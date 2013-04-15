@@ -84,4 +84,19 @@ public class CategoryServiceImpl implements CategoryService{
 			throw new Exception("generateSortId_err");
 		}
 	}
+	@Override
+	public Category[] selectCategoryPathBySortId(long uid, String sortId) {
+		if (sortId == null || "".equals(sortId) || "null".equals(sortId))return null;
+		int len = sortId.length() / 9;
+		Category[] categories = new Category[len];
+		for(int i = 0 ; i < categories.length; i ++){
+			String pathSortId = sortId.substring(0 * 9,9 + (i * 9));
+			categories[i] = categoryDao.selectBySortId(uid, pathSortId);
+		}
+		return categories;
+	}
+	@Override
+	public List<Category> selectChildBySortId(long uid, String sortId) {
+		return categoryDao.selectChildBySortId(uid, sortId);
+	}
 }

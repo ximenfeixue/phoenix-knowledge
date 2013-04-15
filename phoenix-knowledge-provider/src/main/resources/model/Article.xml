@@ -195,5 +195,31 @@
 				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
 			</isNotNull>  
 		</dynamic>
-    </select>    
+    </select>
+    <select id="articleAllListBySortId" resultMap="articleCategoryMap" parameterClass="java.util.Map">
+        select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.sortId,
+		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		a.clickNum from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="uid">
+				a.uid = #uid#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="recycleBin">
+				a.recycleBin = #recycleBin:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="essence">
+				a.essence = #essence:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="sortId">
+				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
+			</isNotNull>  
+		</dynamic>
+		order by a.sortId
+    </select>      
 </sqlMap>

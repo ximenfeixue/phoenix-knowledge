@@ -46,5 +46,18 @@ public interface CategoryService {
      * @param category
      */
     void update(Category category);
-    
+    /**
+     * 通过sortId得到某用户下此分类的全路径数组
+     * @param uid
+     * @param sortId
+     * @return Category[]
+     */
+    Category[] selectCategoryPathBySortId(long uid,String sortId);
+    /**
+     * 通过phoenix_user.tb_user.id得到此用户sortId下经过树形结构排序的所有分类
+     * @param uid
+     * @param sortId
+     * @return
+     */
+	List<Category> selectChildBySortId(long uid,String sortId);
 }

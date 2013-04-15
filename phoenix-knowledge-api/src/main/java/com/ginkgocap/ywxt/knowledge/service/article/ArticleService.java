@@ -113,4 +113,20 @@ public interface ArticleService {
      * @return List<Article>
      */
 	List<Article> list(long uid, String keywords, int pageIndex, int pageSize);
+    /**
+     * 通过条件取到从文章列表
+     * @param uid 
+     * @param sortId
+     * @param recycleBin 
+     * @param essence 
+     */
+	List<Article> articleAllListBySortId(long uid, String sortId, String recycleBin, String essence);
+    /**
+     * sortId得到所有文章并生成word文档提供下载
+     * @param uid 
+     * @param sortId
+     * @param recycleBin 是否包括回收站的文章
+     * @param 
+     */
+	Map<String,Object> exportFileBySortId(long uid,String sortId,String recycleBin,String essence);
 }

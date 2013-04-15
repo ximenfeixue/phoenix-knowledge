@@ -61,5 +61,11 @@ public interface CategoryDao {
      * @return
      */
 	String selectMaxSortId(long uid,String parentSortId);
-	
+    /**
+     * 通过phoenix_user.tb_user.id得到此用户sortId下经过树形结构排序的所有分类
+     * @param uid
+     * @param sortId
+     * @return
+     */
+	List<Category> selectChildBySortId(long uid,String sortId);
 }

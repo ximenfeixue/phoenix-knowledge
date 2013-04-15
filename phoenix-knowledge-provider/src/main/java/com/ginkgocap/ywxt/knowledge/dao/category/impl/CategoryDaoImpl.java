@@ -94,4 +94,14 @@ public class CategoryDaoImpl extends SqlMapClientDaoSupport implements
 		return (String)getSqlMapClientTemplate().queryForObject("tb_category.selectMaxSortId",map);
 	}
 
+	@Override
+	public List<Category> selectChildBySortId(long uid, String sortId) {
+		if (uid <=0)return null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("uid", uid);
+		map.put("sortId", sortId);
+		List<Category> list = getSqlMapClientTemplate().queryForList("tb_category.selectChildBySortId", map);
+		return list;
+	}
+
 }

@@ -69,4 +69,13 @@ public class ArticleServiceTest extends TestBase{
     	List<Article> list = articleService.articlelist(62, "", "", "", 1, 10);
     	System.out.println("articleList " + list.size());
     }
+    @Test
+    public void testArticleAllListBySortId(){
+    	List<Article> list = articleService.articleAllListBySortId(62, "000000002", "", "");
+    	System.out.println("articleList " + list.size());
+    }
+    @Test
+    public void testExportFileBySortId(){
+    	Map<String,Object>map = articleService.exportFileBySortId(uid, "000000002", "", "");
+    }
  }

@@ -71,6 +71,10 @@
 		select <include refid="dyColumns"/> from tb_category where uid = #uid# and sortId = #sortId# 
 	</select>
 	
+	<!-- 通过sortId得到此用户的分类下所有的子分类  -->
+	<select id="selectChildBySortId" resultMap="categoryMap" parameterClass="java.util.Map">
+		select <include refid="dyColumns"/> from tb_category where uid = #uid# and sortId like CONCAT(#sortId#, '%') order by sortId
+	</select>	
 	
 	<!-- 通过ID得到子分类的数量 -->
 	<select id="selectChildCountById" resultClass="long" parameterClass="long">

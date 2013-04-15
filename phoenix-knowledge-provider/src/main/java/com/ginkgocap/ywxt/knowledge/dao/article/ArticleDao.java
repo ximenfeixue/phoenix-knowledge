@@ -93,4 +93,12 @@ public interface ArticleDao {
      * @return List
      */
 	long selectArticleListCount(long uid, String recycleBin, String essence,String sortId);
+    /**
+     * 通过条件取到从文章列表
+     * @param uid 
+     * @param sortId
+     * @param recycleBin 
+     * @param essence 
+     */
+	List<Article> articleAllListBySortId(long uid, String sortId,String recycleBin, String essence);
 }

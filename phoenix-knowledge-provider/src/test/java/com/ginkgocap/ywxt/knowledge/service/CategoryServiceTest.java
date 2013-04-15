@@ -78,4 +78,20 @@ public class CategoryServiceTest extends TestBase{
     	System.out.println(newCat.getId());
     }
 
+    
+    @Test
+    public void testSelectCategoryPathBySortId(){
+    	Category[] cats = categoryService.selectCategoryPathBySortId(62, "000000001000000001");
+    	for (Category cat: cats){
+    		System.out.println(cat.getCategoryName());
+    	}
+    }
+    
+    @Test
+    public void testSelectChildBySortId(){
+    	List<Category>list = categoryService.selectChildBySortId(62, "");
+    	for (Category c: list){
+    		System.out.println(c.getCategoryName() + "   " + c.getSortId());
+    	}
+    }
 }

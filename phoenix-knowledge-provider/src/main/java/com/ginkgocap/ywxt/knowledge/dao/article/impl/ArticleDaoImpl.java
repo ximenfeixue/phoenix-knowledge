@@ -146,4 +146,19 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
         	map.put("sortId", sortId);
 		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectArticleListCount", map);
 	}
+
+	@Override
+	public List<Article> articleAllListBySortId(long uid, String sortId,
+			String recycleBin, String essence) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		if(StringUtils.isNotBlank(recycleBin))
+        	map.put("recycleBin", recycleBin);
+		if(StringUtils.isNotBlank(essence))
+        	map.put("essence", essence);
+		if(StringUtils.isNotBlank(sortId))
+        	map.put("sortId", sortId);
+		return (List<Article>)getSqlMapClientTemplate().queryForList("tb_article.articleAllListBySortId",map);
+	}
 }

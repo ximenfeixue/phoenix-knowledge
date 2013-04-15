@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
-import com.ginkgocap.ywxt.knowledge.util.ExportFile;
 import com.lowagie.text.DocumentException;
 
 public class ExportFileTest  extends TestBase {
