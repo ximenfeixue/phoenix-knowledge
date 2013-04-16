@@ -78,4 +78,9 @@ public class ArticleServiceTest extends TestBase{
     public void testExportFileBySortId(){
     	Map<String,Object>map = articleService.exportFileBySortId(uid, "000000002", "", "");
     }
+    @Test
+    public void testTask_ID(){
+    	Article article = articleService.selectByPrimaryKey(1);
+    	System.out.println(article.getTaskId());
+    }
  }

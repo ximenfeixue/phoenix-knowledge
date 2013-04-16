@@ -17,6 +17,7 @@
 		<result column="recycleBin" property="recycleBin" jdbcType="VARCHAR"/>
 		<result column="state" property="state" jdbcType="VARCHAR"/>
 		<result column="clickNum" property="clickNum" jdbcType="BIGINT"/>
+		<result column="task_id" property="taskId" jdbcType="VARCHAR"/>
 	</resultMap>
 	<resultMap class="com.ginkgocap.ywxt.knowledge.model.Article" id="articleCategoryMap">
 		<result column="id" property="id" jdbcType="BIGINT"/>
@@ -25,6 +26,7 @@
 		<result column="source" property="source" jdbcType="VARCHAR"/>
 		<result column="articleTitle" property="articleTitle" jdbcType="VARCHAR"/>
 		<result column="categoryid" property="categoryid" jdbcType="BIGINT"/>
+		<result column="articleContent" property="articleContent" jdbcType="VARCHAR"/>
 		<result column="sortId" property="sortId" jdbcType="VARCHAR"/>
 		<result column="categoryName" property="categoryName" jdbcType="VARCHAR"/>
 		<result column="pubdate" property="pubdate" jdbcType="TIMESTAMP"/>
@@ -33,10 +35,11 @@
 		<result column="recycleBin" property="recycleBin" jdbcType="VARCHAR"/>
 		<result column="state" property="state" jdbcType="VARCHAR"/>
 		<result column="clickNum" property="clickNum" jdbcType="BIGINT"/>
+		<result column="task_id" property="taskId" jdbcType="VARCHAR"/>
 	</resultMap>
 	
-	<sql id="allColumns">id,uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum</sql>
-	<sql id="dyColumns">id,uid,author,source,articleTitle,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum</sql>
+	<sql id="allColumns">id,uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id</sql>
+	<sql id="dyColumns">id,uid,author,source,articleTitle,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id</sql>
 	<!-- 通过主键找到文章 -->
 	<select id="selectByPrimaryKey" resultMap="articleMap" parameterClass="long">
 		select <include refid="allColumns"/> from tb_article where id= #value# 
@@ -71,7 +74,7 @@
 	<!-- 存入文章 -->
 	<insert id="insert" parameterClass="article">
 		insert into tb_article(
-			uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum
+			uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id
 		) values (
 			#uid:BIGINT#,
 			#author:VARCHAR#,
@@ -85,7 +88,8 @@
 			#essence:VARCHAR#,
 			#recycleBin:VARCHAR#,
 			#state:VARCHAR#,
-			#clickNum:BIGINT#
+			#clickNum:BIGINT#,
+			#taskId:VARCHAR#
 		)
 		<selectKey resultClass="long" type="post" keyProperty="id" > 
 		SELECT LAST_INSERT_ID() AS VALUE     
@@ -94,9 +98,9 @@
     
     <!-- 文章查询结果列表  -->
     <select id="selectByParams" resultMap="articleCategoryMap" parameterClass="java.util.Map">
-		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.sortId,
+		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#
@@ -146,9 +150,9 @@
     
     <!-- 取到文章列表 -->
     <select id="selectArticleList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
-    	select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.sortId,
+    	select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#
@@ -197,9 +201,9 @@
 		</dynamic>
     </select>
     <select id="articleAllListBySortId" resultMap="articleCategoryMap" parameterClass="java.util.Map">
-        select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.sortId,
+        select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#

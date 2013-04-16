@@ -99,6 +99,12 @@ public class Article  implements Serializable{
 	public void setClickNum(long clickNum) {
 		this.clickNum = clickNum;
 	}
+	public String getTaskId() {
+		return taskId;
+	}
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
 	/** 主键 */
 	private long id;
 	/** phoenix_user.tb_user.id */
@@ -129,4 +135,6 @@ public class Article  implements Serializable{
 	private String state;
 	/** 文章点击次数 */
 	private long clickNum;
+	/** 与文章附件表关联 */
+	private String taskId;
 }
