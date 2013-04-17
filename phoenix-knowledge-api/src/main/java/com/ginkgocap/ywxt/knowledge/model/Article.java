@@ -105,6 +105,12 @@ public class Article  implements Serializable{
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+	public String getIsNew() {
+		return isNew;
+	}
+	public void setIsNew(String isNew) {
+		this.isNew = isNew;
+	}
 	/** 主键 */
 	private long id;
 	/** phoenix_user.tb_user.id */
@@ -137,4 +143,6 @@ public class Article  implements Serializable{
 	private long clickNum;
 	/** 与文章附件表关联 */
 	private String taskId;
+	/** 是否是最新的文章 在发布于三天之内的和最新修改于三天之内的为最新文章  */
+	private String isNew;
 }

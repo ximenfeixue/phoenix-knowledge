@@ -129,4 +129,8 @@ public interface ArticleService {
      * @param 
      */
 	Map<String,Object> exportFileBySortId(long uid,String sortId,String recycleBin,String essence);
+    /**
+     * 导出文章时转换word文件的进度
+     */
+	Map<String,Object> processView();
 }

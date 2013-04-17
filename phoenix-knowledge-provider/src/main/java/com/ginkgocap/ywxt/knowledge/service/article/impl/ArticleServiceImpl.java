@@ -203,6 +203,8 @@ public class ArticleServiceImpl implements ArticleService{
 		return articles;
 	}
 
+	private Map<String ,Object> proMap;
+	
 	@Override
 	public Map<String,Object> exportFileBySortId(long uid, String sortId,String recycleBin,String essence) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -213,7 +215,9 @@ public class ArticleServiceImpl implements ArticleService{
 		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
 		List exportArticleList = new ArrayList();
 		List errorArticleList = new ArrayList();
+		proMap = new HashMap();
 		if (list != null && list.size() > 0){
+			proMap.put("totle", list.size());
 			for(Article article:list){
 				try{
 					String path = article.getSortId();
@@ -239,6 +243,8 @@ public class ArticleServiceImpl implements ArticleService{
 				}catch(Exception e){
 					errorArticleList.add(article);
 				}
+				proMap.put("export", exportArticleList);
+				proMap.put("error", errorArticleList);
 			}
 			//压缩文件
 			try {
@@ -261,4 +267,12 @@ public class ArticleServiceImpl implements ArticleService{
 		map.put("errexport", errorArticleList);
 		return map;
 	}
+	
+
+
+	@Override
+	public Map<String, Object> processView() {
+		return proMap;
+	}
+
 }

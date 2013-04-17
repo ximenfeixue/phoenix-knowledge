@@ -36,6 +36,7 @@
 		<result column="state" property="state" jdbcType="VARCHAR"/>
 		<result column="clickNum" property="clickNum" jdbcType="BIGINT"/>
 		<result column="task_id" property="taskId" jdbcType="VARCHAR"/>
+		<result column="isNew" property="isNew" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<sql id="allColumns">id,uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id</sql>
@@ -100,7 +101,8 @@
     <select id="selectByParams" resultMap="articleCategoryMap" parameterClass="java.util.Map">
 		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
+		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#
@@ -152,7 +154,8 @@
     <select id="selectArticleList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
     	select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
+		 from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#
@@ -203,7 +206,8 @@
     <select id="articleAllListBySortId" resultMap="articleCategoryMap" parameterClass="java.util.Map">
         select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
-		a.clickNum,a.task_id from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		a.clickNum,a.task_id ,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
+		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#

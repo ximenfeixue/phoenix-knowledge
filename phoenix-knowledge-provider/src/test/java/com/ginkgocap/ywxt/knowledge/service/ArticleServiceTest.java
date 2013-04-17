@@ -25,7 +25,7 @@ public class ArticleServiceTest extends TestBase{
     @Autowired
     private ArticleService articleService;
     
-    private long uid = 62;
+    private long uid = 12423041;
     
     private Article article;
     
@@ -71,8 +71,12 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testArticleAllListBySortId(){
-    	List<Article> list = articleService.articleAllListBySortId(62, "000000002", "", "");
+    	List<Article> list = articleService.articleAllListBySortId(12423041, "", "", "");
     	System.out.println("articleList " + list.size());
+    	for(Article article:list){
+    		System.out.println(article.getIsNew() + " " + article.getId());
+    		
+    	}
     }
     @Test
     public void testExportFileBySortId(){
@@ -82,5 +86,7 @@ public class ArticleServiceTest extends TestBase{
     public void testTask_ID(){
     	Article article = articleService.selectByPrimaryKey(1);
     	System.out.println(article.getTaskId());
+    	System.out.println(article.getPubdate());
+    	System.out.println(article.getModifyTime());
     }
  }
