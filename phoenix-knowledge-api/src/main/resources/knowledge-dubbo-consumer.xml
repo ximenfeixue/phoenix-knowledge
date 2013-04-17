@@ -31,6 +31,6 @@
 	http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
     
-    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="2.1.0"/>	
-    <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="2.1.0"/>
+    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="1.0.0"/>	
+    <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
 </beans>

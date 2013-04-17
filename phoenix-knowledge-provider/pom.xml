@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>phoenix-knowledge</artifactId>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge-provider</artifactId>
 	<name>${project.artifactId}</name>
@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-knowledge-api</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<!-- spring begin -->
 		<!-- spring base -->
