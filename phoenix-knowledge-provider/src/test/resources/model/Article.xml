@@ -41,6 +41,88 @@
 	
 	<sql id="allColumns">id,uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id</sql>
 	<sql id="dyColumns">id,uid,author,source,articleTitle,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id</sql>
+	
+	<select id="selectListCount" resultClass="long" parameterClass="java.util.Map">
+		select count(a.id) from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="uid">
+				a.uid = #uid#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="AND" open="(" close=")">
+			<isNotNull  prepend="OR" property="keywords">
+				a.articleTitle like CONCAT('%',#keywords#,'%')
+			</isNotNull>
+			<isNotNull  prepend="OR" property="keywords">
+				a.articleContent like CONCAT('%', #keywords#, '%') 
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="recycleBin">
+				a.recycleBin = #recycleBin:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="essence">
+				a.essence = #essence:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="sortId">
+				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
+			</isNotNull>  
+		</dynamic>
+	</select>
+	<select id="selectList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
+		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
+		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
+		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="uid">
+				a.uid = #uid#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="AND" open="(" close=")">
+			<isNotNull  prepend="OR" property="keywords">
+				a.articleTitle like CONCAT('%',#keywords#,'%')
+			</isNotNull>
+			<isNotNull  prepend="OR" property="keywords">
+				a.articleContent like CONCAT('%', #keywords#, '%') 
+			</isNotNull>
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="recycleBin">
+				a.recycleBin = #recycleBin:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="essence">
+				a.essence = #essence:VARCHAR#
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="sortId">
+				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
+			</isNotNull>  
+		</dynamic>
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="id">
+				1=#id# order by a.id  desc 
+			</isNotNull>
+			<isNotNull  prepend="AND" property="clickNum">
+				2=#clickNum# order by a.clickNum  desc 
+			</isNotNull>
+			<isNotNull  prepend="AND" property="pubdate">
+				3=#pubdate# order by a.pubdate  desc 
+			</isNotNull>
+			<isNotNull  prepend="AND" property="modifyTime">
+				4=#modifyTime# order by a.modifyTime  desc 
+			</isNotNull>
+		</dynamic>
+		limit #start#,#size#
+	</select>
+	
 	<!-- 通过主键找到文章 -->
 	<select id="selectByPrimaryKey" resultMap="articleMap" parameterClass="long">
 		select <include refid="allColumns"/> from tb_article where id= #value# 
@@ -102,7 +184,7 @@
 		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
 		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
-		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1 and a.recycleBin = '0'
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#
@@ -120,7 +202,7 @@
 	</select>
 	<!-- 统计文章查询后的数量 -->
 	<select id="selectCountByParams" resultClass="long" parameterClass="java.util.Map">
-		select count(a.id) from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
+		select count(a.id) from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1  and a.recycleBin = '0'
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="uid">
 				a.uid = #uid#

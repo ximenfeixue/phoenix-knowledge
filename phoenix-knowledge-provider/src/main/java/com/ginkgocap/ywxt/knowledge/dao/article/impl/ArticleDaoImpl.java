@@ -39,11 +39,11 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		return (Long)getSqlMapClientTemplate().queryForObject("tb_article.selectCountByCategoryId", categoryid);
 	}
 
-	@Override
-	public long selectCountBySortId(long uid, String sortId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+//	@Override
+//	public long selectCountBySortId(long uid, String sortId) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 
 	@Override
 	public Article insert(Article article) {
@@ -71,31 +71,31 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		getSqlMapClientTemplate().delete("tb_article.delete", id);
 	}
 
-	@Override
-	public List<Article> selectByParams(long uid, String keywords,
-			Integer pageIndex, Integer pageSize) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		long start = (pageIndex - 1) * pageSize;
-		long size = pageSize;
-		if (uid > 0)
-			map.put("uid", new Long(uid));
-		if(StringUtils.isNotBlank(keywords))
-        	map.put("keywords", keywords);
-        map.put("start", start);
-        map.put("size", size);
-        List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectByParams", map);
-        return list;
-	}
-
-	@Override
-	public Long selectByParamsCount(long uid, String keywords) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (uid > 0)
-			map.put("uid", new Long(uid));
-		if(StringUtils.isNotBlank(keywords))
-        	map.put("keywords", keywords);
-		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectCountByParams", map);
-	}
+//	@Override
+//	public List<Article> selectByParams(long uid, String keywords,
+//			Integer pageIndex, Integer pageSize) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		long start = (pageIndex - 1) * pageSize;
+//		long size = pageSize;
+//		if (uid > 0)
+//			map.put("uid", new Long(uid));
+//		if(StringUtils.isNotBlank(keywords))
+//        	map.put("keywords", keywords);
+//        map.put("start", start);
+//        map.put("size", size);
+//        List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectByParams", map);
+//        return list;
+//	}
+//
+//	@Override
+//	public Long selectByParamsCount(long uid, String keywords) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		if (uid > 0)
+//			map.put("uid", new Long(uid));
+//		if(StringUtils.isNotBlank(keywords))
+//        	map.put("keywords", keywords);
+//		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectCountByParams", map);
+//	}
 
 	@Override
 	public void updateEssence(String essence, String[] ids) {
@@ -113,39 +113,39 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		getSqlMapClientTemplate().update("tb_article.updateRecycleBin",map);
 	}
 
-	@Override
-	public List<Article> selectArticleList(long uid, String recycleBin,
-			String essence, String sortId, Integer pageIndex, Integer pageSize) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		long start = (pageIndex - 1) * pageSize;
-		long size = pageSize;
-		if (uid > 0)
-			map.put("uid", new Long(uid));
-		if(StringUtils.isNotBlank(recycleBin))
-        	map.put("recycleBin", recycleBin);
-		if(StringUtils.isNotBlank(essence))
-        	map.put("essence", essence);
-		if(StringUtils.isNotBlank(sortId))
-        	map.put("sortId", sortId);
-		map.put("start", start);
-		map.put("size", size);
-		return (List<Article>)getSqlMapClientTemplate().queryForList("tb_article.selectArticleList",map);
-	}
+//	@Override
+//	public List<Article> selectArticleList(long uid, String recycleBin,
+//			String essence, String sortId, Integer pageIndex, Integer pageSize) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		long start = (pageIndex - 1) * pageSize;
+//		long size = pageSize;
+//		if (uid > 0)
+//			map.put("uid", new Long(uid));
+//		if(StringUtils.isNotBlank(recycleBin))
+//        	map.put("recycleBin", recycleBin);
+//		if(StringUtils.isNotBlank(essence))
+//        	map.put("essence", essence);
+//		if(StringUtils.isNotBlank(sortId))
+//        	map.put("sortId", sortId);
+//		map.put("start", start);
+//		map.put("size", size);
+//		return (List<Article>)getSqlMapClientTemplate().queryForList("tb_article.selectArticleList",map);
+//	}
 
-	@Override
-	public long selectArticleListCount(long uid, String recycleBin,
-			String essence, String sortId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (uid > 0)
-			map.put("uid", new Long(uid));
-		if(StringUtils.isNotBlank(recycleBin))
-        	map.put("recycleBin", recycleBin);
-		if(StringUtils.isNotBlank(essence))
-        	map.put("essence", essence);
-		if(StringUtils.isNotBlank(sortId))
-        	map.put("sortId", sortId);
-		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectArticleListCount", map);
-	}
+//	@Override
+//	public long selectArticleListCount(long uid, String recycleBin,
+//			String essence, String sortId) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		if (uid > 0)
+//			map.put("uid", new Long(uid));
+//		if(StringUtils.isNotBlank(recycleBin))
+//        	map.put("recycleBin", recycleBin);
+//		if(StringUtils.isNotBlank(essence))
+//        	map.put("essence", essence);
+//		if(StringUtils.isNotBlank(sortId))
+//        	map.put("sortId", sortId);
+//		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectArticleListCount", map);
+//	}
 
 	@Override
 	public List<Article> articleAllListBySortId(long uid, String sortId,
@@ -160,5 +160,56 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		if(StringUtils.isNotBlank(sortId))
         	map.put("sortId", sortId);
 		return (List<Article>)getSqlMapClientTemplate().queryForList("tb_article.articleAllListBySortId",map);
+	}
+
+	@Override
+	public long selectByParamsCount(long uid, String sortId, String essence,String recycleBin, String keywords) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		if(StringUtils.isNotBlank(sortId))
+        	map.put("sortId", sortId);
+		if(StringUtils.isNotBlank(essence))
+        	map.put("essence", essence);
+		if(StringUtils.isNotBlank(recycleBin))
+        	map.put("recycleBin", recycleBin);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectListCount", map);
+	}
+
+	@Override
+	public List<Article> selectByParams(long uid, String sortId, String essence, String recycleBin, String keywords,String sort, int pageIndex,
+			int pageSize) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		long start = (pageIndex - 1) * pageSize;
+		long size = pageSize;
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		if(StringUtils.isNotBlank(sortId))
+        	map.put("sortId", sortId);
+		if(StringUtils.isNotBlank(essence))
+        	map.put("essence", essence);
+		if(StringUtils.isNotBlank(recycleBin))
+        	map.put("recycleBin", recycleBin);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		if(StringUtils.isNotBlank(sort)){
+			if ("clickNum".equalsIgnoreCase(sort)){
+				map.put("clickNum", "2");
+			}else if ("pubdate".equalsIgnoreCase(sort)){
+				map.put("pubdate", "3");
+			}else if ("modifyTime".equalsIgnoreCase(sort)){
+				map.put("modifyTime", "4");
+			}
+		}else{
+			map.put("id", "1");
+		}
+        map.put("start", start);
+        map.put("size", size);
+        List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectList", map);
+        return list;
 	}
 }

@@ -37,13 +37,6 @@ public interface ArticleService {
      */
     void update(Article article);
     /**
-     * 返回查询列表并带分页信息
-     * @param uid 文章发布人登陆框的ID
-     * @param keywords 查询的关键字
-     * @param dgm  分页信息
-     */
-    Map<String,Object> selectListByParam(long uid,String keywords, DataGridModel dgm);
-    /**
      * 根据多个文章id设置是否批量加精
      * @param essence 
      * @param ids
@@ -56,63 +49,11 @@ public interface ArticleService {
      */
     void updateRecycleBin(String recycleBin,String[] ids);
     /**
-     * 通过条件取到从文章列表
-     * @param uid 
-     * @param recycleBin 
-     * @param essence 
-     * @param sortId 
-     * @param dgm 分页信息
-     * @return Map<String, Object>
-     */
-	Map<String, Object> selectByParam(long uid, String recycleBin,String essence, String sortId,DataGridModel dgm);
-    /**
      * 通过文章ID导出此文章生成Doc并下载
      * @param id 
      * @return String
      */
 	String exportArticleById(long id);
-    /**
-     * 通过条件取到从文章列表条数
-     * @param uid 
-     * @param recycleBin 
-     * @param essence 
-     * @param sortId 
-     * @param pageIndex 当前页
-     * @param pageSize  分页大小
-     * @return PageUtil
-     */
-	PageUtil articleCount(long uid, String essence, String recycleBin, String sortId,
-			int pageIndex, int pageSize);
-    /**
-     * 通过条件取到从文章列表
-     * @param uid 
-     * @param recycleBin 
-     * @param essence 
-     * @param sortId 
-     * @param pageIndex 当前页
-     * @param pageSize  分页大小
-     * @return PageUtil
-     */
-	List<Article> articlelist(long uid, String essence, String recycleBin,
-			String sortId, int pageIndex, int pageSize);
-    /**
-     * 通过关键字查询
-     * @param uid 
-     * @param keywords 关键字 
-     * @param pageIndex 当前页
-     * @param pageSize  分页大小
-     * @return PageUtil
-     */
-	PageUtil count(long uid, String keywords, int pageIndex, int pageSize);
-    /**
-     * 通过关键字查询
-     * @param uid 
-     * @param keywords 关键字 
-     * @param pageIndex 当前页
-     * @param pageSize  分页大小
-     * @return List<Article>
-     */
-	List<Article> list(long uid, String keywords, int pageIndex, int pageSize);
     /**
      * 通过条件取到从文章列表
      * @param uid 
@@ -133,4 +74,29 @@ public interface ArticleService {
      * 导出文章时转换word文件的进度
      */
 	Map<String,Object> processView();
+    /**
+     * 文章列表
+     * @param uid 
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param sort 排序字段名称
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+     * @return List<Article>
+     */
+	PageUtil count(long uid, String sortId, String essence, String recycleBin, String keywords, int pageIndex, int pageSize);
+    /**
+     * 得到文章列表的文章数量
+     * @param uid 
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+     * @return List<Article>
+     */
+	List<Article> list(long uid, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
 }

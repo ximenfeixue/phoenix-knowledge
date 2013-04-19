@@ -44,30 +44,9 @@ public class ArticleServiceTest extends TestBase{
     public void tearDown() throws Exception {
     }
 
-
     @Test
-    public void testList(){
-    	List<Article> list = (List<Article>)articleService.list(62, "", 1, 10);
-    	System.out.println("testList " + list.size());
-    }
-    @Test
-    public void testCount(){
-    	PageUtil p = articleService.count(62, "",1, 10);
-    	System.out.println("testCount " + p.getCount());
-    }
-//    @Test
-//    public void testExportArticleById(){
-//    	System.out.println(articleService.exportArticleById(5));
-//    }
-    @Test
-    public void testArticleCount(){
-    	PageUtil p = articleService.articleCount(62, "", "", "", 1, 10);
-    	System.out.println("testArticleCount " + p.getCount());
-    }
-    @Test
-    public void testArticlelist(){
-    	List<Article> list = articleService.articlelist(62, "", "", "", 1, 10);
-    	System.out.println("articleList " + list.size());
+    public void testExportArticleById(){
+    	System.out.println(articleService.exportArticleById(5));
     }
     @Test
     public void testArticleAllListBySortId(){

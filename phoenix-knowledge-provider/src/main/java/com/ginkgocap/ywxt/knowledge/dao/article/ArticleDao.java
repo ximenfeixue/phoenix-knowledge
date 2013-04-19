@@ -21,13 +21,6 @@ public interface ArticleDao {
      * @return
      */
     long selectCountByCategoryId(long categoryid);
-	 /**
-     * 得到此用户在此文章分类sortId下的文章数量(包括回收站的文章)
-     * @param uid
-     * @param sortId
-     * @return
-     */
-    long selectCountBySortId(long uid,String sortId);
     /**
      * 插入文章
      * @param article
@@ -45,21 +38,6 @@ public interface ArticleDao {
      */
     void delete(long id);
     /**
-     * 根据条件查询
-     * @param uid 
-     * @param keywords 查询关键字
-     * @param start 分页开始行
-     * @param size 行大小
-     * @return
-     */
-    List<Article> selectByParams(long uid,String keywords,Integer start,Integer size);
-    /**
-     * 根据条件查询后得查询后的文章总记录数
-     * @param uid 
-     * @param keywords 查询关键字
-     */
-    Long selectByParamsCount(long uid,String keywords);
-    /**
      * 根据多个文章id设置是否批量加精
      * @param essence 
      * @param ids
@@ -72,28 +50,6 @@ public interface ArticleDao {
      */
     void updateRecycleBin(String recycleBin,String[] ids);
     /**
-     * 通过条件取到从start开始到end结束条文章
-     * @param uid 
-     * @param recycleBin 
-     * @param essence 
-     * @param sortId 
-     * @param start 从地start条开始
-     * @param size  读取size条信息
-     * @return List
-     */
-	List<Article> selectArticleList(long uid, String recycleBin,String essence, String sortId, Integer start, Integer size);
-	 /**
-     * 取到selectArticleList方法通过条件查询的文章总共条数
-     * @param uid 
-     * @param recycleBin 
-     * @param essence 
-     * @param sortId 
-     * @param start 从地start条开始
-     * @param size  读取size条信息
-     * @return List
-     */
-	long selectArticleListCount(long uid, String recycleBin, String essence,String sortId);
-    /**
      * 通过条件取到从文章列表
      * @param uid 
      * @param sortId
@@ -101,4 +57,26 @@ public interface ArticleDao {
      * @param essence 
      */
 	List<Article> articleAllListBySortId(long uid, String sortId,String recycleBin, String essence);
+    /**
+     * 文章列表
+     * @param uid 
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @return long
+     */
+	long selectByParamsCount(long uid, String sortId, String essence,String recycleBin, String keywords);
+    /**
+     * 得到文章列表的文章数量
+     * @param uid 
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+     * @return List<Article>
+     */
+	List<Article> selectByParams(long uid, String sortId, String essence,String recycleBin, String keywords, String sort,int pageIndex, int pageSize);
 }

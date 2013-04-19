@@ -51,9 +51,22 @@ import com.ginkgocap.ywxt.knowledge.model.Article;
 	    	Article article = articleDao.selectByPrimaryKey(1);
 	    	System.out.println("ID为1的文章回收状态:" + article.getRecycleBin());
 	    }
+//	    @Test
+//	    public void testArticlelist(){
+//	    	List<Article> list = articleDao.selectArticleList(62, "", "", "", 1, 10);
+//	    	System.out.println(list.size());
+//	    }
 	    @Test
-	    public void testArticlelist(){
-	    	List<Article> list = articleDao.selectArticleList(62, "", "", "", 1, 10);
-	    	System.out.println(list.size());
+	    public void testlist(){
+	    	List<Article> list = articleDao.selectByParams(12423041, "", "", "", "", "id", 1, 5);
+	    	for (Article a:list){
+	    		System.out.println(a.getId() + "   " + a.getArticleTitle() + " " + a.getSortId() + "  clickNum:" + a.getClickNum());
+	    	}
+	    	
 	    }
+//	    @Test
+//	    public void testcount(){
+//	    	List<Article> list = articleDao.selectArticleList(62, "", "", "", 1, 10);
+//	    	System.out.println(list.size());
+//	    }
 	}

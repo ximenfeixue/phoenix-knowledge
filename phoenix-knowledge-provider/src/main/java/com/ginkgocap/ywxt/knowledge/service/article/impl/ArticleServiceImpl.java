@@ -51,25 +51,6 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public Map<String, Object> selectListByParam(long uid, String keywords,
-			DataGridModel dgm) {
-		Integer start = (dgm.getPage() - 1) * dgm.getRows();
-		Integer size = dgm.getRows();
-		List<Article> lt=null;
-		long total=0l;
-		try{
-			lt = articleDao.selectByParams(uid,keywords, start, size);
-			total = articleDao.selectByParamsCount(uid, keywords);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("rows", lt);
-		result.put("total", total);
-		return result;
-	}
-
-	@Override
 	public void updateEssence(String essence, String[] ids) {
 		articleDao.updateEssence(essence, ids);
 	}
@@ -79,29 +60,6 @@ public class ArticleServiceImpl implements ArticleService{
 		articleDao.updateRecycleBin(recycleBin, ids);
 	}
 
-	@Override
-	public Map<String, Object> selectByParam(long uid, String recycleBin,
-			String essence, String sortId, DataGridModel dgm) {
-		Integer start = (dgm.getPage() - 1) * dgm.getRows();
-		Integer size = dgm.getRows();
-		List<Article> lt=null;
-		long total=0l;
-		try{
-			lt = articleDao.selectArticleList(uid, recycleBin, essence, sortId, start, size);
-			total = articleDao.selectArticleListCount(uid, recycleBin, essence, sortId);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("rows", lt);
-		result.put("total", total);
-		return result;
-	}
-
-	
-	
-	
-	
 	
 	private String genDocFile(Article article,String path,OpenOfficeConvert oc){
 		String flag = "";
@@ -126,12 +84,6 @@ public class ArticleServiceImpl implements ArticleService{
 		html.delete();
 		return flag;
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	@Override
@@ -169,32 +121,6 @@ public class ArticleServiceImpl implements ArticleService{
 		return "/GENFILE/TEMP/" + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "WORD/" + URL.encode(wordFileName);
 	}
 
-	@Override
-	public PageUtil articleCount(long uid, String essence, String recycleBin,
-			String sortId, int pageIndex, int pageSize) {
-		long count = articleDao.selectArticleListCount(uid, recycleBin, essence, sortId);
-		return new PageUtil((int) count, pageIndex, pageSize);
-	}
-
-	@Override
-	public List<Article> articlelist(long uid, String essence,
-			String recycleBin, String sortId, int pageIndex, int pageSize) {
-		List<Article> articles = articleDao.selectArticleList(uid, recycleBin, essence, sortId, pageIndex, pageSize);
-		return articles;
-	}
-
-	@Override
-	public PageUtil count(long uid, String keywords, int pageIndex, int pageSize) {
-		long count = articleDao.selectByParamsCount(uid, keywords);
-		return new PageUtil((int) count, pageIndex, pageSize);
-	}
-
-	@Override
-	public List<Article> list(long uid, String keywords, int pageIndex,
-			int pageSize) {
-		List<Article> articles = articleDao.selectByParams(uid, keywords, pageIndex, pageSize);
-		return articles;
-	}
 
 	@Override
 	public List<Article> articleAllListBySortId(long uid, String sortId,
@@ -273,6 +199,18 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public Map<String, Object> processView() {
 		return proMap;
+	}
+
+	@Override
+	public PageUtil count(long uid, String sortId, String essence,String recycleBin, String keywords, int pageIndex,int pageSize) {
+		long count = articleDao.selectByParamsCount(uid, sortId, essence,recycleBin, keywords);
+		return new PageUtil((int) count, pageIndex, pageSize);
+	}
+
+	@Override
+	public List<Article> list(long uid, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize) {
+		List<Article> articles = articleDao.selectByParams(uid, sortId, essence,recycleBin, keywords, sort,pageIndex, pageSize);
+		return articles;
 	}
 
 }
