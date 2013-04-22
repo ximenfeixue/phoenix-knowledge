@@ -69,11 +69,11 @@ public interface ArticleService {
      * @param recycleBin 是否包括回收站的文章
      * @param 
      */
-	Map<String,Object> exportFileBySortId(long uid,String sortId,String recycleBin,String essence);
+	Map<String,Object> exportFileBySortId(long uid,String sortId,String taskId,String recycleBin,String essence);
     /**
      * 导出文章时转换word文件的进度
      */
-	Map<String,Object> processView();
+	String processView(String taskId);
     /**
      * 文章列表
      * @param uid 

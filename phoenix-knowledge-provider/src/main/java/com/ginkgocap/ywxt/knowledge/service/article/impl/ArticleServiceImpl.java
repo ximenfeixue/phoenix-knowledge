@@ -8,19 +8,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.URL;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
-import com.ginkgocap.ywxt.knowledge.form.DataGridModel;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
+import com.ginkgocap.ywxt.knowledge.util.Content;
+import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
+import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
+import com.ginkgocap.ywxt.knowledge.util.process.Watched;
+import com.ginkgocap.ywxt.knowledge.util.process.Watcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -60,21 +65,14 @@ public class ArticleServiceImpl implements ArticleService{
 		articleDao.updateRecycleBin(recycleBin, ids);
 	}
 
-	
 	private String genDocFile(Article article,String path,OpenOfficeConvert oc){
 		String flag = "";
 		//******************************************************************生成HTML的文件名称
 		String htmlFileName = article.getId() + "_" + article.getArticleTitle() + ".html";
 		//拼接HTML模板
 		StringBuffer HTML = new StringBuffer("");
-		HTML.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
-		HTML.append("<HTML><HEAD>");
-		HTML.append("<META HTTP-EQUIV=\"CONTENT-TYPE\"");
-		HTML.append(" CONTENT=\"text/html; charset=utf-8\"><BODY>");
-		HTML.append("文章标题:" + article.getArticleTitle());
-		HTML.append("<HR><BR/>");
-		HTML.append(article.getArticleContent());
-		HTML.append("</BODY></HTML>");
+		HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE, article.getArticleTitle())
+				   .replaceAll(HTMLTemplate.ARTICLE_CONTENT, article.getArticleContent()));
 		//html生成对象
 		GenFile gf = new GenHTML();
 		//生成HTML并返回HTML文件对象
@@ -98,25 +96,20 @@ public class ArticleServiceImpl implements ArticleService{
 		String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
 		//拼接HTML模板
 		StringBuffer HTML = new StringBuffer("");
-		HTML.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
-		HTML.append("<HTML><HEAD>");
-		HTML.append("<META HTTP-EQUIV=\"CONTENT-TYPE\"");
-		HTML.append(" CONTENT=\"text/html; charset=utf-8\"><BODY>");
-		HTML.append("文章标题:" + article.getArticleTitle());
-		HTML.append("<HR><BR/>");
-		HTML.append(article.getArticleContent());
-		HTML.append("</BODY></HTML>");
+		HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE, article.getArticleTitle())
+											   .replaceAll(HTMLTemplate.ARTICLE_CONTENT, article.getArticleContent()));
 		//html生成对象
 		GenFile gf = new GenHTML();
 		//生成HTML并返回HTML文件对象
 		File html = gf.genFile(HTML.toString(), htmlPath, htmlFileName);
 		//*************************将生成的HTML文件转换成word文档*************************
-		OpenOfficeConvert oc = new OpenOfficeConvert();
-		oc.getOfficeManager().start();
+		OfficeManager os = OpenOfficeServer.getInstance().getOfficeManager();
+		os.start();
+		OpenOfficeConvert oc = new OpenOfficeConvert(os);
 		String wordPath = sharePath + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "WORD/";
 		String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, wordPath + wordFileName);
-		oc.getOfficeManager().stop();
+		os.stop();
 		//*************************若成功生成word，将返回word路径*************************
 		return "/GENFILE/TEMP/" + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "WORD/" + URL.encode(wordFileName);
 	}
@@ -129,22 +122,40 @@ public class ArticleServiceImpl implements ArticleService{
 		return articles;
 	}
 
-	private Map<String ,Object> proMap;
 	
 	@Override
-	public Map<String,Object> exportFileBySortId(long uid, String sortId,String recycleBin,String essence) {
+	public Map<String,Object> exportFileBySortId(long uid, String sortId,String taskId,String recycleBin,String essence) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		//取到系统当前时间
 		String nowDate = new Date().getTime() + "";
-		String sharePath = "D:/workspace-sts-3.2.0.RELEASE/phoenix-knowledge-web/src/main/webapp/GENFILE/TEMP/" + uid + "/genfile/" + nowDate;
-		String zipPath = "D:/workspace-sts-3.2.0.RELEASE/phoenix-knowledge-web/src/main/webapp/GENFILE/TEMP/" + uid + "/" + nowDate;
+		//生成的word文件路径
+		String sharePath = Content.EXPORTDOCPATH + uid + "/genfile/" + nowDate;
+		//生成word后压缩的的文件路径
+		String zipPath = Content.EXPORTDOCPATH + uid + "/" + nowDate;
+		//下载压缩文件地址
 		String download = "/GENFILE/TEMP/" + uid + "/" + nowDate;
+		//取到需要导出的文章列表
 		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
+		//已转黄的文章列表
 		List exportArticleList = new ArrayList();
+		//转换时出错的文章列表
 		List errorArticleList = new ArrayList();
-		proMap = new HashMap();
+		//得到OpenOffice服务端的实例
+		OpenOfficeServer of = OpenOfficeServer.getInstance();
+		OfficeManager om = of.getOfficeManager();
+		//启动OpenOffice服务
+		om.start();
+		//当有文章列表不为空时执行转换操作
 		if (list != null && list.size() > 0){
-			proMap.put("totle", list.size());
+			//被监听对象
+			Watched watched = new Watched();
+			watched.setTaskId(taskId);
+			watched.setTotal(list.size());
+			Content.MAP.put(taskId, watched);
+			int k=0;
 			for(Article article:list){
+				boolean flag = false;
+				k++;
 				try{
 					String path = article.getSortId();
 					int len = path.length() / 9;
@@ -161,17 +172,18 @@ public class ArticleServiceImpl implements ArticleService{
 					allPath = sharePath + genPath;
 					File file = new File(allPath);
 					if (!file.exists())file.mkdirs();
-					OpenOfficeConvert oc = new OpenOfficeConvert();
-					oc.getOfficeManager().start();
-					genDocFile(article,allPath,oc);
-					oc.getOfficeManager().stop();
+					//通过html生成word
+					genDocFile(article,allPath,new OpenOfficeConvert(om));
 					exportArticleList.add(article);
+					flag = true;
 				}catch(Exception e){
+					e.printStackTrace();
 					errorArticleList.add(article);
 				}
-				proMap.put("export", exportArticleList);
-				proMap.put("error", errorArticleList);
+				watched.changeData(k,article.getArticleTitle(),flag);
 			}
+			om.stop();
+			watched.setDone(true);
 			//压缩文件
 			try {
 				File zipFile = new File(zipPath);
@@ -197,8 +209,19 @@ public class ArticleServiceImpl implements ArticleService{
 
 
 	@Override
-	public Map<String, Object> processView() {
-		return proMap;
+	public String processView(String taskId) {
+		//从hash表中得到被监听的对象
+		Watched watched = (Watched)Content.MAP.get(taskId);
+		//通过被监听对象初始化监听对象
+		Watcher w = new Watcher(watched);
+		//得到被监听对象状态
+		w.update(watched, "");
+		//假如事务完成则从Hash表中清楚被监听对象
+		if (watched.isDone()){
+			Content.MAP.remove(taskId);
+			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
+		}
+		return w.getMes();
 	}
 
 	@Override

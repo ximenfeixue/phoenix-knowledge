@@ -9,8 +9,8 @@ public class OpenOfficeConvert {
 
 	private OfficeManager officeManager;
 	
-	public OpenOfficeConvert(){
-		officeManager = OpenOfficeServer.getInstance().getOfficeManager();
+	public OpenOfficeConvert(OfficeManager officeManager){
+		this.officeManager = officeManager;
 	}
 	
 	public void htmlToWord (File html,String wordPath){

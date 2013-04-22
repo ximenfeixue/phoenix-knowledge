@@ -12,7 +12,6 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.form.DataGridModel;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
-import com.ginkgocap.ywxt.util.PageUtil;
 
 
 /**
@@ -59,7 +58,7 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testExportFileBySortId(){
-    	Map<String,Object>map = articleService.exportFileBySortId(uid, "000000002", "", "");
+    	Map<String,Object>map = articleService.exportFileBySortId(12423041, "000000002","taskId", "", "");
     }
     @Test
     public void testTask_ID(){
