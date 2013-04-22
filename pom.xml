@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<version>1.0.0-SNAPSHOT</version>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
@@ -43,6 +42,11 @@
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-util</artifactId>
 			<version>${util.dependencied}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-file-api</artifactId>
+			<version>${file.dependencied}</version>
 		</dependency>
 	</dependencies>
 	

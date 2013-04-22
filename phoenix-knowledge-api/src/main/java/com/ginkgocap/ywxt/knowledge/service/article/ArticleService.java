@@ -1,10 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.article;
 
 import java.util.List;
-
 import java.util.Map;
 
-import com.ginkgocap.ywxt.knowledge.form.DataGridModel;
+import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -66,14 +65,26 @@ public interface ArticleService {
      * sortId得到所有文章并生成word文档提供下载
      * @param uid 
      * @param sortId
+     * @param taskId
      * @param recycleBin 是否包括回收站的文章
-     * @param 
+     * @param essence
      */
 	Map<String,Object> exportFileBySortId(long uid,String sortId,String taskId,String recycleBin,String essence);
     /**
      * 导出文章时转换word文件的进度
      */
 	String processView(String taskId);
+    /**
+     * 将文本导入相应的categoryid分类下的数据库中
+     * @param uid 
+     * @param sortId
+     * @param taskId 是否包括回收站的文章
+     */
+	Map<String, Object> importFileBySortId(long uid, long category,String taskId);
+    /**
+     * 导入文章到数据时的转换
+     */
+	String importProcess(String taskId);
     /**
      * 文章列表
      * @param uid 
@@ -99,4 +110,6 @@ public interface ArticleService {
      * @return List<Article>
      */
 	List<Article> list(long uid, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
+	
+	Map<String, Object> importFileBySortId(long uid, long categoryId,List<FileIndex> fileList, String taskId);
 }

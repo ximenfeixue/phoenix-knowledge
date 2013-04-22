@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.util.process;
 
 import java.util.Observable;
 
-public class Watched  extends Observable{
+public class ImportWatched  extends Observable{
 	private boolean done = false;
 	private long data;
 	private String taskId;
@@ -11,6 +11,7 @@ public class Watched  extends Observable{
 	private boolean flag;
 	
 	public void changeData(long data,String option,boolean flag) {
+		this.flag = flag;
 		this.data = data;
 		this.option = option;
 		setChanged();

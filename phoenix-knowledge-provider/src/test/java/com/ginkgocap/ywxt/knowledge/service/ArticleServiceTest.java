@@ -58,7 +58,7 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testExportFileBySortId(){
-    	Map<String,Object>map = articleService.exportFileBySortId(12423041, "000000002","taskId", "", "");
+    	Map<String,Object>map = articleService.exportFileBySortId(12423041, "","taskId", "", "");
     }
     @Test
     public void testTask_ID(){

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.URL;
+import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
@@ -24,9 +25,11 @@ import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
-import com.ginkgocap.ywxt.knowledge.util.process.Watched;
-import com.ginkgocap.ywxt.knowledge.util.process.Watcher;
+import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
+import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
+import com.ginkgocap.ywxt.knowledge.util.process.ImportWatched;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
+import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("articleService")
@@ -80,6 +83,12 @@ public class ArticleServiceImpl implements ArticleService{
 		String wordFileName = article.getId() + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, path + "/" + wordFileName);
 		html.delete();
+		return flag;
+	}
+	
+	private String genHtmlFile(File doc,String path,OpenOfficeConvert oc){
+		String flag = "";
+		oc.wordToHtml(doc, path);
 		return flag;
 	}
 	
@@ -140,15 +149,15 @@ public class ArticleServiceImpl implements ArticleService{
 		List exportArticleList = new ArrayList();
 		//转换时出错的文章列表
 		List errorArticleList = new ArrayList();
-		//得到OpenOffice服务端的实例
-		OpenOfficeServer of = OpenOfficeServer.getInstance();
-		OfficeManager om = of.getOfficeManager();
-		//启动OpenOffice服务
-		om.start();
 		//当有文章列表不为空时执行转换操作
 		if (list != null && list.size() > 0){
+			//得到OpenOffice服务端的实例
+			OpenOfficeServer of = OpenOfficeServer.getInstance();
+			OfficeManager om = of.getOfficeManager();
+			//启动OpenOffice服务
+			om.start();
 			//被监听对象
-			Watched watched = new Watched();
+			ExportWatched watched = new ExportWatched();
 			watched.setTaskId(taskId);
 			watched.setTotal(list.size());
 			Content.MAP.put(taskId, watched);
@@ -182,7 +191,6 @@ public class ArticleServiceImpl implements ArticleService{
 				}
 				watched.changeData(k,article.getArticleTitle(),flag);
 			}
-			om.stop();
 			watched.setDone(true);
 			//压缩文件
 			try {
@@ -196,6 +204,7 @@ public class ArticleServiceImpl implements ArticleService{
 				map.put("ziperr", "ziperr");
 				e.printStackTrace();
 			}
+			om.stop();
 		}else{
 			map.put("noexport", "noexport");
 		}
@@ -211,9 +220,9 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public String processView(String taskId) {
 		//从hash表中得到被监听的对象
-		Watched watched = (Watched)Content.MAP.get(taskId);
+		ExportWatched watched = (ExportWatched)Content.MAP.get(taskId);
 		//通过被监听对象初始化监听对象
-		Watcher w = new Watcher(watched);
+		ExportWatcher w = new ExportWatcher(watched);
 		//得到被监听对象状态
 		w.update(watched, "");
 		//假如事务完成则从Hash表中清楚被监听对象
@@ -224,6 +233,82 @@ public class ArticleServiceImpl implements ArticleService{
 		return w.getMes();
 	}
 
+
+	@Override
+	public Map<String, Object> importFileBySortId(long uid, long categoryId,List<FileIndex> fileList,String taskId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//得到分类的sortId
+		String sortId = categoryDao.selectByPrimaryKey(categoryId).getSortId();
+		if (fileList != null && fileList.size() > 0){
+			String HtmlPath = "";
+			//已转入的文件列表
+			List importFileList = new ArrayList();
+			//转环时出错的列表
+			List errorFileList = new ArrayList();
+			//得到OpenOffice服务端的实例
+			OpenOfficeServer of = OpenOfficeServer.getInstance();
+			OfficeManager om = of.getOfficeManager();
+			//启动OpenOffice服务
+			om.start();
+			//被监听对象
+			ImportWatched watched = new ImportWatched();
+			watched.setTaskId(taskId);
+			watched.setTotal(fileList.size());
+			Content.MAP.put(taskId, watched);
+			int k=0;
+			for (FileIndex file:fileList){
+				boolean flag = false;
+				k ++;
+				try{
+					String date = DateFunc.getDate();
+					OpenOfficeConvert oc = new OpenOfficeConvert(om);
+					//将文件名称存入为文章标题
+					String Articleitle = file.getFileTitle();
+					//将文件作者存入为文章作者
+					String author = file.getAuthorName();
+					//将taskId设置为文章的taskId
+					genHtmlFile(new File(file.getFilePath()),HtmlPath,oc);
+					//得到内容
+					String content = oc.getHTML(new File(HtmlPath));
+					//设置存入数据库的对象
+					Article article = new Article();
+					article.setArticleContent(content);
+					article.setArticleTitle(Articleitle);
+					article.setAuthor(author);
+					article.setCategoryid(categoryId);
+					article.setSortId(sortId);
+					article.setClickNum(0);
+					article.setEssence("0");
+					article.setModifyTime(date);
+					article.setPubdate(date);
+					article.setRecycleBin("0");
+					article.setState("0");
+					article.setTaskId(taskId);
+					article.setUid(uid);
+					articleDao.insert(article);
+					importFileList.add(file);
+					flag = true;
+				}catch(Exception e){
+					errorFileList.add(file);
+					e.printStackTrace();
+				}
+				watched.changeData(k,file.getId(),flag);
+			}
+			om.stop();
+		}else{
+			map.put("noimport", "noimport");
+		}
+		return map;
+	}
+
+	@Override
+	public String importProcess(String taskId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
 	@Override
 	public PageUtil count(long uid, String sortId, String essence,String recycleBin, String keywords, int pageIndex,int pageSize) {
 		long count = articleDao.selectByParamsCount(uid, sortId, essence,recycleBin, keywords);
@@ -235,5 +320,13 @@ public class ArticleServiceImpl implements ArticleService{
 		List<Article> articles = articleDao.selectByParams(uid, sortId, essence,recycleBin, keywords, sort,pageIndex, pageSize);
 		return articles;
 	}
+
+	@Override
+	public Map<String, Object> importFileBySortId(long uid, long category,
+			String taskId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
