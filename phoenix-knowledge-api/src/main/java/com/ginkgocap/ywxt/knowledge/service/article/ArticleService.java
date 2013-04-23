@@ -73,7 +73,7 @@ public interface ArticleService {
     /**
      * 导出文章时转换word文件的进度
      */
-	String processView(String taskId);
+	Map<String,Object> processView(String taskId);
     /**
      * 将文本导入相应的categoryid分类下的数据库中
      * @param uid 

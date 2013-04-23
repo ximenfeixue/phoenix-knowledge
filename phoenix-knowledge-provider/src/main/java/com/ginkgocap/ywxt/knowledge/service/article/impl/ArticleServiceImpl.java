@@ -159,7 +159,7 @@ public class ArticleServiceImpl implements ArticleService{
 				//被监听对象
 				ExportWatched watched = new ExportWatched();
 				watched.setTaskId(taskId);
-				watched.setTotal(list.size());
+				watched.setTotal(list.size() + 1);
 				Content.MAP.put(taskId, watched);
 				int k=0;
 				for(Article article:list){
@@ -191,7 +191,6 @@ public class ArticleServiceImpl implements ArticleService{
 					}
 					watched.changeData(k,article.getArticleTitle(),flag);
 				}
-				watched.setDone(true);
 				//压缩文件
 				try {
 					File zipFile = new File(zipPath);
@@ -200,11 +199,15 @@ public class ArticleServiceImpl implements ArticleService{
 					util.put(new String[]{sharePath});
 					util.close();
 					map.put("downloadpath", download + "/exportfile.zip");
+					watched.changeData(k + 1,"文件压缩",true);
+					watched.setDownloadPath(download + "/exportfile.zip");
 				} catch (IOException e) {
 					map.put("ziperr", "ziperr");
+					watched.changeData(k + 1,"文件压缩",false);
 					e.printStackTrace();
 				}
 				om.stop();
+				watched.setDone(true);
 			}else{
 				map.put("noexport", "noexport");
 			}
@@ -218,7 +221,8 @@ public class ArticleServiceImpl implements ArticleService{
 
 
 	@Override
-	public String processView(String taskId) {
+	public Map<String,Object> processView(String taskId) {
+		Map<String,Object> map = new HashMap<String,Object>();
 		//从hash表中得到被监听的对象
 		ExportWatched watched = (ExportWatched)Content.MAP.get(taskId);
 		//通过被监听对象初始化监听对象
@@ -230,7 +234,9 @@ public class ArticleServiceImpl implements ArticleService{
 			Content.MAP.remove(taskId);
 			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
 		}
-		return w.getMes();
+		map.put("mes", w.getMes());
+		map.put("downloadPath", w.getProgen());
+		return map;
 	}
 
 

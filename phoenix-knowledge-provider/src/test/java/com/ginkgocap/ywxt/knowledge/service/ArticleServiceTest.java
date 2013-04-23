@@ -1,9 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.artofsolving.jodconverter.office.OfficeManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +9,6 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.form.DataGridModel;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
-import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
 
 
 /**

@@ -9,6 +9,7 @@ public class ExportWatched  extends Observable{
 	private long total;
 	private String option;
 	private boolean flag;
+	private String downloadPath;
 	
 	public void changeData(long data,String option,boolean flag) {
 		this.flag = flag;
@@ -18,7 +19,20 @@ public class ExportWatched  extends Observable{
 		notifyObservers();
 	}
 
-	
+
+
+	public String getDownloadPath() {
+		return downloadPath;
+	}
+
+
+
+	public void setDownloadPath(String downloadPath) {
+		this.downloadPath = downloadPath;
+	}
+
+
+
 	public boolean isFlag() {
 		return flag;
 	}

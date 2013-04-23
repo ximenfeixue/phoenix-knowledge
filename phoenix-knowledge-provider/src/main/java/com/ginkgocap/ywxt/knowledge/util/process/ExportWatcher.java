@@ -10,16 +10,24 @@ public class ExportWatcher  implements Observer {
 	}
 
 	private String mes;
+	
+	private String progen;
+	
 	public void update(Observable ob, Object arg) {
 		long data = ((ExportWatched) ob).getData();
+		ExportWatched watched = (ExportWatched)ob;
 		if (((ExportWatched) ob).isDone()){
 			this.mes = "done";
+			//返回生成的压缩文件路径
+			this.progen = watched.getDownloadPath();
 		}else{
-			this.mes = data + "-" + ((ExportWatched) ob).getTotal() + "-" + ((ExportWatched) ob).getOption() + "-" + ((ExportWatched) ob).isFlag();
+			this.mes = data + "-" +watched.getTotal() + "-" + watched.getOption() + "-" +watched.isFlag();
 		}
 	}
 	public String getMes(){
 		return this.mes;
 	}
-	
+	public String getProgen() {
+		return this.progen;
+	}
 }
