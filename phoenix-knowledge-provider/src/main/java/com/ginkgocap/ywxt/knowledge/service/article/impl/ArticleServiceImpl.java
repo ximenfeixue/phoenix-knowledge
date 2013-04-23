@@ -143,71 +143,71 @@ public class ArticleServiceImpl implements ArticleService{
 		String zipPath = Content.EXPORTDOCPATH + uid + "/" + nowDate;
 		//下载压缩文件地址
 		String download = "/GENFILE/TEMP/" + uid + "/" + nowDate;
-		//取到需要导出的文章列表
-		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
 		//已转黄的文章列表
 		List exportArticleList = new ArrayList();
 		//转换时出错的文章列表
 		List errorArticleList = new ArrayList();
+		//取到需要导出的文章列表
+		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
 		//当有文章列表不为空时执行转换操作
 		if (list != null && list.size() > 0){
-			//得到OpenOffice服务端的实例
-			OpenOfficeServer of = OpenOfficeServer.getInstance();
-			OfficeManager om = of.getOfficeManager();
-			//启动OpenOffice服务
-			om.start();
-			//被监听对象
-			ExportWatched watched = new ExportWatched();
-			watched.setTaskId(taskId);
-			watched.setTotal(list.size());
-			Content.MAP.put(taskId, watched);
-			int k=0;
-			for(Article article:list){
-				boolean flag = false;
-				k++;
-				try{
-					String path = article.getSortId();
-					int len = path.length() / 9;
-					Category[] categories = new Category[len];
-					for(int i = 0 ; i < categories.length; i ++){
-						String pathSortId = path.substring(0 * 9,9 + (i * 9));
-						categories[i] = categoryDao.selectBySortId(uid, pathSortId);
+				//得到OpenOffice服务端的实例
+				OpenOfficeServer of = OpenOfficeServer.getInstance();
+				OfficeManager om = of.getOfficeManager();
+				//启动OpenOffice服务
+				om.start();
+				//被监听对象
+				ExportWatched watched = new ExportWatched();
+				watched.setTaskId(taskId);
+				watched.setTotal(list.size());
+				Content.MAP.put(taskId, watched);
+				int k=0;
+				for(Article article:list){
+					boolean flag = false;
+					k++;
+					try{
+						String path = article.getSortId();
+						int len = path.length() / 9;
+						Category[] categories = new Category[len];
+						for(int i = 0 ; i < categories.length; i ++){
+							String pathSortId = path.substring(0 * 9,9 + (i * 9));
+							categories[i] = categoryDao.selectBySortId(uid, pathSortId);
+						}
+						String allPath = "";
+						String genPath = "";
+						for (Category cat:categories){
+							genPath += "/" + cat.getCategoryName();
+						}
+						allPath = sharePath + genPath;
+						File file = new File(allPath);
+						if (!file.exists())file.mkdirs();
+						//通过html生成word
+						genDocFile(article,allPath,new OpenOfficeConvert(om));
+						exportArticleList.add(article);
+						flag = true;
+					}catch(Exception e){
+						e.printStackTrace();
+						errorArticleList.add(article);
 					}
-					String allPath = "";
-					String genPath = "";
-					for (Category cat:categories){
-						genPath += "/" + cat.getCategoryName();
-					}
-					allPath = sharePath + genPath;
-					File file = new File(allPath);
-					if (!file.exists())file.mkdirs();
-					//通过html生成word
-					genDocFile(article,allPath,new OpenOfficeConvert(om));
-					exportArticleList.add(article);
-					flag = true;
-				}catch(Exception e){
-					e.printStackTrace();
-					errorArticleList.add(article);
+					watched.changeData(k,article.getArticleTitle(),flag);
 				}
-				watched.changeData(k,article.getArticleTitle(),flag);
+				watched.setDone(true);
+				//压缩文件
+				try {
+					File zipFile = new File(zipPath);
+					if (!zipFile.exists())zipFile.mkdirs();
+					ZipUtil util = new ZipUtil(zipPath + "/exportfile.zip");
+					util.put(new String[]{sharePath});
+					util.close();
+					map.put("downloadpath", download + "/exportfile.zip");
+				} catch (IOException e) {
+					map.put("ziperr", "ziperr");
+					e.printStackTrace();
+				}
+				om.stop();
+			}else{
+				map.put("noexport", "noexport");
 			}
-			watched.setDone(true);
-			//压缩文件
-			try {
-				File zipFile = new File(zipPath);
-				if (!zipFile.exists())zipFile.mkdirs();
-				ZipUtil util = new ZipUtil(zipPath + "/exportfile.zip");
-				util.put(new String[]{sharePath});
-				util.close();
-				map.put("downloadpath", download + "/exportfile.zip");
-			} catch (IOException e) {
-				map.put("ziperr", "ziperr");
-				e.printStackTrace();
-			}
-			om.stop();
-		}else{
-			map.put("noexport", "noexport");
-		}
 		//导出的文章
 		map.put("export", exportArticleList);
 		//错误未导出的文章
