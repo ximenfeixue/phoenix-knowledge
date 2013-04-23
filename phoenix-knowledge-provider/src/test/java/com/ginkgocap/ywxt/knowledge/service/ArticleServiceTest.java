@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
+import org.artofsolving.jodconverter.office.OfficeManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.form.DataGridModel;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
+import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
 
 
 /**
@@ -45,16 +47,16 @@ public class ArticleServiceTest extends TestBase{
 
     @Test
     public void testExportArticleById(){
-    	System.out.println(articleService.exportArticleById(5));
+//    	System.out.println(articleService.exportArticleById(5));
     }
     @Test
     public void testArticleAllListBySortId(){
-    	List<Article> list = articleService.articleAllListBySortId(12423041, "", "", "");
-    	System.out.println("articleList " + list.size());
-    	for(Article article:list){
-    		System.out.println(article.getIsNew() + " " + article.getId());
-    		
-    	}
+//    	List<Article> list = articleService.articleAllListBySortId(12423041, "", "", "");
+//    	System.out.println("articleList " + list.size());
+//    	for(Article article:list){
+//    		System.out.println(article.getIsNew() + " " + article.getId());
+//    		
+//    	}
     }
     @Test
     public void testExportFileBySortId(){
@@ -66,5 +68,9 @@ public class ArticleServiceTest extends TestBase{
     	System.out.println(article.getTaskId());
     	System.out.println(article.getPubdate());
     	System.out.println(article.getModifyTime());
+    }
+    @Test
+    public void testOpenOffice(){
+
     }
  }
