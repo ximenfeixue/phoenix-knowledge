@@ -60,7 +60,7 @@ public class CategoryDaoTest  extends TestBase{
     public void testSelectTreeOfSortByUserid(){
     	List<Category> categories = categoryDao.selectTreeOfSortByUserid(62, "");
     	for(Category category:categories){
-    		System.out.println(category.getSortId() + "    " + category.getCategoryName());
+    		System.out.println(category.getSortId() + "    " + category.getName());
     	}
     }
 }

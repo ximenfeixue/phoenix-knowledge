@@ -5,7 +5,7 @@
 	<resultMap class="com.ginkgocap.ywxt.knowledge.model.Category" id="categoryMap">
 		<result column="id" property="id" jdbcType="BIGINT"/>
 		<result column="uid" property="uid" jdbcType="BIGINT"/>
-		<result column="categoryName" property="categoryName" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
 		<result column="parentId" property="parentId" jdbcType="BIGINT"/>
 		<result column="sortId" property="sortId" jdbcType="VARCHAR"/>
 		<result column="state" property="state" jdbcType="VARCHAR"/>
@@ -13,7 +13,7 @@
 		<result column="modtime" property="modtime" jdbcType="TIMESTAMP"/>
 	</resultMap>
 	
-	<sql id="dyColumns">id,uid,categoryName,parentId,sortId,subtime,modtime,state</sql>
+	<sql id="dyColumns">id,uid,name,parentId,sortId,subtime,modtime,state</sql>
 	
 	
 	
@@ -34,10 +34,10 @@
 	</delete>
 	<insert id="insert" parameterClass="category">
 		insert into tb_category(
-			uid,categoryName,parentId,sortId,subtime,modtime,state
+			uid,name,parentId,sortId,subtime,modtime,state
 		) values (
 			#uid:BIGINT#,
-			#categoryName:VARCHAR#,
+			#name:VARCHAR#,
 			#parentId:BIGINT#,
 			#sortId:VARCHAR#,
 			#subtime:TIMESTAMP#,
@@ -51,7 +51,7 @@
 	<update id="update" parameterClass="category">  
         UPDATE tb_category SET  
 	        uid = #uid:BIGINT#,
-			categoryName = #categoryName:VARCHAR#,
+			name = #name:VARCHAR#,
 			parentId = #parentId:BIGINT#,
 			sortId = #sortId:VARCHAR#,
 			subtime = #subtime:TIMESTAMP#,

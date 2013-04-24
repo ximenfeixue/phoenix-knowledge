@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +48,12 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testArticleAllListBySortId(){
-//    	List<Article> list = articleService.articleAllListBySortId(12423041, "", "", "");
-//    	System.out.println("articleList " + list.size());
-//    	for(Article article:list){
-//    		System.out.println(article.getIsNew() + " " + article.getId());
-//    		
-//    	}
+    	List<Article> list = articleService.articleAllListBySortId(12423041, "", "", "");
+    	System.out.println("articleList " + list.size());
+    	for(Article article:list){
+    		System.out.println(article.getIsNew() + " " + article.getId());
+    		
+    	}
     }
     @Test
     public void testExportFileBySortId(){

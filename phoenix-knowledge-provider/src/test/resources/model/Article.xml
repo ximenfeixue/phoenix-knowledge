@@ -28,7 +28,7 @@
 		<result column="categoryid" property="categoryid" jdbcType="BIGINT"/>
 		<result column="articleContent" property="articleContent" jdbcType="VARCHAR"/>
 		<result column="sortId" property="sortId" jdbcType="VARCHAR"/>
-		<result column="categoryName" property="categoryName" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
 		<result column="pubdate" property="pubdate" jdbcType="TIMESTAMP"/>
 		<result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP"/>
 		<result column="essence" property="essence" jdbcType="VARCHAR"/>
@@ -75,7 +75,7 @@
 	</select>
 	<select id="selectList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
 		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
-		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		b.name,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
 		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
 		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
@@ -163,7 +163,7 @@
     
     <select id="selectByParams" resultMap="articleCategoryMap" parameterClass="java.util.Map">
 		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
-		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		b.name,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
 		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
 		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1 and a.recycleBin = '0'
 		<dynamic prepend="and">
@@ -215,7 +215,7 @@
     </delete>
     <select id="selectArticleList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
     	select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
-		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		b.name,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
 		a.clickNum,a.task_id,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
 		 from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">
@@ -267,7 +267,7 @@
     </select>
     <select id="articleAllListBySortId" resultMap="articleCategoryMap" parameterClass="java.util.Map">
         select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
-		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
+		b.name,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
 		a.clickNum,a.task_id ,(a.pubdate - NOW() >= -(50000 * 60) OR a.modifyTime - NOW() >= -(50000 * 60)) as isNew 
 		from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1
 		<dynamic prepend="and">

@@ -39,7 +39,7 @@ public class CategoryServiceTest extends TestBase{
       category.setState("0");
       category.setSubtime(DateFunc.getDate());
       category.setSortId("000000001");
-      category.setCategoryName("测试分类");
+      category.setName("测试分类");
     }
     /**
      * @throws java.lang.Exception
@@ -50,25 +50,25 @@ public class CategoryServiceTest extends TestBase{
 
     @Test
     public void testSelectByPrimaryKey() {
-        assertEquals(categoryService.selectByPrimaryKey(1).getCategoryName(),category.getCategoryName());
+        assertEquals(categoryService.selectByPrimaryKey(1).getName(),category.getName());
     }
     
     @Test
     public void testSelectTreeOfSortByUserid(){
     	List<Category> list = categoryService.selectTreeOfSortByUserid(uid,state);
     	for(Category cat:list){
-    		System.out.println("name:" + cat.getCategoryName() + " sortId:" + cat.getSortId());
+    		System.out.println("name:" + cat.getName() + " sortId:" + cat.getSortId());
     	}
     }
     @Test
     public void testSelectBySortId(){
     	Category cat = categoryService.selectBySortId(uid,"000000001000000001");
-    	System.out.println(cat.getCategoryName() + "  " + cat.getUid());
+    	System.out.println(cat.getName() + "  " + cat.getUid());
     }
     @Test
     public void testInsert(){
     	Category cat = new Category();
-    	cat.setCategoryName("junit测试新增");
+    	cat.setName("junit测试新增");
     	cat.setParentId(1);
     	cat.setState("0");
     	cat.setSubtime(DateFunc.getDate());
@@ -83,7 +83,7 @@ public class CategoryServiceTest extends TestBase{
     public void testSelectCategoryPathBySortId(){
     	Category[] cats = categoryService.selectCategoryPathBySortId(62, "000000001000000001");
     	for (Category cat: cats){
-    		System.out.println(cat.getCategoryName());
+    		System.out.println(cat.getName());
     	}
     }
     
@@ -91,7 +91,7 @@ public class CategoryServiceTest extends TestBase{
     public void testSelectChildBySortId(){
     	List<Category>list = categoryService.selectChildBySortId(62, "");
     	for (Category c: list){
-    		System.out.println(c.getCategoryName() + "   " + c.getSortId());
+    		System.out.println(c.getName() + "   " + c.getSortId());
     	}
     }
 }

@@ -57,11 +57,11 @@ public class Article  implements Serializable{
 	public void setSortId(String sortId) {
 		this.sortId = sortId;
 	}
-	public String getCategoryName() {
-		return categoryName;
+	public String getName() {
+		return name;
 	}
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getPubdate() {
 		return pubdate;
@@ -127,8 +127,8 @@ public class Article  implements Serializable{
 	private long categoryid;
 	/** phoenix_knowledge.tb_category.sortId */
 	private String sortId;
-	/** phoenix_knowledge.tb_category.categoryName */
-	private String categoryName;
+	/** phoenix_knowledge.tb_category.name */
+	private String name;
 	/** 文章发布时间	 */
 	private String pubdate;
 	/** 最后修改时间 */

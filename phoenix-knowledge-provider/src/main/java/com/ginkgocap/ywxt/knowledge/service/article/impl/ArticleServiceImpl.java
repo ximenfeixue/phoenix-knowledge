@@ -176,7 +176,7 @@ public class ArticleServiceImpl implements ArticleService{
 						String allPath = "";
 						String genPath = "";
 						for (Category cat:categories){
-							genPath += "/" + cat.getCategoryName();
+							genPath += "/" + cat.getName();
 						}
 						allPath = sharePath + genPath;
 						File file = new File(allPath);

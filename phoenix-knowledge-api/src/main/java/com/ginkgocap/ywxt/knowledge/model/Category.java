@@ -23,12 +23,6 @@ public class Category implements Serializable {
 	public void setUid(long uid) {
 		this.uid = uid;
 	}
-	public String getCategoryName() {
-		return categoryName;
-	}
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
 	public long getParentId() {
 		return parentId;
 	}
@@ -59,11 +53,17 @@ public class Category implements Serializable {
 	public void setModtime(String modtime) {
 		this.modtime = modtime;
 	}
-	public List<Category> getChildList() {
-		return childList;
+	public String getName() {
+		return name;
 	}
-	public void setChildList(List<Category> childList) {
-		this.childList = childList;
+	public void setName(String name) {
+		this.name = name;
+	}
+	public List<Category> getList() {
+		return list;
+	}
+	public void setList(List<Category> list) {
+		this.list = list;
 	}
 
 
@@ -73,7 +73,7 @@ public class Category implements Serializable {
 	/** phoenix_user.tb_user.id */
 	private long uid;
 	/** 分类名称 */
-	private String categoryName;
+	private String name;
 	/** 父类ID */
 	private long parentId;
 	/** 排序ID，九位一级 如000000001000000001,为一级分类下的第一个分类 */
@@ -85,5 +85,5 @@ public class Category implements Serializable {
 	/** 最后修改时间 */
 	private String modtime;
 	/** 子分类列表 */
-	private List<Category> childList;
+	private List<Category> list;
 }
