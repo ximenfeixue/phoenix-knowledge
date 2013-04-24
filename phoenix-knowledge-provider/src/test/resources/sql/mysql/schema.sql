@@ -1,9 +1,6 @@
 CREATE DATABASE IF NOT EXISTS `phoenix_knowledge`  DEFAULT CHARACTER SET utf8 ;
 
 USE `phoenix_knowledge`;
--- ----------------------------
--- 文章表
--- ----------------------------
 DROP TABLE IF EXISTS `tb_article`;
 CREATE TABLE `tb_article` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -22,16 +19,13 @@ CREATE TABLE `tb_article` (
   `clickNum` bigint(20) DEFAULT NULL COMMENT '文章点击次数',
   `task_id` varchar(765) DEFAULT NULL COMMENT '与文章附件表关联',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table 文章分类表
--- ----------------------------
 DROP TABLE IF EXISTS `tb_category`;
 CREATE TABLE `tb_category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `uid` bigint(20) DEFAULT NULL COMMENT 'phoenix_user.tb_user.id',
-  `categoryName` varchar(255) DEFAULT NULL COMMENT '分类名称',
+  `name` varchar(255) DEFAULT NULL COMMENT '分类名称',
   `parentId` bigint(20) DEFAULT '0' COMMENT '父类ID',
   `sortId` varchar(255) DEFAULT NULL COMMENT '排序ID，九位一级 如000000001000000001,为一级分类下的第一个分类',
   `state` varchar(255) DEFAULT '0' COMMENT '分类状态 0:正常   1:删除',
