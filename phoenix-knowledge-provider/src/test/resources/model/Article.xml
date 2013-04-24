@@ -106,34 +106,17 @@
 				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
 			</isNotNull>  
 		</dynamic>
-		<dynamic prepend="and">
-			<isNotNull  prepend="AND" property="id">
-				1=#id# order by a.id  desc 
-			</isNotNull>
-			<isNotNull  prepend="AND" property="clickNum">
-				2=#clickNum# order by a.clickNum  desc 
-			</isNotNull>
-			<isNotNull  prepend="AND" property="pubdate">
-				3=#pubdate# order by a.pubdate  desc 
-			</isNotNull>
-			<isNotNull  prepend="AND" property="modifyTime">
-				4=#modifyTime# order by a.modifyTime  desc 
-			</isNotNull>
-		</dynamic>
-		limit #start#,#size#
+     	order by #sort# desc limit #start#,#size#
 	</select>
 	
-	<!-- 通过主键找到文章 -->
 	<select id="selectByPrimaryKey" resultMap="articleMap" parameterClass="long">
 		select <include refid="allColumns"/> from tb_article where id= #value# 
 	</select>
 	
-	<!-- 通过Category.Id得到此分类下的文章数量 -->
 	<select id="selectCountByCategoryId" resultClass="long" parameterClass="long">
 		select count(id) from tb_article where categoryid = #categoryid#
 	</select>
 	
-	<!-- 修改文章 -->
 	<update id="update" parameterClass="article">  
         UPDATE tb_article SET  
 			uid=#uid:BIGINT#,
@@ -154,7 +137,6 @@
     </update>
 	
 	
-	<!-- 存入文章 -->
 	<insert id="insert" parameterClass="article">
 		insert into tb_article(
 			uid,author,source,articleTitle,articleContent,categoryid,sortId,pubdate,modifyTime,essence,recycleBin,state,clickNum,task_id
@@ -179,7 +161,6 @@
 		</selectKey>
 	</insert>
     
-    <!-- 文章查询结果列表  -->
     <select id="selectByParams" resultMap="articleCategoryMap" parameterClass="java.util.Map">
 		select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,
@@ -200,7 +181,6 @@
 		</dynamic>
      	order by a.id desc limit #start#,#size#
 	</select>
-	<!-- 统计文章查询后的数量 -->
 	<select id="selectCountByParams" resultClass="long" parameterClass="java.util.Map">
 		select count(a.id) from tb_article a left OUTER join tb_category b on a.categoryid = b.id where 1=1  and a.recycleBin = '0'
 		<dynamic prepend="and">
@@ -217,22 +197,22 @@
 			</isNotNull>
 		</dynamic>
 	</select>
-	<!-- 批量更新文章是否加精状态 -->
 	<update id="updateEssence" parameterClass="java.util.Map">  
         UPDATE tb_article SET 
 			essence=#essence#
         WHERE id IN
         <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
     </update>
-    <!-- 批量删除(进入回收站)或恢复文章 -->
 	<update id="updateRecycleBin" parameterClass="java.util.Map">  
         UPDATE tb_article SET 
 			recycleBin=#recycleBin#
         WHERE id IN
         <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
     </update>
-    
-    <!-- 取到文章列表 -->
+    <delete id="deleteArticles" parameterClass="java.util.Map">  
+        DELETE from tb_article WHERE id IN
+        <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+    </delete>
     <select id="selectArticleList" resultMap="articleCategoryMap" parameterClass="java.util.Map">
     	select a.id,a.uid,a.author,a.source,a.articleTitle,a.categoryid,a.articleContent,a.sortId,
 		b.categoryName,a.pubdate,a.modifyTime,a.essence,a.recycleBin,a.state,

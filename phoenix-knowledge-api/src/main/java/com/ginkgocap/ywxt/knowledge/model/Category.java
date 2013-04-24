@@ -67,7 +67,8 @@ public class Category implements Serializable {
 	}
 
 
-	/** 主键 */
+
+		/** 主键 */
 	private long id;
 	/** phoenix_user.tb_user.id */
 	private long uid;

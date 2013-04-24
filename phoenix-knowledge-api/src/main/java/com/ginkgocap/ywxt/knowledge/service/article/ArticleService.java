@@ -48,6 +48,11 @@ public interface ArticleService {
      */
     void updateRecycleBin(String recycleBin,String[] ids);
     /**
+     * 批量删除文章
+     * @param ids
+     */
+    void deleteArticles(String[] ids);
+    /**
      * 通过文章ID导出此文章生成Doc并下载
      * @param id 
      * @return String

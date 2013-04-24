@@ -65,7 +65,9 @@ public class ArticleServiceTest extends TestBase{
     	System.out.println(article.getModifyTime());
     }
     @Test
-    public void testOpenOffice(){
-
+    public void testDeleteArticles(){
+//    	articleService.deleteArticles(new String[]{"1","2"});
+    	Article a = articleService.selectByPrimaryKey(1);
+    	System.out.println(a == null);
     }
  }

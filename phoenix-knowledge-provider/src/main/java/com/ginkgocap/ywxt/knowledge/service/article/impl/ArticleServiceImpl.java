@@ -334,5 +334,10 @@ public class ArticleServiceImpl implements ArticleService{
 		return null;
 	}
 
+	@Override
+	public void deleteArticles(String[] ids) {
+		articleDao.deleteArticles(ids);
+	}
+
 
 }

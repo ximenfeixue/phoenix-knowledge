@@ -212,4 +212,11 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
         List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectList", map);
         return list;
 	}
+
+	@Override
+	public void deleteArticles(String[] ids) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ids", ids);
+		getSqlMapClientTemplate().update("tb_article.deleteArticles",map);
+	}
 }

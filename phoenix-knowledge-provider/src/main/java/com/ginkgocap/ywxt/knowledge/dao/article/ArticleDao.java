@@ -79,4 +79,9 @@ public interface ArticleDao {
      * @return List<Article>
      */
 	List<Article> selectByParams(long uid, String sortId, String essence,String recycleBin, String keywords, String sort,int pageIndex, int pageSize);
+    /**
+     * 批量删除文章
+     * @param ids
+     */
+	void deleteArticles(String[] ids);
 }
