@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,7 +58,7 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testExportFileBySortId(){
-//    	Map<String,Object>map = articleService.exportFileBySortId(12423041, "","taskId", "", "");
+    	Map<String,Object>map = articleService.exportFileBySortId(12423041, "","taskId", "", "","3");
     }
     @Test
     public void testTask_ID(){

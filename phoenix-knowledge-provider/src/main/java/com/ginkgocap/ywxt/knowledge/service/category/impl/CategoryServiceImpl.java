@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService{
 		return categoryDao.selectByPrimaryKey(id);
 	}
 	@Override
-	public void delete(long id) {
+	public String delete(long id) {
 		Category cat = categoryDao.selectByPrimaryKey(id);
 		//此分类下子分类的个数
 		long childCount = categoryDao.selectChildCountById(id);
@@ -35,8 +35,13 @@ public class CategoryServiceImpl implements CategoryService{
 		if (childCount <= 0){
 			if (articleCount <= 0){
 				categoryDao.delete(id);
+			}else{
+				return "articleNotNull";
 			}
+		}else{
+			return "childNotNull";
 		}
+		return "";
 	}
 	@Override
 	public List<Category> selectTreeOfSortByUserid(long uid, String state) {

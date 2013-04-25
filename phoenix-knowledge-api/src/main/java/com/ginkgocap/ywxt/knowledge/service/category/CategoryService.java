@@ -26,8 +26,9 @@ public interface CategoryService {
     /**
      * 删除类型
      * @param id
+     * @return String
      */
-    void delete(long id);
+    String delete(long id);
     /**
      * 通过phoenix_user.tb_user.id得到此用户下经过树形结构排序的所有分类
      * @param uid

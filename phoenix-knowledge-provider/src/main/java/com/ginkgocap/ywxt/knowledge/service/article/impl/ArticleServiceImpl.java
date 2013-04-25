@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service.article.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,10 +12,12 @@ import java.util.Map;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.URL;
 import com.ginkgocap.ywxt.file.model.FileIndex;
+import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
@@ -38,6 +42,8 @@ public class ArticleServiceImpl implements ArticleService{
     private ArticleDao articleDao;
     @Autowired
     private CategoryDao categoryDao;
+	@Autowired(required=false)
+    private FileIndexService fileIndexService;
 	@Override
 	public Article selectByPrimaryKey(long id) {
 		return articleDao.selectByPrimaryKey(id);
@@ -131,86 +137,126 @@ public class ArticleServiceImpl implements ArticleService{
 		return articles;
 	}
 
+	private File createDir(String path){
+		File f = new File(path);
+		if (!f.exists())f.mkdirs();
+		return f;
+	}
 	
-	@Override
-	public Map<String,Object> exportFileBySortId(long uid, String sortId,String taskId,String recycleBin,String essence) {
+	@Override	
+	public Map<String,Object>exportFileBySortId(long uid, String sortId,String taskId,String recycleBin,String essence,String option){
+		//返回的map信息
 		Map<String, Object> map = new HashMap<String, Object>();
 		//取到系统当前时间
-		String nowDate = new Date().getTime() + "";
-		//生成的word文件路径
-		String sharePath = Content.EXPORTDOCPATH + uid + "/genfile/" + nowDate;
-		//生成word后压缩的的文件路径
-		String zipPath = Content.EXPORTDOCPATH + uid + "/" + nowDate;
-		//下载压缩文件地址
-		String download = "/GENFILE/TEMP/" + uid + "/" + nowDate;
-		//已转黄的文章列表
+		String now = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+		//需要压缩的路径
+		String zipPath = Content.EXPORTDOCPATH + "/GENPATH_" + uid + "/" + now;
+		//压缩输出路径
+		String zipOutPath = Content.EXPORTDOCPATH + "/DOWNLOAD_" + uid + "/" + now;
+		//已导出正确的文章列表
 		List exportArticleList = new ArrayList();
-		//转换时出错的文章列表
+		//导出时出错的文章列表
 		List errorArticleList = new ArrayList();
-		//取到需要导出的文章列表
+		//通过sortId及Uid取到文章列表
 		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
-		//当有文章列表不为空时执行转换操作
-		if (list != null && list.size() > 0){
-				//得到OpenOffice服务端的实例
-				OpenOfficeServer of = OpenOfficeServer.getInstance();
-				OfficeManager om = of.getOfficeManager();
-				//启动OpenOffice服务
-				om.start();
-				//被监听对象
-				ExportWatched watched = new ExportWatched();
-				watched.setTaskId(taskId);
-				watched.setTotal(list.size() + 1);
-				Content.MAP.put(taskId, watched);
-				int k=0;
-				for(Article article:list){
-					boolean flag = false;
-					k++;
-					try{
-						String path = article.getSortId();
-						int len = path.length() / 9;
-						Category[] categories = new Category[len];
-						for(int i = 0 ; i < categories.length; i ++){
-							String pathSortId = path.substring(0 * 9,9 + (i * 9));
-							categories[i] = categoryDao.selectBySortId(uid, pathSortId);
-						}
-						String allPath = "";
-						String genPath = "";
-						for (Category cat:categories){
-							genPath += "/" + cat.getName();
-						}
-						allPath = sharePath + genPath;
-						File file = new File(allPath);
-						if (!file.exists())file.mkdirs();
-						//通过html生成word
-						genDocFile(article,allPath,new OpenOfficeConvert(om));
-						exportArticleList.add(article);
-						flag = true;
-					}catch(Exception e){
-						e.printStackTrace();
-						errorArticleList.add(article);
+		//生成word的文件夹
+		File articleDir = null;
+		//生成附件的文件夹名称
+		File fileDir = null;
+		//若文件列表为空不执行操作，直接返回map信息
+		if(list != null && list.size() > 0){
+			//执行到当前的序号
+			int currentNum = 0;
+			//被监听对象
+			ExportWatched watched = new ExportWatched();
+			//设置监听对象的任务标识
+			watched.setTaskId(taskId);
+			//设置监听任务的工作总数    加1为压缩的任务
+			watched.setTotal(list.size() + 1);
+			//将监听任务存放的Hash表中
+			Content.MAP.put(taskId, watched);
+			//得到OpenOffice服务端的实例
+			OpenOfficeServer of = OpenOfficeServer.getInstance();
+			//得到Office的管理对象以便启动服务
+			OfficeManager om = of.getOfficeManager();
+			//启动OpenOffice服务
+			om.start();
+			if ("1".equals(option)){
+				//创建二级的文章目录
+				articleDir = createDir(zipPath + "/" + "article");
+			}else if ("2".equals(option)){
+				//创建二级的附件目录
+				fileDir = createDir(zipPath + "/" + "file");
+			}else if ("3".equals(option)){
+				//创建二级文章及附件目录
+				articleDir = createDir(zipPath + "/" + "article");
+				fileDir = createDir(zipPath + "/" + "file");
+			}
+			
+			for(Article article:list){
+				//当前任务序号通过文章数量的循环递增
+				currentNum ++;
+				//此篇文章处理的状态true为成功
+				boolean flag = false;
+				try{
+					//当导出文章时生成word的名称为文章标题的名称，当导出附件时，多个附件时一个文章有多个附件时用文件夹存放，文件夹命名为文章
+					String title = article.getArticleTitle();
+					//生成word文件的内容
+					String content = article.getArticleContent();
+					//生成文章包及内容
+					if (articleDir != null){
+						//根据每个文章的分类生成目录
+						File articlepath = genPath(article,articleDir.getPath());
+						//将文档转换到各个分类的目录中
+						genDocFile(article,articlepath.getPath(),new OpenOfficeConvert(om));
 					}
-					watched.changeData(k,article.getArticleTitle(),flag);
-				}
-				//压缩文件
-				try {
-					File zipFile = new File(zipPath);
-					if (!zipFile.exists())zipFile.mkdirs();
-					ZipUtil util = new ZipUtil(zipPath + "/exportfile.zip");
-					util.put(new String[]{sharePath});
-					util.close();
-					map.put("downloadpath", download + "/exportfile.zip");
-					watched.changeData(k + 1,"文件压缩",true);
-					watched.setDownloadPath(download + "/exportfile.zip");
-				} catch (IOException e) {
-					map.put("ziperr", "ziperr");
-					watched.changeData(k + 1,"文件压缩",false);
+					//生成附件包及内容
+					if (fileDir != null){
+						File filepath = genPath(article,fileDir.getPath());
+						List<FileIndex> filelist = fileIndexService.selectByTaskId(taskId, "1");
+					}
+					//将转换完毕的文章对象存放到列表中
+					exportArticleList.add(article);
+					//标志当前文章处理成功
+					flag = true;
+				}catch(Exception e){
+					//将出错的文章增加到列表中
+					errorArticleList.add(article);
 					e.printStackTrace();
 				}
-				om.stop();
-				watched.setDone(true);
-			}else{
-				map.put("noexport", "noexport");
+				watched.changeData(currentNum,article.getArticleTitle(),flag);
+				//压缩文件
+				try {
+					//创建压缩输出的路径
+					createDir(zipOutPath);
+					//初始化压缩工具
+					ZipUtil util = new ZipUtil(zipOutPath + "/exportfile.zip");
+					//压缩文件夹
+					util.put(new String[]{zipPath});
+					//关闭压缩工具流
+					util.close();
+					//设置监听为压缩成功
+					watched.changeData(currentNum + 1,"文件压缩",true);
+					//设置压缩路径到监听对象以便下载使用
+					watched.setDownloadPath(zipOutPath + "/exportfile.zip");
+					//设置整个任务成功
+					map.put("result", "success");
+				} catch (IOException e) {
+					//设置监听为压缩失败
+					watched.changeData(currentNum + 1,"文件压缩",false);
+					//设置整个任务失败
+					map.put("result", "error");
+					e.printStackTrace();
+				}
 			}
+			//停止OpenOffice服务
+			om.stop();
+			//设置整个任务完成
+			watched.setDone(true);
+		}else{
+			//文章列表为空
+			map.put("noexport", "noexport");
+		}
 		//导出的文章
 		map.put("export", exportArticleList);
 		//错误未导出的文章
@@ -218,7 +264,136 @@ public class ArticleServiceImpl implements ArticleService{
 		return map;
 	}
 	
+	
+	
+	
+	
+//	@Override
+//	public Map<String,Object> exportFileBySortIdOld(long uid, String sortId,String taskId,String recycleBin,String essence,String option) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		//取到系统当前时间
+//		String nowDate = new Date().getTime() + "";
+//		//生成的word文件路径
+//		String sharePath = Content.EXPORTDOCPATH + uid + "/genfile/" + nowDate;
+//		//已转黄的文章列表
+//		List exportArticleList = new ArrayList();
+//		//转换时出错的文章列表
+//		List errorArticleList = new ArrayList();
+//		//下载压缩文件地址
+//		String download = "/GENFILE/TEMP/" + uid + "/" + nowDate;
+//		//生成word后压缩的的文件路径
+//		String zipPath = Content.EXPORTDOCPATH + uid + "/" + nowDate;
+//		//取到需要导出的文章列表
+//		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
+//		//得到OpenOffice服务端的实例
+//		OpenOfficeServer of = OpenOfficeServer.getInstance();
+//		OfficeManager om = of.getOfficeManager();
+//		//启动OpenOffice服务
+//		om.start();
+//		//当有文章列表不为空时执行转换操作
+//		if (list != null && list.size() > 0){
+//			//被监听对象
+//			ExportWatched watched = new ExportWatched();
+//			watched.setTaskId(taskId);
+//			watched.setTotal(list.size() + 1);
+//			Content.MAP.put(taskId, watched);
+//			int num = 0;
+//			if ("1".equals(option) || "3".equals(option)){
+//				//导出所有文章或  文章及所有附件
+//				int k=0;
+//				for(Article article:list){
+//					boolean flag = false;
+//					k++;
+//					try{
+//						//根据文章分类生成相应路径
+//						String path = genPath(article,sharePath);
+//						//通过html生成word
+//						genDocFile(article,path,new OpenOfficeConvert(om));
+//						//转换的文档
+//						exportArticleList.add(article);
+//						flag = true;
+//					}catch(Exception e){
+//						//转换错误的文档
+//						errorArticleList.add(article);
+//						e.printStackTrace();
+//					}
+//					watched.changeData(k,article.getArticleTitle(),flag);
+//				}
+//				num = k;
+//				
+//			}else if ("2".equals(option)){
+//				//导出所有附件
+//				int k = 0;
+//				for(Article article:list){
+//					k ++;
+//					//根据文章分类生成相应路径
+//					String path = genPath(article,sharePath);
+//					//通过文章得到文章的附件
+//					List<FileIndex> filelist = fileIndexService.selectByTaskId(article.getTaskId(), "1");
+//					if (filelist != null){
+//						if (filelist.size() > 1){
+//							//若文件数为多个便通过文件名称创建文件夹
+//							File dir = new File(path + "/" + article.getArticleTitle());
+//							if (!dir.exists())dir.mkdirs();
+//							for(FileIndex f:filelist){
+//								File fj = new File(f.getFileTitle());
+//							}
+//						}else{
+//							
+//						}
+//					}
+//				}
+//				num = k;
+//			}
+//			
+//			watched.setDone(true);
+//		}
+//		om.stop();
+//
+//
+//		
+//		//当有文章列表不为空时执行转换操作
+//		if (list != null && list.size() > 0){
+//
+//
+//				
+//
+//				
+//			}else{
+//				map.put("noexport", "noexport");
+//			}
+//		//导出的文章
+//		map.put("export", exportArticleList);
+//		//错误未导出的文章
+//		map.put("errexport", errorArticleList);
+//		return map;
+//	}
+	
 
+	private File genPath(Article article,String sharePath){
+		File f = null;
+		try{
+			//根据文章分类生成相应路径
+			String path = article.getSortId();
+			int len = path.length() / 9;
+			Category[] categories = new Category[len];
+			for(int i = 0 ; i < categories.length; i ++){
+				String pathSortId = path.substring(0 * 9,9 + (i * 9));
+				categories[i] = categoryDao.selectBySortId(article.getUid(), pathSortId);
+			}
+			String genPath = "";
+			for (Category cat:categories){
+				genPath += "/" + cat.getName();
+			}
+			f = this.createDir(sharePath + genPath);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return f;
+	}
+	
+	
+	
 
 	@Override
 	public Map<String,Object> processView(String taskId) {

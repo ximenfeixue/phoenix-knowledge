@@ -73,8 +73,9 @@ public interface ArticleService {
      * @param taskId
      * @param recycleBin 是否包括回收站的文章
      * @param essence
+     * @param option
      */
-	Map<String,Object> exportFileBySortId(long uid,String sortId,String taskId,String recycleBin,String essence);
+	Map<String,Object> exportFileBySortId(long uid,String sortId,String taskId,String recycleBin,String essence,String option);
     /**
      * 导出文章时转换word文件的进度
      */
