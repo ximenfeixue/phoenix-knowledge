@@ -56,8 +56,15 @@ public class CategoryServiceImpl implements CategoryService{
 			String parentSortId = parentId > 0 ? categoryDao.selectByPrimaryKey(parentId).getSortId() : "";
 			//通过parentSortId得到子类最大已添加的sortId
 			String childMaxSortId = categoryDao.selectMaxSortId(category.getUid(), parentSortId);
+			//如果用户第一次添加，将childMaxSortId赋值
+			String newSortId = new String("");
+			if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)){
+				newSortId = "000000001";
+			}else{
+				newSortId = this.generateSortId(childMaxSortId);
+			}
 			//通过已添加的最大的SortId生成新的SortId
-			String newSortId = this.generateSortId(childMaxSortId);
+			
 			//设置最新的sortId
 			category.setSortId(newSortId);
 			//返回存入的对象

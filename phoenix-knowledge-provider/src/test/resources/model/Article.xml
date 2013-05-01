@@ -106,7 +106,7 @@
 				a.sortId like CONCAT (#sortId:VARCHAR#,'%')
 			</isNotNull>  
 		</dynamic>
-     	order by #sort# desc limit #start#,#size#
+     	order by $sort$ desc limit #start#,#size#
 	</select>
 	
 	<select id="selectByPrimaryKey" resultMap="articleMap" parameterClass="long">
@@ -291,5 +291,8 @@
 			</isNotNull>  
 		</dynamic>
 		order by a.sortId
-    </select>      
+    </select>
+    <delete id="cleanRecyle" parameterClass="java.util.Map">
+    	delete from tb_article where uid=#uid:BIGINT# and recycleBin='1'
+    </delete>   
 </sqlMap>

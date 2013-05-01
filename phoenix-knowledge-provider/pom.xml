@@ -432,6 +432,8 @@
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
 				<dubbo.registry.address>zookeeper://192.168.101.88:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>8812</dubbo.protocol.port>
+				<!-- 应用端的挂载配置路径 -->
+				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>
 			</properties>
 		</profile>
 		<profile>
@@ -463,6 +465,8 @@
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
 				<dubbo.registry.address>zookeeper://192.168.101.88:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
+				<!-- 应用端的挂载配置路径 -->
+				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>				
 			</properties>
 			<build>
 				<plugins>
@@ -572,6 +576,8 @@
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
 				<dubbo.registry.address>zookeeper://192.168.101.90:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
+				<!-- 应用端的挂载配置路径 -->
+				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>
 			</properties>
 			<build>
 				<plugins>

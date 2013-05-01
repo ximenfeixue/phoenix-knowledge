@@ -2,17 +2,18 @@ package com.ginkgocap.ywxt.knowledge.service.article.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
+import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.URL;
@@ -24,9 +25,11 @@ import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
 import com.ginkgocap.ywxt.knowledge.util.Content;
+import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
+import com.ginkgocap.ywxt.knowledge.util.ReadProperties;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
@@ -98,15 +101,34 @@ public class ArticleServiceImpl implements ArticleService{
 		return flag;
 	}
 	
-	
+    private String getOfficeHome() {
+        String osName = System.getProperty("os.name");
+         if (Pattern.matches("Linux.*", osName)) {
+            return "/opt/openoffice.org3";
+         } else if (Pattern.matches("Windows.*", osName)) {
+             return "C:/Program Files (x86)/OpenOffice.org 3";
+         } else if (Pattern.matches("Mac.*", osName)) {
+            return "/Application/OpenOffice.org.app/Contents";
+        }
+         return null;
+    }
+    private OfficeManager getOfficeManager() {
+        DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
+       // 获取OpenOffice.org 3的安装目录
+       String officeHome = getOfficeHome();
+       config.setOfficeHome(officeHome);
+        // 启动OpenOffice的服务
+         OfficeManager officeManager = config.buildOfficeManager();
+        officeManager.start();
+       return officeManager;
+     }
 	@Override
 	public String exportArticleById(long id) {
-		String sharePath = "D:/workspace-sts-3.2.0.RELEASE/phoenix-knowledge-web/src/main/webapp/GENFILE/TEMP/";
 		//**************************先从数据库获取文章信息*************************
 		Article article = articleDao.selectByPrimaryKey(id);
 		//*************************先通过取到的文章信息生成HTML文件*************************
 		//生成HTML的路径
-		String htmlPath = sharePath + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "HTML/";
+		String htmlPath = Content.EXPORTDOCPATH  + "/ID_" + id + "/" + article.getSortId() + "/" + "HTML/";
 		//生成HTML的文件名称
 		String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
 		//拼接HTML模板
@@ -118,15 +140,14 @@ public class ArticleServiceImpl implements ArticleService{
 		//生成HTML并返回HTML文件对象
 		File html = gf.genFile(HTML.toString(), htmlPath, htmlFileName);
 		//*************************将生成的HTML文件转换成word文档*************************
-		OfficeManager os = OpenOfficeServer.getInstance().getOfficeManager();
-		os.start();
+		OfficeManager os = this.getOfficeManager();
 		OpenOfficeConvert oc = new OpenOfficeConvert(os);
-		String wordPath = sharePath + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "WORD/";
+		String wordPath =  Content.EXPORTDOCPATH + "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
 		String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, wordPath + wordFileName);
 		os.stop();
 		//*************************若成功生成word，将返回word路径*************************
-		return "/GENFILE/TEMP/" + "UID_62/" + article.getId() + "/" + article.getSortId() + "/" + "WORD/" + URL.encode(wordFileName);
+		return wordPath + URL.encode(wordFileName);
 	}
 
 
@@ -145,6 +166,10 @@ public class ArticleServiceImpl implements ArticleService{
 	
 	@Override	
 	public Map<String,Object>exportFileBySortId(long uid, String sortId,String taskId,String recycleBin,String essence,String option){
+		//dubbo树形文件
+		Properties pro = new ReadProperties().getPro();
+		//得到挂载路径
+		String mountPath = Content.EXPORTMOUNTPATH;
 		//返回的map信息
 		Map<String, Object> map = new HashMap<String, Object>();
 		//取到系统当前时间
@@ -212,8 +237,20 @@ public class ArticleServiceImpl implements ArticleService{
 					}
 					//生成附件包及内容
 					if (fileDir != null){
+						//根据分类生成附件的目录
 						File filepath = genPath(article,fileDir.getPath());
+						//通过文章得到附件列表
 						List<FileIndex> filelist = fileIndexService.selectByTaskId(taskId, "1");
+						
+						if (filelist != null){
+							//已文章标题创建文件夹存放附件
+							File articleFilePath = this.createDir(filepath.getParent() + "/" + article.getArticleTitle() + "_ID" + article.getId());
+							//将挂载点的文件拷贝到包中
+							for(FileIndex f:filelist){
+								//将文件拷贝到目录中
+								CopyFile.copyFile(new File(mountPath + f.getFilePath()), new File(articleFilePath.getPath() + f.getFileTitle()));
+							}
+						}
 					}
 					//将转换完毕的文章对象存放到列表中
 					exportArticleList.add(article);
@@ -407,6 +444,16 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public void deleteArticles(String[] ids) {
 		articleDao.deleteArticles(ids);
+	}
+
+	@Override
+	public void updateEssence(String[] ids, String essence) {
+		articleDao.updateEssence(essence, ids);
+	}
+
+	@Override
+	public void cleanRecyle(long uid) {
+		articleDao.cleanRecyle(uid);
 	}
 
 

@@ -197,15 +197,17 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		if(StringUtils.isNotBlank(keywords))
         	map.put("keywords", keywords);
 		if(StringUtils.isNotBlank(sort)){
-			if ("clickNum".equalsIgnoreCase(sort)){
-				map.put("clickNum", "2");
-			}else if ("pubdate".equalsIgnoreCase(sort)){
-				map.put("pubdate", "3");
-			}else if ("modifyTime".equalsIgnoreCase(sort)){
-				map.put("modifyTime", "4");
-			}
-		}else{
-			map.put("id", "1");
+//			if ("clickNum".equalsIgnoreCase(sort)){
+//				map.put("sort", "clickNum");
+//			}else if ("pubdate".equalsIgnoreCase(sort)){
+//				map.put("sort", "pubdate");
+//			}else if ("modifyTime".equalsIgnoreCase(sort)){
+//				map.put("sort", "modifyTime");
+//			}else if ("id".equalsIgnoreCase(sort)){
+//				map.put("sort", "articleId");
+//			}
+//			
+			map.put("sort", sort);
 		}
         map.put("start", start);
         map.put("size", size);
@@ -218,5 +220,12 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ids", ids);
 		getSqlMapClientTemplate().update("tb_article.deleteArticles",map);
+	}
+
+	@Override
+	public void cleanRecyle(long uid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("uid", uid);
+		getSqlMapClientTemplate().update("tb_article.cleanRecyle",map);
 	}
 }

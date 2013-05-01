@@ -116,6 +116,26 @@ public interface ArticleService {
      * @return List<Article>
      */
 	List<Article> list(long uid, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
-	
+    /**
+     * 将文章导入categoryid分类下
+     * @param uid 
+     * @param categoryId
+     * @param fileList
+     * @param taskId
+     * @param essence
+     * @param option
+     * @return Map<String, Object>
+     */
 	Map<String, Object> importFileBySortId(long uid, long categoryId,List<FileIndex> fileList, String taskId);
+    /**
+     * 批量更新是否加精
+     * @param ids
+     * @param essence
+     */
+	void updateEssence(String[] ids, String essence);
+    /**
+     * 根据用户id清除此用户下回收站的文章
+     * @param uid
+     */
+	void cleanRecyle(long uid);
 }

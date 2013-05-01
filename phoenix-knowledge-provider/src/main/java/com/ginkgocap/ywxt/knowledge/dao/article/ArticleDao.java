@@ -84,4 +84,9 @@ public interface ArticleDao {
      * @param ids
      */
 	void deleteArticles(String[] ids);
+    /**
+     * 删除某用户下的回收站文章
+     * @param uid
+     */
+	void cleanRecyle(long uid);
 }

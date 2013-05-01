@@ -73,4 +73,12 @@ public class ArticleServiceTest extends TestBase{
     	Article a = articleService.selectByPrimaryKey(1);
     	System.out.println(a == null);
     }
+    
+    @Test
+    public void testList(){
+    	List<Article> list = articleService.list(uid, "", "", "", "", "id", 1, 10);
+    	for (Article a: list){
+    		System.out.println(a.getId() + "    " + a.getClickNum() + "    "  + a.getArticleTitle());
+    	}
+    }
  }
