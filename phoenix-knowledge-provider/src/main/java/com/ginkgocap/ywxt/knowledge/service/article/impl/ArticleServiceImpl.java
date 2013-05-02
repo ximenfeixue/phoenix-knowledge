@@ -35,6 +35,7 @@ import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.process.ImportWatched;
+import com.ginkgocap.ywxt.knowledge.util.process.ImportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -175,9 +176,9 @@ public class ArticleServiceImpl implements ArticleService{
 		//取到系统当前时间
 		String now = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
 		//需要压缩的路径
-		String zipPath = Content.EXPORTDOCPATH + "/GENPATH_" + uid + "/" + now;
+		String zipPath = Content.WEBSERVERPATH + "/" + Content.EXPORTDOCPATH + "/GENPATH_" + uid + "/" + now;
 		//压缩输出路径
-		String zipOutPath = Content.EXPORTDOCPATH + "/DOWNLOAD_" + uid + "/" + now;
+		String zipOutPath = Content.WEBSERVERPATH + "/" + Content.EXPORTDOCPATH + "/DOWNLOAD_" + uid + "/" + now;
 		//已导出正确的文章列表
 		List exportArticleList = new ArrayList();
 		//导出时出错的文章列表
@@ -226,8 +227,6 @@ public class ArticleServiceImpl implements ArticleService{
 				try{
 					//当导出文章时生成word的名称为文章标题的名称，当导出附件时，多个附件时一个文章有多个附件时用文件夹存放，文件夹命名为文章
 					String title = article.getArticleTitle();
-					//生成word文件的内容
-					String content = article.getArticleContent();
 					//生成文章包及内容
 					if (articleDir != null){
 						//根据每个文章的分类生成目录
@@ -244,7 +243,7 @@ public class ArticleServiceImpl implements ArticleService{
 						
 						if (filelist != null){
 							//已文章标题创建文件夹存放附件
-							File articleFilePath = this.createDir(filepath.getParent() + "/" + article.getArticleTitle() + "_ID" + article.getId());
+							File articleFilePath = this.createDir(filepath.getParent() + "/" + title + "_ID" + article.getId());
 							//将挂载点的文件拷贝到包中
 							for(FileIndex f:filelist){
 								//将文件拷贝到目录中
@@ -262,29 +261,29 @@ public class ArticleServiceImpl implements ArticleService{
 					e.printStackTrace();
 				}
 				watched.changeData(currentNum,article.getArticleTitle(),flag);
-				//压缩文件
-				try {
-					//创建压缩输出的路径
-					createDir(zipOutPath);
-					//初始化压缩工具
-					ZipUtil util = new ZipUtil(zipOutPath + "/exportfile.zip");
-					//压缩文件夹
-					util.put(new String[]{zipPath});
-					//关闭压缩工具流
-					util.close();
-					//设置监听为压缩成功
-					watched.changeData(currentNum + 1,"文件压缩",true);
-					//设置压缩路径到监听对象以便下载使用
-					watched.setDownloadPath(zipOutPath + "/exportfile.zip");
-					//设置整个任务成功
-					map.put("result", "success");
-				} catch (IOException e) {
-					//设置监听为压缩失败
-					watched.changeData(currentNum + 1,"文件压缩",false);
-					//设置整个任务失败
-					map.put("result", "error");
-					e.printStackTrace();
-				}
+			}
+			//压缩文件
+			try {
+				//创建压缩输出的路径
+				createDir(zipOutPath);
+				//初始化压缩工具
+				ZipUtil util = new ZipUtil(zipOutPath + "/exportfile.zip");
+				//压缩文件夹
+				util.put(new String[]{zipPath});
+				//关闭压缩工具流
+				util.close();
+				//设置监听为压缩成功
+				watched.changeData(currentNum + 1,"文件压缩",true);
+				//设置压缩路径到监听对象以便下载使用
+				watched.setDownloadPath(zipOutPath + "/exportfile.zip");
+				//设置整个任务成功
+				map.put("result", "success");
+			} catch (IOException e) {
+				//设置监听为压缩失败
+				watched.changeData(currentNum + 1,"文件压缩",false);
+				//设置整个任务失败
+				map.put("result", "error");
+				e.printStackTrace();
 			}
 			//停止OpenOffice服务
 			om.stop();
@@ -379,7 +378,7 @@ public class ArticleServiceImpl implements ArticleService{
 					String Articleitle = file.getFileTitle();
 					//将文件作者存入为文章作者
 					String author = file.getAuthorName();
-					//将taskId设置为文章的taskId
+					//生成需要转换的html
 					genHtmlFile(new File(file.getFilePath()),HtmlPath,oc);
 					//得到内容
 					String content = oc.getHTML(new File(HtmlPath));
@@ -405,8 +404,10 @@ public class ArticleServiceImpl implements ArticleService{
 					errorFileList.add(file);
 					e.printStackTrace();
 				}
+				file.setStatus(true);
 				watched.changeData(k,file.getId(),flag);
 			}
+			fileIndexService.update(fileList);
 			om.stop();
 		}else{
 			map.put("noimport", "noimport");
@@ -414,10 +415,28 @@ public class ArticleServiceImpl implements ArticleService{
 		return map;
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public String importProcess(String taskId) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String,Object> map = new HashMap<String,Object>();
+		//从hash表中得到被监听的对象
+		ImportWatched watched = (ImportWatched)Content.MAP.get(taskId);
+		//通过被监听对象初始化监听对象
+		ImportWatcher w = new ImportWatcher(watched);
+		//得到被监听对象状态
+		w.update(watched, "");
+		//假如事务完成则从Hash表中清楚被监听对象
+		if (watched.isDone()){
+			Content.MAP.remove(taskId);
+			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
+		}
+		return w.getMes();
 	}
 	
 	

@@ -26,7 +26,7 @@ public class CategoryServiceTest extends TestBase{
     @Autowired
     private CategoryService categoryService;
     
-    private long uid = 62;
+    private long uid = 10000;
     
     private String state = "0";
     
