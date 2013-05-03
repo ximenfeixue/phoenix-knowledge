@@ -44,14 +44,15 @@ public class OpenOfficeConvert {
 			}
 			br.close();
 			// 删除临时文件      
-			HTML.delete();
+			//HTML.delete();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// HTML文件字符串   
-		String htmlStr = htmlSb.toString();
+		String htmlStr =  "";
+		htmlStr = htmlSb.toString();
 		System.out.println(htmlStr);
 		// 返回经过清洁的html文本    
 		return clearFormat(htmlStr, HTML.getPath());
