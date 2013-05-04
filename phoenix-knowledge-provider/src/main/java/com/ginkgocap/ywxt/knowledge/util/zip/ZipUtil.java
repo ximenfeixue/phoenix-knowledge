@@ -15,7 +15,7 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
- * ÎÄ¼şÑ¹ËõÀà
+ * æ–‡ä»¶å‹ç¼©ç±»
  * 
  * @author lk
  * @version 2013-04-11
@@ -35,19 +35,19 @@ public class ZipUtil extends ZipOutputStream {
 		this(new FileOutputStream(file), defaultEncoding, defaultLevel);
 	}
 	/**
-	 * Í³Ò»µ÷ÓÃµÄ¹¹Ôìº¯Êı
+	 * ç»Ÿä¸€è°ƒç”¨çš„æ„é€ å‡½æ•°
 	 * 
 	 * @param outputStream
-	 *            Êä³öÁ÷(Êä³öÂ·¾¶),*.zip
+	 *            è¾“å‡ºæµ(è¾“å‡ºè·¯å¾„),*.zip
 	 * @param encoding
-	 *            ±àÂë
+	 *            ç¼–ç 
 	 * @param level
-	 *            Ñ¹Ëõ¼¶±ğ 0-9
+	 *            å‹ç¼©çº§åˆ« 0-9
 	 * */
 	public ZipUtil(OutputStream outputStream, String encoding, int level) {
 		super(outputStream);
 
-		buf = new byte[1024];// 1024 KB»º³å
+		buf = new byte[1024];// 1024 KBç¼“å†²
 
 		if (encoding != null || !"".equals(encoding))
 			this.setEncoding(encoding);
@@ -64,25 +64,25 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	/**
-	 * ¼ÓÈëÒªÑ¹ËõµÄÎÄ¼ş»òÎÄ¼ş¼Ğ
+	 * åŠ å…¥è¦å‹ç¼©çš„æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹
 	 * 
 	 * @param fileName
-	 *            ¼ÓÈëÒ»¸öÎÄ¼ş,»òÒ»¸öÎÄ¼ş¼Ğ
+	 *            åŠ å…¥ä¸€ä¸ªæ–‡ä»¶,æˆ–ä¸€ä¸ªæ–‡ä»¶å¤¹
 	 * @param pathName
-	 *            Éú³ÉZIPÊ±¼ÓµÄÎÄ¼ş¼ĞÂ·¾¶
+	 *            ç”ŸæˆZIPæ—¶åŠ çš„æ–‡ä»¶å¤¹è·¯å¾„
 	 * @return fileName
 	 * */
 	public String put(String fileName, String pathName) throws IOException {
 		File file = new File(fileName);
 
 		if (!file.exists()) {
-			comment.append("·¢ÏÖÒ»¸ö²»´æÔÚµÄÎÄ¼ş»òÄ¿Â¼: ").append(fileName).append("\n");
+			comment.append("å‘ç°ä¸€ä¸ªä¸å­˜åœ¨çš„æ–‡ä»¶æˆ–ç›®å½•: ").append(fileName).append("\n");
 			return null;
 		}
 
-		// µİ¹é¼ÓÈëÎÄ¼ş
+		// é€’å½’åŠ å…¥æ–‡ä»¶
 		if (file.isDirectory()) {
-			pathName += file.getName() + "/";
+			pathName += file.getName() + File.separator;
 			String fileNames[] = file.list();
 			if (fileNames != null) {
 				for (String f : fileNames)
@@ -104,11 +104,11 @@ public class ZipUtil extends ZipOutputStream {
 				pathName += file.getPath();
 			this.putNextEntry(new ZipEntry(pathName + file.getName()));
 			int len;
-			// BufferedOutputStream»á×Ô¶¯Ê¹ÓÃ this.buf,Èç¹ûÔÙÊ¹ÓÃin.read(buf)Êı¾İ»á´íÎó
+			// BufferedOutputStreamä¼šè‡ªåŠ¨ä½¿ç”¨ this.buf,å¦‚æœå†ä½¿ç”¨in.read(buf)æ•°æ®ä¼šé”™è¯¯
 			while ((len = in.read()) > -1)
 				out.write(len);
 		} catch (IOException ex) {
-			comment.append("Ò»¸öÎÄ¼ş¶ÁÈ¡Ğ´ÈëÊ±´íÎó: ").append(fileName).append("\n");
+			comment.append("ä¸€ä¸ªæ–‡ä»¶è¯»å–å†™å…¥æ—¶é”™è¯¯: ").append(fileName).append("\n");
 		}
 
 		if (out != null)
@@ -147,7 +147,7 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	/**
-	 * Ñ¹ËõµÄÎÄ¼ş¸öÊı
+	 * å‹ç¼©çš„æ–‡ä»¶ä¸ªæ•°
 	 * 
 	 * @return int
 	 * */
@@ -156,13 +156,13 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	
-	// ²âÊÔ
+	// æµ‹è¯•
 	public static void main(String[] args) {
 		try {
 			java.util.Date d1 = new java.util.Date();
 			ZipUtil util = new ZipUtil("D:/GENPATH_10000/zip.zip");
-			// util.buf = new byte[1024*2]; //¿ÉÒÔÖ¸¶¨»º´æ
-			util.comment.append("±¨±íÅúÁ¿ÏÂÔØ!\n\n");
+			// util.buf = new byte[1024*2]; //å¯ä»¥æŒ‡å®šç¼“å­˜
+			util.comment.append("æŠ¥è¡¨æ‰¹é‡ä¸‹è½½!\n\n");
 //			File file = new File("D:/GENPATH_10000/2013-05-03-17-32-51");
 //			File[] files = file.listFiles();
 //			String[] fileNames = new String[files.length];
@@ -170,8 +170,8 @@ public class ZipUtil extends ZipOutputStream {
 //				fileNames[i] = files[i].getPath();
 //			}
 			util.put(new String[]{"D:/GENPATH_10000/2013-05-03-17-32-51"});
-			util.comment.append("\n¹²³É¹¦Ñ¹ËõÎÄ¼ş: ").append(util.getFileCount())
-					.append(" ¸ö!");
+			util.comment.append("\nå…±æˆåŠŸå‹ç¼©æ–‡ä»¶: ").append(util.getFileCount())
+					.append(" ä¸ª!");
 			util.setComment(util.comment.toString());
 			util.close();
 			java.util.Date d2 = new java.util.Date();
@@ -183,13 +183,13 @@ public class ZipUtil extends ZipOutputStream {
 	
 	
 	private List fileList = new ArrayList();
-	// Ñ¹Ëõ¼¶±ğ:0-9
+	// å‹ç¼©çº§åˆ«:0-9
 	public static int defaultLevel = 7;
-	// ±àÂë,¼òÌå:GB2312,·±Ìå:BIG5
+	// ç¼–ç ,ç®€ä½“:GB2312,ç¹ä½“:BIG5
 	public static String defaultEncoding = "UTF-8";
-	// Ñ¹ËõÊ±ÓÃÈ«Â·¾¶,»áÉú³É¶ÔÓ¦µÄÄ¿Â¼,false:²»´øÂ·¾¶,Ö»ÓĞÎÄ¼şÃû
+	// å‹ç¼©æ—¶ç”¨å…¨è·¯å¾„,ä¼šç”Ÿæˆå¯¹åº”çš„ç›®å½•,false:ä¸å¸¦è·¯å¾„,åªæœ‰æ–‡ä»¶å
 	public static boolean userFullPathName = false;
-	// ×¢ÊÍ
+	// æ³¨é‡Š
 	public StringBuffer comment;
 
 	private int fileCount = 0;
