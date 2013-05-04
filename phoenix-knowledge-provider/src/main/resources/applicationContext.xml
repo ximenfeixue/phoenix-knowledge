@@ -34,7 +34,6 @@
 			<list>
 				<value>classpath:dubbo.properties</value>
 			</list>
-
 		</property>
 	</bean>
 

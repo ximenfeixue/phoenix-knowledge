@@ -44,7 +44,7 @@ public class OpenOfficeConvert {
 			}
 			br.close();
 			// 删除临时文件      
-			//HTML.delete();
+			HTML.delete();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

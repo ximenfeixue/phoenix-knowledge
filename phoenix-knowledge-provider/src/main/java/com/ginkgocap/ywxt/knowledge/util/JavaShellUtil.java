@@ -33,7 +33,7 @@ public class JavaShellUtil {
 			stringBuffer.append(dateFormat.format(new Date())).append("准备执行Shell命令 ")
 			.append(this.shellPath + "/" + this.shellName).append(" \r\n");
 			Process pid = null;
-			String[] cmd = { "/bin/sh", "-c", shellPath + "/" + shellName,this.paths,this.genPath};
+			String[] cmd = {shellPath + "/" + shellName,this.paths,this.genPath};
 			// 执行Shell命令
 			pid = Runtime.getRuntime().exec(cmd);
 			if (pid != null) {
@@ -45,10 +45,6 @@ public class JavaShellUtil {
             is = pid.getInputStream();
             ir = new InputStreamReader(is);
             bufferedReader = new BufferedReader(ir);
-            
-            
-            
-            
             
 			stringBuffer.append(dateFormat.format(new Date())).append("Shell命令执行完毕\r\n执行结果为：\r\n");
 			String line = null;

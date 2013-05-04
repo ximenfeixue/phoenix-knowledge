@@ -28,7 +28,6 @@ import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
-import com.ginkgocap.ywxt.knowledge.util.OpenOfficeServer;
 import com.ginkgocap.ywxt.knowledge.util.ReadProperties;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
@@ -79,17 +78,17 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	private String genDocFile(Article article,String path,OpenOfficeConvert oc){
+		String title  = article.getArticleTitle();
+		String content = article.getArticleContent();
 		String flag = "";
-		//******************************************************************Éú³ÉHTMLµÄÎÄ¼şÃû³Æ
+		//******************************************************************ç”ŸæˆHTMLçš„æ–‡ä»¶åç§°
 		String htmlFileName = article.getId() + "_" + article.getArticleTitle() + ".html";
-		//Æ´½ÓHTMLÄ£°å
-		StringBuffer HTML = new StringBuffer("");
-		HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE, article.getArticleTitle())
-				   .replaceAll(HTMLTemplate.ARTICLE_CONTENT, article.getArticleContent()));
-		//htmlÉú³É¶ÔÏó
+		//æ‹¼æ¥HTMLæ¨¡æ¿
+		HTMLTemplate ht = new HTMLTemplate();
+		//htmlç”Ÿæˆå¯¹è±¡
 		GenFile gf = new GenHTML();
-		//Éú³ÉHTML²¢·µ»ØHTMLÎÄ¼ş¶ÔÏó
-		File html = gf.genFile(HTML.toString(), path + "/", htmlFileName);
+		//ç”ŸæˆHTMLå¹¶è¿”å›HTMLæ–‡ä»¶å¯¹è±¡
+		File html = gf.genFile(ht.getTemplate(article), path + "/", htmlFileName);
 		String wordFileName = article.getId() + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, path + "/" + wordFileName);
 		html.delete();
@@ -115,48 +114,52 @@ public class ArticleServiceImpl implements ArticleService{
     }
     private OfficeManager getOfficeManager() {
        DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
-       // »ñÈ¡OpenOffice.org 3µÄ°²×°Ä¿Â¼
+       // è·å–OpenOffice.org 3çš„å®‰è£…ç›®å½•
        String officeHome = getOfficeHome();
-       //ÉèÖÃopenoffice°²×°Ä¿Â¼
+       //è®¾ç½®openofficeå®‰è£…ç›®å½•
        config.setOfficeHome(officeHome);
-       //ÉèÖÃ×ª»»¶Ë¿Ú£¬Ä¬ÈÏÎª8100 
+       //è®¾ç½®è½¬æ¢ç«¯å£ï¼Œé»˜è®¤ä¸º8100 
        config.setPortNumbers(8100);
-       //ÉèÖÃÈÎÎñÖ´ĞĞ³¬Ê±Îª5·ÖÖÓ  
+       //è®¾ç½®ä»»åŠ¡æ‰§è¡Œè¶…æ—¶ä¸º5åˆ†é’Ÿ  
        config.setTaskExecutionTimeout(1000 * 60 * 5L);
-       //ÉèÖÃÈÎÎñ¶ÓÁĞ³¬Ê±Îª24Ğ¡Ê±  
+       //è®¾ç½®ä»»åŠ¡é˜Ÿåˆ—è¶…æ—¶ä¸º24å°æ—¶  
        config.setTaskQueueTimeout(1000 * 60 * 60 * 24L);
-       // Æô¶¯OpenOfficeµÄ·şÎñ
+       // å¯åŠ¨OpenOfficeçš„æœåŠ¡
        OfficeManager officeManager = config.buildOfficeManager();
-       //Æô¶¯ÈÎÎñ
+       //å¯åŠ¨ä»»åŠ¡
        officeManager.start();
        return officeManager;
      }
 	@Override
 	public String exportArticleById(long id) {
-		//**************************ÏÈ´ÓÊı¾İ¿â»ñÈ¡ÎÄÕÂĞÅÏ¢*************************
+		//**************************å…ˆä»æ•°æ®åº“è·å–æ–‡ç« ä¿¡æ¯*************************
 		Article article = articleDao.selectByPrimaryKey(id);
-		//*************************ÏÈÍ¨¹ıÈ¡µ½µÄÎÄÕÂĞÅÏ¢Éú³ÉHTMLÎÄ¼ş*************************
-		//Éú³ÉHTMLµÄÂ·¾¶
+		//*************************å…ˆé€šè¿‡å–åˆ°çš„æ–‡ç« ä¿¡æ¯ç”ŸæˆHTMLæ–‡ä»¶*************************
+		//ç”ŸæˆHTMLçš„è·¯å¾„
 		String htmlPath = Content.EXPORTDOCPATH  + "/ID_" + id + "/" + article.getSortId() + "/" + "HTML/";
-		//Éú³ÉHTMLµÄÎÄ¼şÃû³Æ
+		//ç”ŸæˆHTMLçš„æ–‡ä»¶åç§°
 		String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
-		//Æ´½ÓHTMLÄ£°å
-		StringBuffer HTML = new StringBuffer("");
-		HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE, article.getArticleTitle())
-											   .replaceAll(HTMLTemplate.ARTICLE_CONTENT, article.getArticleContent()));
-		//htmlÉú³É¶ÔÏó
+		//æ‹¼æ¥HTMLæ¨¡æ¿
+//		StringBuffer HTML = new StringBuffer("");
+//		HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE, article.getArticleTitle())
+//											   .replaceAll(HTMLTemplate.ARTICLE_CONTENT, article.getArticleContent()));
+		HTMLTemplate ht = new HTMLTemplate();
+		//htmlç”Ÿæˆå¯¹è±¡
 		GenFile gf = new GenHTML();
-		//Éú³ÉHTML²¢·µ»ØHTMLÎÄ¼ş¶ÔÏó
-		File html = gf.genFile(HTML.toString(), htmlPath, htmlFileName);
-		//*************************½«Éú³ÉµÄHTMLÎÄ¼ş×ª»»³ÉwordÎÄµµ*************************
+		//ç”ŸæˆHTMLå¹¶è¿”å›HTMLæ–‡ä»¶å¯¹è±¡
+		File html = gf.genFile(ht.getTemplate(article), htmlPath, htmlFileName);
+		//*************************å°†ç”Ÿæˆçš„HTMLæ–‡ä»¶è½¬æ¢æˆwordæ–‡æ¡£*************************
 		OfficeManager os = this.getOfficeManager();
 		OpenOfficeConvert oc = new OpenOfficeConvert(os);
-		String wordPath =  Content.EXPORTDOCPATH + "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
+		//wordç”Ÿæˆè·¯å¾„
+		String wordPath =  Content.WEBSERVERPATH + Content.EXPORTDOCPATH + "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
+		//è¿”å›ä¸‹è½½è·¯å¾„
+		String download = Content.EXPORTDOCPATH + "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
 		String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, wordPath + wordFileName);
 		os.stop();
-		//*************************Èô³É¹¦Éú³Éword£¬½«·µ»ØwordÂ·¾¶*************************
-		return wordPath + URL.encode(wordFileName);
+		//*************************è‹¥æˆåŠŸç”Ÿæˆwordï¼Œå°†è¿”å›wordè·¯å¾„*************************
+		return download + URL.encode(wordFileName);
 	}
 
 
@@ -177,142 +180,148 @@ public class ArticleServiceImpl implements ArticleService{
 	
 	@Override	
 	public Map<String,Object>exportFileBySortId(long uid, String sortId,String taskId,String recycleBin,String essence,String option){
-		//dubboÊ÷ĞÎÎÄ¼ş
+		//dubboæ ‘å½¢æ–‡ä»¶
 		Properties pro = new ReadProperties().getPro();
-		//µÃµ½¹ÒÔØÂ·¾¶
+		//å¾—åˆ°æŒ‚è½½è·¯å¾„
 		String mountPath = Content.EXPORTMOUNTPATH;
-		//·µ»ØµÄmapĞÅÏ¢
+		//è¿”å›çš„mapä¿¡æ¯
 		Map<String, Object> map = new HashMap<String, Object>();
-		//È¡µ½ÏµÍ³µ±Ç°Ê±¼ä
+		//å–åˆ°ç³»ç»Ÿå½“å‰æ—¶é—´
 		String now = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
-		//ĞèÒªÑ¹ËõµÄÂ·¾¶
+		//éœ€è¦å‹ç¼©çš„è·¯å¾„
 		String zipPath = Content.WEBSERVERPATH  + Content.EXPORTDOCPATH + "/GENPATH_" + uid + "/" + now;
-		//Ñ¹ËõÊä³öÂ·¾¶
+		//å‹ç¼©è¾“å‡ºè·¯å¾„
 		String zipOutPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH + "/DOWNLOAD_" + uid + "/" + now;
-		//ÏÂÔØµØÖ·
+		//ä¸‹è½½åœ°å€
 		String downloadPath = Content.EXPORTDOCPATH + "/DOWNLOAD_" + uid + "/" + now;
-		//ÒÑµ¼³öÕıÈ·µÄÎÄÕÂÁĞ±í
+		//å·²å¯¼å‡ºæ­£ç¡®çš„æ–‡ç« åˆ—è¡¨
 		List exportArticleList = new ArrayList();
-		//µ¼³öÊ±³ö´íµÄÎÄÕÂÁĞ±í
+		//å¯¼å‡ºæ—¶å‡ºé”™çš„æ–‡ç« åˆ—è¡¨
 		List errorArticleList = new ArrayList();
-		//Í¨¹ısortId¼°UidÈ¡µ½ÎÄÕÂÁĞ±í
+		//é€šè¿‡sortIdåŠUidå–åˆ°æ–‡ç« åˆ—è¡¨
 		List<Article> list = articleDao.articleAllListBySortId(uid, sortId, recycleBin,essence);
-		//Éú³ÉwordµÄÎÄ¼ş¼Ğ
+		//ç”Ÿæˆwordçš„æ–‡ä»¶å¤¹
 		File articleDir = null;
-		//Éú³É¸½¼şµÄÎÄ¼ş¼ĞÃû³Æ
+		//ç”Ÿæˆé™„ä»¶çš„æ–‡ä»¶å¤¹åç§°
 		File fileDir = null;
-		//ÈôÎÄ¼şÁĞ±íÎª¿Õ²»Ö´ĞĞ²Ù×÷£¬Ö±½Ó·µ»ØmapĞÅÏ¢
+		//è‹¥æ–‡ä»¶åˆ—è¡¨ä¸ºç©ºä¸æ‰§è¡Œæ“ä½œï¼Œç›´æ¥è¿”å›mapä¿¡æ¯
 		if(list != null && list.size() > 0){
-			//Ö´ĞĞµ½µ±Ç°µÄĞòºÅ
+			//æ‰§è¡Œåˆ°å½“å‰çš„åºå·
 			int currentNum = 0;
-			//±»¼àÌı¶ÔÏó
+			//è¢«ç›‘å¬å¯¹è±¡
 			ExportWatched watched = new ExportWatched();
-			//ÉèÖÃ¼àÌı¶ÔÏóµÄÈÎÎñ±êÊ¶
+			//è®¾ç½®ç›‘å¬å¯¹è±¡çš„ä»»åŠ¡æ ‡è¯†
 			watched.setTaskId(taskId);
-			//ÉèÖÃ¼àÌıÈÎÎñµÄ¹¤×÷×ÜÊı    ¼Ó1ÎªÑ¹ËõµÄÈÎÎñ
+			//è®¾ç½®ç›‘å¬ä»»åŠ¡çš„å·¥ä½œæ€»æ•°    åŠ 1ä¸ºå‹ç¼©çš„ä»»åŠ¡
 			watched.setTotal(list.size() + 1);
-			//½«¼àÌıÈÎÎñ´æ·ÅµÄHash±íÖĞ
+			//å°†ç›‘å¬ä»»åŠ¡å­˜æ”¾çš„Hashè¡¨ä¸­
 			Content.MAP.put(taskId, watched);
-//			//µÃµ½OpenOffice·şÎñ¶ËµÄÊµÀı
+//			//å¾—åˆ°OpenOfficeæœåŠ¡ç«¯çš„å®ä¾‹
 //			OpenOfficeServer of = OpenOfficeServer.getInstance();
-			//µÃµ½OfficeµÄ¹ÜÀí¶ÔÏóÒÔ±ãÆô¶¯·şÎñ
+			//å¾—åˆ°Officeçš„ç®¡ç†å¯¹è±¡ä»¥ä¾¿å¯åŠ¨æœåŠ¡
 			DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
-			// »ñÈ¡OpenOffice.org 3µÄ°²×°Ä¿Â¼
+			// è·å–OpenOffice.org 3çš„å®‰è£…ç›®å½•
 			String officeHome = getOfficeHome();
 			config.setOfficeHome(officeHome);
-			// Æô¶¯OpenOfficeµÄ·şÎñ
+			// å¯åŠ¨OpenOfficeçš„æœåŠ¡
 			OfficeManager om = config.buildOfficeManager();
-			//Æô¶¯OpenOffice·şÎñ
+			//å¯åŠ¨OpenOfficeæœåŠ¡
 			om.start();
 			if ("1".equals(option)){
-				//´´½¨¶ş¼¶µÄÎÄÕÂÄ¿Â¼
+				//åˆ›å»ºäºŒçº§çš„æ–‡ç« ç›®å½•
 				articleDir = createDir(zipPath + "/" + "article");
 			}else if ("2".equals(option)){
-				//´´½¨¶ş¼¶µÄ¸½¼şÄ¿Â¼
+				//åˆ›å»ºäºŒçº§çš„é™„ä»¶ç›®å½•
 				fileDir = createDir(zipPath + "/" + "file");
 			}else if ("3".equals(option)){
-				//´´½¨¶ş¼¶ÎÄÕÂ¼°¸½¼şÄ¿Â¼
+				//åˆ›å»ºäºŒçº§æ–‡ç« åŠé™„ä»¶ç›®å½•
 				articleDir = createDir(zipPath + "/" + "article");
 				fileDir = createDir(zipPath + "/" + "file");
 			}
 			
 			for(Article article:list){
-				//µ±Ç°ÈÎÎñĞòºÅÍ¨¹ıÎÄÕÂÊıÁ¿µÄÑ­»·µİÔö
+				//å½“å‰ä»»åŠ¡åºå·é€šè¿‡æ–‡ç« æ•°é‡çš„å¾ªç¯é€’å¢
 				currentNum ++;
-				//´ËÆªÎÄÕÂ´¦ÀíµÄ×´Ì¬trueÎª³É¹¦
+				//æ­¤ç¯‡æ–‡ç« å¤„ç†çš„çŠ¶æ€trueä¸ºæˆåŠŸ
 				boolean flag = false;
 				try{
-					//µ±µ¼³öÎÄÕÂÊ±Éú³ÉwordµÄÃû³ÆÎªÎÄÕÂ±êÌâµÄÃû³Æ£¬µ±µ¼³ö¸½¼şÊ±£¬¶à¸ö¸½¼şÊ±Ò»¸öÎÄÕÂÓĞ¶à¸ö¸½¼şÊ±ÓÃÎÄ¼ş¼Ğ´æ·Å£¬ÎÄ¼ş¼ĞÃüÃûÎªÎÄÕÂ
+					//å½“å¯¼å‡ºæ–‡ç« æ—¶ç”Ÿæˆwordçš„åç§°ä¸ºæ–‡ç« æ ‡é¢˜çš„åç§°ï¼Œå½“å¯¼å‡ºé™„ä»¶æ—¶ï¼Œå¤šä¸ªé™„ä»¶æ—¶ä¸€ä¸ªæ–‡ç« æœ‰å¤šä¸ªé™„ä»¶æ—¶ç”¨æ–‡ä»¶å¤¹å­˜æ”¾ï¼Œæ–‡ä»¶å¤¹å‘½åä¸ºæ–‡ç« 
 					String title = article.getArticleTitle();
-					//Éú³ÉÎÄÕÂ°ü¼°ÄÚÈİ
+					//ç”Ÿæˆæ–‡ç« åŒ…åŠå†…å®¹
 					if (articleDir != null){
-						//¸ù¾İÃ¿¸öÎÄÕÂµÄ·ÖÀàÉú³ÉÄ¿Â¼
+						//æ ¹æ®æ¯ä¸ªæ–‡ç« çš„åˆ†ç±»ç”Ÿæˆç›®å½•
 						File articlepath = genPath(article,articleDir.getPath());
-						//½«ÎÄµµ×ª»»µ½¸÷¸ö·ÖÀàµÄÄ¿Â¼ÖĞ
+						//å°†æ–‡æ¡£è½¬æ¢åˆ°å„ä¸ªåˆ†ç±»çš„ç›®å½•ä¸­
 						genDocFile(article,articlepath.getPath(),new OpenOfficeConvert(om));
 					}
-					//Éú³É¸½¼ş°ü¼°ÄÚÈİ
+					//ç”Ÿæˆé™„ä»¶åŒ…åŠå†…å®¹
 					if (fileDir != null){
-						//¸ù¾İ·ÖÀàÉú³É¸½¼şµÄÄ¿Â¼
+						//æ ¹æ®åˆ†ç±»ç”Ÿæˆé™„ä»¶çš„ç›®å½•
 						File filepath = genPath(article,fileDir.getPath());
-						//Í¨¹ıÎÄÕÂµÃµ½¸½¼şÁĞ±í
+						//é€šè¿‡æ–‡ç« å¾—åˆ°é™„ä»¶åˆ—è¡¨
 						List<FileIndex> filelist = fileIndexService.selectByTaskId(taskId, "1");
 						
 						if (filelist != null){
-							//ÒÑÎÄÕÂ±êÌâ´´½¨ÎÄ¼ş¼Ğ´æ·Å¸½¼ş
+							//å·²æ–‡ç« æ ‡é¢˜åˆ›å»ºæ–‡ä»¶å¤¹å­˜æ”¾é™„ä»¶
 							File articleFilePath = this.createDir(filepath.getParent() + "/" + title + "_ID" + article.getId());
-							//½«¹ÒÔØµãµÄÎÄ¼ş¿½±´µ½°üÖĞ
+							//å°†æŒ‚è½½ç‚¹çš„æ–‡ä»¶æ‹·è´åˆ°åŒ…ä¸­
 							for(FileIndex f:filelist){
-								//½«ÎÄ¼ş¿½±´µ½Ä¿Â¼ÖĞ
-								CopyFile.copyFile(new File(mountPath + f.getFilePath()), new File(articleFilePath.getPath() + f.getFileTitle()));
+								//å°†æ–‡ä»¶æ‹·è´åˆ°ç›®å½•ä¸­
+								CopyFile.copyFile(new File(f.getFilePath()), new File(articleFilePath.getPath() + f.getFileTitle()));
 							}
 						}
 					}
-					//½«×ª»»Íê±ÏµÄÎÄÕÂ¶ÔÏó´æ·Åµ½ÁĞ±íÖĞ
+					//å°†è½¬æ¢å®Œæ¯•çš„æ–‡ç« å¯¹è±¡å­˜æ”¾åˆ°åˆ—è¡¨ä¸­
 					exportArticleList.add(article);
-					//±êÖ¾µ±Ç°ÎÄÕÂ´¦Àí³É¹¦
+					//æ ‡å¿—å½“å‰æ–‡ç« å¤„ç†æˆåŠŸ
 					flag = true;
 				}catch(Exception e){
-					//½«³ö´íµÄÎÄÕÂÔö¼Óµ½ÁĞ±íÖĞ
+					//å°†å‡ºé”™çš„æ–‡ç« å¢åŠ åˆ°åˆ—è¡¨ä¸­
 					errorArticleList.add(article);
 					e.printStackTrace();
 				}
 				watched.changeData(currentNum,article.getArticleTitle(),flag);
 			}
-			//Ñ¹ËõÎÄ¼ş
+			//å‹ç¼©æ–‡ä»¶
 			try {
-				//´´½¨Ñ¹ËõÊä³öµÄÂ·¾¶
+				//åˆ›å»ºå‹ç¼©è¾“å‡ºçš„è·¯å¾„
 				createDir(zipOutPath);
-				//³õÊ¼»¯Ñ¹Ëõ¹¤¾ß
+				//åˆå§‹åŒ–å‹ç¼©å·¥å…·
 				ZipUtil util = new ZipUtil(zipOutPath + "/exportfile.zip");
-				//Ñ¹ËõÎÄ¼ş¼Ğ
+				System.out.println("å‹ç¼©è¾“å‡ºç›®å½•: -----------------------------------------------------------------  " + zipOutPath);
+				//å‹ç¼©æ–‡ä»¶å¤¹
 				util.put(new String[]{zipPath});
-				//¹Ø±ÕÑ¹Ëõ¹¤¾ßÁ÷
+				System.out.println("å‹ç¼©çš„ç›®å½•: -----------------------------------------------------------------  " + zipPath);
+				//å‹ç¼©æ–‡ä»¶è¯´æ˜
+				util.comment.append("\nå…±æˆåŠŸå‹ç¼©æ–‡ä»¶:").append(util.getFileCount()).append(" ä¸ª! æºè‡ª:é‡‘æ¡çŸ¥è¯†ç¤¾åŒº ");
+				//è®¾ç½®å‹ç¼©æ–‡ä»¶è¯´æ˜
+				util.setComment(util.comment.toString());
+				//å…³é—­å‹ç¼©å·¥å…·æµ
 				util.close();
-				//ÉèÖÃ¼àÌıÎªÑ¹Ëõ³É¹¦
-				watched.changeData(currentNum + 1,"ÎÄ¼şÑ¹Ëõ",true);
-				//ÉèÖÃÑ¹ËõÂ·¾¶µ½¼àÌı¶ÔÏóÒÔ±ãÏÂÔØÊ¹ÓÃ
+				//è®¾ç½®ç›‘å¬ä¸ºå‹ç¼©æˆåŠŸ
+				watched.changeData(currentNum + 1,"æ–‡ä»¶å‹ç¼©",true);
+				//è®¾ç½®å‹ç¼©è·¯å¾„åˆ°ç›‘å¬å¯¹è±¡ä»¥ä¾¿ä¸‹è½½ä½¿ç”¨
 				watched.setDownloadPath(downloadPath + "/exportfile.zip");
-				//ÉèÖÃÕû¸öÈÎÎñ³É¹¦
+				//è®¾ç½®æ•´ä¸ªä»»åŠ¡æˆåŠŸ
 				map.put("result", "success");
 			} catch (IOException e) {
-				//ÉèÖÃ¼àÌıÎªÑ¹ËõÊ§°Ü
-				watched.changeData(currentNum + 1,"ÎÄ¼şÑ¹Ëõ",false);
-				//ÉèÖÃÕû¸öÈÎÎñÊ§°Ü
+				//è®¾ç½®ç›‘å¬ä¸ºå‹ç¼©å¤±è´¥
+				watched.changeData(currentNum + 1,"æ–‡ä»¶å‹ç¼©",false);
+				//è®¾ç½®æ•´ä¸ªä»»åŠ¡å¤±è´¥
 				map.put("result", "error");
 				e.printStackTrace();
 			}
-			//Í£Ö¹OpenOffice·şÎñ
+			//åœæ­¢OpenOfficeæœåŠ¡
 			om.stop();
-			//ÉèÖÃÕû¸öÈÎÎñÍê³É
+			//è®¾ç½®æ•´ä¸ªä»»åŠ¡å®Œæˆ
 			watched.setDone(true);
 		}else{
-			//ÎÄÕÂÁĞ±íÎª¿Õ
+			//æ–‡ç« åˆ—è¡¨ä¸ºç©º
 			map.put("noexport", "noexport");
 		}
-		//µ¼³öµÄÎÄÕÂ
+		//å¯¼å‡ºçš„æ–‡ç« 
 		map.put("export", exportArticleList);
-		//´íÎóÎ´µ¼³öµÄÎÄÕÂ
+		//é”™è¯¯æœªå¯¼å‡ºçš„æ–‡ç« 
 		map.put("errexport", errorArticleList);
 		return map;
 	}
@@ -321,7 +330,7 @@ public class ArticleServiceImpl implements ArticleService{
 	private File genPath(Article article,String sharePath){
 		File f = null;
 		try{
-			//¸ù¾İÎÄÕÂ·ÖÀàÉú³ÉÏàÓ¦Â·¾¶
+			//æ ¹æ®æ–‡ç« åˆ†ç±»ç”Ÿæˆç›¸åº”è·¯å¾„
 			String path = article.getSortId();
 			int len = path.length() / 9;
 			Category[] categories = new Category[len];
@@ -346,16 +355,16 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public Map<String,Object> processView(String taskId) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		//´Óhash±íÖĞµÃµ½±»¼àÌıµÄ¶ÔÏó
+		//ä»hashè¡¨ä¸­å¾—åˆ°è¢«ç›‘å¬çš„å¯¹è±¡
 		ExportWatched watched = (ExportWatched)Content.MAP.get(taskId);
-		//Í¨¹ı±»¼àÌı¶ÔÏó³õÊ¼»¯¼àÌı¶ÔÏó
+		//é€šè¿‡è¢«ç›‘å¬å¯¹è±¡åˆå§‹åŒ–ç›‘å¬å¯¹è±¡
 		ExportWatcher w = new ExportWatcher(watched);
-		//µÃµ½±»¼àÌı¶ÔÏó×´Ì¬
+		//å¾—åˆ°è¢«ç›‘å¬å¯¹è±¡çŠ¶æ€
 		w.update(watched, "");
-		//¼ÙÈçÊÂÎñÍê³ÉÔò´ÓHash±íÖĞÇå³ş±»¼àÌı¶ÔÏó
+		//å‡å¦‚äº‹åŠ¡å®Œæˆåˆ™ä»Hashè¡¨ä¸­æ¸…æ¥šè¢«ç›‘å¬å¯¹è±¡
 		if (watched.isDone()){
 			Content.MAP.remove(taskId);
-			System.out.println("¼àÌıÁĞ±íÒÆ³ı:" + (Content.MAP.get(taskId) == null));
+			System.out.println("ç›‘å¬åˆ—è¡¨ç§»é™¤:" + (Content.MAP.get(taskId) == null));
 		}
 		map.put("mes", w.getMes());
 		map.put("downloadPath", w.getProgen());
@@ -366,25 +375,25 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public Map<String, Object> importFileBySortId(long uid, long categoryId,List<FileIndex> fileList,String taskId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		//µÃµ½·ÖÀàµÄsortId
+		//å¾—åˆ°åˆ†ç±»çš„sortId
 		String sortId = categoryDao.selectByPrimaryKey(categoryId).getSortId();
 		if (fileList != null && fileList.size() > 0){
-			//htmlÁÙÊ±Éú³ÉÂ·¾¶
+			//htmlä¸´æ—¶ç”Ÿæˆè·¯å¾„
 			String HtmlPath = Content.WEBSERVERPATH  + Content.EXPORTDOCPATH + "/GENPATH_" + uid + "/HTMLTEMP";
-			//ÒÑ×ªÈëµÄÎÄ¼şÁĞ±í
+			//å·²è½¬å…¥çš„æ–‡ä»¶åˆ—è¡¨
 			List importFileList = new ArrayList();
-			//×ª»·Ê±³ö´íµÄÁĞ±í
+			//è½¬ç¯æ—¶å‡ºé”™çš„åˆ—è¡¨
 			List errorFileList = new ArrayList();
-			//µÃµ½OfficeµÄ¹ÜÀí¶ÔÏóÒÔ±ãÆô¶¯·şÎñ
+			//å¾—åˆ°Officeçš„ç®¡ç†å¯¹è±¡ä»¥ä¾¿å¯åŠ¨æœåŠ¡
 			DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
-			// »ñÈ¡OpenOffice.org 3µÄ°²×°Ä¿Â¼
+			// è·å–OpenOffice.org 3çš„å®‰è£…ç›®å½•
 			String officeHome = getOfficeHome();
 			config.setOfficeHome(officeHome);
-			// Æô¶¯OpenOfficeµÄ·şÎñ
+			// å¯åŠ¨OpenOfficeçš„æœåŠ¡
 			OfficeManager om = config.buildOfficeManager();
-			//Æô¶¯OpenOffice·şÎñ
+			//å¯åŠ¨OpenOfficeæœåŠ¡
 			om.start();
-			//±»¼àÌı¶ÔÏó
+			//è¢«ç›‘å¬å¯¹è±¡
 			ImportWatched watched = new ImportWatched();
 			watched.setTaskId(taskId);
 			watched.setTotal(fileList.size());
@@ -394,24 +403,29 @@ public class ArticleServiceImpl implements ArticleService{
 				boolean flag = false;
 				k ++;
 				try{
-					//Éú³ÉÁÙÊ±µÄhtmlÎÄ¼şÃû³Æ
-					String htmlName = HtmlPath + "/" + file.getId() + "_" + file.getFileTitle() + ".html";
+					String title = file.getFileTitle();
+					if (title != null){
+						String[] ts = title.split(".");
+						if (ts != null && ts.length >= 2){
+							title = ts[0];
+						}
+					}
+					//ç”Ÿæˆä¸´æ—¶çš„htmlæ–‡ä»¶åç§°
+					String htmlName = HtmlPath + "/" + file.getId() + "_" + title + ".html";
 					String date = DateFunc.getDate();
 					OpenOfficeConvert oc = new OpenOfficeConvert(om);
-					//½«ÎÄ¼şÃû³Æ´æÈëÎªÎÄÕÂ±êÌâ
-					String Articleitle = file.getFileTitle();
-					//½«ÎÄ¼ş×÷Õß´æÈëÎªÎÄÕÂ×÷Õß
+					//å°†æ–‡ä»¶ä½œè€…å­˜å…¥ä¸ºæ–‡ç« ä½œè€…
 					String author = file.getAuthorName();
-					//Éú³ÉĞèÒª×ª»»µÄhtml
+					//ç”Ÿæˆéœ€è¦è½¬æ¢çš„html
 					genHtmlFile(new File(file.getFilePath()),htmlName,oc);
-					System.out.println("wordÎÄ¼şÂ·¾¶:" + file.getFilePath());
-					System.out.println("Éú³ÉµÄhtmlÎÄ¼ş:" + htmlName);
-					//µÃµ½ÄÚÈİ
+//					System.out.println("wordæ–‡ä»¶è·¯å¾„:" + file.getFilePath());
+//					System.out.println("ç”Ÿæˆçš„htmlæ–‡ä»¶:" + htmlName);
+					//å¾—åˆ°å†…å®¹
 					String content = oc.getHTML(new File(htmlName));
-					//ÉèÖÃ´æÈëÊı¾İ¿âµÄ¶ÔÏó
+					//è®¾ç½®å­˜å…¥æ•°æ®åº“çš„å¯¹è±¡
 					Article article = new Article();
 					article.setArticleContent(content);
-					article.setArticleTitle(Articleitle);
+					article.setArticleTitle(title);
 					article.setAuthor(author);
 					article.setCategoryid(categoryId);
 					article.setSortId(sortId);
@@ -449,16 +463,16 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public String importProcess(String taskId) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		//´Óhash±íÖĞµÃµ½±»¼àÌıµÄ¶ÔÏó
+		//ä»hashè¡¨ä¸­å¾—åˆ°è¢«ç›‘å¬çš„å¯¹è±¡
 		ImportWatched watched = (ImportWatched)Content.MAP.get(taskId);
-		//Í¨¹ı±»¼àÌı¶ÔÏó³õÊ¼»¯¼àÌı¶ÔÏó
+		//é€šè¿‡è¢«ç›‘å¬å¯¹è±¡åˆå§‹åŒ–ç›‘å¬å¯¹è±¡
 		ImportWatcher w = new ImportWatcher(watched);
-		//µÃµ½±»¼àÌı¶ÔÏó×´Ì¬
+		//å¾—åˆ°è¢«ç›‘å¬å¯¹è±¡çŠ¶æ€
 		w.update(watched, "");
-		//¼ÙÈçÊÂÎñÍê³ÉÔò´ÓHash±íÖĞÇå³ş±»¼àÌı¶ÔÏó
+		//å‡å¦‚äº‹åŠ¡å®Œæˆåˆ™ä»Hashè¡¨ä¸­æ¸…æ¥šè¢«ç›‘å¬å¯¹è±¡
 		if (watched.isDone()){
 			Content.MAP.remove(taskId);
-			System.out.println("¼àÌıÁĞ±íÒÆ³ı:" + (Content.MAP.get(taskId) == null));
+			System.out.println("ç›‘å¬åˆ—è¡¨ç§»é™¤:" + (Content.MAP.get(taskId) == null));
 		}
 		return w.getMes();
 	}

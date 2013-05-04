@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.util.zip;
 
 import java.io.BufferedInputStream;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +15,7 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
- * æ–‡ä»¶å‹ç¼©ç±»
+ * ÎÄ¼şÑ¹ËõÀà
  * 
  * @author lk
  * @version 2013-04-11
@@ -34,19 +35,19 @@ public class ZipUtil extends ZipOutputStream {
 		this(new FileOutputStream(file), defaultEncoding, defaultLevel);
 	}
 	/**
-	 * ç»Ÿä¸€è°ƒç”¨çš„æ„é€ å‡½æ•°
+	 * Í³Ò»µ÷ÓÃµÄ¹¹Ôìº¯Êı
 	 * 
 	 * @param outputStream
-	 *            è¾“å‡ºæµ(è¾“å‡ºè·¯å¾„),*.zip
+	 *            Êä³öÁ÷(Êä³öÂ·¾¶),*.zip
 	 * @param encoding
-	 *            ç¼–ç 
+	 *            ±àÂë
 	 * @param level
-	 *            å‹ç¼©çº§åˆ« 0-9
+	 *            Ñ¹Ëõ¼¶±ğ 0-9
 	 * */
 	public ZipUtil(OutputStream outputStream, String encoding, int level) {
 		super(outputStream);
 
-		buf = new byte[1024];// 1024 KBç¼“å†²
+		buf = new byte[1024];// 1024 KB»º³å
 
 		if (encoding != null || !"".equals(encoding))
 			this.setEncoding(encoding);
@@ -63,29 +64,29 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	/**
-	 * åŠ å…¥è¦å‹ç¼©çš„æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹
+	 * ¼ÓÈëÒªÑ¹ËõµÄÎÄ¼ş»òÎÄ¼ş¼Ğ
 	 * 
 	 * @param fileName
-	 *            åŠ å…¥ä¸€ä¸ªæ–‡ä»¶,æˆ–ä¸€ä¸ªæ–‡ä»¶å¤¹
+	 *            ¼ÓÈëÒ»¸öÎÄ¼ş,»òÒ»¸öÎÄ¼ş¼Ğ
 	 * @param pathName
-	 *            ç”ŸæˆZIPæ—¶åŠ çš„æ–‡ä»¶å¤¹è·¯å¾„
+	 *            Éú³ÉZIPÊ±¼ÓµÄÎÄ¼ş¼ĞÂ·¾¶
 	 * @return fileName
 	 * */
 	public String put(String fileName, String pathName) throws IOException {
 		File file = new File(fileName);
 
 		if (!file.exists()) {
-			comment.append("å‘ç°ä¸€ä¸ªä¸å­˜åœ¨çš„æ–‡ä»¶æˆ–ç›®å½•: ").append(fileName).append("\n");
+			comment.append("·¢ÏÖÒ»¸ö²»´æÔÚµÄÎÄ¼ş»òÄ¿Â¼: ").append(fileName).append("\n");
 			return null;
 		}
 
-		// é€’å½’åŠ å…¥æ–‡ä»¶
+		// µİ¹é¼ÓÈëÎÄ¼ş
 		if (file.isDirectory()) {
 			pathName += file.getName() + "/";
 			String fileNames[] = file.list();
 			if (fileNames != null) {
 				for (String f : fileNames)
-					put(fileName + "\\" + f, pathName);
+					put(fileName + File.separator + f, pathName);
 			}
 			return fileName;
 		}
@@ -103,11 +104,11 @@ public class ZipUtil extends ZipOutputStream {
 				pathName += file.getPath();
 			this.putNextEntry(new ZipEntry(pathName + file.getName()));
 			int len;
-			// BufferedOutputStreamä¼šè‡ªåŠ¨ä½¿ç”¨ this.buf,å¦‚æœå†ä½¿ç”¨in.read(buf)æ•°æ®ä¼šé”™è¯¯
+			// BufferedOutputStream»á×Ô¶¯Ê¹ÓÃ this.buf,Èç¹ûÔÙÊ¹ÓÃin.read(buf)Êı¾İ»á´íÎó
 			while ((len = in.read()) > -1)
 				out.write(len);
 		} catch (IOException ex) {
-			comment.append("ä¸€ä¸ªæ–‡ä»¶è¯»å–å†™å…¥æ—¶é”™è¯¯: ").append(fileName).append("\n");
+			comment.append("Ò»¸öÎÄ¼ş¶ÁÈ¡Ğ´ÈëÊ±´íÎó: ").append(fileName).append("\n");
 		}
 
 		if (out != null)
@@ -146,7 +147,7 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	/**
-	 * å‹ç¼©çš„æ–‡ä»¶ä¸ªæ•°
+	 * Ñ¹ËõµÄÎÄ¼ş¸öÊı
 	 * 
 	 * @return int
 	 * */
@@ -155,22 +156,22 @@ public class ZipUtil extends ZipOutputStream {
 	}
 
 	
-	// æµ‹è¯•
+	// ²âÊÔ
 	public static void main(String[] args) {
 		try {
 			java.util.Date d1 = new java.util.Date();
-			ZipUtil util = new ZipUtil("D:/ziptest/zip1.zip");
-			// util.buf = new byte[1024*2]; //å¯ä»¥æŒ‡å®šç¼“å­˜
-			util.comment.append("æŠ¥è¡¨æ‰¹é‡ä¸‹è½½!\n\n");
-			File file = new File("D:/ziptest/zip/");
-			File[] files = file.listFiles();
-			String[] fileNames = new String[files.length];
-			for(int i =0; i < fileNames.length; i ++){
-				fileNames[i] = files[i].getPath();
-			}
-			util.put(fileNames);
-			util.comment.append("\nå…±æˆåŠŸå‹ç¼©æ–‡ä»¶: ").append(util.getFileCount())
-					.append(" ä¸ª!");
+			ZipUtil util = new ZipUtil("D:/GENPATH_10000/zip.zip");
+			// util.buf = new byte[1024*2]; //¿ÉÒÔÖ¸¶¨»º´æ
+			util.comment.append("±¨±íÅúÁ¿ÏÂÔØ!\n\n");
+//			File file = new File("D:/GENPATH_10000/2013-05-03-17-32-51");
+//			File[] files = file.listFiles();
+//			String[] fileNames = new String[files.length];
+//			for(int i =0; i < fileNames.length; i ++){
+//				fileNames[i] = files[i].getPath();
+//			}
+			util.put(new String[]{"D:/GENPATH_10000/2013-05-03-17-32-51"});
+			util.comment.append("\n¹²³É¹¦Ñ¹ËõÎÄ¼ş: ").append(util.getFileCount())
+					.append(" ¸ö!");
 			util.setComment(util.comment.toString());
 			util.close();
 			java.util.Date d2 = new java.util.Date();
@@ -182,13 +183,13 @@ public class ZipUtil extends ZipOutputStream {
 	
 	
 	private List fileList = new ArrayList();
-	// å‹ç¼©çº§åˆ«:0-9
+	// Ñ¹Ëõ¼¶±ğ:0-9
 	public static int defaultLevel = 7;
-	// ç¼–ç ,ç®€ä½“:GB2312,ç¹ä½“:BIG5
-	public static String defaultEncoding = "GB2312";
-	// å‹ç¼©æ—¶ç”¨å…¨è·¯å¾„,ä¼šç”Ÿæˆå¯¹åº”çš„ç›®å½•,false:ä¸å¸¦è·¯å¾„,åªæœ‰æ–‡ä»¶å
+	// ±àÂë,¼òÌå:GB2312,·±Ìå:BIG5
+	public static String defaultEncoding = "UTF-8";
+	// Ñ¹ËõÊ±ÓÃÈ«Â·¾¶,»áÉú³É¶ÔÓ¦µÄÄ¿Â¼,false:²»´øÂ·¾¶,Ö»ÓĞÎÄ¼şÃû
 	public static boolean userFullPathName = false;
-	// æ³¨é‡Š
+	// ×¢ÊÍ
 	public StringBuffer comment;
 
 	private int fileCount = 0;

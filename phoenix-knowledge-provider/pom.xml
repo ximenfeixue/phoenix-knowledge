@@ -433,7 +433,9 @@
 				<dubbo.registry.address>zookeeper://192.168.101.88:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>8812</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>
+				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
+				<webserver.path>/root/apache-tomcat-6.0.36/webapps</webserver.path>
+				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
 			</properties>
 		</profile>
 		<profile>
@@ -466,7 +468,9 @@
 				<dubbo.registry.address>zookeeper://192.168.101.88:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>				
+				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
+				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/webapps</webserver.path>
+				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>		
 			</properties>
 			<build>
 				<plugins>
@@ -577,7 +581,9 @@
 				<dubbo.registry.address>zookeeper://192.168.101.90:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/uploadfile/knowledge</linux.mount.path>
+				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
+				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/webapps</webserver.path>
+				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
 			</properties>
 			<build>
 				<plugins>
