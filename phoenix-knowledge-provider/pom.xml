@@ -469,7 +469,7 @@
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/webapps</webserver.path>
+				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
 				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>		
 			</properties>
 			<build>
@@ -582,7 +582,7 @@
 				<dubbo.protocol.port>2015</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/webapps</webserver.path>
+				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
 				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
 			</properties>
 			<build>
