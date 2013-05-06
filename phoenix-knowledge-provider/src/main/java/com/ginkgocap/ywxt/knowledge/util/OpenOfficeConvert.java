@@ -43,47 +43,47 @@ public class OpenOfficeConvert {
 				htmlSb.append(br.readLine());
 			}
 			br.close();
-			// É¾³ıÁÙÊ±ÎÄ¼ş      
+			// åˆ é™¤ä¸´æ—¶æ–‡ä»¶      
 			HTML.delete();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// HTMLÎÄ¼ş×Ö·û´®   
+		// HTMLæ–‡ä»¶å­—ç¬¦ä¸²   
 		String htmlStr =  "";
 		htmlStr = htmlSb.toString();
 		System.out.println(htmlStr);
-		// ·µ»Ø¾­¹ıÇå½àµÄhtmlÎÄ±¾    
+		// è¿”å›ç»è¿‡æ¸…æ´çš„htmlæ–‡æœ¬    
 		return clearFormat(htmlStr, HTML.getPath());
 	}
 	
-	/**     * Çå³ıÒ»Ğ©²»ĞèÒªµÄhtml±ê¼Ç 
+	/**     * æ¸…é™¤ä¸€äº›ä¸éœ€è¦çš„htmlæ ‡è®° 
 	 *     *      * @param htmlStr     *             
-	 *        ´øÓĞ¸´ÔÓhtml±ê¼ÇµÄhtmlÓï¾ä    
-	 *         * @return È¥³ıÁË²»ĞèÒªhtml±ê¼ÇµÄÓï¾ä     */
+	 *        å¸¦æœ‰å¤æ‚htmlæ ‡è®°çš„htmlè¯­å¥    
+	 *         * @return å»é™¤äº†ä¸éœ€è¦htmlæ ‡è®°çš„è¯­å¥     */
 	protected static String clearFormat(String htmlStr, String docImgPath) {
-		// »ñÈ¡bodyÄÚÈİµÄÕıÔò    
+		// è·å–bodyå†…å®¹çš„æ­£åˆ™    
 		String bodyReg = "<BODY .*</BODY>";
 		Pattern bodyPattern = Pattern.compile(bodyReg);
 		Matcher bodyMatcher = bodyPattern.matcher(htmlStr);
 		if (bodyMatcher.find()) {
-			// »ñÈ¡BODYÄÚÈİ£¬²¢×ª»¯BODY±êÇ©ÎªDIV       
+			// è·å–BODYå†…å®¹ï¼Œå¹¶è½¬åŒ–BODYæ ‡ç­¾ä¸ºDIV       
 			htmlStr = bodyMatcher.group().replaceFirst("<BODY", "<DIV")
 					.replaceAll("</BODY>", "</DIV>");
 		}
-		// µ÷ÕûÍ¼Æ¬µØÖ·   
+		// è°ƒæ•´å›¾ç‰‡åœ°å€   
 		htmlStr = htmlStr.replaceAll("<IMG SRC=\"", "<IMG SRC=\"" + docImgPath
 				+ "/");
-		// °Ñ<P></P>×ª»»³É</div></div>±£ÁôÑùÊ½    // content = content.replaceAll("(<P)([^>]*>.*?)(<\\/P>)",    // "<div$2</div>");   
-		// °Ñ<P></P>×ª»»³É</div></div>²¢É¾³ıÑùÊ½  
+		// æŠŠ<P></P>è½¬æ¢æˆ</div></div>ä¿ç•™æ ·å¼    // content = content.replaceAll("(<P)([^>]*>.*?)(<\\/P>)",    // "<div$2</div>");   
+		// æŠŠ<P></P>è½¬æ¢æˆ</div></div>å¹¶åˆ é™¤æ ·å¼  
 		htmlStr = htmlStr.replaceAll("(<P)([^>]*)(>.*?)(<\\/P>)", "<p$3</p>");
-		// É¾³ı²»ĞèÒªµÄ±êÇ©    
+		// åˆ é™¤ä¸éœ€è¦çš„æ ‡ç­¾    
 		htmlStr = htmlStr
 				.replaceAll(
 						"<[/]?(font|FONT|span|SPAN|xml|XML|del|DEL|ins|INS|meta|META|[ovwxpOVWXP]:\\w+)[^>]*?>",
 						"");
-		// É¾³ı²»ĞèÒªµÄÊôĞÔ   
+		// åˆ é™¤ä¸éœ€è¦çš„å±æ€§   
 		htmlStr = htmlStr
 				.replaceAll(
 						"<([^>]*)(?:lang|LANG|class|CLASS|style|STYLE|size|SIZE|face|FACE|[ovwxpOVWXP]:\\w+)=(?:'[^']*'|\"\"[^\"\"]*\"\"|[^>]+)([^>]*)>",
@@ -102,5 +102,4 @@ public class OpenOfficeConvert {
 	private void setOfficeManager(OfficeManager officeManager) {
 		this.officeManager = officeManager;
 	}
-	
 }
