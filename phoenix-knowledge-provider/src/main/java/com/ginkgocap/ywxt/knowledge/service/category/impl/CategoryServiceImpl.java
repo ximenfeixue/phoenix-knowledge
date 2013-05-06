@@ -59,12 +59,11 @@ public class CategoryServiceImpl implements CategoryService{
 			//如果用户第一次添加，将childMaxSortId赋值
 			String newSortId = new String("");
 			if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)){
-				newSortId = "000000001";
+				newSortId = parentSortId + "000000001";
 			}else{
 				newSortId = this.generateSortId(childMaxSortId);
 			}
 			//通过已添加的最大的SortId生成新的SortId
-			
 			//设置最新的sortId
 			category.setSortId(newSortId);
 			//返回存入的对象

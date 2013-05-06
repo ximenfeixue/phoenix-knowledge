@@ -46,6 +46,8 @@ public class CategoryDaoImpl extends SqlMapClientDaoSupport implements
 	@Override
 	public Category insert(Category category) {
 		try {
+			System.out.println("dao:name" + category.getName());
+			System.out.println("dao:sortid" + category.getSortId());
 			Long id = (Long) getSqlMapClientTemplate().insert("tb_category.insert", category);
 			if (id != null) {
 				category.setId(id);
