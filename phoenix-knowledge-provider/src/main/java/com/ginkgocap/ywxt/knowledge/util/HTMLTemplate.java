@@ -8,7 +8,7 @@ public class HTMLTemplate {
 	public String getTemplate(Article article){
 		StringBuffer HTML = new StringBuffer();
 		HTML.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
-		HTML.append("<HTML><HEAD><META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=GBK\"><TITLE>"+article.getArticleTitle()+"</TITLE>");
+		HTML.append("<HTML><HEAD><META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=UTF-8\"><TITLE>"+article.getArticleTitle()+"</TITLE>");
 		HTML.append("</HEAD>");
 //		HTML.append("<META NAME=\"GENERATOR\" CONTENT=\"OpenOffice.org 3.4.1  (Unix)\">");
 //		HTML.append("<META NAME=\"AUTHOR\" CONTENT=\"yx\">");	
