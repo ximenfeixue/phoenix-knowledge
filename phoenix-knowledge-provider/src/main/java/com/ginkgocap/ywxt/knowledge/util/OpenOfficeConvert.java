@@ -43,47 +43,47 @@ public class OpenOfficeConvert {
 				htmlSb.append(br.readLine());
 			}
 			br.close();
-			// åˆ é™¤ä¸´æ—¶æ–‡ä»¶      
+			// É¾³ıÁÙÊ±ÎÄ¼ş      
 			HTML.delete();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// HTMLæ–‡ä»¶å­—ç¬¦ä¸²   
+		// HTMLÎÄ¼ş×Ö·û´®   
 		String htmlStr =  "";
 		htmlStr = htmlSb.toString();
 		System.out.println(htmlStr);
-		// è¿”å›ç»è¿‡æ¸…æ´çš„htmlæ–‡æœ¬    
+		// ·µ»Ø¾­¹ıÇå½àµÄhtmlÎÄ±¾    
 		return clearFormat(htmlStr, HTML.getPath());
 	}
 	
-	/**     * æ¸…é™¤ä¸€äº›ä¸éœ€è¦çš„htmlæ ‡è®° 
+	/**     * Çå³ıÒ»Ğ©²»ĞèÒªµÄhtml±ê¼Ç 
 	 *     *      * @param htmlStr     *             
-	 *        å¸¦æœ‰å¤æ‚htmlæ ‡è®°çš„htmlè¯­å¥    
-	 *         * @return å»é™¤äº†ä¸éœ€è¦htmlæ ‡è®°çš„è¯­å¥     */
+	 *        ´øÓĞ¸´ÔÓhtml±ê¼ÇµÄhtmlÓï¾ä    
+	 *         * @return È¥³ıÁË²»ĞèÒªhtml±ê¼ÇµÄÓï¾ä     */
 	protected static String clearFormat(String htmlStr, String docImgPath) {
-		// è·å–bodyå†…å®¹çš„æ­£åˆ™    
+		// »ñÈ¡bodyÄÚÈİµÄÕıÔò    
 		String bodyReg = "<BODY .*</BODY>";
 		Pattern bodyPattern = Pattern.compile(bodyReg);
 		Matcher bodyMatcher = bodyPattern.matcher(htmlStr);
 		if (bodyMatcher.find()) {
-			// è·å–BODYå†…å®¹ï¼Œå¹¶è½¬åŒ–BODYæ ‡ç­¾ä¸ºDIV       
+			// »ñÈ¡BODYÄÚÈİ£¬²¢×ª»¯BODY±êÇ©ÎªDIV       
 			htmlStr = bodyMatcher.group().replaceFirst("<BODY", "<DIV")
 					.replaceAll("</BODY>", "</DIV>");
 		}
-		// è°ƒæ•´å›¾ç‰‡åœ°å€   
+		// µ÷ÕûÍ¼Æ¬µØÖ·   
 		htmlStr = htmlStr.replaceAll("<IMG SRC=\"", "<IMG SRC=\"" + docImgPath
 				+ "/");
-		// æŠŠ<P></P>è½¬æ¢æˆ</div></div>ä¿ç•™æ ·å¼    // content = content.replaceAll("(<P)([^>]*>.*?)(<\\/P>)",    // "<div$2</div>");   
-		// æŠŠ<P></P>è½¬æ¢æˆ</div></div>å¹¶åˆ é™¤æ ·å¼  
+		// °Ñ<P></P>×ª»»³É</div></div>±£ÁôÑùÊ½    // content = content.replaceAll("(<P)([^>]*>.*?)(<\\/P>)",    // "<div$2</div>");   
+		// °Ñ<P></P>×ª»»³É</div></div>²¢É¾³ıÑùÊ½  
 		htmlStr = htmlStr.replaceAll("(<P)([^>]*)(>.*?)(<\\/P>)", "<p$3</p>");
-		// åˆ é™¤ä¸éœ€è¦çš„æ ‡ç­¾    
+		// É¾³ı²»ĞèÒªµÄ±êÇ©    
 		htmlStr = htmlStr
 				.replaceAll(
 						"<[/]?(font|FONT|span|SPAN|xml|XML|del|DEL|ins|INS|meta|META|[ovwxpOVWXP]:\\w+)[^>]*?>",
 						"");
-		// åˆ é™¤ä¸éœ€è¦çš„å±æ€§   
+		// É¾³ı²»ĞèÒªµÄÊôĞÔ   
 		htmlStr = htmlStr
 				.replaceAll(
 						"<([^>]*)(?:lang|LANG|class|CLASS|style|STYLE|size|SIZE|face|FACE|[ovwxpOVWXP]:\\w+)=(?:'[^']*'|\"\"[^\"\"]*\"\"|[^>]+)([^>]*)>",
