@@ -1,14 +1,17 @@
 package com.ginkgocap.ywxt.knowledge.util;
 
+
 import com.ginkgocap.ywxt.knowledge.model.Article;
 
 public class HTMLTemplate {
 
-	
+
 	public String getTemplate(Article article){
+		String title = article.getArticleTitle();
+		String content = article.getArticleContent();
 		StringBuffer HTML = new StringBuffer();
 		HTML.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
-		HTML.append("<HTML><HEAD><META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=UTF-8\"><TITLE>"+article.getArticleTitle()+"</TITLE>");
+		HTML.append("<HTML><HEAD><META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=gb2312\"><TITLE>" + title + "</TITLE>");
 		HTML.append("</HEAD>");
 //		HTML.append("<META NAME=\"GENERATOR\" CONTENT=\"OpenOffice.org 3.4.1  (Unix)\">");
 //		HTML.append("<META NAME=\"AUTHOR\" CONTENT=\"yx\">");	
@@ -23,9 +26,9 @@ public class HTMLTemplate {
 //		HTML.append("<META NAME=\"ScaleCrop\" CONTENT=\"false\">");	
 //		HTML.append("<META NAME=\"ShareDoc\" CONTENT=\"false\">");
 		HTML.append("<BODY>");
-		HTML.append("文章标题:" + article.getArticleTitle());
+		HTML.append("文章标题:" + title);
 		HTML.append("<HR><BR/>");
-		HTML.append(article.getArticleContent());
+		HTML.append(content);
 		HTML.append("</BODY></HTML>");
 //		System.out.println(HTML.toString());
 		return HTML.toString();

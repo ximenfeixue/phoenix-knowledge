@@ -116,10 +116,9 @@ public class ArticleServiceImpl implements ArticleService {
 		// html生成对象
 		GenFile gf = new GenHTML();
 		// 生成HTML并返回HTML文件对象
-		File html = gf.genFile(ht.getTemplate(article), path + "/",
-				htmlFileName);
-		String wordFileName = article.getId() + "_" + article.getArticleTitle()
-				+ ".doc";
+		File html = gf.genFile(ht.getTemplate(article), path + "/",htmlFileName);
+		System.out.println("htmlcontent ****************************" + ht.getTemplate(article));
+		String wordFileName = article.getId() + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, path + "/" + wordFileName);
 		html.delete();
 		return flag;
@@ -178,10 +177,11 @@ public class ArticleServiceImpl implements ArticleService {
 			Article article = articleDao.selectByPrimaryKey(id);
 			// *************************先通过取到的文章信息生成HTML文件*************************
 			// 生成HTML的路径
-			String htmlPath = Content.EXPORTDOCPATH + "/ID_" + id + "/"
-					+ article.getSortId() + "/" + "HTML/";
+			String htmlPath = Content.WEBSERVERPATH + File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "HTML" + File.separator;
+			System.out.println("htmlPath---------------------------------------" + htmlPath);
 			// 生成HTML的文件名称
 			String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
+			System.out.println("htmlFileName---------------------------------------" + htmlFileName);
 			// 拼接HTML模板
 			// StringBuffer HTML = new StringBuffer("");
 			// HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE,
@@ -196,15 +196,15 @@ public class ArticleServiceImpl implements ArticleService {
 			
 			OpenOfficeConvert oc = new OpenOfficeConvert(om);
 			// word生成路径
-			String wordPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
-					+ "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
+			String wordPath = Content.WEBSERVERPATH +  File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator;
+			System.out.println("wordPath---------------------------------------" + wordPath);
 			// 返回下载路径
-			String download = Content.EXPORTDOCPATH + "/ID_" + id + "/"
-					+ article.getSortId() + "/" + "WORD/";
-			String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
-				oc.htmlToWord(html, wordPath +  new String(wordFileName.getBytes("ISO-8859-1"),"utf-8"));
+			String wordFileName =  "ExportWord-Record-No." + article.getId() + ".doc";
+			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + wordFileName;
+			System.out.println("wordFileName---------------------------------------" + wordFileName);
+			oc.htmlToWord(html, wordPath +  wordFileName);
 			// *************************若成功生成word，将返回word路径*************************
-			return download + URL.encode(wordFileName);
+			return download;
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -313,24 +313,18 @@ public class ArticleServiceImpl implements ArticleService {
 					if (fileDir != null) {
 						// 根据分类生成附件的目录
 						File filepath = genPath(article, fileDir.getPath());
-						System.out.println("filepath:---------------------------------" + filepath.getPath());
 						// 通过文章得到附件列表
 						List<FileIndex> filelist = fileIndexService.selectByTaskId(article.getTaskId(), "1");
 
 						if (filelist != null) {
 							// 以文章标题创建文件夹存放附件
 							File articleFilePath = this.createDir(filepath.getPath() + File.separator + "article_ID" + article.getId());
-							System.out.println("articleFilePath-----------------------------" + articleFilePath.getPath());
 							// 将挂载点的文件拷贝到包中
 							for (FileIndex f : filelist) {
 								File source = new File(f.getFilePath());
 								File target = new File(articleFilePath.getPath() + File.separator + f.getFileTitle());
 								// 将文件拷贝到目录中
 								CopyFile.copyFile(source,target);
-								System.out.println("************************************************");
-								System.out.println("source------" + source.getPath());
-								System.out.println("target------" + target.getPath());
-								System.out.println("************************************************");
 							}
 						}
 					}
@@ -354,8 +348,8 @@ public class ArticleServiceImpl implements ArticleService {
 				// 压缩文件夹
 				util.put(new String[] { zipPath });
 				// 压缩文件说明
-				util.comment.append("\n共成功压缩文件:").append(util.getFileCount())
-						.append(" 个! 源自:金桐知识社区 ");
+				String rem = "\nfiles:" + util.getFileCount() + " ! sources:www.gintong.com ";
+				util.comment.append(rem);
 				// 设置压缩文件说明
 				util.setComment(util.comment.toString());
 				// 关闭压缩工具流
