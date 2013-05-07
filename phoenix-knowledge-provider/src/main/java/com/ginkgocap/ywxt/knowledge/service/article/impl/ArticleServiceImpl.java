@@ -183,8 +183,15 @@ public class ArticleServiceImpl implements ArticleService {
 		// 生成HTML并返回HTML文件对象
 		File html = gf.genFile(ht.getTemplate(article), htmlPath, htmlFileName);
 		// *************************将生成的HTML文件转换成word文档*************************
-		OfficeManager os = this.getOfficeManager();
-		OpenOfficeConvert oc = new OpenOfficeConvert(os);
+		DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
+		// 获取OpenOffice.org 3的安装目录
+		String officeHome = getOfficeHome();
+		config.setOfficeHome(officeHome);
+		// 启动OpenOffice的服务
+		OfficeManager om = config.buildOfficeManager();
+		// 启动OpenOffice服务
+		om.start();
+		OpenOfficeConvert oc = new OpenOfficeConvert(om);
 		// word生成路径
 		String wordPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
 				+ "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
@@ -193,7 +200,7 @@ public class ArticleServiceImpl implements ArticleService {
 				+ article.getSortId() + "/" + "WORD/";
 		String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
 		oc.htmlToWord(html, wordPath + wordFileName);
-		os.stop();
+		om.stop();
 		// *************************若成功生成word，将返回word路径*************************
 		return download + URL.encode(wordFileName);
 	}
@@ -242,14 +249,16 @@ public class ArticleServiceImpl implements ArticleService {
 		File fileDir = null;
 		// 若文件列表为空不执行操作，直接返回map信息
 		if (list != null && list.size() > 0) {
+			//执行任务总数 列表数  + openoffice启动前初始化任务 + oppenoffice启动任务  + 压缩任务
+			int taskNum = list.size() + 1 + 1 + 1;
 			// 执行到当前的序号
-			int currentNum = 0;
+			int currentNum = 2;
 			// 被监听对象
 			ExportWatched watched = new ExportWatched();
 			// 设置监听对象的任务标识
 			watched.setTaskId(taskId);
 			// 设置监听任务的工作总数 加1为压缩的任务
-			watched.setTotal(list.size() + 1);
+			watched.setTotal(taskNum);
 			// 将监听任务存放的Hash表中
 			Content.MAP.put(taskId, watched);
 			// //得到OpenOffice服务端的实例
@@ -261,8 +270,10 @@ public class ArticleServiceImpl implements ArticleService {
 			config.setOfficeHome(officeHome);
 			// 启动OpenOffice的服务
 			OfficeManager om = config.buildOfficeManager();
+			watched.changeData(1, "openoffice任务启动", false);
 			// 启动OpenOffice服务
 			om.start();
+			watched.changeData(2, "openoffice任务启动", true);
 			if ("1".equals(option)) {
 				// 创建二级的文章目录
 				articleDir = createDir(zipPath + File.separator + "article");
@@ -277,7 +288,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 			for (Article article : list) {
 				// 当前任务序号通过文章数量的循环递增
-				currentNum++;
+				currentNum ++;
 				// 此篇文章处理的状态true为成功
 				boolean flag = false;
 				try {
