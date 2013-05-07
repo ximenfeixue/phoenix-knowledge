@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.article.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -163,25 +164,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public String exportArticleById(long id) {
-		// **************************先从数据库获取文章信息*************************
-		Article article = articleDao.selectByPrimaryKey(id);
-		// *************************先通过取到的文章信息生成HTML文件*************************
-		// 生成HTML的路径
-		String htmlPath = Content.EXPORTDOCPATH + "/ID_" + id + "/"
-				+ article.getSortId() + "/" + "HTML/";
-		// 生成HTML的文件名称
-		String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
-		// 拼接HTML模板
-		// StringBuffer HTML = new StringBuffer("");
-		// HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE,
-		// article.getArticleTitle())
-		// .replaceAll(HTMLTemplate.ARTICLE_CONTENT,
-		// article.getArticleContent()));
-		HTMLTemplate ht = new HTMLTemplate();
-		// html生成对象
-		GenFile gf = new GenHTML();
-		// 生成HTML并返回HTML文件对象
-		File html = gf.genFile(ht.getTemplate(article), htmlPath, htmlFileName);
 		// *************************将生成的HTML文件转换成word文档*************************
 		DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
 		// 获取OpenOffice.org 3的安装目录
@@ -191,18 +173,44 @@ public class ArticleServiceImpl implements ArticleService {
 		OfficeManager om = config.buildOfficeManager();
 		// 启动OpenOffice服务
 		om.start();
-		OpenOfficeConvert oc = new OpenOfficeConvert(om);
-		// word生成路径
-		String wordPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
-				+ "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
-		// 返回下载路径
-		String download = Content.EXPORTDOCPATH + "/ID_" + id + "/"
-				+ article.getSortId() + "/" + "WORD/";
-		String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
-		oc.htmlToWord(html, wordPath + wordFileName);
-		om.stop();
-		// *************************若成功生成word，将返回word路径*************************
-		return download + URL.encode(wordFileName);
+		try{
+			// **************************先从数据库获取文章信息*************************
+			Article article = articleDao.selectByPrimaryKey(id);
+			// *************************先通过取到的文章信息生成HTML文件*************************
+			// 生成HTML的路径
+			String htmlPath = Content.EXPORTDOCPATH + "/ID_" + id + "/"
+					+ article.getSortId() + "/" + "HTML/";
+			// 生成HTML的文件名称
+			String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
+			// 拼接HTML模板
+			// StringBuffer HTML = new StringBuffer("");
+			// HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE,
+			// article.getArticleTitle())
+			// .replaceAll(HTMLTemplate.ARTICLE_CONTENT,
+			// article.getArticleContent()));
+			HTMLTemplate ht = new HTMLTemplate();
+			// html生成对象
+			GenFile gf = new GenHTML();
+			// 生成HTML并返回HTML文件对象
+			File html = gf.genFile(ht.getTemplate(article), htmlPath, htmlFileName);
+			
+			OpenOfficeConvert oc = new OpenOfficeConvert(om);
+			// word生成路径
+			String wordPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
+					+ "/ID_" + id + "/" + article.getSortId() + "/" + "WORD/";
+			// 返回下载路径
+			String download = Content.EXPORTDOCPATH + "/ID_" + id + "/"
+					+ article.getSortId() + "/" + "WORD/";
+			String wordFileName = id + "_" + article.getArticleTitle() + ".doc";
+				oc.htmlToWord(html, wordPath +  new String(wordFileName.getBytes("ISO-8859-1"),"utf-8"));
+			// *************************若成功生成word，将返回word路径*************************
+			return download + URL.encode(wordFileName);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			om.stop();
+		}
+		return "";
 	}
 
 	@Override
