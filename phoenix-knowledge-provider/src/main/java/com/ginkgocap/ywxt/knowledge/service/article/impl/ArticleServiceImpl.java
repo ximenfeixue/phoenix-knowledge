@@ -431,10 +431,18 @@ public class ArticleServiceImpl implements ArticleService {
 		// 得到分类的sortId
 		String sortId = categoryDao.selectByPrimaryKey(categoryId).getSortId();
 		if (fileList != null && fileList.size() > 0) {
+			//任务执行总数，列表数 + openoffice启动前任务 + openoffice启动后任务 + openoffice关闭任务
+			int total = fileList.size() + 1 + 1 + 1; 
+			// 被监听对象
+			ImportWatched watched = new ImportWatched();
+			watched.setTaskId(taskId);
+			watched.setTotal(total);
+			Content.MAP.put(taskId, watched);
 			// html临时生成路径
 			String HtmlPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
 					+ File.separator + "GENPATH_" + uid + File.separator + "HTMLTEMP";
 			// 已转入的文件列表
+			watched.changeData(1, "任务启动准备", false);
 			List importFileList = new ArrayList();
 			// 转环时出错的列表
 			List errorFileList = new ArrayList();
@@ -447,12 +455,8 @@ public class ArticleServiceImpl implements ArticleService {
 			OfficeManager om = config.buildOfficeManager();
 			// 启动OpenOffice服务
 			om.start();
-			// 被监听对象
-			ImportWatched watched = new ImportWatched();
-			watched.setTaskId(taskId);
-			watched.setTotal(fileList.size());
-			Content.MAP.put(taskId, watched);
-			int k = 0;
+			watched.changeData(2, "任务启动", true);
+			int k = 2;
 			for (FileIndex file : fileList) {
 				boolean flag = false;
 				k++;
@@ -502,6 +506,9 @@ public class ArticleServiceImpl implements ArticleService {
 				watched.changeData(k, file.getId(), flag);
 			}
 			om.stop();
+			map.put("errlist", errorFileList);
+			map.put("importlist", importFileList);
+			watched.changeData(k + 1, "任务关闭", true);
 		} else {
 			map.put("noimport", "noimport");
 		}
