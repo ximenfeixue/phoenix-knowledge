@@ -494,10 +494,15 @@ public class ArticleServiceImpl implements ArticleService {
 					article.setPubdate(date);
 					article.setRecycleBin("0");
 					article.setState("0");
-					article.setTaskId(taskId);
+//					article.setTaskId(taskId);
 					article.setUid(uid);
-					articleDao.insert(article);
-					importFileList.add(file);
+					Article narticle = articleDao.insert(article);
+					if (narticle != null){
+						importFileList.add(file);
+					}else{
+						errorFileList.add(file);
+					}
+					
 					flag = true;
 				} catch (Exception e) {
 					errorFileList.add(file);

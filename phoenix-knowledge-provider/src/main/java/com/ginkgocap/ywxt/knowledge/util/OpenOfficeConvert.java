@@ -53,7 +53,6 @@ public class OpenOfficeConvert {
 		// HTML文件字符串   
 		String htmlStr =  "";
 		htmlStr = htmlSb.toString();
-		System.out.println(htmlStr);
 		// 返回经过清洁的html文本    
 		return clearFormat(htmlStr, HTML.getPath());
 	}
