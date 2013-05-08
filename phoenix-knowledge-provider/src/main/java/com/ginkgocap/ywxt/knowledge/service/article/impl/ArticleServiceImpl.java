@@ -509,6 +509,7 @@ public class ArticleServiceImpl implements ArticleService {
 			map.put("errlist", errorFileList);
 			map.put("importlist", importFileList);
 			watched.changeData(k + 1, "任务关闭", true);
+			watched.setDone(true);
 		} else {
 			map.put("noimport", "noimport");
 		}
