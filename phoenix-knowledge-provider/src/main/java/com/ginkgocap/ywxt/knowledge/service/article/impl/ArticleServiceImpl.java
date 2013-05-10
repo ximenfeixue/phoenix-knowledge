@@ -372,7 +372,6 @@ public class ArticleServiceImpl implements ArticleService {
 			// 设置整个任务完成
 			watched.setDone(true);
 		} else {
-			// 文章列表为空
 			map.put("noexport", "noexport");
 		}
 		// 导出的文章
