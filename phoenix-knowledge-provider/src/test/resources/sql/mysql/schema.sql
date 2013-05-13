@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS `phoenix_knowledge`  DEFAULT CHARACTER SET utf8 ;
-
 USE `phoenix_knowledge`;
+
 DROP TABLE IF EXISTS `tb_article`;
 CREATE TABLE `tb_article` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -19,7 +19,8 @@ CREATE TABLE `tb_article` (
   `clickNum` bigint(20) DEFAULT NULL COMMENT '文章点击次数',
   `task_id` varchar(765) DEFAULT NULL COMMENT '与文章附件表关联',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `tb_category`;
 CREATE TABLE `tb_category` (
@@ -32,4 +33,4 @@ CREATE TABLE `tb_category` (
   `subtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modtime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
