@@ -16,7 +16,7 @@ public class GenHTML implements GenFile{
 			byte tag_bytes[] = content.getBytes();
 			fileoutputstream.write(tag_bytes);
 			fileoutputstream.close();
-			System.out.print("文件输出路径:" + path + fileName);
+			System.out.print("文件输出路径:-------------" + path + fileName);
 			f = new File(path + fileName);
 			return f;
 		} catch (Exception e) {

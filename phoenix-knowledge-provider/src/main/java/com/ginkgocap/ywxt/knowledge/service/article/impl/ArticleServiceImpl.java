@@ -30,6 +30,7 @@ import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
 import com.ginkgocap.ywxt.knowledge.util.ReadProperties;
+import com.ginkgocap.ywxt.knowledge.util.Snippet;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
@@ -105,12 +106,15 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	private String genDocFile(Article article, String path, OpenOfficeConvert oc) {
-		String title = article.getArticleTitle();
-		String content = article.getArticleContent();
 		String flag = "";
+		String title = article.getArticleTitle();
+//		//文件名处理
+//		if (title != null) {
+//			//去除文件名后去除扩展名
+//			title = Snippet.getFileNameNoEx(title);
+//		}
 		// ******************************************************************生成HTML的文件名称
-		String htmlFileName = article.getId() + "_" + article.getArticleTitle()
-				+ ".html";
+		String htmlFileName = article.getId() + "_" + title + ".html";
 		// 拼接HTML模板
 		HTMLTemplate ht = new HTMLTemplate();
 		// html生成对象
@@ -118,8 +122,12 @@ public class ArticleServiceImpl implements ArticleService {
 		// 生成HTML并返回HTML文件对象
 		File html = gf.genFile(ht.getTemplate(article), path + "/",htmlFileName);
 		System.out.println("htmlcontent ****************************" + ht.getTemplate(article));
-		String wordFileName = article.getId() + "_" + article.getArticleTitle() + ".doc";
+		//生成的word文件名称
+		String wordFileName = article.getId() + "_" + title + ".doc";
+		System.out.println("wordFileName+++++++++++++++++++++++++++++++++" + wordFileName);
+		//通过html文件转换成word
 		oc.htmlToWord(html, path + "/" + wordFileName);
+		//删除临时的html文件
 		html.delete();
 		return flag;
 	}
@@ -461,19 +469,19 @@ public class ArticleServiceImpl implements ArticleService {
 				k++;
 				try {
 					String title = file.getFileTitle();
+					//文件名处理
 					if (title != null) {
-						String[] ts = title.split(".");
-						if (ts != null && ts.length >= 2) {
-							title = ts[0];
-						}
+						//去除文件名后去除扩展名
+						title = Snippet.getFileNameNoEx(title);
 					}
 					// 生成临时的html文件名称
-					String htmlName = HtmlPath + File.separator + file.getId() + "_"
-							+ title + ".html";
+					String htmlName = HtmlPath + File.separator + file.getId() + "_" + title + ".html";
+					System.out.println("htmlName:--------------------------------------" + htmlName);
 					String date = DateFunc.getDate();
 					OpenOfficeConvert oc = new OpenOfficeConvert(om);
 					// 将文件作者存入为文章作者
 					String author = file.getAuthorName();
+					System.out.println("path------------------" + file.getFilePath());
 					// 生成需要转换的html
 					genHtmlFile(new File(file.getFilePath()), htmlName, oc);
 					// System.out.println("word文件路径:" + file.getFilePath());
