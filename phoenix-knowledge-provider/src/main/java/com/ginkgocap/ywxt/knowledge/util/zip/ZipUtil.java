@@ -87,6 +87,9 @@ public class ZipUtil extends ZipOutputStream {
 			if (fileNames != null) {
 				for (String f : fileNames)
 					put(fileName + File.separator + f, pathName);
+			}else{
+				File temp = new File(file.getPath() + File.separator + "empty。txt");
+				temp.createNewFile();
 			}
 			return fileName;
 		}

@@ -207,8 +207,9 @@ public class ArticleServiceImpl implements ArticleService {
 			String wordPath = Content.WEBSERVERPATH +  File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator;
 			System.out.println("wordPath---------------------------------------" + wordPath);
 			// 返回下载路径
-			String wordFileName =  "ExportWord-Record-No." + article.getId() + ".doc";
-			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + wordFileName;
+			String wordFileName =  article.getArticleTitle() + ".doc";
+			wordFileName = Snippet.stringFilter(wordFileName);
+			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + URL.encode(wordFileName);
 			System.out.println("wordFileName---------------------------------------" + wordFileName);
 			oc.htmlToWord(html, wordPath +  wordFileName);
 			// *************************若成功生成word，将返回word路径*************************
@@ -488,6 +489,9 @@ public class ArticleServiceImpl implements ArticleService {
 					// System.out.println("生成的html文件:" + htmlName);
 					// 得到内容
 					String content = oc.getHTML(new File(htmlName));
+					if (content != null)
+						content = Snippet.imgFilter(content);
+					System.out.println("------------------------------------------------" + content + "");
 					// 设置存入数据库的对象
 					Article article = new Article();
 					article.setArticleContent(content);

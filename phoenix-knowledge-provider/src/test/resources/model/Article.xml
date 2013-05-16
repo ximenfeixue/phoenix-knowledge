@@ -53,9 +53,6 @@
 			<isNotNull  prepend="OR" property="keywords">
 				a.articleTitle like CONCAT('%',#keywords#,'%')
 			</isNotNull>
-			<isNotNull  prepend="OR" property="keywords">
-				a.articleContent like CONCAT('%', #keywords#, '%') 
-			</isNotNull>
 		</dynamic>
 		<dynamic prepend="and">
 			<isNotNull  prepend="AND" property="recycleBin">
@@ -86,9 +83,6 @@
 		<dynamic prepend="AND" open="(" close=")">
 			<isNotNull  prepend="OR" property="keywords">
 				a.articleTitle like CONCAT('%',#keywords#,'%')
-			</isNotNull>
-			<isNotNull  prepend="OR" property="keywords">
-				a.articleContent like CONCAT('%', #keywords#, '%') 
 			</isNotNull>
 		</dynamic>
 		<dynamic prepend="and">
@@ -175,9 +169,6 @@
 			<isNotNull  prepend="OR" property="keywords">
 				a.articleTitle like CONCAT('%',#keywords#,'%')
 			</isNotNull>
-			<isNotNull  prepend="OR" property="keywords">
-				a.articleContent like CONCAT('%', #keywords#, '%') 
-			</isNotNull>
 		</dynamic>
      	order by a.id desc limit #start#,#size#
 	</select>
@@ -191,9 +182,6 @@
 		<dynamic prepend="AND" open="(" close=")">
 			<isNotNull  prepend="OR" property="keywords">
 				a.articleTitle like CONCAT('%',#keywords#,'%')
-			</isNotNull>
-			<isNotNull  prepend="OR" property="keywords">
-				a.articleContent like CONCAT('%', #keywords#, '%') 
 			</isNotNull>
 		</dynamic>
 	</select>
