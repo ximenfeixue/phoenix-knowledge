@@ -282,5 +282,13 @@
     </select>
     <delete id="cleanRecyle" parameterClass="java.util.Map">
     	delete from tb_article where uid=#uid:BIGINT# and recycleBin='1'
-    </delete>   
+    </delete>
+    <select id="selectRecyleNum" resultClass="long" parameterClass="java.util.Map">
+    	select count(*) from tb_article where recycleBin='1'
+		<dynamic prepend="and">
+			<isNotNull  prepend="AND" property="uid">
+				a.uid = #uid#
+			</isNotNull>  
+		</dynamic>
+    </select> 
 </sqlMap>

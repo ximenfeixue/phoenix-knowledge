@@ -89,4 +89,5 @@ public interface ArticleDao {
      * @param uid
      */
 	void cleanRecyle(long uid);
+	long selectRecyleNum(long uid);
 }

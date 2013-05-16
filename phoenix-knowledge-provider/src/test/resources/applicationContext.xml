@@ -20,6 +20,7 @@
 	http://www.springframework.org/schema/data/jpa 
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
 	<import resource="classpath:knowledge-integration.xml"/>
+	<import resource="classpath:file-dubbo-consumer.xml" />
 	<import resource="classpath:knowledge-dubbo-provider.xml" />
 	
 	<context:component-scan base-package="com.ginkgocap.ywxt">

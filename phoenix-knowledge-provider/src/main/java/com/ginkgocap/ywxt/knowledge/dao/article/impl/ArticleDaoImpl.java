@@ -228,4 +228,12 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 		map.put("uid", uid);
 		getSqlMapClientTemplate().update("tb_article.cleanRecyle",map);
 	}
+
+	@Override
+	public long selectRecyleNum(long uid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectRecyleNum", map);
+	}
 }

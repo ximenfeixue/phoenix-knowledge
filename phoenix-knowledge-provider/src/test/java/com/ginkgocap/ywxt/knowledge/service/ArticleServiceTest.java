@@ -73,7 +73,11 @@ public class ArticleServiceTest extends TestBase{
     	Article a = articleService.selectByPrimaryKey(1);
     	System.out.println(a == null);
     }
-    
+    @Test
+    public void testReNum(){
+    	long a = articleService.selectRecyleNum(10000);
+    	System.out.println(a);
+    }
     @Test
     public void testList(){
     	List<Article> list = articleService.list(uid, "", "", "", "", "id", 1, 10);

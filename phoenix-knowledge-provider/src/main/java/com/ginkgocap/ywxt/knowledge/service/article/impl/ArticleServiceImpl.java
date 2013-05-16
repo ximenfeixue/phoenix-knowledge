@@ -587,4 +587,10 @@ public class ArticleServiceImpl implements ArticleService {
 	public void cleanRecyle(long uid) {
 		articleDao.cleanRecyle(uid);
 	}
+
+	@Override
+	public long selectRecyleNum(long uid) {
+		// TODO Auto-generated method stub
+		return articleDao.selectRecyleNum(uid);
+	}
 }

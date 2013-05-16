@@ -138,4 +138,9 @@ public interface ArticleService {
      * @param uid
      */
 	void cleanRecyle(long uid);
+    /**
+     * 根据用户id得到此用户下回收站文章的数量
+     * @param uid
+     */
+	long selectRecyleNum(long uid);
 }
