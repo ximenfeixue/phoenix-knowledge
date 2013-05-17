@@ -8,7 +8,7 @@ CREATE TABLE `tb_article` (
   `author` varchar(255) DEFAULT NULL COMMENT '文章作者，默认为当前登录用户的name',
   `source` varchar(255) DEFAULT NULL COMMENT '文章来源',
   `articleTitle` varchar(255) DEFAULT NULL COMMENT '文章标题',
-  `articleContent` text COMMENT '文章内容',
+  `articleContent` longtext COMMENT '文章内容',
   `categoryid` bigint(20) DEFAULT NULL COMMENT 'phoenix_knowledge.tb_category.id',
   `sortId` varchar(255) DEFAULT NULL COMMENT 'phoenix_knowledge.tb_category.sortId',
   `pubdate` timestamp NULL DEFAULT NULL COMMENT '文章发布时间',
