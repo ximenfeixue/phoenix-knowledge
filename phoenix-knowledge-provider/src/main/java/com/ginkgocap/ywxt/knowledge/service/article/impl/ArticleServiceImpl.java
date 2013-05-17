@@ -593,4 +593,11 @@ public class ArticleServiceImpl implements ArticleService {
 		// TODO Auto-generated method stub
 		return articleDao.selectRecyleNum(uid);
 	}
+
+	@Override
+	public List<Article> relationList(long uid, long ralatoinid, String sort,
+			 int pageIndex, int pageSize) {
+		// TODO Auto-generated method stub
+		return articleDao.relationList(uid,ralatoinid,sort,pageIndex,pageSize);
+	}
 }

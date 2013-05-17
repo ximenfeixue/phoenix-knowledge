@@ -143,4 +143,9 @@ public interface ArticleService {
      * @param uid
      */
 	long selectRecyleNum(long uid);
+    /**
+     * 相关文章
+     * @param uid
+     */
+	List<Article> relationList(long uid, long ralatoinid,String sort,  int pageIndex, int pageSize);
 }

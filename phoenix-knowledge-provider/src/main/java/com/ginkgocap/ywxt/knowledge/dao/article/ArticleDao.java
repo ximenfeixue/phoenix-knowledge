@@ -90,4 +90,7 @@ public interface ArticleDao {
      */
 	void cleanRecyle(long uid);
 	long selectRecyleNum(long uid);
+	
+	List<Article> relationList(long uid, long ralatoinid, String sort,
+			int pageIndex, int pageSize);
 }
