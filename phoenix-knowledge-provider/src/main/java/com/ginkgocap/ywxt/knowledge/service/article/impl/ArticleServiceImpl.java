@@ -39,6 +39,7 @@ import com.ginkgocap.ywxt.knowledge.util.process.ImportWatched;
 import com.ginkgocap.ywxt.knowledge.util.process.ImportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
 import com.ginkgocap.ywxt.util.DateFunc;
+import com.ginkgocap.ywxt.util.MakeTaskId;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("articleService")
@@ -469,6 +470,9 @@ public class ArticleServiceImpl implements ArticleService {
 				boolean flag = false;
 				k++;
 				try {
+					// 将文件作者存入为文章作者
+					String author = file.getAuthorName();
+					String filetaskId = MakeTaskId.getTaskId(author);
 					String title = file.getFileTitle();
 					//文件名处理
 					if (title != null) {
@@ -480,8 +484,7 @@ public class ArticleServiceImpl implements ArticleService {
 					System.out.println("htmlName:--------------------------------------" + htmlName);
 					String date = DateFunc.getDate();
 					OpenOfficeConvert oc = new OpenOfficeConvert(om);
-					// 将文件作者存入为文章作者
-					String author = file.getAuthorName();
+
 					System.out.println("path------------------" + file.getFilePath());
 					// 生成需要转换的html
 					genHtmlFile(new File(file.getFilePath()), htmlName, oc);
@@ -505,7 +508,7 @@ public class ArticleServiceImpl implements ArticleService {
 					article.setPubdate(date);
 					article.setRecycleBin("0");
 					article.setState("0");
-//					article.setTaskId(taskId);
+					article.setTaskId(filetaskId);
 					article.setUid(uid);
 					Article narticle = articleDao.insert(article);
 					if (narticle != null){
