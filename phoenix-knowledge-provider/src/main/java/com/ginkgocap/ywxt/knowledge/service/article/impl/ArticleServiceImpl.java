@@ -267,9 +267,9 @@ public class ArticleServiceImpl implements ArticleService {
 		// 若文件列表为空不执行操作，直接返回map信息
 		if (list != null && list.size() > 0) {
 			//执行任务总数 列表数  + openoffice启动前初始化任务 + oppenoffice启动任务  + 压缩任务
-			int taskNum = list.size() + 1 + 1 + 1;
+			int taskNum = list.size() + 1 + 1;
 			// 执行到当前的序号
-			int currentNum = 2;
+			int currentNum = 1;
 			// 被监听对象
 			ExportWatched watched = new ExportWatched();
 			// 设置监听对象的任务标识
@@ -287,10 +287,10 @@ public class ArticleServiceImpl implements ArticleService {
 			config.setOfficeHome(officeHome);
 			// 启动OpenOffice的服务
 			OfficeManager om = config.buildOfficeManager();
-			watched.changeData(1, "openoffice任务启动", false);
+			watched.changeData(1, "导出准备", false);
 			// 启动OpenOffice服务
 			om.start();
-			watched.changeData(2, "openoffice任务启动", true);
+			
 			if ("1".equals(option)) {
 				// 创建二级的文章目录
 				articleDir = createDir(zipPath + File.separator + "article");
@@ -462,8 +462,8 @@ public class ArticleServiceImpl implements ArticleService {
 			// 启动OpenOffice的服务
 			OfficeManager om = config.buildOfficeManager();
 			// 启动OpenOffice服务
-			om.start();
 			watched.changeData(2, "任务启动", true);
+			om.start();
 			int k = 2;
 			for (FileIndex file : fileList) {
 				boolean flag = false;
