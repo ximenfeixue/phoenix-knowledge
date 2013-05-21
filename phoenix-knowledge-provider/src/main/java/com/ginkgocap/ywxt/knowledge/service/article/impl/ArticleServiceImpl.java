@@ -342,12 +342,14 @@ public class ArticleServiceImpl implements ArticleService {
 					exportArticleList.add(article);
 					// 标志当前文章处理成功
 					flag = true;
+					watched.changeData(currentNum, article.getArticleTitle(), flag);
 				} catch (Exception e) {
+					watched.changeData(currentNum, article.getArticleTitle(), flag);
 					// 将出错的文章增加到列表中
 					errorArticleList.add(article);
 					e.printStackTrace();
 				}
-				watched.changeData(currentNum, article.getArticleTitle(), flag);
+				
 			}
 			// 压缩文件
 			try {
