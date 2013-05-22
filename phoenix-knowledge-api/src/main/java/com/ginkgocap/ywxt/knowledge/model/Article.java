@@ -111,6 +111,14 @@ public class Article  implements Serializable{
 	public void setIsNew(String isNew) {
 		this.isNew = isNew;
 	}
+	
+	public Category[] getCategorys() {
+		return categorys;
+	}
+	public void setCategorys(Category[] categorys) {
+		this.categorys = categorys;
+	}
+
 	/** 主键 */
 	private long id;
 	/** phoenix_user.tb_user.id */
@@ -145,4 +153,6 @@ public class Article  implements Serializable{
 	private String taskId;
 	/** 是否是最新的文章 在发布于三天之内的和最新修改于三天之内的为最新文章  */
 	private String isNew;
+	/** 用於列表顯示的時候存放文章的目錄數組 */
+	private Category[] categorys;
 }

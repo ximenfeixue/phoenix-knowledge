@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
@@ -174,6 +175,8 @@ public class ArticleServiceImpl implements ArticleService {
 	public String exportArticleById(long id) {
 		// *************************将生成的HTML文件转换成word文档*************************
 		DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
+		Random roll = new Random();
+		config.setPortNumber(30000+roll.nextInt(1000));
 		// 获取OpenOffice.org 3的安装目录
 		String officeHome = getOfficeHome();
 		config.setOfficeHome(officeHome);
@@ -283,6 +286,8 @@ public class ArticleServiceImpl implements ArticleService {
 			// OpenOfficeServer of = OpenOfficeServer.getInstance();
 			// 得到Office的管理对象以便启动服务
 			DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
+			Random roll = new Random();
+			config.setPortNumber(33000+roll.nextInt(1000));
 			// 获取OpenOffice.org 3的安装目录
 			String officeHome = getOfficeHome();
 			config.setOfficeHome(officeHome);
@@ -459,6 +464,8 @@ public class ArticleServiceImpl implements ArticleService {
 			List errorFileList = new ArrayList();
 			// 得到Office的管理对象以便启动服务
 			DefaultOfficeManagerConfiguration config = new DefaultOfficeManagerConfiguration();
+			Random roll = new Random();
+			config.setPortNumber(35000+roll.nextInt(1000));
 			// 获取OpenOffice.org 3的安装目录
 			String officeHome = getOfficeHome();
 			config.setOfficeHome(officeHome);
