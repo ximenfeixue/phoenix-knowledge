@@ -12,7 +12,7 @@ public class HTMLTemplate {
 		if (content != null){
 			content = Snippet.imgFilter(content);
 		}
-		System.out.println("content------------------------------------------" + content);
+//		System.out.println("content------------------------------------------" + content);
 		StringBuffer HTML = new StringBuffer();
 		HTML.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
 		HTML.append("<HTML><HEAD><META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=UTF-8\"><TITLE>" + title + "</TITLE>");
@@ -34,7 +34,7 @@ public class HTMLTemplate {
 		HTML.append("<HR><BR/>");
 		HTML.append(content);
 		HTML.append("</BODY></HTML>");
-		System.out.println("--------------------------------------------------------------------------" + HTML.toString());
+//		System.out.println("--------------------------------------------------------------------------" + HTML.toString());
 		return HTML.toString();
 	}
 }

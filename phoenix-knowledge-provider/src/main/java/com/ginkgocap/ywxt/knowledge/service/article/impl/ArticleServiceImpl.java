@@ -122,10 +122,10 @@ public class ArticleServiceImpl implements ArticleService {
 		GenFile gf = new GenHTML();
 		// 生成HTML并返回HTML文件对象
 		File html = gf.genFile(ht.getTemplate(article), path + "/",htmlFileName);
-		System.out.println("htmlcontent ****************************" + ht.getTemplate(article));
+//		System.out.println("htmlcontent ****************************" + ht.getTemplate(article));
 		//生成的word文件名称
 		String wordFileName = article.getId() + "_" + title + ".doc";
-		System.out.println("wordFileName+++++++++++++++++++++++++++++++++" + wordFileName);
+//		System.out.println("wordFileName+++++++++++++++++++++++++++++++++" + wordFileName);
 		//通过html文件转换成word
 		oc.htmlToWord(html, path + "/" + wordFileName);
 		//删除临时的html文件
@@ -187,10 +187,10 @@ public class ArticleServiceImpl implements ArticleService {
 			// *************************先通过取到的文章信息生成HTML文件*************************
 			// 生成HTML的路径
 			String htmlPath = Content.WEBSERVERPATH + File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "HTML" + File.separator;
-			System.out.println("htmlPath---------------------------------------" + htmlPath);
+//			System.out.println("htmlPath---------------------------------------" + htmlPath);
 			// 生成HTML的文件名称
 			String htmlFileName = id + "_" + article.getArticleTitle() + ".html";
-			System.out.println("htmlFileName---------------------------------------" + htmlFileName);
+//			System.out.println("htmlFileName---------------------------------------" + htmlFileName);
 			// 拼接HTML模板
 			// StringBuffer HTML = new StringBuffer("");
 			// HTML.append(HTMLTemplate.getTemplate().replaceAll(HTMLTemplate.ARTICLE_TITLE,
@@ -206,12 +206,12 @@ public class ArticleServiceImpl implements ArticleService {
 			OpenOfficeConvert oc = new OpenOfficeConvert(om);
 			// word生成路径
 			String wordPath = Content.WEBSERVERPATH +  File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator;
-			System.out.println("wordPath---------------------------------------" + wordPath);
+//			System.out.println("wordPath---------------------------------------" + wordPath);
 			// 返回下载路径
 			String wordFileName =  article.getArticleTitle() + ".doc";
 			wordFileName = Snippet.stringFilter(wordFileName);
 			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + URL.encode(wordFileName);
-			System.out.println("wordFileName---------------------------------------" + wordFileName);
+//			System.out.println("wordFileName---------------------------------------" + wordFileName);
 			oc.htmlToWord(html, wordPath +  wordFileName);
 			// *************************若成功生成word，将返回word路径*************************
 			return download;
@@ -270,7 +270,7 @@ public class ArticleServiceImpl implements ArticleService {
 			//执行任务总数 列表数  + openoffice启动前初始化任务 + oppenoffice启动任务  + 压缩任务
 			int taskNum = list.size() + 1 + 1;
 			// 执行到当前的序号
-			int currentNum = 1;
+			int currentNum = 1;System.out.println("currentNum:" + currentNum + "*******************************************************************************");
 			// 被监听对象
 			ExportWatched watched = new ExportWatched();
 			// 设置监听对象的任务标识
@@ -483,11 +483,11 @@ public class ArticleServiceImpl implements ArticleService {
 					}
 					// 生成临时的html文件名称
 					String htmlName = HtmlPath + File.separator + file.getId() + "_" + title + ".html";
-					System.out.println("htmlName:--------------------------------------" + htmlName);
+//					System.out.println("htmlName:--------------------------------------" + htmlName);
 					String date = DateFunc.getDate();
 					OpenOfficeConvert oc = new OpenOfficeConvert(om);
 
-					System.out.println("path------------------" + file.getFilePath());
+//					System.out.println("path------------------" + file.getFilePath());
 					// 生成需要转换的html
 					genHtmlFile(new File(file.getFilePath()), htmlName, oc);
 					// System.out.println("word文件路径:" + file.getFilePath());
@@ -496,7 +496,7 @@ public class ArticleServiceImpl implements ArticleService {
 					String content = oc.getHTML(new File(htmlName));
 					if (content != null)
 						content = Snippet.imgFilter(content);
-					System.out.println("------------------------------------------------" + content + "");
+//					System.out.println("------------------------------------------------" + content + "");
 					// 设置存入数据库的对象
 					Article article = new Article();
 					article.setArticleContent(content);
