@@ -643,24 +643,28 @@
 			<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<!-- redis地址 -->
-				<redis.host>${metadata.online.redis.host}</redis.host>
+				<redis.host>${knowledge.online.redis.host}</redis.host>
 				<!-- redis端口 -->
-				<redis.port>${metadata.online.redis.port}</redis.port>
+				<redis.port>${knowledge.online.redis.port}</redis.port>
 				<!-- 数据库连接地址和数据库名 -->
-				<jdbc.url>${metadata.online.jdbc.url}</jdbc.url>
+				<jdbc.url>${knowledge.online.jdbc.url}</jdbc.url>
 				<!-- 数据库访问帐号 -->
-				<jdbc.username>${metadata.online.jdbc.username}</jdbc.username>
+				<jdbc.username>${knowledge.online.jdbc.username}</jdbc.username>
 				<!-- 数据库访问密码 -->
-				<jdbc.password>${metadata.online.jdbc.password}</jdbc.password>
+				<jdbc.password>${knowledge.online.jdbc.password}</jdbc.password>
 				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-				<log4j.level>${metadata.online.log4j.level}</log4j.level>
+				<log4j.level>${knowledge.online.log4j.level}</log4j.level>
 				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
-				<log4j.path>${metadata.online.log4j.path}</log4j.path>
+				<log4j.path>${knowledge.online.log4j.path}</log4j.path>
 				<!-- dubbo注册中心的地址 -->
 				<dubbo.application.name>${knowledge.online.dubbo.application.name}</dubbo.application.name>
 				<dubbo.protocol.name>${knowledge.online.dubbo.protocol.name}</dubbo.protocol.name>
 				<dubbo.registry.address>${knowledge.online.dubbo.registry.address}</dubbo.registry.address>
 				<dubbo.protocol.port>${knowledge.online.dubbo.protocol.port}</dubbo.protocol.port>
+				
+				<linux.mount.path>${knowledge.online.linux.mount.path}</linux.mount.path>
+				<webserver.path>${knowledge.online.webserver.path}</webserver.path>
+				<gen.path>${knowledge.online.gen.path}</gen.path>
 			</properties>
 		</profile>
 	</profiles>
