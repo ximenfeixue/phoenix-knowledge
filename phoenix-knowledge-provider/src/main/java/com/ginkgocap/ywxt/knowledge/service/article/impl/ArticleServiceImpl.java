@@ -301,23 +301,23 @@ public class ArticleServiceImpl implements ArticleService {
 				// 创建二级的文章目录
 				articleDir = createDir(zipPath + File.separator + "article");
 				for(Category c:cat){
-					genPath(c.getSortId(),uid,articleDir.getParent());
+					genPath(c.getSortId(),uid,articleDir.getPath());
 				}
 			} else if ("2".equals(option)) {
 				// 创建二级的附件目录
 				fileDir = createDir(zipPath + File.separator + "file");
 				for(Category c:cat){
-					genPath(c.getSortId(),uid,fileDir.getParent());
+					genPath(c.getSortId(),uid,fileDir.getPath());
 				}
 			} else if ("3".equals(option)) {
 				// 创建二级文章及附件目录
 				articleDir = createDir(zipPath + File.separator + "article");
 				fileDir = createDir(zipPath + File.separator + "file");
 				for(Category c:cat){
-					genPath(c.getSortId(),uid,articleDir.getParent());
+					genPath(c.getSortId(),uid,articleDir.getPath());
 				}
 				for(Category c:cat){
-					genPath(c.getSortId(),uid,fileDir.getParent());
+					genPath(c.getSortId(),uid,fileDir.getPath());
 				}
 			}
 
