@@ -273,7 +273,7 @@ public class ArticleServiceImpl implements ArticleService {
 			//执行任务总数 列表数  + openoffice启动前初始化任务 + oppenoffice启动任务  + 压缩任务
 			int taskNum = list.size() + 1 + 1;
 			// 执行到当前的序号
-			int currentNum = 1;System.out.println("currentNum:" + currentNum + "*******************************************************************************");
+			int currentNum = 1;
 			// 被监听对象
 			ExportWatched watched = new ExportWatched();
 			// 设置监听对象的任务标识
@@ -296,18 +296,31 @@ public class ArticleServiceImpl implements ArticleService {
 			watched.changeData(1, "导出准备", false);
 			// 启动OpenOffice服务
 			om.start();
-			
+			List <Category> cat = categoryDao.selectChildBySortId(uid, sortId);
 			if ("1".equals(option)) {
 				// 创建二级的文章目录
 				articleDir = createDir(zipPath + File.separator + "article");
+				for(Category c:cat){
+					genPath(c.getSortId(),uid,articleDir.getParent());
+				}
 			} else if ("2".equals(option)) {
 				// 创建二级的附件目录
 				fileDir = createDir(zipPath + File.separator + "file");
+				for(Category c:cat){
+					genPath(c.getSortId(),uid,fileDir.getParent());
+				}
 			} else if ("3".equals(option)) {
 				// 创建二级文章及附件目录
 				articleDir = createDir(zipPath + File.separator + "article");
 				fileDir = createDir(zipPath + File.separator + "file");
+				for(Category c:cat){
+					genPath(c.getSortId(),uid,articleDir.getParent());
+				}
+				for(Category c:cat){
+					genPath(c.getSortId(),uid,fileDir.getParent());
+				}
 			}
+
 
 			for (Article article : list) {
 				// 当前任务序号通过文章数量的循环递增
@@ -421,6 +434,31 @@ public class ArticleServiceImpl implements ArticleService {
 		return f;
 	}
 
+	
+	private File genPath(String sortId, long uid,String sharePath) {
+		File f = null;
+		try {
+			// 根据文章分类生成相应路径
+			String path = sortId;
+			int len = path.length() / 9;
+			Category[] categories = new Category[len];
+			for (int i = 0; i < categories.length; i++) {
+				String pathSortId = path.substring(0 * 9, 9 + (i * 9));
+				categories[i] = categoryDao.selectBySortId(uid,
+						pathSortId);
+			}
+			String genPath = "";
+			for (Category cat : categories) {
+				genPath += File.separator + cat.getName();
+			}
+			f = this.createDir(sharePath + genPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return f;
+	}
+	
+	
 	@Override
 	public Map<String, Object> processView(String taskId) {
 		Map<String, Object> map = new HashMap<String, Object>();
