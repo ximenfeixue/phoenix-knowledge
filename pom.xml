@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>com.ginkgocap.ywxt</groupId>
 		<artifactId>phoenix-base</artifactId>
-		<version>1.3.7</version>
+		<version>1.3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge</artifactId>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
