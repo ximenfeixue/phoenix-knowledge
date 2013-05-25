@@ -253,10 +253,12 @@ public class ArticleServiceImpl implements ArticleService {
 		String zipPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
 				+ File.separator + "GENPATH_" + uid + File.separator + now;
 		// 压缩输出路径
-		String zipOutPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
-				+ File.separator + "DOWNLOAD_" + uid + File.separator + now;
+//		String zipOutPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
+//				+ File.separator + "DOWNLOAD_" + uid + File.separator + now;
+		String zipOutPath = Content.EXPORTMOUNTPATH;
 		// 下载地址
-		String downloadPath = Content.EXPORTDOCPATH + File.separator + "DOWNLOAD_" + uid + File.separator + now;
+//		String downloadPath = Content.EXPORTDOCPATH + File.separator + "DOWNLOAD_" + uid + File.separator + now;
+		String downloadPath = uid + "_exportfile_multiple.zip";
 		// 已导出正确的文章列表
 		List exportArticleList = new ArrayList();
 		// 导出时出错的文章列表
@@ -374,7 +376,7 @@ public class ArticleServiceImpl implements ArticleService {
 				// 创建压缩输出的路径
 				createDir(zipOutPath);
 				// 初始化压缩工具
-				ZipUtil util = new ZipUtil(zipOutPath + "/exportfile.zip");
+				ZipUtil util = new ZipUtil(zipOutPath + "/" + uid + "_exportfile_multiple.zip");
 				// 压缩文件夹
 				util.put(new String[] { zipPath });
 				// 压缩文件说明
@@ -387,7 +389,7 @@ public class ArticleServiceImpl implements ArticleService {
 				// 设置监听为压缩成功
 				watched.changeData(currentNum + 1, "文件压缩", true);
 				// 设置压缩路径到监听对象以便下载使用
-				watched.setDownloadPath(downloadPath + "/exportfile.zip");
+				watched.setDownloadPath(downloadPath);
 				// 设置整个任务成功
 				map.put("result", "success");
 			} catch (IOException e) {
