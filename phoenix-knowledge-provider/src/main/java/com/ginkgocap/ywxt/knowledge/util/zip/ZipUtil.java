@@ -192,7 +192,7 @@ public class ZipUtil extends ZipOutputStream {
 	// 压缩级别:0-9
 	public static int defaultLevel = 7;
 	// 编码,简体:GB2312,繁体:BIG5
-	public static String defaultEncoding = "UTF-8";
+	public static String defaultEncoding = "GBK";
 	// 压缩时用全路径,会生成对应的目录,false:不带路径,只有文件名
 	public static boolean userFullPathName = false;
 	// 注释
