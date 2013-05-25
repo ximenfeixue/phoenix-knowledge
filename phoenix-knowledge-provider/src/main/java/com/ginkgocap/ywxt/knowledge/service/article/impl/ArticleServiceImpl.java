@@ -427,7 +427,7 @@ public class ArticleServiceImpl implements ArticleService {
 			}
 			String genPath = "";
 			for (Category cat : categories) {
-				genPath += File.separator + "目录标识_" + cat.getId() + "_" + cat.getName();
+				genPath += File.separator + "目录_" + cat.getId() + "_" + cat.getName();
 			}
 			f = this.createDir(sharePath + genPath);
 		} catch (Exception e) {
@@ -451,7 +451,7 @@ public class ArticleServiceImpl implements ArticleService {
 			}
 			String genPath = "";
 			for (Category cat : categories) {
-				genPath += File.separator + "目录标识_" + cat.getId() + "_" + cat.getName();
+				genPath += File.separator + "目录_" + cat.getId() + "_" + cat.getName();
 			}
 			f = this.createDir(sharePath + genPath);
 		} catch (Exception e) {
