@@ -80,23 +80,32 @@ public class ZipUtil extends ZipOutputStream {
 			return null;
 		}
 
-		// 递归加入文件
+//		// 递归加入文件
+//		if (file.isDirectory()) {
+//			pathName += file.getName() + File.separator;
+//			String fileNames[] = file.list();
+//			if (fileNames != null) {
+//				if (fileNames.length <=0){
+//					File temp = new File(file.getPath() + File.separator + "empty.txt");
+//					temp.createNewFile();
+//					fileNames = file.list();
+//				}
+//				for (String f : fileNames)
+//					put(fileName + File.separator + f, pathName);
+//				}
+//
+//			return fileName;
+//		}
 		if (file.isDirectory()) {
 			pathName += file.getName() + File.separator;
 			String fileNames[] = file.list();
 			if (fileNames != null) {
-				if (fileNames.length <=0){
-					File temp = new File(file.getPath() + File.separator + "empty.txt");
-					temp.createNewFile();
-					fileNames = file.list();
-				}
 				for (String f : fileNames)
 					put(fileName + File.separator + f, pathName);
 				}
 
 			return fileName;
 		}
-
 		fileCount++;
 		// System.out.println(fileCount + " = " + fileName);
 		// System.out.println("file = " + file.getAbsolutePath());

@@ -30,7 +30,7 @@ public class HTMLTemplate {
 //		HTML.append("<META NAME=\"ScaleCrop\" CONTENT=\"false\">");	
 //		HTML.append("<META NAME=\"ShareDoc\" CONTENT=\"false\">");
 		HTML.append("<BODY>");
-		HTML.append("文章标题:" + title);
+		HTML.append(title);
 		HTML.append("<HR><BR/>");
 		HTML.append(content);
 		HTML.append("</BODY></HTML>");
