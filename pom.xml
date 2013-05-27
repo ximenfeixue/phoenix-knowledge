@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<artifactId>phoenix-base</artifactId>
+		<artifactId>phoenix-parent</artifactId>
 		<version>1.3.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge</artifactId>
