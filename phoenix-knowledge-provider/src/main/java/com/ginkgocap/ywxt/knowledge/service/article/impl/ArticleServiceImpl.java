@@ -179,6 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
 		config.setPortNumber(30000+roll.nextInt(1000));
 		// 获取OpenOffice.org 3的安装目录
 		String officeHome = getOfficeHome();
+		System.out.println("officeHome:    " + officeHome);
 		config.setOfficeHome(officeHome);
 		// 启动OpenOffice的服务
 		OfficeManager om = config.buildOfficeManager();
