@@ -141,15 +141,15 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	private String getOfficeHome() {
-		String osName = System.getProperty("os.name");
-		if (Pattern.matches("Linux.*", osName)) {
+//		String osName = System.getProperty("os.name");
+//		if (Pattern.matches("Linux.*", osName)) {
 			return "/opt/openoffice.org3";
-		} else if (Pattern.matches("Windows.*", osName)) {
-			return "C:/Program Files (x86)/OpenOffice.org 3";
-		} else if (Pattern.matches("Mac.*", osName)) {
-			return "/Application/OpenOffice.org.app/Contents";
-		}
-		return null;
+//		} else if (Pattern.matches("Windows.*", osName)) {
+//			return "C:/Program Files (x86)/OpenOffice.org 3";
+//		} else if (Pattern.matches("Mac.*", osName)) {
+//			return "/Application/OpenOffice.org.app/Contents";
+//		}
+//		return null;
 	}
 
 	private OfficeManager getOfficeManager() {
