@@ -436,6 +436,7 @@
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
 				<webserver.path>/root/apache-tomcat-6.0.36/webapps</webserver.path>
 				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
+				<nginx.root>http://file.dev.gintong.com</nginx.root>
 			</properties>
 		</profile>
 		<profile>
@@ -470,7 +471,8 @@
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
 				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
-				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>		
+				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
+				<nginx.root>http://file.server.gintong.com:81</nginx.root>	
 			</properties>
 			<build>
 				<plugins>
@@ -584,6 +586,7 @@
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
 				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
 				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
+				<nginx.root>http://file.qatest.gintong.com:81</nginx.root>
 			</properties>
 			<build>
 				<plugins>
@@ -661,7 +664,7 @@
 				<dubbo.protocol.name>${knowledge.online.dubbo.protocol.name}</dubbo.protocol.name>
 				<dubbo.registry.address>${knowledge.online.dubbo.registry.address}</dubbo.registry.address>
 				<dubbo.protocol.port>${knowledge.online.dubbo.protocol.port}</dubbo.protocol.port>
-				
+				<nginx.root>${knowledgeweb.online.nginx.root}</nginx.root>
 				<linux.mount.path>${knowledge.online.linux.mount.path}</linux.mount.path>
 				<webserver.path>${knowledge.online.webserver.path}</webserver.path>
 				<gen.path>${knowledge.online.gen.path}</gen.path>

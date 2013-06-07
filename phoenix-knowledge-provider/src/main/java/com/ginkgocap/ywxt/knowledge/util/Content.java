@@ -12,4 +12,6 @@ public class Content {
 	public final static String EXPORTDOCPATH = Env.getInstance().getProperty("gen.path");
 	//导出时附件服务器上存放附件的地址MOUNT到本地的路径
 	public final static String EXPORTMOUNTPATH = Env.getInstance().getProperty("linux.mount.path");
+	//nginx服务地址
+	public final static String NGINXROOT = Env.getInstance().getProperty("nginx.root");
 }

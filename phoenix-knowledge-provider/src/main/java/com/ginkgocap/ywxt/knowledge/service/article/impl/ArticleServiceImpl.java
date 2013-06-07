@@ -141,7 +141,10 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	private String getOfficeHome() {
-//		String osName = System.getProperty("os.name");
+		String osName = System.getProperty("os.name");
+		if (Pattern.matches("Windows.*", osName)) {
+			return "C:/Program Files (x86)/OpenOffice.org 3";
+		}
 //		if (Pattern.matches("Linux.*", osName)) {
 			return "/opt/openoffice.org3";
 //		} else if (Pattern.matches("Windows.*", osName)) {
@@ -209,16 +212,20 @@ public class ArticleServiceImpl implements ArticleService {
 			
 			OpenOfficeConvert oc = new OpenOfficeConvert(om);
 			// word生成路径
-			String wordPath = Content.WEBSERVERPATH +  File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator;
-//			System.out.println("wordPath---------------------------------------" + wordPath);
+//			String wordPath = Content.WEBSERVERPATH +  File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator;
+			String wordPath = Content.EXPORTMOUNTPATH + "/" ;
+			//			System.out.println("wordPath---------------------------------------" + wordPath);
 			// 返回下载路径
-			String wordFileName =  article.getArticleTitle() + ".doc";
+//			String wordFileName =  article.getArticleTitle() + ".doc";
+			String wordFileName =   id + "_article.doc";
 			wordFileName = Snippet.stringFilter(wordFileName);
-			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + URL.encode(wordFileName);
+//			String download = File.separator + "TEMP" + File.separator + "ID_" + id + File.separator + article.getSortId() + File.separator + "WORD" + File.separator + URL.encode(wordFileName);
+			String download = wordFileName;
+			createDir(wordPath);
 //			System.out.println("wordFileName---------------------------------------" + wordFileName);
 			oc.htmlToWord(html, wordPath +  wordFileName);
 			// *************************若成功生成word，将返回word路径*************************
-			return download;
+			return Content.NGINXROOT + "/attachment/downloadgenfile?filepath="+ download + "&articleid=" + article.getId();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -377,7 +384,7 @@ public class ArticleServiceImpl implements ArticleService {
 				// 创建压缩输出的路径
 				createDir(zipOutPath);
 				// 初始化压缩工具
-				ZipUtil util = new ZipUtil(zipOutPath + "/" + uid + "_exportfile_multiple.zip");
+				ZipUtil util = new ZipUtil(zipOutPath + File.separator + uid + "_exportfile_multiple.zip");
 				// 压缩文件夹
 				util.put(new String[] { zipPath });
 				// 压缩文件说明
