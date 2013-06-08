@@ -307,5 +307,5 @@
 				uid = #uid#
 			</isNotNull>  
 		</dynamic>
-    </select> 
+    </select>
 </sqlMap>
