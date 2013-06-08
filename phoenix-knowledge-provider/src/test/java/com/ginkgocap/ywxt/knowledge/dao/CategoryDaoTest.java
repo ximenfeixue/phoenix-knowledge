@@ -1,6 +1,4 @@
 package com.ginkgocap.ywxt.knowledge.dao;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +7,6 @@ import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
-import com.ginkgocap.ywxt.knowledge.model.Category;
 /**
  * 类型的测试
  * @author lk
@@ -46,21 +43,21 @@ public class CategoryDaoTest  extends TestBase{
     public void testFormat() {
 
     }
-    @Test
-    public void testSelectChildCountById(){
-    	long count = categoryDao.selectChildCountById(1);
-    	System.out.println(count);
-    }
-    @Test
-    public void testSelectMaxSortId(){
-    	String maxsort = categoryDao.selectMaxSortId(62, "000000001");
-    	System.out.println(maxsort);
-    }
-    @Test
-    public void testSelectTreeOfSortByUserid(){
-    	List<Category> categories = categoryDao.selectTreeOfSortByUserid(62, "");
-    	for(Category category:categories){
-    		System.out.println(category.getSortId() + "    " + category.getName());
-    	}
-    }
+//    @Test
+//    public void testSelectChildCountById(){
+//    	long count = categoryDao.selectChildCountById(1);
+//    	System.out.println(count);
+//    }
+//    @Test
+//    public void testSelectMaxSortId(){
+//    	String maxsort = categoryDao.selectMaxSortId(62, "000000001");
+//    	System.out.println(maxsort);
+//    }
+//    @Test
+//    public void testSelectTreeOfSortByUserid(){
+//    	List<Category> categories = categoryDao.selectTreeOfSortByUserid(62, "");
+//    	for(Category category:categories){
+//    		System.out.println(category.getSortId() + "    " + category.getName());
+//    	}
+//    }
 }

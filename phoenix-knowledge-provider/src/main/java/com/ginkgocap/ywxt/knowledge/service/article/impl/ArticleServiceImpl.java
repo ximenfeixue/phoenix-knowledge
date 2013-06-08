@@ -2,14 +2,12 @@ package com.ginkgocap.ywxt.knowledge.service.article.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -18,7 +16,6 @@ import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.dubbo.common.URL;
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
@@ -30,7 +27,6 @@ import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
 import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
-import com.ginkgocap.ywxt.knowledge.util.ReadProperties;
 import com.ginkgocap.ywxt.knowledge.util.Snippet;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenFile;
 import com.ginkgocap.ywxt.knowledge.util.gen.GenHTML;

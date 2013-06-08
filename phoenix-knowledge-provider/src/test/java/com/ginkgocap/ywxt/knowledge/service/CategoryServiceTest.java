@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -28,60 +28,65 @@ public class CategoryServiceTest extends TestBase{
     
     private long uid = 10000;
     
-    private String state = "0";
-    
     private Category category;
+    
+    private Category child;
     @Before
     public void setUp() throws Exception {
       category = new Category();
-      category.setId(1);
       category.setParentId(0);
       category.setState("0");
       category.setSubtime(DateFunc.getDate());
-      category.setSortId("000000001");
+      category.setModtime(DateFunc.getDate());
       category.setName("测试分类");
+      category.setUid(uid);
+      categoryService.insert(category);
+      child = new Category();
+      child.setParentId(category.getId());
+      child.setState("0");
+      child.setSubtime(DateFunc.getDate());
+      child.setModtime(DateFunc.getDate());
+      child.setName("测试子类");
+      child.setUid(uid);
+      categoryService.insert(child);
     }
     /**
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
+    	categoryService.delete(child.getId());
+    	categoryService.delete(category.getId());
     }
 
     @Test
     public void testSelectByPrimaryKey() {
-        assertEquals(categoryService.selectByPrimaryKey(1).getName(),category.getName());
+    	Category cat = categoryService.selectByPrimaryKey(category.getId());
+    	System.out.println(cat.getId());
+        assertEquals(cat.getSortId(),category.getSortId());
     }
     
     @Test
     public void testSelectTreeOfSortByUserid(){
-    	List<Category> list = categoryService.selectTreeOfSortByUserid(uid,state);
+    	List<Category> list = categoryService.selectTreeOfSortByUserid(category.getUid(),category.getState());
+    	assertTrue(list.size() > 0);
     	for(Category cat:list){
-    		System.out.println("name:" + cat.getName() + " sortId:" + cat.getSortId());
+    		System.out.println("name: " + cat.getName() + " sortId:" + cat.getSortId());
     	}
     }
     @Test
     public void testSelectBySortId(){
-    	Category cat = categoryService.selectBySortId(uid,"000000001000000001");
+    	Category cat = categoryService.selectBySortId(uid,category.getSortId());
+    	assertTrue(cat != null);
     	System.out.println(cat.getName() + "  " + cat.getUid());
     }
-    @Test
-    public void testInsert(){
-    	Category cat = new Category();
-    	cat.setName("junit测试新增");
-    	cat.setParentId(1);
-    	cat.setState("0");
-    	cat.setSubtime(DateFunc.getDate());
-    	cat.setUid(uid);
-    	Category newCat = categoryService.insert(cat);
-    	System.out.println(newCat.getSortId());
-    	System.out.println(newCat.getId());
-    }
+
 
     
     @Test
     public void testSelectCategoryPathBySortId(){
-    	Category[] cats = categoryService.selectCategoryPathBySortId(62, "000000001000000001");
+    	Category[] cats = categoryService.selectCategoryPathBySortId(child.getUid(), child.getSortId());
+    	assertTrue(cats.length > 0);
     	for (Category cat: cats){
     		System.out.println(cat.getName());
     	}
@@ -89,9 +94,17 @@ public class CategoryServiceTest extends TestBase{
     
     @Test
     public void testSelectChildBySortId(){
-    	List<Category>list = categoryService.selectChildBySortId(62, "");
+    	List<Category>list = categoryService.selectChildBySortId(category.getUid(), "");
+    	assertTrue(list.size() > 0);
     	for (Category c: list){
     		System.out.println(c.getName() + "   " + c.getSortId());
     	}
+    }
+    @Test
+    public void testUpdate(){
+    	category.setName("修改测试分类");
+    	categoryService.update(category);
+    	assertTrue("修改测试分类".equals(category.getName()));
+    	System.out.println(category.getName());
     }
 }
