@@ -633,6 +633,21 @@
 				</plugins>
 			</build>
 		</profile>
+
+                <profile>
+                   <id>delivery</id>
+                   <activation>
+                     <activeByDefault>false</activeByDefault>
+                   </activation>
+                   <build>
+                     <filters>
+                       <filter>${sa.config.file}</filter>
+                     </filters>
+                   </build>
+                </profile>
+
+
+
 		<profile>
 			<id>online</id>
 			<activation>
