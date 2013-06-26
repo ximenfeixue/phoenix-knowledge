@@ -2,8 +2,10 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +17,11 @@ import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
 import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
+import com.ginkgocap.ywxt.knowledge.util.Content;
+import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
+import com.ginkgocap.ywxt.knowledge.util.process.ImportWatched;
 import com.ginkgocap.ywxt.util.DateFunc;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 /**
  * 文章Service的测试用例
@@ -129,11 +135,21 @@ public class ArticleServiceTest extends TestBase{
     }
     @Test
     public void testExportFileBySortId(){
-//    	for (int i = 1; i <=3; i ++){
-//    		Map<String,Object>map = articleService.exportFileBySortId(uid,category.getSortId(),"taskId", "", "",i + "");
-//    		String f = (String)map.get("result");
-//    		assertTrue("success".equals(f));
-//    	}
+    	String osName = System.getProperty("os.name");
+    	String home = "";
+		if (Pattern.matches("Windows.*", osName)) {
+			home= "C:/Program Files (x86)/OpenOffice.org 3";
+		}
+			home = "/opt/openoffice.org3";
+		File file = new File(home);
+		if (file.exists() && file.isDirectory())
+	    	for (int i = 1; i <=3; i ++){
+	    		Map<String,Object>map = articleService.exportFileBySortId(uid,category.getSortId(),"taskId", "", "",i + "");
+	    		String f = (String)map.get("result");
+	    		assertTrue("success".equals(f));
+	    	}
+		else
+			assertTrue(!file.exists());
     }
     @Test
     public void testSelectByPrimaryKey(){
@@ -161,5 +177,68 @@ public class ArticleServiceTest extends TestBase{
     	for (Article a: list){
     		System.out.println(a.getId() + "    " + a.getClickNum() + "    "  + a.getArticleTitle());
     	}
+    }
+    
+    
+    @Test
+    public void testProcessView(){
+    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230349";
+    	ExportWatched watched = new ExportWatched();
+		watched.setTaskId(taskId);
+		watched.setTotal(10);
+		Content.MAP.put(taskId, watched);
+		Map<String, Object> map = articleService.processView(taskId);
+		watched.setDone(true);
+		map = articleService.processView(taskId);
+		ExportWatched watched1 = (ExportWatched) Content.MAP.get(taskId);
+		assertTrue(watched1 == null);
+    }
+    
+    @Test
+    public void testImportProcess(){
+    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230340";
+    	ImportWatched watched = new ImportWatched();
+    	watched.setTaskId(taskId);
+		watched.setTotal(10);
+		Content.MAP.put(taskId, watched);
+		String a = articleService.importProcess(taskId);
+		System.out.println(a);
+		watched.setDone(true);
+		a = articleService.importProcess(taskId);
+		System.out.println(a);
+		assertTrue("done".equals(a));
+    }
+    
+    @Test
+    public void testCount(){
+    	PageUtil p = articleService.count(uid, article.getSortId(), article.getEssence(), article.getRecycleBin(), "title", 1, 10);
+    	System.out.println(p.getCount());
+    	assertTrue(p.getCount() >0);
+    }
+    
+    @Test
+    public void testUpdateEssence(){
+    	articleService.updateEssence("0", new String[]{article.getId()+""});
+    	System.out.println(article.getEssence());
+    	assertTrue("0".equals(article.getEssence()));
+    }
+    @Test
+    public void testUpdateRecycleBin(){
+    	articleService.updateRecycleBin("0", new String[]{article.getId()+""});
+    	System.out.println(article.getRecycleBin());
+    	assertTrue("0".equals(article.getRecycleBin()));
+    } 
+    
+    @Test
+    public void testCleanRecyle(){
+    	articleService.cleanRecyle(uid);
+    	long i = articleService.selectRecyleNum(uid);
+    	assertTrue(i==0);
+    }
+    @Test
+    public void testRelationList(){
+    	List<Article> list = articleService.relationList(uid, article.getId(), article.getSortId(), 1, 10);
+    	System.out.println(list.size());
+    	assertTrue(list.size() > 0);
     }
  }
