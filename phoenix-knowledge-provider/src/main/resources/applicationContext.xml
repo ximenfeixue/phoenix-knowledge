@@ -45,28 +45,34 @@
 		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
 		<property name="initialPoolSize">
-			<value>10</value>
+			<value>${knowledge.jdbc.initialPoolSize}</value>
 		</property>
 		<property name="minPoolSize">
-			<value>10</value>
+			<value>${knowledge.jdbc.minPoolSize}</value>
 		</property>
 		<property name="acquireIncrement">
-			<value>2</value>
+			<value>${knowledge.jdbc.acquireIncrement}</value>
 		</property>
 		<property name="maxPoolSize">
-			<value>30</value>
+			<value>${knowledge.jdbc.maxPoolSize}</value>
 		</property>
 		<property name="maxIdleTime">
-			<value>60</value>
+			<value>${knowledge.jdbc.maxIdleTime}</value>
+		</property>
+		<property name="idleConnectionTestPeriod">
+			<value>${knowledge.jdbc.idleConnectionTestPeriod}</value>
 		</property>
 		<property name="maxStatements">
-			<value>0</value>
+			<value>${knowledge.jdbc.maxStatements}</value>
+		</property>
+		<property name="maxStatementsPerConnection">
+			<value>${knowledge.jdbc.maxStatementsPerConnection}</value>
+		</property>
+		<property name="debugUnreturnedConnectionStackTraces">
+			<value>${knowledge.jdbc.debugUnreturnedConnectionStackTraces}</value>
 		</property>
 		<property name="automaticTestTable">
 			<value>c3p0test</value>
-		</property>
-		<property name="idleConnectionTestPeriod">
-			<value>60</value>
 		</property>
 	</bean>
 
