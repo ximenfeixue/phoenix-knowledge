@@ -182,31 +182,31 @@ public class ArticleServiceTest extends TestBase{
     
     @Test
     public void testProcessView(){
-//    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230349";
-//    	ExportWatched watched = new ExportWatched();
-//		watched.setTaskId(taskId);
-//		watched.setTotal(10);
-//		Content.MAP.put(taskId, watched);
-//		Map<String, Object> map = articleService.processView(taskId);
-//		watched.setDone(true);
-//		map = articleService.processView(taskId);
-//		ExportWatched watched1 = (ExportWatched) Content.MAP.get(taskId);
-//		assertTrue(watched1 == null);
+    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230349";
+    	ExportWatched watched = new ExportWatched();
+		watched.setTaskId(taskId);
+		watched.setTotal(10);
+		Content.MAP.put(taskId, watched);
+		Map<String, Object> map = articleService.processView(taskId);
+		watched.setDone(true);
+		map = articleService.processView(taskId);
+		ExportWatched watched1 = (ExportWatched) Content.MAP.get(taskId);
+		assertTrue(watched1 == null);
     }
     
     @Test
     public void testImportProcess(){
-//    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230340";
-//    	ImportWatched watched = new ImportWatched();
-//    	watched.setTaskId(taskId);
-//		watched.setTotal(10);
-//		Content.MAP.put(taskId, watched);
-//		String a = articleService.importProcess(taskId);
-//		System.out.println(a);
-//		watched.setDone(true);
-//		a = articleService.importProcess(taskId);
-//		System.out.println(a);
-//		assertTrue("done".equals(a));
+    	String taskId="aJJLIEowiejioj2930kj5k2092-i=230340";
+    	ImportWatched watched = new ImportWatched();
+    	watched.setTaskId(taskId);
+		watched.setTotal(10);
+		Content.MAP.put(taskId, watched);
+		String a = articleService.importProcess(taskId);
+		System.out.println(a);
+		watched.setDone(true);
+		a = articleService.importProcess(taskId);
+		System.out.println(a);
+		assertTrue("done".equals(a));
     }
     
     @Test

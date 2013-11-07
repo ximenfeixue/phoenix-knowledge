@@ -16,7 +16,6 @@ import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
  */
 @Service("categoryService")
 public class CategoryServiceImpl implements CategoryService{
-	private CategoryHelper helper = new CategoryHelper();
     @Autowired
     private CategoryDao categoryDao;
     @Autowired
@@ -62,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService{
 			if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)){
 				newSortId = parentSortId + "000000001";
 			}else{
-				newSortId = helper.generateSortId(childMaxSortId);
+				newSortId = this.generateSortId(childMaxSortId);
 			}
 			//通过已添加的最大的SortId生成新的SortId
 			//设置最新的sortId
@@ -82,7 +81,20 @@ public class CategoryServiceImpl implements CategoryService{
 	public Category selectBySortId(long uid, String sortId) {
 		return categoryDao.selectBySortId(uid ,sortId);
 	}
-
+	//给新增的分类生成新的sortId
+	private String generateSortId(String currentSortId) throws Exception{
+		try{
+			int clen = currentSortId.length();
+			String lastCurrentSort = currentSortId.substring(clen - 9 ,clen);
+			String temp = (Integer.parseInt(lastCurrentSort) + 1) + "";
+			String tempstr = "";
+			for(int i = 1; i <= (9-temp.length()); i ++)tempstr += "0";
+			String newSortId  = currentSortId.substring(0,clen - 9) + tempstr + temp;
+			return newSortId;
+		}catch(Exception e){
+			throw new Exception("generateSortId_err");
+		}
+	}
 	@Override
 	public Category[] selectCategoryPathBySortId(long uid, String sortId) {
 		if (sortId == null || "".equals(sortId) || "null".equals(sortId))return null;
