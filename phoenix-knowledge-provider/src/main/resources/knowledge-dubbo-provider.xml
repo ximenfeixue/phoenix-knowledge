@@ -38,8 +38,6 @@
 		queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
 		accepts="${knowledge.dubbo.protocol.accepts}" accesslog="${knowledge.dubbo.protocol.accesslog}"
 		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
-	<dubbo:registry address="${knowledge.dubbo.registry.address}"
-		protocol="${knowledge.dubbo.protocol.name}"/>
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" ref="articleService" version="1.0.0"/>
