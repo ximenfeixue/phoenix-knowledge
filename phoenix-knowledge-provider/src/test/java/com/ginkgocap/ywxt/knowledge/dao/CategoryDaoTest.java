@@ -1,4 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
+import com.ginkgocap.ywxt.knowledge.model.Category;
 /**
  * 类型的测试
  * @author lk
@@ -28,6 +31,7 @@ public class CategoryDaoTest  extends TestBase{
 //        code.setType("TZXQ");
 //        code.setLevel(1);
 //        code.setCtime("2012-3-5 10:58:04");
+    	
         
     }
 
@@ -39,9 +43,16 @@ public class CategoryDaoTest  extends TestBase{
     }
 
     @Test
-    @Rollback(false)
     public void testFormat() {
-
+    	System.out.println("33333");
+//    	categoryDao.selectByPrimaryKey(55);
+    	try {
+    		List<Category> list = categoryDao.selectTreeOfSortByUserid(1, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+    	System.out.println("33333");
     }
 //    @Test
 //    public void testSelectChildCountById(){

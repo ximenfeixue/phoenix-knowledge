@@ -34,13 +34,20 @@ public class CategoryDaoImpl extends SqlMapClientDaoSupport implements
 
 	@Override
 	public List<Category> selectTreeOfSortByUserid(long uid, String state) {
-		if (uid <=0)return null;
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("uid", uid);
-		if(StringUtils.isNotBlank(state))
-        	map.put("state", state);
-		List<Category> list = getSqlMapClientTemplate().queryForList("tb_category.selectTreeOfSortByUserid", map);
-		return list;
+		try {
+			if (uid <=0)return null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("uid", uid);
+			if(StringUtils.isNotBlank(state))
+	        	map.put("state", state);
+			List<Category> list = getSqlMapClientTemplate().queryForList("tb_category.selectTreeOfSortByUserid", map);
+			return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 
 	@Override
