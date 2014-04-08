@@ -19,13 +19,12 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 	http://www.springframework.org/schema/data/jpa 
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
+	<context:component-scan base-package="com.ginkgocap.ywxt">
+	</context:component-scan>
 	<import resource="classpath:knowledge-integration.xml"/>
 	<import resource="classpath:file-dubbo-consumer.xml" />
-	<import resource="classpath:knowledge-dubbo-provider.xml" />
+<!-- 	<import resource="classpath:knowledge-dubbo-provider.xml" /> -->
 	
-	<context:component-scan base-package="com.ginkgocap.ywxt">
-		<context:exclude-filter type="regex" expression="com.ginkgocap.ywxt.configuration.KnowledgeHttpInvoker"/>
-	</context:component-scan>
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
