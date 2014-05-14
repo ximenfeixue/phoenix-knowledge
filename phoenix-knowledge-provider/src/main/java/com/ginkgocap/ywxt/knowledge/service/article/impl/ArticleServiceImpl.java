@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -632,6 +633,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void deleteArticles(String[] ids) {
 		articleDao.deleteArticles(ids);
+		
 	}
 
 	@Override

@@ -113,4 +113,10 @@ public class CategoryDaoImpl extends SqlMapClientDaoSupport implements
 		return list;
 	}
 
+	@Override
+	public List<Category> findByParam(Map<String, Object> map) {
+		List<Category> list = getSqlMapClientTemplate().queryForList("tb_category.findByParam", map);
+		return list;
+	}
+
 }
