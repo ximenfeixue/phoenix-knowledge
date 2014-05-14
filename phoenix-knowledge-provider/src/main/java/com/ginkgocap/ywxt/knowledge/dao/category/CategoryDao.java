@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.dao.category;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.Category;
 
@@ -68,4 +70,15 @@ public interface CategoryDao {
      * @return
      */
 	List<Category> selectChildBySortId(long uid,String sortId);
+	/**
+	 * 按条件查询
+	 * @param map
+	  Map<String,Object> map = new HashMap<String, Object>();
+      map.put("name", "试分类");
+      map.put("uid", uid);
+      map.put("sortId", category.getSortId());
+      map.put("state", "0");
+	 * @return
+	 */
+	List<Category> findByParam(Map<String, Object> map);
 }

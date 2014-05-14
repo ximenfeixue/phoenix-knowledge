@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.category.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,16 +59,18 @@ public class CategoryServiceImpl implements CategoryService{
 			String parentSortId = parentId > 0 ? categoryDao.selectByPrimaryKey(parentId).getSortId() : "";
 			//通过parentSortId得到子类最大已添加的sortId
 			String childMaxSortId = categoryDao.selectMaxSortId(category.getUid(), parentSortId);
-			//如果用户第一次添加，将childMaxSortId赋值
-			String newSortId = new String("");
-			if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)){
-				newSortId = parentSortId + "000000001";
-			}else{
-				newSortId = helper.generateSortId(childMaxSortId);
+			if(StringUtils.isBlank(category.getSortId())){
+				//如果用户第一次添加，将childMaxSortId赋值
+				String newSortId = new String("");
+				if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)){
+					newSortId = parentSortId + "000000001";
+				}else{
+					newSortId = helper.generateSortId(childMaxSortId);
+				}
+				//通过已添加的最大的SortId生成新的SortId
+				//设置最新的sortId
+				category.setSortId(newSortId);
 			}
-			//通过已添加的最大的SortId生成新的SortId
-			//设置最新的sortId
-			category.setSortId(newSortId);
 			//返回存入的对象
 			return categoryDao.insert(category);
 		} catch (Exception e) {
@@ -97,5 +101,10 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<Category> selectChildBySortId(long uid, String sortId) {
 		return categoryDao.selectChildBySortId(uid, sortId);
+	}
+	@Override
+	public List<Category> findByParam(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return categoryDao.findByParam(map);
 	}
 }
