@@ -42,4 +42,6 @@
     
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" ref="articleService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" ref="categoryService" version="1.0.0"/>
+    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService"  ref="knowledgeShareService"  version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" ref="favoritesService" version="1.0.0"/>
 </beans>

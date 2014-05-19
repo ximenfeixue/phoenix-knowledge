@@ -21,9 +21,11 @@ import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
+import com.ginkgocap.ywxt.knowledge.dao.share.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
+import com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService;
 import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;
@@ -46,6 +48,10 @@ public class ArticleServiceImpl implements ArticleService {
 	private ArticleDao articleDao;
 	@Autowired
 	private CategoryDao categoryDao;
+	@Autowired
+	private KnowledgeShareDao knowledgeShareDao;
+	@Autowired
+	private KnowledgeShareService knowledgeShareService;
 
 	public ArticleDao getArticleDao() {
 		return articleDao;
@@ -87,11 +93,14 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void delete(long id) {
 		articleDao.delete(id);
+		knowledgeShareDao.deleteShareInfoByKnowledgeId(id);
+		
 	}
 
 	@Override
 	public void update(Article article) {
 		articleDao.update(article);
+		knowledgeShareService.updateTitle(article.getUid(), article.getId(), article.getArticleTitle());
 	}
 
 	@Override
@@ -633,7 +642,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void deleteArticles(String[] ids) {
 		articleDao.deleteArticles(ids);
-		
+		for(String id : ids){
+			if(StringUtils.isNotBlank(id)){
+				knowledgeShareDao.deleteShareInfoByKnowledgeId(Long.valueOf(id));
+			}
+		}
 	}
 
 	@Override
