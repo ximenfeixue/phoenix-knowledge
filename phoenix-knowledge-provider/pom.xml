@@ -411,17 +411,21 @@
 			<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<!-- redis地址 -->
-				<redis.host>192.168.101.89</redis.host>
+				<redis.host>192.168.120.23</redis.host>
 				<!-- redis端口 -->
 				<redis.port>6379</redis.port>
+				<!-- mongo地址 -->
+				<mongodb.address>192.168.120.23:27017</mongodb.address>
+				<!-- mongo中数据库 -->
+				<mongodb.database>ywxt</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>
-					jdbc:mysql://192.168.101.90:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
+					jdbc:mysql://192.168.120.23:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
 				</jdbc.url>
 				<!-- 数据库访问帐号 -->
 				<jdbc.username>root</jdbc.username>
 				<!-- 数据库访问密码 -->
-				<jdbc.password>111111</jdbc.password>
+				<jdbc.password></jdbc.password>
 				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
 				<log4j.level>debug</log4j.level>
 				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
@@ -430,7 +434,7 @@
 				<!-- dubbo注册中心的地址 -->
 				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.101.17:2181?client=zkclient</dubbo.registry.address>
+				<dubbo.registry.address>zookeeper://192.168.120.23:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>8812</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
@@ -451,6 +455,10 @@
 				<redis.host>192.168.101.89</redis.host>
 				<!-- redis端口 -->
 				<redis.port>6379</redis.port>
+				<!-- mongo地址 -->
+				<mongodb.address>192.168.101.89:27017</mongodb.address>
+				<!-- mongo中数据库 -->
+				<mongodb.database>ywxt</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>
 					jdbc:mysql://192.168.101.89:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
@@ -565,6 +573,10 @@
 				<redis.host>192.168.101.90</redis.host>
 				<!-- redis端口 -->
 				<redis.port>6379</redis.port>
+				<!-- mongo地址 -->
+				<mongodb.address>192.168.101.90:27017</mongodb.address>
+				<!-- mongo中数据库 -->
+				<mongodb.database>ywxt</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>
 					jdbc:mysql://192.168.101.90:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
@@ -664,6 +676,10 @@
 				<redis.host>${knowledge.online.redis.host}</redis.host>
 				<!-- redis端口 -->
 				<redis.port>${knowledge.online.redis.port}</redis.port>
+				<!-- mongo地址 -->
+				<mongodb.address>${knowledge.online.mongodb.address}</mongodb.address>
+				<!-- mongo中数据库 -->
+				<mongodb.database>${knowledge.online.mongodb.database}</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>${knowledge.online.jdbc.url}</jdbc.url>
 				<!-- 数据库访问帐号 -->
