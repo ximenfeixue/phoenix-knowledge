@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.favorites.FavoritesDao;
+import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Favorites;
+import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
 import com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService;
-import com.ginkgocap.ywxt.user.model.Diary;
-import com.ginkgocap.ywxt.user.service.DiaryService;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.FavoritesType;
 import com.ginkgocap.ywxt.util.PageUtil;
 @Service("favoritesService")
@@ -22,7 +23,9 @@ public class FavoritesServiceImpl implements FavoritesService {
 	@Autowired
 	private FavoritesDao favoritesDao;
 	@Autowired
-	private DiaryService diaryService;
+	private ArticleService articleService;
+	@Autowired
+	private UserService userService;
 	
 	private Logger logger = LoggerFactory.getLogger(FavoritesServiceImpl.class);
 	
@@ -33,7 +36,7 @@ public class FavoritesServiceImpl implements FavoritesService {
 		favorites.setModuleId(moduleId);
 		favorites.setType(type);
 		favorites.setTarget(this.setTargetInfo(moduleId, type));//保存收藏对象
-		favorites = this.setTitleAndContent(moduleId, type, favorites);//保存收藏标题和内容
+		favorites = this.setOtherInfo(moduleId, type, favorites);//保存其他信息
 		favorites = favoritesDao.save(favorites);
 		if(favorites==null){
 			logger.debug("[ FavoritesServiceImpl ] save Favorites is fail");
@@ -75,31 +78,37 @@ public class FavoritesServiceImpl implements FavoritesService {
 	 * @param id 主键
 	 * @return Diary
 	 */
-	private Diary getDiaryInfo(long id){
-		Diary diary = diaryService.selectDiaryById(id);
-		if(diary == null){
+	private Article getDiaryInfo(long id){
+		Article article  = articleService.selectByPrimaryKey(id);
+		if(article == null){
 			logger.debug("[ FavoritesServiceImpl ] get diary is fail, because diary doesn't exist");
 		}
-		return diary;
+		return article;
 	}
 	/**
-	 * 设置收藏的标题和内容
+	 * 设置收藏保存其他信息
 	 * @param id 对象Id
 	 * @param type 类型
 	 * @param favorites 对象
 	 * @return Favorites
 	 */
-	private Favorites setTitleAndContent(long id,String type, Favorites favorites){
+	private Favorites setOtherInfo(long id,String type, Favorites favorites){
 		Object obj = this.setTargetInfo(id, type);
 		String title = "";
 		String content = "";
+		long fbrId = 0;
+		String fbrName = "";
 		if(obj != null){
 			//如果是观点那么就获取观点的对象
 			if(type.equals(FavoritesType.FAVORITER_DIARY.toString())){
-				Diary diary = (Diary) obj;
-				title = diary.getTitleName();
-				content = diary.getContent();
+				Article article  = (Article) obj;
+				title = article.getArticleTitle();
+				content = article.getArticleContent();
+				fbrId = userService.findByUid(article.getUid())==null ? 0 : userService.findByUid(article.getUid()).getId();
+				fbrName = article.getAuthor();
 			}
+			favorites.setFbrId(fbrId);
+			favorites.setFbrName(fbrName);
 			favorites.setTitle(title);
 			favorites.setContent(content);
 		}else{

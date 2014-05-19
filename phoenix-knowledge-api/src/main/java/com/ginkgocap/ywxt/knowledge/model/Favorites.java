@@ -18,6 +18,8 @@ public class Favorites implements Serializable {
 	private String title;//标题
 	private String content;//内容
 	private String ctime;//创建时间
+	private String fbrName;
+	private long fbrId;
 	public String getId() {
 		return id;
 	}
@@ -66,4 +68,17 @@ public class Favorites implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	public String getFbrName() {
+		return fbrName;
+	}
+	public void setFbrName(String fbrName) {
+		this.fbrName = fbrName;
+	}
+	public long getFbrId() {
+		return fbrId;
+	}
+	public void setFbrId(long fbrId) {
+		this.fbrId = fbrId;
+	}
+	
 }
