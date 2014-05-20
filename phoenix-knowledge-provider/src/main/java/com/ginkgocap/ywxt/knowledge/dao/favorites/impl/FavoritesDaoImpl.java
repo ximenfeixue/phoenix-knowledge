@@ -29,6 +29,12 @@ public class FavoritesDaoImpl implements FavoritesDao {
 	
 	@Override
 	public Favorites save(Favorites favorites) {
+		Criteria criteria = Criteria.where("userId").is(favorites.getUserId()).and("moduleId").is(favorites.getModuleId()).and("type").is(favorites.getType());
+		Query query = new Query(criteria);
+		Favorites ff = mongoTemplate.findOne(query, Favorites.class);
+		if(ff!=null){
+			return ff;
+		}
 		favorites.setCtime(DateFunc.getDate());
 		favorites.setId(MakePrimaryKey.getPrimaryKey());
 		mongoTemplate.save(favorites);
