@@ -129,6 +129,8 @@ public class Article  implements Serializable{
 	private String source;
 	/** 文章标题 */
 	private String articleTitle;
+	/** 文章类型，默认0：文章内容；1：url */
+	private String articleType="0";
 	/** 文章内容 */
 	private String articleContent;
 	/** phoenix_knowledge.tb_category.id */
