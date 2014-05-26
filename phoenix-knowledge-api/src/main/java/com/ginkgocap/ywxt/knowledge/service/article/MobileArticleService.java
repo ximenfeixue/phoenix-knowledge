@@ -178,7 +178,7 @@ public interface MobileArticleService {
 	 * 
 	 * @param id 文章id
 	 * @param uid 用户uid  不是id
-	 * @return
+	 * @return true:已存在;false:不存在
 	 */
 	boolean checkArticleIsExist(long id,long uid);
 }
