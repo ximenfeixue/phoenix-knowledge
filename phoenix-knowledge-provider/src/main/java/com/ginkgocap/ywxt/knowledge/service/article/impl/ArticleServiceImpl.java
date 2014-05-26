@@ -671,5 +671,20 @@ public class ArticleServiceImpl implements ArticleService {
 		// TODO Auto-generated method stub
 		return articleDao.relationList(uid,ralatoinid,sort,pageIndex,pageSize);
 	}
-	
+	@Override
+	public PageUtil count(long uid,String articleType, String sortId, String essence,
+			String recycleBin, String keywords, int pageIndex, int pageSize) {
+		long count = articleDao.selectByParamsCount(uid,articleType, sortId, essence,
+				recycleBin, keywords);
+		return new PageUtil((int) count, pageIndex, pageSize);
+	}
+
+	@Override
+	public List<Article> list(long uid,String articleType, String sortId, String essence,
+			String recycleBin, String keywords, String sort, int pageIndex,
+			int pageSize) {
+		List<Article> articles = articleDao.selectByParams(uid,articleType, sortId,
+				essence, recycleBin, keywords, sort, pageIndex, pageSize);
+		return articles;
+	}
 }
