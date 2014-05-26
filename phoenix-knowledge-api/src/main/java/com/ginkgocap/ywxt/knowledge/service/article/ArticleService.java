@@ -148,4 +148,30 @@ public interface ArticleService {
      * @param uid
      */
 	List<Article> relationList(long uid, long ralatoinid,String sort,  int pageIndex, int pageSize);
+	/**
+	 * 
+	 * @param uid user对象uid，不是id
+	 * @param articleType null：取全部；0：去正文类型；1：取url类型
+	 * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+	 * @return
+	 */
+	PageUtil count(long uid, String articleType,String sortId, String essence, String recycleBin, String keywords, int pageIndex, int pageSize);
+	/**
+	 * 
+	 * @param uid user对象uid，不是id
+	 * @param articleType null：取全部；0：去正文类型；1：取url类型
+	 * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+	 * @return
+	 */
+	List<Article> list(long uid,String articleType, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
 }

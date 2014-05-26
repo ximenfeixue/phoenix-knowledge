@@ -39,6 +39,12 @@ public class Article  implements Serializable{
 	public void setArticleTitle(String articleTitle) {
 		this.articleTitle = articleTitle;
 	}
+	public String getArticleType() {
+		return articleType;
+	}
+	public void setArticleType(String articleType) {
+		this.articleType = articleType;
+	}
 	public String getArticleContent() {
 		return articleContent;
 	}
@@ -121,7 +127,7 @@ public class Article  implements Serializable{
 
 	/** 主键 */
 	private long id;
-	/** phoenix_user.tb_user.id */
+	/** phoenix_user.tb_user.uid */
 	private long uid;
 	/** 文章作者，默认为当前登录用户的name */
 	private String author;
@@ -129,6 +135,8 @@ public class Article  implements Serializable{
 	private String source;
 	/** 文章标题 */
 	private String articleTitle;
+	/** 文章类型，默认0：文章内容；1：url */
+	private String articleType="0";
 	/** 文章内容 */
 	private String articleContent;
 	/** phoenix_knowledge.tb_category.id */
