@@ -30,9 +30,14 @@
 	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd 
 	http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
-    
+    <!-- 需要单独注释掉此service类，打成jar提供给手机端调用否则会与其他服务提供者冲突，web端则放开此方法
     <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="1.0.0"/>	
     <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
+     -->
+    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="1.0.0"/>	
+    <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
+    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.MobileArticleService" version="1.0.0"/>
+    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.category.MobileCategoryService" version="1.0.0"/>
     <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService" version="1.0.0"/>
     <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" version="1.0.0"/>
 </beans>

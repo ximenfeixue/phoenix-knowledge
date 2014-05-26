@@ -6,13 +6,12 @@ import java.util.Map;
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.util.PageUtil;
-
 /**
- * 文章管理的service接口
- * @author lk
- * @创建时间：2013-03-29 10:40
+ * 手机端调用文章管理的service接口
+ * @author jc
+ * @创建时间：2014-05-26 15:11
  */
-public interface ArticleService {
+public interface MobileArticleService {
 	 /**
      * 通过主键获得文章
      * @param id
@@ -174,4 +173,12 @@ public interface ArticleService {
 	 * @return
 	 */
 	List<Article> list(long uid,String articleType, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
+	
+	/**
+	 * 
+	 * @param id 文章id
+	 * @param uid 用户uid  不是id
+	 * @return
+	 */
+	boolean checkArticleIsExist(long id,long uid);
 }
