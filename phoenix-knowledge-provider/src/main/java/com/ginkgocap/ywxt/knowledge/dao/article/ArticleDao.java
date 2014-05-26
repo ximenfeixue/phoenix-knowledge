@@ -117,5 +117,12 @@ public interface ArticleDao {
      * @return List<Article>
      */
 	List<Article> selectByParams(long uid,String articleType, String sortId, String essence,String recycleBin, String keywords, String sort,int pageIndex, int pageSize);
-    
+
+    /**
+     * 查询该用户是否发表过此文章
+     * @param id 文章ID
+     * @param uid 用户uid
+     * @return 存在：true；不存在：false
+     */
+	boolean checkArticleIsExist(long id, long uid);
 }
