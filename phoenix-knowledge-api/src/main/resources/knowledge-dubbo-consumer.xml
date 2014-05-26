@@ -34,10 +34,8 @@
     <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="1.0.0"/>	
     <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
      -->
-    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" version="1.0.0"/>	
-    <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
-    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.article.MobileArticleService" version="1.0.0"/>
-    <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.category.MobileCategoryService" version="1.0.0"/>
+    <dubbo:reference id="mobileArticleService" interface="com.ginkgocap.ywxt.knowledge.service.article.MobileArticleService" version="1.0.0"/>
+    <dubbo:reference id="mobileCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.MobileCategoryService" version="1.0.0"/>
     <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService" version="1.0.0"/>
     <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" version="1.0.0"/>
 </beans>
