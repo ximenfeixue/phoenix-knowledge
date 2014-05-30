@@ -25,18 +25,18 @@ public class KnowledgeShareDaoImpl implements KnowledgeShareDao {
 	@Override
 	public KnowledgeShare save(KnowledgeShare knowledgeShare) {
 		Criteria criteria = Criteria.where("knowledgeId").is(knowledgeShare.getKnowledgeId()).and("userId").is(knowledgeShare.getUserId());
-		Query query = new Query(criteria);
-		KnowledgeShare ks = mongoTemplate.findOne(query, KnowledgeShare.class);
-		if(ks!=null){
-			Update update =  new Update();
-			update.set("receiverId", knowledgeShare.getReceiverId());
-			update.set("receiverName", knowledgeShare.getReceiverName());
-			update.set("ctime", DateFunc.getDate());
-			update.set("title", knowledgeShare.getTitle());
-			update.set("friends", knowledgeShare.getFriends());
-			mongoTemplate.updateMulti(query, update, KnowledgeShare.class);
-			return ks;
-		}
+//		Query query = new Query(criteria);
+//		KnowledgeShare ks = mongoTemplate.findOne(query, KnowledgeShare.class);
+//		if(ks!=null){
+//			Update update =  new Update();
+//			update.set("receiverId", knowledgeShare.getReceiverId());
+//			update.set("receiverName", knowledgeShare.getReceiverName());
+//			update.set("ctime", DateFunc.getDate());
+//			update.set("title", knowledgeShare.getTitle());
+//			update.set("friends", knowledgeShare.getFriends());
+//			mongoTemplate.updateMulti(query, update, KnowledgeShare.class);
+//			return ks;
+//		}
 		knowledgeShare.setCtime(DateFunc.getDate());
 		knowledgeShare.setId(MakePrimaryKey.getPrimaryKey());
 		mongoTemplate.save(knowledgeShare);
