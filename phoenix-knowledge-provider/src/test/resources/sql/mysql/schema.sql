@@ -4,9 +4,10 @@ USE `phoenix_knowledge`;
 DROP TABLE IF EXISTS `tb_article`;
 CREATE TABLE `tb_article` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `uid` bigint(20) DEFAULT NULL COMMENT 'phoenix_user.tb_user.id',
+  `uid` bigint(20) DEFAULT NULL COMMENT 'phoenix_user.tb_user.uid',
   `author` varchar(255) DEFAULT NULL COMMENT '文章作者，默认为当前登录用户的name',
   `source` varchar(255) DEFAULT NULL COMMENT '文章来源',
+  `articleType` varchar(1) DEFAULT '0' COMMENT '文章类型，默认0：文章内容；1：url',
   `articleTitle` varchar(255) DEFAULT NULL COMMENT '文章标题',
   `articleContent` longtext COMMENT '文章内容',
   `categoryid` bigint(20) DEFAULT NULL COMMENT 'phoenix_knowledge.tb_category.id',
