@@ -175,10 +175,10 @@ public interface MobileArticleService {
 	List<Article> list(long uid,String articleType, String sortId, String essence,String recycleBin, String keywords,String sort, int pageIndex, int pageSize);
 	
 	/**
-	 * 
-	 * @param id 文章id
+	 * 查询articleType为1的 文章是否存在
+	 * @param url 文章url
 	 * @param uid 用户uid  不是id
 	 * @return true:已存在;false:不存在
 	 */
-	boolean checkArticleIsExist(long id,long uid);
+	boolean checkArticleIsExist(String url,long uid);
 }

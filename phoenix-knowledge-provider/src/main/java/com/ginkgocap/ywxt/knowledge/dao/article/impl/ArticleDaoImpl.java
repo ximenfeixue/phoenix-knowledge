@@ -314,9 +314,9 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
 	}
 
 	@Override
-	public boolean checkArticleIsExist(long id, long uid) {
+	public boolean checkArticleIsExist(String url, long uid) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
+		map.put("url", url);
         map.put("uid", uid);
 		Long count=(Long)getSqlMapClientTemplate().queryForObject("tb_article.checkArticleIsExist", map);
 		if(count>0){

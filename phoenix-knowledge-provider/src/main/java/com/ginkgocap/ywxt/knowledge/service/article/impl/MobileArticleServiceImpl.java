@@ -689,8 +689,8 @@ public class MobileArticleServiceImpl implements MobileArticleService {
 	}
 
 	@Override
-	public boolean checkArticleIsExist(long id, long uid) {
-		return articleDao.checkArticleIsExist(id, uid);
+	public boolean checkArticleIsExist(String url, long uid) {
+		return articleDao.checkArticleIsExist(url, uid);
 	}
 	
 }

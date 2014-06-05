@@ -322,7 +322,7 @@
 		</dynamic>
     </select>
     <select id="checkArticleIsExist" resultClass="long" parameterClass="java.util.Map">
-    	select count(*) from tb_article where id = #id# and uid = #uid#
+    	select count(*) from tb_article where articleContent = #url# and uid = #uid# and articleType='1'
 		
     </select>
     
