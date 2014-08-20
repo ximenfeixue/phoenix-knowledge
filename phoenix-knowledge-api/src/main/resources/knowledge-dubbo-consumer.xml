@@ -35,4 +35,6 @@
     <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" version="1.0.0"/>
     <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService" version="1.0.0"/>
     <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeColumnService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" version="1.0.0"/>
 </beans>

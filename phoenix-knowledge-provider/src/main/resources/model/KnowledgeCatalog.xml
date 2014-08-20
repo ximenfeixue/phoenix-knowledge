@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_catalog">
+	<typeAlias alias="knowledgeCatalog" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog" id="knowledgeCatalogMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="knowledgeid" property="knowledgeId" jdbcType="BIGINT"/>
+		<result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
+		<result column="pid" property="pid" jdbcType="BIGINT"/>
+		<result column="level" property="level" jdbcType="INT"/>
+		<result column="knowledge_type" property="knowledgeType" jdbcType="INT"/>
+		<result column="level_path" property="levelPath" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<sql id="allColumns">
+	  id,
+	  knowledgeid,
+	  catalog_name,
+	  pid,
+	  level,
+	  knowledge_type,
+	  level_path
+	</sql>
+	
+	<update id="update" parameterClass="knowledgeCatalog">  
+        UPDATE tb_knowledge_catalog SET  
+			knowledgeid=#knowledgeId:BIGINT#,
+			catalog_name=#catalogName:VARCHAR#,
+			pid=#pid:BIGINT#,
+			level=#level:INT#,
+			knowledge_type=#knowledgeType:INT#,
+			level_path=#levelPath:VARCHAR#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+	
+	<insert id="insert" parameterClass="knowledgeCatalog">
+		insert into tb_knowledge_catalog(
+			  knowledgeid,
+			  catalog_name,
+			  pid,
+			  level,
+			  knowledge_type,
+			  level_path
+		) values (
+			knowledgeid=#knowledgeId:BIGINT#,
+			catalog_name=#catalogName:VARCHAR#,
+			pid=#pid:BIGINT#,
+			level=#level:INT#,
+			knowledge_type=#knowledgeType:INT#,
+			level_path=#levelPath:VARCHAR#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+	
+    <select id="selectById" resultMap="knowledgeCatalogMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_catalog where id=#id#
+	</select>
+	 
+</sqlMap>
