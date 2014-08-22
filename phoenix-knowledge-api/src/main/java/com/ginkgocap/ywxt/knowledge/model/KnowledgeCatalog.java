@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 
 /** 
- * <p>知识目录</p>  
+ * <p>知识文章目录</p>  
  * <p>于2014-8-19 由 bianzhiwei 创建 </p>
  * @author  <p>当前负责人 bianzhiwei</p>     
  * @since <p>1.2.1-SNAPSHOT</p> 
