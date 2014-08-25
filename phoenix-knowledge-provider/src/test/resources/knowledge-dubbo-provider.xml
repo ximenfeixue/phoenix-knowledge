@@ -31,11 +31,21 @@
 	http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
 	
+	<dubbo:monitor protocol="registry" />
     <dubbo:application name="${dubbo.application.name}" />
-    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"
+		threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
+		queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
+		accepts="${knowledge.dubbo.protocol.accepts}" accesslog="${knowledge.dubbo.protocol.accesslog}"
+		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
-    
     
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" ref="articleService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" ref="categoryService" version="1.0.0"/>
+    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService"  ref="knowledgeShareService"  version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" ref="favoritesService" version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" ref="knowledgeColumnService" version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
+
 </beans>
