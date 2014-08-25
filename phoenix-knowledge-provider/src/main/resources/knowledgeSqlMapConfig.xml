@@ -10,5 +10,6 @@
 	<sqlMap resource="model/Article.xml" />
 	<sqlMap resource="model/KnowledgeCatalog.xml" />
 	<sqlMap resource="model/KnowledgeColumn.xml" />
+	<sqlMap resource="model/KnowledgeMapper.xml" />
 </sqlMapConfig>
 

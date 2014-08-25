@@ -14,53 +14,36 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Component("knowledgeColumnDao")
-public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements KnowledgeColumnDao {
-    @Autowired
-    SqlMapClient sqlMapClient;
+public class KnowledgeColumnDaoImpl implements KnowledgeColumnDao {
 
-    @PostConstruct
-    public void initSqlMapClient() {
-        super.setSqlMapClient(sqlMapClient);
-    }
-    
-    @Override
-    public KnowledgeColumn insert(KnowledgeColumn kc) {
-        Long id = (Long) getSqlMapClientTemplate().insert("tb_knowledge_column.insert", kc);
-        if (id != null) {
-            kc.setId(id);
-            return kc;
-        } else {
-            return null;
-        }
-    }
+	@Override
+	public KnowledgeColumn insert(KnowledgeColumn kc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public KnowledgeColumn update(KnowledgeColumn kc) {
-        getSqlMapClientTemplate().update("tb_knowledge_column.update", kc);
-        return kc;
-    }
+	@Override
+	public KnowledgeColumn update(KnowledgeColumn kc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public KnowledgeColumn queryById(long id) {
-        KnowledgeColumn kl = (KnowledgeColumn) getSqlMapClientTemplate().queryForObject("tb_knowledge_column.selectById", id);
-        return kl;
-    }
+	@Override
+	public KnowledgeColumn queryById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public long countByPidAndName(final int parentColumnId,final String columnName) {
-        Map<String ,Object> params=new HashMap<String,Object>(){
-            {
-                put("parentColumnId",parentColumnId);
-                put("column",columnName);
-            }
-        };
-        long count =  (Long) getSqlMapClientTemplate().queryForObject("tb_knowledge_column.countByPidAndName", params);
-        return count;
-    }
+	@Override
+	public long countByPidAndName(int parentColumnId, String columnName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public void delById(long id) {
-        getSqlMapClientTemplate().delete("tb_knowledge_column.delById", id);
-    }
+	@Override
+	public void delById(long id) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
