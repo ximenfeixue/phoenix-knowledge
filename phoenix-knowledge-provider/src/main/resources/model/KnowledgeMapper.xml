@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="knowledge">
+	<typeAlias alias="knowledge" type="com.ginkgocap.ywxt.knowledge.model.Knowledge"/>
+
+
+  <resultMap id="BaseResultMap" class="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="knowledgeid" jdbcType="BIGINT" property="knowledgeid" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="knowledgeType" jdbcType="SMALLINT" property="knowledgetype" />
+    <result column="knowledgeAuthor" jdbcType="VARCHAR" property="knowledgeauthor" />
+    <result column="knowledgeSource" jdbcType="VARCHAR" property="knowledgesource" />
+    <result column="knowledgeDesc" jdbcType="VARCHAR" property="knowledgedesc" />
+    <result column="knowledgeTitle" jdbcType="VARCHAR" property="knowledgetitle" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="columnid" jdbcType="BIGINT" property="columnid" />
+    <result column="categoryid" jdbcType="BIGINT" property="categoryid" />
+    <result column="essence" jdbcType="VARCHAR" property="essence" />
+    <result column="picture_task_id" jdbcType="VARCHAR" property="pictureTaskId" />
+    <result column="visible" jdbcType="VARCHAR" property="visible" />
+    <result column="sortId" jdbcType="VARCHAR" property="sortid" />
+    <result column="pubdate" jdbcType="TIMESTAMP" property="pubdate" />
+    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+    <result column="recycleBin" jdbcType="VARCHAR" property="recyclebin" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="clickNum" jdbcType="BIGINT" property="clicknum" />
+    <result column="attatchment_task_id" jdbcType="VARCHAR" property="attatchmentTaskId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, knowledgeid, user_id, knowledgeType, knowledgeAuthor, knowledgeSource, knowledgeDesc, 
+    knowledgeTitle, tag, columnid, categoryid, essence, picture_task_id, visible, sortId, 
+    pubdate, modifyTime, recycleBin, state, clickNum, attatchment_task_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+    delete from tb_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterClass="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    insert into tb_knowledge (id, knowledgeid, user_id, 
+      knowledgeType, knowledgeAuthor, knowledgeSource, 
+      knowledgeDesc, knowledgeTitle, tag, 
+      columnid, categoryid, essence, 
+      picture_task_id, visible, sortId, 
+      pubdate, modifyTime, recycleBin, 
+      state, clickNum, attatchment_task_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{knowledgetype,jdbcType=SMALLINT}, #{knowledgeauthor,jdbcType=VARCHAR}, #{knowledgesource,jdbcType=VARCHAR}, 
+      #{knowledgedesc,jdbcType=VARCHAR}, #{knowledgetitle,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{columnid,jdbcType=BIGINT}, #{categoryid,jdbcType=BIGINT}, #{essence,jdbcType=VARCHAR}, 
+      #{pictureTaskId,jdbcType=VARCHAR}, #{visible,jdbcType=VARCHAR}, #{sortid,jdbcType=VARCHAR}, 
+      #{pubdate,jdbcType=TIMESTAMP}, #{modifytime,jdbcType=TIMESTAMP}, #{recyclebin,jdbcType=VARCHAR}, 
+      #{state,jdbcType=VARCHAR}, #{clicknum,jdbcType=BIGINT}, #{attatchmentTaskId,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    update tb_knowledge
+    set knowledgeid = #{knowledgeid,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      knowledgeType = #{knowledgetype,jdbcType=SMALLINT},
+      knowledgeAuthor = #{knowledgeauthor,jdbcType=VARCHAR},
+      knowledgeSource = #{knowledgesource,jdbcType=VARCHAR},
+      knowledgeDesc = #{knowledgedesc,jdbcType=VARCHAR},
+      knowledgeTitle = #{knowledgetitle,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      columnid = #{columnid,jdbcType=BIGINT},
+      categoryid = #{categoryid,jdbcType=BIGINT},
+      essence = #{essence,jdbcType=VARCHAR},
+      picture_task_id = #{pictureTaskId,jdbcType=VARCHAR},
+      visible = #{visible,jdbcType=VARCHAR},
+      sortId = #{sortid,jdbcType=VARCHAR},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      recycleBin = #{recyclebin,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      clickNum = #{clicknum,jdbcType=BIGINT},
+      attatchment_task_id = #{attatchmentTaskId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</sqlMap>
