@@ -23,7 +23,7 @@ public interface KnowledgeColumnService {
      * @param id id
      * @return 知识栏目
      */
-    public KnowledgeColumn queryById(long id);
+    public KnowledgeColumn queryById(long id); 
     
     /**
      * isExist <p>(是否存在)</p>      
