@@ -34,7 +34,13 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements Knowledg
 
 	@Override
 	public int insert(Knowledge record) {
-		Long i= (Long) getSqlMapClientTemplate().insert("knowledge.insert", record);
+		long r=record.getId();
+		Long i=0l;
+		if(r>0){
+			return updateByPrimaryKey(record);
+		}else{
+			i = (Long) getSqlMapClientTemplate().insert("knowledge.insert", record);
+		}
 		return i.intValue();
 	}
 

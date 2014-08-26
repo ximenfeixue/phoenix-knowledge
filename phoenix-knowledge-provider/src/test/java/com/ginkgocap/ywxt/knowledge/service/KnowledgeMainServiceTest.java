@@ -58,7 +58,6 @@ public class KnowledgeMainServiceTest extends TestBase{
 			System.err.println("'"+title+"'_已存在");
 			return;
 		}
-		knowledgeMainService.saveKnowledge(knowledge, word);
-		investmentId = investmentAuthenticationService.createInvestmentWord(word);
+		Long id=knowledgeMainService.saveKnowledge(knowledge, word);
     }
  }
