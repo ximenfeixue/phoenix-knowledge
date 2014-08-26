@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCatalogDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService;
 
-@Service("knowledgeCatelogService")
+@Service("knowledgeCatalogService")
 public class KnowledgeCatalogServiceImpl implements KnowledgeCatalogService {
 
     @Autowired
