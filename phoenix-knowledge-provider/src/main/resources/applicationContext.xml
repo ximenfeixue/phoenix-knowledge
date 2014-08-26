@@ -26,6 +26,7 @@
 	<import resource="classpath:knowledge-integration.xml" />
 	<import resource="classpath:knowledge-mongo-config.xml" />
 	<import resource="classpath:user-dubbo-consumer.xml"/><!-- 加载user注册服务 -->
+	<import resource="classpath:cloud-dubbo-consumer.xml" />
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
