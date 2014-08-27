@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -61,6 +62,21 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
     @Override
     public void delById(long id) {
         getSqlMapClientTemplate().delete("tb_knowledge_column.delById", id);
+    }
+
+    @Override
+    public List<KnowledgeColumn> queryByParentId(final int parentColumnId,final int createUserId) {
+        @SuppressWarnings("serial")
+        Map<String ,Object> params=new HashMap<String,Object>(){
+            {
+                put("parentColumnId",parentColumnId);
+                put("createUserId",createUserId);
+            }
+        };
+        
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectByParentId", params);
+        return list;
     }
 
 }

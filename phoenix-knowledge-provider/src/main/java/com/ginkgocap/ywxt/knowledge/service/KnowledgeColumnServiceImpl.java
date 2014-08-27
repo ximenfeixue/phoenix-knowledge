@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,11 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
     @Override
     public void delById(long id) {
          knowledgeColumnDao.delById(id);
+    }
+
+    @Override
+    public List<KnowledgeColumn> queryByParentId(int parentColumnId, int createUserId) {
+        return knowledgeColumnDao.queryByParentId(parentColumnId, createUserId);
     }
 
 }

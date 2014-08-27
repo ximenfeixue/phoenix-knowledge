@@ -36,5 +36,17 @@ public class KnowledgeColumnTest extends TestBase{
        KnowledgeColumn kc= knowledgeColumnService.queryById(1);
        System.out.println(kc.getColumnName());
     }
+    
+    @Test
+    public void  queryByParentId() throws Exception {
+        List<KnowledgeColumn> list= knowledgeColumnService.queryByParentId(0, 0);
+        
+        for (KnowledgeColumn knowledgeColumn : list) {
+            System.out.print(knowledgeColumn.getColumnName());
+            
+        }
+//        System.out.println();
+        assertTrue(!list.isEmpty());
+    }
  
 }

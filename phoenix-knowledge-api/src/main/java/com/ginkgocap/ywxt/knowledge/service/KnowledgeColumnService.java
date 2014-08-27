@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 
+import java.util.List;
+
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 
 /** 
@@ -39,4 +41,11 @@ public interface KnowledgeColumnService {
      */
     public void delById(long id);
     
+    /**
+     * queryByParentId根据上级栏目查询子栏目
+     * @param parentColumnId 父栏目id
+     * @param createUserId 创建者名称
+     * @return 栏目列表
+     */
+    public List<KnowledgeColumn> queryByParentId(int parentColumnId,int createUserId);
 }
