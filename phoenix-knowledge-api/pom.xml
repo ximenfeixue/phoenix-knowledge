@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>phoenix-knowledge</artifactId>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<version>app-1.0.0</version>
+		<version>1.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge-api</artifactId>
 	<name>${project.artifactId}</name>

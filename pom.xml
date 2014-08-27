@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>com.ginkgocap.ywxt</groupId>
 		<artifactId>phoenix-parent</artifactId>
-		<version>5.0.4</version>
+		<version>5.1.1</version>
 	</parent>
 	<artifactId>phoenix-knowledge</artifactId>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
-	<version>app-1.0.0</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
