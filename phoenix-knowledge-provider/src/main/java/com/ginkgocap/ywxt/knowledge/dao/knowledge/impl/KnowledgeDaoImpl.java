@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 @Component("knowledgeDao")
 public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		KnowledgeDao {
-
+	
 	@Autowired
 	SqlMapClient sqlMapClient;
 
@@ -30,49 +30,51 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	public void initSqlMapClient() {
 		super.setSqlMapClient(sqlMapClient);
 	}
+	
+	@Override
+	public int insert(Knowledge record) {
+		long r=record.getId();
+		Long i=0l;
+		if(r>0){
+			return updateByPrimaryKey(record);
+		}else{
+			i = (Long) getSqlMapClientTemplate().insert("tb_knowledge.insert", record);
+		}
+		return i.intValue();
+	}
 
-	// @Override
-	// public int deleteByPrimaryKey(Long id) {
-	// // TODO Auto-generated method stub
-	// return 0;
-	// }
-	//
-	// @Override
-	// public int insert(Knowledge record) {
-	// long r = record.getId();
-	// Long i = 0l;
-	// if (r > 0) {
-	// return updateByPrimaryKey(record);
-	// } else {
-	// i = (Long) getSqlMapClientTemplate().insert("knowledge.insert",
-	// record);
-	// }
-	// return i.intValue();
-	// }
-	//
-	// @Override
-	// public int insertSelective(Knowledge record) {
-	// // TODO Auto-generated method stub
-	// return 0;
-	// }
-	//
-	// @Override
-	// public Knowledge selectByPrimaryKey(Long id) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// @Override
-	// public int updateByPrimaryKeySelective(Knowledge record) {
-	// // TODO Auto-generated method stub
-	// return 0;
-	// }
-	//
-	// @Override
-	// public int updateByPrimaryKey(Knowledge record) {
-	// // TODO Auto-generated method stub
-	// return 0;
-	// }
+	@Override
+	public int insertSelective(Knowledge record) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Knowledge selectByPrimaryKey(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Knowledge record) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int deleteByPrimaryKey(Long id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public int updateByPrimaryKey(Knowledge record) {
+		int i =  getSqlMapClientTemplate().update("knowledge.updateByPrimaryKey",record);
+		return i;
+	}
 
 	@Override
 	public int checkNameRepeat(int knowledgetype, String knowledgetitle) {

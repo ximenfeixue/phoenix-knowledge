@@ -17,38 +17,68 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	private InvestmentAuthenticationService investmentAuthenticationService;
 	@Autowired
 	private KnowledgeDao knowledgeDao;
+	
+	
+	@Override
+	public Long saveKnowledge(Knowledge knowledge,Object knowledgeDetail) {
 
-//	@Override
-//	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
-//
-//		int type = knowledge.getKnowledgetype();
-//		Long id = 0l;
-//		switch (type) {
-//		case 1:
-//			break;
-//		case 2:
-//			InvestmentWord word = (InvestmentWord) knowledgeDetail;
-//			id = investmentAuthenticationService.createInvestmentWord(word);
-//			break;
-//
-//		default:
-//			break;
-//		}
-//		knowledge.setKnowledgeid(id);
-//		int i = knowledgeDao.insert(knowledge);
-//		return (long) i;
-//	}
-//
-//	@Override
-//	public boolean updateKnowledge(Knowledge knowledge, Object knowledgeDetail) {
-//
-//		return false;
-//	}
-//
-//	@Override
-//	public <T> T getKnowLedgeDetail(int id, int type) {
-//		return null;
-//	}
+		int type=knowledge.getKnowledgetype();
+		Long id=0l;
+		switch (type) {
+		case 1:
+			break;
+		case 2:
+			InvestmentWord word=(InvestmentWord) knowledgeDetail;
+			id=investmentAuthenticationService.createInvestmentWord(word);
+			break;
+			
+		default:
+			break;
+		}
+		knowledge.setKnowledgeid(id);
+		int i=knowledgeDao.insert(knowledge);
+		return (long) i;
+	}
+
+	@Override
+	public boolean updateKnowledge(Knowledge knowledge,Object knowledgeDetail) {
+		int type=knowledge.getKnowledgetype();
+		Long id=0l;
+		switch (type) {
+		case 1:
+			break;
+		case 2:
+			InvestmentWord word=(InvestmentWord) knowledgeDetail;
+			id=investmentAuthenticationService.createInvestmentWord(word);
+			break;
+			
+		default:
+			break;
+		}
+		knowledge.setKnowledgeid(id);
+		int i=knowledgeDao.insert(knowledge);
+		return true;
+
+	}
+
+	@Override
+	public Long saveKnowledgeTitle(Knowledge knowledge, Object knowledgeDetail) {
+		int type=knowledge.getKnowledgetype();
+		Long id=0l;
+		switch (type) {
+		case 1:
+			break;
+		case 2:
+			InvestmentWord word=(InvestmentWord) knowledgeDetail;
+			id=investmentAuthenticationService.createInvestmentWord(word);
+			break;
+		default:
+			break;
+		}
+		knowledge.setKnowledgeid(id);
+		int i=knowledgeDao.insert(knowledge);
+		return (long) i;
+	}
 
 	@Override
 	public int checkNameRepeat(int knowledgeType, String knowledgeTitle) {

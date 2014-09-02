@@ -13,19 +13,25 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
  */
 public interface KnowledgeMainService {
 
-//	/**
-//	 * 存储知识
-//	 * 
-//	 * @return
-//	 */
-//	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail);
-//
-//	/**
-//	 * 更新知识
-//	 * 
-//	 * @return
-//	 */
-//	public boolean updateKnowledge(Knowledge knowledge, Object knowledgeDetail);
+
+	/**
+	 * 存储知识
+	 * @return
+	 */
+	public Long saveKnowledge(Knowledge knowledge,Object knowledgeDetail);
+	
+	
+	/**
+	 * 存储知识基本信息（试用透融工具、行业）
+	 * @return
+	 */
+	public Long saveKnowledgeTitle(Knowledge knowledge,Object knowledgeDetail);
+	
+	/**
+	 * 更新知识
+	 * @return
+	 */
+	public boolean updateKnowledge(Knowledge knowledge,Object knowledgeDetail);
 //
 //	/**
 //	 * 获取知识详情
@@ -35,7 +41,6 @@ public interface KnowledgeMainService {
 //	 * @param type
 //	 *            知识类型
 //	 * @return
-//	 */
 //	public <T> T getKnowLedgeDetail(int id, int type);
 
 	/**
