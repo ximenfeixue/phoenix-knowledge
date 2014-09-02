@@ -12,43 +12,48 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 @Service("knowledgeMainService")
 public class KnowledgeMainServiceImpl implements KnowledgeMainService {
-	
+
 	@Autowired
 	private InvestmentAuthenticationService investmentAuthenticationService;
 	@Autowired
 	private KnowledgeDao knowledgeDao;
-	
-	
-	@Override
-	public Long saveKnowledge(Knowledge knowledge,Object knowledgeDetail) {
 
-		int type=knowledge.getKnowledgetype();
-		Long id=0l;
-		switch (type) {
-		case 1:
-			break;
-		case 2:
-			InvestmentWord word=(InvestmentWord) knowledgeDetail;
-			id=investmentAuthenticationService.createInvestmentWord(word);
-			break;
-			
-		default:
-			break;
-		}
-		knowledge.setKnowledgeid(id);
-		int i=knowledgeDao.insert(knowledge);
-		return (long) i;
-	}
+//	@Override
+//	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
+//
+//		int type = knowledge.getKnowledgetype();
+//		Long id = 0l;
+//		switch (type) {
+//		case 1:
+//			break;
+//		case 2:
+//			InvestmentWord word = (InvestmentWord) knowledgeDetail;
+//			id = investmentAuthenticationService.createInvestmentWord(word);
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		knowledge.setKnowledgeid(id);
+//		int i = knowledgeDao.insert(knowledge);
+//		return (long) i;
+//	}
+//
+//	@Override
+//	public boolean updateKnowledge(Knowledge knowledge, Object knowledgeDetail) {
+//
+//		return false;
+//	}
+//
+//	@Override
+//	public <T> T getKnowLedgeDetail(int id, int type) {
+//		return null;
+//	}
 
 	@Override
-	public boolean updateKnowledge(Knowledge knowledge,Object knowledgeDetail) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public int checkNameRepeat(int knowledgeType, String knowledgeTitle) {
 
-	@Override
-	public <T> T getKnowLedgeDetail(int id,int type) {
-		return null;
+		return knowledgeDao.checkNameRepeat(knowledgeType, knowledgeTitle);
 	}
 
 }

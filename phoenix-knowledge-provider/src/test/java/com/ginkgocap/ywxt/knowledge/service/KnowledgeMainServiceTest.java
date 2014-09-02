@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.cloud.model.InvestmentSynonym;
 import com.ginkgocap.ywxt.cloud.model.InvestmentWord;
@@ -32,32 +33,44 @@ public class KnowledgeMainServiceTest extends TestBase{
 	private InvestmentCommonService investmentCommonService;
 	@Autowired
 	private InvestmentAuthenticationService investmentAuthenticationService;
-
+//
+//    @Test
+//    public void testSaveKnowledge(){
+//    	Knowledge knowledge=new Knowledge();
+//    	Short s=2;
+//    	knowledge.setKnowledgeauthor("张巍11");
+//    	knowledge.setKnowledgetype(s);
+//    	knowledge.setKnowledgeid(34l);
+//    	InvestmentWord word=new InvestmentWord();
+//    	word.setCreateUserId(1l);
+//		word.setCreateUserName("张巍");
+//		String title = "关于测114试";
+//		word.setTitle(title);
+//		// 分类id
+//		word.setInvestmentClassifyId(1);
+//		// 等待审核
+//		word.setInvestmentStatus('0');
+//		word.setCreateDate(DateFunc.getDate());
+//		List<InvestmentSynonym> synonymList = investmentCommonService
+//				.parseSynonyms("呵呵");
+//		word.setSynonyms(synonymList);
+//		Long investmentId = investmentAuthenticationService.getInvestmentIdByTitle(title);
+//		if(investmentId != null){
+//			System.err.println("'"+title+"'_已存在");
+//			return;
+//		}
+//		Long id=knowledgeMainService.saveKnowledge(knowledge, word);
+//    }
+    
     @Test
-    public void testSaveKnowledge(){
-    	Knowledge knowledge=new Knowledge();
-    	Short s=2;
-    	knowledge.setKnowledgeauthor("张巍11");
-    	knowledge.setKnowledgetype(s);
-    	knowledge.setKnowledgeid(34l);
-    	InvestmentWord word=new InvestmentWord();
-    	word.setCreateUserId(1l);
-		word.setCreateUserName("张巍");
-		String title = "关于测114试";
-		word.setTitle(title);
-		// 分类id
-		word.setInvestmentClassifyId(1);
-		// 等待审核
-		word.setInvestmentStatus('0');
-		word.setCreateDate(DateFunc.getDate());
-		List<InvestmentSynonym> synonymList = investmentCommonService
-				.parseSynonyms("呵呵");
-		word.setSynonyms(synonymList);
-		Long investmentId = investmentAuthenticationService.getInvestmentIdByTitle(title);
-		if(investmentId != null){
-			System.err.println("'"+title+"'_已存在");
-			return;
-		}
-		Long id=knowledgeMainService.saveKnowledge(knowledge, word);
+    public void testcheckName(){
+    	int knowledgetype=2;
+    	String knowledgetitle="不知";
+    	int count=knowledgeMainService.checkNameRepeat(knowledgetype, knowledgetitle);
+    	if(count!=0){
+    		System.out.println("名称可以使用");
+    	}else{
+    		System.out.println("名称已存在");
+    	}
     }
  }
