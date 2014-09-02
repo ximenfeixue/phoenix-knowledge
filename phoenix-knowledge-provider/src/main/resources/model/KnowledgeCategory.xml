@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_category">
+	<typeAlias alias="knowledgecategory" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory" id="knowledgecategoryMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="knowledgeid" property="knowledgeid" jdbcType="BIGINT"/>
+		<result column="categoryid" property="categoryid" jdbcType="BIGINT"/>
+		<result column="status" property="status" jdbcType="INT"/>
+		<result column="sortid" property="sortId" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="dyColumns">id,knowledgeid,categoryid,status,sortid</sql>
+	
+	<update id="update" parameterClass="java.util.Map" >  
+        UPDATE tb_knowledge_r_category SET  
+	        categoryid = #categoryid:BIGINT#,
+			sortid = #sortId:VARCHAR#
+        WHERE   
+        	knowledgeid = #knowledgeid:BIGINT#   
+    </update>
+    
+    <delete id="delete" parameterClass="java.util.Map">
+    delete from tb_knowledge_r_category 
+    where knowledgeid=#knowledgeid:BIGINT#
+     and categoryid=#categoryid:BIGINT#
+    </delete>
+    
+
+	<insert id="batchInsert" parameterClass="java.util.List">
+		insert into tb_knowledge_r_category (
+			knowledgeid,
+			categoryid,
+			sortid
+		) values 
+		 	<iterate conjunction=",">
+				(#list[].knowledgeid#,
+				 #list[].categoryid#,
+				 #list[].sortId#
+				)
+		 	</iterate>
+	</insert>
+
+</sqlMap>
