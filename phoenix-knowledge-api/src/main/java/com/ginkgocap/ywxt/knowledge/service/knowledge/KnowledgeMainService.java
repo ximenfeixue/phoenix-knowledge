@@ -65,11 +65,7 @@ public interface KnowledgeMainService {
 	 * 批量知识移动到其它多个目录下
 	 * 
 	 * @param knowledgeid
-	 *            检查新建名称是否重复
 	 * 
-	 * @param knowledgeid
-	 * @param knowledgeTitle
-	 * @return
 	 */
 	void moveCategoryBatch(long knowledgeid, long categoryid,
 			long knowledgeids[], long categoryids[]);
