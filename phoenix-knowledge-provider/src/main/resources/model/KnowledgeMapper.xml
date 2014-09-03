@@ -13,7 +13,6 @@
 		<result column="knowledgeTitle" property="knowledgetitle" jdbcType="VARCHAR"/>
 		<result column="tag" property="tag" jdbcType="VARCHAR"/>
 		<result column="columnid" property="columnid" jdbcType="BIGINT"/>
-		<result column="categoryid" property="categoryid" jdbcType="BIGINT"/>
 		<result column="essence" property="essence" jdbcType="VARCHAR"/>
 		<result column="picture_task_id" property="pictureTaskId" jdbcType="VARCHAR"/>
 		<result column="visible" property="visible" jdbcType="VARCHAR"/>
@@ -36,7 +35,7 @@
 	  knowledgeDesc,
 	  knowledgeTitle,
 	  tag,columnid,
-	  categoryid,essence,picture_task_id,visible,sortId,pubdate,modifytime,recycleBin,state,clickNum,attatchment_task_id
+	  essence,picture_task_id,visible,sortId,pubdate,modifytime,recycleBin,state,clickNum,attatchment_task_id
 	</sql>
 
   <select id="selectByTitle" resultMap="knowledgeMap" parameterClass="java.util.Map">
@@ -44,5 +43,56 @@
    where knowledgeType=#knowledgetype:INT#
    and knowledgeTitle=#knowledgetitle:VARCHAR#
   </select>
+  
+   <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+    delete from tb_knowledge
+    where id = #id#
+  </delete>
+  <insert id="insert" parameterClass="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    insert into tb_knowledge (id, knowledgeid, user_id, 
+      knowledgeType, knowledgeAuthor, knowledgeSource, 
+      knowledgeDesc, knowledgeTitle, tag, 
+      columnid, essence, 
+      picture_task_id, visible, sortId, 
+      pubdate, modifyTime, recycleBin, 
+      state, clickNum, attatchment_task_id
+      )
+    values (#id#, #knowledgeid#, #userId#, 
+      #knowledgetype#, #knowledgeauthor#, #knowledgesource#, 
+      #knowledgedesc#, #knowledgetitle#, #tag#, 
+      #columnid#, #essence#, 
+      #pictureTaskId#, #visible#, #sortid#, 
+      #pubdate#, #modifytime#, #recyclebin#, 
+      #state#, #clicknum#, #attatchmentTaskId#
+      )
+      <selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    update tb_knowledge
+    set knowledgeid = #knowledgeid#,
+      user_id = #userId#,
+      knowledgeType = #knowledgetype#,
+      knowledgeAuthor = #knowledgeauthor#,
+      knowledgeSource = #knowledgesource#,
+      knowledgeDesc = #knowledgedesc#,
+      knowledgeTitle = #knowledgetitle#,
+      tag = #tag#,
+      columnid = #columnid#,
+      essence = #essence#,
+      picture_task_id = #pictureTaskId#,
+      visible = #visible#,
+      sortId = #sortid#,
+      pubdate = #pubdate#,
+      modifyTime = #modifytime#,
+      recycleBin = #recyclebin#,
+      state = #state#,
+      clickNum = #clicknum#,
+      attatchment_task_id = #attatchmentTaskId#
+    where id = #id#
+  </update>
+  
   
 </sqlMap>

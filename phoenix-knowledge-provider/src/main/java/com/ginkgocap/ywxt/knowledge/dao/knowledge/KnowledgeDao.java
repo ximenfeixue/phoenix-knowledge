@@ -3,17 +3,17 @@ package com.ginkgocap.ywxt.knowledge.dao.knowledge;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 public interface KnowledgeDao {
-	// int deleteByPrimaryKey(Long id);
-	//
-	// int insert(Knowledge record);
-	//
-	// int insertSelective(Knowledge record);
-	//
-	// Knowledge selectByPrimaryKey(Long id);
-	//
-	// int updateByPrimaryKeySelective(Knowledge record);
-	//
-	// int updateByPrimaryKey(Knowledge record);
+	 int deleteByPrimaryKey(Long id);
+	
+	 int insert(Knowledge record);
+	
+	 int insertSelective(Knowledge record);
+	
+	 Knowledge selectByPrimaryKey(Long id);
+	
+	 int updateByPrimaryKeySelective(Knowledge record);
+	
+	 int updateByPrimaryKey(Knowledge record);
 	/**
 	 * 检查知识名称是否重复
 	 * 
@@ -22,6 +22,7 @@ public interface KnowledgeDao {
 	 * @return
 	 */
 	int checkNameRepeat(int knowledgetype, String knowledgetitle);
+
 
 	/**
 	 * 将知识移动到其它目录
@@ -42,4 +43,6 @@ public interface KnowledgeDao {
 	 * @return
 	 */
 	void moveCategoryBatch(long knowledgeids[], long categoryids[]);
+
+
 }
