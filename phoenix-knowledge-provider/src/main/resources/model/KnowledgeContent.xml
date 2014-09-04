@@ -4,49 +4,35 @@
 	<typeAlias alias="knowledgeContent" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeContent"/>
 	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeContent" id="knowledgeContentMap">
 		<result column="id" property="id" jdbcType="BIGINT"/>
-		<result column="knowledgeid" property="knowledgeid" jdbcType="BIGINT"/>
+		<result column="knowledge_id" property="knowledgeid" jdbcType="BIGINT"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
-		<result column="show_content" property="show_content" jdbcType="VARCHAR"/>
-		<result column="page_count" property="page_count" jdbcType="INT"/>
-		<result column="page_head" property="page_head" jdbcType="VARCHAR"/>
-		<result column="page_bottom" property="page_bottom" jdbcType="VARCHAR"/>
-		<result column="state" property="state" jdbcType="INT"/>
+		<result column="pagecount" property="page_count" jdbcType="INT"/>
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+		<result column="htmlcontent" property="htmlcontent" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	
 	<sql id="allColumns">
 	  id,
-	  knowledgeid,
+	  knowledge_id,
 	  content,
-	  show_content,
-	  page_count,
-	  page_head,
-	  page_bottom,
-	  state
+	  pagecount,
+	  status,
+	  htmlcontent
 	</sql>
-	<!-- 
-	<update id="update" parameterClass="knowledgeContentMap">  
-        UPDATE tb_knowledge_content SET  
-			knowledgeid=#knowledgeId:BIGINT#,
-			content=#content:VARCHAR#,
-			show_content=#show_content:VARCHAR#,
-			page_count=#page_count:INT#,
-			page_head=#page_head:VARCHAR#,
-			page_bottom=#page_bottom:VARCHAR#,
-			state=#state:INT#
-        WHERE   
-        	id=#id:BIGINT#   
-    </update>
-	 -->
 	<insert id="insert" parameterClass="knowledgeContent">
 		insert into tb_knowledge_content(
-			  knowledgeid,
-			  page_count
+			  knowledge_id,
+			  content,
+			  pagecount,
+			  status,
+			  htmlcontent
 		) values (
-			knowledgeid=#knowledgeid:BIGINT#,
-			
-			page_count=#page_count:INT#
-			
+			#knowledgeid:BIGINT#,
+			#content:VARCHAR#,
+			#page_count:INT#,
+			#status:VARCHAR#,
+			#htmlcontent:VARCHAR#
 		)
 		<selectKey resultClass="long" type="post" keyProperty="id" > 
 		SELECT LAST_INSERT_ID() AS VALUE     

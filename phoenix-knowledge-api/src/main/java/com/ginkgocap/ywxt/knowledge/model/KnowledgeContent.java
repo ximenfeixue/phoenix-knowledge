@@ -13,11 +13,9 @@ public class KnowledgeContent implements Serializable {
 	private long id;// 内容id
 	private long knowledgeid;// 知识ID
 	private String content;// 知识内容
-	private String show_content;// 显示内容，大数据分析处理过的数据
 	private int page_count;// 页码总数，默认为1，可以有多页的需要填写
-	private String page_head;// 页头html数据，包含css
-	private String page_bottom;// 页尾html数据，包含css
-	private int state;// 1为有效，0为无效
+	private String status;// 1为有效，0为无效
+	private String htmlcontent;// html内容
 
 	public long getId() {
 		return id;
@@ -43,14 +41,6 @@ public class KnowledgeContent implements Serializable {
 		this.content = content;
 	}
 
-	public String getShow_content() {
-		return show_content;
-	}
-
-	public void setShow_content(String show_content) {
-		this.show_content = show_content;
-	}
-
 	public int getPage_count() {
 		return page_count;
 	}
@@ -59,28 +49,20 @@ public class KnowledgeContent implements Serializable {
 		this.page_count = page_count;
 	}
 
-	public String getPage_head() {
-		return page_head;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setPage_head(String page_head) {
-		this.page_head = page_head;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getPage_bottom() {
-		return page_bottom;
+	public String getHtmlcontent() {
+		return htmlcontent;
 	}
 
-	public void setPage_bottom(String page_bottom) {
-		this.page_bottom = page_bottom;
-	}
-
-	public int getState() {
-		return state;
-	}
-
-	public void setState(int state) {
-		this.state = state;
+	public void setHtmlcontent(String htmlcontent) {
+		this.htmlcontent = htmlcontent;
 	}
 
 	public static long getSerialversionuid() {

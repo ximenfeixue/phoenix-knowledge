@@ -113,4 +113,11 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 		return (long) i;
 	}
 
+
+	@Override
+	public Knowledge insertknowledge(Knowledge knowledge) {
+		
+		return knowledgeDao.insertknowledge(knowledge);
+	}
+
 }

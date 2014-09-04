@@ -72,4 +72,10 @@ public interface KnowledgeMainService {
 
 	int deleteKnowledgeRCategory(long knowledgeid, long categoryid);
 
+	/**
+	 * 新增知识(资讯，文章，宏观，资产管理，判例，观点)
+	 */
+
+	Knowledge insertknowledge(Knowledge knowledge);
+
 }

@@ -36,7 +36,6 @@ public class KnowledgeContentTest extends TestBase {
 
 		knowledgeContent.setKnowledgeid(7894);
 		knowledgeContent.setContent("测试");
-		knowledgeContent.setPage_head("测试");
 		knowledgeContent.setPage_count(5);
 		KnowledgeContent kc = knowledgeContentService.insert(knowledgeContent);
 

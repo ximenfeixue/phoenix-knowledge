@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -13,6 +13,8 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeContent;
+import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
@@ -35,6 +37,9 @@ public class KnowledgeMainServiceTest extends TestBase {
 	private InvestmentCommonService investmentCommonService;
 	@Autowired
 	private InvestmentAuthenticationService investmentAuthenticationService;
+
+	@Autowired
+	private KnowledgeContentService knowledgeContentService;
 
 	@Test
 	public void testcheckName() {
@@ -105,4 +110,35 @@ public class KnowledgeMainServiceTest extends TestBase {
 				knowledgeids, categoryids);
 	}
 
+	@Test
+	public void testinsertKnowledge() {
+		Knowledge knowledge = new Knowledge();
+
+		knowledge.setUserId(111012);
+		knowledge.setKnowledgetype(1);
+		knowledge.setKnowledgeauthor("测试名称");
+		knowledge.setKnowledgetitle("测试名");
+		knowledge.setKnowledgesource("不知道");
+		knowledge.setKnowledgedesc("测试");
+		knowledge.setClicknum(123);
+		knowledge.setEssence("1");
+		knowledge.setPictureTaskId("111");
+		knowledge.setVisible("0");
+		knowledge.setPubdate(new Date());
+		knowledge.setModifytime(new Date());
+		knowledge.setClicknum(20);
+		knowledge.setAttatchmentTaskId("123");
+
+		Knowledge knowresult = knowledgeMainService.insertknowledge(knowledge);
+		if (knowresult.getId() > 0) {
+			KnowledgeContent knowledgeContent = new KnowledgeContent();
+			knowledgeContent.setKnowledgeid(knowresult.getId());
+			knowledgeContent.setContent("这是测试内容");
+			KnowledgeContent knowledgeContentResult = knowledgeContentService
+					.insert(knowledgeContent);
+			System.out.println("content" + knowledgeContentResult.getId());
+			System.out.println("content : " + knowledgeContentResult.getContent());
+		}
+		System.out.println("knowledge" + knowresult.getId());
+	}
 }

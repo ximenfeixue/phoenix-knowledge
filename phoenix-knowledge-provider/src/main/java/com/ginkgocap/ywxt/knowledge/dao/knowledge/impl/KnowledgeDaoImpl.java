@@ -13,6 +13,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
+import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -34,6 +35,9 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	@Autowired
 	private CategoryDao categoryDao;
 
+	@Autowired
+	private KnowledgeContentDAO knowledgeContentDAO;
+
 	private CategoryHelper helper = new CategoryHelper();
 
 	@PostConstruct
@@ -41,43 +45,43 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		super.setSqlMapClient(sqlMapClient);
 	}
 
-	
-	 @Override
+	@Override
 	public int insert(Knowledge record) {
-	 long r = record.getId();
-	 Long i = 0l;
-	 if (r > 0) {
-	 return updateByPrimaryKey(record);
-	 } else {
-	 i = (Long) getSqlMapClientTemplate().insert("knowledge.insert",
-	 record);
-	 }
-	 return i.intValue();
-	 }
-	
-	 @Override
-	 public int insertSelective(Knowledge record) {
-	 // TODO Auto-generated method stub
-	 return 0;
-	 }
-	
-	 @Override
-	 public Knowledge selectByPrimaryKey(Long id) {
-	 // TODO Auto-generated method stub
-	 return null;
-	 }
-	
-	 @Override
-	 public int updateByPrimaryKeySelective(Knowledge record) {
-	 // TODO Auto-generated method stub
-	 return 0;
-	 }
-	
-	 @Override
-	 public int updateByPrimaryKey(Knowledge record) {
-		 int i =  getSqlMapClientTemplate().update("knowledge.updateByPrimaryKey",record);
-			return i;
-	 }
+		long r = record.getId();
+		Long i = 0l;
+		if (r > 0) {
+			return updateByPrimaryKey(record);
+		} else {
+			i = (Long) getSqlMapClientTemplate().insert("knowledge.insert",
+					record);
+		}
+		return i.intValue();
+	}
+
+	@Override
+	public int insertSelective(Knowledge record) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Knowledge selectByPrimaryKey(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Knowledge record) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateByPrimaryKey(Knowledge record) {
+		int i = getSqlMapClientTemplate().update(
+				"knowledge.updateByPrimaryKey", record);
+		return i;
+	}
 
 	@Override
 	public int checkNameRepeat(int knowledgetype, String knowledgetitle) {
@@ -174,7 +178,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 						e.printStackTrace();
 					}
 					list.add(knowledgeRCategory);
-				}else{
+				} else {
 					continue;
 				}
 
@@ -188,6 +192,20 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	public int deleteByPrimaryKey(Long id) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Knowledge insertknowledge(Knowledge knowledge) {
+
+		Long id = (Long) getSqlMapClientTemplate().insert(
+				"tb_knowledge.insertknowledge", knowledge);
+		if (id != null) {
+			knowledge.setId(id);
+			return knowledge;
+		} else {
+
+			return null;
+		}
 	}
 
 }
