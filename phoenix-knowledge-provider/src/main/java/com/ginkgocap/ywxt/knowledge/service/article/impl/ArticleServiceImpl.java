@@ -609,12 +609,14 @@ public class ArticleServiceImpl implements ArticleService {
 			// 得到被监听对象状态
 			w.update(watched, "");
 			// 假如事务完成则从Hash表中清楚被监听对象
+			if (watched.isDone()) {
+				Content.MAP.remove(taskId);
+				System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
+			}
+			return w.getMes();
+		}else{
+			return "";
 		}
-		if (watched.isDone()) {
-			Content.MAP.remove(taskId);
-			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
-		}
-		return w.getMes();
 	}
 
 	@Override
