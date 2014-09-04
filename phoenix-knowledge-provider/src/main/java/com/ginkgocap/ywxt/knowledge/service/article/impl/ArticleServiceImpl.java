@@ -604,10 +604,12 @@ public class ArticleServiceImpl implements ArticleService {
 		// 从hash表中得到被监听的对象
 		ImportWatched watched = (ImportWatched) Content.MAP.get(taskId);
 		// 通过被监听对象初始化监听对象
-		ImportWatcher w = new ImportWatcher(watched);
-		// 得到被监听对象状态
-		w.update(watched, "");
-		// 假如事务完成则从Hash表中清楚被监听对象
+		if(watched!=null){
+			ImportWatcher w = new ImportWatcher(watched);
+			// 得到被监听对象状态
+			w.update(watched, "");
+			// 假如事务完成则从Hash表中清楚被监听对象
+		}
 		if (watched.isDone()) {
 			Content.MAP.remove(taskId);
 			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
