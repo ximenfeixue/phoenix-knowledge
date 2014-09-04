@@ -208,4 +208,18 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		}
 	}
 
+	@Override
+	public int deleteKnowledge(String[] ids) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ids", ids);
+		int count = getSqlMapClientTemplate()
+				.delete("tb_knowledge.deleteBatch", map);
+		if (count > 0) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 }

@@ -137,8 +137,20 @@ public class KnowledgeMainServiceTest extends TestBase {
 			KnowledgeContent knowledgeContentResult = knowledgeContentService
 					.insert(knowledgeContent);
 			System.out.println("content" + knowledgeContentResult.getId());
-			System.out.println("content : " + knowledgeContentResult.getContent());
+			System.out.println("content : "
+					+ knowledgeContentResult.getContent());
 		}
 		System.out.println("knowledge" + knowresult.getId());
+	}
+
+	@Test
+	public void testdeleteBatch() {
+		String ids[] = { "5574"};
+		int count = knowledgeMainService.deleteKnowledge(ids);
+		if (count > 0) {
+			System.out.println("删除成功");
+		} else {
+			System.out.println("删除失败");
+		}
 	}
 }

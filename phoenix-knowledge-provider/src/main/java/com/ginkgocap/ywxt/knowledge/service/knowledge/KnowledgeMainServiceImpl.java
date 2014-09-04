@@ -18,32 +18,31 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	@Autowired
 	private KnowledgeDao knowledgeDao;
 
-	 @Override
-	 public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
-	
-	 int type = knowledge.getKnowledgetype();
-	 Long id = 0l;
-	 switch (type) {
-	 case 1:
-	 break;
-	 case 2:
-	 InvestmentWord word = (InvestmentWord) knowledgeDetail;
-	 id = investmentAuthenticationService.createInvestmentWord(word);
-	 break;
-	
-	 default:
-	 break;
-	 }
-	 knowledge.setKnowledgeid(id);
-	 int i = knowledgeDao.insert(knowledge);
-	 return (long) i;
-	 }
-	
-	
-	 @Override
-	 public <T> T getKnowLedgeDetail(int id, int type) {
-	 return null;
-	 }
+	@Override
+	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
+
+		int type = knowledge.getKnowledgetype();
+		Long id = 0l;
+		switch (type) {
+		case 1:
+			break;
+		case 2:
+			InvestmentWord word = (InvestmentWord) knowledgeDetail;
+			id = investmentAuthenticationService.createInvestmentWord(word);
+			break;
+
+		default:
+			break;
+		}
+		knowledge.setKnowledgeid(id);
+		int i = knowledgeDao.insert(knowledge);
+		return (long) i;
+	}
+
+	@Override
+	public <T> T getKnowLedgeDetail(int id, int type) {
+		return null;
+	}
 
 	@Override
 	public int checkNameRepeat(int knowledgeType, String knowledgeTitle) {
@@ -74,50 +73,55 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public boolean updateKnowledge(Knowledge knowledge,Object knowledgeDetail) {
-		int type=knowledge.getKnowledgetype();
-		Long id=0l;
+	public boolean updateKnowledge(Knowledge knowledge, Object knowledgeDetail) {
+		int type = knowledge.getKnowledgetype();
+		Long id = 0l;
 		switch (type) {
 		case 1:
 			break;
 		case 2:
-			InvestmentWord word=(InvestmentWord) knowledgeDetail;
-			id=investmentAuthenticationService.createInvestmentWord(word);
+			InvestmentWord word = (InvestmentWord) knowledgeDetail;
+			id = investmentAuthenticationService.createInvestmentWord(word);
 			break;
-			
+
 		default:
 			break;
 		}
 		knowledge.setKnowledgeid(id);
-		int i=knowledgeDao.insert(knowledge);
+		int i = knowledgeDao.insert(knowledge);
 		return true;
 
 	}
 
 	@Override
 	public Long saveKnowledgeTitle(Knowledge knowledge, Object knowledgeDetail) {
-		int type=knowledge.getKnowledgetype();
-		Long id=0l;
+		int type = knowledge.getKnowledgetype();
+		Long id = 0l;
 		switch (type) {
 		case 1:
 			break;
 		case 2:
-			InvestmentWord word=(InvestmentWord) knowledgeDetail;
-			id=investmentAuthenticationService.createInvestmentWord(word);
+			InvestmentWord word = (InvestmentWord) knowledgeDetail;
+			id = investmentAuthenticationService.createInvestmentWord(word);
 			break;
 		default:
 			break;
 		}
 		knowledge.setKnowledgeid(id);
-		int i=knowledgeDao.insert(knowledge);
+		int i = knowledgeDao.insert(knowledge);
 		return (long) i;
 	}
 
-
 	@Override
 	public Knowledge insertknowledge(Knowledge knowledge) {
-		
+
 		return knowledgeDao.insertknowledge(knowledge);
+	}
+
+	@Override
+	public int deleteKnowledge(String[] ids) {
+
+		return knowledgeDao.deleteKnowledge(ids);
 	}
 
 }

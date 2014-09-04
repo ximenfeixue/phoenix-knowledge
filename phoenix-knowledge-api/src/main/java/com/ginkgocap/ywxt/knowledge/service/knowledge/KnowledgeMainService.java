@@ -78,4 +78,9 @@ public interface KnowledgeMainService {
 
 	Knowledge insertknowledge(Knowledge knowledge);
 
+	/**
+	 * 删除知识(资讯，文章，宏观，资产管理，判例，观点)
+	 */
+
+	int deleteKnowledge(String[] ids);
 }

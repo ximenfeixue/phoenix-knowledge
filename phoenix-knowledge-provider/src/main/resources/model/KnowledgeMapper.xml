@@ -128,5 +128,12 @@
     where id = #id#
   </update>
   
+  <update id="deleteBatch" parameterClass="java.util.Map">
+    update tb_knowledge
+ 	 set   status = '0'
+    where id  in 
+    <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+  </update>
+  
   
 </sqlMap>
