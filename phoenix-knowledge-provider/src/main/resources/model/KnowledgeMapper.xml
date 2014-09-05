@@ -130,7 +130,7 @@
   
   <update id="deleteBatch" parameterClass="java.util.Map">
     update tb_knowledge
- 	 set   status = ''
+ 	 set   status = '3'
     where id  in 
     <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
   </update>

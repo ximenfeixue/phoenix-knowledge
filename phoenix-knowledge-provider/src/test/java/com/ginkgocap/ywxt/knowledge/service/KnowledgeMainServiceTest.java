@@ -142,9 +142,9 @@ public class KnowledgeMainServiceTest extends TestBase {
 
 	@Test
 	public void testdeleteBatch() {
-		String ids[] = { "5574" };
-		long category_id = 0;
-		int count = knowledgeMainService.deleteKnowledge(ids, category_id);
+		long ids[] = { 5575,5586 };
+		long categoryid = 52;
+		int count = knowledgeMainService.deleteKnowledge(ids, categoryid);
 		if (count > 0) {
 			System.out.println("删除成功");
 		} else {

@@ -124,15 +124,24 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	@Override
 	public Knowledge insertknowledge(Knowledge knowledge, long[] categoryids) {
 
-		Knowledge knowledgeresult = knowledgeDao.insertknowledge(knowledge);
-
 		return knowledgeDao.insertknowledge(knowledge);
 	}
 
 	@Override
-	public int deleteKnowledge(String[] ids, long category_id) {
+	public int deleteKnowledge(long ids[], long categoryid) {
 
-		return knowledgeDao.deleteKnowledge(ids);
+		int count = 0;
+		count = knowledgeDao.deleteKnowledge(ids, categoryid);
+		if (count > 0) {
+			count = knowledgeDao.deleteKnowledgeRCategory(ids, categoryid);
+			if (count > 0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
 	}
 
 	@Override

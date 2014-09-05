@@ -191,7 +191,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public int deleteKnowledge(String[] ids) {
+	public int deleteKnowledge(long[] ids, long categoryid) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ids", ids);

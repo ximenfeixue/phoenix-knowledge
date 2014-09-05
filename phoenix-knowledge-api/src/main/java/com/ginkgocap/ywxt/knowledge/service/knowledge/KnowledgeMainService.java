@@ -90,7 +90,7 @@ public interface KnowledgeMainService {
 	 * 删除知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	int deleteKnowledge(String[] ids, long category_id);
+	int deleteKnowledge(long[] ids,long categoryid);
 
 	/**
 	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
