@@ -19,6 +19,15 @@ public interface KnowledgeContentService {
 	 * @return
 	 */
 	KnowledgeContent insert(KnowledgeContent knowledgeContent);
+	
+	/**
+	 * 当編輯知识同时要修改内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int update(KnowledgeContent knowledgeContent);
+	
 
 	/**
 	 * 查询内容

@@ -4,33 +4,34 @@
 	<typeAlias alias="knowledgecategory" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory"/>
 	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory" id="knowledgecategoryMap">
 		<result column="id" property="id" jdbcType="BIGINT"/>
-		<result column="knowledgeid" property="knowledgeid" jdbcType="BIGINT"/>
-		<result column="categoryid" property="categoryid" jdbcType="BIGINT"/>
-		<result column="status" property="status" jdbcType="INT"/>
+		<result column="knowledge_id" property="knowledgeid" jdbcType="BIGINT"/>
+		<result column="category_id" property="categoryid" jdbcType="BIGINT"/>
+		<result column="status" property="status" jdbcType="VARCHAR"/>
 		<result column="sortid" property="sortId" jdbcType="VARCHAR"/>
 	</resultMap>
 	
-	<sql id="dyColumns">id,knowledgeid,categoryid,status,sortid</sql>
+	<sql id="dyColumns">id,knowledge_id,category_id,status,sortid</sql>
 	
 	<update id="update" parameterClass="java.util.Map" >  
-        UPDATE tb_knowledge_r_category SET  
-	        categoryid = #categoryid:BIGINT#,
+        UPDATE tb_knowledge_category SET  
+	        category_id = #categoryid:BIGINT#,
 			sortid = #sortId:VARCHAR#
         WHERE   
-        	knowledgeid = #knowledgeid:BIGINT#   
+        	knowledge_id = #knowledgeid:BIGINT#   
     </update>
     
     <delete id="delete" parameterClass="java.util.Map">
-    delete from tb_knowledge_r_category 
-    where knowledgeid=#knowledgeid:BIGINT#
-     and categoryid=#categoryid:BIGINT#
+    delete from tb_knowledge_category 
+     where  category_id=#categoryid:BIGINT# 
+     and  knowledge_id in 
+      <iterate property="knowledgeids" open="(" close=")" conjunction=",">#knowledgeids[]#</iterate>
     </delete>
     
 
 	<insert id="batchInsert" parameterClass="java.util.List">
-		insert into tb_knowledge_r_category (
-			knowledgeid,
-			categoryid,
+		insert into tb_knowledge_category (
+			knowledge_id,
+			category_id,
 			sortid
 		) values 
 		 	<iterate conjunction=",">
@@ -39,6 +40,23 @@
 				 #list[].sortId#
 				)
 		 	</iterate>
+	</insert>
+	
+	<insert id="insert" parameterClass="knowledgecategory">
+		insert into tb_knowledge_category(
+			knowledge_id,
+			category_id,
+			status,
+			sortid
+		) values (
+			#knowledgeid:BIGINT#,
+			#categoryid:BIGINT#,
+			#status:VARCHAR#,
+			#sortId:VARCHAR#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
 	</insert>
 
 </sqlMap>

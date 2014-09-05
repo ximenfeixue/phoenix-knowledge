@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledge;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 
 /**
  * 知识Service
@@ -51,14 +52,6 @@ public interface KnowledgeMainService {
 	 */
 	public Long saveKnowledgeTitle(Knowledge knowledge, Object knowledgeDetail);
 
-	/**
-	 * 知识移动到其它目录下
-	 * 
-	 * @param knowledgeid
-	 * @return
-	 */
-	void moveCategory(long knowledgeid, long categoryid, String sortId);
-
 	//
 
 	/**
@@ -67,20 +60,41 @@ public interface KnowledgeMainService {
 	 * @param knowledgeid
 	 * 
 	 */
-	void moveCategoryBatch(long knowledgeid, long categoryid,
-			long knowledgeids[], long categoryids[]);
+	void moveCategoryBatch(long categoryid, long knowledgeids[],
+			long categoryids[]);
 
-	int deleteKnowledgeRCategory(long knowledgeid, long categoryid);
+	/**
+	 * 刪除知识，把知识目录中间表删除
+	 * 
+	 * @param knowledgeids
+	 * @param categoryid
+	 * @return
+	 */
+	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
+
+	/**
+	 * 新增知识，把知识ID，目录ID，存入到知识目录中间表中
+	 * 
+	 * @param knowledgeRCategory
+	 * @return
+	 */
+	void insertKnowledgeRCategory(Knowledge knowledge, long categoryid[]);
 
 	/**
 	 * 新增知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	Knowledge insertknowledge(Knowledge knowledge);
+	Knowledge insertknowledge(Knowledge knowledge, long categoryid[]);
 
 	/**
 	 * 删除知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	int deleteKnowledge(String[] ids);
+	int deleteKnowledge(String[] ids, long category_id);
+
+	/**
+	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
+	 */
+
+	int updateKnowledge(Knowledge knowledge);
 }

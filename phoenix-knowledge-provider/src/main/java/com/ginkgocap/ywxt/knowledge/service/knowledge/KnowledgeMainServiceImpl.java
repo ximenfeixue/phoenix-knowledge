@@ -1,14 +1,21 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledge;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.cloud.model.InvestmentWord;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
+import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
+import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
+import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Service("knowledgeMainService")
 public class KnowledgeMainServiceImpl implements KnowledgeMainService {
@@ -17,6 +24,13 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	private InvestmentAuthenticationService investmentAuthenticationService;
 	@Autowired
 	private KnowledgeDao knowledgeDao;
+
+	@Autowired
+	private CategoryDao categoryDao;
+
+	@Autowired
+	SqlMapClient sqlMapClient;
+	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
 	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
@@ -51,21 +65,16 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public void moveCategory(long knowledgeid, long categoryid, String sortId) {
-		knowledgeDao.moveCategory(knowledgeid, categoryid, sortId);
+	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
+
+		return knowledgeDao.deleteKnowledgeRCategory(knowledgeids, categoryid);
 	}
 
 	@Override
-	public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
+	public void moveCategoryBatch(long categoryid, long[] knowledgeids,
+			long[] categoryids) {
 
-		return knowledgeDao.deleteKnowledgeRCategory(knowledgeid, categoryid);
-	}
-
-	@Override
-	public void moveCategoryBatch(long knowledgeid, long categoryid,
-			long[] knowledgeids, long[] categoryids) {
-
-		int count = knowledgeDao.deleteKnowledgeRCategory(knowledgeid,
+		int count = knowledgeDao.deleteKnowledgeRCategory(knowledgeids,
 				categoryid);
 		if (count > 0) {
 			knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
@@ -113,15 +122,29 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public Knowledge insertknowledge(Knowledge knowledge) {
+	public Knowledge insertknowledge(Knowledge knowledge, long[] categoryids) {
+
+		Knowledge knowledgeresult = knowledgeDao.insertknowledge(knowledge);
 
 		return knowledgeDao.insertknowledge(knowledge);
 	}
 
 	@Override
-	public int deleteKnowledge(String[] ids) {
+	public int deleteKnowledge(String[] ids, long category_id) {
 
 		return knowledgeDao.deleteKnowledge(ids);
+	}
+
+	@Override
+	public int updateKnowledge(Knowledge knowledge) {
+
+		return knowledgeDao.updateKnowledge(knowledge);
+	}
+
+	@Override
+	public void insertKnowledgeRCategory(Knowledge knowledge, long categoryid[]) {
+
+		knowledgeDao.insertKnowledgeRCategory(knowledge, categoryid);
 	}
 
 }

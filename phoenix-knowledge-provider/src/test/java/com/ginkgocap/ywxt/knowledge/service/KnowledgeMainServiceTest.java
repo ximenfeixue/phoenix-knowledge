@@ -83,18 +83,9 @@ public class KnowledgeMainServiceTest extends TestBase {
 	}
 
 	@Test
-	@Rollback(false)
-	public void testmovecategory() {
-		long knowledgeid = 6478;
-		String sortId = "000000001000000001";
-		long categoryid = 46;
-		knowledgeMainService.moveCategory(knowledgeid, categoryid, sortId);
-	}
-
-	@Test
 	public void testdeletetegory() {
-		long knowledgeid = 6478;
-		long categoryid = 46;
+		long knowledgeid[] = { 1, 2, 3 };
+		long categoryid = 3;
 		int count = knowledgeMainService.deleteKnowledgeRCategory(knowledgeid,
 				categoryid);
 		System.out.println(count + "是否成功");
@@ -102,12 +93,11 @@ public class KnowledgeMainServiceTest extends TestBase {
 
 	@Test
 	public void testmoveCategoryBatch() {
-		long knowledgeid = 3;
 		long categoryid = 52;
-		long knowledgeids[] = { 3, 4, 5 };
+		long knowledgeids[] = { 2, 3 };
 		long categoryids[] = { 52, 53, 54 };
-		knowledgeMainService.moveCategoryBatch(knowledgeid, categoryid,
-				knowledgeids, categoryids);
+		knowledgeMainService.moveCategoryBatch(categoryid, knowledgeids,
+				categoryids);
 	}
 
 	@Test
@@ -129,7 +119,10 @@ public class KnowledgeMainServiceTest extends TestBase {
 		knowledge.setClicknum(20);
 		knowledge.setAttatchmentTaskId("123");
 
-		Knowledge knowresult = knowledgeMainService.insertknowledge(knowledge);
+		long[] categoryid = { 52, 53, 54 };
+
+		Knowledge knowresult = knowledgeMainService.insertknowledge(knowledge,
+				categoryid);
 		if (knowresult.getId() > 0) {
 			KnowledgeContent knowledgeContent = new KnowledgeContent();
 			knowledgeContent.setKnowledgeid(knowresult.getId());
@@ -139,18 +132,50 @@ public class KnowledgeMainServiceTest extends TestBase {
 			System.out.println("content" + knowledgeContentResult.getId());
 			System.out.println("content : "
 					+ knowledgeContentResult.getContent());
+			if (knowledgeContentResult.getId() > 0) {
+				knowledgeMainService.insertKnowledgeRCategory(knowledge,
+						categoryid);
+			}
 		}
 		System.out.println("knowledge" + knowresult.getId());
 	}
 
 	@Test
 	public void testdeleteBatch() {
-		String ids[] = { "5574"};
-		int count = knowledgeMainService.deleteKnowledge(ids);
+		String ids[] = { "5574" };
+		long category_id = 0;
+		int count = knowledgeMainService.deleteKnowledge(ids, category_id);
 		if (count > 0) {
 			System.out.println("删除成功");
 		} else {
 			System.out.println("删除失败");
+		}
+	}
+
+	@Test
+	public void testupdateknowledge() {
+		Knowledge knowledge = new Knowledge();
+
+		knowledge.setId(5571);
+		knowledge.setUserId(111012);
+		knowledge.setKnowledgetype(1);
+		knowledge.setKnowledgeauthor("修改后的测试");
+		knowledge.setKnowledgetitle("修改后测试名");
+		knowledge.setKnowledgesource("修改后不知道");
+		knowledge.setKnowledgedesc("修改后测试");
+		knowledge.setClicknum(123);
+		knowledge.setEssence("1");
+		knowledge.setPictureTaskId("111");
+		knowledge.setVisible("0");
+		knowledge.setPubdate(new Date());
+		knowledge.setModifytime(new Date());
+		knowledge.setClicknum(20);
+		knowledge.setAttatchmentTaskId("123");
+		int count = knowledgeMainService.updateKnowledge(knowledge);
+		if (count > 0) {
+			System.out.println("编辑成功");
+		} else {
+			System.out.println("编辑失败");
 		}
 	}
 }

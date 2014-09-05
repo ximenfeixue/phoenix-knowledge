@@ -28,4 +28,12 @@ public interface KnowledgeContentDAO {
 	 */
 	List<KnowledgeContent> selectByknowledgeId(long knowledgeId);
 
+	/**
+	 * 編輯内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int update(KnowledgeContent knowledgeContent);
+
 }

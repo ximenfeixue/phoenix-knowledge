@@ -130,10 +130,39 @@
   
   <update id="deleteBatch" parameterClass="java.util.Map">
     update tb_knowledge
- 	 set   status = '0'
+ 	 set   status = ''
     where id  in 
     <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
   </update>
   
+  <update id="updateknowledge" parameterClass="com.ginkgocap.ywxt.knowledge.model.Knowledge">
+    update tb_knowledge
+    set oldknowledge_id = #knowledgeid#,
+      user_id = #userId#,
+      username=#username#,
+      create_user_id=#create_user_id#,
+      create_username=#create_username#,
+      author = #knowledgeauthor#,
+      source = #knowledgesource#,
+      knowDesc = #knowledgedesc#,
+      title = #knowledgetitle#,
+      column_id = #columnid#,
+      know_path=#know_path#,
+      essence = #essence#,
+      pic_path = #pictureTaskId#,
+      visible = #visible#,
+      pubdate = #pubdate#,
+      modifyTime = #modifytime#,
+      status = #status#,
+      check_status=#check_status#,
+     report_status =#report_status#,
+      clickNum = #clicknum#,
+      commentNum=#commentNum#,
+      shareNum=#shareNum#,
+      collectionNum=#collectionNum#,
+      createtime=#createtime#,
+      taskid = #attatchmentTaskId#
+    where id = #id# and type = #knowledgetype#
+  </update>
   
 </sqlMap>

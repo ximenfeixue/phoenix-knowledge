@@ -53,9 +53,23 @@ public class KnowledgeContentDAOImpl extends SqlMapClientDaoSupport implements
 				"tb_knowledge_content.insert", knowledgeId);
 		if (list != null && list.size() > 0) {
 			return list;
-		}else{
-			
+		} else {
+
 			return null;
+		}
+	}
+
+	@Override
+	public int update(KnowledgeContent knowledgeContent) {
+
+		int count = getSqlMapClientTemplate().update(
+				"tb_knowledge_content.update", knowledgeContent);
+		if (count > 0) {
+
+			return 1;
+		} else {
+
+			return 0;
 		}
 	}
 

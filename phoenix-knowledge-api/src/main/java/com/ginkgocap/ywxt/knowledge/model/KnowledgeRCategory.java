@@ -19,7 +19,7 @@ public class KnowledgeRCategory implements Serializable {
 	private long categoryid;
 
 	/** 状态(1生效，0失效) */
-	private int status;
+	private String status;
 
 	/** 排序ID，九位一级 如000000001000000001,为一级分类下的第一个分类 */
 	private String sortId;
@@ -48,11 +48,11 @@ public class KnowledgeRCategory implements Serializable {
 		this.categoryid = categoryid;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
