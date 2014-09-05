@@ -24,7 +24,7 @@ import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.share.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.article.ArticleService;
+import com.ginkgocap.ywxt.knowledge.service.article.MobileArticleService;
 import com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService;
 import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
@@ -42,8 +42,8 @@ import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.MakeTaskId;
 import com.ginkgocap.ywxt.util.PageUtil;
 
-@Service("articleService")
-public class ArticleServiceImpl implements ArticleService {
+@Service("mobileArticleService")
+public class MobileArticleServiceImpl implements MobileArticleService {
 	@Autowired
 	private ArticleDao articleDao;
 	@Autowired
@@ -687,4 +687,10 @@ public class ArticleServiceImpl implements ArticleService {
 				essence, recycleBin, keywords, sort, pageIndex, pageSize);
 		return articles;
 	}
+
+	@Override
+	public boolean checkArticleIsExist(String url, long uid) {
+		return articleDao.checkArticleIsExist(url, uid);
+	}
+	
 }

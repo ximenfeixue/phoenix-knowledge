@@ -69,8 +69,9 @@ public class ArticleServiceTest extends TestBase{
         
         
         article = new Article();
-        article.setArticleContent("content");
+        article.setArticleContent("http://www.baidu.com");
         article.setArticleTitle("title");
+        article.setArticleType("1");
         article.setAuthor("lk");
         article.setCategoryid(category.getId());
         article.setClickNum(0);
@@ -88,6 +89,7 @@ public class ArticleServiceTest extends TestBase{
         articlechild = new Article();
         articlechild.setArticleContent("content内容");
         articlechild.setArticleTitle("title标题");
+        articlechild.setArticleType("1");
         articlechild.setAuthor("lk");
         articlechild.setCategoryid(child.getId());
         articlechild.setClickNum(0);
@@ -240,5 +242,19 @@ public class ArticleServiceTest extends TestBase{
     	List<Article> list = articleService.relationList(uid, article.getId(), article.getSortId(), 1, 10);
     	System.out.println(list.size());
     	assertTrue(list.size() > 0);
+    }
+    @Test
+    public void testNewCount(){
+    	PageUtil p = articleService.count(uid, article.getArticleType(),article.getSortId(), article.getEssence(), article.getRecycleBin(), "title", 1, 10);
+    	System.out.println(p.getCount());
+    	assertTrue(p.getCount() >0);
+    }
+    @Test
+    public void testNewList(){
+    	List<Article> list = articleService.list(uid,article.getArticleType(),category.getSortId(), "0", "0", "title", "id", 1, 10);
+    	assertTrue(list.size() > 0);
+    	for (Article a: list){
+    		System.out.println(a.getId() + "    " + a.getClickNum() + "    "  + a.getArticleTitle());
+    	}
     }
  }

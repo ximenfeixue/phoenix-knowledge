@@ -93,4 +93,36 @@ public interface ArticleDao {
 	
 	List<Article> relationList(long uid, long ralatoinid, String sort,
 			int pageIndex, int pageSize);
+	/**
+     * 文章列表
+     * @param uid 
+     * @param articleType null：取全部；0：去正文类型；1：取url类型
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @return long
+     */
+	long selectByParamsCount(long uid, String articleType,String sortId, String essence,String recycleBin, String keywords);
+	/**
+     * 得到文章列表的文章数量
+     * @param uid 
+     * @param articleType null：取全部；0：去正文类型；1：取url类型
+     * @param sortId 分类配需ID
+     * @param essence 是否为精华
+     * @param recycleBin 是否回收站 
+     * @param keywords 搜索关键字
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+     * @return List<Article>
+     */
+	List<Article> selectByParams(long uid,String articleType, String sortId, String essence,String recycleBin, String keywords, String sort,int pageIndex, int pageSize);
+
+	/**
+	 * 查询articleType为1的 文章是否存在
+	 * @param url 文章url
+	 * @param uid 用户uid  不是id
+	 * @return true:已存在;false:不存在
+	 */
+	boolean checkArticleIsExist(String url,long uid);
 }

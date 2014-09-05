@@ -10,6 +10,8 @@
 			<props>
 				<prop key="/category/">categoryExporter</prop>
 				<prop key="/article/">articleExporter</prop>
+				<prop key="/share/">shareExporter</prop>
+				<prop key="/favorites/">favoritesExporter</prop>
 			</props>
 		</property>
 	</bean>
@@ -18,9 +20,22 @@
 	              <property name="service" ref="categoryService"/>
 	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.category.CategoryService"/>
 	</bean>
+	
 	<bean id="articleExporter" 
 	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
 	              <property name="service" ref="articleService"/>
 	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.article.ArticleService"/>
+	</bean>
+	
+	<bean id="shareExporter" 
+	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+	              <property name="service" ref="knowledgeShareService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService"/>
+	</bean>
+	
+	<bean id="favoritesExporter" 
+	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+	              <property name="service" ref="favoritesService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService"/>
 	</bean>
 </beans>

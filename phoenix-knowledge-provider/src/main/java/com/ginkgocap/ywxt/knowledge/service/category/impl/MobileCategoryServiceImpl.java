@@ -10,14 +10,10 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
-/**
- * 知识管理分类的service实现类
- * @author lk
- * @创建时间：2013-03-29 10:40
- */
-@Service("categoryService")
-public class CategoryServiceImpl implements CategoryService{
+import com.ginkgocap.ywxt.knowledge.service.category.MobileCategoryService;
+
+@Service("mobileCategoryService")
+public class MobileCategoryServiceImpl implements MobileCategoryService {
 	private CategoryHelper helper = new CategoryHelper();
     @Autowired
     private CategoryDao categoryDao;

@@ -76,4 +76,22 @@
 	<select id="selectMaxSortId" resultClass="string" parameterClass="java.util.Map">
 		select max(sortid) from tb_category where uid=#uid# and sortId like #parentSortId#
 	</select>
+	<select id="findByParam" resultMap="categoryMap"
+	parameterClass="java.util.Map">
+		select a.* from tb_category a where 1=1 
+		<dynamic>
+			<isNotEmpty  prepend="AND" property="name">
+				a.name = #name#
+			</isNotEmpty >  
+			<isNotEmpty  prepend="AND" property="uid">
+				a.uid = #uid#
+			</isNotEmpty >
+			<isNotEmpty  prepend="AND" property="sortId">
+				a.sortId = #sortId#
+			</isNotEmpty >
+			<isNotEmpty  prepend="AND" property="state">
+				a.state = #state#
+			</isNotEmpty >
+		</dynamic>
+	</select>
 </sqlMap>

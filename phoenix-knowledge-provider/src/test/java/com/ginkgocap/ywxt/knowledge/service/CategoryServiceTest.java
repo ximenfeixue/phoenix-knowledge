@@ -3,7 +3,9 @@ package com.ginkgocap.ywxt.knowledge.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +42,7 @@ public class CategoryServiceTest extends TestBase{
       category.setModtime(DateFunc.getDate());
       category.setName("测试分类");
       category.setUid(uid);
-      categoryService.insert(category);
+      category = categoryService.insert(category);
       child = new Category();
       child.setParentId(category.getId());
       child.setState("0");
@@ -49,6 +51,13 @@ public class CategoryServiceTest extends TestBase{
       child.setName("测试子类");
       child.setUid(uid);
       categoryService.insert(child);
+      Map<String,Object> map = new HashMap<String, Object>();
+      map.put("name", "试分类");
+      map.put("uid", uid);
+      map.put("sortId", category.getSortId());
+      map.put("state", "0");
+     List<Category> list = categoryService.findByParam(map);
+     System.out.println(list.size());
     }
     /**
      * @throws java.lang.Exception

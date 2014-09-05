@@ -254,4 +254,76 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
         List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.relationList", map);
         return list;
 	}
+	@Override
+	public long selectByParamsCount(long uid, String articleType,
+			String sortId, String essence, String recycleBin, String keywords) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		if(StringUtils.isNotBlank(articleType))
+        	map.put("articleType", articleType);
+		if(StringUtils.isNotBlank(sortId))
+        	map.put("sortId", sortId);
+		if(StringUtils.isNotBlank(essence))
+        	map.put("essence", essence);
+		if(StringUtils.isNotBlank(recycleBin))
+        	map.put("recycleBin", recycleBin);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		return (Long) getSqlMapClientTemplate().queryForObject("tb_article.selectListCount", map);
+	}
+
+	@Override
+	public List<Article> selectByParams(long uid, String articleType,
+			String sortId, String essence, String recycleBin, String keywords,
+			String sort, int pageIndex, int pageSize) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		long start = (pageIndex - 1) * pageSize;
+		long size = pageSize;
+		if (uid > 0)
+			map.put("uid", new Long(uid));
+		if(StringUtils.isNotBlank(sortId))
+        	map.put("sortId", sortId);
+		if(StringUtils.isNotBlank(essence))
+        	map.put("essence", essence);
+		if(StringUtils.isNotBlank(recycleBin))
+        	map.put("recycleBin", recycleBin);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		if(StringUtils.isNotBlank(keywords))
+        	map.put("keywords", keywords);
+		if(StringUtils.isNotBlank(articleType))
+        	map.put("articleType", articleType);
+		if(StringUtils.isNotBlank(sort)){
+//			if ("clickNum".equalsIgnoreCase(sort)){
+//				map.put("sort", "clickNum");
+//			}else if ("pubdate".equalsIgnoreCase(sort)){
+//				map.put("sort", "pubdate");
+//			}else if ("modifyTime".equalsIgnoreCase(sort)){
+//				map.put("sort", "modifyTime");
+//			}else if ("id".equalsIgnoreCase(sort)){
+//				map.put("sort", "articleId");
+//			}
+//			
+			map.put("sort", sort);
+		}
+        map.put("start", start);
+        map.put("size", size);
+        List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectList", map);
+        return list;
+	}
+
+	@Override
+	public boolean checkArticleIsExist(String url, long uid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("url", url); 
+        map.put("uid", uid);
+		Long count=(Long)getSqlMapClientTemplate().queryForObject("tb_article.checkArticleIsExist", map);
+		if(count>0){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }

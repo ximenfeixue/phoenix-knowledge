@@ -1,18 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.service.category;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.Category;
-
 /**
  * 知识管理分类的service接口
- * @author lk
- * @创建时间：2013-03-29 10:40
+ * @author jc
+ * @创建时间：2014-05-26 15:11
  */
-public interface CategoryService {
-    /**
+public interface MobileCategoryService {
+	  /**
      * 通过主键获得类型
      * @param id
      * @return
