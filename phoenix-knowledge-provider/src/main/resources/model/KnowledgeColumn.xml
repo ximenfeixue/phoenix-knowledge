@@ -12,6 +12,8 @@
 		<result column="column_level_path" property="columnLevelPath" jdbcType="VARCHAR"/>
 		<result column="create_time" property="createTime" jdbcType="java.util.Date"/>
 		<result column="update_time" property="updateTime" jdbcType="java.util.Date"/>
+		<result column="del_status" property="delStatus" jdbcType="TINYINT"/>
+		<result column="subscribe_count" property="subscribeCount" jdbcType="INT"/>
 	</resultMap>
 	
 	
@@ -24,7 +26,9 @@
 	  level,
 	  column_level_path,
 	  create_time,
-	  update_time
+	  update_time,
+	  del_status,
+	  subscribe_count
 	</sql>
 	
 	<update id="update" parameterClass="knowledgeColumn">  
@@ -36,10 +40,21 @@
 			level=#level:INT#,
 			column_level_path=#columnLevelPath:VARCHAR#
 			create_time=#createTime:java.util.Date#,
+			update_time=#updateTime:java.util.Date#,
+			subscribe_count=#subscribe_count:INT#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+    
+    <update id="delById" parameterClass="java.util.Map">  
+        UPDATE tb_knowledge_column SET 
+        	del_status=#delStatus:TINYINT#
 			update_time=#updateTime:java.util.Date#
         WHERE   
         	id=#id:BIGINT#   
     </update>
+	
+	
 	
 	<insert id="insert" parameterClass="knowledgeColumn">
 		insert into tb_knowledge_column(
@@ -50,7 +65,9 @@
 			  level,
 			  column_level_path,
 			  create_time,
-			  update_time
+			  update_time,
+			  del_status,
+			  subscribe_count
 		) values (
 			column_name=#columnName:VARCHAR#,
 			parent_column_id=#parentColumnId:INT#,
@@ -59,11 +76,13 @@
 			level=#level:INT#,
 			column_level_path=#columnLevelPath:VARCHAR#
 			create_time=#createTime:java.util.Date#,
-			update_time=#updateTime:java.util.Date#
+			update_time=#updateTime:java.util.Date#,
+			del_status=#delStatus:TINYINT#
+			subscribe_count=#subscribe_count:INT#
 		)
-		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		<!--??? <selectKey resultClass="long" type="post" keyProperty="id" > 
 		SELECT LAST_INSERT_ID() AS VALUE     
-		</selectKey>
+		</selectKey> -->
 	</insert>
 	
     <select id="selectById" resultMap="knowledgeColumnMap" parameterClass="long">
@@ -75,5 +94,17 @@
 		select <include refid="allColumns"/>
 		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId#
 	</select>
+	
+	<!-- <select id="selectByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where create_user_id=#createUserId#
+	</select>
+	
+	<select id="selectAll" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column
+	</select> -->
+	
+	
 	 
 </sqlMap>
