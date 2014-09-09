@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,8 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
     }
 
     @Override
-    public long countByPidAndName(final int parentColumnId,final String columnName) {
+    public long countByPidAndName(final long parentColumnId,final String columnName) {
+        @SuppressWarnings("serial")
         Map<String ,Object> params=new HashMap<String,Object>(){
             {
                 put("parentColumnId",parentColumnId);
@@ -61,11 +63,19 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
 
     @Override
     public void delById(long id) {
-        getSqlMapClientTemplate().delete("tb_knowledge_column.delById", id);
+//        getSqlMapClientTemplate().delete("tb_knowledge_column.delById", id);
+        
+        Date update_time=new Date();
+        Map<String ,Object> map=new HashMap<String,Object>();
+        map.put("id",id);
+        map.put("updateTime",update_time);
+        map.put("delStatus",1);
+        
+        getSqlMapClientTemplate().update("tb_knowledge_column.delById", map);
     }
 
     @Override
-    public List<KnowledgeColumn> queryByParentId(final int parentColumnId,final int createUserId) {
+    public List<KnowledgeColumn> queryByParentId(final long parentColumnId,final long createUserId) {
         @SuppressWarnings("serial")
         Map<String ,Object> params=new HashMap<String,Object>(){
             {
@@ -77,6 +87,50 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         @SuppressWarnings("unchecked")
         List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectByParentId", params);
         return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<KnowledgeColumn> queryByUserId(long createUserId) {
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectByUserId", createUserId);
+        return list;
+    }
+
+    @Override
+    public List<KnowledgeColumn> queryByUserIdAndSystem(long createUserId, long systemId) {
+        
+        Map<String ,Object> map=new HashMap<String,Object>();
+        map.put("createUserId", createUserId);
+        map.put("systemId", systemId);
+        
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectByUserIdAndSystem", map);
+        return list;
+    }
+
+    @Override
+    public List<KnowledgeColumn> queryAll() {
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectAll");
+        return list;
+    }
+
+    @Override
+    public List<KnowledgeColumn> queryAllDel() {
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectAllDel");
+        return list;
+    }
+
+    @Override
+    public void recoverOneKC(long id) {
+        Date update_time=new Date();
+        Map<String ,Object> map=new HashMap<String,Object>();
+        map.put("id",id);
+        map.put("updateTime",update_time);
+        map.put("delStatus",0);
+        
+        getSqlMapClientTemplate().update("tb_knowledge_column.recoverOneKC", map);
     }
 
 }

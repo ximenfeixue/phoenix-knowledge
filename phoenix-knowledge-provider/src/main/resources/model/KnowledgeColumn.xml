@@ -53,8 +53,7 @@
         WHERE   
         	id=#id:BIGINT#   
     </update>
-	
-	
+
 	
 	<insert id="insert" parameterClass="knowledgeColumn">
 		insert into tb_knowledge_column(
@@ -80,31 +79,53 @@
 			del_status=#delStatus:TINYINT#
 			subscribe_count=#subscribe_count:INT#
 		)
-		<!--??? <selectKey resultClass="long" type="post" keyProperty="id" > 
+		<!-- 此字段作为返回值，插入完成后才返回 -->
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
 		SELECT LAST_INSERT_ID() AS VALUE     
-		</selectKey> -->
+		</selectKey>
 	</insert>
 	
     <select id="selectById" resultMap="knowledgeColumnMap" parameterClass="long">
 		select <include refid="allColumns"/>
-		from tb_knowledge_column where id=#id#
+		from tb_knowledge_column where id=#id# and del_status=0
 	</select>
 	
 	<select id="selectByParentId" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
 		select <include refid="allColumns"/>
-		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId#
+		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId# and del_status=0
 	</select>
 	
-	<!-- <select id="selectByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+	<select id="selectByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
 		select <include refid="allColumns"/>
-		from tb_knowledge_column where create_user_id=#createUserId#
+		from tb_knowledge_column where create_user_id=#createUserId# and del_status=0
 	</select>
 	
-	<select id="selectAll" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+	<select id="selectByUserIdAndSystem" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
 		select <include refid="allColumns"/>
-		from tb_knowledge_column
-	</select> -->
+		from tb_knowledge_column WHERE create_user_id IN (#createUserId#,#systemId#) and del_status=0
+	</select>
 	
+	<select id="selectAll" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where del_status=0
+	</select>
 	
+	<select id="selectAllDel" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where del_status=1
+	</select>  
+	
+	<!-- 和delById的语句一样 -->
+	<update id="recoverOneKC" parameterClass="java.util.Map">  
+        UPDATE tb_knowledge_column SET 
+        	del_status=#delStatus:TINYINT#
+			update_time=#updateTime:java.util.Date#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+	<!-- 
+	UPDATE tb_knowledge_column SET subscribe_count = 0
+	UPDATE tb_knowledge_column SET del_status = 0
+	 -->
 	 
 </sqlMap>

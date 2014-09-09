@@ -42,10 +42,10 @@ public class KnowledgeColumnTest extends TestBase{
         List<KnowledgeColumn> list= knowledgeColumnService.queryByParentId(0, 0);
         
         for (KnowledgeColumn knowledgeColumn : list) {
-            System.out.print(knowledgeColumn.getColumnName());
+            System.out.print(knowledgeColumn.getColumnName()+' ');
             
         }
-//        System.out.println();
+        System.out.println();
         assertTrue(!list.isEmpty());
     }
  

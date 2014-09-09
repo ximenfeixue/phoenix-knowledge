@@ -26,7 +26,7 @@ public class KnowledgeColumn implements Serializable {
     private Date createTime;//创建时间
     private Date updateTime;//更新时间
     private Integer delStatus=0; //删除状态    0-正常  1-已删除
-    private Integer subscribeCount; //订阅数量
+    private Integer subscribeCount=0; //订阅数量
 //    private Object subscribers;  //订阅人列表
     public Long getId() {
         return id;
