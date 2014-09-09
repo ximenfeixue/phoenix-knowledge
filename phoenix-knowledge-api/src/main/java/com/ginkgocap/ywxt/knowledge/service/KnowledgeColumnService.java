@@ -79,7 +79,7 @@ public interface KnowledgeColumnService {
      * recoverOneKC 恢复一个已删除的栏目
      * @return none
      */
-    public void recoverOneKC(long id);
+    public void recoverOneKC(Long id);
     
     
 }

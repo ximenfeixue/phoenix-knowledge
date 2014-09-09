@@ -95,7 +95,11 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
     }
 
     @Override
-    public void recoverOneKC(long id) {
+    public void recoverOneKC(Long id) {
+        if(null==id || id.longValue()<0){
+            return;
+        }
+        
         knowledgeColumnDao.recoverOneKC(id);
     }
 
