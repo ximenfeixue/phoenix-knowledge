@@ -54,7 +54,7 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         Map<String ,Object> params=new HashMap<String,Object>(){
             {
                 put("parentColumnId",parentColumnId);
-                put("column",columnName);
+                put("columnName",columnName);
             }
         };
         long count =  (Long) getSqlMapClientTemplate().queryForObject("tb_knowledge_column.countByPidAndName", params);

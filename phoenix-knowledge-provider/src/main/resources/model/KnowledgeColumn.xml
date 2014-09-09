@@ -121,6 +121,12 @@
         WHERE   
         	id=#id:BIGINT#   
     </update>
+    
+    <select id="countByPidAndName" parameterClass="java.util.Map">
+    	select count(*)
+		from tb_knowledge_column 
+		where parent_column_id=#parentColumnId# and column_name=#columnName#
+    </select>
 	<!-- 
 	UPDATE tb_knowledge_column SET subscribe_count = 0
 	UPDATE tb_knowledge_column SET del_status = 0

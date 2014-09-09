@@ -95,10 +95,16 @@ public class KnowledgeColumnTest extends TestBase{
             e.printStackTrace();
             Assert.fail();
         }finally{
-            if (clearId>0) {
-                knowledgeColumnService.delById(clearId);
-                knowledgeColumnService.clearById(clearId);
+            try {
+                if (clearId>0) {
+                    knowledgeColumnService.delById(clearId);
+                    knowledgeColumnService.clearById(clearId);
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                Assert.fail();
             }
+           
         }
     }
  
