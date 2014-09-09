@@ -104,4 +104,9 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
         knowledgeColumnDao.recoverOneKC(id);
     }
 
+    @Override
+    public void clearById(long id) {
+        knowledgeColumnDao.clearById(id);
+    }
+
 }

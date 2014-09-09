@@ -55,12 +55,16 @@ public class KnowledgeColumnTest extends TestBase{
     @Test
     public void saveOrUpdate(){
         
+        Long clearId = new Long(-1);
+        
         try {
+            
+            //==========add==========//
             
             KnowledgeColumn kc =new KnowledgeColumn();
             Date date=new Date();
             SimpleDateFormat f=new SimpleDateFormat("HH:mm:ss");
-            kc.setColumnName("自定义"+f.format(date));
+            kc.setColumnName("_自定义"+f.format(date));
             kc.setParentColumnId(1L);
             kc.setCreateUserId(71L);
             kc.setLevel(2);
@@ -68,9 +72,12 @@ public class KnowledgeColumnTest extends TestBase{
             
             KnowledgeColumn ks = knowledgeColumnService.saveOrUpdate(kc);
             
-            System.out.println(ks.getId());
+            System.out.println(clearId=ks.getId());
+            System.out.println(ks.getColumnName());
             
             assertEquals(true, ks.getId()>0);
+            
+            //==========update==========//
             
             ks=knowledgeColumnService.queryById(ks.getId());
             ks.setColumnName("_test_aaa");
@@ -79,15 +86,20 @@ public class KnowledgeColumnTest extends TestBase{
             
             knowledgeColumnService.saveOrUpdate(ks);
             
-            assertEquals(true, ks.getId()>0);
+            KnowledgeColumn ku=knowledgeColumnService.queryById(ks.getId());
+            
+            assertEquals(ks.getColumnName(), ku.getColumnName());
+            System.out.println(ku.getColumnName());
             
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
+        }finally{
+            if (clearId>0) {
+                knowledgeColumnService.delById(clearId);
+                knowledgeColumnService.clearById(clearId);
+            }
         }
-        
-       
-        
     }
  
 }

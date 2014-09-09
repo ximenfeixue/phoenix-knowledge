@@ -81,5 +81,10 @@ public interface KnowledgeColumnService {
      */
     public void recoverOneKC(Long id);
     
-    
+    /**
+     * clearById <p>(删除栏目, 物理删除 ,数据库中将清除此条数据，慎用！！！)</p>  
+     * <p>只有已删除状态的数据才能被清空</p>  
+     * @param id
+     */
+    public void clearById(long id);
 }

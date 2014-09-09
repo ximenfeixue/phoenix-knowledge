@@ -63,15 +63,18 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
 
     @Override
     public void delById(long id) {
-//        getSqlMapClientTemplate().delete("tb_knowledge_column.delById", id);
         
-        Date update_time=new Date();
+        Date updateTime=new Date();
         Map<String ,Object> map=new HashMap<String,Object>();
         map.put("id",id);
-        map.put("updateTime",update_time);
+        map.put("updateTime",updateTime);
         map.put("delStatus",1);
         
         getSqlMapClientTemplate().update("tb_knowledge_column.delById", map);
+    }
+    
+    public void clearById(long id){
+        getSqlMapClientTemplate().delete("tb_knowledge_column.clearById", id);
     }
 
     @Override

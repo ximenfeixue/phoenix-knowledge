@@ -3,7 +3,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Transient;
+import org.springframework.data.annotation.Transient;
+
 
 
 /**
@@ -20,9 +21,9 @@ public class KnowledgeColumn implements Serializable {
     
     private Long id;//分类id
     private String columnName;//分类名称
-    private Long parentColumnId;//父分类id
+    private Long parentColumnId;//父分类id 在设值时数字后边一定要加上l
     private Long createUserId;//用户id
-    @Transient  //?用什么的
+    @Transient 
     private String tag;//分类标签，分号分割
     private Integer level;//
     private String columnLevelPath;//分类层级路径
@@ -31,9 +32,14 @@ public class KnowledgeColumn implements Serializable {
     private Integer delStatus=0; //删除状态    0-正常  1-已删除
     private Integer subscribeCount=0; //订阅数量
 //    private Object subscribers;  //订阅人列表
+    
+    public KnowledgeColumn() {
+    }
+    
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }

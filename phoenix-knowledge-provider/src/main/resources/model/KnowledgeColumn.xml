@@ -45,11 +45,15 @@
     
     <update id="delById" parameterClass="java.util.Map">  
         UPDATE tb_knowledge_column SET 
-        	del_status=#delStatus:TINYINT#
-			update_time=#updateTime:java.util.Date#
-        WHERE   
-        	id=#id:BIGINT#   
+        	del_status=#delStatus#,
+        	update_time=#updateTime# 
+        WHERE 
+        	id=#id# 
     </update>
+    
+    <delete id="clearById" parameterClass="long">
+    	delete from tb_knowledge_column where id=#id# and del_status=1
+    </delete>
 
 	
 	<insert id="insert" parameterClass="knowledgeColumn">
@@ -112,7 +116,7 @@
 	<!-- 和delById的语句一样 -->
 	<update id="recoverOneKC" parameterClass="java.util.Map">  
         UPDATE tb_knowledge_column SET 
-        	del_status=#delStatus:TINYINT#
+        	del_status=#delStatus:TINYINT#,
 			update_time=#updateTime:java.util.Date#
         WHERE   
         	id=#id:BIGINT#   
