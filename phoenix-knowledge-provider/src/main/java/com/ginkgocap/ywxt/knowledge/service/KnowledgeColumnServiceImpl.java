@@ -23,32 +23,33 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
             return null;
         }
         
-        long id = kc.getId();
+        Long id = kc.getId();
         Date date=new Date();
         
-        if (id > 0) {
+        if (null == id || id.intValue() <=0) {
             
-//            KnowledgeColumn okc= knowledgeColumnDao.queryById(kc.getId());
-//            
-//            if(null != okc){
-//                okc.setColumnLevelPath(kc.getColumnLevelPath());
-//                okc.setSubscribeCount(kc.getSubscribeCount());
-//                okc.setUpdateTime(date);
-//                knowledgeColumnDao.update(okc);
-//            }
-            
-            kc.setUpdateTime(date);
-            knowledgeColumnDao.update(kc);
-            
-        } else {
             kc.setCreateTime(date);
             kc.setUpdateTime(date);
             kc.setDelStatus(0);
             kc.setSubscribeCount(0);
-            kc = knowledgeColumnDao.insert(kc);
+            return knowledgeColumnDao.insert(kc);
+        } 
+        
+        if(id > 0) {
+//          KnowledgeColumn okc= knowledgeColumnDao.queryById(kc.getId());
+//          
+//          if(null != okc){
+//              okc.setColumnLevelPath(kc.getColumnLevelPath());
+//              okc.setSubscribeCount(kc.getSubscribeCount());
+//              okc.setUpdateTime(date);
+//              knowledgeColumnDao.update(okc);
+//          }
+          
+          kc.setUpdateTime(date);
+          return knowledgeColumnDao.update(kc);
         }
         
-        return kc;
+        return null;
     }
 
     @Override

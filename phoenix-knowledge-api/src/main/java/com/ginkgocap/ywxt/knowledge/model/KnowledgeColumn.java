@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 
 /**
  *   
@@ -20,6 +22,7 @@ public class KnowledgeColumn implements Serializable {
     private String columnName;//分类名称
     private Long parentColumnId;//父分类id
     private Long createUserId;//用户id
+    @Transient  //?用什么的
     private String tag;//分类标签，分号分割
     private Integer level;//
     private String columnLevelPath;//分类层级路径
