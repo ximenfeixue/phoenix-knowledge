@@ -481,16 +481,18 @@ public class ArticleServiceImpl implements ArticleService {
 		// 从hash表中得到被监听的对象
 		ExportWatched watched = (ExportWatched) Content.MAP.get(taskId);
 		// 通过被监听对象初始化监听对象
-		ExportWatcher w = new ExportWatcher(watched);
-		// 得到被监听对象状态
-		w.update(watched, "");
-		// 假如事务完成则从Hash表中清楚被监听对象
-		if (watched.isDone()) {
-			Content.MAP.remove(taskId);
-			System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
+		if(watched!=null){
+			ExportWatcher w = new ExportWatcher(watched);
+			// 得到被监听对象状态
+			w.update(watched, "");
+			// 假如事务完成则从Hash表中清楚被监听对象
+			if (watched.isDone()) {
+				Content.MAP.remove(taskId);
+				System.out.println("监听列表移除:" + (Content.MAP.get(taskId) == null));
+			}
+			map.put("mes", w.getMes());
+			map.put("downloadPath", w.getProgen());
 		}
-		map.put("mes", w.getMes());
-		map.put("downloadPath", w.getProgen());
 		return map;
 	}
 
