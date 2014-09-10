@@ -18,20 +18,19 @@ public class KnowledgeColumnSubscribe implements Serializable {
     private static final long serialVersionUID = 1243330354704937038L;
     
     private long id;//主键
-
     private long userId;//订阅人的id
+    private long columnId;//栏目id
+    private String columnType;
+    private Date subDate;
+    
     @Transient
     private String userName;//订阅人的用户名 
-    private long columnId;//栏目id
     @Transient
     private String knowledgeColumnName;//栏目名称
     @Transient
     private long parentKColumnId;//父栏目id
     @Transient
     private String parentKColumnName;//父栏目名称
-    
-    private String columnType;
-    private Date subDate;
 
     public KnowledgeColumnSubscribe() {
     }

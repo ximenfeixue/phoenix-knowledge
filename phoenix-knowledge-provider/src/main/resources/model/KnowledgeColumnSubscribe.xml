@@ -42,10 +42,10 @@
 			sub_date,
 			column_type
 		) values (
-			user_id=#userId:BIGINT#,
-			column_id=#columnId:BIGINT#,
-			sub_date=#subDate:java.util.Date#
-			column_type=#columnType:CHAR#
+			#userId:BIGINT#,
+			#columnId:BIGINT#,
+			#subDate:java.util.Date#
+			#columnType:CHAR#
 		)
 		<selectKey resultClass="long" type="post" keyProperty="id" > 
 		SELECT LAST_INSERT_ID() AS VALUE     
