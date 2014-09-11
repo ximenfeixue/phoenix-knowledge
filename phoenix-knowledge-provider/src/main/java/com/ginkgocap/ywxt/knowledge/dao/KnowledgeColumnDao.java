@@ -87,4 +87,16 @@ public interface KnowledgeColumnDao {
      * @param id
      */
     public void clearById(long id);
+    /**
+     * queryByUserId  查询用户订阅的所有栏目
+     * @param createUserId 用户id
+     * @return 用户订阅的所有栏目列表
+     */
+    public List<KnowledgeColumn> querySubByUserId(long createUserId);
+    /**
+     * queryByUserId  查询系统所有可订阅的栏目
+     * @param systemId 系统用户id
+     * @return 系统栏目列表
+     */
+    public List<KnowledgeColumn> querySubBySystem(long systemId);
 }

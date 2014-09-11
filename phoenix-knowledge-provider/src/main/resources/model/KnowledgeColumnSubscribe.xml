@@ -21,19 +21,15 @@
 	  column_type
 	</sql>
 	
-	<!-- <update id="update" parameterClass="knowledgeColumn">  
+	<update id="update" parameterClass="knowledgeColumnSubscribe">  
         UPDATE tb_knowledge_column_subscribe SET  
-			column_name=#columnName:VARCHAR#,
-			parent_column_id=#parentColumnId:INT#,
-			create_user_id=#createUserId:INT#,
-			tag=#tag:VARCHAR#,
-			level=#level:INT#,
-			column_level_path=#columnLevelPath:VARCHAR#
-			create_time=#createTime:java.util.Date#,
-			update_time=#updateTime:java.util.Date#
+			user_id=#userId:BIGINT#,,
+			column_id=#columnId:BIGINT#,
+			sub_date=#subDate:java.util.Date#,
+			column_type=#columnType:CHAR#
         WHERE   
         	id=#id:BIGINT#   
-    </update> -->
+    </update>
 	
 	<insert id="insert" parameterClass="knowledgeColumnSubscribe">
 		insert into tb_knowledge_column_subscribe(
@@ -44,7 +40,7 @@
 		) values (
 			#userId:BIGINT#,
 			#columnId:BIGINT#,
-			#subDate:java.util.Date#
+			#subDate:java.util.Date#,
 			#columnType:CHAR#
 		)
 		<selectKey resultClass="long" type="post" keyProperty="id" > 
@@ -52,11 +48,29 @@
 		</selectKey>
 	</insert>
 	
+	<delete id="deleteByPK" parameterClass="long">  
+       delete from 
+       		tb_knowledge_column_subscribe 
+       where 
+       		id=#id#
+    </delete>
+    <delete id="deleteByUIdAndKCId" parameterClass="java.util.Map">  
+       delete from 
+       		tb_knowledge_column_subscribe 
+       where 
+       		user_id=#userId# and column_id=#columnId#
+    </delete>
+	
     <select id="selectByUserId" resultMap="knowledgeColumnSubscribeMap" parameterClass="long">
 		select <include refid="allColumns"/>
-		from tb_knowledge_column_subscribe where id=#id#
+		from tb_knowledge_column_subscribe where user_id=#userId#
 	</select>
-	
+	 
+	 <select id="selectKCListByUserId" resultMap="knowledgeColumnSubscribeMap" parameterClass="long">
+		<!-- select <include refid="allColumns"/>
+		from tb_knowledge_column_subscribe s, tb_knowledge_column k
+		where s.user_id=#userId# and k.id=s.column_id -->
+	</select>
 	<!-- <select id="selectByParentId" resultMap="knowledgeColumnSubscribeMap" parameterClass="java.util.Map">
 		select <include refid="allColumns"/>
 		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId#

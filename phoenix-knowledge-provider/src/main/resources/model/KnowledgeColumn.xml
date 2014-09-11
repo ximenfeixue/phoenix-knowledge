@@ -116,7 +116,15 @@
 	<select id="selectAllDel" resultMap="knowledgeColumnMap" >
 		select <include refid="allColumns"/>
 		from tb_knowledge_column where del_status=1
-	</select>  
+	</select> 
+	 
+	 <!-- test -->
+	<select id="selectSubByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column 
+		where del_status=0 and id IN 
+			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#createUserId#)
+	</select>
 	
 	<!-- 和delById的语句一样 -->
 	<update id="recoverOneKC" parameterClass="java.util.Map">  

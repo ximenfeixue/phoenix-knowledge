@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.dao;
+package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
 
@@ -7,25 +7,31 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
 
 /** 
- * <p>订阅栏目dao</p>  
- * @author   guangyuan   
- * @since 1.2.1-SNAPSHOT
- * @createdtime 2014-09-09
+ * 栏目订阅操作接口
+ * @author  guangyuan 
+ * @since  1.2.1-SNAPSHOT
+ * @createdtime 2014-09-10
  */
-public interface KnowledgeColumnSubscribeDao {
-
+public interface KnowledgeColumnSubscribeService {
+    
     /**
      * 增加用户订阅栏目的记录
      * @param kcs 要增加的记录
      * @return 增加的记录
      */
-    public KnowledgeColumnSubscribe insert(KnowledgeColumnSubscribe kcs);
+    public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs);
     /**
      * 修改用户订阅栏目的记录
      * @param kcs
      * @return 修改的记录
      */
     public int update(KnowledgeColumnSubscribe kcs);
+    /**
+     * 添加或修改用户订阅栏目的记录
+     * @param kcs
+     * @return 修改或添加的记录
+     */
+    public KnowledgeColumnSubscribe merge(KnowledgeColumnSubscribe kcs);
     /**
      * 根据用户id和栏目id删除用户订阅栏目的记录
      * @param id 要删除的的订阅id
@@ -107,4 +113,5 @@ public interface KnowledgeColumnSubscribeDao {
      * @return 知识列表
      */
     public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<KnowledgeColumn> list,int type);
+
 }

@@ -1,77 +1,81 @@
-package com.ginkgocap.ywxt.knowledge.dao.impl;
+package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnSubscribeDao;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
-/**
- * 
- * @author guangyyuan
- *
- */
-@Component("knowledgeColumnSubscribeDao")
-public class KnowledgeColumnSubscribeDaoImpl extends SqlMapClientDaoSupport implements KnowledgeColumnSubscribeDao {
+@Service("knowledgeColumnSubscribeService")
+public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubscribeService {
 
     @Autowired
-    SqlMapClient sqlMapClient;
-
-    @PostConstruct
-    public void initSqlMapClient() {
-        super.setSqlMapClient(sqlMapClient);
-    }
+    private KnowledgeColumnDao knowledgeColumnDao;
     
+    @Autowired
+    private KnowledgeColumnSubscribeDao kcsDao;
     
     @Override
-    public KnowledgeColumnSubscribe insert(KnowledgeColumnSubscribe kcs) {
-        Long id=(Long) getSqlMapClientTemplate().insert("tb_knowledge_column_subscribe.insert", kcs);
-        
-        if (null==id) {
-            return null;
-        }
-        
-        kcs.setId(id);
-        return kcs;
+    public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
+        KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
+//        kc.setKcType(kcType)
+        Date date=new Date();
+        kcs.setSubDate(date);
+        return kcsDao.insert(kcs);
     }
 
     @Override
     public int update(KnowledgeColumnSubscribe kcs) {
-        int r=getSqlMapClientTemplate().update("tb_knowledge_column_subscribe.update", kcs);
-        return r;
+        return kcsDao.update(kcs);
+    }
+
+    @Override
+    public KnowledgeColumnSubscribe merge(KnowledgeColumnSubscribe kcs) {
+
+        if (null == kcs) {
+            return null;
+        }
+        
+        Long id =-1l;
+        
+        //在不使用包装类型的情况下
+        try {
+            id = kcs.getId();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            
+            KnowledgeColumnSubscribe kcsi=kcsDao.insert(kcs);
+            return kcsi;
+        }
+        
+        if (id>0) {
+            this.update(kcs);
+            return kcs;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void deleteByUIdAndKCId(long userId, long columnId) {
+       kcsDao.deleteByUIdAndKCId(userId, columnId);
+
     }
 
     @Override
     public void deleteByPK(long id) {
-        getSqlMapClientTemplate().delete("tb_knowledge_column_subscribe.deleteByPK", id, 1);
-    }
-    
-
-    @Override
-    public void deleteByUIdAndKCId(long userId, long columnId) {
-        
-        Map<String, Long> map=new HashMap<String, Long>();
-        map.put("userId", userId);
-        map.put("columnId", columnId);
-        
-        getSqlMapClientTemplate().delete("tb_knowledge_column_subscribe.deleteByUIdAndKCId", map, 1);
+        kcsDao.deleteByPK(id);
     }
 
     @Override
     public List<KnowledgeColumnSubscribe> selectByUserId(long userId) {
-        @SuppressWarnings("unchecked")
-        List<KnowledgeColumnSubscribe> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column_subscribe.selectByUserId", userId);
-        return list;
+        return kcsDao.selectByUserId(userId);
     }
 
     @Override
@@ -133,7 +137,5 @@ public class KnowledgeColumnSubscribeDaoImpl extends SqlMapClientDaoSupport impl
         // TODO Auto-generated method stub
         return null;
     }
-
-
 
 }

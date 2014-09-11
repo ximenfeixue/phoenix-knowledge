@@ -35,6 +35,9 @@ public class KnowledgeColumn implements Serializable {
     private String tag;//分类标签，分号分割
 //    private Object subscribers;  //订阅人列表
     
+    @Transient 
+    private Integer kcType;
+    
     public KnowledgeColumn() {
     }
     
@@ -114,4 +117,12 @@ public class KnowledgeColumn implements Serializable {
         this.pathName = pathName;
     }
 
+    public Integer getKcType() {
+        return kcType;
+    }
+
+    public void setKcType(Integer kcType) {
+        this.kcType = kcType;
+    }
+    
 }
