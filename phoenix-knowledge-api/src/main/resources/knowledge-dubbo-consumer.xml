@@ -39,4 +39,5 @@
     <dubbo:reference id="knowledgeColumnService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMainService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService" version="1.0.0"/>
     <dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService" version="1.0.0"/>
 </beans>
