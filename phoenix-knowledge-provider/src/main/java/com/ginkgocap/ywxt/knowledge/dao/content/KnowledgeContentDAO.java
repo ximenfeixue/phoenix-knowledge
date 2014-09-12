@@ -35,5 +35,13 @@ public interface KnowledgeContentDAO {
 	 * @return
 	 */
 	int update(KnowledgeContent knowledgeContent);
+	
+	/**
+	 * 删除内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int deleteByknowledgeId(long[] knowledgeId);
 
 }

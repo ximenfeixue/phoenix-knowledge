@@ -48,5 +48,7 @@ public class KnowledgeColumnTest extends TestBase{
 //        System.out.println();
         assertTrue(!list.isEmpty());
     }
+    
+    
  
 }

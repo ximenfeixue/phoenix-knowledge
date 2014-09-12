@@ -1,20 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledge;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.cloud.model.InvestmentWord;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
+import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
-import com.ginkgocap.ywxt.knowledge.model.Category;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
-import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Service("knowledgeMainService")
@@ -29,28 +23,34 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	private CategoryDao categoryDao;
 
 	@Autowired
+	private KnowledgeContentDAO knowledgeContentDAO;
+
+	@Autowired
+	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Autowired
 	SqlMapClient sqlMapClient;
-	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
 	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
 
-		int type = knowledge.getKnowledgetype();
-		Long id = 0l;
-		switch (type) {
-		case 1:
-			break;
-		case 2:
-			InvestmentWord word = (InvestmentWord) knowledgeDetail;
-			id = investmentAuthenticationService.createInvestmentWord(word);
-			break;
-
-		default:
-			break;
-		}
-		knowledge.setKnowledgeid(id);
-		int i = knowledgeDao.insert(knowledge);
-		return (long) i;
+		// int type = knowledge.getKnowledgetype();
+		// Long id = 0l;
+		// switch (type) {
+		// case 1:
+		// break;
+		// case 2:
+		// InvestmentWord word = (InvestmentWord) knowledgeDetail;
+		// id = investmentAuthenticationService.createInvestmentWord(word);
+		// break;
+		//
+		// default:
+		// break;
+		// }
+		// knowledge.setKnowledgeid(id);
+		// int i = knowledgeDao.insert(knowledge);
+		// return (long) i;
+		return (long) 0;
 	}
 
 	@Override
@@ -65,16 +65,10 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
-
-		return knowledgeDao.deleteKnowledgeRCategory(knowledgeids, categoryid);
-	}
-
-	@Override
 	public void moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 
-		int count = knowledgeDao.deleteKnowledgeRCategory(knowledgeids,
+		int count = knowledgeBetweenDAO.deleteKnowledgeRCategory(knowledgeids,
 				categoryid);
 		if (count > 0) {
 			knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
@@ -83,42 +77,42 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
 	@Override
 	public boolean updateKnowledge(Knowledge knowledge, Object knowledgeDetail) {
-		int type = knowledge.getKnowledgetype();
-		Long id = 0l;
-		switch (type) {
-		case 1:
-			break;
-		case 2:
-			InvestmentWord word = (InvestmentWord) knowledgeDetail;
-			id = investmentAuthenticationService.createInvestmentWord(word);
-			break;
-
-		default:
-			break;
-		}
-		knowledge.setKnowledgeid(id);
-		int i = knowledgeDao.insert(knowledge);
+		// int type = knowledge.getKnowledgetype();
+		// Long id = 0l;
+		// switch (type) {
+		// case 1:
+		// break;
+		// case 2:
+		// InvestmentWord word = (InvestmentWord) knowledgeDetail;
+		// id = investmentAuthenticationService.createInvestmentWord(word);
+		// break;
+		//
+		// default:
+		// break;
+		// }
+		// knowledge.setKnowledgeid(id);
+		// int i = knowledgeDao.insert(knowledge);
 		return true;
 
 	}
 
 	@Override
 	public Long saveKnowledgeTitle(Knowledge knowledge, Object knowledgeDetail) {
-		int type = knowledge.getKnowledgetype();
-		Long id = 0l;
-		switch (type) {
-		case 1:
-			break;
-		case 2:
-			InvestmentWord word = (InvestmentWord) knowledgeDetail;
-			id = investmentAuthenticationService.createInvestmentWord(word);
-			break;
-		default:
-			break;
-		}
-		knowledge.setKnowledgeid(id);
-		int i = knowledgeDao.insert(knowledge);
-		return (long) i;
+		// int type = knowledge.getKnowledgetype();
+		// Long id = 0l;
+		// switch (type) {
+		// case 1:
+		// break;
+		// case 2:
+		// InvestmentWord word = (InvestmentWord) knowledgeDetail;
+		// id = investmentAuthenticationService.createInvestmentWord(word);
+		// break;
+		// default:
+		// break;
+		// }
+		// knowledge.setKnowledgeid(id);
+		// int i = knowledgeDao.insert(knowledge);
+		return (long) 0;
 	}
 
 	@Override
@@ -133,27 +127,51 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 		int count = 0;
 		count = knowledgeDao.deleteKnowledge(ids, categoryid);
 		if (count > 0) {
-			count = knowledgeDao.deleteKnowledgeRCategory(ids, categoryid);
+			count = knowledgeContentDAO.deleteByknowledgeId(ids);
 			if (count > 0) {
-				return 1;
-			} else {
-				return 0;
+				count = knowledgeBetweenDAO.deleteKnowledgeRCategory(ids,
+						categoryid);
+				if (count > 0) {
+					return 1;
+
+				} else {
+					return 0;
+				}
 			}
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 
 	@Override
-	public int updateKnowledge(Knowledge knowledge) {
+	public int updateKnowledge(Knowledge knowledge, long categoryid,
+			long categoryids[]) {
+		int count = 0;
+		count = knowledgeDao.updateKnowledge(knowledge, categoryids);
+		if (count > 0) {
+			if (categoryids != null && categoryids.length > 0) {
 
-		return knowledgeDao.updateKnowledge(knowledge);
+				count = deleteKnowledgeRCategory(knowledge.getId(), categoryid);
+				if (count > 0) {
+					// insertKnowledgeRCategory(knowledge, categoryids);
+					return 1;
+				}
+			}
+			return 1;
+		}
+		return 0;
 	}
 
 	@Override
-	public void insertKnowledgeRCategory(Knowledge knowledge, long categoryid[]) {
+	public int updateKnowledgeRCategory(long knowledgeid, long categoryid,
+			long[] categoryids) {
 
-		knowledgeDao.insertKnowledgeRCategory(knowledge, categoryid);
+		return 0;
+	}
+
+	@Override
+	public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
+
+		return knowledgeDao.deleteKnowledgeRCategory(knowledgeid, categoryid);
 	}
 
 }

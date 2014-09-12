@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.dao.content.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -64,6 +66,21 @@ public class KnowledgeContentDAOImpl extends SqlMapClientDaoSupport implements
 
 		int count = getSqlMapClientTemplate().update(
 				"tb_knowledge_content.update", knowledgeContent);
+		if (count > 0) {
+
+			return 1;
+		} else {
+
+			return 0;
+		}
+	}
+
+	@Override
+	public int deleteByknowledgeId(long[] knowledgeId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("knowledgeId", knowledgeId);
+		int count = getSqlMapClientTemplate().update(
+				"tb_knowledge_content.delete", map);
 		if (count > 0) {
 
 			return 1;

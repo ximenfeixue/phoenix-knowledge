@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledge;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
 public interface KnowledgeDao {
 	int deleteByPrimaryKey(Long id);
@@ -24,8 +24,6 @@ public interface KnowledgeDao {
 	 * @return
 	 */
 	int checkNameRepeat(int knowledgetype, String knowledgetitle);
-
-	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
 
 	/**
 	 * 批量知识移动到其它多个目录下
@@ -51,14 +49,23 @@ public interface KnowledgeDao {
 	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	int updateKnowledge(Knowledge knowledge);
+	int updateKnowledge(Knowledge knowledge,long categoryid[]);
 
 	/**
-	 * 新增知识，把知识ID，目录ID，存入到知识目录中间表中
+	 * 编辑知识，如果目录更改，相应的知识目录中间表也更改
 	 * 
-	 * @param knowledgeRCategory
+	 * @param knowledgeids
+	 * @param categoryid
 	 * @return
 	 */
-	void insertKnowledgeRCategory(Knowledge knowledge, long categoryid[]);
-
+	int updateKnowledgeRCategory(long knowledgeid, long categoryid,long[] categoryids);
+	
+	/**
+	 * 編輯知识，把知识目录中间表删除
+	 * 
+	 * @param knowledgeids
+	 * @param categoryid
+	 * @return
+	 */
+	int deleteKnowledgeRCategory(long knowledgeid, long categoryid);
 }

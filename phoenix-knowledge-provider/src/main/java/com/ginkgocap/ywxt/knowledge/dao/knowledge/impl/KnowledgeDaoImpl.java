@@ -17,6 +17,7 @@ import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -101,21 +102,6 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		} else {
 			return 1;// 名称可以使用
 		}
-	}
-
-	@Override
-	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (knowledgeids.length > 0) {
-			map.put("knowledgeids", knowledgeids);
-		}
-		if (categoryid > 0) {
-			map.put("categoryid", categoryid);
-		}
-		int count = getSqlMapClientTemplate().delete(
-				"tb_knowledge_category.delete", map);
-		return count;
 	}
 
 	@Override
@@ -205,7 +191,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public int updateKnowledge(Knowledge knowledge) {
+	public int updateKnowledge(Knowledge knowledge, long categoryid[]) {
 
 		int count = getSqlMapClientTemplate().update(
 				"tb_knowledge.updateknowledge", knowledge);
@@ -217,53 +203,25 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public void insertKnowledgeRCategory(Knowledge knowledge,
-			long categoryids[]) {
+	public int updateKnowledgeRCategory(long knowledgeid, long categoryid,
+			long[] categoryids) {
 
-		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
-		KnowledgeRCategory knowledgeRCategory = new KnowledgeRCategory();
-		for (int k = 0; k < categoryids.length; k++) {
-			Category category = categoryDao.selectByPrimaryKey(categoryids[k]);
-			if (category != null) {
-				knowledgeRCategory = new KnowledgeRCategory();
-				knowledgeRCategory.setKnowledgeid(knowledge.getId());
-				knowledgeRCategory.setCategoryid(categoryids[k]);
-				try {
-					// 得到要添加的分类的父类parentId
-					long parentId = category.getParentId();
-					// 得到要添加的分类的父类sortId
-					String parentSortId = parentId > 0 ? categoryDao
-							.selectByPrimaryKey(parentId).getSortId() : "";
-					// 通过parentSortId得到子类最大已添加的sortId
-					String childMaxSortId = categoryDao.selectMaxSortId(
-							category.getUid(), parentSortId);
-					if (StringUtils.isBlank(category.getSortId())) {
-						// 如果用户第一次添加，将childMaxSortId赋值
-						String newSortId = new String("");
-						if (childMaxSortId == null
-								|| "null".equals(childMaxSortId)
-								|| "".equals(childMaxSortId)) {
-							newSortId = parentSortId + "000000001";
-						} else {
-							newSortId = helper.generateSortId(childMaxSortId);
-						}
-						// 通过已添加的最大的SortId生成新的SortId
-						// 设置最新的sortId
-						knowledgeRCategory.setSortId(newSortId);
-					} else {
-						knowledgeRCategory.setSortId(category.getSortId());
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				list.add(knowledgeRCategory);
-			} else {
-				continue;
-			}
+		return 0;
+	}
 
+	@Override
+	public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (knowledgeid > 0) {
+			map.put("knowledgeid", knowledgeid);
 		}
-		getSqlMapClientTemplate().insert("tb_knowledge_category.batchInsert",
-				list);
+		if (categoryid > 0) {
+			map.put("categoryid", categoryid);
+		}
+		int count = getSqlMapClientTemplate().delete(
+				"tb_knowledge_category.deleteknowledgeid", map);
+		return count;
 	}
 
 }

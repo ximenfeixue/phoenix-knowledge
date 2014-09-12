@@ -37,8 +37,13 @@ public class KnowledgeContentServiceImpl implements KnowledgeContentService {
 
 	@Override
 	public int update(KnowledgeContent knowledgeContent) {
-		
-		return 0;
+
+		return knowledgeContentDAO.update(knowledgeContent);
+	}
+
+	@Override
+	public int deleteByknowledgeId(long[] knowledgeId) {
+		return knowledgeContentDAO.deleteByknowledgeId(knowledgeId);
 	}
 
 }

@@ -42,4 +42,26 @@ public class KnowledgeContentTest extends TestBase {
 		System.out.println(kc.getContent());
 	}
 
+	@Test
+	public void testKnowledgeContentdelete() throws Exception {
+
+		long[] knowledgeId = { 5574, 5576, 5575 };
+
+		int count = knowledgeContentService.deleteByknowledgeId(knowledgeId);
+
+		System.out.println(count);
+	}
+
+	@Test
+	public void testKnowledgeContentupdate() throws Exception {
+
+		KnowledgeContent knowledgeContent = new KnowledgeContent();
+
+		knowledgeContent.setKnowledgeid(5574);
+		knowledgeContent.setContent("修改后");
+		int count = knowledgeContentService.update(knowledgeContent);
+
+		System.out.println(count);
+	}
+
 }

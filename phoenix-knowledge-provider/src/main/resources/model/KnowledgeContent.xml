@@ -47,5 +47,19 @@
 		<include refid="allColumns" />
 		from tb_knowledge_content where id=#id#
 	</select>
+	
+	<update id="delete" parameterClass="java.util.Map">
+    update tb_knowledge_content
+ 	 set   status = '0'
+    where knowledge_id  in 
+    <iterate property="knowledgeId" open="(" close=")" conjunction=",">#knowledgeId[]#</iterate>
+  </update>
+  
+  <update id="update" parameterClass="knowledgeContent">
+    update tb_knowledge_content
+ 	 set   content = #content#
+    where knowledge_id =#knowledgeid:BIGINT#
+   
+  </update>
 
 </sqlMap>

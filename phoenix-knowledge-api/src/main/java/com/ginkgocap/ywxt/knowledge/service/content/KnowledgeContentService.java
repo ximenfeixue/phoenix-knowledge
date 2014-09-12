@@ -19,7 +19,7 @@ public interface KnowledgeContentService {
 	 * @return
 	 */
 	KnowledgeContent insert(KnowledgeContent knowledgeContent);
-	
+
 	/**
 	 * 当編輯知识同时要修改内容
 	 * 
@@ -27,7 +27,6 @@ public interface KnowledgeContentService {
 	 * @return
 	 */
 	int update(KnowledgeContent knowledgeContent);
-	
 
 	/**
 	 * 查询内容
@@ -36,5 +35,13 @@ public interface KnowledgeContentService {
 	 * @return
 	 */
 	List<KnowledgeContent> selectByknowledgeId(long knowledgeId);
+
+	/**
+	 * 删除内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int deleteByknowledgeId(long[] knowledgeId);
 
 }
