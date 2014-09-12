@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_column">
+	<typeAlias alias="knowledgeColumn" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn" id="knowledgeColumnMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="column_name" property="columnName" jdbcType="VARCHAR"/>
+		<result column="parent_column_id" property="parentColumnId" jdbcType="INT"/>
+		<result column="create_user_id" property="createUserId" jdbcType="INT"/>
+		<result column="level" property="level" jdbcType="INT"/>
+		<result column="path_name" property="pathName" jdbcType="VARCHAR"/>
+		<result column="column_level_path" property="columnLevelPath" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="java.util.Date"/>
+		<result column="update_time" property="updateTime" jdbcType="java.util.Date"/>
+		<result column="del_status" property="delStatus" jdbcType="TINYINT"/>
+		<result column="subscribe_count" property="subscribeCount" jdbcType="INT"/>
+	</resultMap>
+	
+	
+	<sql id="allColumns">
+	  id,
+	  column_name,
+	  parent_column_id,
+	  create_user_id,
+	  level,
+	  column_level_path,
+	  path_name,
+	  create_time,
+	  update_time,
+	  del_status,
+	  subscribe_count
+	</sql>
+	
+	<update id="update" parameterClass="knowledgeColumn">  
+        UPDATE tb_knowledge_column SET  
+			column_name=#columnName:VARCHAR#,
+			parent_column_id=#parentColumnId:INT#,
+			create_user_id=#createUserId:INT#,
+			level=#level:INT#,
+			column_level_path=#columnLevelPath:VARCHAR#,
+			path_name=#pathName#,
+			create_time=#createTime:java.util.Date#,
+			update_time=#updateTime:java.util.Date#,
+			subscribe_count=#subscribeCount:INT#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+    
+    <update id="delById" parameterClass="java.util.Map">  
+        UPDATE tb_knowledge_column SET 
+        	del_status=#delStatus#,
+        	update_time=#updateTime# 
+        WHERE 
+        	id=#id# 
+    </update>
+    
+    <delete id="clearById" parameterClass="long">
+    	delete from tb_knowledge_column where id=#id# and del_status=1
+    </delete>
+
+	
+	<insert id="insert" parameterClass="knowledgeColumn">
+		insert into tb_knowledge_column(
+			  column_name,
+			  parent_column_id,
+			  create_user_id,
+			  level,
+			  column_level_path,
+			  path_name,
+			  create_time,
+			  update_time,
+			  del_status,
+			  subscribe_count
+		) values (
+			#columnName#,
+			#parentColumnId#,
+			#createUserId#,
+			#level#,
+			#columnLevelPath#,
+			#pathName#,
+			#createTime#,
+			#updateTime#,
+			#delStatus#,
+			#subscribeCount#
+		)
+		<!-- 此字段作为返回值，插入完成后才执行 -->
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+    <select id="selectById" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where id=#id# and del_status=0
+	</select>
+	
+	<select id="selectByParentId" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId# and del_status=0
+	</select>
+	
+	<select id="selectByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where create_user_id=#createUserId# and del_status=0
+	</select>
+	
+	<select id="selectByUserIdAndSystem" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column WHERE create_user_id IN (#createUserId#,#systemId#) and del_status=0
+	</select>
+	
+	<select id="selectAll" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where del_status=0
+	</select>
+	
+	<select id="selectAllDel" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where del_status=1
+	</select> 
+	 
+	 <!-- test -->
+	<select id="selectSubByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column 
+		where del_status=0 and id IN 
+			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#createUserId#)
+	</select>
+	
+	<!-- 和delById的语句一样 -->
+	<update id="recoverOneKC" parameterClass="java.util.Map">  
+        UPDATE tb_knowledge_column SET 
+        	del_status=#delStatus:TINYINT#,
+			update_time=#updateTime:java.util.Date#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+    
+    <select id="countByPidAndName" parameterClass="java.util.Map">
+    	select count(*)
+		from tb_knowledge_column 
+		where parent_column_id=#parentColumnId# and column_name=#columnName#
+    </select>
+	<!-- 
+	UPDATE tb_knowledge_column SET subscribe_count = 0
+	UPDATE tb_knowledge_column SET del_status = 0
+	 -->
+	 
+</sqlMap>

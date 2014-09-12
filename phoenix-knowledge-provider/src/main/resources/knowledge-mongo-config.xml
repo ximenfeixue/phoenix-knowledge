@@ -25,11 +25,11 @@
 	http://www.springframework.org/schema/integration/stream
 	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd ">
 
-	<mongo:mongo id="mongo" replica-set="${knowledge.mongodb.address}">
+	<mongo:mongo id="mongo" replica-set="${mongodb.address}">
 		<!-- 一些连接属性的设置 -->
 	</mongo:mongo>
 	<!-- mongo的工厂，通过它来取得mongo实例,dbname为mongodb的数据库名，没有的话会自动创建 -->
-	<mongo:db-factory dbname="${knowledge.mongodb.database}" mongo-ref="mongo" />
+	<mongo:db-factory dbname="${mongodb.database}" mongo-ref="mongo" />
 	<!-- mongodb的主要操作对象，所有对mongodb的增删改查的操作都是通过它完成 -->
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />

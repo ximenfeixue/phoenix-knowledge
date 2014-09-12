@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_column_subscribe">
+	<typeAlias alias="knowledgeColumnSubscribe" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe" id="knowledgeColumnSubscribeMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="user_id" property="userId" jdbcType="BIGINT"/>
+		<result column="column_id" property="columnId" jdbcType="BIGINT"/>
+		<result column="sub_date" property="subDate" jdbcType="java.util.Date"/>
+		<result column="column_type" property="columnType" jdbcType="CHAR"/>
+		<!-- <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="knowledge_column_name" property="knowledgeColumnName" jdbcType="VARCHAR"/> -->
+	</resultMap>
+	
+	
+	<sql id="allColumns">
+	  id,
+	  user_id,
+	  column_id,
+	  sub_date,
+	  column_type
+	</sql>
+	
+	<update id="update" parameterClass="knowledgeColumnSubscribe">  
+        UPDATE tb_knowledge_column_subscribe SET  
+			user_id=#userId:BIGINT#,,
+			column_id=#columnId:BIGINT#,
+			sub_date=#subDate:java.util.Date#,
+			column_type=#columnType:CHAR#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+	
+	<insert id="insert" parameterClass="knowledgeColumnSubscribe">
+		insert into tb_knowledge_column_subscribe(
+			user_id,
+			column_id,
+			sub_date,
+			column_type
+		) values (
+			#userId:BIGINT#,
+			#columnId:BIGINT#,
+			#subDate:java.util.Date#,
+			#columnType:CHAR#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteByPK" parameterClass="long">  
+       delete from 
+       		tb_knowledge_column_subscribe 
+       where 
+       		id=#id#
+    </delete>
+    <delete id="deleteByUIdAndKCId" parameterClass="java.util.Map">  
+       delete from 
+       		tb_knowledge_column_subscribe 
+       where 
+       		user_id=#userId# and column_id=#columnId#
+    </delete>
+	
+    <select id="selectByUserId" resultMap="knowledgeColumnSubscribeMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column_subscribe where user_id=#userId#
+	</select>
+	 
+	 <select id="selectKCListByUserId" resultMap="knowledgeColumnSubscribeMap" parameterClass="long">
+		<!-- select <include refid="allColumns"/>
+		from tb_knowledge_column_subscribe s, tb_knowledge_column k
+		where s.user_id=#userId# and k.id=s.column_id -->
+	</select>
+	<!-- <select id="selectByParentId" resultMap="knowledgeColumnSubscribeMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column where parent_column_id=#parentColumnId# and create_user_id=#createUserId#
+	</select> -->
+	 
+</sqlMap>
