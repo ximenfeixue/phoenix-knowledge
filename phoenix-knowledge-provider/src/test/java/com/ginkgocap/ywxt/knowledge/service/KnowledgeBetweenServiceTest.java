@@ -38,14 +38,15 @@ public class KnowledgeBetweenServiceTest extends TestBase {
 	public void testinsertKnowledgeR() {
 
 		KnowledgeNews knowledge = new KnowledgeNews();
-//		knowledge.setKnowledgetitle("测试名");
-//		knowledge.setKnowledgesource("不知道");
-//		knowledge.setPictureTaskId("111");
-//		knowledge.setModifytime(new Date());
-//		knowledge.setCreate_user_id(123);
+		// knowledge.setKnowledgetitle("测试名");
+		// knowledge.setKnowledgesource("不知道");
+		// knowledge.setPictureTaskId("111");
+		// knowledge.setModifytime(new Date());
+		// knowledge.setCreate_user_id(123);
 		long[] categoryid = { 1, 2 };
 
-		knowledgeBetweenService.insertKnowledgeRCategory(knowledge, categoryid);
+		// knowledgeBetweenService.insertKnowledgeRCategory(knowledge,
+		// categoryid);
 	}
 
 	@Test
@@ -53,7 +54,7 @@ public class KnowledgeBetweenServiceTest extends TestBase {
 
 		long[] knowledgeids = { 1, 2 };
 		long categoryid = 3;
-		System.out.println(knowledgeBetweenService.deleteKnowledgeRCategory(knowledgeids,
-				categoryid));
+		System.out.println(knowledgeBetweenService.deleteKnowledgeRCategory(
+				knowledgeids, categoryid));
 	}
 }

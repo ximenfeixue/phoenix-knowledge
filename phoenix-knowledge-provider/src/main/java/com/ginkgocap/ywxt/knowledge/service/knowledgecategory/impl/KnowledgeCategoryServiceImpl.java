@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecategory.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,13 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
 
 	@Override
-	public void insertKnowledgeRCategory(KnowledgeNews knowledge,
-			long[] categoryid) {
-		knowledgeBetweenDAO.insertKnowledgeRCategory(knowledge, categoryid);
+	public void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+			long userid, String title, String author, String path,
+			String share_author, Date createtime, String tag, String know_desc,
+			long column_id, String pic_path) {
+		knowledgeBetweenDAO.insertKnowledgeRCategory(knowledgeid, categoryid,
+				userid, title, author, path, share_author, createtime, tag,
+				know_desc, column_id, pic_path);
 	}
 
 	@Override

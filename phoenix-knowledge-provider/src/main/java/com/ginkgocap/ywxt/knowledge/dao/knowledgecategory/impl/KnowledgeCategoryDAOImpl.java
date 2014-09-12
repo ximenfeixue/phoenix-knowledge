@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,17 +47,19 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
-	public void insertKnowledgeRCategory(KnowledgeNews knowledge,
-			long[] categoryids) {
+	public void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+			long userid, String title, String author, String path,
+			String share_author, Date createtime, String tag, String know_desc,
+			long column_id, String pic_path) {
 		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
 		KnowledgeRCategory knowledgeRCategory = new KnowledgeRCategory();
-		for (int k = 0; k < categoryids.length; k++) {
-			Category category = categoryDao.selectByPrimaryKey(categoryids[k]);
+		for (int k = 0; k < categoryid.length; k++) {
+			Category category = categoryDao.selectByPrimaryKey(categoryid[k]);
 			if (category != null) {
 				knowledgeRCategory = new KnowledgeRCategory();
-				knowledgeRCategory.setKnowledgeid(knowledge.getId());
-				knowledgeRCategory.setCategoryid(categoryids[k]);
-				knowledgeRCategory.setUserid(knowledge.getCid());
+				knowledgeRCategory.setKnowledgeid(knowledgeid);
+				knowledgeRCategory.setCategoryid(categoryid[k]);
+				knowledgeRCategory.setUserid(userid);
 				try {
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();

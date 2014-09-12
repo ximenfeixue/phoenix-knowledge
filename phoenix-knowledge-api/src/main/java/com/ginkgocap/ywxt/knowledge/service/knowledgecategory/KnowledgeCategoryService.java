@@ -1,9 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecategory;
 
-import java.util.Map;
-
-import com.ginkgocap.ywxt.knowledge.model.Favorites;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import java.util.Date;
 
 /**
  * 知识相关的关系表
@@ -19,8 +16,11 @@ public interface KnowledgeCategoryService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeRCategory(KnowledgeNews knowledge, long categoryid[]);
-	
+	void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+			long userid, String title, String author, String path,
+			String share_author, Date createtime, String tag, String know_desc,
+			long column_id, String pic_path);
+
 	/**
 	 * 刪除知识，把知识目录中间表删除
 	 * 

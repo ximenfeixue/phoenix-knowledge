@@ -29,17 +29,24 @@
     
 
 	<insert id="batchInsert" parameterClass="java.util.List">
-		insert into tb_knowledge_category (
+		insert into tb_user_permission (
+			receive_user_id,
 			knowledge_id,
-			category_id,
-			sortid,
-			user_id
+			send_user_id,
+			type,
+			mento,
+			createtime,
+			column_id
 		) values 
 		 	<iterate conjunction=",">
-				(#list[].knowledgeid#,
-				 #list[].categoryid#,
-				 #list[].sortId#,
-				 #list[].userid#,
+				(#list[].receive_user_id#,
+				 #list[].knowledge_id#,
+				 #list[].send_user_id#,
+				 #list[].type#,
+				 #list[].mento#,
+				 #list[].createtime#,
+				 #list[].column_id#
+				 
 				)
 		 	</iterate>
 	</insert>

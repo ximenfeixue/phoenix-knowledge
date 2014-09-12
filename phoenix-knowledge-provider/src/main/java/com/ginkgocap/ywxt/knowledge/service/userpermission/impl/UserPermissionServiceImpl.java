@@ -16,12 +16,6 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private UserPermissionDAO userPermissionDAO;
 
 	@Override
-	public void insertColumnKnowledge(ColumnKnowledge columnKnowledge) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public int deleteColumnKnowledge(long[] knowledgeids, long columnid) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -31,6 +25,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	public List<Long> selectByreceive_user_id(long receive_user_id) {
 
 		return userPermissionDAO.selectByreceive_user_id(receive_user_id);
+	}
+
+	@Override
+	public void insertUserPermission(long[] receive_uid, long knowledgeid,
+			long send_uid, int type, String mento, long column_id) {
+
+		userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
+				send_uid, type, mento, column_id);
 	}
 
 }
