@@ -50,7 +50,9 @@
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" ref="knowledgeColumnService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService" ref="knowledgeContentService" version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
  -->	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService" ref="knowledgeMongoIncService" version="1.0.0"/>
+     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService"  ref="knowledgeNewsService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.asset.KnowledgeAssetService"  ref="knowledgeAssetService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService"  ref="knowledgeCategoryService" version="1.0.0"/>
@@ -60,4 +62,5 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.macro.KnowledgeMacroService"  ref="knowledgeMacroService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.opinion.KnowledgeOpinionService"  ref="knowledgeOpinionService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgearticle.KnowledgeArticleService"  ref="knowledgeArticleService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgetag.KnowledgeTagService"  ref="knowledgeTagService" version="1.0.0"/>
 </beans>
