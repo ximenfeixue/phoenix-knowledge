@@ -140,5 +140,4 @@ public class KnowledgeColumnTest extends TestBase{
         }
     }
     
- 
 }
