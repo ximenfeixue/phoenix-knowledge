@@ -24,7 +24,9 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     @Override
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
         KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
+        //setType
 //        kc.setKcType(kcType)
+        
         Date date=new Date();
         kcs.setSubDate(date);
         return kcsDao.insert(kcs);
