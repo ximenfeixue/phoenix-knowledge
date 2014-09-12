@@ -8,7 +8,7 @@
 		<param name="File" value="${log4j.path}/phoenix-knowledge/normal.log" />
 		<param name="DatePattern" value=".yyyyMMddHH" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyyMMddHHmmss} %p %c %t %m%n" />
+			<param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %c %t %m%n" />
 		</layout>
 	</appender>
 	<root>
