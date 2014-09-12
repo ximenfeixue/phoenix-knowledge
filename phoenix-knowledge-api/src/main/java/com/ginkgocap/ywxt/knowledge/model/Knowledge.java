@@ -2,70 +2,69 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import java.util.Date;
 
+/**
+ * 知识javaBean （资讯，资产管理,宏观，观点，文章）
+ * 
+ * @author Administrator
+ * 
+ */
 public class Knowledge {
 
 	// id
 	private long id;
 
-	// 知识ID，兼容原来老数据
-	private long knowledgeid;
+	// 拥有者id
+	private long owner_id;
 
-	// phoenix_user.tb_user.id，创建用户Id
-	private long userId;
+	// 创建人(作者id)
+	private long create_user_id;
 
-	// 知识类型，默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规
-	private int knowledgetype;
-
-	// 知识作者，默认为当前登录用户的name
-	private String knowledgeauthor;
-
-	// 知识来源
+	// 来源（最初创建者）
 	private String knowledgesource;
 
-	// 知识内容前50个字符
-	private String knowledgedesc;
+	// 来源地址
+	private String source_url;
 
-	// 知识标题
+	// 知识所在栏目路径id
+	private String know_path;
+
+	// 描述
+	private String knowledgeDesc;
+
+	// 标题
 	private String knowledgetitle;
 
-	// 自定义标签，使用逗号分割
-	private String tag;
+	// 是否加精
+	private boolean essence;
 
-	// phoenix_knowledge.tb_column.columnid，栏目ID
-	private long columnid;
-
-	// phoenix_knowledge.tb_category.id，保存目录id
-	private long categoryid;
-
-	// 是否加精 0:否 1:是
-	private String essence;
-
-	// 知识图片表Id
+	// 封面地址id
 	private String pictureTaskId;
-
-	// 可见范围，默认0：为全平台可见，1：为自己可见，2：好友可见
-	private String visible;
-
-	// phoenix_knowledge.tb_category.sortId，目录顺序
-	private String sortid;
-
-	// 知识发布时间
-	private Date pubdate;
 
 	// 最后修改时间
 	private Date modifytime;
 
-	// 是否标志为回收站知识0:否 1:是
-	private String recyclebin;
+	// 审核状态(0：待审核，1：审核中，2：审核通过，-1：未通过)
+	private String check_status;
 
-	// 0为有效，1为失效
-	private String state;
+	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
+	private short status;
 
-	// 知识点击次数
-	private long clicknum;
+	// 举报状态(3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报)
+	private int report_status;
 
-	// 与知识附件表关联ID
-	private String attatchmentTaskId;
+	// 创建时间
+	private Date createtime;
+
+	// 分类表
+	private String table_name;
+
+	public String getTable_name() {
+		return table_name;
+	}
+
+	public void setTable_name(String table_name) {
+		this.table_name = table_name;
+	}
 
 	public long getId() {
 		return id;
@@ -75,36 +74,20 @@ public class Knowledge {
 		this.id = id;
 	}
 
-	public long getKnowledgeid() {
-		return knowledgeid;
+	public long getOwner_id() {
+		return owner_id;
 	}
 
-	public void setKnowledgeid(long knowledgeid) {
-		this.knowledgeid = knowledgeid;
+	public void setOwner_id(long owner_id) {
+		this.owner_id = owner_id;
 	}
 
-	public long getUserId() {
-		return userId;
+	public long getCreate_user_id() {
+		return create_user_id;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public int getKnowledgetype() {
-		return knowledgetype;
-	}
-
-	public void setKnowledgetype(int knowledgetype) {
-		this.knowledgetype = knowledgetype;
-	}
-
-	public String getKnowledgeauthor() {
-		return knowledgeauthor;
-	}
-
-	public void setKnowledgeauthor(String knowledgeauthor) {
-		this.knowledgeauthor = knowledgeauthor;
+	public void setCreate_user_id(long create_user_id) {
+		this.create_user_id = create_user_id;
 	}
 
 	public String getKnowledgesource() {
@@ -115,12 +98,28 @@ public class Knowledge {
 		this.knowledgesource = knowledgesource;
 	}
 
-	public String getKnowledgedesc() {
-		return knowledgedesc;
+	public String getSource_url() {
+		return source_url;
 	}
 
-	public void setKnowledgedesc(String knowledgedesc) {
-		this.knowledgedesc = knowledgedesc;
+	public void setSource_url(String source_url) {
+		this.source_url = source_url;
+	}
+
+	public String getKnow_path() {
+		return know_path;
+	}
+
+	public void setKnow_path(String know_path) {
+		this.know_path = know_path;
+	}
+
+	public String getKnowledgeDesc() {
+		return knowledgeDesc;
+	}
+
+	public void setKnowledgeDesc(String knowledgeDesc) {
+		this.knowledgeDesc = knowledgeDesc;
 	}
 
 	public String getKnowledgetitle() {
@@ -131,35 +130,11 @@ public class Knowledge {
 		this.knowledgetitle = knowledgetitle;
 	}
 
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
-	public long getColumnid() {
-		return columnid;
-	}
-
-	public void setColumnid(long columnid) {
-		this.columnid = columnid;
-	}
-
-	public long getCategoryid() {
-		return categoryid;
-	}
-
-	public void setCategoryid(long categoryid) {
-		this.categoryid = categoryid;
-	}
-
-	public String getEssence() {
+	public boolean isEssence() {
 		return essence;
 	}
 
-	public void setEssence(String essence) {
+	public void setEssence(boolean essence) {
 		this.essence = essence;
 	}
 
@@ -171,30 +146,6 @@ public class Knowledge {
 		this.pictureTaskId = pictureTaskId;
 	}
 
-	public String getVisible() {
-		return visible;
-	}
-
-	public void setVisible(String visible) {
-		this.visible = visible;
-	}
-
-	public String getSortid() {
-		return sortid;
-	}
-
-	public void setSortid(String sortid) {
-		this.sortid = sortid;
-	}
-
-	public Date getPubdate() {
-		return pubdate;
-	}
-
-	public void setPubdate(Date pubdate) {
-		this.pubdate = pubdate;
-	}
-
 	public Date getModifytime() {
 		return modifytime;
 	}
@@ -203,35 +154,36 @@ public class Knowledge {
 		this.modifytime = modifytime;
 	}
 
-	public String getRecyclebin() {
-		return recyclebin;
+	public String getCheck_status() {
+		return check_status;
 	}
 
-	public void setRecyclebin(String recyclebin) {
-		this.recyclebin = recyclebin;
+	public void setCheck_status(String check_status) {
+		this.check_status = check_status;
 	}
 
-	public String getState() {
-		return state;
+	public short getStatus() {
+		return status;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
-	public long getClicknum() {
-		return clicknum;
+	public int getReport_status() {
+		return report_status;
 	}
 
-	public void setClicknum(long clicknum) {
-		this.clicknum = clicknum;
+	public void setReport_status(int report_status) {
+		this.report_status = report_status;
 	}
 
-	public String getAttatchmentTaskId() {
-		return attatchmentTaskId;
+	public Date getCreatetime() {
+		return createtime;
 	}
 
-	public void setAttatchmentTaskId(String attatchmentTaskId) {
-		this.attatchmentTaskId = attatchmentTaskId;
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
 	}
+
 }

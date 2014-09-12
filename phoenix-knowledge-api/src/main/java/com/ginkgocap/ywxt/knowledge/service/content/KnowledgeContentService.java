@@ -21,11 +21,27 @@ public interface KnowledgeContentService {
 	KnowledgeContent insert(KnowledgeContent knowledgeContent);
 
 	/**
+	 * 当編輯知识同时要修改内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int update(KnowledgeContent knowledgeContent);
+
+	/**
 	 * 查询内容
 	 * 
 	 * @param knowledge
 	 * @return
 	 */
 	List<KnowledgeContent> selectByknowledgeId(long knowledgeId);
+
+	/**
+	 * 删除内容
+	 * 
+	 * @param knowledge
+	 * @return
+	 */
+	int deleteByknowledgeId(long[] knowledgeId);
 
 }
