@@ -1,83 +1,77 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.impl;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnSubscribeDao;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
-@Service("knowledgeColumnSubscribeService")
-public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubscribeService {
+/**
+ * 
+ * @author guangyyuan
+ *
+ */
+@Component("knowledgeColumnSubscribeDao")
+public class KnowledgeColumnSubscribeDaoImpl extends SqlMapClientDaoSupport implements KnowledgeColumnSubscribeDao {
 
     @Autowired
-    private KnowledgeColumnDao knowledgeColumnDao;
+    SqlMapClient sqlMapClient;
+
+    @PostConstruct
+    public void initSqlMapClient() {
+        super.setSqlMapClient(sqlMapClient);
+    }
     
-    @Autowired
-    private KnowledgeColumnSubscribeDao kcsDao;
     
     @Override
-    public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-        KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-        //setType
-//        kc.setKcType(kcType)
+    public KnowledgeColumnSubscribe insert(KnowledgeColumnSubscribe kcs) {
+        Long id=(Long) getSqlMapClientTemplate().insert("tb_knowledge_column_subscribe.insert", kcs);
         
-        Date date=new Date();
-        kcs.setSubDate(date);
-        return kcsDao.insert(kcs);
+        if (null==id) {
+            return null;
+        }
+        
+        kcs.setId(id);
+        return kcs;
     }
 
     @Override
     public int update(KnowledgeColumnSubscribe kcs) {
-        return kcsDao.update(kcs);
-    }
-
-    @Override
-    public KnowledgeColumnSubscribe merge(KnowledgeColumnSubscribe kcs) {
-
-        if (null == kcs) {
-            return null;
-        }
-        
-        Long id =-1l;
-        
-        //在不使用包装类型的情况下
-        try {
-            id = kcs.getId();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            
-            KnowledgeColumnSubscribe kcsi=kcsDao.insert(kcs);
-            return kcsi;
-        }
-        
-        if (id>0) {
-            this.update(kcs);
-            return kcs;
-        }
-        
-        return null;
-    }
-
-    @Override
-    public void deleteByUIdAndKCId(long userId, long columnId) {
-       kcsDao.deleteByUIdAndKCId(userId, columnId);
-
+        int r=getSqlMapClientTemplate().update("tb_knowledge_column_subscribe.update", kcs);
+        return r;
     }
 
     @Override
     public void deleteByPK(long id) {
-        kcsDao.deleteByPK(id);
+        getSqlMapClientTemplate().delete("tb_knowledge_column_subscribe.deleteByPK", id, 1);
+    }
+    
+
+    @Override
+    public void deleteByUIdAndKCId(long userId, long columnId) {
+        
+        Map<String, Long> map=new HashMap<String, Long>();
+        map.put("userId", userId);
+        map.put("columnId", columnId);
+        
+        getSqlMapClientTemplate().delete("tb_knowledge_column_subscribe.deleteByUIdAndKCId", map, 1);
     }
 
     @Override
     public List<KnowledgeColumnSubscribe> selectByUserId(long userId) {
-        return kcsDao.selectByUserId(userId);
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumnSubscribe> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column_subscribe.selectByUserId", userId);
+        return list;
     }
 
     @Override
@@ -139,5 +133,7 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
         // TODO Auto-generated method stub
         return null;
     }
+
+
 
 }

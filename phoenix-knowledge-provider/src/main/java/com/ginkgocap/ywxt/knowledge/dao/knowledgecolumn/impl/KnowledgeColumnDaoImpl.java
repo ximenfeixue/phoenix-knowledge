@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.dao.impl;
+package com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.impl;
 
 
 import java.util.Date;

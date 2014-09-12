@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.service.knowledgecolumn.impl;
 
 import java.util.Date;
 import java.util.List;
