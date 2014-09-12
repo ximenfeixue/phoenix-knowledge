@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnDao;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
