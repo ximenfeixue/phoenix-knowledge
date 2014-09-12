@@ -20,8 +20,6 @@ public class KnowledgeMongoIncServiceImpl implements KnowledgeMongoIncService {
 	@Resource
     private MongoTemplate mongoTemplate;
 	
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
 	@Override
 	public Long getKnowledgeIncreaseId() {
 		Criteria c = Criteria.where("name").is("kid");
