@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog;
 
+
 public interface KnowledgeCatalogDao {
     /**
      * insert <p>(新增知识文章目录)</p>    

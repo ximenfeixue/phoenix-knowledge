@@ -54,4 +54,5 @@
     <dubbo:reference id="knowledgeMacroService" interface="com.ginkgocap.ywxt.knowledge.service.macro.KnowledgeMacroService" version="1.0.0"/>
     <dubbo:reference id="knowledgeOpinionService" interface="com.ginkgocap.ywxt.knowledge.service.opinion.KnowledgeOpinionService" version="1.0.0"/>
     <dubbo:reference id="knowledgeArticleService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgearticle.KnowledgeArticleService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeTagService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgetag.KnowledgeTagService" version="1.0.0"/>
 </beans>
