@@ -148,11 +148,12 @@ public interface ArticleService {
      * @param uid
      */
 	List<Article> relationList(long uid, long ralatoinid,String sort,  int pageIndex, int pageSize);
+	
 	/**
 	 * 
 	 * @param uid user对象uid，不是id
 	 * @param articleType null：取全部；0：去正文类型；1：取url类型
-	 * @param sortId 分类配需ID
+	 * @param sortId 分类排序ID
      * @param essence 是否为精华
      * @param recycleBin 是否回收站 
      * @param keywords 搜索关键字
@@ -165,7 +166,7 @@ public interface ArticleService {
 	 * 
 	 * @param uid user对象uid，不是id
 	 * @param articleType null：取全部；0：去正文类型；1：取url类型
-	 * @param sortId 分类配需ID
+	 * @param sortId 分类排序ID
      * @param essence 是否为精华
      * @param recycleBin 是否回收站 
      * @param keywords 搜索关键字

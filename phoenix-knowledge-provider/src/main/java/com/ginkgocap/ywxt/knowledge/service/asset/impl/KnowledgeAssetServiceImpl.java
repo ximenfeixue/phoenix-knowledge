@@ -1,0 +1,74 @@
+package com.ginkgocap.ywxt.knowledge.service.asset.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ginkgocap.ywxt.knowledge.dao.asset.KnowledgeAssetDAO;
+import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
+import com.ginkgocap.ywxt.knowledge.service.asset.KnowledgeAssetService;
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+@Service("knowledgeAssetService")
+public class KnowledgeAssetServiceImpl implements KnowledgeAssetService {
+
+	@Autowired
+	private KnowledgeDao knowledgeDao;
+
+	@Autowired
+	private KnowledgeAssetDAO knowledgeAssetDAO;
+
+	@Autowired
+	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Autowired
+	SqlMapClient sqlMapClient;
+
+	@Override
+	public KnowledgeAsset insertknowledge(KnowledgeAsset knowledge) {
+
+		KnowledgeAsset knowledgeNews = knowledgeAssetDAO
+				.insertknowledge(knowledge);
+		if (knowledgeNews == null) {
+
+			return null;
+		} else {
+			return knowledgeNews;
+		}
+
+	}
+
+	@Override
+	public void deleteKnowledge(long[] ids) {
+
+		knowledgeAssetDAO.deleteKnowledge(ids);
+	}
+
+	@Override
+	public void updateKnowledge(KnowledgeAsset knowledge) {
+
+		int count = 0;
+		knowledgeAssetDAO.updateKnowledge(knowledge);
+		if (count > 0) {
+			// if (categoryids != null && categoryids.length > 0) {
+			//
+			// count = knowledgeDao.deleteKnowledgeRCategory(
+			// knowledge.getId(), categoryid);
+			// if (count > 0) {
+			// knowledgeBetweenDAO.insertKnowledgeRCategory(knowledge,
+			// categoryids);
+			// return 1;
+			// }
+			// }
+			// return 1;
+		}
+	}
+
+	@Override
+	public KnowledgeAsset selectKnowledge(long knowledgeid) {
+
+		return knowledgeAssetDAO.selectKnowledge(knowledgeid);
+	}
+
+}

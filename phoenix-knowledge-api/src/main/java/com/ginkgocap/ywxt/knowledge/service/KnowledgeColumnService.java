@@ -9,7 +9,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
  * <p>知识栏目操作接口</p>  
  * <p>于2014-8-19 由 bianzhiwei 创建 </p>
  * @author  <p>当前负责人 guangyuan</p>     
- * @since <p>1.2.1-SNAPSHO</p> 
+ * @since <p>1.2.1-SNAPSHOT</p> 
  */
 public interface KnowledgeColumnService {
 
@@ -54,6 +54,18 @@ public interface KnowledgeColumnService {
      * @return 用户创建的所有栏目列表
      */
     public List<KnowledgeColumn> queryByUserId(long createUserId);
+    /**
+     * queryByUserId  查询用户订阅的所有栏目
+     * @param createUserId 用户id
+     * @return 用户订阅的所有栏目列表
+     */
+    public List<KnowledgeColumn> querySubByUserId(long createUserId);
+    /**
+     * queryByUserId  查询系统所有可订阅的栏目
+     * @param systemId 系统用户id
+     * @return 系统栏目列表
+     */
+    public List<KnowledgeColumn> querySubBySystem(long systemId);
     
     /**
      * queryByUserId  查询用户创建的所有栏目和系统栏目

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_new">
+	<typeAlias alias="knowledge" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews"/>
+  <resultMap  class="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews" id="knowledgeMap">
+ 		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="owner_id" property="owner_id" jdbcType="BIGINT"/>
+		<result column="create_user_id" property="create_user_id" jdbcType="BIGINT"/>
+		<result column="source" property="knowledgesource" jdbcType="VARCHAR"/>
+		<result column="source_url" property="source_url" jdbcType="VARCHAR"/>
+		<result column="knowDesc" property="knowledgeDesc" jdbcType="VARCHAR"/>
+		<result column="title" property="knowledgetitle" jdbcType="VARCHAR"/>
+		<result column="know_path" property="know_path" jdbcType="VARCHAR"/>
+		<result column="essence" property="essence" jdbcType="INT"/>
+		<result column="pic_path" property="pictureTaskId" jdbcType="VARCHAR"/>
+		<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP"/>
+		<result column="status" property="status" jdbcType="SMALLINT"/>
+		<result column="check_status" property="check_status" jdbcType="INT"/>
+		<result column="report_status" property="report_status" jdbcType="INT"/>
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  
+
+  
+  <insert id="insertknowledge" parameterClass="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews">
+     insert into tb_knowledge_news (
+		id,owner_id,create_user_id, source,knowDesc,title,
+	  know_path,essence,pic_path,modifytime,status,
+	  check_status,report_status,createtime
+      )
+    values ( #id#,#owner_id#, #create_user_id#,
+      #knowledgesource#, 
+      #knowledgeDesc#, #knowledgetitle#, 
+      #know_path#, #essence#, 
+      #pictureTaskId#,
+      #modifytime#, #status#, #check_status#,#report_status#,
+      #createtime#
+      )
+      <selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+  </insert>
+  
+  <update id="deleteBatch" parameterClass="java.util.Map">
+    update tb_knowledge_news
+ 	 set   status = '6'
+    where id  in 
+    <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+  </update>
+  
+  <update id="updateknowledge" parameterClass="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews">
+    update tb_knowledge_news
+    set 
+      owner_id = #owner_id#,
+      create_user_id=#create_user_id#,
+      source=#knowledgesource#,
+      knowDesc=#knowledgeDesc#,
+      title = #knowledgetitle#,
+      know_path = #know_path#,
+      essence = #essence#,
+      pic_path = #pictureTaskId#,
+      modifytime = #modifytime#,
+      status=#status#,
+      check_status = #check_status#,
+      report_status = #report_status#,
+      createtime = #createtime#,
+
+    where id = #id# 
+  </update>
+  
+  <insert id="insertknowledgeasset" parameterClass="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews">
+     insert into tb_knowledge_asset (
+		id,owner_id,create_user_id, source,knowDesc,title,
+	  know_path,essence,pic_path,modifytime,status,
+	  check_status,report_status,createtime
+      )
+    values ( #id#,#owner_id#, #create_user_id#,
+      #knowledgesource#, 
+      #knowledgeDesc#, #knowledgetitle#, 
+      #know_path#, #essence#, 
+      #pictureTaskId#,
+      #modifytime#, #status#, #check_status#,#report_status#,
+      #createtime#
+      )
+      <selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+  </insert>
+  
+   <update id="deleteBatchasset" parameterClass="java.util.Map">
+    update tb_knowledge_asset
+ 	 set   status = '6'
+    where id  in 
+    <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+  </update>
+  
+  <update id="updateknowledgeasset" parameterClass="com.ginkgocap.ywxt.knowledge.model.KnowledgeNews">
+    update tb_knowledge_asset
+    set 
+      owner_id = #owner_id#,
+      create_user_id=#create_user_id#,
+      source=#knowledgesource#,
+      knowDesc=#knowledgeDesc#,
+      title = #knowledgetitle#,
+      know_path = #know_path#,
+      essence = #essence#,
+      pic_path = #pictureTaskId#,
+      modifytime = #modifytime#,
+      status=#status#,
+      check_status = #check_status#,
+      report_status = #report_status#,
+      createtime = #createtime#,
+
+    where id = #id# 
+  </update>
+  
+</sqlMap>

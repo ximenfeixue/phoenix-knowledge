@@ -312,4 +312,18 @@ public class ArticleDaoImpl  extends SqlMapClientDaoSupport implements ArticleDa
         List<Article> list = getSqlMapClientTemplate().queryForList("tb_article.selectList", map);
         return list;
 	}
+
+	@Override
+	public boolean checkArticleIsExist(String url, long uid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("url", url); 
+        map.put("uid", uid);
+		Long count=(Long)getSqlMapClientTemplate().queryForObject("tb_article.checkArticleIsExist", map);
+		if(count>0){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }

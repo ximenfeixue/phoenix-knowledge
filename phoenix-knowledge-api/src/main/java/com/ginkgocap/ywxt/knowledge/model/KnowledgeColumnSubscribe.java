@@ -7,31 +7,29 @@ import org.springframework.data.annotation.Transient;
 /**
  *   
  * <p>栏目订阅</p>  
- * <p>2014-9-1 creat by guangyuan </p>
- * <p>属性类型和名称依据表tb_knowledge_column_subscribe的字段名称和类型创建 </p>
- * @author  <p>当前负责人 guangyuan</p>     
- * @since <p>1.2.1-SNAPSHOT</p> 
- *
+ * <p>非Transient属性类型和名称依据表tb_knowledge_column_subscribe的字段名称和类型创建 </p>
+ * @author  guangyuan  
+ * @since 1.2.1-SNAPSHOT
+ * @createdtime 2014-9-1
  */
 public class KnowledgeColumnSubscribe implements Serializable {
 
     private static final long serialVersionUID = 1243330354704937038L;
     
     private long id;//主键
-
     private long userId;//订阅人的id
+    private long columnId;//栏目id
+    private String columnType;
+    private Date subDate;
+    
     @Transient
     private String userName;//订阅人的用户名 
-    private long columnId;//栏目id
     @Transient
     private String knowledgeColumnName;//栏目名称
     @Transient
     private long parentKColumnId;//父栏目id
     @Transient
     private String parentKColumnName;//父栏目名称
-    
-    private String columnType;
-    private Date subDate;
 
     public KnowledgeColumnSubscribe() {
     }

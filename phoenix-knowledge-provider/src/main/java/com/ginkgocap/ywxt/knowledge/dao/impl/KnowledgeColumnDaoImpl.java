@@ -31,9 +31,10 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         if (id != null) {
             kc.setId(id);
             return kc;
-        } else {
-            return null;
-        }
+        } 
+        
+        return null;
+
     }
 
     @Override
@@ -70,11 +71,11 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         map.put("updateTime",updateTime);
         map.put("delStatus",1);
         
-        getSqlMapClientTemplate().update("tb_knowledge_column.delById", map);
+        getSqlMapClientTemplate().update("tb_knowledge_column.delById", map,1);
     }
     
     public void clearById(long id){
-        getSqlMapClientTemplate().delete("tb_knowledge_column.clearById", id);
+        getSqlMapClientTemplate().delete("tb_knowledge_column.clearById", id,1);
     }
 
     @Override
@@ -134,6 +135,19 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         map.put("delStatus",0);
         
         getSqlMapClientTemplate().update("tb_knowledge_column.recoverOneKC", map);
+    }
+
+    @Override
+    public List<KnowledgeColumn> querySubByUserId(long createUserId) {
+        @SuppressWarnings("unchecked")
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectSubByUserId");
+        return list;
+    }
+
+    @Override
+    public List<KnowledgeColumn> querySubBySystem(long systemId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

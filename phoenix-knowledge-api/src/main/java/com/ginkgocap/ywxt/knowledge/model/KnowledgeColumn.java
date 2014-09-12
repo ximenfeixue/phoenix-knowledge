@@ -23,15 +23,20 @@ public class KnowledgeColumn implements Serializable {
     private String columnName;//分类名称
     private Long parentColumnId;//父分类id 在设值时数字后边一定要加上l
     private Long createUserId;//用户id
-    @Transient 
-    private String tag;//分类标签，分号分割
     private Integer level;//
-    private String columnLevelPath;//分类层级路径
+    private String columnLevelPath;//层级路径
+    private String pathName;//层级路径对应的文字名称
     private Date createTime;//创建时间
     private Date updateTime;//更新时间
     private Integer delStatus=0; //删除状态    0-正常  1-已删除
     private Integer subscribeCount=0; //订阅数量
+    
+    @Transient 
+    private String tag;//分类标签，分号分割
 //    private Object subscribers;  //订阅人列表
+    
+    @Transient 
+    private Integer kcType;
     
     public KnowledgeColumn() {
     }
@@ -104,4 +109,20 @@ public class KnowledgeColumn implements Serializable {
         this.subscribeCount = subscribeCount;
     }
 
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public Integer getKcType() {
+        return kcType;
+    }
+
+    public void setKcType(Integer kcType) {
+        this.kcType = kcType;
+    }
+    
 }

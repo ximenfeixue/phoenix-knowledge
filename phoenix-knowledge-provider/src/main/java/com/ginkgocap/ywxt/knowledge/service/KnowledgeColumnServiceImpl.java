@@ -109,4 +109,16 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
         knowledgeColumnDao.clearById(id);
     }
 
+    @Override
+    public List<KnowledgeColumn> querySubByUserId(long createUserId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<KnowledgeColumn> querySubBySystem(long systemId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

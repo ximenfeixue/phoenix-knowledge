@@ -41,13 +41,44 @@ public class KnowledgeColumnTest extends TestBase{
     }
     
     @Test
-    public void  queryByParentId() throws Exception {
-        List<KnowledgeColumn> list= knowledgeColumnService.queryByParentId(0, 0);
+    public void  queryByParentId() {
         
-        for (KnowledgeColumn knowledgeColumn : list) {
-            System.out.print(knowledgeColumn.getColumnName()+' ');
+        try {
+            List<KnowledgeColumn> list= knowledgeColumnService.queryByParentId(1, 71);
             
+            for (KnowledgeColumn knowledgeColumn : list) {
+                System.out.print(knowledgeColumn.getColumnName()+' ');
+                
+            }
+            System.out.println();
+            assertTrue(!list.isEmpty());
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }finally{
+            System.gc();
         }
+    }
+    
+    @Test
+    public void queryByUserIdAndSystem(){
+        List<KnowledgeColumn> list=null;
+        try {
+            list= knowledgeColumnService.queryByUserIdAndSystem(71, 0);
+            
+            for (int i=0;i<list.size();i++) {
+                KnowledgeColumn knowledgeColumn=list.get(i);
+                System.out.print(knowledgeColumn.getColumnName()+' ');
+                if ((i+1)%13==0) {
+                    System.out.println();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+        
         System.out.println();
         assertTrue(!list.isEmpty());
     }
@@ -69,6 +100,7 @@ public class KnowledgeColumnTest extends TestBase{
             kc.setCreateUserId(71L);
             kc.setLevel(2);
             kc.setColumnLevelPath("0-1");
+            kc.setPathName("资讯->自定义");
             
             KnowledgeColumn ks = knowledgeColumnService.saveOrUpdate(kc);
             
@@ -107,5 +139,5 @@ public class KnowledgeColumnTest extends TestBase{
            
         }
     }
- 
+    
 }
