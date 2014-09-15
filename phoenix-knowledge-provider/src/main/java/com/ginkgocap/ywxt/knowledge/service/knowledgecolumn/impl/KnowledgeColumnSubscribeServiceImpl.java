@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.service.knowledgecolumn.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -6,11 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnSubscribeDao;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnDao;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnSubscribeDao;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnSubscribeService;
 
 @Service("knowledgeColumnSubscribeService")
 public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubscribeService {
@@ -24,8 +25,10 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     @Override
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
         KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-        //setType
-//        kc.setKcType(kcType)
+        
+        KCHelper.analysisType(kc);
+        String columnType=kc.getKcType().toString();
+        kcs.setColumnType(columnType);
         
         Date date=new Date();
         kcs.setSubDate(date);

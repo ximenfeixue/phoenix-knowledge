@@ -25,11 +25,11 @@ import com.ginkgocap.ywxt.util.DateFunc;
 /** 
  * <p>知识栏目操作测试接口</p>  
  * <p>于2014-8-19 由 bianzhiwei 创建 </p>
- * @author  <p>当前负责人 bianzhiwei</p>     
- * @since <p>1.2.1-SNAPSHO</p> 
+ * @author  <p>当前负责人 guangyuan</p>     
+ * @since <p>1.2.1-SNAPSHOT</p> 
  */
 
-public class KnowledgeColumnTest extends TestBase{
+public class KnowledgeColumnServiceTest extends TestBase{
     @Autowired
     private KnowledgeColumnService knowledgeColumnService;
  

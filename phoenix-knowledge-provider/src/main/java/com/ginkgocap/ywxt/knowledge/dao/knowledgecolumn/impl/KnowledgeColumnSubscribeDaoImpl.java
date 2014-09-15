@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.dao.impl;
+package com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeColumnSubscribeDao;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnSubscribeDao;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;

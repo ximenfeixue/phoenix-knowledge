@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.dao;
+package com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn;
 
 import java.util.List;
 
