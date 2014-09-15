@@ -67,12 +67,4 @@ public class KnowledgeInvestmentServiceImpl implements
 		return (KnowledgeInvestment) mongoTemplate.find(query, KnowledgeInvestment.class);
 	}
 
-	@Override
-	public boolean delKnowledgeInvestment(Long id) {
-		Criteria c = Criteria.where("id").is(id);
-		Query query = new Query(c);
-		mongoTemplate.findAndRemove(query,KnowledgeInvestment.class);
-		return false;
-	}
-
 }

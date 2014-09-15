@@ -33,10 +33,4 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 		return null;
 	}
 
-	@Override
-	public boolean delKnowledgeIndustry(Long id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

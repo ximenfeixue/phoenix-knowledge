@@ -22,6 +22,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
@@ -218,7 +219,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 
 		if (StringUtils.isNotBlank(knowledgetitle)) {
 
-			Criteria criteria = Criteria.where("title").is(knowledgetitle);
+			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
 			Query query = new Query(criteria);
 			List<KnowledgeIndustry> list = mongoTemplate.find(query,
 					KnowledgeIndustry.class);
@@ -240,6 +241,24 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 			Query query = new Query(criteria);
 			List<KnowledgeLaw> list = mongoTemplate.find(query,
 					KnowledgeLaw.class);
+			if (list != null && list.size() > 0) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public int checkInvestmentNameRepeat(String knowledgetitle) {
+
+		if (StringUtils.isNotBlank(knowledgetitle)) {
+			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
+			Query query = new Query(criteria);
+			List<KnowledgeInvestment> list = mongoTemplate.find(query,
+					KnowledgeInvestment.class);
 			if (list != null && list.size() > 0) {
 				return 0;
 			} else {

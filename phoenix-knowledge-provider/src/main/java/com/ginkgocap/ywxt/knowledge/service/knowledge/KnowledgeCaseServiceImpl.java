@@ -35,10 +35,4 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		return null;
 	}
 
-	@Override
-	public boolean delKnowledgeCase(Long id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

@@ -15,7 +15,16 @@ public interface KnowledgeDao {
 	int updateByPrimaryKeySelective(Knowledge record);
 
 	int updateByPrimaryKey(Knowledge record);
-
+	
+	/**
+	 * 检查投融工具新建名称是否重复
+	 * 
+	 * @param knowledgeid
+	 * @param knowledgeTitle
+	 * @return
+	 */
+	int checkInvestmentNameRepeat(String knowledgetitle);
+	
 	/**
 	 * 检查行业新建名称是否重复
 	 * 

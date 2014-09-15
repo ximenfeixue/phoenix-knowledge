@@ -179,4 +179,9 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 		return knowledgeDao.checkLayNameRepeat(knowledgetitle);
 	}
 
+	@Override
+	public int checkInvestmentNameRepeat(String knowledgetitle) {
+		return knowledgeDao.checkInvestmentNameRepeat(knowledgetitle);
+	}
+
 }
