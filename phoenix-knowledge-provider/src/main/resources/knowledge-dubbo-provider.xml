@@ -63,4 +63,7 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.opinion.KnowledgeOpinionService"  ref="knowledgeOpinionService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgearticle.KnowledgeArticleService"  ref="knowledgeArticleService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgetag.KnowledgeTagService"  ref="knowledgeTagService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCaseService"  ref="knowledgeCaseService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeIndustryService"  ref="knowledgeIndustryService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService"  ref="knowledgeInvestmentService" version="1.0.0"/>
 </beans>
