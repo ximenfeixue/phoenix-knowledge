@@ -37,13 +37,22 @@ public interface KnowledgeMainService {
 	public <T> T getKnowLedgeDetail(int id, int type);
 
 	/**
-	 * 检查新建名称是否重复
+	 * 检查行业新建名称是否重复
 	 * 
 	 * @param knowledgeid
 	 * @param knowledgeTitle
 	 * @return
 	 */
-	int checkNameRepeat(int knowledgetype, String knowledgetitle);
+	int checkIndustryNameRepeat(String knowledgetitle);
+
+	/**
+	 * 检查法律法规新建名称是否重复
+	 * 
+	 * @param knowledgeid
+	 * @param knowledgeTitle
+	 * @return
+	 */
+	int checkLawNameRepeat(String knowledgetitle);
 
 	/**
 	 * 存储知识基本信息（试用透融工具、行业）

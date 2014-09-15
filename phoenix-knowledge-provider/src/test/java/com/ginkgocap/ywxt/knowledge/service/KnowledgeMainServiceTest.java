@@ -44,9 +44,9 @@ public class KnowledgeMainServiceTest extends TestBase {
 	@Test
 	public void testcheckName() {
 		int knowledgetype = 2;
-		String knowledgetitle = "不知";
-		int count = knowledgeMainService.checkNameRepeat(knowledgetype,
-				knowledgetitle);
+		String knowledgetitle = "测试标题";
+		int count = knowledgeMainService
+				.checkIndustryNameRepeat(knowledgetitle);
 		if (count != 0) {
 			System.out.println("名称可以使用");
 		} else {
@@ -91,9 +91,6 @@ public class KnowledgeMainServiceTest extends TestBase {
 	@Test
 	public void testinsertKnowledge() {
 		Knowledge knowledge = new Knowledge();
-		knowledge.setKnowledgetitle("测试名");
-		knowledge.setKnowledgesource("不知道");
-		knowledge.setPictureTaskId("111");
 		knowledge.setModifytime(new Date());
 
 		long[] categoryid = { 52, 53, 54 };
@@ -110,8 +107,8 @@ public class KnowledgeMainServiceTest extends TestBase {
 			System.out.println("content : "
 					+ knowledgeContentResult.getContent());
 			if (knowledgeContentResult.getId() > 0) {
-//				knowledgeMainService.insertKnowledgeRCategory(knowledge,
-//						categoryid);
+				// knowledgeMainService.insertKnowledgeRCategory(knowledge,
+				// categoryid);
 			}
 		}
 		System.out.println("knowledge" + knowresult.getId());
@@ -134,9 +131,6 @@ public class KnowledgeMainServiceTest extends TestBase {
 		Knowledge knowledge = new Knowledge();
 
 		knowledge.setId(5576);
-		knowledge.setKnowledgetitle("修改后测试名");
-		knowledge.setKnowledgesource("修改后不知道");
-		knowledge.setPictureTaskId("111");
 		knowledge.setModifytime(new Date());
 		long[] categoryids = {};
 		long categoryid = 42;

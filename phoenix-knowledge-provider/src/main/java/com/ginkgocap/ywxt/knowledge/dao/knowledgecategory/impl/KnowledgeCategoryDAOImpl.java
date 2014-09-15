@@ -48,11 +48,11 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 
 	@Override
 	public void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
-			long userid, String title, String author, String path,
+			long userid, String title, String author, int path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path) {
 		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
-		KnowledgeRCategory knowledgeRCategory = new KnowledgeRCategory();
+		KnowledgeRCategory knowledgeRCategory = null;
 		for (int k = 0; k < categoryid.length; k++) {
 			Category category = categoryDao.selectByPrimaryKey(categoryid[k]);
 			if (category != null) {
@@ -60,6 +60,15 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 				knowledgeRCategory.setKnowledgeid(knowledgeid);
 				knowledgeRCategory.setCategoryid(categoryid[k]);
 				knowledgeRCategory.setUserid(userid);
+				knowledgeRCategory.setTitle(title);
+				knowledgeRCategory.setAuthor(author);
+				knowledgeRCategory.setPath(path);
+				knowledgeRCategory.setShare_author(share_author);
+				knowledgeRCategory.setCreatetime(createtime);
+				knowledgeRCategory.setTag(tag);
+				knowledgeRCategory.setKnow_desc(know_desc);
+				knowledgeRCategory.setColumn_id(column_id);
+				knowledgeRCategory.setPic_path(pic_path);
 				try {
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();

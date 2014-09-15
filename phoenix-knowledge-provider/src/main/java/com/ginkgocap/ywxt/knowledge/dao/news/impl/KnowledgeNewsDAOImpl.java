@@ -53,10 +53,10 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 
 		for (int i = 0; i < ids.length; i++) {
 
-			Criteria criteria = Criteria.where("_id").is(ids[i]);
+			Criteria criteria = Criteria.where("_id").in(ids);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("ststus", "6");
+			update.set("status", "6");
 			mongoTemplate.updateFirst(query, update, KnowledgeNews.class);
 		}
 	}

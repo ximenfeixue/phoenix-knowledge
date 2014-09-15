@@ -54,7 +54,7 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").is(ids);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("ststus", "6");
+			update.set("status", "6");
 			mongoTemplate.updateMulti(query, update, KnowledgeOpinion.class);
 //		}
 	}

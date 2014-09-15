@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
@@ -43,13 +44,18 @@ public class KnowledgeNewsServiceTest extends TestBase {
 	@Autowired
 	private KnowledgeContentService knowledgeContentService;
 
+	@Autowired
+	private KnowledgeMongoIncService knowledgeMongoIncService;
+
 	@Test
 	public void testinsertKnowledge() {
+		long id = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		KnowledgeNews knowledge = new KnowledgeNews();
-		knowledge.setId(2);
+		knowledge.setId(id);
 		knowledge.setUid(111);
 		knowledge.setStatus(1);
 		knowledge.setReport_status(5);
+		knowledge.setTitle("测试标题");
 		knowledge.setCname("不知道");
 		knowledge.setContent("这是测试内容");
 		long[] categoryid = { 1, 2 };
@@ -60,16 +66,16 @@ public class KnowledgeNewsServiceTest extends TestBase {
 
 			// knowledgeBetweenService.insertKnowledgeRCategory(knowledge,
 			// categoryid);
-
+			System.out.println("ID : " + knowresult.getId());
 		}
 	}
 
 	@Test
 	public void testdeleteKnowledge() {
-		long[] ids = { 1, 2 };
-		long categoryid = 3;
+		long[] ids = { 5, 6 };
+//		long categoryid = 3;
 		knowledgeNewsService.deleteKnowledge(ids);
-		knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
+//		knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
 
 	}
 

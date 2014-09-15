@@ -11,7 +11,7 @@
 		<result column="user_id" property="userid" jdbcType="BIGINT"/>
 		<result column="title" property="title" jdbcType="VARCHAR"/>
 		<result column="author" property="author" jdbcType="VARCHAR"/>
-		<result column="path" property="path" jdbcType="VARCHAR"/>
+		<result column="path" property="path" jdbcType="SMALLINT"/>
 		<result column="share_author" property="share_author" jdbcType="VARCHAR"/>
 		<result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
 		<result column="tag" property="tag" jdbcType="VARCHAR"/>
@@ -50,13 +50,18 @@
 			knowledge_id,
 			category_id,
 			sortid,
-			user_id
+			user_id,
+			title,
+			author,
+			path,share_author,createtime,tag,know_desc,column_id,pic_path
+			
 		) values 
 		 	<iterate conjunction=",">
 				(#list[].knowledgeid#,
 				 #list[].categoryid#,
 				 #list[].sortId#,
-				 #list[].userid#,
+				 #list[].userid#, #list[].title#, #list[].author#, #list[].path#, #list[].share_author#,
+				 #list[].createtime#,#list[].tag#,#list[].know_desc#,#list[].column_id#,#list[].pic_path#
 				)
 		 	</iterate>
 	</insert>

@@ -17,13 +17,22 @@ public interface KnowledgeDao {
 	int updateByPrimaryKey(Knowledge record);
 
 	/**
-	 * 检查知识名称是否重复
+	 * 检查行业新建名称是否重复
 	 * 
-	 * @param knowledgetype
-	 * @param knowledgetitle
+	 * @param knowledgeid
+	 * @param knowledgeTitle
 	 * @return
 	 */
-	int checkNameRepeat(int knowledgetype, String knowledgetitle);
+	int checkIndustryNameRepeat(String knowledgetitle);
+	
+	/**
+	 * 检查法律法规新建名称是否重复
+	 * 
+	 * @param knowledgeid
+	 * @param knowledgeTitle
+	 * @return
+	 */
+	int checkLayNameRepeat(String knowledgetitle);
 
 	/**
 	 * 批量知识移动到其它多个目录下
