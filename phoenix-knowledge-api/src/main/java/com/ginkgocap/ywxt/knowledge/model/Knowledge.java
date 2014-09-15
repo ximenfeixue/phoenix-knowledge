@@ -9,62 +9,64 @@ import java.util.Date;
  * 
  */
 public class Knowledge {
-
 	// id
 	private long id;
 
-	// 拥有者id
-	private long owner_id;
+	// 标题
+	private String title;
 
-	// 创建人(作者id)
-	private long create_user_id;
+	// 作者
+	private long uid;
 
-	// 来源（最初创建者）
-	private String knowledgesource;
+	// 作者名称
+	private String uname;
+
+	// 创建人id
+	private long cid;
+
+	// 创建人名称
+	private String cname;
+
+	// 来源
+	private String sid;
 
 	// 来源地址
-	private String source_url;
+	private String s_addr;
 
-	// 知识所在栏目路径id
-	private String know_path;
+	// 栏目路徑
+	private long cpathid;
+
+	// 封面地址
+	private String pic;
 
 	// 描述
-	private String knowledgeDesc;
+	private String desc;
 
-	// 标题
-	private String knowledgetitle;
+	// 原内容
+	private String content;
+
+	private String hcontent;
 
 	// 是否加精
-	private boolean essence;
-
-	// 封面地址id
-	private String pictureTaskId;
-
-	// 最后修改时间
-	private Date modifytime;
-
-	// 审核状态(0：待审核，1：审核中，2：审核通过，-1：未通过)
-	private String check_status;
-
-	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
-	private short status;
-
-	// 举报状态(3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报)
-	private int report_status;
+	private int essence;
 
 	// 创建时间
 	private Date createtime;
 
-	// 分类表
-	private String table_name;
+	// 最后修改时间
+	private Date modifytime;
 
-	public String getTable_name() {
-		return table_name;
-	}
+	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
+	private int status;
 
-	public void setTable_name(String table_name) {
-		this.table_name = table_name;
-	}
+	// 举报状态(1:举报，0：未举报)
+	private int report_status;
+
+	// 附件ID
+	private long taskid;
+
+	// 高亮状态（0-未加 1-已加）
+	private int ish;
 
 	public long getId() {
 		return id;
@@ -74,76 +76,116 @@ public class Knowledge {
 		this.id = id;
 	}
 
-	public long getOwner_id() {
-		return owner_id;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setOwner_id(long owner_id) {
-		this.owner_id = owner_id;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public long getCreate_user_id() {
-		return create_user_id;
+	public long getUid() {
+		return uid;
 	}
 
-	public void setCreate_user_id(long create_user_id) {
-		this.create_user_id = create_user_id;
+	public void setUid(long uid) {
+		this.uid = uid;
 	}
 
-	public String getKnowledgesource() {
-		return knowledgesource;
+	public String getUname() {
+		return uname;
 	}
 
-	public void setKnowledgesource(String knowledgesource) {
-		this.knowledgesource = knowledgesource;
+	public void setUname(String uname) {
+		this.uname = uname;
 	}
 
-	public String getSource_url() {
-		return source_url;
+	public long getCid() {
+		return cid;
 	}
 
-	public void setSource_url(String source_url) {
-		this.source_url = source_url;
+	public void setCid(long cid) {
+		this.cid = cid;
 	}
 
-	public String getKnow_path() {
-		return know_path;
+	public String getCname() {
+		return cname;
 	}
 
-	public void setKnow_path(String know_path) {
-		this.know_path = know_path;
+	public void setCname(String cname) {
+		this.cname = cname;
 	}
 
-	public String getKnowledgeDesc() {
-		return knowledgeDesc;
+	public String getSid() {
+		return sid;
 	}
 
-	public void setKnowledgeDesc(String knowledgeDesc) {
-		this.knowledgeDesc = knowledgeDesc;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 
-	public String getKnowledgetitle() {
-		return knowledgetitle;
+	public String getS_addr() {
+		return s_addr;
 	}
 
-	public void setKnowledgetitle(String knowledgetitle) {
-		this.knowledgetitle = knowledgetitle;
+	public void setS_addr(String s_addr) {
+		this.s_addr = s_addr;
 	}
 
-	public boolean isEssence() {
+	public long getCpathid() {
+		return cpathid;
+	}
+
+	public void setCpathid(long cpathid) {
+		this.cpathid = cpathid;
+	}
+
+	public String getPic() {
+		return pic;
+	}
+
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getHcontent() {
+		return hcontent;
+	}
+
+	public void setHcontent(String hcontent) {
+		this.hcontent = hcontent;
+	}
+
+	public int getEssence() {
 		return essence;
 	}
 
-	public void setEssence(boolean essence) {
+	public void setEssence(int essence) {
 		this.essence = essence;
 	}
 
-	public String getPictureTaskId() {
-		return pictureTaskId;
+	public Date getCreatetime() {
+		return createtime;
 	}
 
-	public void setPictureTaskId(String pictureTaskId) {
-		this.pictureTaskId = pictureTaskId;
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
 	}
 
 	public Date getModifytime() {
@@ -154,19 +196,11 @@ public class Knowledge {
 		this.modifytime = modifytime;
 	}
 
-	public String getCheck_status() {
-		return check_status;
-	}
-
-	public void setCheck_status(String check_status) {
-		this.check_status = check_status;
-	}
-
-	public short getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -178,12 +212,20 @@ public class Knowledge {
 		this.report_status = report_status;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
+	public long getTaskid() {
+		return taskid;
 	}
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setTaskid(long taskid) {
+		this.taskid = taskid;
+	}
+
+	public int getIsh() {
+		return ish;
+	}
+
+	public void setIsh(int ish) {
+		this.ish = ish;
 	}
 
 }
