@@ -22,14 +22,14 @@ public class KnowledgeColumnSubscribe implements Serializable {
     private String columnType;
     private Date subDate;
     
-    @Transient
-    private String userName;//订阅人的用户名 
-    @Transient
-    private String knowledgeColumnName;//栏目名称
-    @Transient
-    private long parentKColumnId;//父栏目id
-    @Transient
-    private String parentKColumnName;//父栏目名称
+//    @Transient
+//    private String userName;//订阅人的用户名 
+//    @Transient
+//    private String knowledgeColumnName;//栏目名称
+//    @Transient
+//    private long parentKColumnId;//父栏目id
+//    @Transient
+//    private String parentKColumnName;//父栏目名称
 
     public KnowledgeColumnSubscribe() {
     }
@@ -46,24 +46,24 @@ public class KnowledgeColumnSubscribe implements Serializable {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+//    public String getUserName() {
+//        return userName;
+//    }
+//    public void setUserName(String userName) {
+//        this.userName = userName;
+//    }
     public long getColumnId() {
         return columnId;
     }
     public void setColumnId(long columnId) {
         this.columnId = columnId;
     }
-    public String getKnowledgeColumnName() {
-        return knowledgeColumnName;
-    }
-    public void setKnowledgeColumnName(String knowledgeColumnName) {
-        this.knowledgeColumnName = knowledgeColumnName;
-    }
+//    public String getKnowledgeColumnName() {
+//        return knowledgeColumnName;
+//    }
+//    public void setKnowledgeColumnName(String knowledgeColumnName) {
+//        this.knowledgeColumnName = knowledgeColumnName;
+//    }
 
     public String getColumnType() {
         return columnType;
@@ -81,21 +81,21 @@ public class KnowledgeColumnSubscribe implements Serializable {
         this.subDate = subDate;
     }
 
-    public long getParentKColumnId() {
-        return parentKColumnId;
-    }
+//    public long getParentKColumnId() {
+//        return parentKColumnId;
+//    }
+//
+//    public void setParentKColumnId(long parentKColumnId) {
+//        this.parentKColumnId = parentKColumnId;
+//    }
 
-    public void setParentKColumnId(long parentKColumnId) {
-        this.parentKColumnId = parentKColumnId;
-    }
-
-    public String getParentKColumnName() {
-        return parentKColumnName;
-    }
-
-    public void setParentKColumnName(String parentKColumnName) {
-        this.parentKColumnName = parentKColumnName;
-    }
+//    public String getParentKColumnName() {
+//        return parentKColumnName;
+//    }
+//
+//    public void setParentKColumnName(String parentKColumnName) {
+//        this.parentKColumnName = parentKColumnName;
+//    }
     
 //  private Date createdTime;//创建时间
 //  private Date updateTime;//更新时间
