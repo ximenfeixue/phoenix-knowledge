@@ -13,6 +13,6 @@ public interface UserPermissionDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertUserPermission(long[] receive_uid, long knowledgeid,
+	void  insertUserPermission(long[] receive_uid, long knowledgeid,
 			long send_uid, int type, String mento, long column_id);
 }

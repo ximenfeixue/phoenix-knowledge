@@ -58,4 +58,5 @@
     <dubbo:reference id="knowledgeCaseService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCaseService" version="1.0.0"/>
     <dubbo:reference id="knowledgeIndustryService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeIndustryService" version="1.0.0"/>
     <dubbo:reference id="knowledgeInvestmentService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeStaticsService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService" version="1.0.0"/>
 </beans>

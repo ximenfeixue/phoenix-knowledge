@@ -55,8 +55,7 @@ public class UserPermissionTest extends TestBase {
 		String mento = "测试";
 		long column_id = 1;
 
-		userPermissionService.insertUserPermission(receive_uid, knowledgeid,
+	userPermissionService.insertUserPermission(receive_uid, knowledgeid,
 				send_uid, type, mento, column_id);
-
 	}
 }
