@@ -34,7 +34,7 @@ public class Knowledge {
 	private String s_addr;
 
 	// 栏目路徑
-	private long cpathid;
+	private String cpathid;
 
 	// 封面地址
 	private String pic;
@@ -132,11 +132,11 @@ public class Knowledge {
 		this.s_addr = s_addr;
 	}
 
-	public long getCpathid() {
+	public String getCpathid() {
 		return cpathid;
 	}
 
-	public void setCpathid(long cpathid) {
+	public void setCpathid(String cpathid) {
 		this.cpathid = cpathid;
 	}
 
