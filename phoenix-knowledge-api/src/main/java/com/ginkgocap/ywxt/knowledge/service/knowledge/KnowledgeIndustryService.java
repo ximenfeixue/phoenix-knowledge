@@ -29,13 +29,6 @@ public interface KnowledgeIndustryService {
 	 * @param id
 	 * @return
 	 */
-	public Long getKnowledgeIndustryDetail(Long id);
-	
-	/**
-	 * 删除知识 （行业）
-	 * @param id
-	 * @return
-	 */
-	public boolean delKnowledgeIndustry(Long id);
+	public KnowledgeIndustry getKnowledgeIndustryDetail(Long id);
 	
 }

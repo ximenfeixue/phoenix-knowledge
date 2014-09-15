@@ -30,13 +30,6 @@ public interface KnowledgeCaseService {
 	 * @param id
 	 * @return
 	 */
-	public Long getKnowledgeCaseDetail(Long id);
-	
-	/**
-	 * 删除知识 （经典案例）
-	 * @param id
-	 * @return
-	 */
-	public boolean delKnowledgeCase(Long id);
+	public KnowledgeCase getKnowledgeCaseDetail(Long id);
 	
 }

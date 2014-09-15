@@ -21,6 +21,7 @@ public class KnowledgeInvestmentServiceImpl implements
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
+	@Resource
 	private KnowledgeMongoIncService KnowledgeMongoIncService;
 	
 	@Override

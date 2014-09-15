@@ -9,5 +9,14 @@ import java.util.Date;
  * 
  */
 public class KnowledgeCase extends Knowledge {
+	// 老知识ID
+		private long oid;
 
+		public long getOid() {
+			return oid;
+		}
+
+		public void setOid(long oid) {
+			this.oid = oid;
+		}
 }
