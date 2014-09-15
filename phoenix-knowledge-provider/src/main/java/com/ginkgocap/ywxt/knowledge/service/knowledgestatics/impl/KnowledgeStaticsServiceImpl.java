@@ -8,7 +8,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService;
 
 @Service("knowledgeStaticsService")
-public class KnowledgeCategoryServiceImpl implements KnowledgeStaticsService {
+public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 
 	@Autowired
 	private KnowledgeStaticsDAO knowledgeStaticsDAO;
