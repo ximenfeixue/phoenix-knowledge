@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgestatics.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,10 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 	public void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics) {
 		knowledgeStaticsDAO.insertKnowledgeStatics(knowledgeStatics);
 	}
+
+    @Override
+    public List<KnowledgeStatics> selectRankList(int t) {
+        return knowledgeStaticsDAO.selectRankList(t);
+    }
 
 }

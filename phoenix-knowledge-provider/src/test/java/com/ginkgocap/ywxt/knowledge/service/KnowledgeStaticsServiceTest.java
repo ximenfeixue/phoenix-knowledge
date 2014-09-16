@@ -1,7 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
@@ -17,26 +20,35 @@ import com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsSer
 
 public class KnowledgeStaticsServiceTest extends TestBase {
 
-	public KnowledgeStaticsServiceTest() {
-		System.out.println(123456);
-	}
+    public KnowledgeStaticsServiceTest() {
+        System.out.println(123456);
+    }
 
-	@Autowired
-	private KnowledgeStaticsService knowledgeStaticsService;
+    @Autowired
+    private KnowledgeStaticsService knowledgeStaticsService;
 
-	@Autowired
-	private KnowledgeCategoryService knowledgeCategoryService;
+    @Autowired
+    private KnowledgeCategoryService knowledgeCategoryService;
 
-	@Test
-	public void testinsertKnowledgeR() {
+    @Test
+    public void testinsertKnowledgeR() {
 
-		KnowledgeStatics knowledgeStatics=new KnowledgeStatics();
-		knowledgeStatics.setKnowledgeid(53);
-//		knowledgeStatics.setCollectionCount(0);
-//		knowledgeStatics.setCommentCount(0);
-//		knowledgeStatics.setShareCount(0);
-//		knowledgeStatics.setClickCount(0);
-		knowledgeStaticsService.insertKnowledgeStatics(knowledgeStatics);
-	}
+        KnowledgeStatics knowledgeStatics = new KnowledgeStatics();
+        knowledgeStatics.setKnowledgeid(53);
+        //		knowledgeStatics.setCollectionCount(0);
+        //		knowledgeStatics.setCommentCount(0);
+        //		knowledgeStatics.setShareCount(0);
+        //		knowledgeStatics.setClickCount(0);
+        knowledgeStaticsService.insertKnowledgeStatics(knowledgeStatics);
+    }
+
+    //测试获取评论排行列表
+    @Test
+    public void testSelectRankList() {
+        List<KnowledgeStatics> l = knowledgeStaticsService.selectRankList(1);
+        for (KnowledgeStatics k : l) {
+            System.out.println(k.getCommentCount());
+        }
+    }
 
 }

@@ -46,4 +46,10 @@ public class KnowledgeStaticsDAOImpl extends SqlMapClientDaoSupport implements
 
 	}
 
+    @Override
+    public List<KnowledgeStatics> selectRankList(int type) {
+       return getSqlMapClientTemplate().queryForList("tb_knowledge_statics.selectRankList",
+                type);
+    }
+
 }

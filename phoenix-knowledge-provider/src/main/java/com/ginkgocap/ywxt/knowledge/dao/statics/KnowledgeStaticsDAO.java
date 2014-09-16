@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.statics;
 
+import java.util.List;
+
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
 
 public interface KnowledgeStaticsDAO {
@@ -11,5 +13,11 @@ public interface KnowledgeStaticsDAO {
 	 * @return
 	 */
 	void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
+	   /**
+     * 根据类型查询评论排行
+     * @param type 栏目类型
+     * @return
+     */
+    List<KnowledgeStatics>selectRankList(int type);
 
 }

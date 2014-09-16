@@ -1,38 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="tb_knowledge_statics">
-	<typeAlias alias="knowledgestatics" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics"/>
-	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics" id="knowledgestaticsMap">
-		<result column="knowledge_id" property="knowledgeid" jdbcType="BIGINT"/>
-		<result column="commentCount" property="commentCount" jdbcType="BIGINT"/>
-		<result column="shareCount" property="shareCount" jdbcType="BIGINT"/>
-		<result column="collectionCount" property="collectionCount" jdbcType="BIGINT"/>
-		<result column="clickCount" property="clickCount" jdbcType="BIGINT"/>
-		
+	<typeAlias alias="knowledgestatics"
+		type="com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics" />
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics"
+		id="knowledgestaticsMap">
+		<result column="knowledge_id" property="knowledgeid" jdbcType="BIGINT" />
+		<result column="commentCount" property="commentCount" jdbcType="BIGINT" />
+		<result column="shareCount" property="shareCount" jdbcType="BIGINT" />
+		<result column="collectionCount" property="collectionCount"
+			jdbcType="BIGINT" />
+		<result column="clickCount" property="clickCount" jdbcType="BIGINT" />
+
 	</resultMap>
-	
-	<sql id="dyColumns">knowledge_id,commentCount,shareCount,collectionCount,clickCount</sql>
-	
-	
+
+	<sql id="dyColumns">knowledge_id,commentCount,shareCount,collectionCount,clickCount,title,type,source
+	</sql>
+
+
 	<insert id="insert" parameterClass="knowledgestatics">
 		insert into tb_knowledge_statics(
+		knowledge_id,
+		commentCount,
+		shareCount,
+		collectionCount,
+		clickCount,
+		source,
+		title,
+		type
+		) values (
+		#knowledgeid:BIGINT#,
+		#commentCount:BIGINT#,
+		#shareCount:BIGINT#,
+		#collectionCount:BIGINT#,
+		#clickCount:BIGINT#,
+		#source:INT#,
+		#title:VARCHAR#,
+		#type:INT#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="knowledgeid">
+			SELECT LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="selectRankList" resultClass="knowledgestatics" 
+		parameterClass="int">
+		SELECT *
+			FROM (SELECT
 			knowledge_id,
 			commentCount,
 			shareCount,
 			collectionCount,
-			clickCount
-			
-		) values (
-				#knowledgeid:BIGINT#,
-				 #commentCount:BIGINT#,
-				 #shareCount:BIGINT#,
-				 #collectionCount:BIGINT#,
-				 #clickCount:BIGINT#
-			
-		)
-		<selectKey resultClass="long" type="post" keyProperty="knowledgeid" > 
-		SELECT LAST_INSERT_ID() AS VALUE     
-		</selectKey>
-	</insert>
-
+			clickCount,
+			title,
+			TYPE,
+			source
+		FROM tb_knowledge_statics
+			WHERE TYPE =#type#
+		ORDER BY commentCount DESC) t
+		LIMIT 0,10
+	</select>
 </sqlMap>

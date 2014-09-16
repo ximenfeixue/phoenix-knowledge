@@ -5,67 +5,95 @@ import java.util.Date;
 
 public class KnowledgeStatics implements Serializable {
 
-	/**
-	 * 知识统计javaBean
-	 */
-	private static final long serialVersionUID = 9210031377998416429L;
+    /**
+     * 知识统计javaBean
+     */
+    private static final long serialVersionUID = 9210031377998416429L;
 
-	/** 知识Id */
-	private long knowledgeid;
+    /** 知识Id */
+    private long knowledgeid;
 
-	/** 评论数 */
-	private long commentCount;
+    /** 评论数 */
+    private long commentCount;
 
-	// 分享数
-	private long shareCount;
+    // 分享数
+    private long shareCount;
 
-	// 收藏数
-	private long collectionCount;
+    // 收藏数
+    private long collectionCount;
 
-	// 点击数
-	private long clickCount;
+    // 点击数
+    private long clickCount;
 
-	public long getKnowledgeid() {
-		return knowledgeid;
-	}
+    private int source;//来源
+    private int type;//栏目类型
+    private String title;//标题
 
-	public void setKnowledgeid(long knowledgeid) {
-		this.knowledgeid = knowledgeid;
-	}
+    public int getSource() {
+        return source;
+    }
 
-	public long getCommentCount() {
-		return commentCount;
-	}
+    public void setSource(int source) {
+        this.source = source;
+    }
 
-	public void setCommentCount(long commentCount) {
-		this.commentCount = commentCount;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public long getShareCount() {
-		return shareCount;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
 
-	public void setShareCount(long shareCount) {
-		this.shareCount = shareCount;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public long getCollectionCount() {
-		return collectionCount;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setCollectionCount(long collectionCount) {
-		this.collectionCount = collectionCount;
-	}
+    public long getKnowledgeid() {
+        return knowledgeid;
+    }
 
-	public long getClickCount() {
-		return clickCount;
-	}
+    public void setKnowledgeid(long knowledgeid) {
+        this.knowledgeid = knowledgeid;
+    }
 
-	public void setClickCount(long clickCount) {
-		this.clickCount = clickCount;
-	}
+    public long getCommentCount() {
+        return commentCount;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public long getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(long shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public long getCollectionCount() {
+        return collectionCount;
+    }
+
+    public void setCollectionCount(long collectionCount) {
+        this.collectionCount = collectionCount;
+    }
+
+    public long getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(long clickCount) {
+        this.clickCount = clickCount;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 }

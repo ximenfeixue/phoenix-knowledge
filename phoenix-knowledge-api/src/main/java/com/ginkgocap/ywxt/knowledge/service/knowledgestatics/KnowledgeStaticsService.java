@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgestatics;
 
+import java.util.List;
+
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
 
 /**
@@ -17,5 +19,12 @@ public interface KnowledgeStaticsService {
 	 * @return
 	 */
 	void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
+	
+	/**
+	 * 根据类型查询评论排行
+	 * @param type 栏目类型
+	 * @return
+	 */
+	List<KnowledgeStatics>selectRankList(int type);
 
 }
