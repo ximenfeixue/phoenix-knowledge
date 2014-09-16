@@ -59,12 +59,6 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public int checkNameRepeat(int knowledgeType, String knowledgeTitle) {
-
-		return knowledgeDao.checkNameRepeat(knowledgeType, knowledgeTitle);
-	}
-
-	@Override
 	public void moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 
@@ -172,6 +166,22 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
 
 		return knowledgeDao.deleteKnowledgeRCategory(knowledgeid, categoryid);
+	}
+
+	@Override
+	public int checkIndustryNameRepeat(String knowledgetitle) {
+
+		return knowledgeDao.checkIndustryNameRepeat(knowledgetitle);
+	}
+
+	@Override
+	public int checkLawNameRepeat(String knowledgetitle) {
+		return knowledgeDao.checkLayNameRepeat(knowledgetitle);
+	}
+
+	@Override
+	public int checkInvestmentNameRepeat(String knowledgetitle) {
+		return knowledgeDao.checkInvestmentNameRepeat(knowledgetitle);
 	}
 
 }

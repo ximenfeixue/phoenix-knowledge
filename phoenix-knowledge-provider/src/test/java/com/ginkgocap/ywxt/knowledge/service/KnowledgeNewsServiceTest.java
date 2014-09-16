@@ -8,12 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService;
 
 /**
  * 知识测试类
@@ -43,33 +44,51 @@ public class KnowledgeNewsServiceTest extends TestBase {
 	@Autowired
 	private KnowledgeContentService knowledgeContentService;
 
+	@Autowired
+	private KnowledgeMongoIncService knowledgeMongoIncService;
+
+	@Autowired
+	private UserPermissionService userPermissionService;
+	@Autowired
+	private KnowledgeCategoryService knowledgeCategoryService;
+	
 	@Test
 	public void testinsertKnowledge() {
+		long id = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		KnowledgeNews knowledge = new KnowledgeNews();
-		knowledge.setId(2);
+		knowledge.setId(id);
 		knowledge.setUid(111);
-		knowledge.setStatus(1);
-		knowledge.setReport_status(5);
-		knowledge.setCname("不知道");
-		knowledge.setContent("这是测试内容");
+		knowledge.setTitle("测试标题");
+		knowledge.setCpathid("11");
+		knowledge.setContent("新建测试内容");
+		knowledge.setPic("D:\\pic.png");
+		knowledge.setTaskid(123);
+		knowledge.setStatus(4);
+		knowledge.setReport_status(0);
 		long[] categoryid = { 1, 2 };
 
+		long[] receive_uid = { 1, 2 };
+		int count=0;
 		KnowledgeNews knowresult = knowledgeNewsService
 				.insertknowledge(knowledge);
 		if (knowresult != null && knowresult.getId() > 0) {
+			 userPermissionService.insertUserPermission(receive_uid,
+					knowresult.getId(), 123, 1, "mento", 111);
+			knowledgeCategoryService.insertKnowledgeRCategory(
+					knowresult.getId(), categoryid, 111, "测试标题", "author", 6,
+					"share_author", new Date(), "标签", "know_desc", 11,
+					"D:\\pic.png");
 
-			// knowledgeBetweenService.insertKnowledgeRCategory(knowledge,
-			// categoryid);
-
+			System.out.println("ID : " + knowresult.getId());
 		}
 	}
 
 	@Test
 	public void testdeleteKnowledge() {
-		long[] ids = { 1, 2 };
-		long categoryid = 3;
+		long[] ids = { 5, 6 };
+//		long categoryid = 3;
 		knowledgeNewsService.deleteKnowledge(ids);
-		knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
+//		knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
 
 	}
 

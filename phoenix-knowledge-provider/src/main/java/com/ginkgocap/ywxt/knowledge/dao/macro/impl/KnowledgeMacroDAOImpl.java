@@ -53,7 +53,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").is(ids[i]);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("ststus", "6");
+			update.set("status", "6");
 			mongoTemplate.updateFirst(query, update, KnowledgeMacro.class);
 		}
 	}

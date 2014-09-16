@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory;
 
+import java.util.Date;
+
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
 public interface KnowledgeCategoryDAO {
@@ -9,7 +11,10 @@ public interface KnowledgeCategoryDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeRCategory(KnowledgeNews knowledge, long categoryid[]);
-	
+	void insertKnowledgeRCategory(long knowledgeid, long categoryid[],long userid,
+			String title, String author, int path, String share_author,
+			Date createtime, String tag, String know_desc, long column_id,
+			String pic_path);
+
 	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
 }

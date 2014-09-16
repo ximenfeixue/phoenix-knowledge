@@ -9,6 +9,7 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.service.asset.KnowledgeAssetService;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
@@ -44,18 +45,20 @@ public class KnowledgeAssetServiceTest extends TestBase {
 	@Autowired
 	private KnowledgeCategoryService knowledgeBetweenService;
 	
-//	@Autowired
-//	private KnowledgeMongoIncService knowledgeMongoIncService;
+	@Autowired
+	private KnowledgeMongoIncService knowledgeMongoIncService;
 	
 
 	@Test
 	public void testinsertKnowledge() {
+		long id = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		KnowledgeAsset knowledge = new KnowledgeAsset();
-//		knowledge.setKnowledgetitle("测试名");
-//		knowledge.setKnowledgesource("不知道");
-//		knowledge.setPictureTaskId("111");
-//		knowledge.setModifytime(new Date());
-//		knowledge.setCreate_user_id(123);
+		knowledge.setId(id);
+		knowledge.setUid(111);
+		knowledge.setStatus(1);
+		knowledge.setReport_status(5);
+		knowledge.setCname("不知道");
+		knowledge.setContent("这是测试内容");
 		long[] categoryid = { 1, 2 };
 
 		KnowledgeAsset knowresult = knowledgeAssetService.insertknowledge(

@@ -34,7 +34,7 @@ public class KnowledgeRCategory implements Serializable {
 	private String author;
 
 	// 栏目路径
-	private String path;
+	private int path;
 
 	// 分享者
 	private String share_author;
@@ -70,11 +70,11 @@ public class KnowledgeRCategory implements Serializable {
 		this.author = author;
 	}
 
-	public String getPath() {
+	public int getPath() {
 		return path;
 	}
 
-	public void setPath(String path) {
+	public void setPath(int path) {
 		this.path = path;
 	}
 

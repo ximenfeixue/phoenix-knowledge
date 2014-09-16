@@ -33,11 +33,5 @@ public interface KnowledgeInvestmentService {
 	 */
 	public KnowledgeInvestment getKnowledgeInvestmentDetail(Long id);
 	
-	/**
-	 * 删除知识 （投融工具）
-	 * @param id
-	 * @return
-	 */
-	public boolean delKnowledgeInvestment(Long id);
 	
 }

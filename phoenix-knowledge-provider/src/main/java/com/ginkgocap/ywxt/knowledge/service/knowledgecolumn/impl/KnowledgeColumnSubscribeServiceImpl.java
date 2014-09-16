@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.knowledgecolumn.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +25,21 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     
     @Override
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-        KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-        
-        KCHelper.analysisType(kc);
-        String columnType=kc.getKcType().toString();
-        kcs.setColumnType(columnType);
+       
+        if (StringUtils.isEmpty(kcs.getColumnType())) {
+            KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
+           
+            //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
+            kc=KCHelper.setKCType(kc);
+            String columnType=KCHelper.getMysqlkcType(kc.getKcType());
+            
+            kcs.setColumnType(columnType);
+        }
+       
         
         Date date=new Date();
         kcs.setSubDate(date);
+        
         return kcsDao.insert(kcs);
     }
 

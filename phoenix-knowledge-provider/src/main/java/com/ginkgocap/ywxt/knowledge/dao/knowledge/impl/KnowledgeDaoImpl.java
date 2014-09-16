@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +21,9 @@ import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
@@ -40,6 +47,9 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	private KnowledgeContentDAO knowledgeContentDAO;
 
 	private CategoryHelper helper = new CategoryHelper();
+
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@PostConstruct
 	public void initSqlMapClient() {
@@ -82,26 +92,6 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		int i = getSqlMapClientTemplate().update(
 				"knowledge.updateByPrimaryKey", record);
 		return i;
-	}
-
-	@Override
-	public int checkNameRepeat(int knowledgetype, String knowledgetitle) {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (knowledgetype != 0) {
-			map.put("knowledgetype", knowledgetype);
-		}
-		if (StringUtils.isNotBlank(knowledgetitle)) {
-			map.put("knowledgetitle", knowledgetitle);
-		}
-		List<Knowledge> list = (List<Knowledge>) getSqlMapClientTemplate()
-				.queryForList("tb_knowledge.selectByTitle", map);
-		if (list != null && list.size() > 0) {
-
-			return 0;// 名称已存在
-		} else {
-			return 1;// 名称可以使用
-		}
 	}
 
 	@Override
@@ -224,4 +214,58 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		return count;
 	}
 
+	@Override
+	public int checkIndustryNameRepeat(String knowledgetitle) {
+
+		if (StringUtils.isNotBlank(knowledgetitle)) {
+
+			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
+			Query query = new Query(criteria);
+			List<KnowledgeIndustry> list = mongoTemplate.find(query,
+					KnowledgeIndustry.class);
+			if (list != null && list.size() > 0) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public int checkLayNameRepeat(String knowledgetitle) {
+		if (StringUtils.isNotBlank(knowledgetitle)) {
+
+			Criteria criteria = Criteria.where("title").is(knowledgetitle);
+			Query query = new Query(criteria);
+			List<KnowledgeLaw> list = mongoTemplate.find(query,
+					KnowledgeLaw.class);
+			if (list != null && list.size() > 0) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public int checkInvestmentNameRepeat(String knowledgetitle) {
+
+		if (StringUtils.isNotBlank(knowledgetitle)) {
+			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
+			Query query = new Query(criteria);
+			List<KnowledgeInvestment> list = mongoTemplate.find(query,
+					KnowledgeInvestment.class);
+			if (list != null && list.size() > 0) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
 }

@@ -42,6 +42,7 @@
     <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" version="1.0.0"/>
     <dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/>
     <dubbo:reference id="knowledgeColumnService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeColumnSubscribeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnSubscribeService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMainService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService" version="1.0.0"/>
     <dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService" version="1.0.0"/>
@@ -52,9 +53,12 @@
     <dubbo:reference id="userpermissionService" interface="com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService" version="1.0.0"/>
 	<dubbo:reference id="knowledgeHomeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="1.0.0"/>
 	<dubbo:reference id="userCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeAssetService" interface="com.ginkgocap.ywxt.knowledge.service.asset.KnowledgeAssetService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMacroService" interface="com.ginkgocap.ywxt.knowledge.service.macro.KnowledgeMacroService" version="1.0.0"/>
     <dubbo:reference id="knowledgeOpinionService" interface="com.ginkgocap.ywxt.knowledge.service.opinion.KnowledgeOpinionService" version="1.0.0"/>
     <dubbo:reference id="knowledgeArticleService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgearticle.KnowledgeArticleService" version="1.0.0"/>
     <dubbo:reference id="knowledgeTagService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgetag.KnowledgeTagService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeCaseService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCaseService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeIndustryService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeIndustryService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeInvestmentService" interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeStaticsService" interface="com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService" version="1.0.0"/>
 </beans>

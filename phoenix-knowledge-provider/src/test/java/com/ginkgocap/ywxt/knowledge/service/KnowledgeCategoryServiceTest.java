@@ -22,9 +22,9 @@ import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
  * 
  */
 
-public class KnowledgeBetweenServiceTest extends TestBase {
+public class KnowledgeCategoryServiceTest extends TestBase {
 
-	public KnowledgeBetweenServiceTest() {
+	public KnowledgeCategoryServiceTest() {
 		System.out.println(123456);
 	}
 
@@ -32,20 +32,34 @@ public class KnowledgeBetweenServiceTest extends TestBase {
 	private KnowledgeContentService knowledgeContentService;
 
 	@Autowired
-	private KnowledgeCategoryService knowledgeBetweenService;
+	private KnowledgeCategoryService knowledgeCategoryService;
 
 	@Test
 	public void testinsertKnowledgeR() {
 
 		KnowledgeNews knowledge = new KnowledgeNews();
-//		knowledge.setKnowledgetitle("测试名");
-//		knowledge.setKnowledgesource("不知道");
-//		knowledge.setPictureTaskId("111");
-//		knowledge.setModifytime(new Date());
-//		knowledge.setCreate_user_id(123);
+		// knowledge.setKnowledgetitle("测试名");
+		// knowledge.setKnowledgesource("不知道");
+		// knowledge.setPictureTaskId("111");
+		// knowledge.setModifytime(new Date());
+		// knowledge.setCreate_user_id(123);
 		long[] categoryid = { 1, 2 };
+		long knowledgeid=1;
+		long userid=111;
+		String title="测试"; 
+		String author="浊试作者";
+		int path=1;
+		String share_author="我自己";
+		Date createtime=new Date();
+		String tag="标签";
+		String know_desc="描述";
+		long column_id=111;
+		String pic_path="D:\\pic.gif";
 
-		knowledgeBetweenService.insertKnowledgeRCategory(knowledge, categoryid);
+		knowledgeCategoryService.insertKnowledgeRCategory( knowledgeid,  categoryid,
+				 userid,  title,  author,  path,
+				 share_author,  createtime,  tag,  know_desc,
+				 column_id,  pic_path);
 	}
 
 	@Test
@@ -53,7 +67,7 @@ public class KnowledgeBetweenServiceTest extends TestBase {
 
 		long[] knowledgeids = { 1, 2 };
 		long categoryid = 3;
-		System.out.println(knowledgeBetweenService.deleteKnowledgeRCategory(knowledgeids,
-				categoryid));
+		System.out.println(knowledgeCategoryService.deleteKnowledgeRCategory(
+				knowledgeids, categoryid));
 	}
 }

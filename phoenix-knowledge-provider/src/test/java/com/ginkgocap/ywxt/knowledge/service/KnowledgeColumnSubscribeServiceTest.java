@@ -4,17 +4,27 @@ import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
 
 /** 
  * <p>订阅测试</p>  
  * @author guangyuan  
  * @since 1.2.2
  */
-public class KnowledgeColumnSubscribeServiceTest {
+public class KnowledgeColumnSubscribeServiceTest extends TestBase {
 
+    public static long TEST_USER_ID=71L;
+    
+    @Autowired
+    KnowledgeColumnSubscribeService kcsService;
+    
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
     }
@@ -33,17 +43,41 @@ public class KnowledgeColumnSubscribeServiceTest {
 
     @Test
     public void testAdd() {
-        fail("Not yet implemented");
+        long id=-1;
+        
+        try {
+            
+            KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
+//            kcs.setUserId(TEST_USER_ID);  //测试所用
+            kcs.setUserId(72l);  //测试所用
+            kcs.setColumnId(12); //12所代表的栏目   资讯--金融
+//            kcs.setColumnType(1+"");
+//            System.out.println(kcsService);
+            kcs=kcsService.add(kcs);
+            System.out.println(kcs.getId());
+            id=kcs.getId();
+            assertNotNull(kcs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }finally{
+            if (id>0) {
+//                kcsService.deleteByUIdAndKCId(72l, 12);
+//                kcsService.deleteByPK(id);
+            }
+            
+        }
+       
     }
 
     @Test
     public void testDeleteByUIdAndKCId() {
-        fail("Not yet implemented");
+//        fail("Not yet implemented");
     }
 
     @Test
     public void testDeleteByPK() {
-        fail("Not yet implemented");
+//        fail("Not yet implemented");
     }
 
     @Test

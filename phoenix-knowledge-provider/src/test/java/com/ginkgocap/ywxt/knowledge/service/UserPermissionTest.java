@@ -41,7 +41,21 @@ public class UserPermissionTest extends TestBase {
 		List<Long> list = userPermissionService.selectByreceive_user_id(1);
 
 		for (Long l : list) {
-			
+
 		}
+	}
+
+	@Test
+	public void insertuserPermission() throws Exception {
+
+		long[] receive_uid = {};
+		long knowledgeid = 1;
+		long send_uid = 1;
+		int type = 1;
+		String mento = "测试";
+		long column_id = 1;
+
+	userPermissionService.insertUserPermission(receive_uid, knowledgeid,
+				send_uid, type, mento, column_id);
 	}
 }

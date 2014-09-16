@@ -49,14 +49,14 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 	@Override
 	public void deleteKnowledge(long[] ids) {
 
-		for (int i = 0; i < ids.length; i++) {
+//		for (int i = 0; i < ids.length; i++) {
 
-			Criteria criteria = Criteria.where("_id").is(ids[i]);
+			Criteria criteria = Criteria.where("_id").is(ids);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("ststus", "6");
-			mongoTemplate.updateFirst(query, update, KnowledgeOpinion.class);
-		}
+			update.set("status", "6");
+			mongoTemplate.updateMulti(query, update, KnowledgeOpinion.class);
+//		}
 	}
 
 	@Override
