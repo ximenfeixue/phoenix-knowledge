@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Transient;
 
@@ -31,6 +32,8 @@ public class KnowledgeColumn implements Serializable {
     private Integer delStatus=0; //删除状态    0-正常  1-已删除
     private Integer subscribeCount=0; //订阅数量
     
+    @Transient
+    private List<KnowledgeColumn> list;
     @Transient 
     private String tag;//分类标签，分号分割
 //    private Object subscribers;  //订阅人列表
@@ -41,6 +44,14 @@ public class KnowledgeColumn implements Serializable {
     public KnowledgeColumn() {
     }
     
+    public List<KnowledgeColumn> getList() {
+        return list;
+    }
+
+    public void setList(List<KnowledgeColumn> list) {
+        this.list = list;
+    }
+
     public Long getId() {
         return id;
     }

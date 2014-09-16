@@ -74,4 +74,13 @@ public interface CategoryService {
 	 * @return
 	 */
 	List<Category> findByParam(Map<String,Object> map);
+	
+	/**
+	 * 查询目录树
+	 * @param userId 用户id
+	 * @param sortId 排序id :为空表示所有
+	 * @param status 状态:0正常 1删除
+	 * @return 
+	 */
+	String selectCategoryTreeBySortId(long userId,String sortId,String status);
 }

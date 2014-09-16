@@ -1,0 +1,71 @@
+package com.ginkgocap.ywxt.knowledge.service;
+
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.UserCategory;
+import com.ginkgocap.ywxt.util.DateFunc;
+
+/**
+ *  userCategoryService的测试用例
+ * @author bianzhiwei  
+ * <p>于2014-9-16 由 bianzhiwei 创建 </p>
+ *
+ */
+public class UserCategoryServiceTest extends TestBase {
+    @Autowired
+    private UserCategoryService userCategoryService;
+
+    private long userId = 1;
+    private UserCategory uc;
+
+    @Before
+    public void setUp() throws Exception {
+        uc = new UserCategory();
+        uc.setCategoryName("n01");
+        uc.setUserId(10000);
+        uc.setParentId(1998);
+        uc.setCreateTime(DateFunc.getDate());
+        uc.setModifyTime(DateFunc.getDate());
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void testInsert() {
+        UserCategory cat = userCategoryService.insert(uc);
+    }
+
+    @Test
+    public void testSelectByPrimaryKey() {
+        UserCategory cat = userCategoryService.selectByPrimaryKey(39);
+    }
+
+    @Test
+    public void testUpdate() {
+        userCategoryService.update(uc);
+    }
+
+    @Test
+    public void testDel() {
+        userCategoryService.delete(41);
+    }
+
+    @Test
+    public void testSelectChildBySortId() {
+        userCategoryService.selectChildBySortId(userId, "000000001");
+    }
+
+    @Test
+    public void testSelectUserCategoryTreeBySortId() {
+        userCategoryService.selectUserCategoryTreeBySortId(userId, "000000001");
+    }
+}

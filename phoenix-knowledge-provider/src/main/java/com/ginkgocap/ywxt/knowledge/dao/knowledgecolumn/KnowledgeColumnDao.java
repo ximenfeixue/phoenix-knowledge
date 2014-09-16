@@ -99,4 +99,12 @@ public interface KnowledgeColumnDao {
      * @return 系统栏目列表
      */
     public List<KnowledgeColumn> querySubBySystem(long systemId);
+
+    /**
+     * 查询目录树
+     * @param userId 用户id
+     * @param sortId 排序id :为空表示所有
+     * @return 
+     */
+    List<KnowledgeColumn>  selectCategoryTreeBySortId(long userId,String sortId);
 }

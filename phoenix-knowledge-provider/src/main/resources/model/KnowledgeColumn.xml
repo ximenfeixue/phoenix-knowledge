@@ -144,5 +144,14 @@
 	UPDATE tb_knowledge_column SET subscribe_count = 0
 	UPDATE tb_knowledge_column SET del_status = 0
 	 -->
-	 
+	 <select id="selectCategoryTreeBySortId" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from tb_knowledge_column 
+		where del_status=0 
+		and user_id=#createUserId#
+		<isNotEmpty property="columnLevelPath">
+		column_level_path=#columnLevelPath#
+		</isNotEmpty>
+		order by column_level_path
+	</select>
 </sqlMap>

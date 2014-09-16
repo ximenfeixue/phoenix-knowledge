@@ -116,4 +116,9 @@ public class CategoryServiceTest extends TestBase{
     	assertTrue("修改测试分类".equals(category.getName()));
     	System.out.println(category.getName());
     }
+    
+    @Test
+    public void selectColumnTreeBySortId(){
+        categoryService.selectCategoryTreeBySortId(1, null, "0");
+    }
 }

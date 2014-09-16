@@ -150,4 +150,13 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         return null;
     }
 
+    @Override
+    public List<KnowledgeColumn> selectCategoryTreeBySortId(long userId, String sortId) {
+        Map<String ,Object> map=new HashMap<String,Object>();
+        map.put("createUserId",userId);
+        map.put("columnLevelPath",sortId);
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectCategoryTreeBySortId",map);
+        return list;
+    }
+
 }

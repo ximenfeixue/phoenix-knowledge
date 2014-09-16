@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_user_category">
+	<typeAlias alias="userCategory" type="com.ginkgocap.ywxt.knowledge.model.UserCategory"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.UserCategory" id="userCategoryMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="userid" property="userId" jdbcType="BIGINT"/>
+		<result column="categoryname" property="categoryName" jdbcType="VARCHAR"/>
+		<result column="parentid" property="parentId" jdbcType="BIGINT"/>
+		<result column="sortid" property="sortId" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="modifytime" property="modifyTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="dyColumns">id,userid,categoryname,parentId,sortId,createtime,modifytime</sql>
+	
+	
+	
+	<select id="selectByPrimaryKey" resultMap="userCategoryMap" parameterClass="long">
+		select <include refid="dyColumns"/> from tb_user_category where id= #value# 
+	</select>
+	
+	<delete id="delete" parameterClass="long">
+		delete from tb_user_category where id=#id:BIGINT#
+	</delete>
+	<insert id="insert" parameterClass="userCategory">
+		insert into tb_user_category(
+			userid,categoryname,parentId,sortId,createtime,modifytime
+		) values (
+			#userId:BIGINT#,
+			#categoryName:VARCHAR#,
+			#parentId:BIGINT#,
+			#sortId:VARCHAR#,
+			#createTime:TIMESTAMP#,
+			#modifyTime:TIMESTAMP#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+	<update id="update" parameterClass="userCategory">  
+        UPDATE tb_user_category SET  
+	        userid = #userId:BIGINT#,
+			categoryname = #categoryName:VARCHAR#,
+			parentid = #parentId:BIGINT#,
+			sortid = #sortId:VARCHAR#,
+			createtime = #createTime:TIMESTAMP#,
+			modifytime = #modifyTime:TIMESTAMP#
+        WHERE   
+        	id = #id:BIGINT#   
+    </update>
+
+	
+	<select id="selectChildBySortId" resultMap="userCategoryMap" parameterClass="java.util.Map">
+		select <include refid="dyColumns"/> from tb_user_category where userid = #userId# 
+		<isNotEmpty property="sortId">
+		and sortId like CONCAT(#sortId#, '%') 
+		</isNotEmpty>
+		order by sortId
+	</select>	
+	
+	<select id="selectMaxSortId" resultClass="string" parameterClass="java.util.Map">
+		select max(sortid) from tb_user_category where userid=#userId# and sortId like #parentSortId#
+	</select>
+	
+</sqlMap>

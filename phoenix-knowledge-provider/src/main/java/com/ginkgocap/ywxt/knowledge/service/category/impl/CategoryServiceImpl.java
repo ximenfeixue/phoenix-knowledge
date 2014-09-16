@@ -3,6 +3,9 @@ package com.ginkgocap.ywxt.knowledge.service.category.impl;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,8 @@ import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
+import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 /**
  * 知识管理分类的service实现类
  * @author lk
@@ -102,9 +107,20 @@ public class CategoryServiceImpl implements CategoryService{
 	public List<Category> selectChildBySortId(long uid, String sortId) {
 		return categoryDao.selectChildBySortId(uid, sortId);
 	}
-	@Override
-	public List<Category> findByParam(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return categoryDao.findByParam(map);
-	}
+	
+    @Override
+    public List<Category> findByParam(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
+    public String selectCategoryTreeBySortId(long userId, String sortId, String status) {
+        List<Category> cl = categoryDao.selectChildBySortId(userId, sortId);
+        if (cl != null && cl.size() > 0) {
+            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "id", "name", "parentId", "sortId"))).toString();
+        } 
+        return "";
+    }
+ 
 }

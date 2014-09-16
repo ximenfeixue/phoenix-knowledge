@@ -41,6 +41,11 @@ public class KnowledgeColumnServiceTest extends TestBase{
     }
     
     @Test
+    public void selectColumnTreeBySortId(){
+        knowledgeColumnService.selectColumnTreeBySortId(1, null, "0");
+    }
+    
+    @Test
     public void  queryByParentId() {
         
         try {

@@ -7,6 +7,7 @@
 <sqlMapConfig>
 	<settings useStatementNamespaces="true" enhancementEnabled="false" />
 	<sqlMap resource="model/Category.xml" />
+	<sqlMap resource="model/UserCategory.xml" />
 	<sqlMap resource="model/Article.xml" />
 	<sqlMap resource="model/KnowledgeCatalog.xml" />
 	<sqlMap resource="model/KnowledgeColumn.xml" />
