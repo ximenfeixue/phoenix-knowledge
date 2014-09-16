@@ -5,7 +5,7 @@
 	<resultMap class="com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge" id="knowledgecolumnMap">
 		<result column="column_id" property="column_id" jdbcType="BIGINT"/>
 		<result column="knowledge_id" property="knowledge_id" jdbcType="BIGINT"/>
-		<result column="user_id" property="user_id" jdbcType="INT"/>
+		<result column="user_id" property="user_id" jdbcType="BIGINT"/>
 		<result column="type" property="type" jdbcType="INT"/>
 	</resultMap>
 	
@@ -34,7 +34,7 @@
 		) values (
 			#column_id:BIGINT#,
 			#knowledge_id:BIGINT#,
-			#user_id:INT#,
+			#user_id:BIGINT#,
 			#type:INT#
 			
 		)
