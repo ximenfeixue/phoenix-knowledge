@@ -25,13 +25,15 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     
     @Override
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-        KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-        
+       
         if (StringUtils.isEmpty(kcs.getColumnType())) {
-            //TODO 类型分析，不是按照路径，路径无法分析其类型，只能分析齐级别，只能按照父id层级查询
-//            KCHelper.analysisType(kc);
-//            String columnType=KCHelper.getMysqlkcType(kc.getKcType());
-//            kcs.setColumnType(columnType);
+            KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
+           
+            //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
+            kc=KCHelper.setKCType(kc);
+            String columnType=KCHelper.getMysqlkcType(kc.getKcType());
+            
+            kcs.setColumnType(columnType);
         }
        
         

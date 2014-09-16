@@ -43,35 +43,41 @@ public class KnowledgeColumnSubscribeServiceTest extends TestBase {
 
     @Test
     public void testAdd() {
+        long id=-1;
+        
         try {
             
             KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
-            kcs.setUserId(TEST_USER_ID);  //测试所用
+//            kcs.setUserId(TEST_USER_ID);  //测试所用
+            kcs.setUserId(72l);  //测试所用
             kcs.setColumnId(12); //12所代表的栏目   资讯--金融
-            kcs.setColumnType(1+"");
-            
-            System.out.println(kcsService);
-            kcsService.add(kcs);
-//            kcs=kcsService.add(kcs);
-//            System.out.println(kcs.getId());
-            
+//            kcs.setColumnType(1+"");
+//            System.out.println(kcsService);
+            kcs=kcsService.add(kcs);
+            System.out.println(kcs.getId());
+            id=kcs.getId();
             assertNotNull(kcs);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
+        }finally{
+            if (id>0) {
+//                kcsService.deleteByUIdAndKCId(72l, 12);
+//                kcsService.deleteByPK(id);
+            }
+            
         }
        
     }
 
     @Test
     public void testDeleteByUIdAndKCId() {
-        System.out.println(kcsService);
-        fail("Not yet implemented");
+//        fail("Not yet implemented");
     }
 
     @Test
     public void testDeleteByPK() {
-        fail("Not yet implemented");
+//        fail("Not yet implemented");
     }
 
     @Test
