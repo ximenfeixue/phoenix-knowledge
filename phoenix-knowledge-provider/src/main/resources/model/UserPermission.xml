@@ -15,8 +15,8 @@
 	<sql id="dyColumns">receive_user_id,knowledge_id,send_user_id,type,mento,createtime,column_id</sql>
 	
     <delete id="delete" parameterClass="java.util.Map">
-    delete from tb_knowledge_category 
-     where  category_id=#categoryid:BIGINT# 
+    delete from tb_user_permission 
+     where  send_user_id=#send_user_id:BIGINT# 
      and  knowledge_id in 
       <iterate property="knowledgeids" open="(" close=")" conjunction=",">#knowledgeids[]#</iterate>
     </delete>

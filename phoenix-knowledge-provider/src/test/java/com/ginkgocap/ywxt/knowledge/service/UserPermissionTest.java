@@ -46,16 +46,16 @@ public class UserPermissionTest extends TestBase {
 	}
 
 	@Test
-	public void insertuserPermission() throws Exception {
+	public void deleteuserPermission() throws Exception {
 
-		long[] receive_uid = {};
+		long[] knowledgeids = { 1, 8 };
 		long knowledgeid = 1;
-		long send_uid = 1;
+		long userid = 1;
 		int type = 1;
 		String mento = "测试";
 		long column_id = 1;
 
-	userPermissionService.insertUserPermission(receive_uid, knowledgeid,
-				send_uid, type, mento, column_id);
+		System.out.println(userPermissionService.deleteUserPermission(
+				knowledgeids, userid));
 	}
 }

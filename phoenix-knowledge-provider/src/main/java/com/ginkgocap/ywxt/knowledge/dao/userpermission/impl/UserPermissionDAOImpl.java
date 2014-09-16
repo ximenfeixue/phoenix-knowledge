@@ -71,4 +71,20 @@ public class UserPermissionDAOImpl extends SqlMapClientDaoSupport implements
 		getSqlMapClientTemplate()
 				.insert("tb_user_permission.batchInsert", list);
 	}
+
+	@Override
+	public int deleteUserPermission(long[] knowledgeids, long userid) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (knowledgeids != null && knowledgeids.length > 0) {
+			map.put("knowledgeids", knowledgeids);
+		}
+		if (userid > 0) {
+			map.put("send_user_id", userid);
+		}
+		int count = getSqlMapClientTemplate().delete(
+				"tb_user_permission.delete", map);
+		System.out.println(count);
+		return count;
+	}
 }

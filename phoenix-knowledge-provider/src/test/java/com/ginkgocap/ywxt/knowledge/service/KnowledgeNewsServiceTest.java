@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
 import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
@@ -51,7 +53,10 @@ public class KnowledgeNewsServiceTest extends TestBase {
 	private UserPermissionService userPermissionService;
 	@Autowired
 	private KnowledgeCategoryService knowledgeCategoryService;
-	
+
+	@Autowired
+	private ColumnKnowledgeService columnKnowledgeService;
+
 	@Test
 	public void testinsertKnowledge() {
 		long id = knowledgeMongoIncService.getKnowledgeIncreaseId();
@@ -68,16 +73,19 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		long[] categoryid = { 1, 2 };
 
 		long[] receive_uid = { 1, 2 };
-		int count=0;
+		int count = 0;
 		KnowledgeNews knowresult = knowledgeNewsService
 				.insertknowledge(knowledge);
 		if (knowresult != null && knowresult.getId() > 0) {
-			 userPermissionService.insertUserPermission(receive_uid,
+			userPermissionService.insertUserPermission(receive_uid,
 					knowresult.getId(), 123, 1, "mento", 111);
 			knowledgeCategoryService.insertKnowledgeRCategory(
 					knowresult.getId(), categoryid, 111, "测试标题", "author", 6,
 					"share_author", new Date(), "标签", "know_desc", 11,
 					"D:\\pic.png");
+
+			ColumnKnowledge columnKnowledge = new ColumnKnowledge();
+			columnKnowledgeService.insertColumnKnowledge(columnKnowledge);
 
 			System.out.println("ID : " + knowresult.getId());
 		}
@@ -86,9 +94,9 @@ public class KnowledgeNewsServiceTest extends TestBase {
 	@Test
 	public void testdeleteKnowledge() {
 		long[] ids = { 5, 6 };
-//		long categoryid = 3;
+		// long categoryid = 3;
 		knowledgeNewsService.deleteKnowledge(ids);
-//		knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
+		// knowledgeBetweenService.deleteKnowledgeRCategory(ids, categoryid);
 
 	}
 

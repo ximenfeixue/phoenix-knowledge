@@ -22,13 +22,13 @@ public interface UserPermissionService {
 			long send_uid, int type, String mento, long column_id);
 
 	/**
-	 * 刪除知识，把知识栏目中间表删除
+	 * 刪除知识，把用户权限记录
 	 * 
 	 * @param knowledgeids
 	 * @param
 	 * @return
 	 */
-	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
+	int deleteUserPermission(long[] knowledgeids, long userid);
 
 	// 查询知识ID
 	List<Long> selectByreceive_user_id(long receive_user_id);

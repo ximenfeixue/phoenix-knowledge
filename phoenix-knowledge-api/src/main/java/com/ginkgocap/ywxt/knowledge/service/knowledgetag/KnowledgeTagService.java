@@ -19,11 +19,11 @@ public interface KnowledgeTagService {
 	void insertKnowledgeTag(KnowledgeTag knowledgeTag);
 
 	/**
-	 * 刪除知识，把知识栏目中间表删除
+	 * 刪除知识，把知识标签中间表删除
 	 * 
 	 * @param knowledgeids
 	 * @param
 	 * @return
 	 */
-	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
+	int deleteColumnKnowledge(long[] knowledgeids, long userid);
 }
