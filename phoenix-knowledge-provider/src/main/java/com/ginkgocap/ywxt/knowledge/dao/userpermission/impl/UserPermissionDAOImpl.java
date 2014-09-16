@@ -29,14 +29,18 @@ public class UserPermissionDAOImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public List<Long> selectByreceive_user_id(long receive_user_id) {
+	public List<Long> selectByreceive_user_id(long receive_user_id,
+			long send_userid) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (receive_user_id > 0) {
 			map.put("receive_user_id", receive_user_id);
 		}
+		if (send_userid > 0) {
+			map.put("send_user_id", send_userid);
+		}
 		List<Long> list = (List<Long>) getSqlMapClientTemplate().queryForList(
-				"tb_user_permission.selectByreceive_user_id", receive_user_id);
+				"tb_user_permission.selectByreceive_user_id", map);
 		return list;
 	}
 

@@ -16,9 +16,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private UserPermissionDAO userPermissionDAO;
 
 	@Override
-	public List<Long> selectByreceive_user_id(long receive_user_id) {
+	public List<Long> selectByreceive_user_id(long receive_user_id,
+			long send_userid) {
 
-		return userPermissionDAO.selectByreceive_user_id(receive_user_id);
+		return userPermissionDAO.selectByreceive_user_id(receive_user_id,
+				send_userid);
 	}
 
 	@Override

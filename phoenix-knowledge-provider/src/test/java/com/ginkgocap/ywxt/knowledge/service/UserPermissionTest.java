@@ -38,10 +38,10 @@ public class UserPermissionTest extends TestBase {
 		columnKnowledge.setUser_id(111);
 		columnKnowledge.setType(1);
 
-		List<Long> list = userPermissionService.selectByreceive_user_id(1);
+		List<Long> list = userPermissionService.selectByreceive_user_id(2, 0);
 
 		for (Long l : list) {
-
+			System.out.println(l);
 		}
 	}
 

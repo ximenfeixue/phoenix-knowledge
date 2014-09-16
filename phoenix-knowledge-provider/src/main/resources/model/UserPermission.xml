@@ -51,48 +51,11 @@
 		 	</iterate>
 	</insert>
 	
-	<insert id="insert" parameterClass="knowledgecategory">
-		insert into tb_knowledge_category(
-			knowledge_id,
-			category_id,
-			status,
-			sortid,
-			user_id,
-			title,
-			author,
-			path,
-			share_author,
-			createtime,
-			tag,
-			know_desc,
-			column_id,
-			pic_path
-			
-		) values (
-			#knowledgeid:BIGINT#,
-			#categoryid:BIGINT#,
-			#status:VARCHAR#,
-			#sortId:VARCHAR#,
-			#userid:BIGINT#,
-			#title:VARCHAR#,
-			#author:VARCHAR#,
-			#path:VARCHAR#,
-			#share_author:VARCHAR#,
-			#createtime:VARCHAR#,
-			#tag:VARCHAR#,
-			#know_desc:VARCHAR#,
-			#column_id:BIGINT#,
-			#pic_path:VARCHAR#
-				
-		)
-		<selectKey resultClass="long" type="post" keyProperty="id" > 
-		SELECT LAST_INSERT_ID() AS VALUE     
-		</selectKey>
-	</insert>
 	
-	<select id="selectByreceive_user_id" resultClass="long"  >
+	
+	<select id="selectByreceive_user_id" resultClass="long"  parameterClass="java.util.Map">
 	select knowledge_id from tb_user_permission
-	where receive_user_id=#receive_user_id#
+	where receive_user_id=#receive_user_id# or send_user_id=#send_user_id#
 	
 	</select>
 

@@ -31,5 +31,5 @@ public interface UserPermissionService {
 	int deleteUserPermission(long[] knowledgeids, long userid);
 
 	// 查询知识ID
-	List<Long> selectByreceive_user_id(long receive_user_id);
+	List<Long> selectByreceive_user_id(long receive_user_id, long send_userid);
 }

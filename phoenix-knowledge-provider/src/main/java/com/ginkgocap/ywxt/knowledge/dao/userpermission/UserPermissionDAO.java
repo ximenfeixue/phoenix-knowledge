@@ -5,7 +5,7 @@ import java.util.List;
 public interface UserPermissionDAO {
 
 	// 查询知识ID
-	List<Long> selectByreceive_user_id(long receive_user_id);
+	List<Long> selectByreceive_user_id(long receive_user_id, long send_userid);
 
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
