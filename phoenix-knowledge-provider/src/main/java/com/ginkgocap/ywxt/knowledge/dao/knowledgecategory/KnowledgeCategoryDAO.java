@@ -17,4 +17,10 @@ public interface KnowledgeCategoryDAO {
 			String pic_path);
 
 	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
+	/**
+	 * 查询栏目下知识个数
+	 * @param id
+	 * @return
+	 */
+	long countByKnowledgeCategoryId(long id);
 }

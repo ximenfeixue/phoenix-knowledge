@@ -54,4 +54,11 @@ public interface UserCategoryService {
      * @return 
      */
     String selectUserCategoryTreeBySortId(long userId, String sortId);
+    
+    /**
+     * 查询子目录个数
+     * @param id id
+     * @return 个数
+     */
+    long selectChildCountById(long id);
 }

@@ -32,4 +32,9 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				categoryid);
 	}
 
+    @Override
+    public long countByKnowledgeCategoryId(long id) {
+        return knowledgeBetweenDAO.countByKnowledgeCategoryId(id);
+    }
+
 }

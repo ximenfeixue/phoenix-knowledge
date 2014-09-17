@@ -63,4 +63,8 @@
 		select max(sortid) from tb_user_category where userid=#userId# and sortId like #parentSortId#
 	</select>
 	
+	<select id="selectChildCountById" resultClass="long" parameterClass="long">
+		select count(id) from tb_user_category where parentId = #value#
+	</select>
+	
 </sqlMap>

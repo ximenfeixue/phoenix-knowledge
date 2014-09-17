@@ -54,7 +54,7 @@ create table tb_knowledge_book_bookmark
    knowledge_id         bigint(20) comment '知识id',
    pageno               int(5) comment '书签页码',
    title                varchar(50) comment '书签标题',
-   "desc"               varchar(255) comment '书签描述',
+   b_desc               varchar(255) comment '书签描述',
    createtime           timestamp comment '创建时间',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
@@ -78,7 +78,7 @@ create table tb_knowledge_category
    share_author         varchar(255) comment '分享者',
    createtime           timestamp comment '发表时间',
    tag                  varchar(255) comment '标签',
-   "desc"               varchar(255) comment '简介',
+   c_desc               varchar(255) comment '简介',
    column_id            bigint(20) comment '栏目id',
    pic_path             varchar(255) comment '封面图片地址',
    primary key (id)
@@ -158,18 +158,17 @@ alter table tb_knowledge_comment comment '知识评论表';
 /*==============================================================*/
 /* Table: tb_knowledge_r_tag                                    */
 /*==============================================================*/
-create table tb_knowledge_r_tag
+create table tb_category_tag
 (
    id                   bigint(20) not null comment 'id',
-   knowledge_id         bigint(20) comment '知识id',
    column_id            bigint(20) comment '栏目id',
-   tag_id               bigint(20) comment '标签id',
-   type                 char(1) comment '类型(0:栏目，1：知识)',
+   tag               	varchar(255) comment '标签',
    user_id              bigint(20) comment '用户id',
+   createtime           timestamp comment '创建时间',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
 
-alter table tb_knowledge_r_tag comment '知识标签表';
+alter table tb_category_tag comment '知识标签表';
 
 /*==============================================================*/
 /* Table: tb_knowledge_report                                   */
@@ -204,18 +203,7 @@ create table tb_knowledge_statics
 
 alter table tb_knowledge_statics comment '知识统计表';
 
-/*==============================================================*/
-/* Table: tb_knowledge_tag                                      */
-/*==============================================================*/
-create table tb_knowledge_tag
-(
-   id                   bigint(20) not null comment '标签id',
-   tagname              varchar(50) comment '标签名称',
-   user_id              bigint(20) comment '用户Id',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
-
-alter table tb_knowledge_tag comment '标签表';
+ 
 
 /*==============================================================*/
 /* Table: tb_user_category                                      */

@@ -5,9 +5,13 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
+import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.UserCategory;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 
@@ -22,6 +26,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     private CategoryHelper helper = new CategoryHelper();
     @Autowired
     private UserCategoryDao userCategoryDao;
+    @Autowired
+    private KnowledgeCategoryService knowledgeCategoryService;
 
     @Override
     public UserCategory selectByPrimaryKey(long id) {
@@ -30,8 +36,21 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
     @Override
     public String delete(long id) {
-        userCategoryDao.delete(id);
-        return "success";
+        //此分类下子分类的个数
+        long childCount = userCategoryDao.selectChildCountById(id);
+        //此分类下文章的个数
+        long articleCount =knowledgeCategoryService.countByKnowledgeCategoryId(id);
+        //判断若删除此分类，1.此分类下没有子分类  2.此分类下没有发布的文章
+        if (childCount <= 0){
+            if (articleCount <= 0){
+                userCategoryDao.delete(id);
+            }else{
+                return "articleNotNull";
+            }
+        }else{
+            return "childNotNull";
+        }
+        return "";
     }
 
     @Override
@@ -81,6 +100,11 @@ public class UserCategoryServiceImpl implements UserCategoryService {
                     .toString();
         }
         return "";
+    }
+
+    @Override
+    public long selectChildCountById(long id) {
+        return userCategoryDao.selectChildCountById(id);
     }
 
 }
