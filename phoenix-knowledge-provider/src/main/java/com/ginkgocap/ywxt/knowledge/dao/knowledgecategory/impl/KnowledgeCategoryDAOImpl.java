@@ -123,4 +123,10 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 		return count;
 	}
 
+    @Override
+    public long countByKnowledgeCategoryId(long id) {
+        return (Long)getSqlMapClientTemplate().queryForObject(
+                "tb_knowledge_category.countByKnowledgeCategoryId", id);
+    }
+
 }

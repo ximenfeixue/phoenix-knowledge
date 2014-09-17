@@ -105,4 +105,12 @@
 		</selectKey>
 	</insert>
 
+	<!-- ========================================查询目录下知识的个数 begin======================================= -->
+	
+	<select id="countByKnowledgeCategoryId" resultClass="long" parameterClass="long">
+		SELECT count(*) FROM tb_knowledge_category WHERE STATUS=1 AND category_id=#id#
+	</select>
+	
+	<!-- ========================================查询目录下知识的个数 end======================================= -->
+	
 </sqlMap>
