@@ -44,6 +44,17 @@ public class KnowledgeColumnSubscribeDaoImpl extends SqlMapClientDaoSupport impl
         kcs.setId(id);
         return kcs;
     }
+    
+    @Override
+    public Long countSubNumber(long userId, long columnId) {
+        Map<String, Long> map=new HashMap<String, Long>();
+        map.put("userId", userId);
+        map.put("columnId", columnId);
+        
+        Long num=(Long) getSqlMapClientTemplate().queryForObject("tb_knowledge_column_subscribe.countByUIdAndKCId", map);
+        System.out.println(num);
+        return num;
+    }
 
     @Override
     public int update(KnowledgeColumnSubscribe kcs) {
@@ -133,6 +144,9 @@ public class KnowledgeColumnSubscribeDaoImpl extends SqlMapClientDaoSupport impl
         // TODO Auto-generated method stub
         return null;
     }
+
+
+    
 
 
 

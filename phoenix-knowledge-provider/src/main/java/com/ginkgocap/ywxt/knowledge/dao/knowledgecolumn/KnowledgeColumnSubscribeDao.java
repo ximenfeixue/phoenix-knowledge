@@ -21,6 +21,12 @@ public interface KnowledgeColumnSubscribeDao {
      */
     public KnowledgeColumnSubscribe insert(KnowledgeColumnSubscribe kcs);
     /**
+     * 根据用户id和栏目id查询用户的订阅条数，可能存在重复
+     * @param userId 用户id
+     * @param columnId 栏目id
+     */
+    public Long countSubNumber(long userId,long columnId);
+    /**
      * 修改用户订阅栏目的记录
      * @param kcs
      * @return 修改的记录
@@ -28,7 +34,8 @@ public interface KnowledgeColumnSubscribeDao {
     public int update(KnowledgeColumnSubscribe kcs);
     /**
      * 根据用户id和栏目id删除用户订阅栏目的记录
-     * @param id 要删除的的订阅id
+     * @param userId 用户id
+     * @param columnId 栏目id
      * @return none
      */
     public void deleteByUIdAndKCId(long userId,long columnId);

@@ -21,11 +21,26 @@ public interface KnowledgeColumnSubscribeService {
      */
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs);
     /**
+     * 根据用户id和栏目id查询用户的是否已订阅
+     * @param userId 用户id
+     * @param columnId 栏目id
+     */
+    public boolean isExist(long userId,long columnId);
+    
+    /**
+     * 根据用户id和栏目id查询用户的订阅条数，可能存在重复
+     * @param userId 用户id
+     * @param columnId 栏目id
+     */
+    public Long countSubNumber(long userId,long columnId);
+    
+    /**
      * 修改用户订阅栏目的记录
      * @param kcs
      * @return 修改的记录
      */
     public int update(KnowledgeColumnSubscribe kcs);
+    
     /**
      * 添加或修改用户订阅栏目的记录
      * @param kcs
