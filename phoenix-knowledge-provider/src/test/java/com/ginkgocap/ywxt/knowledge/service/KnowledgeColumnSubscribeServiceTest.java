@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
 
 import org.junit.After;
 import org.junit.AfterClass;
