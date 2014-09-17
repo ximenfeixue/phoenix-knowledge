@@ -68,4 +68,5 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeIndustryService"  ref="knowledgeIndustryService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService"  ref="knowledgeInvestmentService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService"  ref="knowledgeStaticsService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.knowledgecollection.KnowledgeCollectionService"  ref="knowledgeCollectionService" version="1.0.0"/>
 </beans>

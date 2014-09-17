@@ -19,6 +19,7 @@
 	<sqlMap resource="model/KnowledgeTag.xml" />
 	<sqlMap resource="model/KnowledgeStatics.xml" />
 	<sqlMap resource="model/KnowledgeColumnSubscribe.xml" />
+	<sqlMap resource="model/KnowledgeCollection.xml" />
 <!-- 	<sqlMap resource="model/KnowledgeNewsMapper.xml" /> -->
 
 </sqlMapConfig>
