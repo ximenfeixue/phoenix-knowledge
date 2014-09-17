@@ -140,7 +140,7 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
     @Override
     public List<KnowledgeColumn> querySubByUserId(long createUserId) {
         @SuppressWarnings("unchecked")
-        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectSubByUserId");
+        List<KnowledgeColumn> list=getSqlMapClientTemplate().queryForList("tb_knowledge_column.selectSubByUserId",createUserId);
         return list;
     }
 
