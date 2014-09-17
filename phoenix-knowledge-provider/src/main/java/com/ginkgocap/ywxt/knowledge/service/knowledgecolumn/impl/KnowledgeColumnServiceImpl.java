@@ -115,8 +115,7 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
 
     @Override
     public List<KnowledgeColumn> querySubByUserId(long createUserId) {
-        // TODO Auto-generated method stub
-        return null;
+        return knowledgeColumnDao.querySubByUserId(createUserId);
     }
 
     @Override

@@ -145,4 +145,12 @@ public class KnowledgeColumnServiceTest extends TestBase{
         }
     }
     
+    @Test
+    public void querySubByUserId(){
+        List<KnowledgeColumn> list=knowledgeColumnService.querySubByUserId(72l);
+        for (KnowledgeColumn kc : list) {
+            System.out.println(kc.getColumnName());
+        }
+    }
+    
 }
