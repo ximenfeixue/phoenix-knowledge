@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,9 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryTestMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -44,6 +46,9 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 	@Autowired
 	private KnowledgeContentDAO knowledgeContentDAO;
 
+	@Resource
+	private UserCategoryTestMapper userCategoryTestMapper;
+	
 	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
