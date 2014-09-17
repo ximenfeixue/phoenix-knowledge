@@ -21,33 +21,18 @@
     	<sqlMapGenerator targetPackage="com.ginkgocap.ywxt.knowledge.mapper" targetProject="phoenix-knowledge-provider/src/main/gen" />
     	<javaClientGenerator  targetPackage="com.ginkgocap.ywxt.knowledge.mapper" targetProject="phoenix-knowledge-provider/src/main/gen" type="XMLMAPPER" />
     	
-<!--     	<table tableName="tb_active_info" domainObjectName="ActiveInfo" /> -->
-    	<table tableName="tb_user_category" domainObjectName="UserCategoryTest" />
-<!--     	<table tableName="tb_article_pic" domainObjectName="ArticlePic" /> -->
-<!--     	<table tableName="tb_article_share" domainObjectName="ArticleShare" /> -->
-<!--     	<table tableName="tb_take_active" domainObjectName="TakeActive" /> -->
-
-<!--     	<table tableName="tb_attention" domainObjectName="Attention" /> -->
-<!--     	<table tableName="tb_collection" domainObjectName="CollectionInfo" /> -->
-<!--     	<table tableName="tb_comment" domainObjectName="Comment" /> -->
-<!--     	<table tableName="tb_contribution" domainObjectName="Contribution" /> -->
-<!--     	<table tableName="tb_user_imageurl" domainObjectName="UserImageurl" /> -->
-<!--     	<table tableName="tb_download" domainObjectName="Download" /> -->
-<!--     	<table tableName="tb_problem" domainObjectName="Problem" /> -->
-<!--     	<table tableName="tb_collapse_log" domainObjectName="CollapseLog" /> -->
-<!--     		<table tableName="tb_sickkinds_info" domainObjectName="SickkindsInfo" /> -->
-<!--     			<table tableName="tb_focus_pic" domainObjectName="FocusPicInfo" /> -->
-<!--     		<table tableName="tb_department_info" domainObjectName="DepartmentInfo" /> -->
-<!--     	<table tableName="tb_suggestion" domainObjectName="Suggestion" /> -->
-<!--     	<table tableName="tb_third_share" domainObjectName="ThirdShare" />  -->
-<!--     	<table tableName="tb_main" domainObjectName="MainInfo" /> -->
-<!--     	<table tableName="tb_user" domainObjectName="User" /> -->
-<!--     	<table tableName="tb_user_contribution" domainObjectName="UserContribution" /> -->
-<!--     	<table tableName="tb_user_log" domainObjectName="UserLog" /> -->
-<!--     	<table tableName="tb_user_msg" domainObjectName="UserMsg" />  -->
-<!-- 			<table tableName="tb_login_info" domainObjectName="UserLogin" /> -->
-<!-- 			<table tableName="tb_comment" domainObjectName="Comment" /> -->
-<!-- 			<table tableName="tb_statistics_base_info" domainObjectName="StatisticsBase" /> -->
+     	<table tableName="tb_category_tag" domainObjectName="CategoryTag" /> 
+		<table tableName="tb_column_knowledge" domainObjectName="ColumnKnowledge" /> 
+		<table tableName="tb_knowledge_book_bookmark" domainObjectName="KnowledgeBookBookmark" /> 
+		<table tableName="tb_knowledge_category" domainObjectName="KnowledgeCategory" /> 
+		<table tableName="tb_knowledge_collection" domainObjectName="KnowledgeCollection" /> 
+		<table tableName="tb_knowledge_column" domainObjectName="KnowledgeColumn" /> 
+		<table tableName="tb_knowledge_column_subscribe" domainObjectName="KnowledgeColumnSubscribe" /> 
+		<table tableName="tb_knowledge_comment" domainObjectName="KnowledgeComment" /> 
+		<table tableName="tb_knowledge_report" domainObjectName="KnowledgeReport" /> 
+		<table tableName="tb_knowledge_statics" domainObjectName="KnowledgeStatics" /> 
+		<table tableName="tb_user_category" domainObjectName="UserCategory" /> 
+		<table tableName="tb_user_permission" domainObjectName="UserPermission" />
 
   	</context>
 </generatorConfiguration>

@@ -1,0 +1,88 @@
+package com.ginkgocap.ywxt.knowledge.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class KnowledgeComment implements Serializable {
+    private Long id;
+
+    private Long knowledgeId;
+
+    private String content;
+
+    private Date createtime;
+
+    private Boolean status;
+
+    private Long parentid;
+
+    private Long userId;
+
+    private Long count;
+
+    private static final long serialVersionUID = 1L;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getKnowledgeId() {
+        return knowledgeId;
+    }
+
+    public void setKnowledgeId(Long knowledgeId) {
+        this.knowledgeId = knowledgeId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Long getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Long parentid) {
+        this.parentid = parentid;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+}

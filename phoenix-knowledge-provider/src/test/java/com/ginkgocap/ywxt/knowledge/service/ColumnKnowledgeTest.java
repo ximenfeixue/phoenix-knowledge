@@ -4,8 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeService;
 
 /**
@@ -26,32 +25,32 @@ import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeServi
 
 public class ColumnKnowledgeTest extends TestBase {
 	@Autowired
-	private ColumnKnowledgeService knowledgeColumnService;
+	private ColumnKnowledgeService columnKnowledgeService;
 
 	@Test
 	public void insertcolumnknowledge() throws Exception {
 
 		ColumnKnowledge columnKnowledge = new ColumnKnowledge();
-		columnKnowledge.setColumn_id(1);
-		columnKnowledge.setKnowledge_id(1);
-		columnKnowledge.setUser_id(111);
-		columnKnowledge.setType(1);
+		columnKnowledge.setColumnId((long) 111);
+		columnKnowledge.setKnowledgeId((long) 21);
+		columnKnowledge.setType((short) 1);
+		columnKnowledge.setUserId((long) 111);
+		int count = columnKnowledgeService
+				.insertColumnKnowledge(columnKnowledge);
+		if (count > 0) {
 
-		knowledgeColumnService.insertColumnKnowledge(columnKnowledge);
+			System.out.println("成功");
+		}
 	}
 
 	@Test
 	public void deletecolumnknowledge() throws Exception {
 
 		ColumnKnowledge columnKnowledge = new ColumnKnowledge();
-		columnKnowledge.setColumn_id(1);
-		columnKnowledge.setKnowledge_id(1);
-		columnKnowledge.setUser_id(111);
-		columnKnowledge.setType(1);
 
 		long[] knowledgeids = { 1, 2 };
 
-		System.out.println(knowledgeColumnService.deleteColumnKnowledge(
+		System.out.println(columnKnowledgeService.deleteColumnKnowledge(
 				knowledgeids, 1));
 	}
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.columnknowledge.ColumnKnowledgeDAO;
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeService;
 
 @Service("columnknowledgeService")
@@ -14,15 +14,14 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 	private ColumnKnowledgeDAO columnKnowledgeDAO;
 
 	@Override
-	public void insertColumnKnowledge(ColumnKnowledge columnKnowledge) {
-		columnKnowledgeDAO.insertColumnKnowledge(columnKnowledge);
+	public int insertColumnKnowledge(ColumnKnowledge columnKnowledge) {
+		return columnKnowledgeDAO.insertColumnKnowledge(columnKnowledge);
 	}
 
 	@Override
 	public int deleteColumnKnowledge(long[] knowledgeids, long columnid) {
 
-		return columnKnowledgeDAO.deleteColumnKnowledge(knowledgeids,
-				columnid);
+		return columnKnowledgeDAO.deleteColumnKnowledge(knowledgeids, columnid);
 	}
 
 }

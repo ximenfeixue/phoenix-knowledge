@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.columnknowledge;
 
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 
 public interface ColumnKnowledgeDAO {
 	/**
@@ -9,7 +9,7 @@ public interface ColumnKnowledgeDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertColumnKnowledge(ColumnKnowledge columnKnowledge);
+	int insertColumnKnowledge(ColumnKnowledge columnKnowledge);
 
 	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
 }

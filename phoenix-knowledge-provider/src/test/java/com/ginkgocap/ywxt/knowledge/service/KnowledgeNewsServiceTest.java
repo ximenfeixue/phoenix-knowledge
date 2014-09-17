@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
@@ -85,9 +85,16 @@ public class KnowledgeNewsServiceTest extends TestBase {
 					"D:\\pic.png");
 
 			ColumnKnowledge columnKnowledge = new ColumnKnowledge();
-			columnKnowledgeService.insertColumnKnowledge(columnKnowledge);
+			columnKnowledge.setColumnId((long) 111);
+			columnKnowledge.setKnowledgeId((long) 21);
+			columnKnowledge.setType((short) 1);
+			columnKnowledge.setUserId(knowresult.getId());
+			count = columnKnowledgeService
+					.insertColumnKnowledge(columnKnowledge);
+			if (count > 0) {
 
-			System.out.println("ID : " + knowresult.getId());
+				System.out.println("成功");
+			}
 		}
 	}
 

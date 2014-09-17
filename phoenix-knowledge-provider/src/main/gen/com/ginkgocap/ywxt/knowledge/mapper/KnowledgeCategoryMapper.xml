@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="sortid" property="sortid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="SMALLINT" />
+    <result column="share_author" property="shareAuthor" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
+    <result column="column_id" property="columnId" jdbcType="BIGINT" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, knowledge_id, category_id, status, sortid, user_id, title, author, path, share_author, 
+    createtime, tag, c_desc, column_id, pic_path
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_knowledge_category
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+      <if test="limitStart >= 0 and limitEnd>= 0" >
+        limit #{limitStart}, #{limitEnd}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_knowledge_category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_knowledge_category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" >
+    delete from tb_knowledge_category
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+    insert into tb_knowledge_category (id, knowledge_id, category_id, 
+      status, sortid, user_id, 
+      title, author, path, 
+      share_author, createtime, tag, 
+      c_desc, column_id, pic_path
+      )
+    values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, 
+      #{status,jdbcType=CHAR}, #{sortid,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{path,jdbcType=SMALLINT}, 
+      #{shareAuthor,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{tag,jdbcType=VARCHAR}, 
+      #{cDesc,jdbcType=VARCHAR}, #{columnId,jdbcType=BIGINT}, #{picPath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+    insert into tb_knowledge_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="knowledgeId != null" >
+        knowledge_id,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sortid != null" >
+        sortid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="shareAuthor != null" >
+        share_author,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="cDesc != null" >
+        c_desc,
+      </if>
+      <if test="columnId != null" >
+        column_id,
+      </if>
+      <if test="picPath != null" >
+        pic_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeId != null" >
+        #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="sortid != null" >
+        #{sortid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=SMALLINT},
+      </if>
+      <if test="shareAuthor != null" >
+        #{shareAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="columnId != null" >
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="picPath != null" >
+        #{picPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" resultType="java.lang.Integer" >
+    select count(*) from tb_knowledge_category
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_knowledge_category
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.knowledgeId != null" >
+        knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.categoryId != null" >
+        category_id = #{record.categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.sortid != null" >
+        sortid = #{record.sortid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.author != null" >
+        author = #{record.author,jdbcType=VARCHAR},
+      </if>
+      <if test="record.path != null" >
+        path = #{record.path,jdbcType=SMALLINT},
+      </if>
+      <if test="record.shareAuthor != null" >
+        share_author = #{record.shareAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cDesc != null" >
+        c_desc = #{record.cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.columnId != null" >
+        column_id = #{record.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="record.picPath != null" >
+        pic_path = #{record.picPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_knowledge_category
+    set id = #{record.id,jdbcType=BIGINT},
+      knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      category_id = #{record.categoryId,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=CHAR},
+      sortid = #{record.sortid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      author = #{record.author,jdbcType=VARCHAR},
+      path = #{record.path,jdbcType=SMALLINT},
+      share_author = #{record.shareAuthor,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      c_desc = #{record.cDesc,jdbcType=VARCHAR},
+      column_id = #{record.columnId,jdbcType=BIGINT},
+      pic_path = #{record.picPath,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+    update tb_knowledge_category
+    <set >
+      <if test="knowledgeId != null" >
+        knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="sortid != null" >
+        sortid = #{sortid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=SMALLINT},
+      </if>
+      <if test="shareAuthor != null" >
+        share_author = #{shareAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        c_desc = #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="columnId != null" >
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="picPath != null" >
+        pic_path = #{picPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+    update tb_knowledge_category
+    set knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      category_id = #{categoryId,jdbcType=BIGINT},
+      status = #{status,jdbcType=CHAR},
+      sortid = #{sortid,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      path = #{path,jdbcType=SMALLINT},
+      share_author = #{shareAuthor,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      tag = #{tag,jdbcType=VARCHAR},
+      c_desc = #{cDesc,jdbcType=VARCHAR},
+      column_id = #{columnId,jdbcType=BIGINT},
+      pic_path = #{picPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

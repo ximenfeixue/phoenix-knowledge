@@ -14,13 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryTestMapper;
-import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
+import com.ginkgocap.ywxt.knowledge.model.UserCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -41,14 +40,14 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Autowired
-	private CategoryDao categoryDao;
+	private UserCategoryDao userCategoryDao;
 
 	@Autowired
 	private KnowledgeContentDAO knowledgeContentDAO;
 
 	@Resource
 	private UserCategoryTestMapper userCategoryTestMapper;
-	
+
 	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
@@ -59,7 +58,8 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
 		KnowledgeRCategory knowledgeRCategory = null;
 		for (int k = 0; k < categoryid.length; k++) {
-			Category category = categoryDao.selectByPrimaryKey(categoryid[k]);
+			UserCategory category = userCategoryDao
+					.selectByPrimaryKey(categoryid[k]);
 			if (category != null) {
 				knowledgeRCategory = new KnowledgeRCategory();
 				knowledgeRCategory.setKnowledgeid(knowledgeid);
@@ -78,11 +78,11 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();
 					// 得到要添加的分类的父类sortId
-					String parentSortId = parentId > 0 ? categoryDao
+					String parentSortId = parentId > 0 ? userCategoryDao
 							.selectByPrimaryKey(parentId).getSortId() : "";
 					// 通过parentSortId得到子类最大已添加的sortId
-					String childMaxSortId = categoryDao.selectMaxSortId(
-							category.getUid(), parentSortId);
+					String childMaxSortId = userCategoryDao.selectMaxSortId(
+							category.getUserId(), parentSortId);
 					if (StringUtils.isBlank(category.getSortId())) {
 						// 如果用户第一次添加，将childMaxSortId赋值
 						String newSortId = new String("");
@@ -128,10 +128,10 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 		return count;
 	}
 
-    @Override
-    public long countByKnowledgeCategoryId(long id) {
-        return (Long)getSqlMapClientTemplate().queryForObject(
-                "tb_knowledge_category.countByKnowledgeCategoryId", id);
-    }
+	@Override
+	public long countByKnowledgeCategoryId(long id) {
+		return (Long) getSqlMapClientTemplate().queryForObject(
+				"tb_knowledge_category.countByKnowledgeCategoryId", id);
+	}
 
 }

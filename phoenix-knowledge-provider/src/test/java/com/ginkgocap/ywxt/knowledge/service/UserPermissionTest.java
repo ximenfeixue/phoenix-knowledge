@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService;
 
 /**
@@ -32,11 +32,6 @@ public class UserPermissionTest extends TestBase {
 	@Test
 	public void selectcolumnknowledge() throws Exception {
 
-		ColumnKnowledge columnKnowledge = new ColumnKnowledge();
-		columnKnowledge.setColumn_id(1);
-		columnKnowledge.setKnowledge_id(1);
-		columnKnowledge.setUser_id(111);
-		columnKnowledge.setType(1);
 
 		List<Long> list = userPermissionService.selectByreceive_user_id(2, 0);
 

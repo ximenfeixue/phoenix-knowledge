@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.columnknowledge;
 
-import com.ginkgocap.ywxt.knowledge.model.ColumnKnowledge;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 
 /**
  * 知识栏目关系
@@ -16,7 +16,7 @@ public interface ColumnKnowledgeService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertColumnKnowledge(ColumnKnowledge columnKnowledge);
+	int insertColumnKnowledge(ColumnKnowledge columnKnowledge);
 
 	/**
 	 * 刪除知识，把知识栏目中间表删除
