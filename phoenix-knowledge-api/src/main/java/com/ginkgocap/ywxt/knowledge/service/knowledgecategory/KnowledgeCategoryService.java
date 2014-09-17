@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service.knowledgecategory;
 
 import java.util.Date;
 
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+
 /**
  * 知识相关的关系表
  * 
@@ -35,4 +37,5 @@ public interface KnowledgeCategoryService {
      * @return
      */
     long countByKnowledgeCategoryId(long id);
+
 }

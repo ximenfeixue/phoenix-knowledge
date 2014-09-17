@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 
 @Service("knowledgeCategoryService")
