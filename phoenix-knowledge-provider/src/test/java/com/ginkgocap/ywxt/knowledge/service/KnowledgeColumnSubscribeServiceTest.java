@@ -2,6 +2,10 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
+import javax.validation.constraints.AssertTrue;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -49,7 +53,7 @@ public class KnowledgeColumnSubscribeServiceTest extends TestBase {
             
             KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
 //            kcs.setUserId(TEST_USER_ID);  //测试所用
-            kcs.setUserId(72l);  //测试所用
+            kcs.setUserId(79l);  //测试所用
             kcs.setColumnId(12); //12所代表的栏目   资讯--金融
 //            kcs.setColumnType(1+"");
 //            System.out.println(kcsService);
@@ -69,6 +73,57 @@ public class KnowledgeColumnSubscribeServiceTest extends TestBase {
         }
        
     }
+    
+    @Test
+    public void testPrepareData() {
+        
+//        for (int i = 0; i < 4; i++) {
+//            KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
+//            
+//            kcs.setUserId(72l);  
+//            kcs.setColumnId(13+i); //12所代表的栏目   资讯--金融
+//            kcs.setColumnType(1+"");
+//            kcs=kcsService.add(kcs);
+//        }
+        
+//        for (int i = 0; i < 5; i++) {
+//            KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
+//            kcs.setUserId(71);  
+//            kcs.setColumnId(13+i); //13所代表的栏目   资讯--股票
+//            kcs.setColumnType(1+"");
+//            kcs=kcsService.add(kcs);
+//        }
+        
+//        for (int i = 0; i < 5; i++) {
+//            KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
+//            
+//            kcs.setUserId(73+i);  
+//            kcs.setColumnId(13); //13所代表的栏目   资讯--股票 
+//            kcs.setColumnType(1+"");
+//            kcs=kcsService.add(kcs);
+//        }
+//        
+//        for (int i = 0; i < 5; i++) {
+//            KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
+//            
+//            kcs.setUserId(71+i);  
+//            kcs.setColumnId(21); //投融工具--金融理论
+//            kcs.setColumnType(2+"");
+//            kcs=kcsService.add(kcs);
+//        }
+      
+    }
+    
+    @Test
+    public void isExist(){
+        try {
+            assertTrue(kcsService.isExist(72l, 13l)) ;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+       
+    }
 
     @Test
     public void testDeleteByUIdAndKCId() {
@@ -77,11 +132,14 @@ public class KnowledgeColumnSubscribeServiceTest extends TestBase {
 
     @Test
     public void testDeleteByPK() {
-//        fail("Not yet implemented");
     }
 
     @Test
     public void testSelectByUserId() {
+        List<KnowledgeColumnSubscribe> list=kcsService.selectByUserId(72);
+        for (KnowledgeColumnSubscribe kcs : list) {
+            System.out.println(kcs.getColumnId());
+        }
     }
 
     @Test

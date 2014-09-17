@@ -21,6 +21,10 @@
 	  column_type
 	</sql>
 	
+	<sql id="kcs_name">
+	tb_knowledge_column_subscribe
+	</sql>
+	
 	<update id="update" parameterClass="knowledgeColumnSubscribe">  
         UPDATE tb_knowledge_column_subscribe SET  
 			user_id=#userId:BIGINT#,,
@@ -47,6 +51,13 @@
 		SELECT LAST_INSERT_ID() AS VALUE     
 		</selectKey>
 	</insert>
+	
+	<select id="countByUIdAndKCId" resultClass="long" parameterClass="java.util.Map">
+    	select count(*)
+			from <include refid="kcs_name"/> 
+		where 
+			user_id=#userId# and column_id=#columnId#
+    </select>
 	
 	<delete id="deleteByPK" parameterClass="long">  
        delete from 

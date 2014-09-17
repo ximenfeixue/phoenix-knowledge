@@ -26,6 +26,10 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     @Override
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
        
+        //TODO 判断是否已存在
+        
+//        this.isExist(kcs.getUserId(), kcs.getColumnId());
+        
         if (StringUtils.isEmpty(kcs.getColumnType())) {
             KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
            
@@ -149,6 +153,20 @@ public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubsc
     public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<KnowledgeColumn> list, int type) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public boolean isExist(long userId, long columnId) {
+        Long num=kcsDao.countSubNumber(userId, columnId);
+        if (num>0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Long countSubNumber(long userId, long columnId) {
+        return kcsDao.countSubNumber(userId, columnId);
     }
 
 }

@@ -135,7 +135,7 @@
         	id=#id:BIGINT#   
     </update>
     
-    <select id="countByPidAndName" parameterClass="java.util.Map">
+    <select id="countByPidAndName" resultClass="long" parameterClass="java.util.Map">
     	select count(*)
 		from tb_knowledge_column 
 		where parent_column_id=#parentColumnId# and column_name=#columnName#
