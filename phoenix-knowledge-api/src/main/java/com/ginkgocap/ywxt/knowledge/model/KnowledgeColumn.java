@@ -26,7 +26,7 @@ public class KnowledgeColumn implements Serializable {
     private Long createUserId;//用户id
     private Integer level;//
     private String columnLevelPath;//层级路径
-    private String pathName;//层级路径对应的文字名称
+   // private String pathName;//层级路径对应的文字名称
     private Date createTime;//创建时间
     private Date updateTime;//更新时间
     private Integer delStatus=0; //删除状态    0-正常  1-已删除
@@ -120,13 +120,7 @@ public class KnowledgeColumn implements Serializable {
         this.subscribeCount = subscribeCount;
     }
 
-    public String getPathName() {
-        return pathName;
-    }
 
-    public void setPathName(String pathName) {
-        this.pathName = pathName;
-    }
 
     public Integer getKcType() {
         return kcType;

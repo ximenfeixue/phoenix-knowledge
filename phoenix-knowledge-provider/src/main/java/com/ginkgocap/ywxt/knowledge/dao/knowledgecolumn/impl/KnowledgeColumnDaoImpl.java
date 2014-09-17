@@ -159,4 +159,10 @@ public class KnowledgeColumnDaoImpl extends SqlMapClientDaoSupport implements Kn
         return list;
     }
 
+    @Override
+    public List<KnowledgeColumn> selectFullPath(long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

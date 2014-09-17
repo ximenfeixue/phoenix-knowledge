@@ -108,4 +108,11 @@ public interface KnowledgeColumnService {
      * @return 
      */
     String selectColumnTreeBySortId(long userId,String sortId,String status);
+    
+    /**
+     * 获取全路径
+     * @param id 栏目id
+     * @return
+     */
+    List<KnowledgeColumn> selectFullPath(long id);
 }

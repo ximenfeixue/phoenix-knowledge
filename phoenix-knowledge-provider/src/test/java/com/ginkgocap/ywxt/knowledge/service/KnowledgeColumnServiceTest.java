@@ -89,6 +89,14 @@ public class KnowledgeColumnServiceTest extends TestBase{
     }
     
     @Test
+    public void selectFullPath(){
+        List<KnowledgeColumn>l =knowledgeColumnService.selectFullPath(42);
+        for(KnowledgeColumn k :l){
+            System.out.println(k.getId());
+        }
+    }
+        
+    @Test
     public void saveOrUpdate(){
         
         Long clearId = new Long(-1);
@@ -105,7 +113,7 @@ public class KnowledgeColumnServiceTest extends TestBase{
             kc.setCreateUserId(71L);
             kc.setLevel(2);
             kc.setColumnLevelPath("0-1");
-            kc.setPathName("资讯->自定义");
+          //  kc.setPathName("资讯->自定义");
             
             KnowledgeColumn ks = knowledgeColumnService.saveOrUpdate(kc);
             

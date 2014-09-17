@@ -113,7 +113,6 @@ create table tb_column
    user_id              bigint(20) comment '用户Id',
    parent_id            bigint(20) comment '父级id',
    createtime           timestamp comment '创建时间',
-   path_name            varchar(255) comment '路径名称',
    column_level_path    varchar(70) comment '分类层级路径  00000000100000001',
    del_status           tinyint comment '删除状态(1：删除 0- 正常)',
    update_time          timestamp comment '更新时间',

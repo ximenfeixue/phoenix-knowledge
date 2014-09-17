@@ -107,4 +107,11 @@ public interface KnowledgeColumnDao {
      * @return 
      */
     List<KnowledgeColumn>  selectCategoryTreeBySortId(long userId,String sortId);
+    
+    /**
+     * 获取全路径
+     * @param id 栏目id
+     * @return
+     */
+    List<KnowledgeColumn> selectFullPath(long id);
 }

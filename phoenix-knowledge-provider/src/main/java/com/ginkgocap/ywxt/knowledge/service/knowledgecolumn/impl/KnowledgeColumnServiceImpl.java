@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecolumn.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -135,4 +137,27 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
         return "";
     }
 
+    
+    @Override
+    public List<KnowledgeColumn> selectFullPath(long id) {
+        List<KnowledgeColumn> l = new ArrayList<KnowledgeColumn>();
+        KnowledgeColumn k = knowledgeColumnDao.queryById(id);
+        if (k != null) {
+            l.add(k);
+            getFullPath(l, k.getParentColumnId());
+            Collections.reverse(l);
+        }
+        return l;
+    }
+
+    
+    public void getFullPath(List<KnowledgeColumn> l, long pid) {
+        
+        if (pid == 0) {
+            return;
+        }
+        KnowledgeColumn kn = knowledgeColumnDao.queryById(pid);
+        l.add(kn);
+    }
+    
 }

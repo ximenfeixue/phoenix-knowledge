@@ -36,5 +36,14 @@ public interface KnowledgeNewsDAO {
 	 */
 
 	KnowledgeNews selectKnowledge(long knowledgeid);
+    /**
+     * 根据条件查询资讯
+     * @param columnid 栏目类型
+     * @param source 1首页 2其他 
+     * @param userid 用户id
+     * @param ids 资讯ids
+     * @return
+     */
+    List<KnowledgeNews> selectByParam(Long columnid,long source,Long userid,List<Long> ids,int page ,int size);
 
 }

@@ -36,5 +36,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 		return userPermissionDAO.deleteUserPermission(knowledgeids, userid);
 	}
+	    
+    @Override
+    public List<Long> selectByParams(Long receive_user_id, Long column_id, Long type) {
+        return userPermissionDAO.selectByParams(receive_user_id, column_id, type);
+    }
 
 }

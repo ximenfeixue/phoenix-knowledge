@@ -13,7 +13,7 @@ public class Knowledge {
 	private long id;
 
 	// 标题
-	private String title;
+	private String title;  
 
 	// 作者
 	private long uid;

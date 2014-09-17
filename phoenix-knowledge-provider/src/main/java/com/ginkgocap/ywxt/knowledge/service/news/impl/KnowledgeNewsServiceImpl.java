@@ -73,4 +73,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		return knowledgeNewsDAO.selectKnowledge(knowledgeid);
 	}
 
+    @Override
+    public List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid, List<Long> ids,int page,int size) {
+        return knowledgeNewsDAO.selectByParam(columnid, source, userid, ids,page,size);
+    }
+
 }

@@ -24,4 +24,12 @@ public interface UserPermissionDAO {
 	 * @return
 	 */
 	int deleteUserPermission(long[] knowledgeids, long userid);
+	   /**
+     * 按照条件查询id集合
+     * @param receive_user_id 接受人
+     * @param column_id 11种类型
+     * @param type 
+     * @return
+     */
+    List<Long> selectByParams(Long receive_user_id, Long column_id,Long type);
 }

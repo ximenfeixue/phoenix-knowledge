@@ -11,7 +11,7 @@ import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService
 
 /**
  * <p>
- * 知识栏目操作测试接口
+ * 用户权限操作测试接口
  * </p>
  * <p>
  * 于2014-8-19 由 bianzhiwei 创建
@@ -57,5 +57,9 @@ public class UserPermissionTest extends TestBase {
 
 		System.out.println(userPermissionService.deleteUserPermission(
 				knowledgeids, userid));
+	}
+	@Test
+	public void selectByParams()  {
+	    userPermissionService.selectByParams(1l, 1l, 1l);
 	}
 }

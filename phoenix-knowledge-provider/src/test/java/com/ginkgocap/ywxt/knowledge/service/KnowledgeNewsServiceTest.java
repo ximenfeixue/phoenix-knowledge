@@ -127,4 +127,9 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		System.out.println(knowledgeNews.getContent());
 
 	}
+	@Test
+	public void selectByParam() {
+	    knowledgeNewsService.selectByParam(1l, 1, 1l, null, 2, 10);
+	    
+	}
 }
