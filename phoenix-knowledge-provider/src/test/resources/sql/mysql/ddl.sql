@@ -106,7 +106,7 @@ alter table tb_knowledge_collection comment '知识收藏表';
 /*==============================================================*/
 /* Table: tb_knowledge_column                                   */
 /*==============================================================*/
-create table tb_knowledge_column
+create table tb_column
 (
    id                   bigint(20) not null comment '栏目id',
    columnName           varchar(50) comment '栏目名称',
