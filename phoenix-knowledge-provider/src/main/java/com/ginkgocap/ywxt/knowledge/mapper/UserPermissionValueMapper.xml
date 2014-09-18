@@ -51,6 +51,30 @@
     <foreach item="knowledgeids" collection="knowledgeids" open="(" separator="," close=")">
    #{knowledgeids}
     </foreach>
-     
  </delete>
+ 
+ <select id="selectByreceive_user_id" resultType="map">
+ 	select knowledge_id from tb_user_permission
+ 	where 1=1 
+ 	<if test="receive_user_id!=null and receive_user_id>0 ">
+	and receive_user_id=#{receive_user_id}
+	</if>
+	<if test="send_userid!=null and send_userid>0 ">
+	and send_user_id=#{send_userid}
+	</if>
+ </select>
+ 
+  <select id="selectByParams" resultType="map">
+ 	select knowledge_id from tb_user_permission
+	where 1=1
+	<if test="receive_user_id!=null and receive_user_id>0 ">
+	and receive_user_id=#{receive_user_id}
+	</if>
+	<if test="column_id!=null and column_id>0">
+	and column_id=#{column_id}
+	</if>
+	<if test="type!=null and type>0">
+	and type=#{type}
+	</if>
+ </select>
 </mapper>

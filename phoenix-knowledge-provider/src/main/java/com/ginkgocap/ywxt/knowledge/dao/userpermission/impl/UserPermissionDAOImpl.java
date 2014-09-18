@@ -19,16 +19,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Component("userpermissionDAO")
-public class UserPermissionDAOImpl extends SqlMapClientDaoSupport implements
-		UserPermissionDAO {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+public class UserPermissionDAOImpl implements UserPermissionDAO {
 
 	@Resource
 	private UserPermissionValueMapper userPermissionValueMapper;
@@ -37,15 +28,15 @@ public class UserPermissionDAOImpl extends SqlMapClientDaoSupport implements
 	public List<Long> selectByreceive_user_id(long receive_user_id,
 			long send_userid) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (receive_user_id > 0) {
-			map.put("receive_user_id", receive_user_id);
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist = userPermissionValueMapper
+				.selectByreceive_user_id(receive_user_id, send_userid);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("knowledge_id"));
+			}
 		}
-		if (send_userid > 0) {
-			map.put("send_user_id", send_userid);
-		}
-		List<Long> list = (List<Long>) getSqlMapClientTemplate().queryForList(
-				"tb_user_permission.selectByreceive_user_id", map);
 		return list;
 	}
 
@@ -89,12 +80,16 @@ public class UserPermissionDAOImpl extends SqlMapClientDaoSupport implements
 	@Override
 	public List<Long> selectByParams(Long receive_user_id, Long column_id,
 			Long type) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("receive_user_id", receive_user_id);
-		map.put("column_id", column_id);
-		map.put("type", type);
-		List<Long> list = (List<Long>) getSqlMapClientTemplate().queryForList(
-				"tb_user_permission.selectByParams", map);
+
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist = userPermissionValueMapper
+				.selectByParams(receive_user_id, column_id, type);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("knowledge_id"));
+			}
+		}
 		return list;
 	}
 }

@@ -46,7 +46,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         if (type == -1) {
             return userPermissionValueMapper.selectByParamsSingle(receive_user_id, column_id);
         } else {
-            return userPermissionValueMapper.selectByParams(receive_user_id, column_id, type);
+            return userPermissionDAO.selectByParams(receive_user_id, column_id, type);
         }
     }
 
