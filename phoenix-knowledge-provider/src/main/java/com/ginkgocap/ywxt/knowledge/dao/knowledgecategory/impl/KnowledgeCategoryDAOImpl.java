@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.impl;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,28 +16,27 @@ import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper; 
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.UserCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * @author caihe
  * 
  */
 @Component("knowledgeCategoryDAO")
-public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
-		KnowledgeCategoryDAO {
+public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 
 	@Autowired
 	private UserCategoryDao userCategoryDao;
 
 	@Autowired
 	private KnowledgeContentDAO knowledgeContentDAO;
- 
 
 	@Resource
 	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
