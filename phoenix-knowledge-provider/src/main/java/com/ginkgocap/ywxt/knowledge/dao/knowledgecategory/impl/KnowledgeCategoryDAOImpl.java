@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +18,7 @@ import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
-import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryTestMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper; 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.model.UserCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
@@ -46,9 +45,7 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 
 	@Autowired
 	private KnowledgeContentDAO knowledgeContentDAO;
-
-	@Resource
-	private UserCategoryTestMapper userCategoryTestMapper;
+ 
 
 	@Resource
 	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;

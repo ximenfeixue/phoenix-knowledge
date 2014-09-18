@@ -1,8 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory;
 
-import java.util.Date;
-
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+import java.util.Date; 
+ 
 
 public interface KnowledgeCategoryDAO {
 	/**

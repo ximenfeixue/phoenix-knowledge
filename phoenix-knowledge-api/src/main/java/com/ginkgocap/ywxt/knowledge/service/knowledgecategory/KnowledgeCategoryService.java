@@ -1,8 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecategory;
 
-import java.util.Date;
-
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+import java.util.Date; 
+ 
 
 /**
  * 知识相关的关系表

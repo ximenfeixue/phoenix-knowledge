@@ -1,12 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecategory.impl;
 
-import java.util.Date;
+import java.util.Date; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO; 
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 
 @Service("knowledgeCategoryService")
