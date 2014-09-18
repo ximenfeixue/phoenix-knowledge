@@ -52,7 +52,7 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 		update.set("pic", k.getPic());
 		update.set("report_status", k.getReport_status());
 		update.set("s_addr", k.getS_addr());
-		update.set("sid", k.getSid());
+		update.set("source", k.getSource());
 		update.set("status", k.getStatus());
 		update.set("taskid", k.getTaskid());
 		update.set("title", k.getTitle());

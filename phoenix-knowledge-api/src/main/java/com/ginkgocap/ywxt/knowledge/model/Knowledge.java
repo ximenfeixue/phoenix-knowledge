@@ -28,7 +28,7 @@ public class Knowledge {
 	private String cname;
 
 	// 来源
-	private String sid;
+	private String source;
 
 	// 来源地址
 	private String s_addr;
@@ -127,12 +127,12 @@ public class Knowledge {
 		this.cname = cname;
 	}
 
-	public String getSid() {
-		return sid;
+	public String getSource() {
+		return source;
 	}
 
-	public void setSid(String sid) {
-		this.sid = sid;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getS_addr() {

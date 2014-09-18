@@ -76,7 +76,7 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 			update.set("uname", knowledge.getUname());
 			update.set("cid", knowledge.getCid());
 			update.set("cname", knowledge.getCname());
-			update.set("sid", knowledge.getSid());
+			update.set("source", knowledge.getSource());
 			update.set("s_addr", knowledge.getS_addr());
 			update.set("cpathid", knowledge.getCpathid());
 			update.set("pic", knowledge.getPic());
