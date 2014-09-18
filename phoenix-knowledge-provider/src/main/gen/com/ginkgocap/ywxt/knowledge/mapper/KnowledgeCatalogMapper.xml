@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCatalogMapper" >
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="knowledgeid" property="knowledgeid" jdbcType="BIGINT" />
+    <result column="catalog_name" property="catalogName" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="knowledge_type" property="knowledgeType" jdbcType="INTEGER" />
+    <result column="level_path" property="levelPath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, knowledgeid, catalog_name, pid, level, knowledge_type, level_path
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_knowledge_catalog
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+      <if test="limitStart >= 0 and limitEnd>= 0" >
+        limit #{limitStart}, #{limitEnd}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_knowledge_catalog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_knowledge_catalog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalogExample" >
+    delete from tb_knowledge_catalog
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalog" >
+    insert into tb_knowledge_catalog (id, knowledgeid, catalog_name, 
+      pid, level, knowledge_type, 
+      level_path)
+    values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{catalogName,jdbcType=VARCHAR}, 
+      #{pid,jdbcType=BIGINT}, #{level,jdbcType=INTEGER}, #{knowledgeType,jdbcType=INTEGER}, 
+      #{levelPath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalog" >
+    insert into tb_knowledge_catalog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="knowledgeid != null" >
+        knowledgeid,
+      </if>
+      <if test="catalogName != null" >
+        catalog_name,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="knowledgeType != null" >
+        knowledge_type,
+      </if>
+      <if test="levelPath != null" >
+        level_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeid != null" >
+        #{knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="catalogName != null" >
+        #{catalogName,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="knowledgeType != null" >
+        #{knowledgeType,jdbcType=INTEGER},
+      </if>
+      <if test="levelPath != null" >
+        #{levelPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalogExample" resultType="java.lang.Integer" >
+    select count(*) from tb_knowledge_catalog
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_knowledge_catalog
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.knowledgeid != null" >
+        knowledgeid = #{record.knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="record.catalogName != null" >
+        catalog_name = #{record.catalogName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pid != null" >
+        pid = #{record.pid,jdbcType=BIGINT},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=INTEGER},
+      </if>
+      <if test="record.knowledgeType != null" >
+        knowledge_type = #{record.knowledgeType,jdbcType=INTEGER},
+      </if>
+      <if test="record.levelPath != null" >
+        level_path = #{record.levelPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_knowledge_catalog
+    set id = #{record.id,jdbcType=BIGINT},
+      knowledgeid = #{record.knowledgeid,jdbcType=BIGINT},
+      catalog_name = #{record.catalogName,jdbcType=VARCHAR},
+      pid = #{record.pid,jdbcType=BIGINT},
+      level = #{record.level,jdbcType=INTEGER},
+      knowledge_type = #{record.knowledgeType,jdbcType=INTEGER},
+      level_path = #{record.levelPath,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalog" >
+    update tb_knowledge_catalog
+    <set >
+      <if test="knowledgeid != null" >
+        knowledgeid = #{knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="catalogName != null" >
+        catalog_name = #{catalogName,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="knowledgeType != null" >
+        knowledge_type = #{knowledgeType,jdbcType=INTEGER},
+      </if>
+      <if test="levelPath != null" >
+        level_path = #{levelPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCatalog" >
+    update tb_knowledge_catalog
+    set knowledgeid = #{knowledgeid,jdbcType=BIGINT},
+      catalog_name = #{catalogName,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=BIGINT},
+      level = #{level,jdbcType=INTEGER},
+      knowledge_type = #{knowledgeType,jdbcType=INTEGER},
+      level_path = #{levelPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
