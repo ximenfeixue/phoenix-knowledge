@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.columnknowledge.ColumnKnowledgeDAO;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeValueMapper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -34,6 +35,9 @@ public class ColumnKnowledgeDAOImpl extends SqlMapClientDaoSupport implements
 	@Resource
 	private ColumnKnowledgeMapper columnKnowledgeMapper;
 
+	@Resource
+	private ColumnKnowledgeValueMapper columnKnowledgeValueMapper;
+
 	@Override
 	public int insertColumnKnowledge(ColumnKnowledge columnKnowledge) {
 
@@ -44,16 +48,8 @@ public class ColumnKnowledgeDAOImpl extends SqlMapClientDaoSupport implements
 	@Override
 	public int deleteColumnKnowledge(long[] knowledgeids, long columnid) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (knowledgeids.length > 0) {
-			map.put("knowledgeids", knowledgeids);
-		}
-		if (columnid > 0) {
-			map.put("column_id", columnid);
-		}
-		int count = getSqlMapClientTemplate().delete(
-				"tb_column_knowledge.delete", map);
-		return count;
+		return columnKnowledgeValueMapper.deleteKnowledge(knowledgeids,
+				columnid);
 	}
 
 }

@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.statics;
 
 import java.util.List;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 
 public interface KnowledgeStaticsDAO {
 
@@ -12,12 +12,15 @@ public interface KnowledgeStaticsDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
-	   /**
-     * 根据类型查询评论排行
-     * @param type 栏目类型
-     * @return
-     */
-    List<KnowledgeStatics>selectRankList(int type);
+	int insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
+
+	/**
+	 * 根据知识ID查询数据
+	 * 
+	 * @param type
+	 *            栏目类型
+	 * @return
+	 */
+	KnowledgeStatics selectByknowledgeId(long knowledgeid);
 
 }

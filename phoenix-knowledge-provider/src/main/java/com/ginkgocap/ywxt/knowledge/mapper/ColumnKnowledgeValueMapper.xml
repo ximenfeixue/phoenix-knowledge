@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeValueMapper" >
+ 
+ <delete id="deleteKnowledge">
+  delete from tb_column_knowledge
+     where  column_id=#{columnid} 
+     and  knowledge_id in 
+     <foreach item="knowledgeids" collection="knowledgeids" open="(" separator="," close=")">
+     #{knowledgeids}
+ 	</foreach>
+ </delete>
+</mapper>

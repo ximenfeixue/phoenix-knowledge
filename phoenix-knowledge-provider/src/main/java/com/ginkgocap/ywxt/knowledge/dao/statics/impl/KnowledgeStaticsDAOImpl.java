@@ -1,25 +1,17 @@
 package com.ginkgocap.ywxt.knowledge.dao.statics.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
-import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.statics.KnowledgeStaticsDAO;
-import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
-import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -38,18 +30,20 @@ public class KnowledgeStaticsDAOImpl extends SqlMapClientDaoSupport implements
 		super.setSqlMapClient(sqlMapClient);
 	}
 
+	@Resource
+	private KnowledgeStaticsMapper knowledgeStaticsMapper;
+
 	@Override
-	public void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics) {
-		
-		getSqlMapClientTemplate().insert("tb_knowledge_statics.insert",
-				knowledgeStatics);
+	public int insertKnowledgeStatics(KnowledgeStatics knowledgeStatics) {
+
+		return knowledgeStaticsMapper.insertSelective(knowledgeStatics);
 
 	}
 
-    @Override
-    public List<KnowledgeStatics> selectRankList(int type) {
-       return getSqlMapClientTemplate().queryForList("tb_knowledge_statics.selectRankList",
-                type);
-    }
+	@Override
+	public KnowledgeStatics selectByknowledgeId(long knowledgeid) {
+
+		return knowledgeStaticsMapper.selectByPrimaryKey(knowledgeid);
+	}
 
 }

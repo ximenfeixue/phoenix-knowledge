@@ -42,4 +42,13 @@ public class KnowledgeCategoryServiceTest extends TestBase {
 				"测试标题", "author", 6, "share_author", new Date(), "标签",
 				"know_desc", 11, "D:\\pic.png");
 	}
+
+	@Test
+	public void testdeleteKnowledgeR() {
+
+		long[] knowledgeids = { 14 };
+		long categoryid = 1;
+		System.out.println(knowledgeCategoryService.deleteKnowledgeRCategory(
+				knowledgeids, categoryid));
+	}
 }

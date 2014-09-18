@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
 /**
  * 知识相关的关系表
  * 
- * @author liuyang
+ * @author caihe
  * 
  */
 public interface KnowledgeCategoryService {

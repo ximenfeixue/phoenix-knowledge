@@ -24,5 +24,12 @@
     </foreach>  
  </insert>
  
- <delete id="delete"></delete>
+ <delete id="deleteKnowledge">
+  delete from tb_knowledge_category 
+     where  category_id=#{categoryid} 
+     and  knowledge_id in 
+     <foreach item="knowledgeids" collection="knowledgeids" open="(" separator="," close=")">
+     #{knowledgeids}
+ 	</foreach>
+ </delete>
 </mapper>

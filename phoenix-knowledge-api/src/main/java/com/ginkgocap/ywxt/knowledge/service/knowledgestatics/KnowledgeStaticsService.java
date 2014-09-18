@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.knowledgestatics;
 
 import java.util.List;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 
 /**
  * 知识统计
@@ -18,13 +18,15 @@ public interface KnowledgeStaticsService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
-	
+	int insertKnowledgeStatics(KnowledgeStatics knowledgeStatics);
+
 	/**
-	 * 根据类型查询评论排行
-	 * @param type 栏目类型
+	 * 根据知识ID查询数据
+	 * 
+	 * @param type
+	 *            栏目类型
 	 * @return
 	 */
-	List<KnowledgeStatics>selectRankList(int type);
+	KnowledgeStatics selectByknowledgeId(long knowledgeid);
 
 }

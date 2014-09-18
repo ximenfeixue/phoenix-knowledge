@@ -48,10 +48,10 @@ public class ColumnKnowledgeTest extends TestBase {
 
 		ColumnKnowledge columnKnowledge = new ColumnKnowledge();
 
-		long[] knowledgeids = { 1, 2 };
+		long[] knowledgeids = { 21 };
 
 		System.out.println(columnKnowledgeService.deleteColumnKnowledge(
-				knowledgeids, 1));
+				knowledgeids, 111));
 	}
 
 }
