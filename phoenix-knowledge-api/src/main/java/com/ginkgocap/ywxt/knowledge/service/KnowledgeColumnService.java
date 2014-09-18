@@ -3,7 +3,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
+ 
 
 /** 
  * <p>知识栏目操作接口</p>  
@@ -16,16 +17,16 @@ public interface KnowledgeColumnService {
     /**
      * saveOrUpdate <p>(保存知识栏目)</p>    
      * @param kc
-     * @return knowledgeColumn
+     * @return Column
      */
-    public KnowledgeColumn saveOrUpdate(KnowledgeColumn kc);
+    public Column saveOrUpdate(Column kc);
     
     /**
      * queryById <p>(查询栏目)</p>      
      * @param id id
      * @return 知识栏目
      */
-    public KnowledgeColumn queryById(long id); 
+    public Column queryById(long id); 
     
     /**
      * isExist <p>(是否存在)</p>      
@@ -47,25 +48,25 @@ public interface KnowledgeColumnService {
      * @param createUserId 创建者名称
      * @return 栏目列表
      */
-    public List<KnowledgeColumn> queryByParentId(int parentColumnId,int createUserId);
+    public List<Column> queryByParentId(int parentColumnId,int createUserId);
     /**
      * queryByUserId  查询用户创建的所有栏目
      * @param createUserId 用户id
      * @return 用户创建的所有栏目列表
      */
-    public List<KnowledgeColumn> queryByUserId(long createUserId);
+    public List<Column> queryByUserId(long createUserId);
     /**
      * queryByUserId  查询用户订阅的所有栏目
      * @param createUserId 用户id
      * @return 用户订阅的所有栏目列表
      */
-    public List<KnowledgeColumn> querySubByUserId(long createUserId);
+    public List<Column> querySubByUserId(long createUserId);
     /**
      * queryByUserId  查询系统所有可订阅的栏目
      * @param systemId 系统用户id
      * @return 系统栏目列表
      */
-    public List<KnowledgeColumn> querySubBySystem(long systemId);
+    public List<Column> querySubBySystem(long systemId);
     
     /**
      * queryByUserId  查询用户创建的所有栏目和系统栏目
@@ -73,19 +74,19 @@ public interface KnowledgeColumnService {
      * @param systemId 系统用户id
      * @return 用户创建的所有栏目和系统栏目列表
      */
-    public List<KnowledgeColumn> queryByUserIdAndSystem(long createUserId,long systemId);
+    public List<Column> queryByUserIdAndSystem(long createUserId,long systemId);
     
     /**
      * queryAll 查询所有未删除的栏目
      * @return 所有栏目列表
      */
-    public List<KnowledgeColumn> queryAll();
+    public List<Column> queryAll();
     
     /**
      * queryAll 查询所有已删除的栏目
      * @return 所有已删除栏目列表
      */
-    public List<KnowledgeColumn> queryAllDel();
+    public List<Column> queryAllDel();
     
     /**
      * recoverOneKC 恢复一个已删除的栏目
@@ -114,5 +115,5 @@ public interface KnowledgeColumnService {
      * @param id 栏目id
      * @return
      */
-    List<KnowledgeColumn> selectFullPath(long id);
+    List<Column> selectFullPath(long id);
 }

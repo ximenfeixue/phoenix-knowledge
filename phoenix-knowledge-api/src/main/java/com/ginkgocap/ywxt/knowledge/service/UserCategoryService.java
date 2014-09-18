@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.List;
+import java.util.List; 
 
-import com.ginkgocap.ywxt.knowledge.model.UserCategory;
-
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+ 
 /**
  * 知识目录左树  
  * <p>于2014-9-16 由 bianzhiwei 创建 </p>

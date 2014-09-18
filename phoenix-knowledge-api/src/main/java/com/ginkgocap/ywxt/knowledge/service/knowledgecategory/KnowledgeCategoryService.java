@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * 知识相关的关系表
- * 
+ *  
  * @author caihe
  * 
  */
