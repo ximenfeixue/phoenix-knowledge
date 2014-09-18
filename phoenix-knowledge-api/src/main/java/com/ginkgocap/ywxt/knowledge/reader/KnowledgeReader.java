@@ -8,4 +8,9 @@ public interface KnowledgeReader {
 	User getUserInfo(long userid);
 	
 	KnowledgeStatics getKnowledgeStatusCount(long kid);
+	
+	boolean isExistFriends(long loginuserid,long kuid); 
+	
+	boolean showHeadTag(long kid,short type);
+	
 }
