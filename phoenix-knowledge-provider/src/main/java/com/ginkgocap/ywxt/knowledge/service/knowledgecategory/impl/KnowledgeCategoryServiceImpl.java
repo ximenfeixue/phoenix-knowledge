@@ -16,11 +16,11 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
 
 	@Override
-	public void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
 			long userid, String title, String author, int path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path) {
-		knowledgeBetweenDAO.insertKnowledgeRCategory(knowledgeid, categoryid,
+		return knowledgeBetweenDAO.insertKnowledgeRCategory(knowledgeid, categoryid,
 				userid, title, author, path, share_author, createtime, tag,
 				know_desc, column_id, pic_path);
 	}

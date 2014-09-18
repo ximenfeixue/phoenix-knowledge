@@ -13,7 +13,7 @@ public class Knowledge {
 	private long id;
 
 	// 标题
-	private String title;  
+	private String title;
 
 	// 作者
 	private long uid;
@@ -64,6 +64,17 @@ public class Knowledge {
 
 	// 附件ID
 	private long taskid;
+
+	// 标签
+	private String tag;
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	// 高亮状态（0-未加 1-已加）
 	private int ish;

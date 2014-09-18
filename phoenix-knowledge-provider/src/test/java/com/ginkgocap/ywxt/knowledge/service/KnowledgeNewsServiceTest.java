@@ -17,6 +17,7 @@ import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
 import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 /**
  * 知识测试类
@@ -70,6 +71,7 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		knowledge.setTaskid(123);
 		knowledge.setStatus(4);
 		knowledge.setReport_status(0);
+		knowledge.setTag("不知道,不知道");
 		long[] categoryid = { 1, 2 };
 
 		long[] receive_uid = { 1, 2 };
@@ -77,24 +79,35 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		KnowledgeNews knowresult = knowledgeNewsService
 				.insertknowledge(knowledge);
 		if (knowresult != null && knowresult.getId() > 0) {
-			userPermissionService.insertUserPermission(receive_uid,
-					knowresult.getId(), 123, 1, "mento", 111);
-			knowledgeCategoryService.insertKnowledgeRCategory(
-					knowresult.getId(), categoryid, 111, "测试标题", "author", 6,
-					"share_author", new Date(), "标签", "know_desc", 11,
-					"D:\\pic.png");
-
-			ColumnKnowledge columnKnowledge = new ColumnKnowledge();
-			columnKnowledge.setColumnId((long) 111);
-			columnKnowledge.setKnowledgeId((long) 21);
-			columnKnowledge.setType((short) 1);
-			columnKnowledge.setUserId(knowresult.getId());
-			count = columnKnowledgeService
-					.insertColumnKnowledge(columnKnowledge);
+			count = userPermissionService.insertUserPermission(receive_uid,
+					knowresult.getId(), 123, 1, "mento", (short) 111);
 			if (count > 0) {
+				count = knowledgeCategoryService.insertKnowledgeRCategory(
+						knowresult.getId(), categoryid, 111, "测试标题", "author",
+						6, "share_author", new Date(), "标签", "know_desc", 11,
+						"D:\\pic.png");
+				if (count > 0) {
+					ColumnKnowledge columnKnowledge = new ColumnKnowledge();
+					columnKnowledge.setColumnId((long) 111);
+					columnKnowledge.setKnowledgeId((long) 21);
+					columnKnowledge
+							.setType((short) Constants.KnowledgeType.NEWS.v());
+					columnKnowledge.setUserId(knowresult.getId());
+					count = columnKnowledgeService
+							.insertColumnKnowledge(columnKnowledge);
+					if (count > 0) {
 
-				System.out.println("成功");
+						System.out.println("成功");
+					} else {
+						System.out.println("栏目失败");
+					}
+				} else {
+					System.out.println("目录失败");
+				}
+			} else {
+				System.out.println("权限失败");
 			}
+
 		}
 	}
 
@@ -134,9 +147,10 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		System.out.println(knowledgeNews.getContent());
 
 	}
+
 	@Test
 	public void selectByParam() {
-	    knowledgeNewsService.selectByParam(1l, 1, 1l, null, 2, 10);
-	    
+		knowledgeNewsService.selectByParam(1l, 1, 1l, null, 2, 10);
+
 	}
 }

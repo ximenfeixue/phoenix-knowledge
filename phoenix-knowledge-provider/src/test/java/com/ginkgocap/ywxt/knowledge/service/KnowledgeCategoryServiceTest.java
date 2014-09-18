@@ -35,11 +35,11 @@ public class KnowledgeCategoryServiceTest extends TestBase {
 	private KnowledgeCategoryService knowledgeCategoryService;
 
 	@Test
-	public void testdeleteKnowledgeR() {
+	public void testinsertKnowledgeR() {
 
-		long[] knowledgeids = { 1, 2 };
-		long categoryid = 3;
-		System.out.println(knowledgeCategoryService.deleteKnowledgeRCategory(
-				knowledgeids, categoryid));
+		long[] categoryid = { 1, 2 };
+		knowledgeCategoryService.insertKnowledgeRCategory(11, categoryid, 111,
+				"测试标题", "author", 6, "share_author", new Date(), "标签",
+				"know_desc", 11, "D:\\pic.png");
 	}
 }

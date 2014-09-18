@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledtag.KnowledgeTagDAO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeTag;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeTagMapper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -37,11 +39,13 @@ public class KnowledgeTagDAOImpl extends SqlMapClientDaoSupport implements
 	@Autowired
 	private KnowledgeContentDAO knowledgeContentDAO;
 
-	@Override
-	public void insertKnowledgeTag(KnowledgeTag knowledge) {
+	@Resource
+	private KnowledgeTagMapper knowledgeTagMapper;
 
-		getSqlMapClientTemplate().insert("tb_knowledge_tag.insert",
-				knowledge);
+	@Override
+	public int insertKnowledgeTag(KnowledgeTag knowledge) {
+
+		return knowledgeTagMapper.insertSelective(knowledge);
 
 	}
 

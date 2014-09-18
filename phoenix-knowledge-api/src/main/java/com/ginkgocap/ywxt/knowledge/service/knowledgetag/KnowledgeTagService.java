@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgetag;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeTag;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 
 /**
  * 知识栏目关系
@@ -16,7 +16,7 @@ public interface KnowledgeTagService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeTag(KnowledgeTag knowledgeTag);
+	int  insertKnowledgeTag(KnowledgeTag knowledgeTag);
 
 	/**
 	 * 刪除知识，把知识标签中间表删除

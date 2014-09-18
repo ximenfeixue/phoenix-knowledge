@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryTestMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.model.UserCategory;
@@ -48,32 +50,35 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 	@Resource
 	private UserCategoryTestMapper userCategoryTestMapper;
 
+	@Resource
+	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
+
 	private CategoryHelper helper = new CategoryHelper();
 
 	@Override
-	public void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
 			long userid, String title, String author, int path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path) {
-		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
-		KnowledgeRCategory knowledgeRCategory = null;
+		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
+		KnowledgeCategory knowledgeRCategory = null;
 		for (int k = 0; k < categoryid.length; k++) {
 			UserCategory category = userCategoryDao
 					.selectByPrimaryKey(categoryid[k]);
 			if (category != null) {
-				knowledgeRCategory = new KnowledgeRCategory();
-				knowledgeRCategory.setKnowledgeid(knowledgeid);
-				knowledgeRCategory.setCategoryid(categoryid[k]);
-				knowledgeRCategory.setUserid(userid);
+				knowledgeRCategory = new KnowledgeCategory();
+				knowledgeRCategory.setKnowledgeId((long) knowledgeid);
+				knowledgeRCategory.setCategoryId(categoryid[k]);
+				knowledgeRCategory.setUserId((long) userid);
 				knowledgeRCategory.setTitle(title);
 				knowledgeRCategory.setAuthor(author);
-				knowledgeRCategory.setPath(path);
-				knowledgeRCategory.setShare_author(share_author);
+				knowledgeRCategory.setPath((short) path);
+				knowledgeRCategory.setShareAuthor(share_author);
 				knowledgeRCategory.setCreatetime(createtime);
 				knowledgeRCategory.setTag(tag);
-				knowledgeRCategory.setKnow_desc(know_desc);
-				knowledgeRCategory.setColumn_id(column_id);
-				knowledgeRCategory.setPic_path(pic_path);
+				knowledgeRCategory.setcDesc(know_desc);
+				knowledgeRCategory.setColumnId((long) column_id);
+				knowledgeRCategory.setPicPath(pic_path);
 				try {
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();
@@ -95,9 +100,9 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 						}
 						// 通过已添加的最大的SortId生成新的SortId
 						// 设置最新的sortId
-						knowledgeRCategory.setSortId(newSortId);
+						knowledgeRCategory.setSortid(newSortId);
 					} else {
-						knowledgeRCategory.setSortId(category.getSortId());
+						knowledgeRCategory.setSortid(category.getSortId());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -108,8 +113,7 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 			}
 
 		}
-		getSqlMapClientTemplate().insert("tb_knowledge_category.batchInsert",
-				list);
+		return knowledgeCategoryValueMapper.batchInsert(list);
 
 	}
 

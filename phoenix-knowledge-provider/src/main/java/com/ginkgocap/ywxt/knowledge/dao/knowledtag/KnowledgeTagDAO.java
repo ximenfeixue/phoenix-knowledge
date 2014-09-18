@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledtag;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeTag;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 
 public interface KnowledgeTagDAO {
 	/**
@@ -9,7 +9,7 @@ public interface KnowledgeTagDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeTag(KnowledgeTag knowledge);
+	int  insertKnowledgeTag(KnowledgeTag knowledge);
 	
 	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
 }

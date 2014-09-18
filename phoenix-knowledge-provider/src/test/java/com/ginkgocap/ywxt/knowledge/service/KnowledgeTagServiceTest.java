@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeTag;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgetag.KnowledgeTagService;
 
@@ -31,11 +31,6 @@ public class KnowledgeTagServiceTest extends TestBase {
 	public void testinsertKnowledgeTag() {
 
 		KnowledgeTag knowledge = new KnowledgeTag();
-		knowledge.setColumn_id(1111);
-		knowledge.setKnowledge_id(22);
-		knowledge.setTag_id(222);
-		knowledge.setType("0");
-		knowledge.setUser_id(456);
 
 		knowledgeTagService.insertKnowledgeTag(knowledge);
 	}

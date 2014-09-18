@@ -1,12 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.List;
+import java.util.Date;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService;
 
 /**
@@ -30,14 +29,20 @@ public class UserPermissionTest extends TestBase {
 	private UserPermissionService userPermissionService;
 
 	@Test
-	public void selectcolumnknowledge() throws Exception {
+	public void insertUserPermission() throws Exception {
 
+		long[] receive_uid = { 1, 2 };
+		long knowledgeid = 1;
+		long send_uid = 1;
+		int type = 1;
+		String mento = "12";
+		short column_id = 1;
+		Date createtime=new Date();
 
-		List<Long> list = userPermissionService.selectByreceive_user_id(2, 0);
+		int count = userPermissionService.insertUserPermission(receive_uid,
+				knowledgeid, send_uid, type, mento, column_id);
 
-		for (Long l : list) {
-			System.out.println(l);
-		}
+		System.out.println("count : " + count);
 	}
 
 	@Test
@@ -53,8 +58,9 @@ public class UserPermissionTest extends TestBase {
 		System.out.println(userPermissionService.deleteUserPermission(
 				knowledgeids, userid));
 	}
+
 	@Test
-	public void selectByParams()  {
-	    userPermissionService.selectByParams(1l, 1l, 1l);
+	public void selectByParams() {
+		userPermissionService.selectByParams(1l, 1l, 1l);
 	}
 }

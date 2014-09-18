@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.userpermission.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public void insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento, long column_id) {
+	public int insertUserPermission(long[] receive_uid, long knowledgeid,
+			long send_uid, int type, String mento, short column_id) {
 
-		userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
+		return userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
 				send_uid, type, mento, column_id);
 	}
 
@@ -35,10 +36,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 		return userPermissionDAO.deleteUserPermission(knowledgeids, userid);
 	}
-	    
-    @Override
-    public List<Long> selectByParams(Long receive_user_id, Long column_id, Long type) {
-        return userPermissionDAO.selectByParams(receive_user_id, column_id, type);
-    }
+
+	@Override
+	public List<Long> selectByParams(Long receive_user_id, Long column_id,
+			Long type) {
+		return userPermissionDAO.selectByParams(receive_user_id, column_id,
+				type);
+	}
 
 }

@@ -18,7 +18,7 @@ public interface KnowledgeCategoryService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertKnowledgeRCategory(long knowledgeid, long categoryid[],
+	int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
 			long userid, String title, String author, int path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path);

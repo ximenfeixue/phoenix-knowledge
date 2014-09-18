@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper" >
+ 
+ 
+ <insert id="batchInsert" parameterType="java.util.List">
+ 
+ insert into tb_knowledge_category (
+			knowledge_id,
+			category_id,
+			sortid,
+			user_id,
+			title,
+			author,
+			path,share_author,createtime,tag,c_desc,column_id,pic_path
+			
+		) values 
+		 	<foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.knowledgeId},
+				 #{item.categoryId},
+				 #{item.sortid},
+				 #{item.userId}, #{item.title}, #{item.author}, #{item.path}, #{item.shareAuthor},
+				 #{item.createtime},#{item.tag},#{item.cDesc},#{item.columnId},#{item.picPath})  
+    </foreach>  
+ </insert>
+ 
+ <delete id="delete"></delete>
+</mapper>

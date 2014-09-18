@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.userpermission;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserPermissionDAO {
@@ -13,8 +14,8 @@ public interface UserPermissionDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	void insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento, long column_id);
+	int insertUserPermission(long[] receive_uid, long knowledgeid,
+			long send_uid, int type, String mento, short column_id);
 
 	/**
 	 * 刪除知识，把用户权限记录
