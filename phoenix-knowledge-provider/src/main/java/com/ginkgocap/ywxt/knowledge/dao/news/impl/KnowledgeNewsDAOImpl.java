@@ -58,7 +58,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").in(ids);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("status", Constants.KnowledgeStatus.Recyclebin.v());
+			update.set("status", Constants.Status.recycle.v());
 			mongoTemplate.updateFirst(query, update, KnowledgeNews.class);
 		}
 	}
@@ -73,7 +73,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
+			update.set("ststus", Constants.Status.checked.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());

@@ -54,7 +54,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").is(ids[i]);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("status", Constants.KnowledgeStatus.Recyclebin.v());
+			update.set("status", Constants.Status.recycle.v());
 			mongoTemplate.updateFirst(query, update, KnowledgeMacro.class);
 		}
 	}
@@ -69,7 +69,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
+			update.set("status", Constants.Status.checked.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());
