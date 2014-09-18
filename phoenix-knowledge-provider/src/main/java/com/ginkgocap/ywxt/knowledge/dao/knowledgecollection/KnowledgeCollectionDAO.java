@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecollection;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 
 public interface KnowledgeCollectionDAO {
 	/**
@@ -9,5 +9,5 @@ public interface KnowledgeCollectionDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	KnowledgeCollection insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
+	int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
 }

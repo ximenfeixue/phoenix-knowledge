@@ -59,14 +59,15 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public void moveCategoryBatch(long categoryid, long[] knowledgeids,
+	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 
 		int count = knowledgeBetweenDAO.deleteKnowledgeRCategory(knowledgeids,
 				categoryid);
 		if (count > 0) {
-			knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
+			return knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
 		}
+		return 0;
 	}
 
 	@Override

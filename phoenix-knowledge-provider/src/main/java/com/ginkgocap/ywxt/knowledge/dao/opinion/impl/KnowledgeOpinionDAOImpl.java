@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.opinion.KnowledgeOpinionDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -49,14 +50,14 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 	@Override
 	public void deleteKnowledge(long[] ids) {
 
-//		for (int i = 0; i < ids.length; i++) {
+		// for (int i = 0; i < ids.length; i++) {
 
-			Criteria criteria = Criteria.where("_id").is(ids);
-			Query query = new Query(criteria);
-			Update update = new Update();
-			update.set("status", "6");
-			mongoTemplate.updateMulti(query, update, KnowledgeOpinion.class);
-//		}
+		Criteria criteria = Criteria.where("_id").is(ids);
+		Query query = new Query(criteria);
+		Update update = new Update();
+		update.set("status", Constants.KnowledgeStatus.Recyclebin.v());
+		mongoTemplate.updateMulti(query, update, KnowledgeOpinion.class);
+		// }
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", "4");
+			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());

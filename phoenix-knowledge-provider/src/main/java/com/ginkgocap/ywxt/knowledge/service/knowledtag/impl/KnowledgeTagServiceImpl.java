@@ -18,10 +18,4 @@ public class KnowledgeTagServiceImpl implements KnowledgeTagService {
 		return knowledgeTagDAO.insertKnowledgeTag(knowledge);
 	}
 
-	@Override
-	public int deleteColumnKnowledge(long[] knowledgeids, long columnid) {
-	
-		return 0;
-	}
-
 }

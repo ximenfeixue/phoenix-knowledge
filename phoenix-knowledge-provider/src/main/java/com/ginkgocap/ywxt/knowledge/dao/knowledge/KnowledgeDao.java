@@ -49,7 +49,7 @@ public interface KnowledgeDao {
 	 * @param knowledgeid
 	 * @return
 	 */
-	void moveCategoryBatch(long knowledgeids[], long categoryids[]);
+	int moveCategoryBatch(long knowledgeids[], long categoryids[]);
 
 	/**
 	 * 新增知识(资讯，文章，宏观，资产管理，判例，观点)

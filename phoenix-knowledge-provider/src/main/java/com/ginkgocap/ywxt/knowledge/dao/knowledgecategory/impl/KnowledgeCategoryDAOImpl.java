@@ -2,9 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.impl;
 
 import java.util.ArrayList; 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -19,26 +17,20 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper; 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.UserCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * @author zhangwei
+ * @author caihe
  * 
  */
 @Component("knowledgeCategoryDAO")
 public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 		KnowledgeCategoryDAO {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
 
 	@Autowired
 	private UserCategoryDao userCategoryDao;
@@ -49,6 +41,9 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 
 	@Resource
 	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
+
+	@Resource
+	private KnowledgeCategoryMapper knowledgeCategoryMapper;
 
 	private CategoryHelper helper = new CategoryHelper();
 
@@ -123,9 +118,13 @@ public class KnowledgeCategoryDAOImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public long countByKnowledgeCategoryId(long id) {
-		return (Long) getSqlMapClientTemplate().queryForObject(
-				"tb_knowledge_category.countByKnowledgeCategoryId", id);
+	public int countByKnowledgeCategoryId(long categoryid) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		if (categoryid > 0) {
+			criteria.andCategoryIdEqualTo(categoryid);
+		}
+		return knowledgeCategoryMapper.countByExample(example);
 	}
 
 }

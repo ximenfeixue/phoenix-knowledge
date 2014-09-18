@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecollection;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 
 /**
- * 知识相关的关系表
+ * 知识收藏
  * 
  * @author caihe
  * 
@@ -16,14 +16,6 @@ public interface KnowledgeCollectionService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	KnowledgeCollection insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
+	int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
 
-	/**
-	 * 刪除知识，把知识目录中间表删除
-	 * 
-	 * @param knowledgeids
-	 * @param categoryid
-	 * @return
-	 */
-	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
 }

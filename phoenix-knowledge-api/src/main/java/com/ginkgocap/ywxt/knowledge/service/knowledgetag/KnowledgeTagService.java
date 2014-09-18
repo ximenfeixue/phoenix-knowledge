@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.knowledgetag;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 
 /**
- * 知识栏目关系
+ * 知识标签关系
  * 
  * @author
  * 
@@ -16,14 +16,6 @@ public interface KnowledgeTagService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int  insertKnowledgeTag(KnowledgeTag knowledgeTag);
+	int insertKnowledgeTag(KnowledgeTag knowledgeTag);
 
-	/**
-	 * 刪除知识，把知识标签中间表删除
-	 * 
-	 * @param knowledgeids
-	 * @param
-	 * @return
-	 */
-	int deleteColumnKnowledge(long[] knowledgeids, long userid);
 }

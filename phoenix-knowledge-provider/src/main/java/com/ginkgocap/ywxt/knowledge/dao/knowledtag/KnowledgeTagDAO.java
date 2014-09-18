@@ -9,7 +9,6 @@ public interface KnowledgeTagDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int  insertKnowledgeTag(KnowledgeTag knowledge);
-	
-	int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid);
+	int insertKnowledgeTag(KnowledgeTag knowledge);
+
 }

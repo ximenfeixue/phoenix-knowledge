@@ -77,7 +77,7 @@ public interface KnowledgeMainService {
 	 * @param knowledgeid
 	 * 
 	 */
-	void moveCategoryBatch(long categoryid, long knowledgeids[],
+	int moveCategoryBatch(long categoryid, long knowledgeids[],
 			long categoryids[]);
 
 	/**

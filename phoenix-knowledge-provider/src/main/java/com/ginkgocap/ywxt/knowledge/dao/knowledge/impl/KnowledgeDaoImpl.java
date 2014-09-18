@@ -19,14 +19,15 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeRCategory;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -55,6 +56,9 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	public void initSqlMapClient() {
 		super.setSqlMapClient(sqlMapClient);
 	}
+
+	@Resource
+	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
 
 	@Override
 	public int insert(Knowledge record) {
@@ -95,17 +99,17 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public void moveCategoryBatch(long[] knowledgeids, long[] categoryids) {
-		List<KnowledgeRCategory> list = new ArrayList<KnowledgeRCategory>();
-		KnowledgeRCategory knowledgeRCategory = null;
+	public int moveCategoryBatch(long[] knowledgeids, long[] categoryids) {
+		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
+		KnowledgeCategory knowledgeRCategory = null;
 		for (int i = 0; i < knowledgeids.length; i++) {
 			for (int k = 0; k < categoryids.length; k++) {
 				Category category = categoryDao
 						.selectByPrimaryKey(categoryids[k]);
 				if (category != null) {
-					knowledgeRCategory = new KnowledgeRCategory();
-					knowledgeRCategory.setKnowledgeid(knowledgeids[i]);
-					knowledgeRCategory.setCategoryid(categoryids[k]);
+					knowledgeRCategory = new KnowledgeCategory();
+					knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
+					knowledgeRCategory.setCategoryId(categoryids[k]);
 					try {
 						// 得到要添加的分类的父类parentId
 						long parentId = category.getParentId();
@@ -128,9 +132,9 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 							}
 							// 通过已添加的最大的SortId生成新的SortId
 							// 设置最新的sortId
-							knowledgeRCategory.setSortId(newSortId);
+							knowledgeRCategory.setSortid(newSortId);
 						} else {
-							knowledgeRCategory.setSortId(category.getSortId());
+							knowledgeRCategory.setSortid(category.getSortId());
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -142,8 +146,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 
 			}
 		}
-		getSqlMapClientTemplate().insert("tb_knowledge_category.batchInsert",
-				list);
+		return knowledgeCategoryValueMapper.batchInsert(list);
 	}
 
 	@Override
@@ -219,7 +222,7 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 
 		if (StringUtils.isNotBlank(knowledgetitle)) {
 
-			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
+			Criteria criteria = Criteria.where("title").is(knowledgetitle);
 			Query query = new Query(criteria);
 			List<KnowledgeIndustry> list = mongoTemplate.find(query,
 					KnowledgeIndustry.class);
@@ -255,7 +258,8 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	public int checkInvestmentNameRepeat(String knowledgetitle) {
 
 		if (StringUtils.isNotBlank(knowledgetitle)) {
-			Criteria criteria = Criteria.where("title").is(knowledgetitle).and("status").is(4);
+			Criteria criteria = Criteria.where("title").is(knowledgetitle)
+					.and("status").is(4);
 			Query query = new Query(criteria);
 			List<KnowledgeInvestment> list = mongoTemplate.find(query,
 					KnowledgeInvestment.class);

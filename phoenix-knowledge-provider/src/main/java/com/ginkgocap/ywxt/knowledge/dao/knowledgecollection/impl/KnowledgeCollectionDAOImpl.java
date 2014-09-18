@@ -1,13 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.impl;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.KnowledgeCollectionDAO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -26,22 +28,12 @@ public class KnowledgeCollectionDAOImpl extends SqlMapClientDaoSupport
 		super.setSqlMapClient(sqlMapClient);
 	}
 
+	@Resource
+	private KnowledgeCollectionMapper knowledgeCollectionMapper;
+
 	@Override
-	public KnowledgeCollection insertKnowledgeCollection(
-			KnowledgeCollection knowledgeCollection) {
-		try {
-			Long id = (Long) getSqlMapClientTemplate().insert(
-					"tb_knowledge_collection.insert", knowledgeCollection);
-			if (id != null) {
-				knowledgeCollection.setId(id);
-				return knowledgeCollection;
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+	public int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection) {
+		return knowledgeCollectionMapper.insertSelective(knowledgeCollection);
 	}
 
 }

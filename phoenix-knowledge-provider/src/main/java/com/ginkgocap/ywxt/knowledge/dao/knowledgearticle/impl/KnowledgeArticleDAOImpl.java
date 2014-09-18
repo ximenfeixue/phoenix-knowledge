@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgearticle.KnowledgeArticleDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -69,7 +70,7 @@ public class KnowledgeArticleDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", "4");
+			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());

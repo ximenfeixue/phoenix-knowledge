@@ -49,19 +49,4 @@ public class KnowledgeTagDAOImpl extends SqlMapClientDaoSupport implements
 
 	}
 
-	@Override
-	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (knowledgeids.length > 0) {
-			map.put("knowledgeids", knowledgeids);
-		}
-		if (categoryid > 0) {
-			map.put("categoryid", categoryid);
-		}
-		int count = getSqlMapClientTemplate().delete(
-				"tb_knowledge_category.delete", map);
-		return count;
-	}
-
 }

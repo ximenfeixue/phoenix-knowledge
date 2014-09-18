@@ -19,9 +19,9 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 			long userid, String title, String author, int path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path) {
-		return knowledgeBetweenDAO.insertKnowledgeRCategory(knowledgeid, categoryid,
-				userid, title, author, path, share_author, createtime, tag,
-				know_desc, column_id, pic_path);
+		return knowledgeBetweenDAO.insertKnowledgeRCategory(knowledgeid,
+				categoryid, userid, title, author, path, share_author,
+				createtime, tag, know_desc, column_id, pic_path);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				categoryid);
 	}
 
-    @Override
-    public long countByKnowledgeCategoryId(long id) {
-        return knowledgeBetweenDAO.countByKnowledgeCategoryId(id);
-    }
+	@Override
+	public int countByKnowledgeCategoryId(long categoryid) {
+		return knowledgeBetweenDAO.countByKnowledgeCategoryId(categoryid);
+	}
 
 }

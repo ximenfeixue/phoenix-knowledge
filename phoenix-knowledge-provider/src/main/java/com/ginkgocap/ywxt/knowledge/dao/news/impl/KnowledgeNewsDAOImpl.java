@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -57,7 +58,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").in(ids);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("status", "6");
+			update.set("status", Constants.KnowledgeStatus.Recyclebin.v());
 			mongoTemplate.updateFirst(query, update, KnowledgeNews.class);
 		}
 	}
@@ -72,7 +73,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", "4");
+			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());
@@ -102,21 +103,22 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		return mongoTemplate.findOne(query, KnowledgeNews.class);
 	}
 
-    @Override
-    public List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid, List<Long> ids,int page ,int size) {
-        Criteria criteria1 = new Criteria().is(userid);
-        Criteria criteria2 = new Criteria();
-        if(ids!=null){
-            criteria2.and("_id").in(ids);
-        }
-        Criteria criteriaall = new Criteria();
-        criteriaall.orOperator(criteria1,criteria2);
-        Query query = new Query(criteriaall);
-        query.sort().on("createtime", Order.DESCENDING);
-        long count = mongoTemplate.count(query, KnowledgeNews.class);
-        PageUtil p = new PageUtil((int) count, page, size);
-        query.limit(p.getPageStartRow() - 1);
-        query.skip(size);
-        return mongoTemplate.find(query, KnowledgeNews.class);
-    }
+	@Override
+	public List<KnowledgeNews> selectByParam(Long columnid, long source,
+			Long userid, List<Long> ids, int page, int size) {
+		Criteria criteria1 = new Criteria().is(userid);
+		Criteria criteria2 = new Criteria();
+		if (ids != null) {
+			criteria2.and("_id").in(ids);
+		}
+		Criteria criteriaall = new Criteria();
+		criteriaall.orOperator(criteria1, criteria2);
+		Query query = new Query(criteriaall);
+		query.sort().on("createtime", Order.DESCENDING);
+		long count = mongoTemplate.count(query, KnowledgeNews.class);
+		PageUtil p = new PageUtil((int) count, page, size);
+		query.limit(p.getPageStartRow() - 1);
+		query.skip(size);
+		return mongoTemplate.find(query, KnowledgeNews.class);
+	}
 }

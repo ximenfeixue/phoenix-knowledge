@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.macro.KnowledgeMacroDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -53,7 +54,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 			Criteria criteria = Criteria.where("_id").is(ids[i]);
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("status", "6");
+			update.set("status", Constants.KnowledgeStatus.Recyclebin.v());
 			mongoTemplate.updateFirst(query, update, KnowledgeMacro.class);
 		}
 	}
@@ -68,7 +69,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", "4");
+			update.set("ststus", Constants.KnowledgeStatus.auditthrough.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());
