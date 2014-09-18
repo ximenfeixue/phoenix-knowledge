@@ -90,8 +90,8 @@ public class KnowledgeNewsServiceTest extends TestBase {
 					ColumnKnowledge columnKnowledge = new ColumnKnowledge();
 					columnKnowledge.setColumnId((long) 111);
 					columnKnowledge.setKnowledgeId((long) 21);
-					columnKnowledge
-							.setType((short) Constants.KnowledgeType.NEWS.v());
+//					columnKnowledge
+//							.setType((short) Constants.KnowledgeType.NEWS.v());
 					columnKnowledge.setUserId(knowresult.getId());
 					count = columnKnowledgeService
 							.insertColumnKnowledge(columnKnowledge);

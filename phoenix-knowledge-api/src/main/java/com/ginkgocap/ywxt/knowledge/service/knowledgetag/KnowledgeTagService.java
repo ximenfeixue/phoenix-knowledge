@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgetag;
 
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
+//import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 
 /**
  * 知识标签关系
@@ -16,6 +16,6 @@ public interface KnowledgeTagService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertKnowledgeTag(KnowledgeTag knowledgeTag);
+	//int insertKnowledgeTag(KnowledgeTag knowledgeTag);
 
 }

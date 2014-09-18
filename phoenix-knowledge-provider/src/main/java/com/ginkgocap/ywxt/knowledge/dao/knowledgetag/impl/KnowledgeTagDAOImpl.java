@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgetag.impl;
 
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledtag.KnowledgeTagDAO;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeTagMapper;
+
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -25,28 +24,28 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class KnowledgeTagDAOImpl extends SqlMapClientDaoSupport implements
 		KnowledgeTagDAO {
 
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
-
-	@Autowired
-	private CategoryDao categoryDao;
-
-	@Autowired
-	private KnowledgeContentDAO knowledgeContentDAO;
-
-	@Resource
-	private KnowledgeTagMapper knowledgeTagMapper;
-
-	@Override
-	public int insertKnowledgeTag(KnowledgeTag knowledge) {
-
-		return knowledgeTagMapper.insertSelective(knowledge);
-
-	}
+//	@Autowired
+//	SqlMapClient sqlMapClient;
+//
+//	@PostConstruct
+//	public void initSqlMapClient() {
+//		super.setSqlMapClient(sqlMapClient);
+//	}
+//
+//	@Autowired
+//	private CategoryDao categoryDao;
+//
+//	@Autowired
+//	private KnowledgeContentDAO knowledgeContentDAO;
+//
+//	@Resource
+//	private KnowledgeTagMapper knowledgeTagMapper;
+//
+//	@Override
+//	public int insertKnowledgeTag(KnowledgeTag knowledge) {
+//
+//		return knowledgeTagMapper.insertSelective(knowledge);
+//
+//	}
 
 }

@@ -1,12 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.service.userpermission.impl;
 
-import java.util.Date;
+ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.userpermission.UserPermissionService;
 
 @Service("userpermissionService")
@@ -14,6 +15,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Autowired
 	private UserPermissionDAO userPermissionDAO;
+	@Autowired
+	private UserPermissionValueMapper userPermissionValueMapper;
 
 	@Override
 	public List<Long> selectByreceive_user_id(long receive_user_id,
@@ -40,8 +43,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public List<Long> selectByParams(Long receive_user_id, Long column_id,
 			Long type) {
-		return userPermissionDAO.selectByParams(receive_user_id, column_id,
-				type);
-	}
+        if (type == -1) {
+            return userPermissionValueMapper.selectByParamsSingle(receive_user_id, column_id);
+        } else {
+            return userPermissionValueMapper.selectByParams(receive_user_id, column_id, type);
+        }
+    }
 
 }

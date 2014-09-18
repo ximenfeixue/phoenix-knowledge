@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.statics.KnowledgeStaticsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService;
 
 @Service("knowledgeStaticsService")
@@ -14,6 +15,9 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 
 	@Autowired
 	private KnowledgeStaticsDAO knowledgeStaticsDAO;
+	
+	@Autowired
+	private KnowledgeStaticsMapper knowledgeStaticsMapper;
 
 	@Override
 	public int insertKnowledgeStatics(KnowledgeStatics knowledgeStatics) {
@@ -22,8 +26,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 
 	@Override
 	public KnowledgeStatics selectByknowledgeId(long knowledgeid) {
-
-		return knowledgeStaticsDAO.selectByknowledgeId(knowledgeid);
+		return knowledgeStaticsMapper.selectByPrimaryKey(knowledgeid);
 	}
 
 }

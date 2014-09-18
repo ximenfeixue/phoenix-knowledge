@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryTest;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
 import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
@@ -63,10 +62,10 @@ public class MybatisKnowledgeCategoryServiceTest extends TestBase {
 		long[] knowledgeids = { 1, 2 };
 		long categoryid = 3;
 
-		UserCategoryTest userCategoryTest = new UserCategoryTest();
-		userCategoryTest.setCreatetime(new Date());
-		userCategoryTest.setCategoryname("不知道");
-		userCategoryTest.setParentId((long) 111);
+//		UserCategoryTest userCategoryTest = new UserCategoryTest();
+//		userCategoryTest.setCreatetime(new Date());
+//		userCategoryTest.setCategoryname("不知道");
+//		userCategoryTest.setParentId((long) 111);
 //		System.out.println(knowledgeCategoryService.insert(userCategoryTest));
 	}
 }

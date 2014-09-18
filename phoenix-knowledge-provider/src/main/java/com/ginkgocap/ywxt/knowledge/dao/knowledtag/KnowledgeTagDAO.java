@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledtag;
 
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
+//import com.ginkgocap.ywxt.knowledge.entity.KnowledgeTag;
 
 public interface KnowledgeTagDAO {
 	/**
@@ -9,6 +9,6 @@ public interface KnowledgeTagDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertKnowledgeTag(KnowledgeTag knowledge);
+	//int insertKnowledgeTag(KnowledgeTag knowledge);
 
 }
