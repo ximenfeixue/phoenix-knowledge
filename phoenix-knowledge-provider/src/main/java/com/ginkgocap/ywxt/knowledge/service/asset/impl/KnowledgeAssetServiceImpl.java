@@ -48,21 +48,7 @@ public class KnowledgeAssetServiceImpl implements KnowledgeAssetService {
 	@Override
 	public void updateKnowledge(KnowledgeAsset knowledge) {
 
-		int count = 0;
 		knowledgeAssetDAO.updateKnowledge(knowledge);
-		if (count > 0) {
-			// if (categoryids != null && categoryids.length > 0) {
-			//
-			// count = knowledgeDao.deleteKnowledgeRCategory(
-			// knowledge.getId(), categoryid);
-			// if (count > 0) {
-			// knowledgeBetweenDAO.insertKnowledgeRCategory(knowledge,
-			// categoryids);
-			// return 1;
-			// }
-			// }
-			// return 1;
-		}
 	}
 
 	@Override

@@ -50,21 +50,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	@Override
 	public void updateKnowledge(KnowledgeNews knowledge) {
 
-		int count = 0;
 		knowledgeNewsDAO.updateKnowledge(knowledge);
-		if (count > 0) {
-			// if (categoryids != null && categoryids.length > 0) {
-			//
-			// count = knowledgeDao.deleteKnowledgeRCategory(
-			// knowledge.getId(), categoryid);
-			// if (count > 0) {
-			// knowledgeBetweenDAO.insertKnowledgeRCategory(knowledge,
-			// categoryids);
-			// return 1;
-			// }
-			// }
-			// return 1;
-		}
 	}
 
 	@Override
@@ -73,9 +59,11 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		return knowledgeNewsDAO.selectKnowledge(knowledgeid);
 	}
 
-    @Override
-    public List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid, List<Long> ids,int page,int size) {
-        return knowledgeNewsDAO.selectByParam(columnid, source, userid, ids,page,size);
-    }
+	@Override
+	public List<KnowledgeNews> selectByParam(Long columnid, long source,
+			Long userid, List<Long> ids, int page, int size) {
+		return knowledgeNewsDAO.selectByParam(columnid, source, userid, ids,
+				page, size);
+	}
 
 }
