@@ -21,16 +21,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 @Component("columnknowledgeDAO")
-public class ColumnKnowledgeDAOImpl extends SqlMapClientDaoSupport implements
-		ColumnKnowledgeDAO {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+public class ColumnKnowledgeDAOImpl implements ColumnKnowledgeDAO {
 
 	@Resource
 	private ColumnKnowledgeMapper columnKnowledgeMapper;

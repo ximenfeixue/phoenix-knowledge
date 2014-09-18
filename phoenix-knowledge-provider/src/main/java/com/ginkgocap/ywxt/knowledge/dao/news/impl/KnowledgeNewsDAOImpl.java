@@ -73,7 +73,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		if (kdnews != null) {
 
 			Update update = new Update();
-			update.set("ststus", Constants.Status.checked.v());
+			update.set("status", Constants.Status.checked.v());
 			update.set("title", knowledge.getTitle());
 			update.set("uid", knowledge.getUid());
 			update.set("uname", knowledge.getUname());

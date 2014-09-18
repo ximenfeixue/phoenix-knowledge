@@ -21,7 +21,7 @@
 				 #{item.type}, #{item.mento}, #{item.createtime}, #{item.columnId})
     </foreach>  
  </insert>
- 
+
   <select id="selectByParams" resultClass="long" >
 		select knowledge_id from tb_user_permission
 		where 1=1
@@ -43,4 +43,14 @@
 			or type=4 )
 		and column_id=#{column_id} 
 	</select>
+
+ <delete id="delete">
+ 	 delete from tb_user_permission 
+     where  send_user_id=#{userid} 
+     and  knowledge_id in 
+    <foreach item="knowledgeids" collection="knowledgeids" open="(" separator="," close=")">
+   #{knowledgeids}
+    </foreach>
+     
+ </delete>
 </mapper>

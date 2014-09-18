@@ -19,16 +19,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 @Component("knowledgeStaticsDAO")
-public class KnowledgeStaticsDAOImpl extends SqlMapClientDaoSupport implements
-		KnowledgeStaticsDAO {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+public class KnowledgeStaticsDAOImpl implements KnowledgeStaticsDAO {
 
 	@Resource
 	private KnowledgeStaticsMapper knowledgeStaticsMapper;
