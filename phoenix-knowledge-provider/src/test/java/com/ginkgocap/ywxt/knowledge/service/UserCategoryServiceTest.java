@@ -1,13 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 
-import org.junit.After;
+import org.junit.After; 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.model.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 /**
@@ -26,11 +26,10 @@ public class UserCategoryServiceTest extends TestBase {
     @Before
     public void setUp() throws Exception {
         uc = new UserCategory();
-        uc.setCategoryName("n01");
-        uc.setUserId(10000);
-        uc.setParentId(1998);
-        uc.setCreateTime(DateFunc.getDate());
-        uc.setModifyTime(DateFunc.getDate());
+        uc.setCategoryname("n01");
+        uc.setUserId((long) 10000);
+        uc.setParentId((long) 1998);
+        uc.setCreatetime(DateFunc.getRegDate());
 
     }
 

@@ -20,7 +20,7 @@ public interface UserPermissionValueMapper {
 			@Param("receive_user_id") long receive_user_id,
 			@Param("send_userid") long send_userid);
 
-	List<Map<String, Object>> selectByParams(
-			@Param("receive_user_id") long receive_user_id,
-			@Param("column_id") long column_id, @Param("type") long type);
+//	List<Map<String, Object>> selectByParams(
+//			@Param("receive_user_id") long receive_user_id,
+//			@Param("column_id") long column_id, @Param("type") long type);
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper" >
  
+
  <insert id="batchInsert" parameterType="java.util.List">
-    
     insert into tb_user_permission (
 			receive_user_id,
 			knowledge_id,
@@ -21,8 +21,9 @@
 				 #{item.type}, #{item.mento}, #{item.createtime}, #{item.columnId})
     </foreach>  
  </insert>
+     
 
-  <select id="selectByParams" resultClass="long" >
+  <select id="selectByParams" resultType="long" >
 		select knowledge_id from tb_user_permission
 		where 1=1
 		<if test="receive_user_id != null">		
@@ -36,7 +37,7 @@
 		</if>
 	</select>
 	
-  <select id="selectByParamsSingle" resultClass="long" >
+  <select id="selectByParamsSingle" resultType="long" >
 		select knowledge_id from tb_user_permission
 		where (
 		(receive_user_id=#{receive_user_id} and type=3) 
@@ -63,7 +64,7 @@
 	and send_user_id=#{send_userid}
 	</if>
  </select>
- 
+ <!-- 
   <select id="selectByParams" resultType="map">
  	select knowledge_id from tb_user_permission
 	where 1=1
@@ -77,4 +78,5 @@
 	and type=#{type}
 	</if>
  </select>
+  -->
 </mapper>

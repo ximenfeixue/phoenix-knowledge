@@ -6,19 +6,15 @@
 
 <sqlMapConfig>
 	<settings useStatementNamespaces="true" enhancementEnabled="false" />
-	<sqlMap resource="model/Category.xml" />
+
 <!-- 	<sqlMap resource="model/UserCategory.xml" /> -->
 	<sqlMap resource="model/Article.xml" />
-	<sqlMap resource="model/KnowledgeCatalog.xml" />
-	<sqlMap resource="model/KnowledgeColumn.xml" />
-	<sqlMap resource="model/KnowledgeContent.xml" />
 <!-- 	<sqlMap resource="model/KnowledgeMapper.xml" /> -->
 <!-- 	<sqlMap resource="model/KnowledgeCategory.xml" /> -->
 <!-- 	<sqlMap resource="model/ColumnKnowledge.xml" /> -->
 <!-- 	<sqlMap resource="model/UserPermission.xml" /> -->
 <!-- 	<sqlMap resource="model/KnowledgeTag.xml" /> -->
 <!-- 	<sqlMap resource="model/KnowledgeStatics.xml" /> -->
-	<sqlMap resource="model/KnowledgeColumnSubscribe.xml" />
 <!-- 	<sqlMap resource="model/KnowledgeCollection.xml" /> -->
 <!-- 	<sqlMap resource="model/KnowledgeNewsMapper.xml" /> -->
 

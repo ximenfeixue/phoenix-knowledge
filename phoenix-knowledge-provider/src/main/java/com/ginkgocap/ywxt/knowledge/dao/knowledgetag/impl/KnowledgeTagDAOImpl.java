@@ -24,13 +24,13 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class KnowledgeTagDAOImpl extends SqlMapClientDaoSupport implements
 		KnowledgeTagDAO {
 
-//	@Autowired
-//	SqlMapClient sqlMapClient;
-//
-//	@PostConstruct
-//	public void initSqlMapClient() {
-//		super.setSqlMapClient(sqlMapClient);
-//	}
+	@Autowired
+	SqlMapClient sqlMapClient;
+
+	@PostConstruct
+	public void initSqlMapClient() {
+		super.setSqlMapClient(sqlMapClient);
+	}
 //
 //	@Autowired
 //	private CategoryDao categoryDao;

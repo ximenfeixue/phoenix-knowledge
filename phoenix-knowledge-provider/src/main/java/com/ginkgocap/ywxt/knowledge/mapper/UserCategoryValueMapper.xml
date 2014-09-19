@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper" >
-	<typeAlias alias="case" type="com.ginkgocap.ywxt.cloud.model.Case" />
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.UserCategory" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
@@ -11,6 +10,7 @@
     <result column="path_name" property="pathName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
   </resultMap>
+  
 	<select id="selectChildBySortId"  resultMap="BaseResultMap" >
 		select * from tb_user_category where userid = #{userId} 
 		<if test="sortId != null and sortId != ''">
@@ -19,12 +19,12 @@
 		order by sortId
 	</select>	
 	
-	<select id="selectMaxSortId" resultClass="string" >
+	<select id="selectMaxSortId" resultType="string" >
 		select max(sortid) from tb_user_category where userid=#{userId} and sortId like CONCAT(#{parentSortId}, '%') 
 	</select>
 	
-	<select id="selectChildCountById" resultClass="long" parameterClass="long">
-		select count(id) from tb_user_category where parentId = #{value}
+	<select id="selectChildCountById" resultType="long" >
+		select count(id) from tb_user_category where parentId = #{id}
 	</select>
 	
 </mapper>

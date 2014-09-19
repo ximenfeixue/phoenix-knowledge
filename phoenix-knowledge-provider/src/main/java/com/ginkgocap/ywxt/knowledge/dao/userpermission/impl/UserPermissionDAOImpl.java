@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.userpermission.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,8 +82,9 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			Long type) {
 
 		List<Long> list = new ArrayList<Long>();
-		List<Map<String, Object>> maplist = userPermissionValueMapper
-				.selectByParams(receive_user_id, column_id, type);
+	List<Map<String, Object>> maplist = null;
+//		List<Map<String, Object>> maplist = userPermissionValueMapper
+//				.selectByParams(receive_user_id, column_id, type);
 		if (maplist != null && maplist.size() > 0) {
 			for (int i = 0; i < maplist.size(); i++) {
 				Map<String, Object> map = maplist.get(i);

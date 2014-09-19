@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
@@ -36,8 +37,8 @@ public class KnowledgeColumnServiceTest extends TestBase{
     @Test
     public void queryById() throws Exception {
         
-       KnowledgeColumn kc= knowledgeColumnService.queryById(1);
-       System.out.println(kc.getColumnName());
+       Column kc= knowledgeColumnService.queryById(1);
+       System.out.println(kc.getColumnname());
     }
     
     @Test
@@ -49,10 +50,10 @@ public class KnowledgeColumnServiceTest extends TestBase{
     public void  queryByParentId() {
         
         try {
-            List<KnowledgeColumn> list= knowledgeColumnService.queryByParentId(1, 71);
+            List<Column> list= knowledgeColumnService.queryByParentId(1, 71);
             
-            for (KnowledgeColumn knowledgeColumn : list) {
-                System.out.print(knowledgeColumn.getColumnName()+' ');
+            for (Column knowledgeColumn : list) {
+                System.out.print(knowledgeColumn.getColumnname()+' ');
                 
             }
             System.out.println();
@@ -68,13 +69,13 @@ public class KnowledgeColumnServiceTest extends TestBase{
     
     @Test
     public void queryByUserIdAndSystem(){
-        List<KnowledgeColumn> list=null;
+        List<Column> list=null;
         try {
             list= knowledgeColumnService.queryByUserIdAndSystem(71, 0);
             
             for (int i=0;i<list.size();i++) {
-                KnowledgeColumn knowledgeColumn=list.get(i);
-                System.out.print(knowledgeColumn.getColumnName()+' ');
+                Column knowledgeColumn=list.get(i);
+               // System.out.print(knowledgeColumn.getColumnName()+' ');
                 if ((i+1)%13==0) {
                     System.out.println();
                 }
@@ -90,8 +91,8 @@ public class KnowledgeColumnServiceTest extends TestBase{
     
     @Test
     public void selectFullPath(){
-        List<KnowledgeColumn>l =knowledgeColumnService.selectFullPath(42);
-        for(KnowledgeColumn k :l){
+        List<Column>l =knowledgeColumnService.selectFullPath(42);
+        for(Column k :l){
             System.out.println(k.getId());
         }
     }
@@ -105,36 +106,36 @@ public class KnowledgeColumnServiceTest extends TestBase{
             
             //==========add==========//
             
-            KnowledgeColumn kc =new KnowledgeColumn();
+            Column kc =new Column();
             Date date=new Date();
             SimpleDateFormat f=new SimpleDateFormat("HH:mm:ss");
-            kc.setColumnName("_自定义"+f.format(date));
-            kc.setParentColumnId(1L);
-            kc.setCreateUserId(71L);
-            kc.setLevel(2);
+            kc.setColumnname("_自定义"+f.format(date));
+//            kc.setParentColumnId(1L);
+//            kc.setCreateUserId(71L);
+//            kc.setLevel(2);
             kc.setColumnLevelPath("0-1");
           //  kc.setPathName("资讯->自定义");
             
-            KnowledgeColumn ks = knowledgeColumnService.saveOrUpdate(kc);
+            Column ks = knowledgeColumnService.saveOrUpdate(kc);
             
             System.out.println(clearId=ks.getId());
-            System.out.println(ks.getColumnName());
+            System.out.println(ks.getColumnname());
             
             assertEquals(true, ks.getId()>0);
             
             //==========update==========//
             
             ks=knowledgeColumnService.queryById(ks.getId());
-            ks.setColumnName("_test_aaa");
+            ks.setColumnname("_test_aaa");
             
             Thread.sleep(1000);
             
             knowledgeColumnService.saveOrUpdate(ks);
             
-            KnowledgeColumn ku=knowledgeColumnService.queryById(ks.getId());
+            Column ku=knowledgeColumnService.queryById(ks.getId());
             
-            assertEquals(ks.getColumnName(), ku.getColumnName());
-            System.out.println(ku.getColumnName());
+            assertEquals(ks.getColumnname(), ku.getColumnname());
+            System.out.println(ku.getColumnname());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,9 +156,9 @@ public class KnowledgeColumnServiceTest extends TestBase{
     
     @Test
     public void querySubByUserId(){
-        List<KnowledgeColumn> list=knowledgeColumnService.querySubByUserId(72l);
-        for (KnowledgeColumn kc : list) {
-            System.out.println(kc.getColumnName());
+        List<Column> list=knowledgeColumnService.querySubByUserId(72l);
+        for (Column kc : list) {
+            System.out.println(kc.getColumnname());
         }
     }
     
