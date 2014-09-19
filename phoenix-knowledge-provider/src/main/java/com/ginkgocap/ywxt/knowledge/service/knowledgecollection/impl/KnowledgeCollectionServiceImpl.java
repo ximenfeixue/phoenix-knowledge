@@ -21,4 +21,10 @@ public class KnowledgeCollectionServiceImpl implements
 
 	}
 
+	@Override
+	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
+		
+		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids, categoryid);
+	}
+
 }

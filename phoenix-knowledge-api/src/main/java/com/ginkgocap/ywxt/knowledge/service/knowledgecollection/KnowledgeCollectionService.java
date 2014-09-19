@@ -18,4 +18,12 @@ public interface KnowledgeCollectionService {
 	 */
 	int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
 
+	/**
+	 * 将知识从收藏夹中删除
+	 * 
+	 * @param knowledgeRCategory
+	 * @return
+	 */
+	int deleteKnowledgeCollection(long[] knowledgeids, long categoryid);
+
 }
