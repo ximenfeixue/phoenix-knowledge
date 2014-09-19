@@ -21,7 +21,6 @@
 				 #{item.type}, #{item.mento}, #{item.createtime}, #{item.columnId})
     </foreach>  
  </insert>
-     
 
   <select id="selectByParams" resultType="long" >
 		select knowledge_id from tb_user_permission
@@ -36,7 +35,9 @@
 			and column_id=#{column_id} 
 		</if>
 	</select>
+
 	
+
   <select id="selectByParamsSingle" resultType="long" >
 		select knowledge_id from tb_user_permission
 		where (
@@ -44,6 +45,7 @@
 			or type=4 )
 		and column_id=#{column_id} 
 	</select>
+
 
  <delete id="delete">
  	 delete from tb_user_permission 

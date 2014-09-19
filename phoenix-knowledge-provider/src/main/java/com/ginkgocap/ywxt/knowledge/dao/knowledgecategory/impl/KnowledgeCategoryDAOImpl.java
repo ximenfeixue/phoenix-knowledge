@@ -4,26 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
-import com.ginkgocap.ywxt.knowledge.model.UserCategory;
+import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * @author caihe
@@ -45,6 +42,9 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 	private KnowledgeCategoryMapper knowledgeCategoryMapper;
 
 	private CategoryHelper helper = new CategoryHelper();
+	
+	@Resource
+	private UserCategoryService userCategoryService;
 
 	@Override
 	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
@@ -54,7 +54,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		KnowledgeCategory knowledgeRCategory = null;
 		for (int k = 0; k < categoryid.length; k++) {
-			UserCategory category = userCategoryDao
+			UserCategory category = userCategoryService
 					.selectByPrimaryKey(categoryid[k]);
 			if (category != null) {
 				knowledgeRCategory = new KnowledgeCategory();
@@ -79,7 +79,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 					// 通过parentSortId得到子类最大已添加的sortId
 					String childMaxSortId = userCategoryDao.selectMaxSortId(
 							category.getUserId(), parentSortId);
-					if (StringUtils.isBlank(category.getSortId())) {
+					if (StringUtils.isBlank(category.getSortid())) {
 						// 如果用户第一次添加，将childMaxSortId赋值
 						String newSortId = new String("");
 						if (childMaxSortId == null
@@ -93,7 +93,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 						// 设置最新的sortId
 						knowledgeRCategory.setSortid(newSortId);
 					} else {
-						knowledgeRCategory.setSortid(category.getSortId());
+						knowledgeRCategory.setSortid(category.getSortid());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
