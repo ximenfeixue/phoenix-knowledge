@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgetag.impl;
 
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -21,31 +21,30 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 @Component("knowledgeTagDAO")
-public class KnowledgeTagDAOImpl extends SqlMapClientDaoSupport implements
-		KnowledgeTagDAO {
+public class KnowledgeTagDAOImpl implements KnowledgeTagDAO {
 
-//	@Autowired
-//	SqlMapClient sqlMapClient;
-//
-//	@PostConstruct
-//	public void initSqlMapClient() {
-//		super.setSqlMapClient(sqlMapClient);
-//	}
-//
-//	@Autowired
-//	private CategoryDao categoryDao;
-//
-//	@Autowired
-//	private KnowledgeContentDAO knowledgeContentDAO;
-//
-//	@Resource
-//	private KnowledgeTagMapper knowledgeTagMapper;
-//
-//	@Override
-//	public int insertKnowledgeTag(KnowledgeTag knowledge) {
-//
-//		return knowledgeTagMapper.insertSelective(knowledge);
-//
-//	}
+	// @Autowired
+	// SqlMapClient sqlMapClient;
+	//
+	// @PostConstruct
+	// public void initSqlMapClient() {
+	// super.setSqlMapClient(sqlMapClient);
+	// }
+	//
+	// @Autowired
+	// private CategoryDao categoryDao;
+	//
+	// @Autowired
+	// private KnowledgeContentDAO knowledgeContentDAO;
+	//
+	// @Resource
+	// private KnowledgeTagMapper knowledgeTagMapper;
+	//
+	// @Override
+	// public int insertKnowledgeTag(KnowledgeTag knowledge) {
+	//
+	// return knowledgeTagMapper.insertSelective(knowledge);
+	//
+	// }
 
 }
