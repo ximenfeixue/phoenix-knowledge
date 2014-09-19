@@ -21,7 +21,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 @Component("knowledgeTagDAO")
-public class KnowledgeTagDAOImpl implements KnowledgeTagDAO {
+public class KnowledgeTagDAOImpl  extends SqlMapClientDaoSupport implements KnowledgeTagDAO {
 
 
 	@Autowired

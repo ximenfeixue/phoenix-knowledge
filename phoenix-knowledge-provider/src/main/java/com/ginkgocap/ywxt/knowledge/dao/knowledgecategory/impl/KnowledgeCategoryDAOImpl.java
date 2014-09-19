@@ -19,8 +19,8 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
-import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.category.impl.CategoryHelper;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.impl.CategoryHelper;
 
 /**
  * @author caihe

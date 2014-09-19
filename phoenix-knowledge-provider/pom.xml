@@ -506,19 +506,19 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<properties>
+				<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<!-- redis地址 -->
-				<redis.host>192.168.120.219</redis.host>
+				<redis.host>192.168.120.42</redis.host>
 				<!-- redis端口 -->
 				<redis.port>6379</redis.port>
 				<!-- mongo地址 -->
-				<mongodb.address>192.168.101.131:27017</mongodb.address>
+				<mongodb.address>192.168.120.42:27017</mongodb.address>
 				<!-- mongo中数据库 -->
 				<mongodb.database>ywxt</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>
-					jdbc:mysql://192.168.120.215:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
+					jdbc:mysql://192.168.120.42:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;zeroDateTimeBehavior=convertToNull
 				</jdbc.url>
 				<!-- 数据库访问帐号 -->
 				<jdbc.username>root</jdbc.username>
@@ -532,7 +532,7 @@
 				<!-- dubbo注册中心的地址 -->
 				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.120.219:2181?client=zkclient</dubbo.registry.address>
+				<dubbo.registry.address>zookeeper://192.168.120.42:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>8812</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>

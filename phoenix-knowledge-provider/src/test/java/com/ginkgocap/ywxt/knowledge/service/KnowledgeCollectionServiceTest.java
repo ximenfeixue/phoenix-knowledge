@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.service.knowledgecollection.KnowledgeCollectionService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCollectionService;
 
 /**
  * 知识测试类

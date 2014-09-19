@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.reader.KnowledgeReader;
-import com.ginkgocap.ywxt.knowledge.service.knowledgestatics.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.user.model.User;

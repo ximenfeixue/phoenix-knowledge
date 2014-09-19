@@ -7,12 +7,12 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
-import com.ginkgocap.ywxt.knowledge.service.asset.KnowledgeAssetService;
-import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
-import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeAssetService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
-import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeNewsService;
 
 /**
  * 知识测试类

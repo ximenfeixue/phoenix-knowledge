@@ -10,10 +10,10 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.content.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
 import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
-import com.ginkgocap.ywxt.knowledge.service.knowledgecategory.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.news.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeNewsService;
 
 /**
  * 知识测试类

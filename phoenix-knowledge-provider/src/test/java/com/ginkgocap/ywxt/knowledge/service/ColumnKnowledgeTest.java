@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
-import com.ginkgocap.ywxt.knowledge.service.columnknowledge.ColumnKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.ColumnKnowledgeService;
 
 /**
  * <p>

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
+import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeColumnSubscribeService;
 
 /** 
  * <p>订阅测试</p>  
