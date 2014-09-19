@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.knowledgecollection.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,17 @@ public class KnowledgeCollectionServiceImpl implements
 
 	@Override
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
-		
-		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids, categoryid);
+
+		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids,
+				categoryid);
+	}
+
+	@Override
+	public List<Long> selectKnowledgeCollection(long column_id,
+			String knowledgeType, long category_id, int pageno, int pagesize) {
+
+		return knowledgeCollectionDAO.selectKnowledgeCollection(column_id,
+				knowledgeType, category_id, pageno, pagesize);
 	}
 
 }

@@ -10,4 +10,19 @@
      #{knowledgeids}
  	</foreach>
  </delete>
+ 
+ <select id="selectKnowledgeCollection" resultType="map">
+ 	select knowledge_id from tb_knowledge_collection
+	where 1=1
+	<if test="column_id!=null and column_id>0 ">
+	and column_id=#{column_id}
+	</if>
+	<if test="knowledgeType!=null">
+	and knowledgeType=#{knowledgeType}
+	</if>
+	<if test="category_id!=null and category_id>0">
+	and category_id=#{category_id}
+	</if>
+	limit #{pageno},#{pagesize}
+ </select>
 </mapper>

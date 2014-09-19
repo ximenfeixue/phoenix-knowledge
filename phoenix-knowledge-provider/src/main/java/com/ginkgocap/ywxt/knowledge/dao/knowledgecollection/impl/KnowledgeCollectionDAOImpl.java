@@ -1,5 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
@@ -18,11 +22,9 @@ public class KnowledgeCollectionDAOImpl implements KnowledgeCollectionDAO {
 
 	@Resource
 	private KnowledgeCollectionMapper knowledgeCollectionMapper;
-	
+
 	@Resource
 	private KnowledgeCollectionValueMapper knowledgeCollectionValueMapper;
-	
-	
 
 	@Override
 	public int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection) {
@@ -31,8 +33,25 @@ public class KnowledgeCollectionDAOImpl implements KnowledgeCollectionDAO {
 
 	@Override
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
-	
-		return knowledgeCollectionValueMapper.deleteKnowledge(knowledgeids, categoryid);
+
+		return knowledgeCollectionValueMapper.deleteKnowledge(knowledgeids,
+				categoryid);
 	}
 
+	@Override
+	public List<Long> selectKnowledgeCollection(long column_id,
+			String knowledgeType, long category_id, int pageno, int pagesize) {
+
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist = knowledgeCollectionValueMapper
+				.selectKnowledgeCollection(column_id, knowledgeType,
+						category_id, pageno, pagesize);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("knowledge_id"));
+			}
+		}
+		return list;
+	}
 }
