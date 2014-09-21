@@ -5,20 +5,24 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeReader;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 
-public abstract class KnowledgeReaderServiceImpl implements KnowledgeReader {
+public abstract class KnowledgeReaderServiceImpl implements
+		KnowledgeReaderService {
+
+	private Logger logger = LoggerFactory
+			.getLogger(KnowledgeReaderServiceImpl.class);
 
 	@Resource
 	private UserService userService;
@@ -31,6 +35,9 @@ public abstract class KnowledgeReaderServiceImpl implements KnowledgeReader {
 
 	@Resource
 	private MongoTemplate mongoTemplate;
+
+	@Resource
+	private KnowledgeReaderDAO knowledgeReaderDAO;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -93,19 +100,19 @@ public abstract class KnowledgeReaderServiceImpl implements KnowledgeReader {
 	}
 
 	@Override
-	public String getKnowledgeContent(long kid, String type) {
-		Knowledge knowledge = null;
+	public Map<String, Object> getKnowledgeContent(long kid, String type) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String content = null;
 		try {
-			MongoUtils util = new MongoUtils();
-			String c = util.getTableName(type);
-			knowledge = (Knowledge) mongoTemplate.findById(kid,
-					Class.forName(c), util.getCollectionName(c));
+			content = knowledgeReaderDAO.findHtmlContentFromMongo(kid, type);
+
+			result.put(Constants.status, Constants.ResultType.success.v());
+			result.put("content", content);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return null;
+			logger.error("未能根据类型:{}创建对象", type);
+			result.put(Constants.status, Constants.ResultType.fail.v());
 		}
-		return StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
-				.getContent() : knowledge.getHcontent();
+		return result;
 	}
-
 }

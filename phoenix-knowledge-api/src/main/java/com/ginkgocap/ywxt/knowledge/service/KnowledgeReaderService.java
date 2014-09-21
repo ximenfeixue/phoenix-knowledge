@@ -5,7 +5,7 @@ import java.util.Map;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.user.model.User;
 
-public interface KnowledgeReader {
+public interface KnowledgeReaderService {
 
 	User getUserInfo(long userid);
 
@@ -15,5 +15,5 @@ public interface KnowledgeReader {
 
 	Map<String, Boolean> showHeadTag(long kid, int type);
 
-	String getKnowledgeContent(long kid,String type);
+	Map<String, Object> getKnowledgeContent(long kid,String type);
 }

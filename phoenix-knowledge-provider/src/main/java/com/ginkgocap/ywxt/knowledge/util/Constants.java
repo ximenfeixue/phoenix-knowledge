@@ -123,16 +123,22 @@ public class Constants {
 	}
 
 	public enum Relation {
-		self(0), friends(1), none(3), jintongnao(4);
+		self(0, "自己"), friends(1, "好友"), none(3, "无关系"), jintongnao(4, "金桐脑");
 
 		private int v;
+		private String c;
 
-		private Relation(int v) {
+		private Relation(int v, String c) {
 			this.v = v;
+			this.c = c;
 		}
 
 		public int v() {
 			return v;
+		}
+
+		public String c() {
+			return c;
 		}
 	}
 }
