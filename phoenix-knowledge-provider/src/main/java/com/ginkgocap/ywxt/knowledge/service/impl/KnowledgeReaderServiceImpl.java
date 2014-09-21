@@ -34,9 +34,6 @@ public abstract class KnowledgeReaderServiceImpl implements
 	private FriendsRelationService friendsRelationService;
 
 	@Resource
-	private MongoTemplate mongoTemplate;
-
-	@Resource
 	private KnowledgeReaderDAO knowledgeReaderDAO;
 
 	@Override
@@ -50,10 +47,11 @@ public abstract class KnowledgeReaderServiceImpl implements
 	}
 
 	@Override
-	public Map<String, Integer> isExistFriends(long loginuserid, long kuid) {
+	public Map<String, Integer> authorAndLoginUserRelation(long loginuserid,
+			long kuid) {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		if (kuid == 0) {
-			result.put("relation", Constants.Relation.jintongnao.v());
+			result.put("relation", Constants.Relation.jinTN.v());
 		} else if (loginuserid == kuid) {
 			result.put("relation", Constants.Relation.self.v());
 		} else if (friendsRelationService.isExistFriends(loginuserid, kuid)) {
@@ -104,15 +102,40 @@ public abstract class KnowledgeReaderServiceImpl implements
 		Map<String, Object> result = new HashMap<String, Object>();
 		String content = null;
 		try {
-			content = knowledgeReaderDAO.findHtmlContentFromMongo(kid, type);
+			Map<String, Object> map = knowledgeReaderDAO
+					.findHtmlContentFromMongo(kid, type);
+			if (map == null) {
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.artNotExsit.c());
+			}
 
 			result.put(Constants.status, Constants.ResultType.success.v());
 			result.put("content", content);
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			logger.error("未能根据类型:{}创建对象", type);
 			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artNotExsit.c());
 		}
 		return result;
 	}
+
+	@Override
+	public Map<String, Object> addCollection(long kid, long userid,
+			String type, String source, long columnid, long categoryid) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (knowledgeReaderDAO.addCollection(kid, userid, type, source,
+				columnid, categoryid) == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addCollFail.c());
+		} else {
+			result.put(Constants.status, Constants.ResultType.success.v());
+		}
+		return result;
+	}
+
 }

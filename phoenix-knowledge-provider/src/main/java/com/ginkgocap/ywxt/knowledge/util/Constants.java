@@ -123,7 +123,7 @@ public class Constants {
 	}
 
 	public enum Relation {
-		self(0, "自己"), friends(1, "好友"), none(3, "无关系"), jintongnao(4, "金桐脑");
+		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), none(4, "无关系");
 
 		private int v;
 		private String c;
@@ -135,6 +135,20 @@ public class Constants {
 
 		public int v() {
 			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
+
+	public enum ErrorMessage {
+		artNotExsit("文章不存在或已被删除!"), addCollFail("文章收藏失败!");
+
+		private String c;
+
+		private ErrorMessage(String c) {
+			this.c = c;
 		}
 
 		public String c() {
