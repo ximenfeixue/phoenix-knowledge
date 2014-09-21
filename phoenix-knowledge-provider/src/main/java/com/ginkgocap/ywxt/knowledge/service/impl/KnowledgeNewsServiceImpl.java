@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Service("knowledgeNewsService")

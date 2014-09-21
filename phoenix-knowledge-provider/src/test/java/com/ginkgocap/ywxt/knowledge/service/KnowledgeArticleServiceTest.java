@@ -8,11 +8,11 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeArticleService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeArticleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
 
 /**
  * 知识测试类

@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;  
 import net.sf.json.JSONObject;
@@ -12,8 +12,8 @@ import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 

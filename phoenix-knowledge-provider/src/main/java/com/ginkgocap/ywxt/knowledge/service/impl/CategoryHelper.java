@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 public class CategoryHelper {
 	//给新增的分类生成新的sortId

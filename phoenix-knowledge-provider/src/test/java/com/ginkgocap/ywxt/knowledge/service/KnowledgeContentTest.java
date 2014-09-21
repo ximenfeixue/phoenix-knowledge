@@ -6,7 +6,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeContent;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService;
 
 /**
  * <p>

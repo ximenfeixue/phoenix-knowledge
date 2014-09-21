@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnSubscribe
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeColumnSubscribeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnSubscribeService;
 
 @Service("knowledgeColumnSubscribeService")
 public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubscribeService {

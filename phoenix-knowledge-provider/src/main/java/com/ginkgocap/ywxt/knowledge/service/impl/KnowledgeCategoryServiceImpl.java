@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date; 
 
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO; 
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 
 @Service("knowledgeCategoryService")
 public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {

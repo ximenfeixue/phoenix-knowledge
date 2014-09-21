@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +15,8 @@ import com.ginkgocap.ywxt.knowledge.dao.share.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.form.Friends;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.ArticleService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeShareService;
+import com.ginkgocap.ywxt.knowledge.service.ArticleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;

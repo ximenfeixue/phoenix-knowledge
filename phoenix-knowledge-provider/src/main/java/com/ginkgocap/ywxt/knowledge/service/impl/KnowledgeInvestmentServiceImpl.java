@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import javax.annotation.Resource;
 
@@ -10,8 +10,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeInvestmentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 
 @Service("knowledgeInvestmentService")

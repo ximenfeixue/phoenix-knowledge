@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
  import java.util.Date;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 
 @Service("userpermissionService")
 public class UserPermissionServiceImpl implements UserPermissionService {

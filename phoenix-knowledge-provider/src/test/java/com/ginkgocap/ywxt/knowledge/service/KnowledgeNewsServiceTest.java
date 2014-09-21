@@ -10,13 +10,13 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.ColumnKnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMongoIncService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeNewsService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 /**

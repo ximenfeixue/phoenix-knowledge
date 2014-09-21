@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 /**

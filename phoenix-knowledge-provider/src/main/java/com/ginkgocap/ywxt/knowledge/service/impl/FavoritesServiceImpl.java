@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.favorites.FavoritesDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Favorites;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.ArticleService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.FavoritesService;
+import com.ginkgocap.ywxt.knowledge.service.ArticleService;
+import com.ginkgocap.ywxt.knowledge.service.FavoritesService;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.FavoritesType;
 import com.ginkgocap.ywxt.util.PageUtil;

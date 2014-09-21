@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import javax.annotation.Resource;
 
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeIndustryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 
 @Service("knowledgeIndustryService")
 public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {

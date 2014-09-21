@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeHomeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 
 /**
  * 知识首页测试用例

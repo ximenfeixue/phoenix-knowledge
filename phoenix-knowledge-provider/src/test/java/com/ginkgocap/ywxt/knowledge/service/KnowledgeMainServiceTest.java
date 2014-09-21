@@ -14,8 +14,8 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeContent;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 /**

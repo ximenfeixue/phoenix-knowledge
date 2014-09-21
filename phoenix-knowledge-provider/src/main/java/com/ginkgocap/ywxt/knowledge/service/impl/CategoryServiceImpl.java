@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.CategoryService;
+import com.ginkgocap.ywxt.knowledge.service.CategoryService;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 /**

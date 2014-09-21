@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 
 /**
  * 知识测试类

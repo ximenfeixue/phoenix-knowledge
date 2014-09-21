@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList; 
 import java.util.Collections;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeColumnService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 

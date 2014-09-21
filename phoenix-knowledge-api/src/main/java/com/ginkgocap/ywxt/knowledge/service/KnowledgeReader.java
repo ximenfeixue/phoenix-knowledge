@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.reader;
+package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 

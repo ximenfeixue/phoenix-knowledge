@@ -1,11 +1,11 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.columnknowledge.ColumnKnowledgeDAO;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.ColumnKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 
 @Service("columnknowledgeService")
 public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {

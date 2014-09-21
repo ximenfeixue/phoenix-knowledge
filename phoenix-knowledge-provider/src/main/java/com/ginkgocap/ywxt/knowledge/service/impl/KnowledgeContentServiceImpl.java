@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeContent;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeContentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService;
 
 @Service("knowledgeContentService")
 public class KnowledgeContentServiceImpl implements KnowledgeContentService {

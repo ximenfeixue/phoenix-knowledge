@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge;
+package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.HashMap;
 import java.util.List;

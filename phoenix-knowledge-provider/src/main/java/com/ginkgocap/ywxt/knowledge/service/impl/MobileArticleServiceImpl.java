@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +24,8 @@ import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.share.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.model.Article;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeShareService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.MobileArticleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService;
+import com.ginkgocap.ywxt.knowledge.service.MobileArticleService;
 import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTMLTemplate;

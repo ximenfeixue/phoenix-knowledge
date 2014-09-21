@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.CategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCatalogService;
+import com.ginkgocap.ywxt.knowledge.service.CategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 /**

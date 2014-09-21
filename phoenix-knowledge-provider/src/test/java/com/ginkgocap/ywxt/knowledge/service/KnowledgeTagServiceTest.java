@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeTagService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService;
 
 /**
  * 知识测试类

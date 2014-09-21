@@ -19,8 +19,8 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.CategoryService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeColumnService;
+import com.ginkgocap.ywxt.knowledge.service.CategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 

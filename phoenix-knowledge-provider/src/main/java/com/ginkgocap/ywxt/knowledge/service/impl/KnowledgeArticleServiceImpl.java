@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgearticle.KnowledgeArticleDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeArticleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeArticleService;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Service("knowledgeArticleService")

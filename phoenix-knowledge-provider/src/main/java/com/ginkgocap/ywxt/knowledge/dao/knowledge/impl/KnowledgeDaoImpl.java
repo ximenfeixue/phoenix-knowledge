@@ -26,7 +26,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.impl.CategoryHelper;
+import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 

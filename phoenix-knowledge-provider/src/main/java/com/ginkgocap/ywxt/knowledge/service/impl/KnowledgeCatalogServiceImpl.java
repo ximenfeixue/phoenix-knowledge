@@ -1,11 +1,11 @@
-package com.ginkgocap.ywxt.knowledge.service.knowledge.impl;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCatalogDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCatalog;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCatalogService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService;
 
 @Service("knowledgeCatalogService")
 public class KnowledgeCatalogServiceImpl implements KnowledgeCatalogService {
