@@ -2,9 +2,9 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
 
+import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
 
 /** 
  * 栏目订阅操作接口
@@ -70,7 +70,7 @@ public interface ColumnSubscribeService {
      * @param userId 用户id
      * @return 栏目列表
      */
-    public List<KnowledgeColumn> selectKCListByUserId(long userId);
+    public List<Column> selectKCListByUserId(long userId);
     /**
      * 查询栏目的所有订阅人的id
      * @param columnId 栏目id
@@ -120,13 +120,13 @@ public interface ColumnSubscribeService {
      * @param list 栏目列表
      * @return 知识列表
      */
-    public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<KnowledgeColumn> list);
+    public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list);
     /**
      * 根据订阅栏目查询知识
      * @param list 栏目列表
      * @param type 知识类型
      * @return 知识列表
      */
-    public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<KnowledgeColumn> list,int type);
+    public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list,int type);
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 
 /**
@@ -39,43 +40,68 @@ public class KCHelper {
         
     }
     
-    public static KnowledgeColumn setKCType(KnowledgeColumn kc){
-        Long pid=kc.getParentColumnId();
+    public static Integer resolveKCType(Long id,Long pid){
+        Integer type=DEFAULT_TYPE;
         
         if (null==pid) {
-            kc.setKcType(DEFAULT_TYPE);
-            return kc;
+            type=DEFAULT_TYPE;
+            return type;
         }
         //当栏目父id为0,说明是一级栏目，只需取其id即可,
         if (pid==0) {
-            kc.setKcType(kc.getId().intValue());
-            return kc;
+            type=id.intValue();
+            return type;
         }
         
         String pids=String.valueOf(pid);
         
         if(kcTypeMap.containsKey(pids)){
-            kc.setKcType(pid.intValue());
+            type=pid.intValue();
         }else{
             //默认类型
             //如果多层次，那么此处需在service中递归查询pid
-            kc.setKcType(DEFAULT_TYPE);
+            type=DEFAULT_TYPE;
         }
-        return kc;
+        return type;
     }
+    
+//    public static KnowledgeColumn setKCType(KnowledgeColumn kc){
+//        Long pid=kc.getParentColumnId();
+//        
+//        if (null==pid) {
+//            kc.setKcType(DEFAULT_TYPE);
+//            return kc;
+//        }
+//        //当栏目父id为0,说明是一级栏目，只需取其id即可,
+//        if (pid==0) {
+//            kc.setKcType(kc.getId().intValue());
+//            return kc;
+//        }
+//        
+//        String pids=String.valueOf(pid);
+//        
+//        if(kcTypeMap.containsKey(pids)){
+//            kc.setKcType(pid.intValue());
+//        }else{
+//            //默认类型
+//            //如果多层次，那么此处需在service中递归查询pid
+//            kc.setKcType(DEFAULT_TYPE);
+//        }
+//        return kc;
+//    }
     
     /**
      * 因数据库类型与期望类型不一致，故作转换
      * @param name
      * @return 
      */
-    public static String getMysqlkcType(Integer name){
+    public static Short getMysqlkcType(Integer name){
         
         if (name.equals(DEFAULT_TYPE)) {
-            return 0+"";
+            return 0;
         }
         
-        return name.toString();
+        return name.shortValue();
     }
 //    根据columnlevelpath路径无法分析其类型,因path记录的只是等级
 //    public static KnowledgeColumn analysisType(KnowledgeColumn kc){
@@ -101,11 +127,7 @@ public class KCHelper {
     
     public static void main(String[] args) {
         
-        KnowledgeColumn kc=new KnowledgeColumn();
-        kc.setParentColumnId(7l);
-        setKCType(kc);
-
-        System.out.println(kc.getKcType());
+        System.out.println(resolveKCType(29l, 7l));
     }
     
    final class KCType{

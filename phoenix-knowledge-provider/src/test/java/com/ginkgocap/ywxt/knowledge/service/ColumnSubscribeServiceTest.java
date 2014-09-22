@@ -50,17 +50,25 @@ public class ColumnSubscribeServiceTest extends TestBase {
         long id=-1;
         
         try {
-            
+            /*
             KnowledgeColumnSubscribe kcs=new KnowledgeColumnSubscribe();
 //            kcs.setUserId(TEST_USER_ID);  //测试所用
             kcs.setUserId(79l);  //测试所用
             kcs.setColumnId(12); //12所代表的栏目   资讯--金融
 //            kcs.setColumnType(1+"");
 //            System.out.println(kcsService);
-            kcs=kcsService.add(kcs);
+//            kcs=kcsService.add(kcs);
             System.out.println(kcs.getId());
             id=kcs.getId();
-            assertNotNull(kcs);
+            assertNotNull(kcs);*/
+            
+            //更改为mybatis后
+            com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe ekcs=new com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe();
+            ekcs.setUserId(81l);
+            ekcs.setColumnId(12l);
+            ekcs=kcsService.add(ekcs);
+            assertNotNull(ekcs);
+            
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -136,10 +144,10 @@ public class ColumnSubscribeServiceTest extends TestBase {
 
     @Test
     public void testSelectByUserId() {
-        List<KnowledgeColumnSubscribe> list=kcsService.selectByUserId(72);
-        for (KnowledgeColumnSubscribe kcs : list) {
-            System.out.println(kcs.getColumnId());
-        }
+//        List<KnowledgeColumnSubscribe> list=kcsService.selectByUserId(72);
+//        for (KnowledgeColumnSubscribe kcs : list) {
+//            System.out.println(kcs.getColumnId());
+//        }
     }
 
     @Test
