@@ -12,7 +12,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
  * @since  1.2.1-SNAPSHOT
  * @createdtime 2014-09-10
  */
-public interface KnowledgeColumnSubscribeService {
+public interface ColumnSubscribeService {
     
     /**
      * 增加用户订阅栏目的记录

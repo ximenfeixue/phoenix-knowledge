@@ -22,7 +22,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
  * @author guangyuan  
  * @since 1.2.2
  */
-public class KnowledgeColumnSubscribeServiceTest extends TestBase {
+public class ColumnSubscribeServiceTest extends TestBase {
 
     public static long TEST_USER_ID=71L;
     

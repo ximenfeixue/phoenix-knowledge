@@ -12,10 +12,10 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecolumn.KnowledgeColumnSubscribe
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumnSubscribe;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnSubscribeService;
+import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
 
-@Service("knowledgeColumnSubscribeService")
-public class KnowledgeColumnSubscribeServiceImpl implements KnowledgeColumnSubscribeService {
+@Service("columnSubscribeService")
+public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 
     @Autowired
     private KnowledgeColumnDao knowledgeColumnDao;
