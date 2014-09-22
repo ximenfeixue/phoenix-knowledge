@@ -11,14 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService;
+import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 
-@Service("ColumnService")
-public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
+@Service("columnService")
+public class ColumnServiceImpl implements ColumnService {
 
     @Autowired
     private ColumnMapper columnMapper;
@@ -159,9 +161,12 @@ public class KnowledgeColumnServiceImpl implements KnowledgeColumnService {
     }
 
     @Override
-    public boolean isExist(int parentColumnId, String columnName) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isExist(long parentColumnId, String columnName) {
+        ColumnExample ce=new ColumnExample();
+        
+        ce.createCriteria().andParentIdEqualTo(parentColumnId).andColumnnameEqualTo(columnName);
+        
+        return columnMapper.countByExample(ce)>0?true:false;
     }
 
     @Override

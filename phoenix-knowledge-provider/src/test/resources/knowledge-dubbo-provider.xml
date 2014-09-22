@@ -41,7 +41,7 @@
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     
    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnService" ref="ColumnService" version="1.0.0"/>
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeColumnSubscribeService" ref="knowledgeColumnSubscribeService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" ref="knowledgeContentService" version="1.0.0"/>

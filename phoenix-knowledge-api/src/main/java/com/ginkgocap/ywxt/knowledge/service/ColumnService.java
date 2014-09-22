@@ -12,7 +12,7 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
  * @author  <p>当前负责人 guangyuan</p>     
  * @since <p>1.2.1-SNAPSHOT</p> 
  */
-public interface KnowledgeColumnService {
+public interface ColumnService {
 
     /**
      * saveOrUpdate <p>(保存知识栏目)</p>    
@@ -34,7 +34,7 @@ public interface KnowledgeColumnService {
      * @param columnName 栏目名称
      * @return true:存在 false:不存在
      */
-    public boolean isExist(int parentColumnId,String columnName);
+    public boolean isExist(long parentColumnId,String columnName);
     
     /**
      * delById <p>(删除栏目)</p>  
