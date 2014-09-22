@@ -59,7 +59,6 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService"  ref="knowledgeCategoryService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService"  ref="columnknowledgeService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserPermissionService"  ref="userpermissionService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssetService"  ref="knowledgeAssetService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMacroService"  ref="knowledgeMacroService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOpinionService"  ref="knowledgeOpinionService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeArticleService"  ref="knowledgeArticleService" version="1.0.0"/>

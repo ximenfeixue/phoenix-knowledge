@@ -38,11 +38,15 @@ public class ColumnServiceImpl implements ColumnService {
         Date date = new Date();
 
         if (null == id || id.intValue() <= 0) {
-
+           
             kc.setCreatetime(date);
             kc.setUpdateTime(date);
             kc.setDelStatus((byte)0);
             kc.setSubscribeCount(0l);
+            
+            //TODO 参考UserCategoryServiceImpl.insert 生成columnlevelpath
+            //USERID应为金桐脑的
+            
             columnMapper.insert(kc);
             return kc;
         }
