@@ -161,10 +161,19 @@ public class ColumnServiceTest extends TestBase{
     
     @Test
     public void querySubByUserId(){
-        List<Column> list=kcs.querySubByUserId(72l);
-        for (Column kc : list) {
-            System.out.println(kc.getColumnname());
+        try {
+            List<Column> list=kcs.querySubByUserId(72l);
+            for (Column kc : list) {
+                System.out.println(kc.getColumnname());
+            }
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }finally{
+            System.gc();
         }
+       
     }
     
     @Test

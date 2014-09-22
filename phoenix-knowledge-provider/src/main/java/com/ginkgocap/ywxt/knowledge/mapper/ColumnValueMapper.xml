@@ -12,7 +12,23 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="subscribe_count" property="subscribeCount" jdbcType="BIGINT" />
   </resultMap>
- 	 <select id="selectCategoryTreeBySortId" resultMap="BaseResultMap">
+  
+  	<sql id="tb_name">tb_column</sql>
+	<sql id="column_name">columnName</sql>
+  	<sql id="allColumns">
+	  id,
+	  <include refid="column_name"/>,
+	  parent_id,
+	  user_id,
+	  column_level_path,
+	  path_name,
+	  createtime,
+	  update_time,
+	  del_status,
+	  subscribe_count
+	</sql>
+  
+ 	<select id="selectCategoryTreeBySortId" resultMap="BaseResultMap">
 		select *
 		from tb_column
 		where del_status=0 
@@ -21,5 +37,12 @@
 		column_level_path=#{columnLevelPath}
 		</if>
 		order by column_level_path
+	</select>
+	
+	<select id="selectSubByUserId" resultMap="BaseResultMap" parameterType="Long">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> 
+		where del_status=0 and id IN 
+			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
 	</select>
 </mapper>

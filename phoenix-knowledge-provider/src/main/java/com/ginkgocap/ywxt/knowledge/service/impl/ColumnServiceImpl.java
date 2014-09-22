@@ -70,62 +70,6 @@ public class ColumnServiceImpl implements ColumnService {
         return columnMapper.selectByPrimaryKey(id);
     }
 
-//    @Override
-//    public boolean isExist(int parentColumnId, String columnName) {
-//        if (ColumnDao.countByPidAndName(parentColumnId, columnName) > 0) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public void delById(long id) {
-//        ColumnDao.delById(id);
-//    }
-//
-//    @Override
-//    public List<Column> queryByParentId(int parentColumnId, int createUserId) {
-//        return ColumnDao.queryByParentId(parentColumnId, createUserId);
-//    }
-//
-//    @Override
-//    public List<Column> queryByUserId(long createUserId) {
-//        return ColumnDao.queryByUserId(createUserId);
-//    }
-//
-//    @Override
-//    public List<Column> queryByUserIdAndSystem(long createUserId, long systemId) {
-//        return ColumnDao.queryByUserIdAndSystem(createUserId, systemId);
-//    }
-//
-//    @Override
-//    public List<Column> queryAll() {
-//        return ColumnDao.queryAll();
-//    }
-//
-//    @Override
-//    public List<Column> queryAllDel() {
-//        return ColumnDao.queryAllDel();
-//    }
-//
-//    @Override
-//    public void recoverOneKC(Long id) {
-//        if (null == id || id.longValue() < 0) {
-//            return;
-//        }
-//
-//        ColumnDao.recoverOneKC(id);
-//    }
-//
-//    @Override
-//    public void clearById(long id) {
-//        ColumnDao.clearById(id);
-//    }
-//
-//    @Override
-//    public List<Column> querySubByUserId(long createUserId) {
-//        return ColumnDao.querySubByUserId(createUserId);
-//    }
 
 
     @Override
@@ -168,11 +112,16 @@ public class ColumnServiceImpl implements ColumnService {
         
         return columnMapper.countByExample(ce)>0?true:false;
     }
+    
+    @Override
+    public List<Column> querySubByUserId(long createUserId) {
+        List<Column> list=columnValueMapper.selectSubByUserId(createUserId);
+        return list;
+    }
 
     @Override
     public void delById(long id) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -187,11 +136,7 @@ public class ColumnServiceImpl implements ColumnService {
         return null;
     }
 
-    @Override
-    public List<Column> querySubByUserId(long createUserId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+  
 
     @Override
     public List<Column> querySubBySystem(long systemId) {
@@ -226,7 +171,62 @@ public class ColumnServiceImpl implements ColumnService {
     @Override
     public void clearById(long id) {
         // TODO Auto-generated method stub
-        
     }
-    
+//  @Override
+//  public boolean isExist(int parentColumnId, String columnName) {
+//      if (ColumnDao.countByPidAndName(parentColumnId, columnName) > 0) {
+//          return true;
+//      }
+//      return false;
+//  }
+//
+//  @Override
+//  public void delById(long id) {
+//      ColumnDao.delById(id);
+//  }
+//
+//  @Override
+//  public List<Column> queryByParentId(int parentColumnId, int createUserId) {
+//      return ColumnDao.queryByParentId(parentColumnId, createUserId);
+//  }
+//
+//  @Override
+//  public List<Column> queryByUserId(long createUserId) {
+//      return ColumnDao.queryByUserId(createUserId);
+//  }
+//
+//  @Override
+//  public List<Column> queryByUserIdAndSystem(long createUserId, long systemId) {
+//      return ColumnDao.queryByUserIdAndSystem(createUserId, systemId);
+//  }
+//
+//  @Override
+//  public List<Column> queryAll() {
+//      return ColumnDao.queryAll();
+//  }
+//
+//  @Override
+//  public List<Column> queryAllDel() {
+//      return ColumnDao.queryAllDel();
+//  }
+//
+//  @Override
+//  public void recoverOneKC(Long id) {
+//      if (null == id || id.longValue() < 0) {
+//          return;
+//      }
+//
+//      ColumnDao.recoverOneKC(id);
+//  }
+//
+//  @Override
+//  public void clearById(long id) {
+//      ColumnDao.clearById(id);
+//  }
+//
+//  @Override
+//  public List<Column> querySubByUserId(long createUserId) {
+//      return ColumnDao.querySubByUserId(createUserId);
+//  }
+
 }

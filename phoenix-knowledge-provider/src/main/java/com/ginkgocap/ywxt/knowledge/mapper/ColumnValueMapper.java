@@ -18,4 +18,10 @@ public interface ColumnValueMapper {
      * @return 
      */
     List<Column>  selectCategoryTreeBySortId(long userId,String sortId);
+    /**
+     * 查询用户订阅的所有栏目
+     * @param userId 用户id
+     * @return 用户订阅的所有栏目列表
+     */
+    public List<Column> selectSubByUserId(long userId);
 }
