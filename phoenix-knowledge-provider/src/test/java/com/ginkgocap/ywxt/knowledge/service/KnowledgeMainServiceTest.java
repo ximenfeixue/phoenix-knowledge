@@ -40,7 +40,7 @@ public class KnowledgeMainServiceTest extends TestBase {
 
 	@Autowired
 	private KnowledgeContentService knowledgeContentService;
-
+	
 	@Test
 	public void testcheckName() {
 		int knowledgetype = 2;
