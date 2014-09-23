@@ -17,6 +17,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
@@ -32,6 +33,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Autowired
     ColumnValueMapper columnValueMapper;
     @Autowired
+    ColumnMapper columnMapper;
+    @Autowired
     KnowledgeHomeDao knowledgeHomeDao;
     @Autowired
     KnowledgeNewsDAO knowledgeNewsDao;
@@ -45,9 +48,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     private UserPermissionValueMapper userPermissionValueMapper;
 
     @Override
-    public List<KnowledgeStatics> getRankList(Short type) {
+    public List<KnowledgeStatics> getRankList(Long columnid) {
+        Column c = columnMapper.selectByPrimaryKey(columnid);
+        byte type = c.getType();
         KnowledgeStaticsExample ce = new KnowledgeStaticsExample();
-        ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo(type);
+        ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo((short) type);
         ce.setLimitStart(0);
         ce.setLimitEnd(10);
         ce.setOrderByClause("commentCount desc");
@@ -55,22 +60,30 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public List<Column> getTypeList(long userId, long column, long pid) {
-        return columnValueMapper.selectByParam(pid, column, userId);
+    public List<Column> getTypeList(Long userId, long column) {
+        return columnValueMapper.selectByParam(column,Constants.gtnid, userId);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> selectAllByParam(T t, long type, boolean isBigColumn, Long columnid, Long userid, int page,
-            int size) {
+    public <T> List<T> selectAllByParam(T t, Long columnid, Long userid, int page, int size) {
+        boolean isBigColumn = false;
 
+        //查询栏目类型
+        Column column = columnMapper.selectByPrimaryKey(columnid);
+        long type = column.getType();
+        
+        //是否为栏目大类
+        if (column.getUserId() == Constants.gtnid && column.getParentId() == 0) {
+            isBigColumn = true;
+        }
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：自己，好友，全平台3种
         ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
         ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
-        
+
         //查询金桐脑(需要判断是否为栏目大类)
         if (isBigColumn) {
             ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) type);
@@ -85,7 +98,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                 ids.add(c.getColumnId());
             }
         }
-        
+
         List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
         for (ColumnKnowledge c : ckl) {
             ids.add(c.getColumnId());
@@ -102,5 +115,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.limit(p.getPageStartRow() - 1);
         query.skip(size);
         return (List<T>) mongoTemplate.find(query, t.getClass());
+    }
+
+    @Override
+    public KnowledgeStatics getPl(long id) {
+        return knowledgeStaticsMapper.selectByPrimaryKey(id);
     }
 }

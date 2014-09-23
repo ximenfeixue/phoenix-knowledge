@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper" >
-  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.Column" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="columnName" property="columnname" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="BIGINT" />
-    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
-    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="column_level_path" property="columnLevelPath" jdbcType="VARCHAR" />
-    <result column="del_status" property="delStatus" jdbcType="TINYINT" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="subscribe_count" property="subscribeCount" jdbcType="BIGINT" />
-  </resultMap>
-  
-  	<sql id="tb_name">tb_column</sql>
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper">
+	<resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.Column">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="columnName" property="columnname" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="column_level_path" property="columnLevelPath"
+			jdbcType="VARCHAR" />
+		<result column="del_status" property="delStatus" jdbcType="TINYINT" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="subscribe_count" property="subscribeCount"
+			jdbcType="BIGINT" />
+	</resultMap>
+
+	<sql id="tb_name">tb_column</sql>
 	<sql id="column_name">columnName</sql>
-  	<sql id="allColumns">
-	  id,
-	  <include refid="column_name"/>,
-	  parent_id,
-	  user_id,
-	  column_level_path,
-	  path_name,
-	  createtime,
-	  update_time,
-	  del_status,
-	  subscribe_count
+	<sql id="allColumns">
+		id,
+		<include refid="column_name" />
+		,
+		parent_id,
+		user_id,
+		column_level_path,
+		path_name,
+		createtime,
+		update_time,
+		del_status,
+		subscribe_count
 	</sql>
-  
- 	<select id="selectCategoryTreeBySortId" resultMap="BaseResultMap">
+
+	<select id="selectCategoryTreeBySortId" resultMap="BaseResultMap">
 		select *
 		from tb_column
-		where del_status=0 
+		where del_status=0
 		and user_id=#{createUserId}
 		<if test="columnLevelPath != null and columnLevelPath != ''">
-		column_level_path=#{columnLevelPath}
+			column_level_path=#{columnLevelPath}
 		</if>
 		order by column_level_path
 	</select>
-	
-	<select id="selectSubByUserId" resultMap="BaseResultMap" parameterType="Long">
-		select <include refid="allColumns"/>
-		from <include refid="tb_name"/> 
-		where del_status=0 and id IN 
-			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
+
+	<select id="selectSubByUserId" resultMap="BaseResultMap"
+		parameterType="Long">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" />
+		where del_status=0 and id IN
+		(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
 	</select>
-	
-	<select id="selectByParam" resultMap="BaseResultMap" >
-		select <include refid="allColumns"/>
-		from <include refid="tb_name"/> 
-		where del_status=0 and t.user_id=#{userId} t.parent_id=#{pid} AND t.id=#{column}
+
+	<select id="selectByParam" resultMap="BaseResultMap">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" />
+		where del_status=0
+		(and 1=1
+		<if test="userId != null">
+			and t.user_id=#{userId}
+		</if>
+		or t.user_id=#{gtnid}
+		)
+		AND t.parent_id=#{column}
 	</select>
 </mapper>

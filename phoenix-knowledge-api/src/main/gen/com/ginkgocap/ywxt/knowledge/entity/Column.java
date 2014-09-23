@@ -14,6 +14,8 @@ public class Column implements Serializable {
 
     private Date createtime;
 
+    private String pathName;
+
     private String columnLevelPath;
 
     private Byte delStatus;
@@ -21,6 +23,8 @@ public class Column implements Serializable {
     private Date updateTime;
 
     private Long subscribeCount;
+
+    private Byte type;
 
     private static final long serialVersionUID = 1L;
 
@@ -64,6 +68,14 @@ public class Column implements Serializable {
         this.createtime = createtime;
     }
 
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
     public String getColumnLevelPath() {
         return columnLevelPath;
     }
@@ -94,5 +106,13 @@ public class Column implements Serializable {
 
     public void setSubscribeCount(Long subscribeCount) {
         this.subscribeCount = subscribeCount;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

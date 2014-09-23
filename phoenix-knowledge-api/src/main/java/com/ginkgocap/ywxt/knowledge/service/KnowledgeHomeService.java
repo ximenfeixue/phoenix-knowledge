@@ -22,29 +22,34 @@ public interface KnowledgeHomeService {
      * 查询分类
      * @param userId 用户id
      * @param column 栏目
-     * @param pid 父id
      * @return
      */
-    public List<Column>getTypeList(long userId,long column,long pid);
+    public List<Column>getTypeList(Long userId,long column);
 
     /**
      * 查询知识
      * @param t类型实例 
-     * @param type 类型id
-     * @param isBigColumn 是否为大栏目
      * @param columnid 栏目id
      * @param userid 用户id
      * @param page 当前页码
      * @param size 每页大小
      * @return
      */
-    public <T> List<T> selectAllByParam(T t, long type, boolean isBigColumn, Long columnid, Long userid, int page, int size);
+    public <T> List<T> selectAllByParam(T t, Long columnid, Long userid, int page, int size);
 
     /**
      * 查询排行
-     * @param type 类型
+     * @param column 栏目id
      * @return
      */
-    public List<KnowledgeStatics> getRankList(Short type);
+    public List<KnowledgeStatics> getRankList(Long  colunm);
+    
+    /**
+     * 根据知识id获取评论等个数
+     * @param id
+     * @return
+     */
+    public KnowledgeStatics getPl(long id);
+    
 
 }

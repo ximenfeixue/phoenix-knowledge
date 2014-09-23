@@ -34,5 +34,5 @@ public interface ColumnValueMapper {
      * @param userId 用户id
      * @return
      */
-    public List<Column> selectByParam(@Param("pid")long pid ,@Param("column")long column ,@Param("userId")long userId);
+    public List<Column> selectByParam(@Param("column")long column ,@Param("gtnid")long gtnid ,@Param("userId")long userId);
 }

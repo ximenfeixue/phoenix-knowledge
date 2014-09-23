@@ -435,6 +435,76 @@ public class ColumnExample {
             return (Criteria) this;
         }
 
+        public Criteria andPathNameIsNull() {
+            addCriterion("path_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameIsNotNull() {
+            addCriterion("path_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameEqualTo(String value) {
+            addCriterion("path_name =", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameNotEqualTo(String value) {
+            addCriterion("path_name <>", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameGreaterThan(String value) {
+            addCriterion("path_name >", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameGreaterThanOrEqualTo(String value) {
+            addCriterion("path_name >=", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameLessThan(String value) {
+            addCriterion("path_name <", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameLessThanOrEqualTo(String value) {
+            addCriterion("path_name <=", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameLike(String value) {
+            addCriterion("path_name like", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameNotLike(String value) {
+            addCriterion("path_name not like", value, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameIn(List<String> values) {
+            addCriterion("path_name in", values, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameNotIn(List<String> values) {
+            addCriterion("path_name not in", values, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameBetween(String value1, String value2) {
+            addCriterion("path_name between", value1, value2, "pathName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameNotBetween(String value1, String value2) {
+            addCriterion("path_name not between", value1, value2, "pathName");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnLevelPathIsNull() {
             addCriterion("column_level_path is null");
             return (Criteria) this;
@@ -685,8 +755,73 @@ public class ColumnExample {
             return (Criteria) this;
         }
 
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Byte value) {
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Byte value) {
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Byte value) {
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Byte value) {
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Byte> values) {
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Byte> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Byte value1, Byte value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnnameLikeInsensitive(String value) {
             addCriterion("upper(columnName) like", value.toUpperCase(), "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNameLikeInsensitive(String value) {
+            addCriterion("upper(path_name) like", value.toUpperCase(), "pathName");
             return (Criteria) this;
         }
 
