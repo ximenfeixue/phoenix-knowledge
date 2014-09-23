@@ -61,7 +61,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @Override
     public List<Column> getTypeList(Long userId, long column) {
-        return columnValueMapper.selectByParam(column,Constants.gtnid, userId);
+        return columnValueMapper.selectByParam(column, Constants.gtnid, userId);
     }
 
     @SuppressWarnings("unchecked")
@@ -72,7 +72,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(columnid);
         long type = column.getType();
-        
+
         //是否为栏目大类
         if (column.getUserId() == Constants.gtnid && column.getParentId() == 0) {
             isBigColumn = true;
@@ -115,6 +115,37 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.limit(p.getPageStartRow() - 1);
         query.skip(size);
         return (List<T>) mongoTemplate.find(query, t.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
+
+        Criteria criteria = new Criteria();
+        List<Long> ids = new ArrayList<Long>();
+
+        //查询栏目大类下的数据：自己，好友，全平台3种
+        ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
+        ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
+
+        //查询金桐脑
+        ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
+        List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
+        for (ColumnKnowledge c : ckl) {
+            ids.add(c.getColumnId());
+        }
+
+        //查询资讯
+        if (ids != null) {
+            criteria.and("_id").in(ids);
+        }
+        Query query = new Query(criteria);
+        query.sort().on("createtime", Order.DESCENDING);
+        long count = mongoTemplate.count(query, ty.obj().getClass());
+        PageUtil p = new PageUtil((int) count, page, size);
+        query.limit(p.getPageStartRow() - 1);
+        query.skip(size);
+        return (List<T>) mongoTemplate.find(query, ty.obj().getClass());
     }
 
     @Override

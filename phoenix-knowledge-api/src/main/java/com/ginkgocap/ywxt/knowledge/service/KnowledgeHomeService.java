@@ -9,6 +9,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 /** 
  * <p>知识首页操作接口</p>  
@@ -50,6 +51,15 @@ public interface KnowledgeHomeService {
      * @return
      */
     public KnowledgeStatics getPl(long id);
+
+    /**
+     * 首页查询
+     * @param ty 类型
+     * @param page 当前页
+     * @param size 每页大小
+     * @return
+     */
+    public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size);
     
 
 }
