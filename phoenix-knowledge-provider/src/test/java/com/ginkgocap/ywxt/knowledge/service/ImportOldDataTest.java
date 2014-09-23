@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Iterator;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -12,10 +13,6 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
-import com.ginkgocap.ywxt.knowledge.service.idUtil.KnowledgeMongoIncService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeCaseService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeInvestmentService;
-import com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeMainService;
 import com.ginkgocap.ywxt.utils.DateUtils;
 
 /**
