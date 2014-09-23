@@ -40,10 +40,15 @@
 
   <select id="selectByParamsSingle" resultType="long" >
 		select knowledge_id from tb_user_permission
-		where (
-		(receive_user_id=#{receive_user_id} and type=3) 
-			or type=4 )
-		and column_id=#{column_id} 
+		where (1=1 
+		<if test="receive_user_id != null">
+			and (receive_user_id=#{receive_user_id} and type=3) 
+		</if>
+			or type=4 
+			)
+		<if test="column_id !=null">
+			and column_id=#{column_id} 
+		</if>
 	</select>
 
 

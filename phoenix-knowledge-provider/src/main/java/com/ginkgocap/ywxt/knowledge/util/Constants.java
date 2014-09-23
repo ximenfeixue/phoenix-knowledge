@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Constants {
 
+	public static long gtnid = 0l;
+	
 	public static String status = "status";
 
 	public static String errormessage = "errormessage";

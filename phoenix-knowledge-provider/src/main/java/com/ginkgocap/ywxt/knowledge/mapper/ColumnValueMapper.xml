@@ -45,4 +45,10 @@
 		where del_status=0 and id IN 
 			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
 	</select>
+	
+	<select id="selectByParam" resultMap="BaseResultMap" >
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> 
+		where del_status=0 and t.user_id=#{userId} t.parent_id=#{pid} AND t.id=#{column}
+	</select>
 </mapper>
