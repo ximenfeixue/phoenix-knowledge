@@ -10,10 +10,6 @@ import java.util.Date;
  */
 public class KnowledgeInvestment extends Knowledge {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3834004182499990945L;
 	// 老知识ID
 	private long oid;
 
