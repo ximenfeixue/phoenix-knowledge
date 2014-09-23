@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
@@ -18,7 +19,8 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 
-public abstract class KnowledgeReaderServiceImpl implements
+@Service("knowledgeReaderService")
+public class KnowledgeReaderServiceImpl implements
 		KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
@@ -63,29 +65,29 @@ public abstract class KnowledgeReaderServiceImpl implements
 	}
 
 	@Override
-	public Map<String, Boolean> showHeadTag(long kid, int type) {
+	public Map<String, Boolean> showHeadTag(long kid, String type) {
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		boolean download = false;
 		boolean sourceFile = false;
 		boolean category = false;
 		boolean mark = false;
 
-		if (type == Constants.Type.News.v()) {
+		if (Integer.parseInt(type) == Constants.Type.News.v()) {
 			sourceFile = true;
-		} else if (type == Constants.Type.Industry.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.Industry.v()) {
 			category = true;
-		} else if (type == Constants.Type.Asset.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.Asset.v()) {
 			sourceFile = true;
-		} else if (type == Constants.Type.BookReport.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.BookReport.v()) {
 			mark = true;
 			download = true;
 			category = true;
-		} else if (type == Constants.Type.Example.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.Example.v()) {
 			download = true;
 			category = true;
-		} else if (type == Constants.Type.Investment.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.Investment.v()) {
 			category = true;
-		} else if (type == Constants.Type.Macro.v()) {
+		} else if (Integer.parseInt(type) == Constants.Type.Macro.v()) {
 			sourceFile = true;
 		}
 

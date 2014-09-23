@@ -42,7 +42,7 @@ public interface KnowledgeReaderService {
 	 *            文章类型(十一种类型之一)
 	 * @return
 	 */
-	Map<String, Boolean> showHeadTag(long kid, int type);
+	Map<String, Boolean> showHeadTag(long kid, String type);
 
 	/**
 	 * 返回文章内容，包括title content
