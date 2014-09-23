@@ -9,12 +9,8 @@ import java.util.Date;
  * @author Administrator
  * 
  */
-public class Knowledge implements Serializable {
+public class Knowledge {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3870485570359777439L;
 
 	// id
 	private long id;
