@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,12 +8,8 @@ import java.util.Date;
  * @author caihe
  * 
  */
-public class KnowledgeInvestment extends Knowledge implements Serializable {
+public class KnowledgeInvestment extends Knowledge {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6269965672863016722L;
 	// 老知识ID
 	private long oid;
 
