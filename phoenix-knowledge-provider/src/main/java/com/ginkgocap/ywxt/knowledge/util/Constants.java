@@ -155,4 +155,19 @@ public class Constants {
 			return c;
 		}
 	}
+
+	public enum StaticsValue {
+		/* 统计信息权值 */
+		commentCount(1), shareCount(1), collCount(1), clickCount(1);
+
+		private int v;
+
+		private StaticsValue(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
+	}
 }

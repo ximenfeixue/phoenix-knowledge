@@ -12,7 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.knowledge.util.TypeUtils;
@@ -25,6 +30,9 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 
 	@Resource
 	private KnowledgeCollectionMapper knowledgeCollectionMapper;
+
+	@Resource
+	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
 
 	@Override
 	public Map<String, Object> findHtmlContentFromMongo(long kid, String type)
@@ -62,4 +70,15 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 		return knowledgeCollectionMapper.insertSelective(coll);
 	}
 
+	@Override
+	public int addStaticsCount(long kid, int commentCount, int shareCount,
+			int collCount, int clickCount) {
+
+		int count = knowledgeStaticsMapperManual.updateStatics(kid,
+				commentCount, shareCount, collCount, clickCount);
+
+		return count;
+	}
+	
+		
 }

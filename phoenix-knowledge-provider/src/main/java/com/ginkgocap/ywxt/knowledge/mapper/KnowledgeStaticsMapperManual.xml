@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual">
+	<update id="updateStatics">
+		update tb_knowledge_statics set
+		<if test="commentCount != 0">
+			commentCount = #{comment}
+		</if>
+		<if test="shareCount != 0">
+			shareCount = #{shareCount}
+		</if>
+		<if test="collCount != 0">
+			collCount = #{collCount}
+		</if>
+		<if test="clickCount != 0">
+			clickCount = #{clickCount}
+		</if>
+
+		where knowledge_id = #{kid}
+
+	</update>
+</mapper>

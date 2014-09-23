@@ -133,9 +133,9 @@ public abstract class KnowledgeReaderServiceImpl implements
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addCollFail.c());
 		} else {
-			//存储收藏数
-			
-			
+			// 存储收藏数
+			knowledgeReaderDAO.addStaticsCount(kid, 0, 0,
+					Constants.StaticsValue.collCount.v(), 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 		}
 		return result;
