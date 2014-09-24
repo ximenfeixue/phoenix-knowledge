@@ -11,6 +11,8 @@ public class Constants {
 
 	public static long gtnid = 0l;
 	
+	public static String redisOrderColumn = "redisOrderColumn";
+	
 	public static String status = "status";
 
 	public static String errormessage = "errormessage";
