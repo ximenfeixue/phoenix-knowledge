@@ -22,10 +22,22 @@ import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 @Service("columnService")
 public class ColumnServiceImpl implements ColumnService {
 
+    public static int NO_DEL_VALUE=0;
+    
     @Autowired
-    private ColumnMapper columnMapper;
+    ColumnMapper columnMapper;
     @Autowired
     private ColumnValueMapper columnValueMapper;
+    
+    /**
+     * 在查询条件中增加delstatus条件，过滤掉已删除对象
+     * @param c
+     * @return
+     */
+    public Criteria filterDel(Criteria c){
+        c.andDelStatusEqualTo(Byte.valueOf(NO_DEL_VALUE+""));
+        return c;
+    }
 
     @Override
     public Column saveOrUpdate(Column kc) {
@@ -46,8 +58,29 @@ public class ColumnServiceImpl implements ColumnService {
             
             //TODO 参考UserCategoryServiceImpl.insert 生成columnlevelpath
             //USERID应为金桐脑的
+            System.out.println(columnMapper);
+            columnMapper.insertSelective(kc);
+            ColumnExample ce=new ColumnExample();
+            filterDel(ce.createCriteria().andUpdateTimeEqualTo(date));
+            kc=columnMapper.selectByExample(ce).get(0);
             
-            columnMapper.insert(kc);
+            
+            String sort="";
+            
+            if (kc.getParentId()>0) {
+                sort=KCHelper.getSortPath(kc.getParentId())+KCHelper.getSortPath(kc.getId());
+            }else if(kc.getParentId()==0){
+                sort=KCHelper.getSortPath(kc.getId());
+            }
+            
+            kc.setColumnLevelPath(sort);
+            
+            Column c=new Column();
+            c.setId(id);
+            c.setColumnLevelPath(sort);
+            
+            columnMapper.updateByPrimaryKeySelective(c);
+            
             return kc;
         }
 
@@ -122,6 +155,23 @@ public class ColumnServiceImpl implements ColumnService {
         List<Column> list=columnValueMapper.selectSubByUserId(createUserId);
         return list;
     }
+    
+    @Override
+    public List<Column> queryByUserIdAndSystem(long createUserId, long systemId) {
+        List<Long> values=new ArrayList<Long>();
+        values.add(createUserId);
+        values.add(systemId);
+        
+        ColumnExample ce=new ColumnExample();
+        Criteria c=ce.createCriteria().andUserIdIn(values);
+        filterDel(c);
+        
+        ce.setOrderByClause("id ASC");
+        //TODO 排序
+        
+        List<Column> list= columnMapper.selectByExample(ce);
+        return list;
+    }
 
     @Override
     public void delById(long id) {
@@ -148,11 +198,7 @@ public class ColumnServiceImpl implements ColumnService {
         return null;
     }
 
-    @Override
-    public List<Column> queryByUserIdAndSystem(long createUserId, long systemId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+   
 
     @Override
     public List<Column> queryAll() {

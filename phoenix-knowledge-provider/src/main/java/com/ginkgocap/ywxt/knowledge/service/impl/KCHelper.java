@@ -65,6 +65,20 @@ public class KCHelper {
         return type;
     }
     
+    public static String getSortPath(Long id){
+        int i=9;
+        StringBuffer sid= new StringBuffer(id+"");
+        int l=sid.length();
+        if (l<9) {
+            int a=i-l;
+            for(int j=0;j<a;j++ ){
+                sid.insert(0, 0);
+            }
+        }
+        
+        return sid.toString();
+    }
+    
 //    public static KnowledgeColumn setKCType(KnowledgeColumn kc){
 //        Long pid=kc.getParentColumnId();
 //        
@@ -127,7 +141,9 @@ public class KCHelper {
     
     public static void main(String[] args) {
         
-        System.out.println(resolveKCType(29l, 7l));
+//        System.out.println(resolveKCType(29l, 7l));
+        
+       System.out.println(getSortPath(9l));
     }
     
    final class KCType{

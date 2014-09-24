@@ -9,7 +9,7 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
 /**
  * 栏目dao接口
  * <p>于2014-9-18 由 bianzhiwei 创建 </p>
- * @author  <p>当前负责人 bianzhiwei</p>   
+ * @author  <p>当前负责人 bianzhiwei & guangyuan</p>   
  *
  */
 public interface ColumnValueMapper {
@@ -35,4 +35,5 @@ public interface ColumnValueMapper {
      * @return
      */
     public List<Column> selectByParam(@Param("column")long column ,@Param("gtnid")long gtnid ,@Param("userId")long userId);
+    
 }

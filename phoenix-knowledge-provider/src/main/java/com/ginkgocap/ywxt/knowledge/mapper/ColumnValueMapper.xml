@@ -19,8 +19,7 @@
 	<sql id="column_name">columnName</sql>
 	<sql id="allColumns">
 		id,
-		<include refid="column_name" />
-		,
+		<include refid="column_name" />,
 		parent_id,
 		user_id,
 		column_level_path,
