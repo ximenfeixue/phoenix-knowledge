@@ -42,7 +42,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 	private KnowledgeCategoryMapper knowledgeCategoryMapper;
 
 	private CategoryHelper helper = new CategoryHelper();
-	
+
 	@Resource
 	private UserCategoryService userCategoryService;
 
@@ -104,7 +104,13 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 			}
 
 		}
-		return knowledgeCategoryValueMapper.batchInsert(list);
+		if (list != null && list.size() > 0) {
+
+			return knowledgeCategoryValueMapper.batchInsert(list);
+		} else {
+
+			return 0;
+		}
 
 	}
 

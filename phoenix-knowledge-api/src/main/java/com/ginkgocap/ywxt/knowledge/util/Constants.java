@@ -10,12 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 public class Constants {
 
 	public static long gtnid = 0l;
-	
+
 	public static String redisOrderColumn = "redisOrderColumn";
-	
+
 	public static String status = "status";
 
 	public static String errormessage = "errormessage";
+
+	public final static String msg = "msg";
 
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
