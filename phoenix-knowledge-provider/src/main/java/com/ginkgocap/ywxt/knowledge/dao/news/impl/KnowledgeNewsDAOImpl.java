@@ -46,7 +46,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 
 	@Override
 	public KnowledgeNews insertknowledge(KnowledgeNews knowledge) {
-		mongoTemplate.save(knowledge);
+		mongoTemplate.save(knowledge, "KnowledgeNews");
 		return knowledge;
 	}
 
