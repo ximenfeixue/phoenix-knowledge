@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Administrator
  * 
  */
-public class Knowledge {
+public class Knowledge implements Serializable {
 
 	// id
 	private long id;
