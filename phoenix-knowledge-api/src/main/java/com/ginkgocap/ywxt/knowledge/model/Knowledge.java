@@ -10,7 +10,6 @@ import java.util.Date;
  * 
  */
 public class Knowledge {
-	
 
 	// id
 	private long id;
@@ -66,7 +65,7 @@ public class Knowledge {
 	private int report_status;
 
 	// 附件ID
-	private long taskid;
+	private String taskid;
 
 	// 标签
 	private String tag;
@@ -226,11 +225,11 @@ public class Knowledge {
 		this.report_status = report_status;
 	}
 
-	public long getTaskid() {
+	public String getTaskid() {
 		return taskid;
 	}
 
-	public void setTaskid(long taskid) {
+	public void setTaskid(String taskid) {
 		this.taskid = taskid;
 	}
 
