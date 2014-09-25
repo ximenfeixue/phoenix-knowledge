@@ -5,23 +5,24 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 
 @Service("knowledgeReaderService")
-public class KnowledgeReaderServiceImpl implements
-		KnowledgeReaderService {
+public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
 			.getLogger(KnowledgeReaderServiceImpl.class);
@@ -104,16 +105,29 @@ public class KnowledgeReaderServiceImpl implements
 		Map<String, Object> result = new HashMap<String, Object>();
 		String content = null;
 		try {
-			Map<String, Object> map = knowledgeReaderDAO
-					.findHtmlContentFromMongo(kid, type);
-			if (map == null) {
+			Knowledge knowledge = knowledgeReaderDAO.findHtmlContentFromMongo(
+					kid, type);
+
+			if (knowledge == null) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.artNotExsit.c());
+				return result;
 			}
+			result.put("title", knowledge.getTitle());
+			result.put(
+					"content",
+					StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
+							.getContent() : knowledge.getHcontent());
 
+			result.put("createtime",
+					DateUtil.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
+			result.put("author", knowledge.getUname());
+			result.put("source", knowledge.getSource());
+
+			result.put("tags", knowledge.getTags());
+			
 			result.put(Constants.status, Constants.ResultType.success.v());
-			result.put("content", content);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

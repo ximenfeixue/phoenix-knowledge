@@ -68,14 +68,14 @@ public class Knowledge implements Serializable {
 	private String taskid;
 
 	// 标签
-	private String tag;
+	private String tags;
 
-	public String getTag() {
-		return tag;
+	public String getTags() {
+		return tags;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	// 高亮状态（0-未加 1-已加）

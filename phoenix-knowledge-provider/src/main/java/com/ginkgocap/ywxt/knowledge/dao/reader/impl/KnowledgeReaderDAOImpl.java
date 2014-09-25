@@ -19,6 +19,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.knowledge.util.TypeUtils;
 
@@ -35,9 +36,8 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
 
 	@Override
-	public Map<String, Object> findHtmlContentFromMongo(long kid, String type)
+	public Knowledge findHtmlContentFromMongo(long kid, String type)
 			throws ClassNotFoundException {
-		Map<String, Object> result = new HashMap<String, Object>();
 		MongoUtils util = new MongoUtils();
 		String c = util.getTableName(type);
 		if (StringUtils.isBlank(c))
@@ -45,15 +45,8 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 
 		Knowledge knowledge = (Knowledge) mongoTemplate.findById(kid,
 				Class.forName(c), util.getCollectionName(c));
-		if (knowledge == null)
-			return null;
-
-		result.put("title", knowledge.getTitle());
-		result.put(
-				"content",
-				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
-						.getContent() : knowledge.getHcontent());
-		return result;
+		
+		return knowledge;
 	}
 
 	@Override
@@ -79,6 +72,5 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 
 		return count;
 	}
-	
-		
+
 }

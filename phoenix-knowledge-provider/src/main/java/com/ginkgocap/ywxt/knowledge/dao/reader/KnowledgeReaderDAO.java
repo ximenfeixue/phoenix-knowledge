@@ -1,10 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.dao.reader;
 
-import java.util.Map;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 public interface KnowledgeReaderDAO {
 
-	Map<String, Object> findHtmlContentFromMongo(long kid, String type)
+	Knowledge findHtmlContentFromMongo(long kid, String type)
 			throws ClassNotFoundException;
 
 	int addCollection(long kid, long userid, String type, String source,

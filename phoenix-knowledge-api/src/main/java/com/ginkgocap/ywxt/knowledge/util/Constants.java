@@ -149,7 +149,7 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("文章不存在或已被删除!"), addCollFail("文章收藏失败!");
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!");
 
 		private String c;
 
