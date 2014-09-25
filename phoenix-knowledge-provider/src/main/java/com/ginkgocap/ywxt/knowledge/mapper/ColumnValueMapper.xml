@@ -19,8 +19,7 @@
 	<sql id="column_name">columnName</sql>
 	<sql id="allColumns">
 		id,
-		<include refid="column_name" />
-		,
+		<include refid="column_name" />,
 		parent_id,
 		user_id,
 		column_level_path,
@@ -65,5 +64,9 @@
 		or t.user_id=#{gtnid}
 		)
 		AND t.parent_id=#{column}
+	</select>
+	
+	<select id="selectMaxID" resultType="Long">
+	select MAX(id) from <include refid="tb_name" />
 	</select>
 </mapper>

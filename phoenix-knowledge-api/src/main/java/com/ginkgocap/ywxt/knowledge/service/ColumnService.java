@@ -49,18 +49,21 @@ public interface ColumnService {
      * @return 栏目列表
      */
     public List<Column> queryByParentId(int parentColumnId,int createUserId);
+    
     /**
      * queryByUserId  查询用户创建的所有栏目
      * @param createUserId 用户id
      * @return 用户创建的所有栏目列表
      */
     public List<Column> queryByUserId(long createUserId);
+    
     /**
      * queryByUserId  查询用户订阅的所有栏目
      * @param createUserId 用户id
      * @return 用户订阅的所有栏目列表
      */
     public List<Column> querySubByUserId(long createUserId);
+    
     /**
      * queryByUserId  查询系统所有可订阅的栏目
      * @param systemId 系统用户id
@@ -76,6 +79,12 @@ public interface ColumnService {
      */
     public List<Column> queryByUserIdAndSystem(long createUserId,long systemId);
     
+    /**
+     * 查询该节点所有上级节点，参数对象c必须包含父id
+     * @param c
+     * @return 父节点列表，列表的最后一个是根节点
+     */
+    public List<Column> selectAncestors(Column c);
     /**
      * queryAll 查询所有未删除的栏目
      * @return 所有栏目列表
