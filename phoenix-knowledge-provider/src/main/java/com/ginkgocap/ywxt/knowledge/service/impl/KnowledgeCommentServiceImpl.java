@@ -35,7 +35,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.userNotExsit.c());
+					Constants.ErrorMessage.artUserNotExsit.c());
 			return result;
 		}
 		KnowledgeComment comment = new KnowledgeComment();
