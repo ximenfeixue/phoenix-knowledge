@@ -176,4 +176,24 @@ public class Constants {
 			return v;
 		}
 	}
+
+	public enum SumbitType {
+		submit(1, "发布!"), submitandadd(2, "发布并新增!");
+
+		private String c;
+		private int v;
+
+		private SumbitType(int v, String c) {
+			this.v = v;
+			this.c = c;
+		}
+
+		public int v() {
+			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
 }
