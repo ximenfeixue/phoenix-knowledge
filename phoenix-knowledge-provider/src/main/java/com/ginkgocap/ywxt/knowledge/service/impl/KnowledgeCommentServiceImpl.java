@@ -15,6 +15,8 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCommentMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.UserService;
 
 @Service("knowledgeCommentService")
 public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
@@ -22,10 +24,20 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	@Resource
 	private KnowledgeCommentMapper knowledgeCommentMapper;
 
+	@Resource
+	private UserService userService;
+
 	@Override
 	public Map<String, Object> addComment(long kid, long userid, long pid,
 			String content) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		User user = userService.findByUid(userid);
+		if (user == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.userNotExsit.c());
+			return result;
+		}
 		KnowledgeComment comment = new KnowledgeComment();
 		comment.setKnowledgeId(kid);
 		comment.setCreatetime(new Date());
@@ -35,6 +47,9 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		comment.setStatus(Constants.CommentStatus.common.c());
 		comment.setCount(0l);
 		comment.setContent(content);
+		comment.setUsername(user.getUserName());
+		comment.setPic(user.getPicPath());
+
 		int v = knowledgeCommentMapper.insertSelective(comment);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());

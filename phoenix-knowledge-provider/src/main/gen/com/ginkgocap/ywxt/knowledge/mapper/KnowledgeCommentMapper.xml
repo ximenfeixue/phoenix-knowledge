@@ -10,6 +10,8 @@
     <result column="parentid" property="parentid" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="count" property="count" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="pic" property="pic" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -70,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, knowledge_id, content, createtime, status, parentid, user_id, count
+    id, knowledge_id, content, createtime, status, parentid, user_id, count, username, 
+    pic
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample" >
     select
@@ -108,10 +111,12 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment" >
     insert into tb_knowledge_comment (id, knowledge_id, content, 
       createtime, status, parentid, 
-      user_id, count)
+      user_id, count, username, 
+      pic)
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}, #{parentid,jdbcType=BIGINT}, 
-      #{userId,jdbcType=BIGINT}, #{count,jdbcType=BIGINT})
+      #{userId,jdbcType=BIGINT}, #{count,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, 
+      #{pic,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment" >
     insert into tb_knowledge_comment
@@ -140,6 +145,12 @@
       <if test="count != null" >
         count,
       </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="pic != null" >
+        pic,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -165,6 +176,12 @@
       </if>
       <if test="count != null" >
         #{count,jdbcType=BIGINT},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -201,6 +218,12 @@
       <if test="record.count != null" >
         count = #{record.count,jdbcType=BIGINT},
       </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pic != null" >
+        pic = #{record.pic,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -215,7 +238,9 @@
       status = #{record.status,jdbcType=BIT},
       parentid = #{record.parentid,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      count = #{record.count,jdbcType=BIGINT}
+      count = #{record.count,jdbcType=BIGINT},
+      username = #{record.username,jdbcType=VARCHAR},
+      pic = #{record.pic,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -244,6 +269,12 @@
       <if test="count != null" >
         count = #{count,jdbcType=BIGINT},
       </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        pic = #{pic,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -255,7 +286,9 @@
       status = #{status,jdbcType=BIT},
       parentid = #{parentid,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=BIGINT},
-      count = #{count,jdbcType=BIGINT}
+      count = #{count,jdbcType=BIGINT},
+      username = #{username,jdbcType=VARCHAR},
+      pic = #{pic,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

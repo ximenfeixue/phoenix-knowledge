@@ -20,6 +20,10 @@ public class KnowledgeComment implements Serializable {
 
     private Long count;
 
+    private String username;
+
+    private String pic;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -84,5 +88,21 @@ public class KnowledgeComment implements Serializable {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }
