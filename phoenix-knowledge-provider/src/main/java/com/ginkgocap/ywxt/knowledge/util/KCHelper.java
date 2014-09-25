@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.impl;
+package com.ginkgocap.ywxt.knowledge.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
  */
 public class KCHelper {
 
-    public static Integer FIRST_PATH_NUMBER=6;
+    public static Integer FIRST_PATH_NUMBER=9;
     public static Integer DEFAULT_TYPE=99;
     public static String[] kcTypeArray={"其他","资讯","投融工具","行业","经典案例","图书报告","资产管理","宏观","观点","判例","法律法规","文章"};
     public static List<String> kcTypeList =new ArrayList<String>(Arrays.asList(kcTypeArray));
@@ -65,7 +65,21 @@ public class KCHelper {
         return type;
     }
     
-    public static String getSortPath(Long id){
+    public static String getSortPath(List<Long> pidList,Long pathId){
+        StringBuffer path=new StringBuffer();
+        
+        if (pidList.size()>1) {
+            for (int i = pidList.size()-2; i >=0; i--) {
+                path.append(getSortNum(pidList.get(i)));
+            }
+        }
+        
+        path.append(getSortNum(pathId));
+        
+        return path.toString();
+    }
+    
+    public static String getSortNum(Long id){
         int i=9;
         StringBuffer sid= new StringBuffer(id+"");
         int l=sid.length();
@@ -143,7 +157,23 @@ public class KCHelper {
         
 //        System.out.println(resolveKCType(29l, 7l));
         
-       System.out.println(getSortPath(9l));
+//       System.out.println(getSortPath(9l));
+//        System.out.println(System.currentTimeMillis()-1411615909652l);
+//        long l=System.currentTimeMillis()-1411615909652l;
+//        System.out.println(l/100);
+//        System.out.println(2*12*24*60*60*1000);
+//        System.out.println(2*12*24*60*60*10);
+//        System.out.println(2*12*24*60*60);
+//        System.out.println(5*12*24*60*60*10);
+//        System.out.println(5*12*24*60*60);
+        
+        List<Long> list=new ArrayList<Long>();
+//        list.add(912l);
+//        list.add(91l);
+//        list.add(9l);
+        list.add(0l);
+        
+        System.out.println(getSortPath(list, 9123l));
     }
     
    final class KCType{

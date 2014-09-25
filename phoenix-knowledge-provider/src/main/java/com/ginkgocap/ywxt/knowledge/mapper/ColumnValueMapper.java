@@ -36,4 +36,9 @@ public interface ColumnValueMapper {
      */
     public List<Column> selectByParam(@Param("column")long column ,@Param("gtnid")long gtnid ,@Param("userId")long userId);
     
+    /**
+     * 查询数据库id最大值
+     * @return 最多id值
+     */
+    public Long selectMaxID();
 }

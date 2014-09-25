@@ -16,6 +16,7 @@ import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeColumnSubscribeMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
+import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 
 @Service("columnSubscribeService")
 public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {

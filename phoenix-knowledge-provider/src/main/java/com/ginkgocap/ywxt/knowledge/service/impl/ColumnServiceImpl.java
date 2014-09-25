@@ -16,6 +16,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
+import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 
@@ -23,6 +24,8 @@ import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 public class ColumnServiceImpl implements ColumnService {
 
     public static int NO_DEL_VALUE=0;
+    public static int ROOT_PARENT_ID=0;
+    public static int MAX_ALLOWED_LEVEL=7;
     
     @Autowired
     ColumnMapper columnMapper;
@@ -38,6 +41,24 @@ public class ColumnServiceImpl implements ColumnService {
         c.andDelStatusEqualTo(Byte.valueOf(NO_DEL_VALUE+""));
         return c;
     }
+    
+    @Override
+    public List<Column> selectAncestors(Column c){
+        
+        List<Column> list=new ArrayList<Column>(MAX_ALLOWED_LEVEL);
+        list.add(c);
+        
+        if (c.getParentId().intValue()==ROOT_PARENT_ID) {
+            return list;
+        }
+        
+        Column cs=c;
+        while(cs.getParentId().intValue()>ROOT_PARENT_ID) {
+            cs=columnMapper.selectByPrimaryKey(cs.getParentId());
+            list.add(cs);
+        }
+        return list;
+    }
 
     @Override
     public Column saveOrUpdate(Column kc) {
@@ -50,6 +71,10 @@ public class ColumnServiceImpl implements ColumnService {
         Date date = new Date();
 
         if (null == id || id.intValue() <= 0) {
+            
+            if (kc.getParentId() == null||kc.getParentId()<0) {
+                return null;
+            }
            
             kc.setCreatetime(date);
             kc.setUpdateTime(date);
@@ -58,28 +83,43 @@ public class ColumnServiceImpl implements ColumnService {
             
             //TODO 参考UserCategoryServiceImpl.insert 生成columnlevelpath
             //USERID应为金桐脑的
-            System.out.println(columnMapper);
-            columnMapper.insertSelective(kc);
+            
+            //插入数据之前必须有columnpath 可以采用maxid+1或 处理系统毫秒数 或以一个初始系统毫秒数减去十亿为基准
+            
+            List<Column> ancestors=selectAncestors(kc);
+            
+            List<Long> pids=new ArrayList<Long>();
+            for (int i = 0; i < ancestors.size(); i++) {
+                pids.add(ancestors.get(i).getParentId());
+            }
+            
+            Long pathId=columnValueMapper.selectMaxID()+1;
+            
+            String sort=KCHelper.getSortPath(pids, pathId);
+            
+//            if (kc.getParentId()>0) {
+//                sort=KCHelper.getSortPath(kc.getParentId())+KCHelper.getSortPath(pathid);
+//            }else if(kc.getParentId()==0){
+//                sort=KCHelper.getSortPath(pathid);
+//            }
+            
+            
+            
+            kc.setColumnLevelPath(sort);
+            
+            columnMapper.insert(kc);
             ColumnExample ce=new ColumnExample();
             filterDel(ce.createCriteria().andUpdateTimeEqualTo(date));
             kc=columnMapper.selectByExample(ce).get(0);
             
             
-            String sort="";
             
-            if (kc.getParentId()>0) {
-                sort=KCHelper.getSortPath(kc.getParentId())+KCHelper.getSortPath(kc.getId());
-            }else if(kc.getParentId()==0){
-                sort=KCHelper.getSortPath(kc.getId());
-            }
             
-            kc.setColumnLevelPath(sort);
-            
-            Column c=new Column();
-            c.setId(id);
-            c.setColumnLevelPath(sort);
-            
-            columnMapper.updateByPrimaryKeySelective(c);
+//            Column c=new Column();
+//            c.setId(id);
+//            c.setColumnLevelPath(sort);
+//            
+//            columnMapper.updateByPrimaryKeySelective(c);
             
             return kc;
         }

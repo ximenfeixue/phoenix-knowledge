@@ -160,6 +160,47 @@ public class ColumnServiceTest extends TestBase{
     }
     
     @Test
+    public void save(){
+        Long clearId = new Long(-1);
+        
+        try {
+            
+            Column kc =new Column();
+            Date date=new Date();
+            SimpleDateFormat f=new SimpleDateFormat("HH:mm:ss");
+            
+            kc.setColumnname("_自定义"+f.format(date));
+            kc.setParentId(0L);
+//            kc.setParentId(12L);
+//            kc.setParentId(595L);
+            kc.setUserId(71L);
+            kc.setPathName("资讯->自定义");
+            
+            Column ks = kcs.saveOrUpdate(kc);
+            
+            System.out.println(clearId=ks.getId());
+            System.out.println(ks.getColumnname());
+            
+            assertEquals(true, ks.getId()>0);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }finally{
+            try {
+                if (clearId>0) {
+//                    kcs.delById(clearId);
+//                    kcs.clearById(clearId);
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+                Assert.fail();
+            }
+           
+        }
+    }
+    
+    @Test
     public void querySubByUserId(){
         try {
             List<Column> list=kcs.querySubByUserId(72l);
