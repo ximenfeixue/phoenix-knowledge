@@ -158,14 +158,6 @@ public class KCHelper {
 //        System.out.println(resolveKCType(29l, 7l));
         
 //       System.out.println(getSortPath(9l));
-//        System.out.println(System.currentTimeMillis()-1411615909652l);
-//        long l=System.currentTimeMillis()-1411615909652l;
-//        System.out.println(l/100);
-//        System.out.println(2*12*24*60*60*1000);
-//        System.out.println(2*12*24*60*60*10);
-//        System.out.println(2*12*24*60*60);
-//        System.out.println(5*12*24*60*60*10);
-//        System.out.println(5*12*24*60*60);
         
         List<Long> list=new ArrayList<Long>();
 //        list.add(912l);

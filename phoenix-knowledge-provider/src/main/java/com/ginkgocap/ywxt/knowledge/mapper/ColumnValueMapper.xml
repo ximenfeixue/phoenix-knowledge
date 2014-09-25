@@ -69,4 +69,11 @@
 	<select id="selectMaxID" resultType="Long">
 	select MAX(id) from <include refid="tb_name" />
 	</select>
+	<update id="updateCLP" parameterType="java.util.Map">
+		UPDATE <include refid="tb_name"/> SET 
+        	column_level_path=#{columnLevelPath}
+        WHERE 
+        	id=#{id}
+	</update>
+	
 </mapper>

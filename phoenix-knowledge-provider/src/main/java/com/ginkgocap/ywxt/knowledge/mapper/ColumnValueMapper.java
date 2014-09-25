@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.mapper;
  
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.repository.query.Param;
 
@@ -41,4 +42,10 @@ public interface ColumnValueMapper {
      * @return 最多id值
      */
     public Long selectMaxID();
+    
+    /**
+     * 更新原始的columnlevelpath
+     * @return
+     */
+    public void updateCLP(Map<String,Object> map);
 }
