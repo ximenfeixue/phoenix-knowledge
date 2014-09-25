@@ -149,7 +149,7 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!");
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"),addCommentFail("评论失败!");
 
 		private String c;
 
@@ -193,6 +193,21 @@ public class Constants {
 		}
 
 		public String c() {
+			return c;
+		}
+	}
+	
+	public enum CommentStatus {
+		common(true), del(false);
+
+		private boolean c;
+
+		private CommentStatus(boolean c) {
+			this.c = c;
+		}
+
+
+		public boolean c() {
 			return c;
 		}
 	}
