@@ -81,10 +81,10 @@ public class ColumnServiceImpl implements ColumnService {
             kc.setDelStatus((byte)0);
             kc.setSubscribeCount(0l);
             
-            //TODO 参考UserCategoryServiceImpl.insert 生成columnlevelpath
-            //USERID应为金桐脑的
+            //参考UserCategoryServiceImpl.insert 生成columnlevelpath
+            //系统栏目的USERID应为金桐脑的id
             
-            //插入数据之前必须有columnpath 可以采用maxid+1或 处理系统毫秒数 或以一个初始系统毫秒数减去十亿为基准
+            //插入数据之前必须有columnpath 
             
             List<Column> ancestors=selectAncestors(kc);
             
@@ -97,29 +97,13 @@ public class ColumnServiceImpl implements ColumnService {
             
             String sort=KCHelper.getSortPath(pids, pathId);
             
-//            if (kc.getParentId()>0) {
-//                sort=KCHelper.getSortPath(kc.getParentId())+KCHelper.getSortPath(pathid);
-//            }else if(kc.getParentId()==0){
-//                sort=KCHelper.getSortPath(pathid);
-//            }
-            
-            
-            
             kc.setColumnLevelPath(sort);
             
             columnMapper.insert(kc);
+            
             ColumnExample ce=new ColumnExample();
-            filterDel(ce.createCriteria().andUpdateTimeEqualTo(date));
+            filterDel(ce.createCriteria().andUpdateTimeEqualTo(date).andCreatetimeEqualTo(date));
             kc=columnMapper.selectByExample(ce).get(0);
-            
-            
-            
-            
-//            Column c=new Column();
-//            c.setId(id);
-//            c.setColumnLevelPath(sort);
-//            
-//            columnMapper.updateByPrimaryKeySelective(c);
             
             return kc;
         }
@@ -242,8 +226,11 @@ public class ColumnServiceImpl implements ColumnService {
 
     @Override
     public List<Column> queryAll() {
-        // TODO Auto-generated method stub
-        return null;
+        ColumnExample ce=new ColumnExample();
+        Criteria c=ce.createCriteria();
+        filterDel(c);
+        List<Column> list=columnMapper.selectByExample(ce);
+        return list;
     }
 
     @Override

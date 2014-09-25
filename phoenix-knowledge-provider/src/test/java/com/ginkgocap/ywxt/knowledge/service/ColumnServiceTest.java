@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.service.CategoryService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
+import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 
@@ -36,6 +39,8 @@ import com.ginkgocap.ywxt.util.DateFunc;
 public class ColumnServiceTest extends TestBase{
     @Autowired
     private ColumnService kcs;
+    
+    @Resource ColumnValueMapper cvm;
     
 //    @Resource(name="columnService") KnowledgeColumnService cs;
  
@@ -80,7 +85,8 @@ public class ColumnServiceTest extends TestBase{
             
             for (int i=0;i<list.size();i++) {
                 Column knowledgeColumn=list.get(i);
-               // System.out.print(knowledgeColumn.getColumnName()+' ');
+                System.out.print(knowledgeColumn.getColumnname()+' ');
+                System.out.print(knowledgeColumn.getColumnLevelPath()+' ');
                 if ((i+1)%13==0) {
                     System.out.println();
                 }
@@ -222,6 +228,64 @@ public class ColumnServiceTest extends TestBase{
         try {
             boolean b=kcs.isExist(1, "股票");
             assertTrue(b);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }finally{
+            System.gc();
+        }
+       
+    }
+    
+    @Test
+    public void queryAll(){
+        
+        try {
+            List<Column> cList=kcs.queryAll();
+            System.out.println(cList.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+        
+    }
+    
+    @Test
+    public void updateColumnlevelpath(){
+        boolean b=true;
+        try {
+            if (b) {
+                return;
+            }
+           
+            Long pathId=cvm.selectMaxID()+1;
+            List<Column> cList=kcs.queryAll();
+            
+            for (int j = 0; j < cList.size(); j++) {
+                Long id=cList.get(j).getId();
+                Column c=kcs.queryById(id);
+                List<Column> ancestors=kcs.selectAncestors(c);
+                
+                List<Long> pids=new ArrayList<Long>();
+                for (int i = 0; i < ancestors.size(); i++) {
+                    pids.add(ancestors.get(i).getParentId());
+                }
+                
+                ++pathId;
+                
+                String sort=KCHelper.getSortPath(pids, pathId);
+                
+                System.out.println(sort);
+                
+                Map<String, Object> map=new HashMap<String, Object>();
+                map.put("id", id);
+                map.put("columnLevelPath", sort);
+                
+                cvm.updateCLP(map);
+            }
+            
+            
         
         } catch (Exception e) {
             e.printStackTrace();
