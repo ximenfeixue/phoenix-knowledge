@@ -18,11 +18,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public int insertKnowledgeDraft(long id, String title, long userid,
-			String uname, long cid, String cname, String source, String s_addr,
-			String cpathid, String pic, String desc, long content,
-			String hcontent, int essence, Date createtime, int status,
-			int report_status, String taskid, String tags) {
-
+			String uname, long cid, String cname, String pic, String desc,
+			long content, int essence, Date createtime, String taskid,
+			String tags) {
 		KnowledgeNews knowledgenews = new KnowledgeNews();
 		knowledgenews.setId(id);
 		knowledgenews.setTitle(title);
@@ -30,13 +28,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		knowledgenews.setUname(uname);
 		knowledgenews.setCid(cid);
 		knowledgenews.setCname(cname);
-		knowledgenews.setSource(source);
-		knowledgenews.setS_addr(s_addr);
-		knowledgenews.setHcontent(hcontent);
 		knowledgenews.setEssence(essence);
 		knowledgenews.setCreatetime(createtime);
 		knowledgenews.setStatus(Constants.Status.draft.v());
-		knowledgenews.setReport_status(report_status);
+		knowledgenews.setReport_status(0);
 		knowledgenews.setTaskid(taskid);
 		knowledgenews.setTags(tags);
 		KnowledgeNews result = knowledgeNewsDAO.insertknowledge(knowledgenews);
@@ -46,4 +41,5 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			return 0;
 		}
 	}
+
 }

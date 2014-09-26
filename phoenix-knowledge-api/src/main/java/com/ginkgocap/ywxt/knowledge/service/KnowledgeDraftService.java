@@ -17,9 +17,7 @@ public interface KnowledgeDraftService {
 	 * @return
 	 */
 	int insertKnowledgeDraft(long id, String title, long userid, String uname,
-			long cid, String cname, String source, String s_addr,
-			String cpathid, String pic, String desc, long content,
-			String hcontent, int essence, Date createtime, int status,
-			int report_status, String taskid, String tags);
+			long cid, String cname, String pic, String desc, long content,
+			int essence, Date createtime, String taskid, String tags);
 
 }
