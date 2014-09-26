@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.util.Page;
 
 /**
  * 知识相关的关系表
@@ -21,7 +22,15 @@ public interface KnowledgeDraftService {
 	int insertKnowledgeDraft(long knowledgeid, String draftname, String type,
 			long userid);
 
-	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
-			int pageno, int pagesize);
+	/**
+	 * 查询草稿箱列表
+	 * 
+	 * @param page
+	 * @param userid
+	 * @param type
+	 * @return
+	 */
+	Page<KnowledgeDraft> selectKnowledgeDraft(Page<KnowledgeDraft> page,
+			long userid, String type);
 
 }

@@ -5,20 +5,23 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDraftDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
+import com.ginkgocap.ywxt.knowledge.util.Page;
 
 @Service("knowledgeDraftService")
 public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Resource
 	private KnowledgeDraftMapper knowledgeDraftMapper;
+
+	@Autowired
+	private KnowledgeDraftDAO knowledgeDraftDAO;
 
 	@Override
 	public int insertKnowledgeDraft(long knowledgeid, String draftname,
@@ -34,18 +37,18 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
-	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
-			int pageno, int pagesize) {
-		KnowledgeDraftExample example = new KnowledgeDraftExample();
-		Criteria criteria = example.createCriteria();
-		if (StringUtils.isNotBlank(type)) {
-			criteria.andDrafttypeEqualTo(type);
-		}
-		criteria.andUseridEqualTo(userid);
-		example.setOrderByClause("createtime desc");
-		example.setLimitStart(pageno);
-		example.setLimitEnd(pagesize);
-		return knowledgeDraftMapper.selectByExample(example);
+	public Page<KnowledgeDraft> selectKnowledgeDraft(Page<KnowledgeDraft> page,
+			long userid, String type) {
+		List<KnowledgeDraft> list = knowledgeDraftDAO.selectKnowledgeDraft(
+				userid, type, (page.getPageNo() - 1) * page.getPageSize(),
+				page.getPageSize());
+
+		int count = knowledgeDraftDAO.countKnowledgeDraft(userid, type);
+
+		page.setTotalItems(count);
+		page.setResult(list);
+
+		return page;
 	}
 
 }
