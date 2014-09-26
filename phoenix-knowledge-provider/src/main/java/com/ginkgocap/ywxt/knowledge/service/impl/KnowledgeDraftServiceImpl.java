@@ -19,8 +19,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public int insertKnowledgeDraft(long id, String title, long userid,
 			String uname, long cid, String cname, String pic, String desc,
-			long content, int essence, Date createtime, String taskid,
-			String tags) {
+			long content, int essence, String taskid, String tags) {
 		KnowledgeNews knowledgenews = new KnowledgeNews();
 		knowledgenews.setId(id);
 		knowledgenews.setTitle(title);
@@ -29,7 +28,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		knowledgenews.setCid(cid);
 		knowledgenews.setCname(cname);
 		knowledgenews.setEssence(essence);
-		knowledgenews.setCreatetime(createtime);
+		knowledgenews.setCreatetime(new Date());
 		knowledgenews.setStatus(Constants.Status.draft.v());
 		knowledgenews.setReport_status(0);
 		knowledgenews.setTaskid(taskid);

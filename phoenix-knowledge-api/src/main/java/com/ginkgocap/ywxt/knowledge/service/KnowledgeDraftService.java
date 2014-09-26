@@ -18,6 +18,6 @@ public interface KnowledgeDraftService {
 	 */
 	int insertKnowledgeDraft(long id, String title, long userid, String uname,
 			long cid, String cname, String pic, String desc, long content,
-			int essence, Date createtime, String taskid, String tags);
+			int essence, String taskid, String tags);
 
 }
