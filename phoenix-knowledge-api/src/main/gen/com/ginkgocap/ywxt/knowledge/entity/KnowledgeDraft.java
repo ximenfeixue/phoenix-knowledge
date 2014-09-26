@@ -8,7 +8,7 @@ public class KnowledgeDraft implements Serializable {
 
     private String draftname;
 
-    private Integer drafttype;
+    private String drafttype;
 
     private Date createtime;
 
@@ -32,11 +32,11 @@ public class KnowledgeDraft implements Serializable {
         this.draftname = draftname;
     }
 
-    public Integer getDrafttype() {
+    public String getDrafttype() {
         return drafttype;
     }
 
-    public void setDrafttype(Integer drafttype) {
+    public void setDrafttype(String drafttype) {
         this.drafttype = drafttype;
     }
 

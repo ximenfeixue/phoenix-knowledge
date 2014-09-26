@@ -265,52 +265,62 @@ public class KnowledgeDraftExample {
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeEqualTo(Integer value) {
+        public Criteria andDrafttypeEqualTo(String value) {
             addCriterion("drafttype =", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeNotEqualTo(Integer value) {
+        public Criteria andDrafttypeNotEqualTo(String value) {
             addCriterion("drafttype <>", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeGreaterThan(Integer value) {
+        public Criteria andDrafttypeGreaterThan(String value) {
             addCriterion("drafttype >", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andDrafttypeGreaterThanOrEqualTo(String value) {
             addCriterion("drafttype >=", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeLessThan(Integer value) {
+        public Criteria andDrafttypeLessThan(String value) {
             addCriterion("drafttype <", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeLessThanOrEqualTo(Integer value) {
+        public Criteria andDrafttypeLessThanOrEqualTo(String value) {
             addCriterion("drafttype <=", value, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeIn(List<Integer> values) {
+        public Criteria andDrafttypeLike(String value) {
+            addCriterion("drafttype like", value, "drafttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrafttypeNotLike(String value) {
+            addCriterion("drafttype not like", value, "drafttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrafttypeIn(List<String> values) {
             addCriterion("drafttype in", values, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeNotIn(List<Integer> values) {
+        public Criteria andDrafttypeNotIn(List<String> values) {
             addCriterion("drafttype not in", values, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeBetween(Integer value1, Integer value2) {
+        public Criteria andDrafttypeBetween(String value1, String value2) {
             addCriterion("drafttype between", value1, value2, "drafttype");
             return (Criteria) this;
         }
 
-        public Criteria andDrafttypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andDrafttypeNotBetween(String value1, String value2) {
             addCriterion("drafttype not between", value1, value2, "drafttype");
             return (Criteria) this;
         }
@@ -437,6 +447,11 @@ public class KnowledgeDraftExample {
 
         public Criteria andDraftnameLikeInsensitive(String value) {
             addCriterion("upper(draftname) like", value.toUpperCase(), "draftname");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrafttypeLikeInsensitive(String value) {
+            addCriterion("upper(drafttype) like", value.toUpperCase(), "drafttype");
             return (Criteria) this;
         }
     }

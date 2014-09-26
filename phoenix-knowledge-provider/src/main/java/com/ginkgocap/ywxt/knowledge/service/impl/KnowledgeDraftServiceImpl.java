@@ -1,12 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 
@@ -18,7 +22,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public int insertKnowledgeDraft(long knowledgeid, String draftname,
-			int type, long userid) {
+			String type, long userid) {
 
 		KnowledgeDraft draft = new KnowledgeDraft();
 		draft.setKnowledgeId(knowledgeid);
@@ -27,6 +31,21 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		draft.setCreatetime(new Date());
 		draft.setUserid(userid);
 		return knowledgeDraftMapper.insertSelective(draft);
+	}
+
+	@Override
+	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
+			int pageno, int pagesize) {
+		KnowledgeDraftExample example = new KnowledgeDraftExample();
+		Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(type)) {
+			criteria.andDrafttypeEqualTo(type);
+		}
+		criteria.andUseridEqualTo(userid);
+		example.setOrderByClause("createtime desc");
+		example.setLimitStart(pageno);
+		example.setLimitEnd(pagesize);
+		return knowledgeDraftMapper.selectByExample(example);
 	}
 
 }
