@@ -1,7 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.Date;
-
 /**
  * 知识相关的关系表
  * 
@@ -16,8 +14,7 @@ public interface KnowledgeDraftService {
 	 * @author caihe
 	 * @return
 	 */
-	int insertKnowledgeDraft(long id, String title, long userid, String uname,
-			long cid, String cname, String pic, String desc, String content,
-			int essence,  String taskid, String tags);
+	int insertKnowledgeDraft(long knowledgeid, String draftname, int type,
+			long userid);
 
 }

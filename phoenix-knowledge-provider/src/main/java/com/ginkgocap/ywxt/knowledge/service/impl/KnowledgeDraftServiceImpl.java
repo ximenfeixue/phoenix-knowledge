@@ -2,43 +2,31 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
-import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeDraftService")
 public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
-	@Autowired
-	private KnowledgeNewsDAO knowledgeNewsDAO;
+	@Resource
+	private KnowledgeDraftMapper knowledgeDraftMapper;
 
 	@Override
-	public int insertKnowledgeDraft(long id, String title, long userid,
-			String uname, long cid, String cname, String pic, String desc,
-			String content, int essence, String taskid, String tags) {
-		KnowledgeNews knowledgenews = new KnowledgeNews();
-		knowledgenews.setId(id);
-		knowledgenews.setTitle(title);
-		knowledgenews.setUid(userid);
-		knowledgenews.setUname(uname);
-		knowledgenews.setCid(cid);
-		knowledgenews.setCname(cname);
-		knowledgenews.setEssence(essence);
-		knowledgenews.setCreatetime(new Date());
-		knowledgenews.setStatus(Constants.Status.draft.v());
-		knowledgenews.setReport_status(0);
-		knowledgenews.setTaskid(taskid);
-		knowledgenews.setTags(tags);
-		KnowledgeNews result = knowledgeNewsDAO.insertknowledge(knowledgenews);
-		if (result.getId() > 0) {
-			return 1;
-		} else {
-			return 0;
-		}
+	public int insertKnowledgeDraft(long knowledgeid, String draftname,
+			int type, long userid) {
+
+		KnowledgeDraft draft = new KnowledgeDraft();
+		draft.setKnowledgeId(knowledgeid);
+		draft.setDraftname(draftname);
+		draft.setDrafttype(type);
+		draft.setCreatetime(new Date());
+		draft.setUserid(userid);
+		return knowledgeDraftMapper.insertSelective(draft);
 	}
 
 }
