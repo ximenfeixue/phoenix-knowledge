@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftValueMapper;
 
 /**
  * @author caihe
@@ -22,6 +23,9 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 
 	@Resource
 	private KnowledgeDraftMapper knowledgeDraftMapper;
+
+	@Resource
+	private KnowledgeDraftValueMapper knowledgeDraftValueMapper;
 
 	@Override
 	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
@@ -48,6 +52,12 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 			criteria.andDrafttypeEqualTo(type);
 		}
 		return knowledgeDraftMapper.countByExample(example);
+	}
+
+	@Override
+	public int deleteKnowledgeDraft(long[] knowledgeids, long userid) {
+
+		return knowledgeDraftValueMapper.deleteKnowledge(knowledgeids, userid);
 	}
 
 }

@@ -33,4 +33,9 @@ public interface KnowledgeDraftService {
 	Page<KnowledgeDraft> selectKnowledgeDraft(Page<KnowledgeDraft> page,
 			long userid, String type);
 
+	/**
+	 * 删除草稿箱知识
+	 */
+
+	int deleteKnowledgeDraft(long[] knowledgeids, long userid);
 }

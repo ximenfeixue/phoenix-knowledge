@@ -10,4 +10,10 @@ public interface KnowledgeDraftDAO {
 			int pageno, int pagesize);
 
 	int countKnowledgeDraft(long userid, String type);
+
+	/**
+	 * 删除草稿箱知识
+	 */
+
+	int deleteKnowledgeDraft(long[] knowledgeids, long userid);
 }

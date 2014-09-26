@@ -51,4 +51,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		return page;
 	}
 
+	@Override
+	public int deleteKnowledgeDraft(long[] knowledgeids, long userid) {
+
+		return knowledgeDraftDAO.deleteKnowledgeDraft(knowledgeids, userid);
+	}
+
 }
