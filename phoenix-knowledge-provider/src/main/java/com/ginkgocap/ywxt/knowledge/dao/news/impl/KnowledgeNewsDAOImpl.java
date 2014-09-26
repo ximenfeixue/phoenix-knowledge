@@ -100,7 +100,8 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
-		return mongoTemplate.findOne(query, KnowledgeNews.class);
+		return mongoTemplate.findOne(query, KnowledgeNews.class,
+				"KnowledgeNews");
 	}
 
 	@Override
@@ -120,5 +121,13 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		query.limit(p.getPageStartRow() - 1);
 		query.skip(size);
 		return mongoTemplate.find(query, KnowledgeNews.class);
+	}
+
+	@Override
+	public void deleteKnowledgeByid(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, "KnowledgeNews");
 	}
 }

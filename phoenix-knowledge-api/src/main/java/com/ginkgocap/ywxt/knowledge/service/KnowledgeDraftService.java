@@ -38,4 +38,9 @@ public interface KnowledgeDraftService {
 	 */
 
 	int deleteKnowledgeDraft(long[] knowledgeids, long userid);
+
+	/**
+	 * 根据知识ID查询草稿箱列表
+	 */
+	KnowledgeDraft selectByKnowledgeId(long knowledgeid);
 }

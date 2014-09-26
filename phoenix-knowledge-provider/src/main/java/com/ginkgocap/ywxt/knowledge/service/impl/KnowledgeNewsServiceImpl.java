@@ -66,4 +66,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 				page, size);
 	}
 
+	@Override
+	public void deleteKnowledgeByid(long knowledgeid) {
+		knowledgeNewsDAO.deleteKnowledgeByid(knowledgeid);
+	}
+
 }

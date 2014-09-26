@@ -57,4 +57,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		return knowledgeDraftDAO.deleteKnowledgeDraft(knowledgeids, userid);
 	}
 
+	@Override
+	public KnowledgeDraft selectByKnowledgeId(long knowledgeid) {
+
+		return knowledgeDraftMapper.selectByPrimaryKey(knowledgeid);
+	}
+
 }
