@@ -19,7 +19,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public int insertKnowledgeDraft(long id, String title, long userid,
 			String uname, long cid, String cname, String pic, String desc,
-			long content, int essence, String taskid, String tags) {
+			String content, int essence, String taskid, String tags) {
 		KnowledgeNews knowledgenews = new KnowledgeNews();
 		knowledgenews.setId(id);
 		knowledgenews.setTitle(title);
