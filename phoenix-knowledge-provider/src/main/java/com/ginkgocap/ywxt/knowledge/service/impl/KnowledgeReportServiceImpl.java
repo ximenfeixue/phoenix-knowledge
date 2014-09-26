@@ -13,8 +13,8 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeReportMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
-@Service("knowledgeReport")
-public class KnowledgeReportImpl implements KnowledgeReportService {
+@Service("knowledgeReportService")
+public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 
 	@Resource
 	private KnowledgeReportMapper knowledgeReportMapper;

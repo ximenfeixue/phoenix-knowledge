@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 
@@ -13,12 +14,15 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 public interface KnowledgeCollectionService {
 
 	/**
-	 * 将知识添加到知识收藏表中
-	 * 
-	 * @param knowledgeRCategory
+	 * 添加收藏
+	 * @param kid 知识Id
+	 * @param columnid 栏目id
+	 * @param type 知识类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）
+	 * @param source 知识来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
+	 * @param categoryid 目录id
 	 * @return
 	 */
-	int insertKnowledgeCollection(KnowledgeCollection knowledgeCollection);
+	Map<String, Object> insertKnowledgeCollection(long kid ,long columnid ,String type,String source,long categoryid);
 
 	/**
 	 * 将知识从收藏夹中删除
