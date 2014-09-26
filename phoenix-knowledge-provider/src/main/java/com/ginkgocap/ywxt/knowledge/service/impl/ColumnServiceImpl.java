@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONObject;
 
@@ -203,8 +204,17 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public List<Column> queryByParentId(int parentColumnId, int createUserId) {
-        // TODO Auto-generated method stub
+    public List<Column> queryByParentId(long parentId,long userId) {
+        ColumnExample ce=new ColumnExample(); 
+        Criteria c=ce.createCriteria().andParentIdEqualTo(parentId).andUserIdEqualTo(userId);
+        filterDel(c);
+        List<Column> list= columnMapper.selectByExample(ce);
+        return list;
+    }
+    
+    @Override
+    public List<Map<String, Object>> querySubAndStatus(long userId){
+//        
         return null;
     }
 

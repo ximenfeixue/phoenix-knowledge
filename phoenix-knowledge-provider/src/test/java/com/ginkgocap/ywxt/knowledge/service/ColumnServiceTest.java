@@ -259,7 +259,8 @@ public class ColumnServiceTest extends TestBase{
                 return;
             }
            
-            Long pathId=cvm.selectMaxID()+1;
+//            Long pathId=cvm.selectMaxID()+1;
+            Long pathId=1l;
             List<Column> cList=kcs.queryAll();
             
             for (int j = 0; j < cList.size(); j++) {

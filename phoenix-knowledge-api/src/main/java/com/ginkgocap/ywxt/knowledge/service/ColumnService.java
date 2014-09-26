@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
  
@@ -48,14 +49,14 @@ public interface ColumnService {
      * @param createUserId 创建者名称
      * @return 栏目列表
      */
-    public List<Column> queryByParentId(int parentColumnId,int createUserId);
+    public List<Column> queryByParentId(long parentId,long userId);
     
     /**
      * queryByUserId  查询用户创建的所有栏目
      * @param createUserId 用户id
      * @return 用户创建的所有栏目列表
      */
-    public List<Column> queryByUserId(long createUserId);
+    public List<Column> queryByUserId(long userId);
     
     /**
      * queryByUserId  查询用户订阅的所有栏目
@@ -63,6 +64,15 @@ public interface ColumnService {
      * @return 用户订阅的所有栏目列表
      */
     public List<Column> querySubByUserId(long createUserId);
+    
+    /**
+     * queryByUserId  查询所有可订阅栏目和该用户订阅状态
+     * map.get("column") 返回column对象
+     * map.get("status") 返回订阅状态，boolean值，true为已订阅
+     * @param createUserId 用户id
+     * @return List<Map<String, Object>> 
+     */
+    public List<Map<String, Object>> querySubAndStatus(long createUserId);
     
     /**
      * queryByUserId  查询系统所有可订阅的栏目
