@@ -252,6 +252,23 @@ public class ColumnServiceTest extends TestBase{
     }
     
     @Test
+    public void querySubAndStatus(){
+        try {
+            List<Map<String, Object>> llist=kcs.querySubAndStatus(71l);
+            
+            for (int i = 0; i < llist.size(); i++) {
+                Column c=(Column) llist.get(i).get("column");
+                System.out.print(c.getId()+"  ");
+                System.out.println(llist.get(i).get("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+        
+    }
+    
+    @Test
     public void updateColumnlevelpath(){
         boolean b=true;
         try {

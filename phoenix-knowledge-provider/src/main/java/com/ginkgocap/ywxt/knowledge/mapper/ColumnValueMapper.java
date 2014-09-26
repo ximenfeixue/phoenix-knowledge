@@ -27,6 +27,12 @@ public interface ColumnValueMapper {
      * @return 用户订阅的所有栏目列表
      */
     public List<Column> selectSubByUserId(long userId);
+    /**
+     * 查询所有可订阅栏目
+     * @param systemId 系统用户id
+     * @return 所有可订阅栏目
+     */
+    public List<Column> selectSubC(long systemId);
     
     /**
      * 根据属性查询栏目

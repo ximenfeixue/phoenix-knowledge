@@ -76,4 +76,13 @@
         	id=#{id}
 	</update>
 	
+	<select id="selectSubC" resultMap="BaseResultMap"
+		parameterType="Long">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" />
+		where del_status=0 and user_id = #{systemId} and LENGTH(column_level_path) = 18
+	</select>
+	
 </mapper>

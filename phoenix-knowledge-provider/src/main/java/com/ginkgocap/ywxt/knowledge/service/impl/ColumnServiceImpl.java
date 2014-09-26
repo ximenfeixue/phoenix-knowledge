@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.ArrayList; 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
@@ -215,7 +217,31 @@ public class ColumnServiceImpl implements ColumnService {
     @Override
     public List<Map<String, Object>> querySubAndStatus(long userId){
 //        
-        return null;
+        List<Column> list=this.querySubBySystem(Constants.gtnid);
+        
+        List<Column> subList=this.querySubByUserId(userId);
+        List<Long> subListId=new ArrayList<Long>();
+        for (int i = 0; i < subList.size(); i++) {
+            subListId.add(subList.get(i).getId());
+        }
+        
+        List<Map<String, Object>> ss=new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < list.size(); i++) {
+            Long id=list.get(i).getId();
+            
+            Map<String, Object> map=new HashMap<String, Object>();
+            
+            map.put("column", list.get(i));
+           
+            if (subListId.contains(id)) {
+                map.put("status", true);
+            }else {
+                map.put("status", false);
+            }
+            
+            ss.add(map);
+        }
+        return ss;
     }
 
     @Override
@@ -228,8 +254,10 @@ public class ColumnServiceImpl implements ColumnService {
 
     @Override
     public List<Column> querySubBySystem(long systemId) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        List<Column> list= columnValueMapper.selectSubC(systemId);
+        
+        return list;
     }
 
    
