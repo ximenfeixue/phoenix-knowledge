@@ -50,13 +50,16 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Override
     public List<KnowledgeStatics> getRankList(Long columnid) {
         Column c = columnMapper.selectByPrimaryKey(columnid);
-        byte type = c.getType();
-        KnowledgeStaticsExample ce = new KnowledgeStaticsExample();
-        ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo((short) type);
-        ce.setLimitStart(0);
-        ce.setLimitEnd(10);
-        ce.setOrderByClause("commentCount desc");
-        return knowledgeStaticsMapper.selectByExample(ce);
+        if (c != null) {
+            byte type = c.getType();
+            KnowledgeStaticsExample ce = new KnowledgeStaticsExample();
+            ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo((short) type);
+            ce.setLimitStart(0);
+            ce.setLimitEnd(10);
+            ce.setOrderByClause("commentCount desc");
+            return knowledgeStaticsMapper.selectByExample(ce);
+        }
+        return null;
     }
 
     @Override
@@ -112,8 +115,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.sort().on("createtime", Order.DESCENDING);
         long count = mongoTemplate.count(query, t.getClass());
         PageUtil p = new PageUtil((int) count, page, size);
-        query.limit(p.getPageStartRow() - 1);
-        query.skip(size);
+        query.limit(size);
+        query.skip(p.getPageStartRow() - 1);
         return (List<T>) mongoTemplate.find(query, t.getClass());
     }
 
@@ -123,29 +126,35 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
-
+        
         //查询栏目大类下的数据：自己，好友，全平台3种
         ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
         ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
-
+        
         //查询金桐脑
         ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
         List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
         for (ColumnKnowledge c : ckl) {
             ids.add(c.getColumnId());
         }
-
+        
         //查询资讯
         if (ids != null) {
-            criteria.and("_id").in(ids);
+            criteria.and("id").in(ids);
         }
         Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
-        long count = mongoTemplate.count(query, ty.obj().getClass());
-        PageUtil p = new PageUtil((int) count, page, size);
-        query.limit(p.getPageStartRow() - 1);
-        query.skip(size);
-        return (List<T>) mongoTemplate.find(query, ty.obj().getClass());
+        long count;
+        try {
+            count = mongoTemplate.count(query, Class.forName(ty.obj()));
+            PageUtil p = new PageUtil((int) count, page, size);
+            query.limit(size);
+            query.skip(p.getPageStartRow() - 1);
+            return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

@@ -55,9 +55,9 @@
 		select
 		<include refid="allColumns" />
 		from
-		<include refid="tb_name" />
+		<include refid="tb_name" /> t
 		where del_status=0
-		(and 1=1
+		and (1=1
 		<if test="userId != null">
 			and t.user_id=#{userId}
 		</if>
