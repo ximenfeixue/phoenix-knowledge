@@ -135,4 +135,10 @@ public interface ColumnService {
      * @return
      */
     List<Column> selectFullPath(long id);
+    /**
+     * 查询订阅数据
+     * @param userId
+     * @return
+     */
+    public Map<Column, List<Map<String, Object>>> querySubAndStatusAndParent(long userId);
 }

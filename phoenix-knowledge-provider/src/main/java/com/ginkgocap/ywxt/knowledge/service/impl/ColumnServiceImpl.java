@@ -193,8 +193,8 @@ public class ColumnServiceImpl implements ColumnService {
         Criteria c=ce.createCriteria().andUserIdIn(values);
         filterDel(c);
         
+        // 排序 column_level_path
         ce.setOrderByClause("id ASC");
-        //TODO 排序
         
         List<Column> list= columnMapper.selectByExample(ce);
         return list;
@@ -210,6 +210,7 @@ public class ColumnServiceImpl implements ColumnService {
         ColumnExample ce=new ColumnExample(); 
         Criteria c=ce.createCriteria().andParentIdEqualTo(parentId).andUserIdEqualTo(userId);
         filterDel(c);
+        ce.setOrderByClause("id ASC");
         List<Column> list= columnMapper.selectByExample(ce);
         return list;
     }
@@ -242,6 +243,33 @@ public class ColumnServiceImpl implements ColumnService {
             ss.add(map);
         }
         return ss;
+    }
+    
+    @Override
+    public Map<Column, List<Map<String, Object>>> querySubAndStatusAndParent(long userId){
+        
+        List<Map<String, Object>> ss=this.querySubAndStatus(userId);
+        
+        
+        List<Column> zz=this.queryByParentId(0, Constants.gtnid);
+        
+        Map<Column, List<Map<String, Object>>> complexx=new HashMap<Column, List<Map<String,Object>>>();
+        
+        for (int j = 0; j <zz.size(); j++) {
+            Column c=zz.get(j);
+            List<Map<String, Object>> headachee=new ArrayList<Map<String, Object>>();
+            for (int i = 0; i < ss.size(); i++) {
+                Column cc=(Column) ss.get(i).get("column");
+                if (cc.getParentId().equals(c.getId())) {
+                    headachee.add(ss.get(i));
+                }
+            }
+            
+            complexx.put(c, headachee);
+        }
+        
+        
+        return complexx;
     }
 
     @Override

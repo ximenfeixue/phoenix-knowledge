@@ -7,8 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -266,6 +269,33 @@ public class ColumnServiceTest extends TestBase{
             Assert.fail();
         }
         
+    }
+    
+    @Test
+    public void querySubAndStatusAndParent(){
+        try {
+            
+            Map<Column, List<Map<String, Object>>> complexx=kcs.querySubAndStatusAndParent(71l);
+            
+            Set<Entry<Column, List<Map<String, Object>>>> set=complexx.entrySet();
+             
+            for (Entry<Column, List<Map<String, Object>>> entry : set) {
+                Column cn=entry.getKey();
+                System.out.println(cn.getColumnname());
+                
+                List<Map<String, Object>> llist=entry.getValue();
+                
+                for (int i = 0; i < llist.size(); i++) {
+                    Column c=(Column) llist.get(i).get("column");
+                    System.out.print("---"+c.getId()+"  ");
+                    System.out.println(llist.get(i).get("status"));
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
     }
     
     @Test
