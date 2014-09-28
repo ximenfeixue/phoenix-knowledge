@@ -27,7 +27,9 @@ public interface KnowledgeCommentService {
 	 *            知识Id
 	 * @param pid
 	 *            父级Id (0查一级，非0查2级)
+	 * @param psize 
+	 * @param pno 
 	 * @return
 	 */
-	Map<String, Object> findCommentList(long kid, long pid);
+	Map<String, Object> findCommentList(long kid, long pid, Integer pno, Integer psize);
 }

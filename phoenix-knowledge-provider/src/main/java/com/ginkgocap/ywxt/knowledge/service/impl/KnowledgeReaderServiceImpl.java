@@ -91,12 +91,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else if (Integer.parseInt(type) == Constants.Type.Macro.v()) {
 			sourceFile = true;
 		}
-
 		result.put("download", download);
 		result.put("sourceFile", sourceFile);
 		result.put("category", category);
 		result.put("mark", mark);
-
 		return result;
 	}
 

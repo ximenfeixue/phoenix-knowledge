@@ -62,17 +62,23 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	}
 
 	@Override
-	public Map<String, Object> findCommentList(long kid, long pid) {
+	public Map<String, Object> findCommentList(long kid, long pid, Integer pno,
+			Integer psize) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeCommentExample example = new KnowledgeCommentExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(kid);
 		criteria.andParentidEqualTo(pid);
+		example.setLimitStart((pno - 1) * psize);
+		example.setLimitEnd(psize);
+
+		example.setOrderByClause("createtime desc");
 		List<KnowledgeComment> list = knowledgeCommentMapper
 				.selectByExample(example);
 		result.put("list", list);
-		result.put(Constants.status, Constants.ResultType.success.v());
+		result.put("totalcount", knowledgeCommentMapper.countByExample(example));
 
+		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
 
