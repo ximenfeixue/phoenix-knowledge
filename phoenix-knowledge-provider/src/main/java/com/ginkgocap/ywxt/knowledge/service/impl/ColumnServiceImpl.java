@@ -138,7 +138,7 @@ public class ColumnServiceImpl implements ColumnService {
 
     @Override
     public String selectColumnTreeBySortId(long userId, String sortId, String status) {
-        List<Column> cl = columnValueMapper.selectCategoryTreeBySortId(userId, sortId);
+        List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
         if (cl != null && cl.size() > 0) {
             return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "id", "columname", "parentId", "columnLevelPath")))
                     .toString();

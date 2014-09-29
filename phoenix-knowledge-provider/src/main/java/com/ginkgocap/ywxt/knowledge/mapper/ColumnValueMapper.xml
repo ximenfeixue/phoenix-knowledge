@@ -30,13 +30,13 @@
 		subscribe_count
 	</sql>
 
-	<select id="selectCategoryTreeBySortId" resultMap="BaseResultMap">
+	<select id="selectColumnTreeBySortId" resultMap="BaseResultMap">
 		select *
 		from tb_column
 		where del_status=0
 		and user_id=#{createUserId}
 		<if test="columnLevelPath != null and columnLevelPath != ''">
-			column_level_path=#{columnLevelPath}
+			and column_level_path like CONCAT(#{columnLevelPath}, '%')
 		</if>
 		order by column_level_path
 	</select>
