@@ -1,10 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.mapper;
  
 
-import java.util.List;
+import java.util.List; 
 import java.util.Map;
 
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
+
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 /**
