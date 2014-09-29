@@ -214,6 +214,22 @@ public class ColumnServiceImpl implements ColumnService {
         List<Column> list= columnMapper.selectByExample(ce);
         return list;
     }
+    @Override
+    public List<Column> queryByParentIdAndSystem(long parentId,long userId) {
+        List<Long> values=new ArrayList<Long>();
+        values.add(userId);
+        values.add(Constants.gtnid);
+        
+        ColumnExample ce=new ColumnExample();
+        Criteria c=ce.createCriteria().andParentIdEqualTo(parentId).andUserIdIn(values);
+        filterDel(c);
+        
+        // 排序 column_level_path
+        ce.setOrderByClause("id ASC");
+        
+        List<Column> list= columnMapper.selectByExample(ce);
+        return list;
+    }
     
     @Override
     public List<Map<String, Object>> querySubAndStatus(long userId){

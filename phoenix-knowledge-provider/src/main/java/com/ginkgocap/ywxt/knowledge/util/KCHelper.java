@@ -18,7 +18,9 @@ public class KCHelper {
 
     public static Integer FIRST_PATH_NUMBER=9;
     public static Integer DEFAULT_TYPE=99;
-    public static String[] kcTypeArray={"其他","资讯","投融工具","行业","经典案例","图书报告","资产管理","宏观","观点","判例","法律法规","文章"};
+    public static Integer DEFAULT_TYPE_PAGE=0; //页面所认为的自定义栏目的类型值
+
+    public static String[] kcTypeArray={"自定义","资讯","投融工具","行业","经典案例","图书报告","资产管理","宏观","观点","判例","法律法规","文章"};
     public static List<String> kcTypeList =new ArrayList<String>(Arrays.asList(kcTypeArray));
     
     //kcTypeMap 存放栏目类型的map，key是栏目所对应的数据库id,value是栏目所对应的名称
