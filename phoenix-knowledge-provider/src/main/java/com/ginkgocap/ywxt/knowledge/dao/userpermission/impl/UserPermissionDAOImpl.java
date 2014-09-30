@@ -1,28 +1,29 @@
 package com.ginkgocap.ywxt.knowledge.dao.userpermission.impl;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Component("userpermissionDAO")
 public class UserPermissionDAOImpl implements UserPermissionDAO {
 
 	@Resource
 	private UserPermissionValueMapper userPermissionValueMapper;
+
+	@Resource
+	private UserPermissionMapper userPermissionMapper;
 
 	@Override
 	public List<Long> selectByreceive_user_id(long receive_user_id,
@@ -82,9 +83,9 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			Long type) {
 
 		List<Long> list = new ArrayList<Long>();
-	List<Map<String, Object>> maplist = null;
-//		List<Map<String, Object>> maplist = userPermissionValueMapper
-//				.selectByParams(receive_user_id, column_id, type);
+		List<Map<String, Object>> maplist = null;
+		// List<Map<String, Object>> maplist = userPermissionValueMapper
+		// .selectByParams(receive_user_id, column_id, type);
 		if (maplist != null && maplist.size() > 0) {
 			for (int i = 0; i < maplist.size(); i++) {
 				Map<String, Object> map = maplist.get(i);
@@ -92,5 +93,14 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public int deleteUserPermission(long knowledgeid, long userid) {
+		UserPermissionExample example = new UserPermissionExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andSendUserIdEqualTo(userid);
+		return userPermissionMapper.deleteByExample(example);
 	}
 }

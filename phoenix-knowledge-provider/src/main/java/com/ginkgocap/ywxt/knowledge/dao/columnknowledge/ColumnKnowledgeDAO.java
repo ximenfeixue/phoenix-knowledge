@@ -9,7 +9,9 @@ public interface ColumnKnowledgeDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertColumnKnowledge(ColumnKnowledge columnKnowledge);
+	int insertColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
 
 	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
+	
+	int updateColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
 }

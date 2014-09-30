@@ -60,4 +60,10 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 		return knowledgeDraftValueMapper.deleteKnowledge(knowledgeids, userid);
 	}
 
+	@Override
+	public int deleteKnowledgeDraft(long knowledgeid) {
+
+		return knowledgeDraftMapper.deleteByPrimaryKey(knowledgeid);
+	}
+
 }

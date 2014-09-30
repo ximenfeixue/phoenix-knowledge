@@ -24,5 +24,7 @@ public interface KnowledgeCategoryDAO {
 	 * @return
 	 */
 	int countByKnowledgeCategoryId(long id);
+	
+	int deleteKnowledgeCategory(long knowledgeid);
 
 }

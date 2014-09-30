@@ -36,4 +36,10 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		return knowledgeBetweenDAO.countByKnowledgeCategoryId(categoryid);
 	}
 
+	@Override
+	public int deleteKnowledgeCategory(long knowledgeid) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

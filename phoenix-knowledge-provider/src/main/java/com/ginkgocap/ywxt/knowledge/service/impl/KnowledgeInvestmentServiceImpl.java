@@ -67,7 +67,7 @@ public class KnowledgeInvestmentServiceImpl implements
 	public KnowledgeInvestment getKnowledgeInvestmentDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeInvestment) mongoTemplate.find(query, KnowledgeInvestment.class);
+		return (KnowledgeInvestment) mongoTemplate.findOne(query, KnowledgeInvestment.class);
 	}
 
 }

@@ -16,4 +16,10 @@ public interface KnowledgeDraftDAO {
 	 */
 
 	int deleteKnowledgeDraft(long[] knowledgeids, long userid);
+
+	/**
+	 * 删除草稿箱知识
+	 */
+
+	int deleteKnowledgeDraft(long knowledgeid);
 }

@@ -132,4 +132,12 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 		return knowledgeCategoryMapper.countByExample(example);
 	}
 
+	@Override
+	public int deleteKnowledgeCategory(long knowledgeid) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		return knowledgeCategoryMapper.deleteByExample(example);
+	}
+
 }

@@ -28,29 +28,19 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	SqlMapClient sqlMapClient;
 
 	@Override
-	public KnowledgeNews insertknowledge(KnowledgeNews knowledge) {
-
-		KnowledgeNews knowledgeNews = knowledgeNewsDAO
-				.insertknowledge(knowledge);
-		if (knowledgeNews == null) {
-
-			return null;
-		} else {
-			return knowledgeNews;
-		}
-
-	}
-
-	@Override
 	public void deleteKnowledge(long[] ids) {
 
 		knowledgeNewsDAO.deleteKnowledge(ids);
 	}
 
 	@Override
-	public void updateKnowledge(KnowledgeNews knowledge) {
+	public void updateKnowledge(String title, long userid, String uname,
+			long cid, String cname, String cpath, String content, String pic,
+			String desc, String essence, String taskid, String tags,
+			long knowledgeid) {
 
-		knowledgeNewsDAO.updateKnowledge(knowledge);
+		knowledgeNewsDAO.updateKnowledge(title, userid, uname, cid, cname,
+				cpath, content, pic, desc, essence, taskid, tags, knowledgeid);
 	}
 
 	@Override
@@ -71,4 +61,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		knowledgeNewsDAO.deleteKnowledgeByid(knowledgeid);
 	}
 
+	@Override
+	public KnowledgeNews insertknowledge(String title, long userid,
+			String uname, long cid, String cname, String cpath, String content,
+			String pic, String desc, String essence, String taskid,
+			String tags, long knowledgeid, long columnid) {
+
+		return knowledgeNewsDAO.insertknowledge(title, userid, uname, cid,
+				cname, cpath, content, pic, desc, essence, taskid, tags,
+				knowledgeid, columnid);
+	}
 }

@@ -14,10 +14,13 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 public interface KnowledgeNewsDAO {
 
 	/**
-	 * 新增知识
+	 * 新增资讯知识
 	 */
 
-	KnowledgeNews insertknowledge(KnowledgeNews knowledge);
+	KnowledgeNews insertknowledge(String title, long userid, String uname,
+			long cid, String cname, String cpath, String content, String pic,
+			String desc, String essence, String taskid, String tags,
+			long knowledgeid,long columnid);
 
 	/**
 	 * 删除知识
@@ -29,7 +32,10 @@ public interface KnowledgeNewsDAO {
 	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	void updateKnowledge(KnowledgeNews knowledge);
+	void updateKnowledge(String title, long userid, String uname,
+			long cid, String cname, String cpath, String content, String pic,
+			String desc, String essence, String taskid, String tags,
+			long knowledgeid);
 
 	/**
 	 * 查询知识

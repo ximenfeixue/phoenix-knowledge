@@ -39,8 +39,11 @@ public interface UserPermissionService {
 	 *            接受人
 	 * @param column_id
 	 *            11种类型
-	 * @param type -1子页 
+	 * @param type
+	 *            -1子页
 	 * @return
 	 */
 	List<Long> selectByParams(Long receive_user_id, Long column_id, Long type);
+
+	int deleteUserPermission(long knowledgeid, long userid);
 }

@@ -16,7 +16,7 @@ public interface ColumnKnowledgeService {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertColumnKnowledge(ColumnKnowledge columnKnowledge);
+	int insertColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
 
 	/**
 	 * 刪除知识，把知识栏目中间表删除
@@ -26,4 +26,6 @@ public interface ColumnKnowledgeService {
 	 * @return
 	 */
 	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
+	
+	int updateColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
 }

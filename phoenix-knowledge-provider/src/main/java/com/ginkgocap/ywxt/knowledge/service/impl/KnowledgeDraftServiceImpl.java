@@ -63,4 +63,24 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		return knowledgeDraftMapper.selectByPrimaryKey(knowledgeid);
 	}
 
+	@Override
+	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
+			int pageno, int pagesize) {
+
+		return knowledgeDraftDAO.selectKnowledgeDraft(userid, type, pageno,
+				pagesize);
+	}
+
+	@Override
+	public int countKnowledgeDraft(long userid, String type) {
+
+		return knowledgeDraftDAO.countKnowledgeDraft(userid, type);
+	}
+
+	@Override
+	public int deleteKnowledgeDraft(long knowledgeid) {
+		
+		return 0;
+	}
+
 }

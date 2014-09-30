@@ -45,7 +45,28 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public KnowledgeNews insertknowledge(KnowledgeNews knowledge) {
+	public KnowledgeNews insertknowledge(String title, long userid,
+			String uname, long cid, String cname, String cpath, String content,
+			String pic, String desc, String essence, String taskid,
+			String tags, long knowledgeid, long columnid) {
+
+		KnowledgeNews knowledge = new KnowledgeNews();
+		knowledge.setTitle(title);
+		knowledge.setUid(userid);
+		knowledge.setUname(uname);
+		knowledge.setCid(cid);
+		knowledge.setCname(cname);
+		knowledge.setCpathid(cpath);
+		knowledge.setContent(content);
+		knowledge.setPic(pic);
+		knowledge.setDesc(desc);
+		knowledge.setEssence(Integer.parseInt(essence));
+		knowledge.setTaskid(taskid);
+		knowledge.setTags(tags);
+		knowledge.setId(knowledgeid);
+		knowledge.setStatus(Constants.Status.checked.v());
+		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
+		knowledge.setCreatetime(new Date());
 		mongoTemplate.save(knowledge, "KnowledgeNews");
 		return knowledge;
 	}
@@ -59,38 +80,34 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("status", Constants.Status.recycle.v());
-			mongoTemplate.updateFirst(query, update, KnowledgeNews.class);
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
 		}
 	}
 
 	@Override
-	public void updateKnowledge(KnowledgeNews knowledge) {
+	public void updateKnowledge(String title, long userid, String uname,
+			long cid, String cname, String cpath, String content, String pic,
+			String desc, String essence, String taskid, String tags,
+			long knowledgeid) {
 
-		Criteria criteria = Criteria.where("_id").is(knowledge.getId());
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
-		KnowledgeNews kdnews = mongoTemplate
-				.findOne(query, KnowledgeNews.class);
+		KnowledgeNews kdnews = mongoTemplate.findOne(query,
+				KnowledgeNews.class, "KnowledgeNews");
 		if (kdnews != null) {
-
 			Update update = new Update();
 			update.set("status", Constants.Status.checked.v());
-			update.set("title", knowledge.getTitle());
-			update.set("uid", knowledge.getUid());
-			update.set("uname", knowledge.getUname());
-			update.set("cid", knowledge.getCid());
-			update.set("cname", knowledge.getCname());
-			update.set("source", knowledge.getSource());
-			update.set("s_addr", knowledge.getS_addr());
-			update.set("cpathid", knowledge.getCpathid());
-			update.set("pic", knowledge.getPic());
-			update.set("desc", knowledge.getDesc());
-			update.set("content", knowledge.getContent());
-			update.set("hcontent", knowledge.getHcontent());
-			update.set("essence", knowledge.getEssence());
+			update.set("title", title);
+			update.set("uid", userid);
+			update.set("uname", uname);
+			update.set("cpathid", cpath);
+			update.set("pic", pic);
+			update.set("desc", desc);
+			update.set("content", content);
+			update.set("essence", essence);
 			update.set("modifytime", new Date());
-			update.set("taskid", knowledge.getTaskid());
-			update.set("ish", knowledge.getIsh());
-			mongoTemplate.updateFirst(query, update, KnowledgeNews.class);
+			update.set("taskid", taskid);
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
 		}
 
 	}
@@ -120,7 +137,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		PageUtil p = new PageUtil((int) count, page, size);
 		query.limit(p.getPageStartRow() - 1);
 		query.skip(size);
-		return mongoTemplate.find(query, KnowledgeNews.class);
+		return mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
 	}
 
 	@Override

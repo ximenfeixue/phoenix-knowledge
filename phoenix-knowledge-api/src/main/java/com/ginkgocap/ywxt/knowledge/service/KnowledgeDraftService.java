@@ -43,4 +43,16 @@ public interface KnowledgeDraftService {
 	 * 根据知识ID查询草稿箱列表
 	 */
 	KnowledgeDraft selectByKnowledgeId(long knowledgeid);
+
+	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
+			int pageno, int pagesize);
+
+	int countKnowledgeDraft(long userid, String type);
+
+	/**
+	 * 删除草稿箱知识
+	 */
+
+	int deleteKnowledgeDraft(long knowledgeid);
+
 }

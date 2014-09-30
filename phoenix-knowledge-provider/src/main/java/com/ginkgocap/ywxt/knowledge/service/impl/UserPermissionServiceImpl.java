@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
- import java.util.Date;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +43,19 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public List<Long> selectByParams(Long receive_user_id, Long column_id,
 			Long type) {
-        if (type == -1) {
-            return userPermissionValueMapper.selectByParamsSingle(receive_user_id, column_id);
-        } else {
-            return userPermissionDAO.selectByParams(receive_user_id, column_id, type);
-        }
-    }
+		if (type == -1) {
+			return userPermissionValueMapper.selectByParamsSingle(
+					receive_user_id, column_id);
+		} else {
+			return userPermissionDAO.selectByParams(receive_user_id, column_id,
+					type);
+		}
+	}
+
+	@Override
+	public int deleteUserPermission(long knowledgeid, long userid) {
+
+		return userPermissionDAO.deleteUserPermission(knowledgeid, userid);
+	}
 
 }

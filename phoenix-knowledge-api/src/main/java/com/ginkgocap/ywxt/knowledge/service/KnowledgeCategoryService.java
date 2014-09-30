@@ -1,11 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.Date; 
- 
+import java.util.Date;
 
 /**
  * 知识相关的关系表
- *  
+ * 
  * @author caihe
  * 
  */
@@ -38,5 +37,7 @@ public interface KnowledgeCategoryService {
 	 * @return
 	 */
 	int countByKnowledgeCategoryId(long categoryid);
+
+	int deleteKnowledgeCategory(long knowledgeid);
 
 }
