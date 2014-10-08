@@ -388,4 +388,14 @@ public class ColumnServiceImpl implements ColumnService {
 //      return ColumnDao.querySubByUserId(createUserId);
 //  }
 
+    @Override
+    public List<Column> queryFisrtLevelCustomerColumns(long userId) {
+        ColumnExample ce=new ColumnExample();
+        Criteria c=ce.createCriteria();
+        c.andUserIdEqualTo(userId);
+        filterDel(c);
+        List<Column> list=columnMapper.selectByExample(ce);
+        return list;
+    }
+
 }

@@ -344,4 +344,8 @@ public class ColumnServiceTest extends TestBase{
        
     }
     
+    @Test
+    public void testCos(){
+        kcs.queryFisrtLevelCustomerColumns(10132l);
+    }
 }

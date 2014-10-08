@@ -148,4 +148,11 @@ public interface ColumnService {
      * @return
      */
     public Map<Column, List<Map<String, Object>>> querySubAndStatusAndParent(long userId);
+    
+    /**
+     * 查询一级自定义栏目
+     * @param userId
+     * @return
+     */
+    public List<Column> queryFisrtLevelCustomerColumns(long userId);
 }
