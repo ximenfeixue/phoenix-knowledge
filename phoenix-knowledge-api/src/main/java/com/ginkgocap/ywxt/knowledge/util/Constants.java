@@ -179,8 +179,12 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addCommentFail(
-				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!"),columnNotFound("未找到知识所属栏目");
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), alreadyCollection(
+				"您已经收藏过该文章!"), addCommentFail("评论失败!"), artUserNotExsit(
+				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
+				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
+				"您已申请过添加好友,请耐心等待!"), IsFriends("您已该用户已是好友关系!"), UserNotExisitInSession(
+				"请确认是否登陆!");
 
 		private String c;
 
@@ -239,6 +243,35 @@ public class Constants {
 
 		public boolean c() {
 			return c;
+		}
+	}
+
+	public enum FriendsType {
+		checking(0), agree(1);
+
+		private int v;
+
+		private FriendsType(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
+	}
+
+	public enum FriendsRelation {
+		// (-1=是自己 or 0=不是好友 or 1=好友等待中 or 2=已是好友)
+		self(-1), notFriends(0), waiting(1), friends(2);
+
+		private int v;
+
+		private FriendsRelation(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
 		}
 	}
 }

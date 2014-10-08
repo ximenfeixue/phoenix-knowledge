@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.KnowledgeCollectionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
@@ -24,6 +27,15 @@ public class KnowledgeCollectionServiceImpl implements
 	public Map<String, Object> insertKnowledgeCollection(long kid,
 			long columnid, String type, String source, long categoryid) {
 		Map<String, Object> result = new HashMap<String, Object>();
+
+
+		if (knowledgeCollectionDAO.isExsitInCollection(kid, categoryid)) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.alreadyCollection.c());
+			return result;
+		}
+
 		KnowledgeCollection coll = new KnowledgeCollection();
 		coll.setKnowledgeId(kid);
 		coll.setColumnId(columnid);

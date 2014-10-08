@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.KnowledgeCollectionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionValueMapper;
 
@@ -53,5 +55,16 @@ public class KnowledgeCollectionDAOImpl implements KnowledgeCollectionDAO {
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public boolean isExsitInCollection(long kid, long categoryid) {
+		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(kid);
+		criteria.andCategoryIdEqualTo(categoryid);
+
+		return knowledgeCollectionMapper.countByExample(example) > 0 ? true
+				: false;
 	}
 }

@@ -31,4 +31,12 @@ public interface KnowledgeCollectionDAO {
 	 */
 	List<Long> selectKnowledgeCollection(long column_id, String knowledgeType,
 			long category_id, int pageno, int pagesize);
+	
+	/**
+	 * 判断知识在收藏夹内目录中是否在在
+	 * @param kid 知识id
+	 * @param categoryid 目录Id
+	 * @return
+	 */
+	boolean isExsitInCollection(long kid , long categoryid);
 }
