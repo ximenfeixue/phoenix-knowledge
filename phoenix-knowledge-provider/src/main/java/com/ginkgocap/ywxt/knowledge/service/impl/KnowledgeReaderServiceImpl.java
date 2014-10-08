@@ -124,6 +124,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			result.put("source", knowledge.getSource());
 
 			result.put("tags", knowledge.getTags());
+			result.put("type", type);
 			
 			result.put(Constants.status, Constants.ResultType.success.v());
 

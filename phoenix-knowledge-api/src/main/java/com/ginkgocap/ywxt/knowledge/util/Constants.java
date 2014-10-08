@@ -180,7 +180,7 @@ public class Constants {
 
 	public enum ErrorMessage {
 		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addCommentFail(
-				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!");
+				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!"),columnNotFound("未找到知识所属栏目");
 
 		private String c;
 

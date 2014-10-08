@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration >
 	
-	<classPathEntry location="C:\Users\Administrator\.m2\repository\mysql\mysql-connector-java\5.1.20\mysql-connector-java-5.1.20.jar" />  
+	<classPathEntry location="C:\Users\Administrator.USER-20140813FC\.m2\repository\mysql\mysql-connector-java\5.1.20\mysql-connector-java-5.1.20.jar" />  
 	
 	<context id="mysqlGenerator" targetRuntime="MyBatis3">
 		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>  
@@ -14,15 +14,15 @@
             <property name="suppressAllComments" value="true" />  
         </commentGenerator>  
         
-   	 	<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.120.215:3306/phoenix_knowledge_new" 
-   	 	userId="root" password="" />
+   	 	<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge" 
+   	 	userId="zhangwei" password="zhangwei" />
    	 	
     	<javaModelGenerator targetPackage="com.ginkgocap.ywxt.knowledge.entity" targetProject="phoenix-knowledge-api/src/main/gen" />
     	<sqlMapGenerator targetPackage="com.ginkgocap.ywxt.knowledge.mapper" targetProject="phoenix-knowledge-provider/src/main/gen" />
     	<javaClientGenerator  targetPackage="com.ginkgocap.ywxt.knowledge.mapper" targetProject="phoenix-knowledge-provider/src/main/gen" type="XMLMAPPER" />
     	
 <!--      	<table tableName="tb_category_tag" domainObjectName="CategoryTag" />  -->
-<!-- 		<table tableName="tb_column_knowledge" domainObjectName="ColumnKnowledge" />  -->
+		<table tableName="tb_column_knowledge" domainObjectName="ColumnKnowledge" /> 
 <!-- 		<table tableName="tb_knowledge_book_bookmark" domainObjectName="KnowledgeBookBookmark" />  -->
 <!-- 		<table tableName="tb_knowledge_category" domainObjectName="KnowledgeCategory" />  -->
 <!-- 		<table tableName="tb_knowledge_collection" domainObjectName="KnowledgeCollection" />  -->
@@ -33,7 +33,7 @@
 <!-- 		<table tableName="tb_knowledge_statics" domainObjectName="KnowledgeStatics" />  -->
 <!-- 		<table tableName="tb_user_category" domainObjectName="UserCategory" />  -->
 <!-- 		<table tableName="tb_user_permission" domainObjectName="UserPermission" /> -->
-		<table tableName="tb_knowledge_r_tag" domainObjectName="KnowledgeTag" />
+<!-- 		<table tableName="tb_knowledge_r_tag" domainObjectName="KnowledgeTag" /> -->
 
   	</context>
 </generatorConfiguration>

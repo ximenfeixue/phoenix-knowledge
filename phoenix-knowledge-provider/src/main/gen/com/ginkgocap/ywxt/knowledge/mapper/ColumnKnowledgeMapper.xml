@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge" >
+    <id column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
-    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="type" property="type" jdbcType="SMALLINT" />
   </resultMap>
@@ -66,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    column_id, knowledge_id, user_id, type
+    knowledge_id, column_id, user_id, type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample" >
     select
@@ -85,6 +85,16 @@
       </if>
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_column_knowledge
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_column_knowledge
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample" >
     delete from tb_column_knowledge
     <if test="_parameter != null" >
@@ -92,19 +102,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge" >
-    insert into tb_column_knowledge (column_id, knowledge_id, user_id, 
+    insert into tb_column_knowledge (knowledge_id, column_id, user_id, 
       type)
-    values (#{columnId,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+    values (#{knowledgeId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{type,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge" >
     insert into tb_column_knowledge
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="columnId != null" >
-        column_id,
-      </if>
       <if test="knowledgeId != null" >
         knowledge_id,
+      </if>
+      <if test="columnId != null" >
+        column_id,
       </if>
       <if test="userId != null" >
         user_id,
@@ -114,11 +124,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="columnId != null" >
-        #{columnId,jdbcType=BIGINT},
-      </if>
       <if test="knowledgeId != null" >
         #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null" >
+        #{columnId,jdbcType=BIGINT},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=BIGINT},
@@ -137,11 +147,11 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update tb_column_knowledge
     <set >
-      <if test="record.columnId != null" >
-        column_id = #{record.columnId,jdbcType=BIGINT},
-      </if>
       <if test="record.knowledgeId != null" >
         knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.columnId != null" >
+        column_id = #{record.columnId,jdbcType=BIGINT},
       </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=BIGINT},
@@ -156,12 +166,34 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update tb_column_knowledge
-    set column_id = #{record.columnId,jdbcType=BIGINT},
-      knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+    set knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      column_id = #{record.columnId,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       type = #{record.type,jdbcType=SMALLINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge" >
+    update tb_column_knowledge
+    <set >
+      <if test="columnId != null" >
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge" >
+    update tb_column_knowledge
+    set column_id = #{columnId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      type = #{type,jdbcType=SMALLINT}
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
 </mapper>

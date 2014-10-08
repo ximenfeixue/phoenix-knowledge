@@ -4,17 +4,18 @@
 	namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual">
 	<update id="updateStatics">
 		update tb_knowledge_statics set
+		
 		<if test="commentCount != 0">
-			commentCount = #{comment}
+			commentCount = commentCount + #{comment}
 		</if>
 		<if test="shareCount != 0">
-			shareCount = #{shareCount}
+			shareCount = shareCount+ #{shareCount}
 		</if>
 		<if test="collCount != 0">
-			collCount = #{collCount}
+			collCount = collCount + #{collCount}
 		</if>
 		<if test="clickCount != 0">
-			clickCount = #{clickCount}
+			clickCount = clickCount + #{clickCount}
 		</if>
 
 		where knowledge_id = #{kid}

@@ -124,66 +124,6 @@ public class ColumnKnowledgeExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andColumnIdIsNull() {
-            addCriterion("column_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdIsNotNull() {
-            addCriterion("column_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdEqualTo(Long value) {
-            addCriterion("column_id =", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdNotEqualTo(Long value) {
-            addCriterion("column_id <>", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdGreaterThan(Long value) {
-            addCriterion("column_id >", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("column_id >=", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdLessThan(Long value) {
-            addCriterion("column_id <", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdLessThanOrEqualTo(Long value) {
-            addCriterion("column_id <=", value, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdIn(List<Long> values) {
-            addCriterion("column_id in", values, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdNotIn(List<Long> values) {
-            addCriterion("column_id not in", values, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdBetween(Long value1, Long value2) {
-            addCriterion("column_id between", value1, value2, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnIdNotBetween(Long value1, Long value2) {
-            addCriterion("column_id not between", value1, value2, "columnId");
-            return (Criteria) this;
-        }
-
         public Criteria andKnowledgeIdIsNull() {
             addCriterion("knowledge_id is null");
             return (Criteria) this;
@@ -241,6 +181,66 @@ public class ColumnKnowledgeExample {
 
         public Criteria andKnowledgeIdNotBetween(Long value1, Long value2) {
             addCriterion("knowledge_id not between", value1, value2, "knowledgeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdIsNull() {
+            addCriterion("column_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdIsNotNull() {
+            addCriterion("column_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdEqualTo(Long value) {
+            addCriterion("column_id =", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdNotEqualTo(Long value) {
+            addCriterion("column_id <>", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdGreaterThan(Long value) {
+            addCriterion("column_id >", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("column_id >=", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdLessThan(Long value) {
+            addCriterion("column_id <", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdLessThanOrEqualTo(Long value) {
+            addCriterion("column_id <=", value, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdIn(List<Long> values) {
+            addCriterion("column_id in", values, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdNotIn(List<Long> values) {
+            addCriterion("column_id not in", values, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdBetween(Long value1, Long value2) {
+            addCriterion("column_id between", value1, value2, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnIdNotBetween(Long value1, Long value2) {
+            addCriterion("column_id not between", value1, value2, "columnId");
             return (Criteria) this;
         }
 

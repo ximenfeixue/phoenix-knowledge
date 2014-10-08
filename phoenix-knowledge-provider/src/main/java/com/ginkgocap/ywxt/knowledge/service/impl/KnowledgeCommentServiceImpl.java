@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCommentMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.user.model.User;
@@ -25,13 +26,16 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	private KnowledgeCommentMapper knowledgeCommentMapper;
 
 	@Resource
+	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
+
+	@Resource
 	private UserService userService;
 
 	@Override
 	public Map<String, Object> addComment(long kid, long userid, long pid,
 			String content) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		User user = userService.findByUid(userid);
+		User user = userService.selectByPrimaryKey(userid);
 		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
@@ -52,10 +56,13 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 
 		int v = knowledgeCommentMapper.insertSelective(comment);
 		if (v == 0) {
+
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addCommentFail.c());
 		} else {
+			knowledgeStaticsMapperManual.updateStatics(kid,
+					Constants.StaticsValue.commentCount.v(), 0, 0, 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 		}
 		return result;
