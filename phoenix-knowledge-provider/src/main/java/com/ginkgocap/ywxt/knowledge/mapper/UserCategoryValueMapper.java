@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.mapper;
 
-import com.ginkgocap.ywxt.knowledge.entity.UserCategory; 
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;  
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 /**
  * 左树dao接口 
  * <p>于2014-9-18 由 bianzhiwei 创建 </p>
@@ -21,12 +23,12 @@ public interface UserCategoryValueMapper {
      * @param parentSortId
      * @return
      */
-    String selectMaxSortId(long uid,String parentSortId);
+    String selectMaxSortId(@Param("uid")long uid,@Param("parentSortId")String parentSortId);
     /**
      * 通过phoenix_user.tb_user.id得到此用户sortId下经过树形结构排序的所有分类
      * @param uid
      * @param sortId
      * @return
      */
-    List<UserCategory> selectChildBySortId(long uid,String sortId);
+    List<UserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId);
 }

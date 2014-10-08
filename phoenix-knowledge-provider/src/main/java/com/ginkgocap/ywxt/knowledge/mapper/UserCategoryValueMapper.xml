@@ -13,7 +13,7 @@
   </resultMap>
   
 	<select id="selectChildBySortId"  resultMap="BaseResultMap" >
-		select * from tb_user_category where userid = #{userId} 
+		select * from tb_user_category where user_id = #{uid} 
 		<if test="sortId != null and sortId != ''">
 		and sortId like CONCAT(#{sortId}, '%') 
 		</if>
@@ -22,12 +22,12 @@
 
 
 	<select id="selectMaxSortId" resultType="string" >
-		select max(sortid) from tb_user_category where userid=#{userId} and sortId like CONCAT(#{parentSortId}, '%') 
+		select max(sortid) from tb_user_category where user_id=#{uid} and sortId like CONCAT(#{parentSortId}, '_________%') 
 	</select>
 
 
 	<select id="selectChildCountById" resultType="long" >
-		select count(id) from tb_user_category where parentId = #{id}
+		select count(id) from tb_user_category where parent_id = #{id}
 	</select>
 	
 </mapper>
