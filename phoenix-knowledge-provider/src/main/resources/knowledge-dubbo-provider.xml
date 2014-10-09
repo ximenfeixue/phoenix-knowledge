@@ -74,4 +74,5 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService"  ref="knowledgeReportService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService"  ref="knowledgeDraftService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService"  ref="knowledgeCommonService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService"  ref="knowledgeRecycleService" version="1.0.0"/>
 </beans>
