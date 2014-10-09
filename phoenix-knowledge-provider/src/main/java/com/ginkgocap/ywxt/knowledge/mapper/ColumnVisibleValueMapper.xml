@@ -4,7 +4,7 @@
 
 	<update id="update" parameterType="java.util.Map">
 		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
-		WHERE t.user_id=#{userId}
+		WHERE t.user_id=#{userId} and t.pcid=#{pcid}
 		<if test="instate==0">
 			and t.column_id in
 			<foreach collection="listl" index="index" item="tag" open="("

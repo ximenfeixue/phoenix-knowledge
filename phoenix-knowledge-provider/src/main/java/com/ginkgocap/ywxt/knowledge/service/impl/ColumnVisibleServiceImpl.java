@@ -63,7 +63,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     }
 
     @Override
-    public void updateCids(long userid, String cids) {
+    public void updateCids(long userid, String cids,long pcid) {
         String[] ids = cids.split(",");
         List<Long> idl = new ArrayList<Long>();
         for (String id : ids) {
@@ -75,6 +75,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         }
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("instate", 0);
+        m.put("pcid", pcid);
         m.put("utime", new Date());
         m.put("userId", userid);
         m.put("state", 0);

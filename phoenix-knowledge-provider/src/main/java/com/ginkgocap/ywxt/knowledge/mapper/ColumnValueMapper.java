@@ -45,6 +45,15 @@ public interface ColumnValueMapper {
     public List<Column> selectByParam(@Param("column")Long column ,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
     
     /**
+     * 根据属性查询可见栏目
+     * @param pid 父id
+     * @param column 栏目id
+     * @param userId 用户id
+     * @return
+     */
+    public List<Column> electByParamVisible(@Param("column")Long column ,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
+    
+    /**
      * 查询数据库id最大值
      * @return 最多id值
      */

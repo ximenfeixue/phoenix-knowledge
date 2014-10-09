@@ -20,7 +20,7 @@ public interface ColumnVisibleService {
 
     public long countListByPidAndUserId(long userid, Long pid);
 
-    public void updateCids(long userid, String cids);
+    public void updateCids(long userid, String cids,long pcid);
 
     public void saveCid(long userid, long cid);
     
