@@ -201,7 +201,7 @@ public class Constants {
 				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
 				"您已申请过添加好友,请耐心等待!"), IsFriends("您已该用户已是好友关系!"), UserNotExisitInSession(
-				"请确认是否登陆!");
+				"请确认是否登陆!"),contentIsBlank("评论内容不能为空!");
 
 		private String c;
 

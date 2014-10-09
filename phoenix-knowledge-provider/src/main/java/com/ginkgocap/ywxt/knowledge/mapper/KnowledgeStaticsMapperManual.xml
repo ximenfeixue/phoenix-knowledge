@@ -6,7 +6,7 @@
 		update tb_knowledge_statics set
 		
 		<if test="commentCount != 0">
-			commentCount = commentCount + #{comment}
+			commentCount = commentCount + #{commentCount}
 		</if>
 		<if test="shareCount != 0">
 			shareCount = shareCount+ #{shareCount}
