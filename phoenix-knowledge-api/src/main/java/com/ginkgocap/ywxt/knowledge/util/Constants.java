@@ -1,5 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -10,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 public class Constants {
 
 	public static long gtnid = 0l;
+	
+	public static List<Long> homeColumnIds = new ArrayList<Long>(asList(1,2,3,4,6,7,10));
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
@@ -57,7 +63,18 @@ public class Constants {
 
 	}
 
-	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
+    private static Collection<? extends Long> asList(int i, int j, int k, int l, int m, int n, int o) {
+        List<Long> list = new ArrayList<Long>();
+        list.add((long) i);
+        list.add((long) j);
+        list.add((long) k);
+        list.add((long) l);
+        list.add((long) m);
+        list.add((long) n);
+        list.add((long) o);
+        return list;
+    }
+    // 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum KnowledgeType {
 		News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), BookReport(
 				5, "图书报告"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(

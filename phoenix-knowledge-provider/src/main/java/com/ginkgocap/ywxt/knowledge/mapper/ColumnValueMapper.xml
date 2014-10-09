@@ -60,10 +60,18 @@
 		and (1=1
 		<if test="userId != null">
 			and t.user_id=#{userId}
+			or t.user_id=#{gtnid}
 		</if>
-		or t.user_id=#{gtnid}
+		<if test="userId == null">
+			and t.user_id=#{gtnid}
+		</if>
 		)
+		<if test="column !=null">
 		AND t.parent_id=#{column}
+		</if>
+		<if test="userId != null">
+		AND t.id NOT IN (SELECT v.column_id FROM tb_column_visible v WHERE v.user_id=#{userId}  )
+		</if>
 	</select>
 	
 	<select id="selectMaxID" resultType="Long">

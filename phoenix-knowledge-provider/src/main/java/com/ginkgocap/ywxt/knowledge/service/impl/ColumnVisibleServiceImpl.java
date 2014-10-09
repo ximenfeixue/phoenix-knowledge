@@ -20,6 +20,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -31,30 +32,29 @@ import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 public class ColumnVisibleServiceImpl implements ColumnVisibleService {
 
     @Autowired
+    ColumnService columnService;
+    @Autowired
     ColumnVisibleMapper columnVisibleMapper;
+    @Autowired
+    ColumnVisibleValueMapper columnVisibleValueMapper;
+    @Autowired
+    ColumnValueMapper columnValueMapper;
 
     @Override
     public List<ColumnVisible> queryListByPidAndUserId(long userid, long cid) {
         ColumnVisibleExample cm = new ColumnVisibleExample();
-        if (userid == 0) {
-            cm.createCriteria().andColumnIdEqualTo(cid);
-        } else {
-            cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(cid);
-        }
+        cm.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(cid);
         List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
-        if (cs != null && cs.size() == 1) {
+        if (cs != null) {
             return cs;
         }
         return null;
     }
+
     @Override
     public ColumnVisible queryListByCidAndUserId(long userid, long cid) {
         ColumnVisibleExample cm = new ColumnVisibleExample();
-        if (userid == 0) {
-            cm.createCriteria().andColumnIdEqualTo(cid);
-        } else {
-            cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(cid);
-        }
+        cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(cid);
         List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
         if (cs != null && cs.size() == 1) {
             return cs.get(0);
@@ -63,22 +63,26 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     }
 
     @Override
-    public void saveCids(long userid, String cids, long pcid) {
+    public void updateCids(long userid, String cids) {
         String[] ids = cids.split(",");
-        delByPcid(pcid, userid);
+        List<Long> idl = new ArrayList<Long>();
         for (String id : ids) {
             try {
                 long c = Long.parseLong(id);
-                ColumnVisible cv = new ColumnVisible();
-                cv.setColumnId(c);
-                cv.setPcid(pcid);
-                cv.setUserId(userid);
-                cv.setCtime(new Date());
-                cv.setUtime(new Date());
-                columnVisibleMapper.insert(cv);
+                idl.add(c);
             } catch (Exception e) {
             }
         }
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("instate", 0);
+        m.put("utime", new Date());
+        m.put("userId", userid);
+        m.put("state", 0);
+        m.put("listl", idl);
+        columnVisibleValueMapper.update(m);
+        m.put("instate", 1);
+        m.put("state", 1);
+        columnVisibleValueMapper.update(m);
     }
 
     @Override
@@ -87,9 +91,59 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     }
 
     @Override
-    public void delByPcid(long id, long userid) {
+    public long countListByPidAndUserId(long userid, Long pid) {
         ColumnVisibleExample cm = new ColumnVisibleExample();
-        cm.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(id);
+        com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample.Criteria cri = cm.createCriteria();
+        cri.andUserIdEqualTo(userid);
+        if (pid != null) {
+            cri.andPcidEqualTo(pid);
+        }
+        long cs = columnVisibleMapper.countByExample(cm);
+        return cs;
+    }
+
+    @Override
+    public void init(long userid, long gtnid) {
+        List<Column> l = columnValueMapper.selectByParam(null, Constants.gtnid, 10132l);
+        for (Column c : l) {
+            long id = c.getId();
+            long pcid = c.getParentId();
+            String cname = c.getColumnname();
+            ColumnVisible cv = new ColumnVisible();
+            cv.setColumnId(id);
+            cv.setPcid(pcid);
+            cv.setUserId(userid);
+            cv.setCtime(new Date());
+            cv.setUtime(new Date());
+            cv.setColumnName(cname);
+            cv.setState((byte) 0);
+            columnVisibleMapper.insert(cv);
+        }
+    }
+
+    @Override
+    public void saveCid(long userid, long cid) {
+        Column c = columnService.queryById(cid);
+        long id = c.getId();
+        long pcid = c.getParentId();
+        String cname = c.getColumnname();
+        ColumnVisible cv = new ColumnVisible();
+        cv.setColumnId(id);
+        cv.setPcid(pcid);
+        cv.setUserId(userid);
+        cv.setCtime(new Date());
+        cv.setUtime(new Date());
+        cv.setColumnName(cname);
+        cv.setState((byte) 0);
+        columnVisibleMapper.insert(cv);
+    }
+
+    @Override
+    public void delByUserIdAndColumnId(long userid, long cid) {
+        ColumnVisibleExample cm = new ColumnVisibleExample();
+        com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample.Criteria cri = cm.createCriteria();
+        cri.andUserIdEqualTo(userid);
+        cri.andColumnIdEqualTo(cid);
         columnVisibleMapper.deleteByExample(cm);
     }
 

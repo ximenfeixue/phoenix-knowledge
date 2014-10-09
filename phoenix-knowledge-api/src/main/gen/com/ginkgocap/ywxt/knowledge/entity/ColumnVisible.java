@@ -10,13 +10,15 @@ public class ColumnVisible implements Serializable {
 
     private Long columnId;
 
-    private Byte state;
-
     private Date ctime;
 
     private Date utime;
 
     private Long pcid;
+
+    private Byte state;
+
+    private String columnName;
 
     private static final long serialVersionUID = 1L;
 
@@ -44,14 +46,6 @@ public class ColumnVisible implements Serializable {
         this.columnId = columnId;
     }
 
-    public Byte getState() {
-        return state;
-    }
-
-    public void setState(Byte state) {
-        this.state = state;
-    }
-
     public Date getCtime() {
         return ctime;
     }
@@ -74,5 +68,21 @@ public class ColumnVisible implements Serializable {
 
     public void setPcid(Long pcid) {
         this.pcid = pcid;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 }

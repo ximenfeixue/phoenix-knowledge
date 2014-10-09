@@ -305,66 +305,6 @@ public class ColumnVisibleExample {
             return (Criteria) this;
         }
 
-        public Criteria andStateIsNull() {
-            addCriterion("state is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateIsNotNull() {
-            addCriterion("state is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateEqualTo(Byte value) {
-            addCriterion("state =", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateNotEqualTo(Byte value) {
-            addCriterion("state <>", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateGreaterThan(Byte value) {
-            addCriterion("state >", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateGreaterThanOrEqualTo(Byte value) {
-            addCriterion("state >=", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateLessThan(Byte value) {
-            addCriterion("state <", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateLessThanOrEqualTo(Byte value) {
-            addCriterion("state <=", value, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateIn(List<Byte> values) {
-            addCriterion("state in", values, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateNotIn(List<Byte> values) {
-            addCriterion("state not in", values, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateBetween(Byte value1, Byte value2) {
-            addCriterion("state between", value1, value2, "state");
-            return (Criteria) this;
-        }
-
-        public Criteria andStateNotBetween(Byte value1, Byte value2) {
-            addCriterion("state not between", value1, value2, "state");
-            return (Criteria) this;
-        }
-
         public Criteria andCtimeIsNull() {
             addCriterion("ctime is null");
             return (Criteria) this;
@@ -542,6 +482,141 @@ public class ColumnVisibleExample {
 
         public Criteria andPcidNotBetween(Long value1, Long value2) {
             addCriterion("pcid not between", value1, value2, "pcid");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateIsNull() {
+            addCriterion("state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateIsNotNull() {
+            addCriterion("state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateEqualTo(Byte value) {
+            addCriterion("state =", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotEqualTo(Byte value) {
+            addCriterion("state <>", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateGreaterThan(Byte value) {
+            addCriterion("state >", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateGreaterThanOrEqualTo(Byte value) {
+            addCriterion("state >=", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateLessThan(Byte value) {
+            addCriterion("state <", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateLessThanOrEqualTo(Byte value) {
+            addCriterion("state <=", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateIn(List<Byte> values) {
+            addCriterion("state in", values, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotIn(List<Byte> values) {
+            addCriterion("state not in", values, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateBetween(Byte value1, Byte value2) {
+            addCriterion("state between", value1, value2, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotBetween(Byte value1, Byte value2) {
+            addCriterion("state not between", value1, value2, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIsNull() {
+            addCriterion("column_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIsNotNull() {
+            addCriterion("column_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameEqualTo(String value) {
+            addCriterion("column_name =", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotEqualTo(String value) {
+            addCriterion("column_name <>", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameGreaterThan(String value) {
+            addCriterion("column_name >", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameGreaterThanOrEqualTo(String value) {
+            addCriterion("column_name >=", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLessThan(String value) {
+            addCriterion("column_name <", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLessThanOrEqualTo(String value) {
+            addCriterion("column_name <=", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLike(String value) {
+            addCriterion("column_name like", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotLike(String value) {
+            addCriterion("column_name not like", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIn(List<String> values) {
+            addCriterion("column_name in", values, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotIn(List<String> values) {
+            addCriterion("column_name not in", values, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameBetween(String value1, String value2) {
+            addCriterion("column_name between", value1, value2, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotBetween(String value1, String value2) {
+            addCriterion("column_name not between", value1, value2, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLikeInsensitive(String value) {
+            addCriterion("upper(column_name) like", value.toUpperCase(), "columnName");
             return (Criteria) this;
         }
     }

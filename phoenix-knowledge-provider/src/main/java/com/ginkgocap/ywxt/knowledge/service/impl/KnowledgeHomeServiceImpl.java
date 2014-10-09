@@ -63,7 +63,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public List<Column> getTypeList(Long userId, long column) {
+    public List<Column> getTypeList(Long userId, Long column) {
         return columnValueMapper.selectByParam(column, Constants.gtnid, userId);
     }
 

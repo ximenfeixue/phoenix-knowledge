@@ -12,14 +12,20 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnVisible;
  */
 public interface ColumnVisibleService {
 
+    public void init(long userid, long gtnid);
+
     public ColumnVisible queryListByCidAndUserId(long userid, long cid);
-    
+
     public List<ColumnVisible> queryListByPidAndUserId(long userid, long pid);
 
-    public void saveCids(long userid, String cids, long pcid);
+    public long countListByPidAndUserId(long userid, Long pid);
+
+    public void updateCids(long userid, String cids);
+
+    public void saveCid(long userid, long cid);
+    
+    public void delByUserIdAndColumnId(long userid, long cid);
 
     public void del(long id);
-
-    public void delByPcid(long pcid, long userid);
 
 }

@@ -34,13 +34,19 @@ import com.ginkgocap.ywxt.util.DateFunc;
 
 public class ColumnVisibleServiceTest extends TestBase {
     @Autowired
-    private ColumnVisibleService cvs;
+    private ColumnVisibleService columnVisibleService;
 
     @Test
     @Rollback(false)
     public void save() throws Exception {
-       // cvs.saveCids(10132, "3", 1);
-        cvs.queryListByCidAndUserId(10132, 0);
+        // cvs.saveCids(10132, "3", 1);
+         
+       long count= columnVisibleService.countListByPidAndUserId(10132, 0l);
+       if(count==0){
+           long gtnid=0;
+           columnVisibleService.init(10132, gtnid);
+       }
+       columnVisibleService.updateCids(10132, "4,6");
     }
 
 }

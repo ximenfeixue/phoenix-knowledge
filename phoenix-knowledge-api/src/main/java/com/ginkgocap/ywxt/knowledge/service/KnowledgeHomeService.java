@@ -25,7 +25,7 @@ public interface KnowledgeHomeService {
      * @param column 栏目
      * @return
      */
-    public List<Column>getTypeList(Long userId,long column);
+    public List<Column>getTypeList(Long userId,Long column);
 
     /**
      * 查询知识

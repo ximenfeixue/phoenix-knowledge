@@ -42,7 +42,7 @@ public interface ColumnValueMapper {
      * @param userId 用户id
      * @return
      */
-    public List<Column> selectByParam(@Param("column")long column ,@Param("gtnid")long gtnid ,@Param("userId")long userId);
+    public List<Column> selectByParam(@Param("column")Long column ,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
     
     /**
      * 查询数据库id最大值
