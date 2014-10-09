@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,13 +163,17 @@ public class KCHelper {
         
 //       System.out.println(getSortPath(9l));
         
-        List<Long> list=new ArrayList<Long>();
+//        List<Long> list=new ArrayList<Long>();
 //        list.add(912l);
 //        list.add(91l);
 //        list.add(9l);
-        list.add(0l);
+//        list.add(0l);
         
-        System.out.println(getSortPath(list, 9123l));
+//        System.out.println(getSortPath(list, 9123l));
+        
+        SimpleDateFormat f=new SimpleDateFormat("E yyyy-MM-dd HH:mm:ss");
+        Date date=new Date();
+        System.out.println(f.format(date));
     }
     
    final class KCType{
