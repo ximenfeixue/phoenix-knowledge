@@ -61,4 +61,6 @@ public interface UserCategoryService {
      * @return 个数
      */
     long selectChildCountById(long id);
+    
+    UserCategory selectByNameAndPid(String name,long pid);
 }

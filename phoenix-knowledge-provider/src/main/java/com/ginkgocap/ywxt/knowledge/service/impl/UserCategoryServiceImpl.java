@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
@@ -83,8 +84,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
                 category.setSortid(newSortId);
             }
             //返回存入的对象
-            int id = userCategoryMapper.insert(category);
-            return userCategoryMapper.selectByPrimaryKey(category.getId());
+            userCategoryMapper.insert(category);
+            return userCategoryMapper.selectByNameAndPid(category.getCategoryname(), category.getParentId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,6 +115,14 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     @Override
     public long selectChildCountById(long id) {
         return userCategoryValueMapper.selectChildCountById(id);
+    }
+
+    @Override
+    public UserCategory selectByNameAndPid(String name, long pid) {
+        UserCategoryExample example=new UserCategoryExample();
+        example.createCriteria().andParentIdEqualTo(pid).andCategorynameEqualTo(name);
+        List<UserCategory> l=userCategoryMapper.selectByExample(example);
+        return l.get(0);
     }
 
 }

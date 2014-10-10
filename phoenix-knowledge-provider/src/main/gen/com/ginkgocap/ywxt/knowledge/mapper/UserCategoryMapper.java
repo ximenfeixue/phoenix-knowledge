@@ -19,6 +19,8 @@ public interface UserCategoryMapper {
     List<UserCategory> selectByExample(UserCategoryExample example);
 
     UserCategory selectByPrimaryKey(Long id);
+    
+    UserCategory selectByNameAndPid(String name,long pid);
 
     int updateByExampleSelective(@Param("record") UserCategory record, @Param("example") UserCategoryExample example);
 
