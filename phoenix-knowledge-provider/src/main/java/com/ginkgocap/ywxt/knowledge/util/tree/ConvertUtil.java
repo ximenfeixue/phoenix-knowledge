@@ -10,11 +10,13 @@ import java.util.List;
  *
  */
 public class ConvertUtil {
-    public static <T> List<Node> convert2Node(List<T> l, String id, String name, String parentId, String sortId) {
+    public static <T> List<Node> convert2Node(List<T> l,String userid, String id, String name, String parentId, String sortId) {
         List<Node> nl = new ArrayList<Node>();
         for (T c : l) {
             Node n = new Node();
             try {
+                n.setUserId((Long) c.getClass()
+                        .getMethod("get" + userid.substring(0, 1).toUpperCase() + userid.substring(1, userid.length())).invoke(c));
                 n.setId((Long) c.getClass()
                         .getMethod("get" + id.substring(0, 1).toUpperCase() + id.substring(1, id.length())).invoke(c));
                 n.setName((String) c.getClass()

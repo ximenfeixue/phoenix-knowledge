@@ -106,7 +106,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     public String selectUserCategoryTreeBySortId(long userId, String sortId,Byte type) {
         List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId,type);
         if (cl != null && cl.size() > 0) {
-            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "id", "categoryname", "parentId", "sortid")))
+            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl,"userId", "id", "categoryname", "parentId", "sortid")))
                     .toString();
         }
         return "";

@@ -118,7 +118,7 @@ public class CategoryServiceImpl implements CategoryService{
     public String selectCategoryTreeBySortId(long userId, String sortId, String status) {
         List<Category> cl = categoryDao.selectChildBySortId(userId, sortId);
         if (cl != null && cl.size() > 0) {
-            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "id", "name", "parentId", "sortId"))).toString();
+            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl,"uid", "id", "name", "parentId", "sortId"))).toString();
         } 
         return "";
     }

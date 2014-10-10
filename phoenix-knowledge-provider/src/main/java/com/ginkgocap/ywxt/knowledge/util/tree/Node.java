@@ -9,11 +9,18 @@ import java.util.List;
  */
 public class Node {
     private long id;
+    private long userId;
     private long parentId;
     private String sortId;
     private String name;
     private List<Node> list;
     
+    public long getUserId() {
+        return userId;
+    }
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
     public String getName() {
         return name;
     }

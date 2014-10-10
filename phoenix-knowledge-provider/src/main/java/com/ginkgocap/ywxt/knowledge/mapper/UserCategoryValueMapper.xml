@@ -13,7 +13,7 @@
   </resultMap>
   
 	<select id="selectChildBySortId"  resultMap="BaseResultMap" >
-		select * from tb_user_category where user_id = #{uid} 
+		select * from tb_user_category where (user_id = #{uid} or user_id = 0) 
 		<if test="sortId != null and sortId != ''">
 		and sortId like CONCAT(#{sortId}, '%') 
 		</if>
