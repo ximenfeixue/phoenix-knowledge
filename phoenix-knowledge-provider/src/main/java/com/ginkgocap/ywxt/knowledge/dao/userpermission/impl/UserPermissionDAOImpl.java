@@ -51,7 +51,7 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			for (int i = 0; i < receive_uid.length; i++) {
 				userPermission = new UserPermission();
 				userPermission.setReceiveUserId(receive_uid[i]);
-				userPermission.setColumnId((short) column_id);
+//				userPermission.setColumnId((short) column_id);
 				userPermission.setCreatetime(new Date());
 				userPermission.setKnowledgeId(knowledgeid);
 				userPermission.setMento(mento);
@@ -61,7 +61,7 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			}
 		} else {
 			userPermission = new UserPermission();
-			userPermission.setColumnId((short) column_id);
+//			userPermission.setColumnId((short) column_id);
 			userPermission.setCreatetime(new Date());
 			userPermission.setKnowledgeId(knowledgeid);
 			userPermission.setMento(mento);
