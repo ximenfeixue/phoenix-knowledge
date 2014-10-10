@@ -39,10 +39,10 @@ public class UserPermissionTest extends TestBase {
 		short column_id = 1;
 		Date createtime=new Date();
 
-		int count = userPermissionService.insertUserPermission(receive_uid,
-				knowledgeid, send_uid, type, mento, column_id);
+//		int count = userPermissionService.insertUserPermission(receive_uid,
+//				knowledgeid, send_uid, type, mento, column_id);
 
-		System.out.println("count : " + count);
+	//	System.out.println("count : " + count);
 	}
 
 	@Test

@@ -127,7 +127,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
         
-        //查询栏目大类下的数据：自己，好友，全平台3种
+        //查询栏目大类下的数据：全平台
         ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
         ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
         

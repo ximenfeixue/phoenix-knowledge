@@ -43,7 +43,7 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 
 	@Override
 	public int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento, short column_id) {
+			long send_uid, int type, String mento,short column_type, long column_id) {
 
 		List<UserPermission> list = new ArrayList<UserPermission>();
 		UserPermission userPermission = null;
@@ -51,7 +51,8 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			for (int i = 0; i < receive_uid.length; i++) {
 				userPermission = new UserPermission();
 				userPermission.setReceiveUserId(receive_uid[i]);
-				userPermission.setColumnId((short) column_id);
+				userPermission.setColumnId(column_id);
+				userPermission.setColumnType(column_type);
 				userPermission.setCreatetime(new Date());
 				userPermission.setKnowledgeId(knowledgeid);
 				userPermission.setMento(mento);
@@ -61,7 +62,8 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 			}
 		} else {
 			userPermission = new UserPermission();
-			userPermission.setColumnId((short) column_id);
+			userPermission.setColumnId( column_id);
+			userPermission.setColumnType(column_type);
 			userPermission.setCreatetime(new Date());
 			userPermission.setKnowledgeId(knowledgeid);
 			userPermission.setMento(mento);

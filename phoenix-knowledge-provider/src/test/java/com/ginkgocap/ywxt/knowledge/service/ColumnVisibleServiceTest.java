@@ -46,7 +46,7 @@ public class ColumnVisibleServiceTest extends TestBase {
            long gtnid=0;
            columnVisibleService.init(10132, gtnid);
        }
-       columnVisibleService.updateCids(10132, "4,6");
+      // columnVisibleService.updateCids(10132, "4,6");
     }
 
 }

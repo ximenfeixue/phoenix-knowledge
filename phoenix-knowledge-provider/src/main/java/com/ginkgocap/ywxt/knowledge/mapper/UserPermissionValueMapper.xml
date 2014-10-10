@@ -46,8 +46,8 @@
 		</if>
 			or type=4 
 			)
-		<if test="column_id !=null">
-			and column_id=#{column_id} 
+		<if test="column_type !=null">
+			and column_type=#{column_type} 
 		</if>
 	</select>
 
