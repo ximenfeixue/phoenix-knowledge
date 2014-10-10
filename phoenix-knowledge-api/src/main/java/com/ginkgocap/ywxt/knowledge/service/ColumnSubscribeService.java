@@ -1,10 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe;
 import com.ginkgocap.ywxt.knowledge.form.KnowledgeSimpleMerge;
+import com.ginkgocap.ywxt.knowledge.form.SubcribeNode;
 
 /** 
  * 栏目订阅操作接口
@@ -20,7 +22,7 @@ public interface ColumnSubscribeService {
      * @return 增加的记录
      */
     public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs);
-    /**
+    /**add
      * 根据用户id和栏目id查询用户的是否已订阅
      * @param userId 用户id
      * @param columnId 栏目id
@@ -129,4 +131,28 @@ public interface ColumnSubscribeService {
      */
     public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list,int type);
 
+    /**
+     * 订阅排行
+     * @param count 排行数量
+     * @return
+     */
+    public Map<String,Object> selectRankList(int count,long userid);
+    /**
+     * 订阅所有列表
+     * @param userid 用户id
+     * @param type 0:所有 1自己
+     * @return
+     */
+    public List<SubcribeNode> selectAllList(Long userid,short type);
+
+    /**
+     * 用户是否订阅过该类型
+     * @param userId
+     * @param type
+     * @return
+     */
+    boolean isExistType(long userId, short type);
+    
+    
+    
 }
