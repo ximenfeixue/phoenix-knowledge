@@ -9,9 +9,21 @@ import java.util.Date;
  * 
  */
 public class KnowledgeCase extends Knowledge {
-	// 老知识ID
+		// 老知识ID
 		private long oid;
+		
+		public float getPrice() {
+			return price;
+		}
 
+		public void setPrice(float price) {
+			this.price = price;
+		}
+
+		//价格
+		private float price;
+				
+		
 		public long getOid() {
 			return oid;
 		}
