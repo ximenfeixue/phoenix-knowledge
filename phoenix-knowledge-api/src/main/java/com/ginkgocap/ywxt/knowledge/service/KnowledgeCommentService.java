@@ -32,4 +32,12 @@ public interface KnowledgeCommentService {
 	 * @return
 	 */
 	Map<String, Object> findCommentList(long kid, long pid, Integer pno, Integer psize);
+
+	/**
+	 * 删除评论
+	 * @param id 评论id
+	 * @param userid 登陆用户Id
+	 * @return
+	 */
+	Map<String, Object> delComment(long id, long userid); 
 }
