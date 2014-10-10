@@ -229,9 +229,9 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
                 sxn.setCount(xc.getSubscribeCount());
                 if (this.isExist(userid, xc.getId())) {
                     //表示存在 ：显示取消按钮
-                    sn.setState("0");
+                    sxn.setState("0");
                 } else {
-                    sn.setState("1");
+                    sxn.setState("1");
                 }
                 if (t == 0) {
                     ccnl.add(sxn);
