@@ -89,4 +89,34 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		return result;
 	}
 
+	@Override
+	public Map<String, Object> delComment(long id, long userid) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		KnowledgeComment kc = knowledgeCommentMapper.selectByPrimaryKey(id);
+		if (kc == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.commentNotExsit.c());
+			return result;
+		}
+		if (userid != kc.getUserId()) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delCommentNotPermission.c());
+			return result;
+		}
+
+		int v = knowledgeCommentMapper.deleteByPrimaryKey(id);
+		if (v == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delCommentFail.c());
+			return result;
+		}
+		
+		result.put(Constants.status, Constants.ResultType.success.v());
+
+		return result;
+	}
+
 }
