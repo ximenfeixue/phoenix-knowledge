@@ -18,6 +18,8 @@ public class UserCategory implements Serializable {
 
     private Long parentId;
 
+    private Byte type;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -74,5 +76,13 @@ public class UserCategory implements Serializable {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 }

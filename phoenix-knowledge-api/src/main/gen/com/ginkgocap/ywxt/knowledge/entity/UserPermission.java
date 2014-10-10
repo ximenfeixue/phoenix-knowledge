@@ -16,7 +16,9 @@ public class UserPermission implements Serializable {
 
     private Date createtime;
 
-    private Short columnId;
+    private Short columnType;
+
+    private Long columnId;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,11 +70,19 @@ public class UserPermission implements Serializable {
         this.createtime = createtime;
     }
 
-    public Short getColumnId() {
+    public Short getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(Short columnType) {
+        this.columnType = columnType;
+    }
+
+    public Long getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(Short columnId) {
+    public void setColumnId(Long columnId) {
         this.columnId = columnId;
     }
 }

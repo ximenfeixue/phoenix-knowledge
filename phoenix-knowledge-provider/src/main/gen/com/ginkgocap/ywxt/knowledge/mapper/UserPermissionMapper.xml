@@ -8,7 +8,8 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="mento" property="mento" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="column_id" property="columnId" jdbcType="SMALLINT" />
+    <result column="column_type" property="columnType" jdbcType="SMALLINT" />
+    <result column="column_id" property="columnId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +70,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    receive_user_id, knowledge_id, send_user_id, type, mento, createtime, column_id
+    receive_user_id, knowledge_id, send_user_id, type, mento, createtime, column_type, 
+    column_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample" >
     select
@@ -97,10 +99,10 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermission" >
     insert into tb_user_permission (receive_user_id, knowledge_id, send_user_id, 
       type, mento, createtime, 
-      column_id)
+      column_type, column_id)
     values (#{receiveUserId,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{sendUserId,jdbcType=BIGINT}, 
       #{type,jdbcType=INTEGER}, #{mento,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{columnId,jdbcType=SMALLINT})
+      #{columnType,jdbcType=SMALLINT}, #{columnId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermission" >
     insert into tb_user_permission
@@ -122,6 +124,9 @@
       </if>
       <if test="createtime != null" >
         createtime,
+      </if>
+      <if test="columnType != null" >
+        column_type,
       </if>
       <if test="columnId != null" >
         column_id,
@@ -146,8 +151,11 @@
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
       </if>
+      <if test="columnType != null" >
+        #{columnType,jdbcType=SMALLINT},
+      </if>
       <if test="columnId != null" >
-        #{columnId,jdbcType=SMALLINT},
+        #{columnId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -178,8 +186,11 @@
       <if test="record.createtime != null" >
         createtime = #{record.createtime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.columnType != null" >
+        column_type = #{record.columnType,jdbcType=SMALLINT},
+      </if>
       <if test="record.columnId != null" >
-        column_id = #{record.columnId,jdbcType=SMALLINT},
+        column_id = #{record.columnId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -194,7 +205,8 @@
       type = #{record.type,jdbcType=INTEGER},
       mento = #{record.mento,jdbcType=VARCHAR},
       createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      column_id = #{record.columnId,jdbcType=SMALLINT}
+      column_type = #{record.columnType,jdbcType=SMALLINT},
+      column_id = #{record.columnId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>

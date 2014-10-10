@@ -495,6 +495,66 @@ public class UserPermissionExample {
             return (Criteria) this;
         }
 
+        public Criteria andColumnTypeIsNull() {
+            addCriterion("column_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeIsNotNull() {
+            addCriterion("column_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeEqualTo(Short value) {
+            addCriterion("column_type =", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotEqualTo(Short value) {
+            addCriterion("column_type <>", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeGreaterThan(Short value) {
+            addCriterion("column_type >", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("column_type >=", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeLessThan(Short value) {
+            addCriterion("column_type <", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeLessThanOrEqualTo(Short value) {
+            addCriterion("column_type <=", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeIn(List<Short> values) {
+            addCriterion("column_type in", values, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotIn(List<Short> values) {
+            addCriterion("column_type not in", values, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeBetween(Short value1, Short value2) {
+            addCriterion("column_type between", value1, value2, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotBetween(Short value1, Short value2) {
+            addCriterion("column_type not between", value1, value2, "columnType");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnIdIsNull() {
             addCriterion("column_id is null");
             return (Criteria) this;
@@ -505,52 +565,52 @@ public class UserPermissionExample {
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdEqualTo(Short value) {
+        public Criteria andColumnIdEqualTo(Long value) {
             addCriterion("column_id =", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotEqualTo(Short value) {
+        public Criteria andColumnIdNotEqualTo(Long value) {
             addCriterion("column_id <>", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdGreaterThan(Short value) {
+        public Criteria andColumnIdGreaterThan(Long value) {
             addCriterion("column_id >", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdGreaterThanOrEqualTo(Short value) {
+        public Criteria andColumnIdGreaterThanOrEqualTo(Long value) {
             addCriterion("column_id >=", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdLessThan(Short value) {
+        public Criteria andColumnIdLessThan(Long value) {
             addCriterion("column_id <", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdLessThanOrEqualTo(Short value) {
+        public Criteria andColumnIdLessThanOrEqualTo(Long value) {
             addCriterion("column_id <=", value, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdIn(List<Short> values) {
+        public Criteria andColumnIdIn(List<Long> values) {
             addCriterion("column_id in", values, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotIn(List<Short> values) {
+        public Criteria andColumnIdNotIn(List<Long> values) {
             addCriterion("column_id not in", values, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdBetween(Short value1, Short value2) {
+        public Criteria andColumnIdBetween(Long value1, Long value2) {
             addCriterion("column_id between", value1, value2, "columnId");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotBetween(Short value1, Short value2) {
+        public Criteria andColumnIdNotBetween(Long value1, Long value2) {
             addCriterion("column_id not between", value1, value2, "columnId");
             return (Criteria) this;
         }

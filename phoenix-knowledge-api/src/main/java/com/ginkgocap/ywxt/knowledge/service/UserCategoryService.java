@@ -44,7 +44,7 @@ public interface UserCategoryService {
      * @param sortId
      * @return
      */
-    List<UserCategory> selectChildBySortId(long userId, String sortId);
+    List<UserCategory> selectChildBySortId(long userId, String sortId,Byte type);
 
     /**
      * 查询目录树
@@ -53,7 +53,7 @@ public interface UserCategoryService {
      * @param status 状态:0正常 1删除
      * @return 
      */
-    String selectUserCategoryTreeBySortId(long userId, String sortId);
+    String selectUserCategoryTreeBySortId(long userId, String sortId,Byte type);
     
     /**
      * 查询子目录个数

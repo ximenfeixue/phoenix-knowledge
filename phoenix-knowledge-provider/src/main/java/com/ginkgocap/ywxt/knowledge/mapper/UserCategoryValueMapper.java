@@ -21,14 +21,15 @@ public interface UserCategoryValueMapper {
      * 通过父类的sortId得到某用户下某及的分类最大的sortId
      * @param uid
      * @param parentSortId
+     * @param type 
      * @return
      */
-    String selectMaxSortId(@Param("uid")long uid,@Param("parentSortId")String parentSortId);
+    String selectMaxSortId(@Param("uid")long uid,@Param("parentSortId")String parentSortId, @Param("type")Byte type);
     /**
      * 通过phoenix_user.tb_user.id得到此用户sortId下经过树形结构排序的所有分类
      * @param uid
      * @param sortId
      * @return
      */
-    List<UserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId);
+    List<UserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId,@Param("type")Byte type);
 }

@@ -18,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
+import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -34,6 +35,8 @@ public class ColumnServiceImpl implements ColumnService {
     ColumnMapper columnMapper;
     @Autowired
     private ColumnValueMapper columnValueMapper;
+    @Autowired
+    private ColumnVisibleService columnVisibleService;
     
     /**
      * 在查询条件中增加delstatus条件，过滤掉已删除对象
@@ -107,7 +110,7 @@ public class ColumnServiceImpl implements ColumnService {
             ColumnExample ce=new ColumnExample();
             filterDel(ce.createCriteria().andUpdateTimeEqualTo(date).andCreatetimeEqualTo(date));
             kc=columnMapper.selectByExample(ce).get(0);
-            
+            columnVisibleService.saveCid(kc.getUserId(), kc.getId());
             return kc;
         }
 

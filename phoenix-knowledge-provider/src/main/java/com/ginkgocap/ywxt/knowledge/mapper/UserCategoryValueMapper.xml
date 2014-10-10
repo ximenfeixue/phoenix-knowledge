@@ -17,12 +17,13 @@
 		<if test="sortId != null and sortId != ''">
 		and sortId like CONCAT(#{sortId}, '%') 
 		</if>
+		and type=#{type}
 		order by sortId
 	</select>	
 
 
 	<select id="selectMaxSortId" resultType="string" >
-		select max(sortid) from tb_user_category where user_id=#{uid} and sortId like CONCAT(#{parentSortId}, '_________%') 
+		select max(sortid) from tb_user_category where user_id=#{uid} and type=#{type} and sortId like CONCAT(#{parentSortId}, '_________%') 
 	</select>
 
 

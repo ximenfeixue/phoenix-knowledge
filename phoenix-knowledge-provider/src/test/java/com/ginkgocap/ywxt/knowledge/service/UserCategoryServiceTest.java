@@ -61,11 +61,11 @@ public class UserCategoryServiceTest extends TestBase {
 
     @Test
     public void testSelectChildBySortId() {
-        userCategoryService.selectChildBySortId(userId, "000000001");
+        userCategoryService.selectChildBySortId(userId, "000000001",(byte) 0);
     }
 
     @Test
     public void testSelectUserCategoryTreeBySortId() {
-        userCategoryService.selectUserCategoryTreeBySortId(userId, "000000001");
+        userCategoryService.selectUserCategoryTreeBySortId(userId, "000000001", (byte) 0);
     }
 }

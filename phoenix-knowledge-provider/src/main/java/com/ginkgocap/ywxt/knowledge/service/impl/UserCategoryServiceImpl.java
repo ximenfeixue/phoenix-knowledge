@@ -69,7 +69,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
             //得到要添加的分类的父类sortId
             String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
             //通过parentSortId得到子类最大已添加的sortId
-            String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId);
+            String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId,category.getType());
             if (StringUtils.isBlank(category.getSortid())) {
                 //如果用户第一次添加，将childMaxSortId赋值
                 String newSortId = new String("");
@@ -97,13 +97,13 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     }
  
     @Override
-    public List<UserCategory> selectChildBySortId(long uid, String sortId) {
-        return userCategoryValueMapper.selectChildBySortId(uid, sortId);
+    public List<UserCategory> selectChildBySortId(long uid, String sortId,Byte type) {
+        return userCategoryValueMapper.selectChildBySortId(uid, sortId,type);
     }
 
     @Override
-    public String selectUserCategoryTreeBySortId(long userId, String sortId) {
-        List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId);
+    public String selectUserCategoryTreeBySortId(long userId, String sortId,Byte type) {
+        List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId,type);
         if (cl != null && cl.size() > 0) {
             return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "id", "categoryname", "parentId", "sortid")))
                     .toString();
