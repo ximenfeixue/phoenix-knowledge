@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;  
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +108,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     public String selectUserCategoryTreeBySortId(long userId, String sortId,Byte type) {
         List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId,type);
         if (cl != null && cl.size() > 0) {
-            return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl,"userId", "id", "categoryname", "parentId", "sortid")))
+            return JSONArray.fromObject(Tree.build(ConvertUtil.convert2Node(cl,"userId", "id", "categoryname", "parentId", "sortid")))
                     .toString();
         }
         return "";

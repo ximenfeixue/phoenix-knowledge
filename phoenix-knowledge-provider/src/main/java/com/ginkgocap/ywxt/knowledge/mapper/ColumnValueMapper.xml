@@ -35,7 +35,7 @@
 		from tb_column
 		where del_status=0
 		and (user_id=#{userId} or user_id=0)
-		<if test="columnLevelPath != null and columnLevelPath != ''">
+		<if test="sortId != null and sortId != ''">
 			and column_level_path like CONCAT(#{sortId}, '%')
 		</if>
 		order by column_level_path
