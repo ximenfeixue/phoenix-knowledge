@@ -40,9 +40,17 @@ public interface KnowledgeRecycleService {
 	int countKnowledgeRecycle(long userid, String type);
 
 	/**
-	 * 删除草稿箱知识
+	 * 删除回收站知识
 	 */
 
-	int deleteKnowledgeDraft(long knowledgeid);
+	int deleteKnowledgeRecycle(long knowledgeid);
+	
+	/**
+	 * 清空回收站
+	 */
+
+	int emptyKnowledgeRecycle();
+	
+	
 
 }
