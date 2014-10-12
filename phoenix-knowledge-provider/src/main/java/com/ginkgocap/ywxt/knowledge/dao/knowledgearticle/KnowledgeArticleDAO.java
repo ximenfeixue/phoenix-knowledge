@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.dao.knowledgearticle;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
 /**
  * 内容的DAO接口

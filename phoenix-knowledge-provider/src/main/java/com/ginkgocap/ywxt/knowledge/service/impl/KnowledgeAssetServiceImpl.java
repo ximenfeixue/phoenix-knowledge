@@ -1,11 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.asset.KnowledgeAssetDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeAssetService;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -22,23 +25,6 @@ public class KnowledgeAssetServiceImpl implements KnowledgeAssetService {
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
 
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@Override
-	public KnowledgeAsset insertknowledge(KnowledgeAsset knowledge) {
-
-		KnowledgeAsset knowledgeNews = knowledgeAssetDAO
-				.insertknowledge(knowledge);
-		if (knowledgeNews == null) {
-
-			return null;
-		} else {
-			return knowledgeNews;
-		}
-
-	}
-
 	@Override
 	public void deleteKnowledge(long[] ids) {
 
@@ -46,15 +32,48 @@ public class KnowledgeAssetServiceImpl implements KnowledgeAssetService {
 	}
 
 	@Override
-	public void updateKnowledge(KnowledgeAsset knowledge) {
+	public void updateKnowledge(String title, long userid, String uname,
+			long cid, String cname, String cpath, String content, String pic,
+			String desc, String essence, String taskid, String tags,
+			long knowledgeid) {
 
-		knowledgeAssetDAO.updateKnowledge(knowledge);
+		knowledgeAssetDAO.updateKnowledge(title, userid, uname, cid, cname,
+				cpath, content, pic, desc, essence, taskid, tags, knowledgeid);
 	}
 
 	@Override
 	public KnowledgeAsset selectKnowledge(long knowledgeid) {
 
 		return knowledgeAssetDAO.selectKnowledge(knowledgeid);
+	}
+
+	@Override
+	public List<KnowledgeAsset> selectByParam(Long columnid, long source,
+			Long userid, List<Long> ids, int page, int size) {
+		return knowledgeAssetDAO.selectByParam(columnid, source, userid, ids,
+				page, size);
+	}
+
+	@Override
+	public void deleteKnowledgeByid(long knowledgeid) {
+		knowledgeAssetDAO.deleteKnowledgeByid(knowledgeid);
+	}
+
+	@Override
+	public KnowledgeAsset insertknowledge(String title, long userid,
+			String uname, long cid, String cname, String cpath, String content,
+			String pic, String desc, String essence, String taskid,
+			String tags, long knowledgeid, long columnid) {
+
+		return knowledgeAssetDAO.insertknowledge(title, userid, uname, cid,
+				cname, cpath, content, pic, desc, essence, taskid, tags,
+				knowledgeid, columnid);
+	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+		knowledgeAssetDAO.restoreKnowledgeByid(knowledgeid);
+
 	}
 
 }

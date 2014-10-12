@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
 /**
  * 知识Service
