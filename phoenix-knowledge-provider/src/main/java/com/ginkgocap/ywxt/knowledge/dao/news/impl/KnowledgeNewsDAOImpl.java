@@ -147,4 +147,17 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		Query query = new Query(criteria);
 		mongoTemplate.remove(query, "KnowledgeNews");
 	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeNews kdnews = mongoTemplate.findOne(query,
+				KnowledgeNews.class, "KnowledgeNews");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
+	}
 }

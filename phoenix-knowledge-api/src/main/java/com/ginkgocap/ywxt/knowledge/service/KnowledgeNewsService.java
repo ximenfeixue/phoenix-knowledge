@@ -63,4 +63,10 @@ public interface KnowledgeNewsService {
 	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
 	 */
 	void deleteKnowledgeByid(long knowledgeid);
+	
+	/**
+	 * 恢复回收站中的知识
+	 * @param knowledgeid
+	 */
+	void restoreKnowledgeByid(long knowledgeid);
 }

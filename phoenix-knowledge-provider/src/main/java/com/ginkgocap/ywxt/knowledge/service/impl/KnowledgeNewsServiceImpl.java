@@ -71,4 +71,10 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 				cname, cpath, content, pic, desc, essence, taskid, tags,
 				knowledgeid, columnid);
 	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+		
+		
+	}
 }

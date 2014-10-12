@@ -63,5 +63,7 @@ public interface KnowledgeNewsDAO {
 	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
 	 */
 	void deleteKnowledgeByid(long knowledgeid);
+	
+	void restoreKnowledgeByid(long knowledgeid);
 
 }
