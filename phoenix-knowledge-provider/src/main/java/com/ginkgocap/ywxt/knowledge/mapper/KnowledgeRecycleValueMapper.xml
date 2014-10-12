@@ -5,4 +5,5 @@
  <delete id="emptyKnowledgeRecycle">
   delete from tb_knowledge_recycle 
  </delete>
+ 
 </mapper>

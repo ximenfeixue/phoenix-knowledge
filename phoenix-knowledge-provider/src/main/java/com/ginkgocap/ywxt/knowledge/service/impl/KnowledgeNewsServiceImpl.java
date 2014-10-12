@@ -74,7 +74,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid) {
-		
+		knowledgeNewsDAO.restoreKnowledgeByid(knowledgeid);
 		
 	}
 }
