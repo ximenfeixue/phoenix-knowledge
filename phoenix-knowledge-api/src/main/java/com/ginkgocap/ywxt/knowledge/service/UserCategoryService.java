@@ -30,7 +30,7 @@ public interface UserCategoryService {
      * @param UserCategory
      * @return
      */
-    UserCategory insert(UserCategory category);
+    void insert(UserCategory category);
 
     /**
      * 修改类型

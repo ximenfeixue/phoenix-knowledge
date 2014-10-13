@@ -61,11 +61,11 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         }else{
             return "childNotNull";
         }
-        return "";
+        return "success";
     }
 
     @Override
-    public UserCategory insert(UserCategory category) {
+    public void insert(UserCategory category) {
         //得到要添加的分类的父类parentId
         try {
             long parentId = category.getParentId();
@@ -87,11 +87,9 @@ public class UserCategoryServiceImpl implements UserCategoryService {
             }
             //返回存入的对象
             userCategoryMapper.insert(category);
-            return userCategoryMapper.selectByNameAndPid(category.getCategoryname(), category.getParentId());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     @Override
