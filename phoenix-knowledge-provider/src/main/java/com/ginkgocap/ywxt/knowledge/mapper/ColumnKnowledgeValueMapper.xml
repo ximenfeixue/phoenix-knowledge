@@ -10,4 +10,24 @@
      #{knowledgeids}
  	</foreach>
  </delete>
+  <select id="selectKnowledgeIds" resultType="java.util.List" >
+	SELECT
+	ck.knowledge_id
+	FROM tb_column_knowledge ck,
+	tb_column c
+	WHERE 1 = 1
+	AND c.del_status=0
+	<if test="userId != null">
+	AND ck.user_id = #{userId}
+	</if>
+	<if test="userId == null">
+	AND (ck.user_id = #{userId} or ck.user_id=#{gtnid})
+	</if>
+	AND c.column_level_path LIKE CONCAT(#{sortId}, '%')
+	AND EXISTS(SELECT
+	1
+	FROM tb_column_visible v
+	WHERE v.state = 0
+	AND v.column_id = c.id)
+</select>
 </mapper>

@@ -23,7 +23,17 @@
 				 #{item.createtime},#{item.tag},#{item.cDesc},#{item.columnId},#{item.picPath})  
     </foreach>  
  </insert>
- 
+ <select id="selectKnowledgeIds" resultType="java.util.List" >
+		SELECT kc.knowledge_id
+		FROM tb_knowledge_category kc,
+		tb_user_category uc
+		WHERE kc.category_id = uc.id
+		AND uc.type = #{type}
+		AND kc.user_id=#{userId}
+		AND kc.status=1 
+		and  uc.sortid like CONCAT(#{sortId}, '%')
+</select>
+
  <delete id="deleteKnowledge">
   delete from tb_knowledge_category 
      where  category_id=#{categoryid} 

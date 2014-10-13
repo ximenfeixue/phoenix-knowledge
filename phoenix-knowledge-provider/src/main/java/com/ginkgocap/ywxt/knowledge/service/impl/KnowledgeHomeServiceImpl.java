@@ -17,8 +17,10 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
@@ -33,7 +35,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Autowired
     ColumnValueMapper columnValueMapper;
     @Autowired
+    KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
+    @Autowired
     ColumnMapper columnMapper;
+    @Autowired
+    ColumnKnowledgeValueMapper columnKnowledgeValueMapper;
     @Autowired
     KnowledgeHomeDao knowledgeHomeDao;
     @Autowired
@@ -69,61 +75,62 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> selectAllByParam(T t, Long columnid, Long userid, int page, int size) {
-        boolean isBigColumn = false;
-
+    public <T> List<T> selectAllByParam(T t, int state ,String columnid, Long userid, int page, int size) {
+        String[] names = t.getClass().getName().split("\\.");
+        int length=names.length;
+        if(state==1||state==2){//目录
+            List<Long> ids=knowledgeCategoryValueMapper.selectKnowledgeIds(userid, 0,columnid,Constants.gtnid);
+            Criteria criteria = new Criteria();
+            criteria.and("uid").is(userid).and("status").is(4);
+            if(state==1){
+                criteria.and("id").in(ids);
+            }else{
+                ids=knowledgeCategoryValueMapper.selectKnowledgeIds(userid, 1,columnid,Constants.gtnid);
+                criteria.and("id").in(ids);
+                
+            }
+            Query query = new Query(criteria);
+            query.sort().on("createtime", Order.DESCENDING);
+            long count = mongoTemplate.count(query, names[length-1]);
+            PageUtil p = new PageUtil((int) count, page, size);
+            query.limit(size);
+            query.skip(p.getPageStartRow() - 1);
+            return (List<T>) mongoTemplate.find(query, t.getClass(),names[length-1]);
+        }
+        //栏目
+        Long cid=Long.parseLong(columnid);
         //查询栏目类型
-        Column column = columnMapper.selectByPrimaryKey(columnid);
+        Column column = columnMapper.selectByPrimaryKey(cid);
         long type = column.getType();
 
-        //是否为栏目大类
-        if (column.getUserId() == Constants.gtnid && column.getParentId() == 0) {
-            isBigColumn = true;
-        }
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：自己，好友，全平台3种
         ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
-        ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
 
-        //查询金桐脑(需要判断是否为栏目大类)
-        if (isBigColumn) {
-            ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) type);
-        } else {
-            ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andColumnIdEqualTo(columnid);
-            //过滤出栏目小类
-            ColumnKnowledgeExample ckm = new ColumnKnowledgeExample();
-            ckm.createCriteria().andKnowledgeIdIn(ids).andColumnIdEqualTo(columnid);
-            List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckm);
-            ids = new ArrayList<Long>();
-            for (ColumnKnowledge c : ckl) {
-                ids.add(c.getColumnId());
-            }
-        }
-
-        List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
-        for (ColumnKnowledge c : ckl) {
-            ids.add(c.getColumnId());
-        }
-
+        //查询金桐脑
+        List<Long> getIds = columnKnowledgeValueMapper.selectKnowledgeIds(Constants.gtnid, columnid);
+        ids.addAll(getIds);
+        
         //查询资讯
         if (ids != null) {
             criteria.and("_id").in(ids);
         }
         Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
-        long count = mongoTemplate.count(query, t.getClass());
+        long count = mongoTemplate.count(query, names[length-1]);
         PageUtil p = new PageUtil((int) count, page, size);
         query.limit(size);
         query.skip(p.getPageStartRow() - 1);
-        return (List<T>) mongoTemplate.find(query, t.getClass());
+        return (List<T>) mongoTemplate.find(query, t.getClass(),names[length-1]);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
-
+        String[] names = ty.obj().split("\\.");
+        int length=names.length;
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
         
@@ -146,11 +153,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.sort().on("createtime", Order.DESCENDING);
         long count;
         try {
-            count = mongoTemplate.count(query, Class.forName(ty.obj()));
+            count = mongoTemplate.count(query, names[length-1]);
             PageUtil p = new PageUtil((int) count, page, size);
             query.limit(size);
             query.skip(p.getPageStartRow() - 1);
-            return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()));
+            return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()), names[length-1]);
         } catch (Exception e) {
             e.printStackTrace();
         }

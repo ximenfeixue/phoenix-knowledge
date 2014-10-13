@@ -46,6 +46,9 @@
 		</if>
 			or type=4 
 			)
+		<if test="receive_user_id == null">
+			and type=4  
+		</if>
 		<if test="column_type !=null">
 			and column_type=#{column_type} 
 		</if>

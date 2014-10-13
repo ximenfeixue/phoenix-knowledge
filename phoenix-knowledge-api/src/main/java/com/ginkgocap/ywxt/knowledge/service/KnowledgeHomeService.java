@@ -30,13 +30,14 @@ public interface KnowledgeHomeService {
     /**
      * 查询知识
      * @param t类型实例 
+     * @param state 0 栏目 1 目录 2 收藏
      * @param columnid 栏目id
      * @param userid 用户id
      * @param page 当前页码
      * @param size 每页大小
      * @return
      */
-    public <T> List<T> selectAllByParam(T t, Long columnid, Long userid, int page, int size);
+    public <T> List<T> selectAllByParam(T t,int state, String columnid, Long userid, int page, int size);
 
     /**
      * 查询排行
