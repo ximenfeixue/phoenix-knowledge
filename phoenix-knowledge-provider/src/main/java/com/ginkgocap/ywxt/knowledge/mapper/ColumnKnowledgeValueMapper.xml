@@ -10,7 +10,7 @@
      #{knowledgeids}
  	</foreach>
  </delete>
-  <select id="selectKnowledgeIds" resultType="java.util.List" >
+  <select id="selectKnowledgeIds" resultType="long" >
 	SELECT
 	ck.knowledge_id
 	FROM tb_column_knowledge ck,
