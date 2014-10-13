@@ -10,10 +10,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeIndustryService")
 public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
@@ -68,6 +70,20 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
 		return (KnowledgeIndustry) mongoTemplate.find(query, KnowledgeIndustry.class);
+	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+		
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeIndustry kdnews = mongoTemplate.findOne(query,
+				KnowledgeIndustry.class, "KnowledgeIndustry");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeIndustry");
+		}
 	}
 
 }
