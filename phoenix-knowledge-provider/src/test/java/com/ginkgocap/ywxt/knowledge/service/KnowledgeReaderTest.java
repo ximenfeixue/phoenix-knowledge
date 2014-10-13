@@ -31,7 +31,7 @@ public class KnowledgeReaderTest extends TestBase {
 
 	@Test
 	public void testFindComment() {
-		System.out.println(knowledgeCommentService.findCommentList(1001, 0));
+//		System.out.println(knowledgeCommentService.findCommentList(1001, 0));
 	}
 
 	@Test

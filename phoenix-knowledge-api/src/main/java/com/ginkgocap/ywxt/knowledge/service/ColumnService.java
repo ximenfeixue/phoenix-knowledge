@@ -155,4 +155,16 @@ public interface ColumnService {
      * @return
      */
     public List<Column> queryFisrtLevelCustomerColumns(long userId);
+
+    /**
+     * 
+     * @param columnname 栏目名称
+     * @param pid 父ID
+     * @param pathName 栏目路径
+     * @param type 栏目所属类型
+     * @param tags 栏目标签
+     * @param userid 登陆用户ID 
+     */
+	public Map<String,Object> addColumn(String columnname, long pid, String pathName,
+			int type, String tags, long userid);
 }
