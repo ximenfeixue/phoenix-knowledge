@@ -12,23 +12,25 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeInvestmentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 
 @Service("knowledgeInvestmentService")
 public class KnowledgeInvestmentServiceImpl implements
 		KnowledgeInvestmentService {
-	
+
 	@Resource
-    private MongoTemplate mongoTemplate;
-	
+	private MongoTemplate mongoTemplate;
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Resource
 	private KnowledgeMongoIncService KnowledgeMongoIncService;
-	
+
 	@Override
 	public Long addKnowledgeInvestment(KnowledgeInvestment k) {
-		Long id=KnowledgeMongoIncService.getKnowledgeIncreaseId();
+		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
 		mongoTemplate.save(k);
 		return id;
@@ -36,9 +38,9 @@ public class KnowledgeInvestmentServiceImpl implements
 
 	@Override
 	public Long updateKnowledgeInvestment(KnowledgeInvestment k) {
-		long id=k.getId();
+		long id = k.getId();
 		Criteria c = Criteria.where("id").is(id);
-		Update update =new Update();
+		Update update = new Update();
 		Query query = new Query(c);
 		update.set("cid", k.getCid());
 		update.set("cname", k.getCname());
@@ -67,7 +69,23 @@ public class KnowledgeInvestmentServiceImpl implements
 	public KnowledgeInvestment getKnowledgeInvestmentDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeInvestment) mongoTemplate.findOne(query, KnowledgeInvestment.class);
+		return (KnowledgeInvestment) mongoTemplate.findOne(query,
+				KnowledgeInvestment.class);
+	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeInvestment kdnews = mongoTemplate.findOne(query,
+				KnowledgeInvestment.class, "KnowledgeInvestment");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
+		}
+
 	}
 
 }
