@@ -49,7 +49,7 @@ public interface KnowledgeRecycleService {
 	 * 清空回收站
 	 */
 
-	int emptyKnowledgeRecycle();
+	int emptyKnowledgeRecycle(long userid);
 	
 	
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeRecycleDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycleExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycleExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeRecycleMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeRecycleValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
@@ -73,8 +74,10 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	}
 
 	@Override
-	public int emptyKnowledgeRecycle() {
-
-		return knowledgeRecycleValueMapper.emptyKnowledgeRecycle();
+	public int emptyKnowledgeRecycle(long userid) {
+		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUseridEqualTo(userid);
+		return knowledgeRecycleMapper.deleteByExample(example);
 	}
 }
