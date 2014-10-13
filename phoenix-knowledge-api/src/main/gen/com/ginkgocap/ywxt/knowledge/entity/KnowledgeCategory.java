@@ -34,6 +34,8 @@ public class KnowledgeCategory implements Serializable {
 
     private String picPath;
 
+    private Byte columnPath;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -154,5 +156,13 @@ public class KnowledgeCategory implements Serializable {
 
     public void setPicPath(String picPath) {
         this.picPath = picPath;
+    }
+
+    public Byte getColumnPath() {
+        return columnPath;
+    }
+
+    public void setColumnPath(Byte columnPath) {
+        this.columnPath = columnPath;
     }
 }

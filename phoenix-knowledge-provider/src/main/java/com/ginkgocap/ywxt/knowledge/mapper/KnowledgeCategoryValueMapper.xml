@@ -23,8 +23,8 @@
 				 #{item.createtime},#{item.tag},#{item.cDesc},#{item.columnId},#{item.picPath})  
     </foreach>  
  </insert>
- <select id="selectKnowledgeIds" resultType="long" >
-		SELECT distinct kc.knowledge_id
+ <select id="selectKnowledgeIds" resultType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
+		SELECT distinct kc.*
 		FROM tb_knowledge_category kc,
 		tb_user_category uc
 		WHERE kc.category_id = uc.id

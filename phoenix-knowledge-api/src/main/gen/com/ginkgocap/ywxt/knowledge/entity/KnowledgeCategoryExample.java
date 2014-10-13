@@ -1105,6 +1105,66 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andColumnPathIsNull() {
+            addCriterion("column_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathIsNotNull() {
+            addCriterion("column_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathEqualTo(Byte value) {
+            addCriterion("column_path =", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotEqualTo(Byte value) {
+            addCriterion("column_path <>", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathGreaterThan(Byte value) {
+            addCriterion("column_path >", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathGreaterThanOrEqualTo(Byte value) {
+            addCriterion("column_path >=", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLessThan(Byte value) {
+            addCriterion("column_path <", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLessThanOrEqualTo(Byte value) {
+            addCriterion("column_path <=", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathIn(List<Byte> values) {
+            addCriterion("column_path in", values, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotIn(List<Byte> values) {
+            addCriterion("column_path not in", values, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathBetween(Byte value1, Byte value2) {
+            addCriterion("column_path between", value1, value2, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotBetween(Byte value1, Byte value2) {
+            addCriterion("column_path not between", value1, value2, "columnPath");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusLikeInsensitive(String value) {
             addCriterion("upper(status) like", value.toUpperCase(), "status");
             return (Criteria) this;

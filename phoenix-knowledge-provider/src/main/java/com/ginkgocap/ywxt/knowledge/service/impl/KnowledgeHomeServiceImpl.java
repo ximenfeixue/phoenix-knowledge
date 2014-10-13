@@ -14,6 +14,7 @@ import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
@@ -75,30 +76,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> selectAllByParam(T t, int state ,String columnid, Long userid, int page, int size) {
+    public <T> List<T> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
         String[] names = t.getClass().getName().split("\\.");
-        int length=names.length;
-        if(state==1||state==2){//目录
-            List<Long> ids=knowledgeCategoryValueMapper.selectKnowledgeIds(userid, 0,columnid,Constants.gtnid);
-            Criteria criteria = new Criteria();
-            criteria.and("uid").is(userid).and("status").is(4);
-            if(state==1){
-                criteria.and("id").in(ids);
-            }else{
-                ids=knowledgeCategoryValueMapper.selectKnowledgeIds(userid, 1,columnid,Constants.gtnid);
-                criteria.and("id").in(ids);
-                
-            }
-            Query query = new Query(criteria);
-            query.sort().on("createtime", Order.DESCENDING);
-            long count = mongoTemplate.count(query, names[length-1]);
-            PageUtil p = new PageUtil((int) count, page, size);
-            query.limit(size);
-            query.skip(p.getPageStartRow() - 1);
-            return (List<T>) mongoTemplate.find(query, t.getClass(),names[length-1]);
-        }
+        int length = names.length;
         //栏目
-        Long cid=Long.parseLong(columnid);
+        Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
         long type = column.getType();
@@ -112,39 +94,39 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         //查询金桐脑
         List<Long> getIds = columnKnowledgeValueMapper.selectKnowledgeIds(Constants.gtnid, columnid);
         ids.addAll(getIds);
-        
+
         //查询资讯
         if (ids != null) {
             criteria.and("_id").in(ids);
         }
         Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
-        long count = mongoTemplate.count(query, names[length-1]);
+        long count = mongoTemplate.count(query, names[length - 1]);
         PageUtil p = new PageUtil((int) count, page, size);
         query.limit(size);
         query.skip(p.getPageStartRow() - 1);
-        return (List<T>) mongoTemplate.find(query, t.getClass(),names[length-1]);
+        return (List<T>) mongoTemplate.find(query, t.getClass(), names[length - 1]);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
         String[] names = ty.obj().split("\\.");
-        int length=names.length;
+        int length = names.length;
         Criteria criteria = new Criteria();
         List<Long> ids = new ArrayList<Long>();
-        
+
         //查询栏目大类下的数据：全平台
         ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
         ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
-        
+
         //查询金桐脑
         ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
         List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
         for (ColumnKnowledge c : ckl) {
             ids.add(c.getColumnId());
         }
-        
+
         //查询资讯
         if (ids != null) {
             criteria.and("id").in(ids);
@@ -153,11 +135,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.sort().on("createtime", Order.DESCENDING);
         long count;
         try {
-            count = mongoTemplate.count(query, names[length-1]);
+            count = mongoTemplate.count(query, names[length - 1]);
             PageUtil p = new PageUtil((int) count, page, size);
             query.limit(size);
             query.skip(p.getPageStartRow() - 1);
-            return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()), names[length-1]);
+            return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()), names[length - 1]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,5 +149,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Override
     public KnowledgeStatics getPl(long id) {
         return knowledgeStaticsMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<KnowledgeCategory> selectAllKnowledgeCategoryByParam(int state, String sortid, Long userid, int page,
+            int size) {
+        return knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid, Constants.gtnid);
     }
 }
