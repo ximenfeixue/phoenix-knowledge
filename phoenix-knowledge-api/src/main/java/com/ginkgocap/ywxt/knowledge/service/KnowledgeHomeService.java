@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
@@ -38,6 +39,17 @@ public interface KnowledgeHomeService {
      * @return
      */
     public <T> List<T> selectAllByParam(T t,int state, String columnid, Long userid, int page, int size);
+    
+    /**
+     * 查询目录
+     * @param state 0默认 1收藏
+     * @param sortid 排序id
+     * @param userid 用户id
+     * @param page页
+     * @param size 页大小
+     * @return
+     */
+    public  List<KnowledgeCategory> selectAllKnowledgeCategoryByParam(int state, String sortid, Long userid, int page, int size);
 
     /**
      * 查询排行
