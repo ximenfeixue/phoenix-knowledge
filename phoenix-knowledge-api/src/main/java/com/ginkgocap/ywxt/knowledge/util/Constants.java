@@ -199,14 +199,14 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), alreadyCollection(
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addColumnFail("添加栏目失败!"),alreadyCollection(
 				"您已经收藏过该文章!"), addCommentFail("评论失败!"), artUserNotExsit(
 				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
 				"您已申请过添加好友,请耐心等待!"), IsFriends("您与该用户已是好友关系!"), UserNotExisitInSession(
 				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
 				"评论不存在!"), delCommentNotPermission("无权删除该评论!"), delCommentFail(
-				"删除评论失败!"),notFindParentColumn("未找到父目录，请刷新页面后重试!");
+				"删除评论失败!"),notFindColumn("栏目不存在，请刷新页面后重试!"),delColumnNotPermission("无权删除该栏目!"),delFail("删除失败!");
 
 		private String c;
 

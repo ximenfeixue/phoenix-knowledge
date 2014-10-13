@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,13 +15,19 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapperManual;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
+import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 
@@ -40,6 +45,12 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnValueMapper columnValueMapper;
 	@Autowired
 	private ColumnVisibleService columnVisibleService;
+	@Autowired
+	private ColumnTagMapperManual columnTagMapperManual;
+	@Autowired
+	private ColumnMapperManual columnMapperManual;
+	@Autowired
+	private ColumnTagMapper columnTagMapper;
 
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
@@ -411,15 +422,14 @@ public class ColumnServiceImpl implements ColumnService {
 	public Map<String, Object> addColumn(String columnname, long pid,
 			String pathName, int type, String tags, long userid) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
 		String currentColumnLevelPath = getColumnLevelPath(pid);
 		if (StringUtils.isBlank(currentColumnLevelPath)) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.notFindParentColumn.c());
+					Constants.ErrorMessage.notFindColumn.c());
 			return result;
 		}
-		
+		// 存储栏目信息
 		Date d = new Date();
 		Column column = new Column();
 		column.setColumnname(columnname);
@@ -431,17 +441,37 @@ public class ColumnServiceImpl implements ColumnService {
 		column.setUpdateTime(d);
 		column.setUserId(userid);
 		column.setColumnLevelPath(currentColumnLevelPath);
-		
+
 		if (type != 0) {
 			column.setType((byte) type);
 		}
+		long cid = columnMapperManual.insertAndGetId(column);
+		if (cid == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addColumnFail.c());
+			return result;
+		}
+		// 存储栏目标签信息
+		TagUtils tagUtil = new TagUtils();
+		String[] currTags = tagUtil.getTagListByTags(tags);
+		List<Column> columnList = new ArrayList<Column>();
+		for (String tag : currTags) {
+			ColumnTag ct = new ColumnTag();
+			ct.setColumnId(cid);
+			ct.setCreatetime(d);
+			ct.setTag(tag);
+			ct.setUserId(userid);
+			columnList.add(column);
+		}
+		columnTagMapperManual.batchInsertColumnTag(columnList);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-		
+
 		return result;
 	}
 
-	/**获取sortId全路径**/
+	/** 获取sortId全路径 **/
 	private String getColumnLevelPath(long pid) {
 		String currentColumn = null;
 		if (pid != 0) {
@@ -461,7 +491,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return currentColumn;
 	}
 
-	/**获取当前sortId值**/
+	/** 获取当前sortId值 **/
 	private String getCurrentSortId(String v) {
 		StringBuffer sb = new StringBuffer();
 		String currV = String.valueOf(Integer.parseInt(v) + 1);
@@ -473,7 +503,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return currSortId.concat(currV);
 	}
 
-	/**获取子栏目下最大值**/
+	/** 获取子栏目下path最大值 **/
 	private String getMaxLevelPath(long pid) {
 		ColumnExample example = new ColumnExample();
 		Criteria criteria = example.createCriteria();
@@ -487,4 +517,41 @@ public class ColumnServiceImpl implements ColumnService {
 		return clist.get(0).getColumnLevelPath();
 	}
 
+	@Override
+	public Map<String, Object> delColumn(long columnid, long userid) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Column column = columnMapper.selectByPrimaryKey(columnid);
+		if (column == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.notFindColumn.c());
+			return result;
+		}
+		if (column.getUserId() != userid) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delColumnNotPermission.c());
+			return result;
+		}
+
+		// 删除栏目表
+		int v = columnMapper.deleteByPrimaryKey(columnid);
+		if (v == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delFail.c());
+			return result;
+		}
+		// 删除栏目标签表
+		ColumnTagExample example = new ColumnTagExample();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria critera = example
+				.createCriteria();
+		critera.andColumnIdEqualTo(columnid);
+
+		columnTagMapper.deleteByExample(example);
+
+		result.put(Constants.status, Constants.ResultType.success.v());
+
+		return result;
+	}
 }
