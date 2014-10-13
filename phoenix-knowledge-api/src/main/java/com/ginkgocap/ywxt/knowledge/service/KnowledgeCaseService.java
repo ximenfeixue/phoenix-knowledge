@@ -32,4 +32,11 @@ public interface KnowledgeCaseService {
 	 */
 	public KnowledgeCase getKnowledgeCaseDetail(Long id);
 	
+	/**
+	 * 恢复回收站中的知识
+	 * 
+	 * @param knowledgeid
+	 */
+	void restoreKnowledgeByid(long knowledgeid);
+	
 }

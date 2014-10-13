@@ -12,23 +12,25 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeCaseService")
 public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
-	
+
 	@Resource
-    private MongoTemplate mongoTemplate;
-	
+	private MongoTemplate mongoTemplate;
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Resource
 	private KnowledgeMongoIncService KnowledgeMongoIncService;
-	
+
 	@Override
 	public Long addKnowledgeCase(KnowledgeCase k) {
-		Long id=KnowledgeMongoIncService.getKnowledgeIncreaseId();
+		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
 		mongoTemplate.save(k);
 		return id;
@@ -36,9 +38,9 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 
 	@Override
 	public Long updateKnowledgeCase(KnowledgeCase k) {
-		long id=k.getId();
+		long id = k.getId();
 		Criteria c = Criteria.where("id").is(id);
-		Update update =new Update();
+		Update update = new Update();
 		Query query = new Query(c);
 		update.set("cid", k.getCid());
 		update.set("cname", k.getCname());
@@ -68,6 +70,20 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
 		return (KnowledgeCase) mongoTemplate.find(query, KnowledgeCase.class);
+	}
+
+	@Override
+	public void restoreKnowledgeByid(long knowledgeid) {
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeCase kdnews = mongoTemplate.findOne(query,
+				KnowledgeCase.class, "KnowledgeCase");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeCase");
+		}
+
 	}
 
 }
