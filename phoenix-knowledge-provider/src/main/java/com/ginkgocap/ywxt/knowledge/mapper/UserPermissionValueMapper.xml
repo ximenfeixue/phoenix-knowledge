@@ -52,7 +52,7 @@
 		<if test="column_type !=null">
 			and column_type=#{column_type} 
 		</if>
-			EXISTS(SELECT
+			and EXISTS(SELECT
 			1
 			FROM tb_column_visible v
 			WHERE v.state = 0
