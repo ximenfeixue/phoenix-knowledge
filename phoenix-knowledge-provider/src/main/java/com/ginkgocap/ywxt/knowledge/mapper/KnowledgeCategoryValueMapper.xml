@@ -39,8 +39,8 @@
 		</if>
 		and  uc.sortid like CONCAT(#{sortId}, '%')
 </select>
- <select id="selectKnowledgeIds" resultType="int" >
- 		select count(1)from (
+ <select id="countKnowledgeIds" resultType="int" >
+ 		select count(1) from (
 		SELECT distinct kc.*
 		FROM tb_knowledge_category kc,
 		tb_user_category uc
@@ -54,7 +54,7 @@
 		AND kc.column_type=#{lid} 
 		</if>
 		AND kc.status=1 
-		and  uc.sortid like CONCAT(#{sortId}, '%'))
+		and  uc.sortid like CONCAT(#{sortId}, '%'))j
 </select>
 
  <delete id="deleteKnowledge">
