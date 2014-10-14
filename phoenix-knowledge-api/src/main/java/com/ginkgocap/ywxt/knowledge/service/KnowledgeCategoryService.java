@@ -20,7 +20,7 @@ public interface KnowledgeCategoryService {
 	 * @return
 	 */
 	int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
-			long userid, String title, String author, int path,
+			long userid, String title, String author, String path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path);
 
@@ -50,7 +50,7 @@ public interface KnowledgeCategoryService {
 	int updateKnowledgeCategorystatus(long knowledgeid, long categoryid);
 	
 	int insertCategory(long knowledgeid, long categoryid,
-			long userid, String title, String author, int path,
+			long userid, String title, String author, String path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path);
 	

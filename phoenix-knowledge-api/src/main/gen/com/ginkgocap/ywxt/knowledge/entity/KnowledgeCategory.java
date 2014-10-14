@@ -20,7 +20,7 @@ public class KnowledgeCategory implements Serializable {
 
     private String author;
 
-    private Short path;
+    private String path;
 
     private String shareAuthor;
 
@@ -33,10 +33,6 @@ public class KnowledgeCategory implements Serializable {
     private Long columnId;
 
     private String picPath;
-
-    private Byte columnType;
-
-    private String source;
 
     private static final long serialVersionUID = 1L;
 
@@ -104,11 +100,11 @@ public class KnowledgeCategory implements Serializable {
         this.author = author;
     }
 
-    public Short getPath() {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(Short path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -158,21 +154,5 @@ public class KnowledgeCategory implements Serializable {
 
     public void setPicPath(String picPath) {
         this.picPath = picPath;
-    }
-
-    public Byte getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(Byte columnType) {
-        this.columnType = columnType;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 }

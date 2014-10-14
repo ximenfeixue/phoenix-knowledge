@@ -655,52 +655,62 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andPathEqualTo(Short value) {
+        public Criteria andPathEqualTo(String value) {
             addCriterion("path =", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathNotEqualTo(Short value) {
+        public Criteria andPathNotEqualTo(String value) {
             addCriterion("path <>", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathGreaterThan(Short value) {
+        public Criteria andPathGreaterThan(String value) {
             addCriterion("path >", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathGreaterThanOrEqualTo(Short value) {
+        public Criteria andPathGreaterThanOrEqualTo(String value) {
             addCriterion("path >=", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathLessThan(Short value) {
+        public Criteria andPathLessThan(String value) {
             addCriterion("path <", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathLessThanOrEqualTo(Short value) {
+        public Criteria andPathLessThanOrEqualTo(String value) {
             addCriterion("path <=", value, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathIn(List<Short> values) {
+        public Criteria andPathLike(String value) {
+            addCriterion("path like", value, "path");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathNotLike(String value) {
+            addCriterion("path not like", value, "path");
+            return (Criteria) this;
+        }
+
+        public Criteria andPathIn(List<String> values) {
             addCriterion("path in", values, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathNotIn(List<Short> values) {
+        public Criteria andPathNotIn(List<String> values) {
             addCriterion("path not in", values, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathBetween(Short value1, Short value2) {
+        public Criteria andPathBetween(String value1, String value2) {
             addCriterion("path between", value1, value2, "path");
             return (Criteria) this;
         }
 
-        public Criteria andPathNotBetween(Short value1, Short value2) {
+        public Criteria andPathNotBetween(String value1, String value2) {
             addCriterion("path not between", value1, value2, "path");
             return (Criteria) this;
         }
@@ -1105,136 +1115,6 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andColumnTypeIsNull() {
-            addCriterion("column_type is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeIsNotNull() {
-            addCriterion("column_type is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeEqualTo(Byte value) {
-            addCriterion("column_type =", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeNotEqualTo(Byte value) {
-            addCriterion("column_type <>", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeGreaterThan(Byte value) {
-            addCriterion("column_type >", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("column_type >=", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeLessThan(Byte value) {
-            addCriterion("column_type <", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("column_type <=", value, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeIn(List<Byte> values) {
-            addCriterion("column_type in", values, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeNotIn(List<Byte> values) {
-            addCriterion("column_type not in", values, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeBetween(Byte value1, Byte value2) {
-            addCriterion("column_type between", value1, value2, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andColumnTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("column_type not between", value1, value2, "columnType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceIsNull() {
-            addCriterion("source is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceIsNotNull() {
-            addCriterion("source is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceEqualTo(String value) {
-            addCriterion("source =", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceNotEqualTo(String value) {
-            addCriterion("source <>", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceGreaterThan(String value) {
-            addCriterion("source >", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceGreaterThanOrEqualTo(String value) {
-            addCriterion("source >=", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceLessThan(String value) {
-            addCriterion("source <", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceLessThanOrEqualTo(String value) {
-            addCriterion("source <=", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceLike(String value) {
-            addCriterion("source like", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceNotLike(String value) {
-            addCriterion("source not like", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceIn(List<String> values) {
-            addCriterion("source in", values, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceNotIn(List<String> values) {
-            addCriterion("source not in", values, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceBetween(String value1, String value2) {
-            addCriterion("source between", value1, value2, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceNotBetween(String value1, String value2) {
-            addCriterion("source not between", value1, value2, "source");
-            return (Criteria) this;
-        }
-
         public Criteria andStatusLikeInsensitive(String value) {
             addCriterion("upper(status) like", value.toUpperCase(), "status");
             return (Criteria) this;
@@ -1255,6 +1135,11 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andPathLikeInsensitive(String value) {
+            addCriterion("upper(path) like", value.toUpperCase(), "path");
+            return (Criteria) this;
+        }
+
         public Criteria andShareAuthorLikeInsensitive(String value) {
             addCriterion("upper(share_author) like", value.toUpperCase(), "shareAuthor");
             return (Criteria) this;
@@ -1272,11 +1157,6 @@ public class KnowledgeCategoryExample {
 
         public Criteria andPicPathLikeInsensitive(String value) {
             addCriterion("upper(pic_path) like", value.toUpperCase(), "picPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceLikeInsensitive(String value) {
-            addCriterion("upper(source) like", value.toUpperCase(), "source");
             return (Criteria) this;
         }
     }

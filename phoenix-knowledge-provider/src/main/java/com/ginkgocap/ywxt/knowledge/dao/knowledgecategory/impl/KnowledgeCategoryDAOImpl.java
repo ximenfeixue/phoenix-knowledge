@@ -57,7 +57,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 
 	@Override
 	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
-			long userid, String title, String author, int path,
+			long userid, String title, String author, String path,
 			String share_author, Date createtime, String tag, String know_desc,
 			long column_id, String pic_path) {
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
@@ -72,7 +72,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 				knowledgeRCategory.setUserId((long) userid);
 				knowledgeRCategory.setTitle(title);
 				knowledgeRCategory.setAuthor(author);
-				knowledgeRCategory.setPath((short) path);
+				knowledgeRCategory.setPath( path);
 				knowledgeRCategory.setShareAuthor(share_author);
 				knowledgeRCategory.setCreatetime(createtime);
 				knowledgeRCategory.setTag(tag);
@@ -153,7 +153,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 
 	@Override
 	public int insertCategory(long knowledgeid, long categoryid, long userid,
-			String title, String author, int path, String share_author,
+			String title, String author, String path, String share_author,
 			Date createtime, String tag, String know_desc, long column_id,
 			String pic_path) {
 
@@ -167,7 +167,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 			knowledgeRCategory.setUserId((long) userid);
 			knowledgeRCategory.setTitle(title);
 			knowledgeRCategory.setAuthor(author);
-			knowledgeRCategory.setPath((short) path);
+			knowledgeRCategory.setPath( path);
 			knowledgeRCategory.setShareAuthor(share_author);
 			knowledgeRCategory.setCreatetime(createtime);
 			knowledgeRCategory.setTag(tag);

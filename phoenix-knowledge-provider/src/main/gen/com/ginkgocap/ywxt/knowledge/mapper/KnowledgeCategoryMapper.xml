@@ -10,15 +10,13 @@
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="author" property="author" jdbcType="VARCHAR" />
-    <result column="path" property="path" jdbcType="SMALLINT" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
     <result column="share_author" property="shareAuthor" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="tag" property="tag" jdbcType="VARCHAR" />
     <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
     <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
-    <result column="column_type" property="columnType" jdbcType="TINYINT" />
-    <result column="source" property="source" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -80,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, knowledge_id, category_id, status, sortid, user_id, title, author, path, share_author, 
-    createtime, tag, c_desc, column_id, pic_path, column_type, source
+    createtime, tag, c_desc, column_id, pic_path
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" >
     select
@@ -120,14 +118,14 @@
       status, sortid, user_id, 
       title, author, path, 
       share_author, createtime, tag, 
-      c_desc, column_id, pic_path, 
-      column_type, source)
+      c_desc, column_id, pic_path
+      )
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, 
       #{status,jdbcType=CHAR}, #{sortid,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
-      #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{path,jdbcType=SMALLINT}, 
+      #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
       #{shareAuthor,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{tag,jdbcType=VARCHAR}, 
-      #{cDesc,jdbcType=VARCHAR}, #{columnId,jdbcType=BIGINT}, #{picPath,jdbcType=VARCHAR}, 
-      #{columnType,jdbcType=TINYINT}, #{source,jdbcType=VARCHAR})
+      #{cDesc,jdbcType=VARCHAR}, #{columnId,jdbcType=BIGINT}, #{picPath,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
     insert into tb_knowledge_category
@@ -177,12 +175,6 @@
       <if test="picPath != null" >
         pic_path,
       </if>
-      <if test="columnType != null" >
-        column_type,
-      </if>
-      <if test="source != null" >
-        source,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -210,7 +202,7 @@
         #{author,jdbcType=VARCHAR},
       </if>
       <if test="path != null" >
-        #{path,jdbcType=SMALLINT},
+        #{path,jdbcType=VARCHAR},
       </if>
       <if test="shareAuthor != null" >
         #{shareAuthor,jdbcType=VARCHAR},
@@ -229,12 +221,6 @@
       </if>
       <if test="picPath != null" >
         #{picPath,jdbcType=VARCHAR},
-      </if>
-      <if test="columnType != null" >
-        #{columnType,jdbcType=TINYINT},
-      </if>
-      <if test="source != null" >
-        #{source,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -272,7 +258,7 @@
         author = #{record.author,jdbcType=VARCHAR},
       </if>
       <if test="record.path != null" >
-        path = #{record.path,jdbcType=SMALLINT},
+        path = #{record.path,jdbcType=VARCHAR},
       </if>
       <if test="record.shareAuthor != null" >
         share_author = #{record.shareAuthor,jdbcType=VARCHAR},
@@ -292,12 +278,6 @@
       <if test="record.picPath != null" >
         pic_path = #{record.picPath,jdbcType=VARCHAR},
       </if>
-      <if test="record.columnType != null" >
-        column_type = #{record.columnType,jdbcType=TINYINT},
-      </if>
-      <if test="record.source != null" >
-        source = #{record.source,jdbcType=VARCHAR},
-      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -313,15 +293,13 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
       author = #{record.author,jdbcType=VARCHAR},
-      path = #{record.path,jdbcType=SMALLINT},
+      path = #{record.path,jdbcType=VARCHAR},
       share_author = #{record.shareAuthor,jdbcType=VARCHAR},
       createtime = #{record.createtime,jdbcType=TIMESTAMP},
       tag = #{record.tag,jdbcType=VARCHAR},
       c_desc = #{record.cDesc,jdbcType=VARCHAR},
       column_id = #{record.columnId,jdbcType=BIGINT},
-      pic_path = #{record.picPath,jdbcType=VARCHAR},
-      column_type = #{record.columnType,jdbcType=TINYINT},
-      source = #{record.source,jdbcType=VARCHAR}
+      pic_path = #{record.picPath,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -351,7 +329,7 @@
         author = #{author,jdbcType=VARCHAR},
       </if>
       <if test="path != null" >
-        path = #{path,jdbcType=SMALLINT},
+        path = #{path,jdbcType=VARCHAR},
       </if>
       <if test="shareAuthor != null" >
         share_author = #{shareAuthor,jdbcType=VARCHAR},
@@ -371,12 +349,6 @@
       <if test="picPath != null" >
         pic_path = #{picPath,jdbcType=VARCHAR},
       </if>
-      <if test="columnType != null" >
-        column_type = #{columnType,jdbcType=TINYINT},
-      </if>
-      <if test="source != null" >
-        source = #{source,jdbcType=VARCHAR},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -389,15 +361,13 @@
       user_id = #{userId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
-      path = #{path,jdbcType=SMALLINT},
+      path = #{path,jdbcType=VARCHAR},
       share_author = #{shareAuthor,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       tag = #{tag,jdbcType=VARCHAR},
       c_desc = #{cDesc,jdbcType=VARCHAR},
       column_id = #{columnId,jdbcType=BIGINT},
-      pic_path = #{picPath,jdbcType=VARCHAR},
-      column_type = #{columnType,jdbcType=TINYINT},
-      source = #{source,jdbcType=VARCHAR}
+      pic_path = #{picPath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
