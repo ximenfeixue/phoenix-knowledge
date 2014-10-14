@@ -20,6 +20,8 @@ public class ColumnVisible implements Serializable {
 
     private String columnName;
 
+    private String sortId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -84,5 +86,13 @@ public class ColumnVisible implements Serializable {
 
     public void setColumnName(String columnName) {
         this.columnName = columnName;
+    }
+
+    public String getSortId() {
+        return sortId;
+    }
+
+    public void setSortId(String sortId) {
+        this.sortId = sortId;
     }
 }

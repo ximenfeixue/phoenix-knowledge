@@ -615,8 +615,83 @@ public class ColumnVisibleExample {
             return (Criteria) this;
         }
 
+        public Criteria andSortIdIsNull() {
+            addCriterion("sort_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdIsNotNull() {
+            addCriterion("sort_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdEqualTo(String value) {
+            addCriterion("sort_id =", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdNotEqualTo(String value) {
+            addCriterion("sort_id <>", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdGreaterThan(String value) {
+            addCriterion("sort_id >", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdGreaterThanOrEqualTo(String value) {
+            addCriterion("sort_id >=", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdLessThan(String value) {
+            addCriterion("sort_id <", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdLessThanOrEqualTo(String value) {
+            addCriterion("sort_id <=", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdLike(String value) {
+            addCriterion("sort_id like", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdNotLike(String value) {
+            addCriterion("sort_id not like", value, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdIn(List<String> values) {
+            addCriterion("sort_id in", values, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdNotIn(List<String> values) {
+            addCriterion("sort_id not in", values, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdBetween(String value1, String value2) {
+            addCriterion("sort_id between", value1, value2, "sortId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdNotBetween(String value1, String value2) {
+            addCriterion("sort_id not between", value1, value2, "sortId");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnNameLikeInsensitive(String value) {
             addCriterion("upper(column_name) like", value.toUpperCase(), "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIdLikeInsensitive(String value) {
+            addCriterion("upper(sort_id) like", value.toUpperCase(), "sortId");
             return (Criteria) this;
         }
     }

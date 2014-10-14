@@ -10,6 +10,7 @@
     <result column="pcid" property="pcid" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="sort_id" property="sortId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, column_id, ctime, utime, pcid, state, column_name
+    id, user_id, column_id, ctime, utime, pcid, state, column_name, sort_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample" >
     select
@@ -108,10 +109,12 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnVisible" >
     insert into tb_column_visible (id, user_id, column_id, 
       ctime, utime, pcid, 
-      state, column_name)
+      state, column_name, sort_id
+      )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, 
       #{ctime,jdbcType=TIMESTAMP}, #{utime,jdbcType=TIMESTAMP}, #{pcid,jdbcType=BIGINT}, 
-      #{state,jdbcType=TINYINT}, #{columnName,jdbcType=VARCHAR})
+      #{state,jdbcType=TINYINT}, #{columnName,jdbcType=VARCHAR}, #{sortId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnVisible" >
     insert into tb_column_visible
@@ -140,6 +143,9 @@
       <if test="columnName != null" >
         column_name,
       </if>
+      <if test="sortId != null" >
+        sort_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -165,6 +171,9 @@
       </if>
       <if test="columnName != null" >
         #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortId != null" >
+        #{sortId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -201,6 +210,9 @@
       <if test="record.columnName != null" >
         column_name = #{record.columnName,jdbcType=VARCHAR},
       </if>
+      <if test="record.sortId != null" >
+        sort_id = #{record.sortId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -215,7 +227,8 @@
       utime = #{record.utime,jdbcType=TIMESTAMP},
       pcid = #{record.pcid,jdbcType=BIGINT},
       state = #{record.state,jdbcType=TINYINT},
-      column_name = #{record.columnName,jdbcType=VARCHAR}
+      column_name = #{record.columnName,jdbcType=VARCHAR},
+      sort_id = #{record.sortId,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -244,6 +257,9 @@
       <if test="columnName != null" >
         column_name = #{columnName,jdbcType=VARCHAR},
       </if>
+      <if test="sortId != null" >
+        sort_id = #{sortId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -255,7 +271,8 @@
       utime = #{utime,jdbcType=TIMESTAMP},
       pcid = #{pcid,jdbcType=BIGINT},
       state = #{state,jdbcType=TINYINT},
-      column_name = #{columnName,jdbcType=VARCHAR}
+      column_name = #{columnName,jdbcType=VARCHAR},
+      sort_id = #{sortId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

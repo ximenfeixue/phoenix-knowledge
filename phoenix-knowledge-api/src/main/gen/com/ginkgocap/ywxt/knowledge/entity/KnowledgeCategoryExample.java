@@ -1105,63 +1105,63 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathIsNull() {
-            addCriterion("column_path is null");
+        public Criteria andColumnTypeIsNull() {
+            addCriterion("column_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathIsNotNull() {
-            addCriterion("column_path is not null");
+        public Criteria andColumnTypeIsNotNull() {
+            addCriterion("column_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathEqualTo(Byte value) {
-            addCriterion("column_path =", value, "columnPath");
+        public Criteria andColumnTypeEqualTo(Byte value) {
+            addCriterion("column_type =", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathNotEqualTo(Byte value) {
-            addCriterion("column_path <>", value, "columnPath");
+        public Criteria andColumnTypeNotEqualTo(Byte value) {
+            addCriterion("column_type <>", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathGreaterThan(Byte value) {
-            addCriterion("column_path >", value, "columnPath");
+        public Criteria andColumnTypeGreaterThan(Byte value) {
+            addCriterion("column_type >", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathGreaterThanOrEqualTo(Byte value) {
-            addCriterion("column_path >=", value, "columnPath");
+        public Criteria andColumnTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("column_type >=", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathLessThan(Byte value) {
-            addCriterion("column_path <", value, "columnPath");
+        public Criteria andColumnTypeLessThan(Byte value) {
+            addCriterion("column_type <", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathLessThanOrEqualTo(Byte value) {
-            addCriterion("column_path <=", value, "columnPath");
+        public Criteria andColumnTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("column_type <=", value, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathIn(List<Byte> values) {
-            addCriterion("column_path in", values, "columnPath");
+        public Criteria andColumnTypeIn(List<Byte> values) {
+            addCriterion("column_type in", values, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathNotIn(List<Byte> values) {
-            addCriterion("column_path not in", values, "columnPath");
+        public Criteria andColumnTypeNotIn(List<Byte> values) {
+            addCriterion("column_type not in", values, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathBetween(Byte value1, Byte value2) {
-            addCriterion("column_path between", value1, value2, "columnPath");
+        public Criteria andColumnTypeBetween(Byte value1, Byte value2) {
+            addCriterion("column_type between", value1, value2, "columnType");
             return (Criteria) this;
         }
 
-        public Criteria andColumnPathNotBetween(Byte value1, Byte value2) {
-            addCriterion("column_path not between", value1, value2, "columnPath");
+        public Criteria andColumnTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("column_type not between", value1, value2, "columnType");
             return (Criteria) this;
         }
 
