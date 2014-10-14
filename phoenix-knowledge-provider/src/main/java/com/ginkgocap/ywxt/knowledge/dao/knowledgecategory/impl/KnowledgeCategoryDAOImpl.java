@@ -19,6 +19,8 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
 
@@ -45,6 +47,12 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 
 	@Resource
 	private UserCategoryService userCategoryService;
+
+	@Resource
+	private UserCategoryMapper userCategoryMapper;
+
+	@Autowired
+	private UserCategoryValueMapper userCategoryValueMapper;
 
 	@Override
 	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
@@ -74,17 +82,13 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();
 					// 得到要添加的分类的父类sortId
-					String parentSortId = parentId > 0 ? userCategoryDao
-							.selectByPrimaryKey(parentId).getSortId() : "";
+					String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
 					// 通过parentSortId得到子类最大已添加的sortId
-					String childMaxSortId = userCategoryDao.selectMaxSortId(
-							category.getUserId(), parentSortId);
+					String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(),parentSortId, category.getType());
 					if (StringUtils.isBlank(category.getSortid())) {
 						// 如果用户第一次添加，将childMaxSortId赋值
 						String newSortId = new String("");
-						if (childMaxSortId == null
-								|| "null".equals(childMaxSortId)
-								|| "".equals(childMaxSortId)) {
+						if (childMaxSortId == null	|| "null".equals(childMaxSortId)|| "".equals(childMaxSortId)) {
 							newSortId = parentSortId + "000000001";
 						} else {
 							newSortId = helper.generateSortId(childMaxSortId);
