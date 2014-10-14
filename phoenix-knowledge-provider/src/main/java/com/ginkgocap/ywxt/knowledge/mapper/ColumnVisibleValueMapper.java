@@ -10,4 +10,6 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
 public interface ColumnVisibleValueMapper {
 
     public void update(Map<String, Object> map);
+    public void updateChild(Map<String, Object> map);
+    public List<Long> selectNotinIds(Map<String, Object> map);
 }

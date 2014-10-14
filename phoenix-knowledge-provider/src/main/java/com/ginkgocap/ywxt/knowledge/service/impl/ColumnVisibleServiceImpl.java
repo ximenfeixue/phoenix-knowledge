@@ -81,9 +81,22 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         m.put("state", 0);
         m.put("listl", idl);
         columnVisibleValueMapper.update(m);
+        for(Long id:idl){
+            ColumnVisible cv =columnVisibleMapper.selectByPrimaryKey(id);
+            String sortId =cv.getSortId();
+            m.put("sortId",sortId);
+            columnVisibleValueMapper.updateChild(m);
+        }
         m.put("instate", 1);
         m.put("state", 1);
         columnVisibleValueMapper.update(m);
+        List<Long>idnl =columnVisibleValueMapper.selectNotinIds(m);
+        for(Long id:idnl){
+            ColumnVisible cv =columnVisibleMapper.selectByPrimaryKey(id);
+            String sortId =cv.getSortId();
+            m.put("sortId",sortId);
+            columnVisibleValueMapper.updateChild(m);
+        }
     }
 
     @Override

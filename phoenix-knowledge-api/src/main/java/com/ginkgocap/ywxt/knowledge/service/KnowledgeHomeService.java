@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.tree.Node;
 
 /** 
  * <p>知识首页操作接口</p>  
@@ -74,5 +75,5 @@ public interface KnowledgeHomeService {
      */
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size);
     
-
+    public List<Node> queryColumns(long cid, long userId) ;
 }

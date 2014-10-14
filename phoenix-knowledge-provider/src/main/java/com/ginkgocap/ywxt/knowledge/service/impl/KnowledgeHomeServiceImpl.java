@@ -24,8 +24,11 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
+import com.ginkgocap.ywxt.knowledge.util.tree.Node;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeHomeService")
@@ -35,6 +38,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     KnowledgeStaticsMapper knowledgeStaticsMapper;
     @Autowired
     ColumnValueMapper columnValueMapper;
+    @Autowired
+    ColumnService columnService;
     @Autowired
     KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
     @Autowired
@@ -155,5 +160,15 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     public List<KnowledgeCategory> selectAllKnowledgeCategoryByParam(int state, String sortid, Long userid, int page,
             int size) {
         return knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid, Constants.gtnid);
+    }
+
+    @Override
+    public List<Node> queryColumns(long cid, long userId) {
+        Column c = columnMapper.selectByPrimaryKey(cid);
+        List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
+        if (cl != null && cl.size() > 0) {
+            return ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath");
+        }
+        return null;
     }
 }
