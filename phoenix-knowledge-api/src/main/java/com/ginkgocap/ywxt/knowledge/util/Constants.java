@@ -297,7 +297,7 @@ public class Constants {
 		}
 	}
 	public enum ColumnDelStatus {
-		del(0), common(1);
+		common(0), del(1);
 		
 		private int v;
 		

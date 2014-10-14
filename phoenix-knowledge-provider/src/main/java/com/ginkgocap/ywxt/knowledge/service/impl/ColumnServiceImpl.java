@@ -445,24 +445,25 @@ public class ColumnServiceImpl implements ColumnService {
 		if (type != 0) {
 			column.setType((byte) type);
 		}
-		long cid = columnMapperManual.insertAndGetId(column);
-		if (cid == 0) {
+		long v = columnMapperManual.insertAndGetId(column);
+		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addColumnFail.c());
 			return result;
 		}
+		long currentColumnId = column.getId();
 		// 存储栏目标签信息
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
-		List<Column> columnList = new ArrayList<Column>();
+		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
 		for (String tag : currTags) {
 			ColumnTag ct = new ColumnTag();
-			ct.setColumnId(cid);
+			ct.setColumnId(currentColumnId);
 			ct.setCreatetime(d);
 			ct.setTag(tag);
 			ct.setUserId(userid);
-			columnList.add(column);
+			columnList.add(ct);
 		}
 		columnTagMapperManual.batchInsertColumnTag(columnList);
 
@@ -483,17 +484,19 @@ public class ColumnServiceImpl implements ColumnService {
 
 		String maxLevel = getMaxLevelPath(pid);
 		if (StringUtils.isBlank(maxLevel)) {
-			currentColumn = currentColumn + "000000001";
+			currentColumn = (currentColumn == null ? "" : currentColumn)
+					+"000000001";
 		} else {
-			currentColumn = currentColumn + getCurrentSortId(maxLevel);
+			currentColumn = (currentColumn == null ? "" : currentColumn)
+					+ getCurrentSortId(maxLevel);
 		}
 
 		return currentColumn;
 	}
-
 	/** 获取当前sortId值 **/
-	private String getCurrentSortId(String v) {
+	public String getCurrentSortId(String v) {
 		StringBuffer sb = new StringBuffer();
+		v = v.length() >9 ? v.substring(v.length()-9, v.length()) :v;
 		String currV = String.valueOf(Integer.parseInt(v) + 1);
 		for (int z = 0; z < sortV - currV.length(); z++) {
 			sb.append("0");
@@ -511,7 +514,7 @@ public class ColumnServiceImpl implements ColumnService {
 		example.setOrderByClause("column_level_path desc ");
 
 		List<Column> clist = columnMapper.selectByExample(example);
-		if (clist == null)
+		if (clist == null || clist.size() == 0)
 			return null;
 
 		return clist.get(0).getColumnLevelPath();
