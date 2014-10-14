@@ -23,6 +23,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 /**
  * @author caihe
@@ -75,6 +76,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 				knowledgeRCategory.setShareAuthor(share_author);
 				knowledgeRCategory.setCreatetime(createtime);
 				knowledgeRCategory.setTag(tag);
+				knowledgeRCategory.setStatus(Constants.ReportStatus.report.v()+"");
 				knowledgeRCategory.setcDesc(know_desc);
 				knowledgeRCategory.setColumnId((long) column_id);
 				knowledgeRCategory.setPicPath(pic_path);
@@ -169,6 +171,7 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 			knowledgeRCategory.setShareAuthor(share_author);
 			knowledgeRCategory.setCreatetime(createtime);
 			knowledgeRCategory.setTag(tag);
+			knowledgeRCategory.setStatus(Constants.ReportStatus.report.v()+"");
 			knowledgeRCategory.setcDesc(know_desc);
 			knowledgeRCategory.setColumnId((long) column_id);
 			knowledgeRCategory.setPicPath(pic_path);
