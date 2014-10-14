@@ -8,10 +8,14 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 
 public interface KnowledgeCategoryValueMapper {
 
-	int batchInsert(List<KnowledgeCategory> list);
-	
-	List<KnowledgeCategory> selectKnowledgeIds(@Param("userId")long userId, @Param("type")int type, @Param("sortId")String sortId,@Param("gtnid")Long gtnid);
+    int batchInsert(List<KnowledgeCategory> list);
 
-	int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids,
-			@Param("categoryid") long categoryid);
+    List<KnowledgeCategory> selectKnowledgeIds(@Param("userId") long userId, @Param("type") int type,
+            @Param("sortId") String sortId, @Param("gtnid") Long gtnid, @Param("tid") String tid,
+            @Param("lid") String lid);
+
+    int countKnowledgeIds(@Param("userId") long userId, @Param("type") int type, @Param("sortId") String sortId,
+            @Param("gtnid") Long gtnid, @Param("tid") String tid, @Param("lid") String lid);
+
+    int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids, @Param("categoryid") long categoryid);
 }

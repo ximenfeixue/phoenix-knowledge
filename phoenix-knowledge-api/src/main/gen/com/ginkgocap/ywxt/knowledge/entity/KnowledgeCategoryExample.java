@@ -1165,6 +1165,76 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andSourceIsNull() {
+            addCriterion("source is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIsNotNull() {
+            addCriterion("source is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceEqualTo(String value) {
+            addCriterion("source =", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotEqualTo(String value) {
+            addCriterion("source <>", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceGreaterThan(String value) {
+            addCriterion("source >", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceGreaterThanOrEqualTo(String value) {
+            addCriterion("source >=", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLessThan(String value) {
+            addCriterion("source <", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLessThanOrEqualTo(String value) {
+            addCriterion("source <=", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLike(String value) {
+            addCriterion("source like", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotLike(String value) {
+            addCriterion("source not like", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIn(List<String> values) {
+            addCriterion("source in", values, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotIn(List<String> values) {
+            addCriterion("source not in", values, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceBetween(String value1, String value2) {
+            addCriterion("source between", value1, value2, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotBetween(String value1, String value2) {
+            addCriterion("source not between", value1, value2, "source");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusLikeInsensitive(String value) {
             addCriterion("upper(status) like", value.toUpperCase(), "status");
             return (Criteria) this;
@@ -1202,6 +1272,11 @@ public class KnowledgeCategoryExample {
 
         public Criteria andPicPathLikeInsensitive(String value) {
             addCriterion("upper(pic_path) like", value.toUpperCase(), "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLikeInsensitive(String value) {
+            addCriterion("upper(source) like", value.toUpperCase(), "source");
             return (Criteria) this;
         }
     }

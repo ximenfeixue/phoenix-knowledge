@@ -50,7 +50,7 @@ public interface KnowledgeHomeService {
      * @param size 页大小
      * @return
      */
-    public  List<KnowledgeCategory> selectAllKnowledgeCategoryByParam(int state, String sortid, Long userid, int page, int size);
+    public Map<String,Object>  selectAllKnowledgeCategoryByParam(String tid,String lid,int state, String sortid, Long userid, int page, int size);
 
     /**
      * 查询排行

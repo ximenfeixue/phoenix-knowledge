@@ -31,7 +31,30 @@
 		AND uc.type = #{type}
 		AND kc.user_id=#{userId}
 		AND kc.status=1 
+		<if test="tid !=null and tid!=''">
+		AND kc.source==#{tid}
+		</if>
+		<if test="lid !=null and lid!=''">
+		AND kc.column_type=#{lid} 
+		</if>
 		and  uc.sortid like CONCAT(#{sortId}, '%')
+</select>
+ <select id="selectKnowledgeIds" resultType="int" >
+ 		select count(1)from (
+		SELECT distinct kc.*
+		FROM tb_knowledge_category kc,
+		tb_user_category uc
+		WHERE kc.category_id = uc.id
+		AND uc.type = #{type}
+		AND kc.user_id=#{userId}
+		<if test="tid !=null and tid!=''">
+		AND kc.source==#{tid}
+		</if>
+		<if test="lid !=null and lid!=''">
+		AND kc.column_type=#{lid} 
+		</if>
+		AND kc.status=1 
+		and  uc.sortid like CONCAT(#{sortId}, '%'))
 </select>
 
  <delete id="deleteKnowledge">

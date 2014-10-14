@@ -1,7 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -157,9 +160,16 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public List<KnowledgeCategory> selectAllKnowledgeCategoryByParam(int state, String sortid, Long userid, int page,
-            int size) {
-        return knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid, Constants.gtnid);
+    public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid,
+            Long userid, int page, int size) {
+        int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid, state, sortid, Constants.gtnid, tid, lid);
+        List<KnowledgeCategory> kcl = knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid,
+                Constants.gtnid, tid, lid);
+        PageUtil p = new PageUtil(count, page, size);
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("page", p);
+        m.put("list", kcl);
+        return m;
     }
 
     @Override

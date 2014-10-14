@@ -18,6 +18,7 @@
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
     <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
     <result column="column_type" property="columnType" jdbcType="TINYINT" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -79,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, knowledge_id, category_id, status, sortid, user_id, title, author, path, share_author, 
-    createtime, tag, c_desc, column_id, pic_path, column_type
+    createtime, tag, c_desc, column_id, pic_path, column_type, source
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" >
     select
@@ -120,13 +121,13 @@
       title, author, path, 
       share_author, createtime, tag, 
       c_desc, column_id, pic_path, 
-      column_type)
+      column_type, source)
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, 
       #{status,jdbcType=CHAR}, #{sortid,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{path,jdbcType=SMALLINT}, 
       #{shareAuthor,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{tag,jdbcType=VARCHAR}, 
       #{cDesc,jdbcType=VARCHAR}, #{columnId,jdbcType=BIGINT}, #{picPath,jdbcType=VARCHAR}, 
-      #{columnType,jdbcType=TINYINT})
+      #{columnType,jdbcType=TINYINT}, #{source,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
     insert into tb_knowledge_category
@@ -179,6 +180,9 @@
       <if test="columnType != null" >
         column_type,
       </if>
+      <if test="source != null" >
+        source,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -228,6 +232,9 @@
       </if>
       <if test="columnType != null" >
         #{columnType,jdbcType=TINYINT},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -288,6 +295,9 @@
       <if test="record.columnType != null" >
         column_type = #{record.columnType,jdbcType=TINYINT},
       </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -310,7 +320,8 @@
       c_desc = #{record.cDesc,jdbcType=VARCHAR},
       column_id = #{record.columnId,jdbcType=BIGINT},
       pic_path = #{record.picPath,jdbcType=VARCHAR},
-      column_type = #{record.columnType,jdbcType=TINYINT}
+      column_type = #{record.columnType,jdbcType=TINYINT},
+      source = #{record.source,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -363,6 +374,9 @@
       <if test="columnType != null" >
         column_type = #{columnType,jdbcType=TINYINT},
       </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -382,7 +396,8 @@
       c_desc = #{cDesc,jdbcType=VARCHAR},
       column_id = #{columnId,jdbcType=BIGINT},
       pic_path = #{picPath,jdbcType=VARCHAR},
-      column_type = #{columnType,jdbcType=TINYINT}
+      column_type = #{columnType,jdbcType=TINYINT},
+      source = #{source,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

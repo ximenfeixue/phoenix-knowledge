@@ -36,6 +36,8 @@ public class KnowledgeCategory implements Serializable {
 
     private Byte columnType;
 
+    private String source;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -164,5 +166,13 @@ public class KnowledgeCategory implements Serializable {
 
     public void setColumnType(Byte columnType) {
         this.columnType = columnType;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }
