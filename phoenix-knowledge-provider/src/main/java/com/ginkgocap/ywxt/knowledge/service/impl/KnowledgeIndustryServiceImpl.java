@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -95,6 +96,21 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("status", Constants.Status.recycle.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeIndustry");
+		}
+
+	}
+
+	@Override
+	public void deleteforeverKnowledge(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeIndustry kdnews = mongoTemplate.findOne(query,
+				KnowledgeIndustry.class, "KnowledgeIndustry");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.foreverdelete.v());
 			mongoTemplate.updateFirst(query, update, "KnowledgeIndustry");
 		}
 

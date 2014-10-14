@@ -15,6 +15,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
 @Service("knowledgeInvestmentService")
 public class KnowledgeInvestmentServiceImpl implements
@@ -98,5 +99,20 @@ public class KnowledgeInvestmentServiceImpl implements
 			update.set("status", Constants.Status.recycle.v());
 			mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
 		}
+	}
+
+	@Override
+	public void deleteforeverKnowledge(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeInvestment kdnews = mongoTemplate.findOne(query,
+				KnowledgeInvestment.class, "KnowledgeInvestment");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.foreverdelete.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
+		}
+
 	}
 }

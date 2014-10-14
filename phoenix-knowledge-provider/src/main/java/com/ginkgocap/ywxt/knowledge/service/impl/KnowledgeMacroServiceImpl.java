@@ -2,14 +2,22 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.macro.KnowledgeMacroDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMacroService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeMacroService")
 public class KnowledgeMacroServiceImpl implements KnowledgeMacroService {
@@ -22,6 +30,9 @@ public class KnowledgeMacroServiceImpl implements KnowledgeMacroService {
 
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public void deleteKnowledge(long[] ids) {
@@ -74,4 +85,17 @@ public class KnowledgeMacroServiceImpl implements KnowledgeMacroService {
 
 	}
 
+	@Override
+	public void deleteforeverKnowledge(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeMacro kdnews = mongoTemplate.findOne(query,
+				KnowledgeMacro.class, "KnowledgeMacro");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.foreverdelete.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeMacro");
+		}
+	}
 }

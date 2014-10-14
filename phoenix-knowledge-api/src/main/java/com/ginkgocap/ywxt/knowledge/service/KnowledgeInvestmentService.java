@@ -46,4 +46,5 @@ public interface KnowledgeInvestmentService {
 
 	void deleteKnowledge(long[] ids);
 	
+	void deleteforeverKnowledge(long knowledgeid);
 }

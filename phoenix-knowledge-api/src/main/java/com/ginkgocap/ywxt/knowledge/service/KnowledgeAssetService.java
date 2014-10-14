@@ -71,5 +71,7 @@ public interface KnowledgeAssetService {
 	 * @param knowledgeid
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
+	
+	void deleteforeverKnowledge(long knowledgeid);
 
 }

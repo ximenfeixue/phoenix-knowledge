@@ -39,4 +39,6 @@ public interface KnowledgeCaseService {
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
 	
+	void deleteforeverKnowledge(long knowledgeid);
+	
 }

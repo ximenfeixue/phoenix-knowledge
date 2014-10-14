@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -81,6 +82,21 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		if (kdnews != null) {
 			Update update = new Update();
 			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeCase");
+		}
+
+	}
+
+	@Override
+	public void deleteforeverKnowledge(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeCase kdnews = mongoTemplate.findOne(query,
+				KnowledgeCase.class, "KnowledgeCase");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.foreverdelete.v());
 			mongoTemplate.updateFirst(query, update, "KnowledgeCase");
 		}
 

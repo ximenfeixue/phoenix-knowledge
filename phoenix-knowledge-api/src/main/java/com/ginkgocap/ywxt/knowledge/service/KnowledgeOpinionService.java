@@ -70,5 +70,7 @@ public interface KnowledgeOpinionService {
 	 * @param knowledgeid
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
+	
+	void deleteforeverKnowledge(long knowledgeid);
 
 }

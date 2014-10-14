@@ -71,4 +71,5 @@ public interface KnowledgeMacroService {
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
 
+	void deleteforeverKnowledge(long knowledgeid);
 }

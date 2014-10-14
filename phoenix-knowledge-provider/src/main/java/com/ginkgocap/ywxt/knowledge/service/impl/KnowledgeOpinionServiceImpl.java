@@ -2,7 +2,13 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
@@ -11,6 +17,7 @@ import com.ginkgocap.ywxt.knowledge.dao.opinion.KnowledgeOpinionDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOpinionService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Service("knowledgeOpinionService")
@@ -24,6 +31,9 @@ public class KnowledgeOpinionServiceImpl implements KnowledgeOpinionService {
 
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public void deleteKnowledge(long[] ids) {
@@ -73,6 +83,21 @@ public class KnowledgeOpinionServiceImpl implements KnowledgeOpinionService {
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid) {
 		knowledgeOpinionDAO.restoreKnowledgeByid(knowledgeid);
+
+	}
+
+	@Override
+	public void deleteforeverKnowledge(long knowledgeid) {
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeOpinion kdnews = mongoTemplate.findOne(query,
+				KnowledgeOpinion.class, "KnowledgeOpinion");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.foreverdelete.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeOpinion");
+		}
 
 	}
 
