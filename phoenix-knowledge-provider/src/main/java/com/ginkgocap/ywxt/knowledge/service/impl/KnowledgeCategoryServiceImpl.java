@@ -1,18 +1,28 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.Date; 
+import java.util.Date;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO; 
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeCategoryService")
 public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Resource
+	private KnowledgeCategoryMapper knowledgeCategoryMapper;
 
 	@Override
 	public int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
@@ -38,8 +48,20 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 	@Override
 	public int deleteKnowledgeCategory(long knowledgeid) {
-		// TODO Auto-generated method stub
+
 		return 0;
+	}
+
+	@Override
+	public int updateKnowledgeCategory(long knowledgeid, long categoryid) {
+
+		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
+		knowledgecategory.setStatus(Constants.ReportStatus.report.v() + "");
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andCategoryIdEqualTo(categoryid);
+		return knowledgeCategoryMapper.updateByExample(knowledgecategory,example);
 	}
 
 }

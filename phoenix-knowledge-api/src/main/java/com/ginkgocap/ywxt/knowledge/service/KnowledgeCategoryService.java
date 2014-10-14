@@ -40,4 +40,6 @@ public interface KnowledgeCategoryService {
 
 	int deleteKnowledgeCategory(long knowledgeid);
 
+	int updateKnowledgeCategory(long knowledgeid, long categoryid);
+
 }
