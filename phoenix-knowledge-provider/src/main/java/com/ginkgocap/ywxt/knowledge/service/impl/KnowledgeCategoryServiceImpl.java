@@ -78,7 +78,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 	@Override
 	public int updateKnowledgeCategorystatus(long knowledgeid, long categoryid) {
-		
+
 		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
 		knowledgecategory.setStatus(Constants.ReportStatus.report.v() + "");
 		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
@@ -87,6 +87,17 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		criteria.andCategoryIdEqualTo(categoryid);
 		return knowledgeCategoryMapper.updateByExample(knowledgecategory,
 				example);
+	}
+
+	@Override
+	public int insertCategory(long knowledgeid, long categoryid, long userid,
+			String title, String author, int path, String share_author,
+			Date createtime, String tag, String know_desc, long column_id,
+			String pic_path) {
+
+		return knowledgeBetweenDAO.insertCategory(knowledgeid, categoryid,
+				userid, title, author, path, share_author, createtime, tag,
+				know_desc, column_id, pic_path);
 	}
 
 }

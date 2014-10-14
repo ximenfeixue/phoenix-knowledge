@@ -82,13 +82,18 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 					// 得到要添加的分类的父类parentId
 					long parentId = category.getParentId();
 					// 得到要添加的分类的父类sortId
-					String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
+					String parentSortId = parentId > 0 ? userCategoryMapper
+							.selectByPrimaryKey(parentId).getSortid() : "";
 					// 通过parentSortId得到子类最大已添加的sortId
-					String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(),parentSortId, category.getType());
+					String childMaxSortId = userCategoryValueMapper
+							.selectMaxSortId(category.getUserId(),
+									parentSortId, category.getType());
 					if (StringUtils.isBlank(category.getSortid())) {
 						// 如果用户第一次添加，将childMaxSortId赋值
 						String newSortId = new String("");
-						if (childMaxSortId == null	|| "null".equals(childMaxSortId)|| "".equals(childMaxSortId)) {
+						if (childMaxSortId == null
+								|| "null".equals(childMaxSortId)
+								|| "".equals(childMaxSortId)) {
 							newSortId = parentSortId + "000000001";
 						} else {
 							newSortId = helper.generateSortId(childMaxSortId);
@@ -142,6 +147,61 @@ public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		return knowledgeCategoryMapper.deleteByExample(example);
+	}
+
+	@Override
+	public int insertCategory(long knowledgeid, long categoryid, long userid,
+			String title, String author, int path, String share_author,
+			Date createtime, String tag, String know_desc, long column_id,
+			String pic_path) {
+
+		KnowledgeCategory knowledgeRCategory = null;
+		UserCategory category = userCategoryService
+				.selectByPrimaryKey(categoryid);
+		if (category != null) {
+			knowledgeRCategory = new KnowledgeCategory();
+			knowledgeRCategory.setKnowledgeId((long) knowledgeid);
+			knowledgeRCategory.setCategoryId(categoryid);
+			knowledgeRCategory.setUserId((long) userid);
+			knowledgeRCategory.setTitle(title);
+			knowledgeRCategory.setAuthor(author);
+			knowledgeRCategory.setPath((short) path);
+			knowledgeRCategory.setShareAuthor(share_author);
+			knowledgeRCategory.setCreatetime(createtime);
+			knowledgeRCategory.setTag(tag);
+			knowledgeRCategory.setcDesc(know_desc);
+			knowledgeRCategory.setColumnId((long) column_id);
+			knowledgeRCategory.setPicPath(pic_path);
+			// 得到要添加的分类的父类parentId
+			long parentId = category.getParentId();
+			// 得到要添加的分类的父类sortId
+			String parentSortId = parentId > 0 ? userCategoryMapper
+					.selectByPrimaryKey(parentId).getSortid() : "";
+			// 通过parentSortId得到子类最大已添加的sortId
+			String childMaxSortId = userCategoryValueMapper.selectMaxSortId(
+					category.getUserId(), parentSortId, category.getType());
+			if (StringUtils.isBlank(category.getSortid())) {
+				// 如果用户第一次添加，将childMaxSortId赋值
+				String newSortId = new String("");
+				if (childMaxSortId == null || "null".equals(childMaxSortId)
+						|| "".equals(childMaxSortId)) {
+					newSortId = parentSortId + "000000001";
+				} else {
+					try {
+						newSortId = helper.generateSortId(childMaxSortId);
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					}
+				}
+				// 通过已添加的最大的SortId生成新的SortId
+				// 设置最新的sortId
+				knowledgeRCategory.setSortid(newSortId);
+			} else {
+				knowledgeRCategory.setSortid(category.getSortid());
+			}
+		}
+		return knowledgeCategoryMapper.insertSelective(knowledgeRCategory);
 	}
 
 }
