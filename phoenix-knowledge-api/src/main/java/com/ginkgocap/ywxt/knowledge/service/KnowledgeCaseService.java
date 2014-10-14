@@ -41,4 +41,9 @@ public interface KnowledgeCaseService {
 	
 	void deleteforeverKnowledge(long knowledgeid);
 	
+	/**
+	 * 删除知识
+	 */
+
+	void deleteKnowledge(long[] ids);
 }
