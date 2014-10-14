@@ -108,7 +108,7 @@ public class Constants {
 	}
 
 	public enum Status {
-		draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6);
+		draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6), foreverdelete(7);
 
 		private int v;
 
