@@ -88,4 +88,15 @@ public class KnowledgeInvestmentServiceImpl implements
 
 	}
 
+	@Override
+	public void deleteKnowledge(long[] ids) {
+		for (int i = 0; i < ids.length; i++) {
+
+			Criteria criteria = Criteria.where("_id").in(ids);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
+		}
+	}
 }

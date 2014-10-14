@@ -38,4 +38,10 @@ public interface KnowledgeIndustryService {
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
 	
+	/**
+	 * 删除知识
+	 */
+
+	void deleteKnowledge(long[] ids);
+	
 }

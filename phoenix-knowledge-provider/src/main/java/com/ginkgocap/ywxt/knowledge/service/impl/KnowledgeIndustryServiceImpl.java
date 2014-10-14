@@ -19,18 +19,18 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeIndustryService")
 public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
-	
+
 	@Resource
-    private MongoTemplate mongoTemplate;
-	
+	private MongoTemplate mongoTemplate;
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Resource
 	private KnowledgeMongoIncService KnowledgeMongoIncService;
-	
+
 	@Override
 	public Long addKnowledgeIndustry(KnowledgeIndustry k) {
-		Long id=KnowledgeMongoIncService.getKnowledgeIncreaseId();
+		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
 		mongoTemplate.save(k);
 		return id;
@@ -38,9 +38,9 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 
 	@Override
 	public Long updateKnowledgeIndustry(KnowledgeIndustry k) {
-		long id=k.getId();
+		long id = k.getId();
 		Criteria c = Criteria.where("id").is(id);
-		Update update =new Update();
+		Update update = new Update();
 		Query query = new Query(c);
 		update.set("cid", k.getCid());
 		update.set("cname", k.getCname());
@@ -69,12 +69,13 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 	public KnowledgeIndustry getKnowledgeIndustryDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeIndustry) mongoTemplate.find(query, KnowledgeIndustry.class);
+		return (KnowledgeIndustry) mongoTemplate.find(query,
+				KnowledgeIndustry.class);
 	}
 
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid) {
-		
+
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
 		KnowledgeIndustry kdnews = mongoTemplate.findOne(query,
@@ -84,6 +85,19 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 			update.set("status", Constants.Status.checked.v());
 			mongoTemplate.updateFirst(query, update, "KnowledgeIndustry");
 		}
+	}
+
+	@Override
+	public void deleteKnowledge(long[] ids) {
+		for (int i = 0; i < ids.length; i++) {
+
+			Criteria criteria = Criteria.where("_id").in(ids);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeIndustry");
+		}
+
 	}
 
 }

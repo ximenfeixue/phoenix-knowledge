@@ -40,4 +40,10 @@ public interface KnowledgeInvestmentService {
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
 	
+	/**
+	 * 删除知识
+	 */
+
+	void deleteKnowledge(long[] ids);
+	
 }
