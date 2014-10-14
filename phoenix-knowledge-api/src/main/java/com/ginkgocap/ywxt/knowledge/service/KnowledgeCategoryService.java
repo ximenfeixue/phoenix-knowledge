@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Date;
+import java.util.List;
+
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 
 /**
  * 知识相关的关系表
@@ -41,5 +44,7 @@ public interface KnowledgeCategoryService {
 	int deleteKnowledgeCategory(long knowledgeid);
 
 	int updateKnowledgeCategory(long knowledgeid, long categoryid);
+	
+	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid, long categoryid);
 
 }

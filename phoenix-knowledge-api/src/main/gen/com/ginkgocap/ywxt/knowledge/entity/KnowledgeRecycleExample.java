@@ -445,6 +445,66 @@ public class KnowledgeRecycleExample {
             return (Criteria) this;
         }
 
+        public Criteria andCategoryidIsNull() {
+            addCriterion("categoryid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidIsNotNull() {
+            addCriterion("categoryid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidEqualTo(Long value) {
+            addCriterion("categoryid =", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidNotEqualTo(Long value) {
+            addCriterion("categoryid <>", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidGreaterThan(Long value) {
+            addCriterion("categoryid >", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidGreaterThanOrEqualTo(Long value) {
+            addCriterion("categoryid >=", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidLessThan(Long value) {
+            addCriterion("categoryid <", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidLessThanOrEqualTo(Long value) {
+            addCriterion("categoryid <=", value, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidIn(List<Long> values) {
+            addCriterion("categoryid in", values, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidNotIn(List<Long> values) {
+            addCriterion("categoryid not in", values, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidBetween(Long value1, Long value2) {
+            addCriterion("categoryid between", value1, value2, "categoryid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryidNotBetween(Long value1, Long value2) {
+            addCriterion("categoryid not between", value1, value2, "categoryid");
+            return (Criteria) this;
+        }
+
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
             return (Criteria) this;

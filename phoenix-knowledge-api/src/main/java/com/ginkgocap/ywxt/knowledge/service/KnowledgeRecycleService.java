@@ -21,7 +21,7 @@ public interface KnowledgeRecycleService {
 	 * @return
 	 */
 	int insertKnowledgeRecycle(long knowledgeid, String recyclename,
-			String type, long userid);
+			String type, long userid,long categoryid);
 
 	/**
 	 * 删除草稿箱知识

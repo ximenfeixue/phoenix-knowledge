@@ -62,7 +62,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 
 	@Override
 	public int insertKnowledgeRecycle(long knowledgeid, String recyclename,
-			String type, long userid) {
+			String type, long userid,long categoryid) {
 
 		KnowledgeRecycle recycle = new KnowledgeRecycle();
 		recycle.setKnowledgeId(knowledgeid);
@@ -70,6 +70,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 		recycle.setUserid(userid);
 		recycle.setCreatetime(new Date());
 		recycle.setType(type);
+		recycle.setCategoryid(categoryid);
 		return knowledgeRecycleMapper.insertSelective(recycle);
 	}
 

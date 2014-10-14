@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -61,7 +62,18 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andCategoryIdEqualTo(categoryid);
-		return knowledgeCategoryMapper.updateByExample(knowledgecategory,example);
+		return knowledgeCategoryMapper.updateByExample(knowledgecategory,
+				example);
+	}
+
+	@Override
+	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
+			long categoryid) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andCategoryIdEqualTo(categoryid);
+		return knowledgeCategoryMapper.selectByExample(example);
 	}
 
 }
