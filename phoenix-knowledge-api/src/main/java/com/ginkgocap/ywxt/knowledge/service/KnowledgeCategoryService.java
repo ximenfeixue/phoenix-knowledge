@@ -46,5 +46,8 @@ public interface KnowledgeCategoryService {
 	int updateKnowledgeCategory(long knowledgeid, long categoryid);
 	
 	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid, long categoryid);
+	
+	int updateKnowledgeCategorystatus(long knowledgeid, long categoryid);
+	
 
 }

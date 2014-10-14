@@ -57,7 +57,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	public int updateKnowledgeCategory(long knowledgeid, long categoryid) {
 
 		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
-		knowledgecategory.setStatus(Constants.ReportStatus.report.v() + "");
+		knowledgecategory.setStatus(Constants.ReportStatus.unreport.v() + "");
 		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
@@ -74,6 +74,19 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andCategoryIdEqualTo(categoryid);
 		return knowledgeCategoryMapper.selectByExample(example);
+	}
+
+	@Override
+	public int updateKnowledgeCategorystatus(long knowledgeid, long categoryid) {
+		
+		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
+		knowledgecategory.setStatus(Constants.ReportStatus.report.v() + "");
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andCategoryIdEqualTo(categoryid);
+		return knowledgeCategoryMapper.updateByExample(knowledgecategory,
+				example);
 	}
 
 }
