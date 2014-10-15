@@ -48,7 +48,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 	public KnowledgeNews insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid,String source) {
 
 		KnowledgeNews knowledge = new KnowledgeNews();
 		knowledge.setTitle(title);
@@ -60,6 +60,7 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setContent(content);
 		knowledge.setPic(pic);
 		knowledge.setDesc(desc);
+		knowledge.setSource(source);
 		knowledge.setEssence(Integer.parseInt(essence));
 		knowledge.setTaskid(taskid);
 		knowledge.setTags(tags);

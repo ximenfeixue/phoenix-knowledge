@@ -73,11 +73,11 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	public KnowledgeNews insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid, String source) {
 
 		return knowledgeNewsDAO.insertknowledge(title, userid, uname, cid,
 				cname, cpath, content, pic, desc, essence, taskid, tags,
-				knowledgeid, columnid);
+				knowledgeid, columnid, source);
 	}
 
 	@Override

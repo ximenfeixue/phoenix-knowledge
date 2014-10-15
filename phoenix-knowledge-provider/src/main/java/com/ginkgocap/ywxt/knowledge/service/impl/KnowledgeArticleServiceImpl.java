@@ -74,11 +74,11 @@ public class KnowledgeArticleServiceImpl implements KnowledgeArticleService {
 	public KnowledgeArticle insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid,String source) {
 
 		return knowledgeArticleDAO.insertknowledge(title, userid, uname, cid,
 				cname, cpath, content, pic, desc, essence, taskid, tags,
-				knowledgeid, columnid);
+				knowledgeid, columnid,source);
 	}
 
 	@Override

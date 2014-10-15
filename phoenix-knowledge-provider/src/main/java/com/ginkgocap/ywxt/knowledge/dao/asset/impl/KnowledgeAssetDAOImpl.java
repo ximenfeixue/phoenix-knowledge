@@ -49,7 +49,7 @@ public class KnowledgeAssetDAOImpl extends SqlMapClientDaoSupport implements
 	public KnowledgeAsset insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid,String source) {
 
 		KnowledgeAsset knowledge = new KnowledgeAsset();
 		knowledge.setTitle(title);
@@ -64,6 +64,7 @@ public class KnowledgeAssetDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setEssence(Integer.parseInt(essence));
 		knowledge.setTaskid(taskid);
 		knowledge.setTags(tags);
+		knowledge.setSource(source);
 		knowledge.setId(knowledgeid);
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());

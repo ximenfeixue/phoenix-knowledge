@@ -40,7 +40,7 @@ public class KnowledgeArticleDAOImpl implements KnowledgeArticleDAO {
 	public KnowledgeArticle insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid,String source) {
 
 		KnowledgeArticle knowledge = new KnowledgeArticle();
 		knowledge.setTitle(title);
@@ -56,6 +56,7 @@ public class KnowledgeArticleDAOImpl implements KnowledgeArticleDAO {
 		knowledge.setTaskid(taskid);
 		knowledge.setTags(tags);
 		knowledge.setId(knowledgeid);
+		knowledge.setSource(source);
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
 		knowledge.setCreatetime(new Date());

@@ -21,7 +21,7 @@ public interface KnowledgeOpinionService {
 	KnowledgeOpinion insertknowledge(String title, long userid, String uname,
 			long cid, String cname, String cpath, String content, String pic,
 			String desc, String essence, String taskid, String tags,
-			long knowledgeid, long columnid);
+			long knowledgeid, long columnid,String source);
 
 	/**
 	 * 删除资讯知识

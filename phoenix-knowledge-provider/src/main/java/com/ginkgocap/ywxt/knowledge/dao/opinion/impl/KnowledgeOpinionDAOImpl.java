@@ -50,7 +50,7 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 	public KnowledgeOpinion insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid, String source) {
 
 		KnowledgeOpinion knowledge = new KnowledgeOpinion();
 		knowledge.setTitle(title);
@@ -66,6 +66,7 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setTaskid(taskid);
 		knowledge.setTags(tags);
 		knowledge.setId(knowledgeid);
+		knowledge.setSource(source);
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
 		knowledge.setCreatetime(new Date());
@@ -139,8 +140,8 @@ public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
 		PageUtil p = new PageUtil((int) count, page, size);
 		query.limit(p.getPageStartRow() - 1);
 		query.skip(size);
-		return mongoTemplate
-				.find(query, KnowledgeOpinion.class, "KnowledgeOpinion");
+		return mongoTemplate.find(query, KnowledgeOpinion.class,
+				"KnowledgeOpinion");
 	}
 
 	@Override

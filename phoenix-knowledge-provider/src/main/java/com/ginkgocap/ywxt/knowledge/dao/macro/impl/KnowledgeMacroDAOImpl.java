@@ -49,7 +49,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 	public KnowledgeMacro insertknowledge(String title, long userid,
 			String uname, long cid, String cname, String cpath, String content,
 			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid) {
+			String tags, long knowledgeid, long columnid,String source) {
 
 		KnowledgeMacro knowledge = new KnowledgeMacro();
 		knowledge.setTitle(title);
@@ -65,6 +65,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setTaskid(taskid);
 		knowledge.setTags(tags);
 		knowledge.setId(knowledgeid);
+		knowledge.setSource(source);
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
 		knowledge.setCreatetime(new Date());
