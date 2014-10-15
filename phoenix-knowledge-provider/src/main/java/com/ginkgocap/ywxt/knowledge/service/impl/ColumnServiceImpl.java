@@ -466,6 +466,8 @@ public class ColumnServiceImpl implements ColumnService {
 			columnList.add(ct);
 		}
 		columnTagMapperManual.batchInsertColumnTag(columnList);
+		
+		columnVisibleService.saveCid(userid, currentColumnId);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
 

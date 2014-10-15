@@ -53,14 +53,14 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	public Map<String, Integer> authorAndLoginUserRelation(long loginuserid,
 			long kuid) {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		if (kuid == 0) {
+		if (loginuserid == -1) {
+			result.put("relation", Constants.Relation.none.v());
+		} else if (kuid == 0) {
 			result.put("relation", Constants.Relation.jinTN.v());
 		} else if (loginuserid == kuid) {
 			result.put("relation", Constants.Relation.self.v());
 		} else if (friendsRelationService.isExistFriends(loginuserid, kuid)) {
 			result.put("relation", Constants.Relation.friends.v());
-		} else {
-			result.put("relation", Constants.Relation.none.v());
 		}
 		return result;
 	}
@@ -118,14 +118,14 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 					StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
 							.getContent() : knowledge.getHcontent());
 
-			result.put("createtime",
-					DateUtil.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
+			result.put("createtime", DateUtil
+					.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
 			result.put("author", knowledge.getUname());
 			result.put("source", knowledge.getSource());
 
 			result.put("tags", knowledge.getTags());
 			result.put("type", type);
-			
+
 			result.put(Constants.status, Constants.ResultType.success.v());
 
 		} catch (ClassNotFoundException e) {
