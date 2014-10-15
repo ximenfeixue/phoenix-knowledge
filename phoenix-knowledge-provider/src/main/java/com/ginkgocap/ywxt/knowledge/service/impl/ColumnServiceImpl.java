@@ -443,7 +443,7 @@ public class ColumnServiceImpl implements ColumnService {
 		column.setColumnLevelPath(currentColumnLevelPath);
 
 		if (type != 0) {
-			column.setType((byte) type);
+			//column.setType((byte) type);
 		}
 		long v = columnMapperManual.insertAndGetId(column);
 		if (v == 0) {
