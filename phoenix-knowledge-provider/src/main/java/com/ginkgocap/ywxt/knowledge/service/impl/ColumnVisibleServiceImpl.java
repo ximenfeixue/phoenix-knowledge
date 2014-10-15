@@ -129,6 +129,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             cv.setUserId(userid);
             cv.setCtime(new Date());
             cv.setUtime(new Date());
+            cv.setSortId(c.getColumnLevelPath());
             cv.setColumnName(cname);
             cv.setState((byte) 0);
             columnVisibleMapper.insert(cv);
@@ -148,6 +149,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         cv.setCtime(new Date());
         cv.setUtime(new Date());
         cv.setColumnName(cname);
+        cv.setSortId(c.getColumnLevelPath());
         cv.setState((byte) 0);
         columnVisibleMapper.insert(cv);
     }
