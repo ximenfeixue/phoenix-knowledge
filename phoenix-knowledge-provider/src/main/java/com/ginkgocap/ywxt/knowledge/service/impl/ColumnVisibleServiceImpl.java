@@ -118,7 +118,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
 
     @Override
     public void init(long userid, long gtnid) {
-        List<Column> l = columnValueMapper.selectByParam(null, Constants.gtnid, 10132l);
+        List<Column> l = columnValueMapper.selectByParam(null, Constants.gtnid, userid);
         for (Column c : l) {
             long id = c.getId();
             long pcid = c.getParentId();
