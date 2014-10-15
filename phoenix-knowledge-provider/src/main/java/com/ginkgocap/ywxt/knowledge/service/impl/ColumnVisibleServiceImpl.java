@@ -82,20 +82,30 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         m.put("listl", idl);
         columnVisibleValueMapper.update(m);
         for(Long id:idl){
-            ColumnVisible cv =columnVisibleMapper.selectByPrimaryKey(id);
-            String sortId =cv.getSortId();
-            m.put("sortId",sortId);
-            columnVisibleValueMapper.updateChild(m);
+            ColumnVisibleExample cm = new ColumnVisibleExample();
+            cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(id);
+            List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
+            if(cs.size()>0){
+                ColumnVisible cv = cs.get(0);
+                String sortId =cv.getSortId();
+                m.put("sortId",sortId);
+                columnVisibleValueMapper.updateChild(m);
+            }
         }
         m.put("instate", 1);
         m.put("state", 1);
         columnVisibleValueMapper.update(m);
         List<Long>idnl =columnVisibleValueMapper.selectNotinIds(m);
         for(Long id:idnl){
-            ColumnVisible cv =columnVisibleMapper.selectByPrimaryKey(id);
-            String sortId =cv.getSortId();
-            m.put("sortId",sortId);
-            columnVisibleValueMapper.updateChild(m);
+            ColumnVisibleExample cm = new ColumnVisibleExample();
+            cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(id);
+            List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
+            if(cs.size()>0){
+                ColumnVisible cv = cs.get(0);
+                String sortId =cv.getSortId();
+                m.put("sortId",sortId);
+                columnVisibleValueMapper.updateChild(m);
+            }
         }
     }
 
