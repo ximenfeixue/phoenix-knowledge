@@ -245,4 +245,6 @@ public interface ColumnService {
 	 * @return
 	 */
 	public Map<String, Object> delColumn(long columnid, long id);
+	
+	public String columnname(long columnid);
 }

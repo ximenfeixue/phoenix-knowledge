@@ -485,7 +485,7 @@ public class ColumnServiceImpl implements ColumnService {
 		String maxLevel = getMaxLevelPath(pid);
 		if (StringUtils.isBlank(maxLevel)) {
 			currentColumn = (currentColumn == null ? "" : currentColumn)
-					+"000000001";
+					+ "000000001";
 		} else {
 			currentColumn = (currentColumn == null ? "" : currentColumn)
 					+ getCurrentSortId(maxLevel);
@@ -493,10 +493,11 @@ public class ColumnServiceImpl implements ColumnService {
 
 		return currentColumn;
 	}
+
 	/** 获取当前sortId值 **/
 	public String getCurrentSortId(String v) {
 		StringBuffer sb = new StringBuffer();
-		v = v.length() >9 ? v.substring(v.length()-9, v.length()) :v;
+		v = v.length() > 9 ? v.substring(v.length() - 9, v.length()) : v;
 		String currV = String.valueOf(Integer.parseInt(v) + 1);
 		for (int z = 0; z < sortV - currV.length(); z++) {
 			sb.append("0");
@@ -556,5 +557,33 @@ public class ColumnServiceImpl implements ColumnService {
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
+	}
+
+	@Override
+	public String columnname(long columnid) {
+
+		Column column = null;
+		String columnname = "";
+		if (columnid != 0) {
+		 column = columnMapper.selectByPrimaryKey(columnid);
+			columnname = "/" + column.getColumnname();
+			if (column.getParentId() != 0) {
+				column = columnMapper.selectByPrimaryKey(column.getParentId());
+				columnname = "/" + column.getColumnname() + columnname;
+			}
+			if (column.getParentId() != 0) {
+				column =columnMapper.selectByPrimaryKey(column.getParentId());
+				columnname = "/" + column.getColumnname() + columnname;
+			}
+			if (column.getParentId() != 0) {
+				column = columnMapper.selectByPrimaryKey(column.getParentId());
+				columnname = "/" + column.getColumnname() + columnname;
+			}
+			if (column.getParentId() != 0) {
+				column =columnMapper.selectByPrimaryKey(column.getParentId());
+				columnname = "/" + column.getColumnname() + columnname;
+			}
+		}
+		return columnname;
 	}
 }
