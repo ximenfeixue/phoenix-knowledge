@@ -11,6 +11,7 @@
 			type,
 			mento,
 			createtime,
+			column_type,
 			column_id
 			
 		) values 
@@ -18,7 +19,7 @@
         (#{item.receiveUserId},
 				 #{item.knowledgeId},
 				 #{item.sendUserId},
-				 #{item.type}, #{item.mento}, #{item.createtime}, #{item.columnId})
+				 #{item.type}, #{item.mento}, #{item.createtime},#{item.columnType}, #{item.columnId})
     </foreach>  
  </insert>
 
