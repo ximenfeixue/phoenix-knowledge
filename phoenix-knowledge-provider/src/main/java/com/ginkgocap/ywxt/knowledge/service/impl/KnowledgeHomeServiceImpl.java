@@ -87,7 +87,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         return columnValueMapper.selectByParam(column, Constants.gtnid, userId);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "static-access" })
     @Override
     public <T> Map<String,Object> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -113,7 +113,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 //        ids.addAll(getIds);
         //查询资讯
         if (ids != null) {
-            criteria.and("_id").in(ids);
+            criteria.where("_id").in(ids);
         }
         criteriaGt.and("cid").is(Constants.gtnid);
         criteriaAll.orOperator(criteria,criteriaGt);
