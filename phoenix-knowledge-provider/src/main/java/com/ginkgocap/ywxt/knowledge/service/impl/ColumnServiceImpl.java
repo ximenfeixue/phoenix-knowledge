@@ -556,6 +556,8 @@ public class ColumnServiceImpl implements ColumnService {
 
 		columnTagMapper.deleteByExample(example);
 
+		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
+		
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
