@@ -66,7 +66,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     public List<KnowledgeStatics> getRankList(Long columnid) {
         Column c = columnMapper.selectByPrimaryKey(columnid);
         if (c != null) {
-            String clp = c.getColumnLevelPath().substring(9);
+            String clp = c.getColumnLevelPath().substring(0, 9);
             byte type = (byte) Integer.parseInt(clp);
             KnowledgeStaticsExample ce = new KnowledgeStaticsExample();
             ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo((short) type);
@@ -92,7 +92,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
-        String ty = column.getColumnLevelPath().substring(9);
+        String ty = column.getColumnLevelPath().substring(0, 9);
         long type = Long.parseLong(ty);
 
         Criteria criteria = new Criteria();
