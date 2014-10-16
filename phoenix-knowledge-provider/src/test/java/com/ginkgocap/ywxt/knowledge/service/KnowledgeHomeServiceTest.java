@@ -32,5 +32,9 @@ public class KnowledgeHomeServiceTest extends TestBase {
 //    public void testGetTypeList() {
 //        knowledgeHomeService.getTypeList(0, 0);
 //    }
+    @Test
+    public void testGetTypeList() {
+        System.out.println(knowledgeHomeService.beRelation(2, 10132));
+    }
 
 }

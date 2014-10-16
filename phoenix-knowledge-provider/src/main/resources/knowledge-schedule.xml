@@ -43,7 +43,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="cronTriggerBean_StatisticsInfoHotReply" />
-				<ref bean="columnJobTrigger" />
+				<!-- <ref bean="columnJobTrigger" /> -->
 			</list>
 		</property>
 	</bean>

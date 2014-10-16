@@ -76,4 +76,6 @@ public interface KnowledgeHomeService {
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size);
     
     public List<Node> queryColumns(long cid, long userId) ;
+    
+    public int beRelation(long cid, long userId) ;
 }

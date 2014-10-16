@@ -20,12 +20,14 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
@@ -45,6 +47,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     ColumnService columnService;
     @Autowired
     KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
+    @Autowired
+    UserPermissionMapper userPermissionMapper;
     @Autowired
     ColumnMapper columnMapper;
     @Autowired
@@ -182,5 +186,31 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
             return ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath");
         }
         return null;
+    }
+
+    @Override
+    public int beRelation(long cid, long userId) {
+        UserPermissionExample example = new UserPermissionExample();
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andSendUserIdEqualTo(userId).andTypeEqualTo(3);
+        int count = userPermissionMapper.countByExample(example);
+        if (count > 0) {
+            return 1;//自己
+        }
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andTypeEqualTo(4);
+        count = userPermissionMapper.countByExample(example);
+        if (count > 0) {
+            return 4;//全平台
+        }
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId).andTypeEqualTo(3);
+        count = userPermissionMapper.countByExample(example);
+        if (count > 0) {
+            return 2;//好友可见
+        }
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId).andTypeEqualTo(2);
+        count = userPermissionMapper.countByExample(example);
+        if (count > 0) {
+            return 2;//好友分享
+        }
+        return 0;
     }
 }
