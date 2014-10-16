@@ -527,7 +527,7 @@
 				<!-- mongo地址 -->
 				<mongodb.address>192.168.101.131:27017</mongodb.address>
 				<!-- mongo中数据库 -->
-				<mongodb.database>ywxt</mongodb.database>
+				<mongodb.database>knowledge</mongodb.database>
 				<!-- 数据库连接地址和数据库名 -->
 				<jdbc.url>
 					jdbc:mysql://192.168.101.131:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;zeroDateTimeBehavior=convertToNull
