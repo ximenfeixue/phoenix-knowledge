@@ -1115,6 +1115,206 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andColumnTypeIsNull() {
+            addCriterion("column_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeIsNotNull() {
+            addCriterion("column_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeEqualTo(Byte value) {
+            addCriterion("column_type =", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotEqualTo(Byte value) {
+            addCriterion("column_type <>", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeGreaterThan(Byte value) {
+            addCriterion("column_type >", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("column_type >=", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeLessThan(Byte value) {
+            addCriterion("column_type <", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("column_type <=", value, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeIn(List<Byte> values) {
+            addCriterion("column_type in", values, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotIn(List<Byte> values) {
+            addCriterion("column_type not in", values, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeBetween(Byte value1, Byte value2) {
+            addCriterion("column_type between", value1, value2, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("column_type not between", value1, value2, "columnType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIsNull() {
+            addCriterion("source is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIsNotNull() {
+            addCriterion("source is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceEqualTo(String value) {
+            addCriterion("source =", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotEqualTo(String value) {
+            addCriterion("source <>", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceGreaterThan(String value) {
+            addCriterion("source >", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceGreaterThanOrEqualTo(String value) {
+            addCriterion("source >=", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLessThan(String value) {
+            addCriterion("source <", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLessThanOrEqualTo(String value) {
+            addCriterion("source <=", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLike(String value) {
+            addCriterion("source like", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotLike(String value) {
+            addCriterion("source not like", value, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIn(List<String> values) {
+            addCriterion("source in", values, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotIn(List<String> values) {
+            addCriterion("source not in", values, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceBetween(String value1, String value2) {
+            addCriterion("source between", value1, value2, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNotBetween(String value1, String value2) {
+            addCriterion("source not between", value1, value2, "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIsNull() {
+            addCriterion("column_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIsNotNull() {
+            addCriterion("column_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameEqualTo(String value) {
+            addCriterion("column_name =", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotEqualTo(String value) {
+            addCriterion("column_name <>", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameGreaterThan(String value) {
+            addCriterion("column_name >", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameGreaterThanOrEqualTo(String value) {
+            addCriterion("column_name >=", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLessThan(String value) {
+            addCriterion("column_name <", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLessThanOrEqualTo(String value) {
+            addCriterion("column_name <=", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLike(String value) {
+            addCriterion("column_name like", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotLike(String value) {
+            addCriterion("column_name not like", value, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameIn(List<String> values) {
+            addCriterion("column_name in", values, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotIn(List<String> values) {
+            addCriterion("column_name not in", values, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameBetween(String value1, String value2) {
+            addCriterion("column_name between", value1, value2, "columnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameNotBetween(String value1, String value2) {
+            addCriterion("column_name not between", value1, value2, "columnName");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusLikeInsensitive(String value) {
             addCriterion("upper(status) like", value.toUpperCase(), "status");
             return (Criteria) this;
@@ -1157,6 +1357,16 @@ public class KnowledgeCategoryExample {
 
         public Criteria andPicPathLikeInsensitive(String value) {
             addCriterion("upper(pic_path) like", value.toUpperCase(), "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceLikeInsensitive(String value) {
+            addCriterion("upper(source) like", value.toUpperCase(), "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnNameLikeInsensitive(String value) {
+            addCriterion("upper(column_name) like", value.toUpperCase(), "columnName");
             return (Criteria) this;
         }
     }
