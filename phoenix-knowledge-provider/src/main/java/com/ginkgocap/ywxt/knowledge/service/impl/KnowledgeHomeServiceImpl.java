@@ -89,7 +89,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<T> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
+    public <T> Map<String,Object> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
+        Map<String, Object> model = new HashMap<String, Object>();
         String[] names = t.getClass().getName().split("\\.");
         int length = names.length;
         //栏目
@@ -100,26 +101,31 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         long type = Long.parseLong(ty);
 
         Criteria criteria = new Criteria();
+        Criteria criteriaGt = new Criteria();
+        Criteria criteriaAll = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：自己，好友，全平台3种
         ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
 
         //查询金桐脑
-        List<Long> getIds = columnKnowledgeValueMapper.selectKnowledgeIds(Constants.gtnid, columnid);
-        ids.addAll(getIds);
-
+//        List<Long> getIds = columnKnowledgeValueMapper.selectKnowledgeIds(Constants.gtnid, columnid);
+//        ids.addAll(getIds);
         //查询资讯
         if (ids != null) {
             criteria.and("_id").in(ids);
         }
-        Query query = new Query(criteria);
+        criteriaGt.and("cid").is(Constants.gtnid);
+        criteriaAll.orOperator(criteria,criteriaGt);
+        Query query = new Query(criteriaAll);
         query.sort().on("createtime", Order.DESCENDING);
         long count = mongoTemplate.count(query, names[length - 1]);
         PageUtil p = new PageUtil((int) count, page, size);
         query.limit(size);
         query.skip(p.getPageStartRow() - 1);
-        return (List<T>) mongoTemplate.find(query, t.getClass(), names[length - 1]);
+        model.put("page", p);
+        model.put("list", (List<T>) mongoTemplate.find(query, t.getClass(), names[length - 1]));
+        return model;
     }
 
     @SuppressWarnings("unchecked")
@@ -128,24 +134,28 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         String[] names = ty.obj().split("\\.");
         int length = names.length;
         Criteria criteria = new Criteria();
+        Criteria criteriaGt = new Criteria();
+        Criteria criteriaAll = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：全平台
         ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
-        ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
+//        ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
 
         //查询金桐脑
-        ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
-        List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
-        for (ColumnKnowledge c : ckl) {
-            ids.add(c.getColumnId());
-        }
+//        ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
+//        List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
+//        for (ColumnKnowledge c : ckl) {
+//            ids.add(c.getColumnId());
+//        }
 
         //查询资讯
         if (ids != null) {
             criteria.and("id").in(ids);
         }
-        Query query = new Query(criteria);
+        criteriaGt.and("cid").is(Constants.gtnid);
+        criteriaAll.orOperator(criteria,criteriaGt);
+        Query query = new Query(criteriaAll);
         query.sort().on("createtime", Order.DESCENDING);
         long count;
         try {

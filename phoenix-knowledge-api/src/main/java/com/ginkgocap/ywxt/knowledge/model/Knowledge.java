@@ -69,8 +69,19 @@ public class Knowledge implements Serializable {
 
 	// 标签
 	private String tags;
+	
+	// 栏目
+	private String columnid;
 
-	public String getTags() {
+	public String getColumnid() {
+        return columnid;
+    }
+
+    public void setColumnid(String columnid) {
+        this.columnid = columnid;
+    }
+
+    public String getTags() {
 		return tags;
 	}
 
