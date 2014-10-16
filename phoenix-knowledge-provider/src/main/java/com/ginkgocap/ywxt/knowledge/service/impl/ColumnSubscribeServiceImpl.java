@@ -249,6 +249,16 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
         return rccnl;
     }
 
+    @Override
+    public long updateSubscribeCount(long columnid) {
+        long count=this.countByKC(columnid);
+        Column cc=new Column();
+        cc.setId(columnid);
+        cc.setSubscribeCount(count);          
+        cm.updateByPrimaryKeySelective(cc);
+        return columnService.queryById(columnid).getSubscribeCount();
+    }
+
     //    @Override
     //    public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
     //       

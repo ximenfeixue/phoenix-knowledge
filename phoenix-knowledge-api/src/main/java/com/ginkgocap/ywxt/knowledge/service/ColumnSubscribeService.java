@@ -153,6 +153,12 @@ public interface ColumnSubscribeService {
      */
     boolean isExistType(long userId, short type);
     
+    /**
+     * 更新订阅数
+     * @param columnid 栏目id
+     * @return
+     */
+    long updateSubscribeCount(long columnid);
     
     
 }

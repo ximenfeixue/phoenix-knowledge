@@ -24,20 +24,18 @@
 	</bean>
 	<!-- 排行统计end -->
 	
-	<!-- 栏目定时统计订阅数开始 -->
+	<!-- 栏目定时统计订阅数开始 
 	<bean id="columnJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
     	<property name="targetObject" ref="columnTimerTasker" />  
-    	<property name="targetMethod" value="execute" />  
-    	<!--将并发设置为false-->  
+    	<property name="targetMethod" value="execute" />   
     	<property name="concurrent" value="false" />  
 	</bean>  
   
 	<bean id="columnJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
         <property name="jobDetail" ref="columnJobDetail" />  
-         <!--表达式，每30分钟 执行一次   --> 
         <property name="cronExpression" value="0 7/30 * * * ?" />
 	</bean>  
-	<!-- 栏目定时统计订阅数结束 -->
+	 -->
 
 	<!--调度工厂 -->
 	<bean id="SpringJobSchedulerFactoryBean"

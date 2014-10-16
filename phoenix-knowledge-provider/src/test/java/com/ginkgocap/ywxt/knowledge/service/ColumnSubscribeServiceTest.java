@@ -196,6 +196,11 @@ public class ColumnSubscribeServiceTest extends TestBase {
     @Test
     public void testSelectSubKnowByKCListListOfKnowledgeColumn() {
     }
+    @Test
+    public void testUpdateSubscribeCount() {
+        long i=kcsService.updateSubscribeCount(1);
+        System.out.println(i);
+    }
 
     @Test
     public void testSelectSubKnowByKCListListOfKnowledgeColumnInt() {
