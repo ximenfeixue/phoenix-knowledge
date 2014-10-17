@@ -99,10 +99,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Column column = columnMapper.selectByPrimaryKey(cid);
         String ty = column.getColumnLevelPath().substring(0, 9);
         long type = Long.parseLong(ty);
-
-        Criteria criteria = new Criteria();
+        Criteria criteria =Criteria.where("status").is(4);
+        Criteria criteriaPj = new Criteria();
+        Criteria criteriaUp = new Criteria();
         Criteria criteriaGt = new Criteria();
-        Criteria criteriaAll = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：自己，好友，全平台3种
@@ -113,11 +113,12 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 //        ids.addAll(getIds);
         //查询资讯
         if (ids != null) {
-            criteria.where("_id").in(ids);
+            criteriaUp.and("_id").in(ids);
         }
         criteriaGt.and("cid").is(Constants.gtnid);
-        criteriaAll.orOperator(criteria,criteriaGt);
-        Query query = new Query(criteriaAll);
+        criteriaPj.orOperator(criteriaUp,criteriaGt);
+        criteria.andOperator(criteriaPj);
+        Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
         long count = mongoTemplate.count(query, names[length - 1]);
         PageUtil p = new PageUtil((int) count, page, size);
@@ -133,9 +134,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
         String[] names = ty.obj().split("\\.");
         int length = names.length;
-        Criteria criteria = new Criteria();
+        Criteria criteria =Criteria.where("status").is(4);
+        Criteria criteriaPj = new Criteria();
+        Criteria criteriaUp = new Criteria();
         Criteria criteriaGt = new Criteria();
-        Criteria criteriaAll = new Criteria();
         List<Long> ids = new ArrayList<Long>();
 
         //查询栏目大类下的数据：全平台
@@ -151,11 +153,12 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
         //查询资讯
         if (ids != null) {
-            criteria.and("id").in(ids);
+            criteriaUp.and("_id").in(ids);
         }
         criteriaGt.and("cid").is(Constants.gtnid);
-        criteriaAll.orOperator(criteria,criteriaGt);
-        Query query = new Query(criteriaAll);
+        criteriaPj.orOperator(criteriaUp,criteriaGt);
+        criteria.andOperator(criteriaPj);
+        Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
         long count;
         try {
