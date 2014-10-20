@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import com.ginkgocap.ywxt.cloud.model.InvestmentWord;
 import com.ginkgocap.ywxt.cloud.service.CaseService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
+import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.utils.DateUtils;
@@ -46,7 +46,13 @@ public class ImportOldDataTest extends TestBase {
 	private KnowledgeInvestmentService knowledgeInvestmentService;
 	@Autowired
 	private KnowledgeCaseService knowledgeCaseService;
-
+	
+	@Test
+	public void testIncId() {
+		Long id=knowledgeMongoIncService.getKnowledgeIncreaseId();
+		System.out.println(id);
+	}
+	
 	@Test
 	public void testImportInvestment() {
 		List<InvestmentWord> list=investmentAuthenticationService.getAll();

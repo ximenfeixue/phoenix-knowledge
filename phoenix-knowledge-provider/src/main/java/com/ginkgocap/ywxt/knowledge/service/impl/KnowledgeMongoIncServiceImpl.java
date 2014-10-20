@@ -23,10 +23,22 @@ public class KnowledgeMongoIncServiceImpl implements KnowledgeMongoIncService {
 	@Override
 	public Long getKnowledgeIncreaseId() {
 		Criteria c = Criteria.where("name").is("kid");
+		
+		
 		Update update =new Update();
 		Query query = new Query(c);
+		Ids hasIds=mongoTemplate.findOne(query, Ids.class);
+		Ids ids=new Ids();
 		update.inc("cid", 1);
-		Ids ids=mongoTemplate.findAndModify(query, update,Ids.class);
+		if(hasIds!=null && hasIds.getCid()>0){
+			ids=mongoTemplate.findAndModify(query, update,Ids.class);
+		}else{
+			ids.setCid(1l);
+			ids.setName("kid");
+			mongoTemplate.insert(ids);
+			ids=mongoTemplate.findAndModify(query, update,Ids.class);
+		}
+		
 		return ids.getCid();
 	}
 
