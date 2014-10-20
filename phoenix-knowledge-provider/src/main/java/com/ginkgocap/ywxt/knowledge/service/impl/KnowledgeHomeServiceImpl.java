@@ -97,6 +97,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
+        int leng = column.getColumnLevelPath().length();
         String ty = column.getColumnLevelPath().substring(0, 9);
         long type = Long.parseLong(ty);
         Criteria criteria =Criteria.where("status").is(4);
@@ -114,6 +115,19 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         //查询资讯
         if (ids != null) {
             criteriaUp.and("_id").in(ids);
+        }
+        if (leng >= 10 ) {//子栏目查询
+            List<Column>rcl=columnService.selectFullPath(cid);
+            StringBuffer refull = new StringBuffer();
+            int count=0;
+            for(Column v:rcl){
+                count++;
+                refull.append(v.getColumnname());
+                if(rcl.size()!=count){
+                    refull.append("/");
+                }
+            }
+            criteriaUp.and("cpathid").regex(refull.toString());
         }
         criteriaGt.and("cid").is(Constants.gtnid);
         criteriaPj.orOperator(criteriaUp,criteriaGt);
