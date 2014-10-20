@@ -11,14 +11,10 @@ public class UserPermissionMongo implements Serializable {
 	private List<Long> receiveUserId;
 	
 	private String receiveName;
+	
+	private String sendUserName;
 
-    public String getReceiveName() {
-		return receiveName;
-	}
-
-	public void setReceiveName(String receiveName) {
-		this.receiveName = receiveName;
-	}
+ 
 
 	private Long knowledgeId;
 
@@ -33,7 +29,21 @@ public class UserPermissionMongo implements Serializable {
     private Long sendUserId;
 
     private String mento; //留言
+    
+    private String createtime; 
 
+    private Short columnType; 
+
+    private Long columnId;
+
+    public String getReceiveName() {
+ 		return receiveName;
+ 	}
+
+ 	public void setReceiveName(String receiveName) {
+ 		this.receiveName = receiveName;
+ 	}
+    
     public List<Long> getReceiveUserId() {
 		return receiveUserId;
 	}
@@ -98,14 +108,6 @@ public class UserPermissionMongo implements Serializable {
 		this.mento = mento;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
-	}
-
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
-
 	public Short getColumnType() {
 		return columnType;
 	}
@@ -122,11 +124,22 @@ public class UserPermissionMongo implements Serializable {
 		this.columnId = columnId;
 	}
 
-	private Date createtime; 
+	public String getCreatetime() {
+		return createtime;
+	}
 
-    private Short columnType; 
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
+	}
 
-    private Long columnId;
+	public String getSendUserName() {
+		return sendUserName;
+	}
+
+	public void setSendUserName(String sendUserName) {
+		this.sendUserName = sendUserName;
+	}
+
 
 
 }

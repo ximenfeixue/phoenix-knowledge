@@ -23,6 +23,7 @@ import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.utils.DateUtils;
 
 @Service("userpermissionService")
 public class UserPermissionServiceImpl implements UserPermissionService {
@@ -73,12 +74,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				}
 			}
 		}
+		User user=userService.selectByPrimaryKey(send_uid);
+		userPermission.setSendUserName(user.getName());
 		userPermission.setReceiveUserId(receiveList);
 		userPermission.setReceiveName(sb.toString());
 		userPermission.setColumnId(column_id);
 		userPermission.setColumnType(column_type);
 		userPermission.setColumnId(column_id);
-		userPermission.setCreatetime(new Date());
+		userPermission.setCreatetime(DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(knowledgeid);
 		userPermission.setMento(mento);
 		userPermission.setSendUserId(send_uid);
