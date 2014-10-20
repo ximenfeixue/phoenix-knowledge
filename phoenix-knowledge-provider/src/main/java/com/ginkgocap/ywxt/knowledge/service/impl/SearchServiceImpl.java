@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -25,12 +26,15 @@ public class SearchServiceImpl implements SearchService {
 
 		String tags = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = mapper.readTree(str);
-			String status = node.path("status").asText();
+			if (!StringUtils.isBlank(str)) {
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode node = mapper.readTree(str);
+				String status = node.path("status").asText();
 
-			if (status.equals("1")) {
-				tags = node.path("tags").asText();
+				if (status.equals("1")) {
+					tags = node.path("tags").asText();
+				}
+
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
