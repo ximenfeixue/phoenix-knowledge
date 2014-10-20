@@ -218,26 +218,21 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Override
     public int beRelation(long cid, long userId) {
         UserPermissionExample example = new UserPermissionExample();
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andSendUserIdEqualTo(userId).andTypeEqualTo(3);
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
         int count = userPermissionMapper.countByExample(example);
         if (count > 0) {
             return 1;//自己
         }
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andTypeEqualTo(4);
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(-1l);
         count = userPermissionMapper.countByExample(example);
         if (count > 0) {
             return 4;//全平台
         }
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId).andTypeEqualTo(3);
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andSendUserIdEqualTo(0l);
         count = userPermissionMapper.countByExample(example);
         if (count > 0) {
-            return 2;//好友可见
+            return 3;//gt
         }
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId).andTypeEqualTo(2);
-        count = userPermissionMapper.countByExample(example);
-        if (count > 0) {
-            return 2;//好友分享
-        }
-        return 0;
+        return 2;//好友可见
     }
 }
