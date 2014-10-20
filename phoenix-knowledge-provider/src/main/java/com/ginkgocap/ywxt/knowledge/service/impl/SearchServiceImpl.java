@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -57,30 +55,60 @@ public class SearchServiceImpl implements SearchService {
 		params.put("scope", scope);
 		params.put("pno", pno);
 		params.put("psize", psize);
-		
-		String str = HTTPUtil.post("knowledge/tag/search.json", params);
-		
+
+		String str = HTTPUtil.post("knowledge/keyword/search.json", params);
+
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
 		try {
 			result = mapper.readValue(str, Map.class);
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return result;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Object> searchTags(Long userid, String keywords,
-			String scope, String pno, String pszie) {
-		// TODO Auto-generated method stub
-		return null;
+			String scope, String pno, String psize) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("user_id", userid + "");
+		params.put("keywords", keywords);
+		params.put("scope", scope);
+		params.put("pno", pno);
+		params.put("psize", psize);
+
+		String str = HTTPUtil.post("knowledge/tag/search.json", params);
+
+		ObjectMapper mapper = new ObjectMapper();
+		Map result = null;
+		try {
+			result = mapper.readValue(str, Map.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Object> shareToJinTN(Long userid, Long kid, String type) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("user_id", userid + "");
+		params.put("kid", kid + "");
+		params.put("type", type);
+		String str = HTTPUtil.post("knowledge/put.json", params);
+
+		ObjectMapper mapper = new ObjectMapper();
+		Map result = null;
+		try {
+			result = mapper.readValue(str, Map.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
