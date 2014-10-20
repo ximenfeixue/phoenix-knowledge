@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.util;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -108,7 +109,8 @@ public class Constants {
 	}
 
 	public enum Status {
-		draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6), foreverdelete(7);
+		draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6), foreverdelete(
+				7);
 
 		private int v;
 
@@ -179,7 +181,8 @@ public class Constants {
 	}
 
 	public enum Relation {
-		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), none(4, "无关系");
+		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), none(4, "无关系"), platform(
+				5, "全平台");
 
 		private int v;
 		private String c;
@@ -199,14 +202,15 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addColumnFail("添加栏目失败!"),alreadyCollection(
-				"您已经收藏过该文章!"), addCommentFail("评论失败!"), artUserNotExsit(
-				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addColumnFail(
+				"添加栏目失败!"), alreadyCollection("您已经收藏过该文章!"), addCommentFail(
+				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
 				"您已申请过添加好友,请耐心等待!"), IsFriends("您与该用户已是好友关系!"), UserNotExisitInSession(
 				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
 				"评论不存在!"), delCommentNotPermission("无权删除该评论!"), delCommentFail(
-				"删除评论失败!"),notFindColumn("栏目不存在，请刷新页面后重试!"),delColumnNotPermission("无权删除该栏目!"),delFail("删除失败!");
+				"删除评论失败!"), notFindColumn("栏目不存在，请刷新页面后重试!"), delColumnNotPermission(
+				"无权删除该栏目!"), delFail("删除失败!");
 
 		private String c;
 
@@ -296,15 +300,42 @@ public class Constants {
 			return v;
 		}
 	}
+
 	public enum ColumnDelStatus {
 		common(0), del(1);
-		
+
 		private int v;
-		
+
 		private ColumnDelStatus(int v) {
 			this.v = v;
 		}
-		
+
+		public int v() {
+			return v;
+		}
+	}
+
+	public static String getTableName(String v) {
+		if (StringUtils.isBlank(v))
+			return null;
+		Type[] type = Type.values();
+		for (Type t : type) {
+			if (t.v == Integer.parseInt(v)) {
+				return t.obj;
+			}
+		}
+		return null;
+	}
+
+	public static enum Ids {
+		jinTN(0),platform(1);
+
+		private int v;
+
+		private Ids(int v) {
+			this.v = v;
+		}
+
 		public int v() {
 			return v;
 		}
