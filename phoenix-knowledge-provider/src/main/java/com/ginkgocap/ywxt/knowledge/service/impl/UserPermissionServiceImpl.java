@@ -47,6 +47,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Override
 	public int insertUserPermission(long[] receive_uid, long knowledgeid,
+			long send_uid, int type, String mento,  short column_type,long column_id) {
+		
+		return userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
+				send_uid, type, mento,   column_type,column_id);
+	}
+	@Override
+	public int insertUserPermission(long[] receive_uid, long knowledgeid,
 			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags) {
 
 		int i= userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,

@@ -21,6 +21,14 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	int insertUserPermission(long[] receive_uid, long knowledgeid,
+			long send_uid, int type, String mento,  short column_type,long column_id);
+	/**
+	 * 新增知识，把知识ID，栏目ID，存入用户权限表
+	 * 
+	 * @param knowledgeRCategory
+	 * @return
+	 */
+	int insertUserPermission(long[] receive_uid, long knowledgeid,
 			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags);
 
 	/**
