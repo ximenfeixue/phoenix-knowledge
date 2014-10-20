@@ -13,7 +13,7 @@ public interface SearchService {
 	 *            　（1-首页热门标签）
 	 * @return
 	 */
-	public Map<String, Object> getUserTag(long userid, String type);
+	public Map<String, Object> getUserTag(Long userid, String type);
 
 	/**
 	 * 关键词搜索
@@ -30,7 +30,7 @@ public interface SearchService {
 	 *            每页请求条数
 	 * @return
 	 */
-	public Map<String, Object> searchByKeywords(long userid, String keywords,
+	public Map<String, Object> searchByKeywords(Long userid, String keywords,
 			String scope, String pno, String pszie);
 
 	/**
@@ -48,7 +48,7 @@ public interface SearchService {
 	 *            每页请求条数
 	 * @return
 	 */
-	public Map<String, Object> searchTags(long userid, String keywords,
+	public Map<String, Object> searchTags(Long userid, String keywords,
 			String scope, String pno, String pszie);
 
 	/**
@@ -62,6 +62,6 @@ public interface SearchService {
 	 *            知识类型
 	 * @return
 	 */
-	public Map<String, Object> shareToJinTN(long userid, long kid, String type);
+	public Map<String, Object> shareToJinTN(Long userid, Long kid, String type);
 
 }

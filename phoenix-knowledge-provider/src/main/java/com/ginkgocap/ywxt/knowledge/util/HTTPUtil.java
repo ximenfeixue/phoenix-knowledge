@@ -33,7 +33,7 @@ public class HTTPUtil {
 
 	public static LinkedBlockingQueue<StandByUrl> urls;
 
-	public String location = "http://192.168.130.144:8088/datatransfer/";
+	public static String location = "http://192.168.130.144:8088/datatransfer/";
 
 	static {
 
@@ -43,7 +43,7 @@ public class HTTPUtil {
 
 	}
 
-	public String post(String url, Map<String, String> params) {
+	public static String post(String url, Map<String, String> params) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		HttpPost post = new HttpPost(location + url);
@@ -81,7 +81,7 @@ public class HTTPUtil {
 		return null;
 	}
 
-	public String get(String url, Map<String, String> params) {
+	public static  String get(String url, Map<String, String> params) {
 
 		HttpGet get = null;
 		try {
