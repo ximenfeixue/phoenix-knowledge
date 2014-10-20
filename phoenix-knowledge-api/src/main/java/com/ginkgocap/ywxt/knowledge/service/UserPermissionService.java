@@ -2,6 +2,9 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 
 /**
  * 知识栏目关系
@@ -46,4 +49,15 @@ public interface UserPermissionService {
 	List<Long> selectByParams(Long receive_user_id, Long column_id, Long type);
 
 	int deleteUserPermission(long knowledgeid, long userid);
+	
+	/**
+	 * 获取我的分享
+	 * @param userId 用户id
+	 * @param start start
+ 	 * @param pageSize step  (为0时查询全部数据)
+	 * @return
+	 */
+	public Map<String,Object> getMyShare(Long userId,int start,int pageSize);
+	
+	public Map<String,Object> getShareme(Long userId,int start,int pageSize);
 }

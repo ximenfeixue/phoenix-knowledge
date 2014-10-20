@@ -2,12 +2,17 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
@@ -17,6 +22,7 @@ import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("userpermissionService")
 public class UserPermissionServiceImpl implements UserPermissionService {
@@ -50,9 +56,9 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		StringBuffer sb=new StringBuffer();
 		List<Long> receiveList=new ArrayList<Long>();
 		for (int j = 0; j < receive_uid.length; j++) {
-			receiveList.add(receive_uid[j]);
 			User user=userService.selectByPrimaryKey(receive_uid[j]);
 			if(user!=null && user.getId()>0){
+				receiveList.add(receive_uid[j]);
 				if(j>0){
 					sb.append(","+user.getName());
 				}else{
@@ -100,6 +106,60 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	public int deleteUserPermission(long knowledgeid, long userid) {
 
 		return userPermissionDAO.deleteUserPermission(knowledgeid, userid);
+	}
+
+	@Override
+	public Map<String, Object> getMyShare(Long userId, int start, int pageSize) {
+		List<UserPermissionMongo> lt=null;
+		PageUtil page =null;
+		Criteria c=Criteria.where("sendUserId").is(userId);
+		Query query = new Query(c);
+		long count = mongoTemplate.count(query, UserPermissionMongo.class);
+		page= new PageUtil((int) count, start, pageSize);
+		
+		query = new Query(c);
+		
+		query.sort().on("createtime", Order.DESCENDING);
+		if(pageSize>0){
+			query.skip(page.getPageStartRow());
+			query.limit(pageSize);
+		}
+		lt = mongoTemplate.find(query, UserPermissionMongo.class);
+		if(lt==null){
+			lt=new ArrayList<UserPermissionMongo>();
+		}
+		Map<String,Object> returnMap=new HashMap<String,Object>();
+		returnMap.put("pageUtil", page);
+		returnMap.put("list", lt);
+		
+		return returnMap;
+	}
+
+	@Override
+	public Map<String, Object> getShareme(Long userId, int start, int pageSize) {
+		List<UserPermissionMongo> lt=null;
+		PageUtil page =null;
+		Criteria c=Criteria.where("receiveUserId").is(userId);
+		Query query = new Query(c);
+		long count = mongoTemplate.count(query, UserPermissionMongo.class);
+		page= new PageUtil((int) count, start, pageSize);
+		
+		query = new Query(c);
+		
+		query.sort().on("createtime", Order.DESCENDING);
+		if(pageSize>0){
+			query.skip(page.getPageStartRow());
+			query.limit(pageSize);
+		}
+		lt = mongoTemplate.find(query, UserPermissionMongo.class);
+		if(lt==null){
+			lt=new ArrayList<UserPermissionMongo>();
+		}
+		Map<String,Object> returnMap=new HashMap<String,Object>();
+		returnMap.put("pageUtil", page);
+		returnMap.put("list", lt);
+		
+		return returnMap;
 	}
 
 }
