@@ -67,4 +67,5 @@
     <dubbo:reference id="knowledgeDraftService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService" version="1.0.0"/>
     <dubbo:reference id="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService" version="1.0.0"/>
     <dubbo:reference id="knowledgeRecycleService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService" version="1.0.0"/>
+    <dubbo:reference id="searchService" interface="com.ginkgocap.ywxt.knowledge.service.SearchService" version="1.0.0"/>
 </beans>
