@@ -18,7 +18,7 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento,  short column_type,long column_id);
+			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags);
 
 	/**
 	 * 刪除知识，把用户权限记录
