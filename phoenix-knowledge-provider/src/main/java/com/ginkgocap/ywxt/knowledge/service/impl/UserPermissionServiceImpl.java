@@ -122,13 +122,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		Criteria c=Criteria.where("sendUserId").is(userId);
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
-		page= new PageUtil((int) count, start, pageSize);
+		page= new PageUtil((int) count, start-1, pageSize);
 		
 		query = new Query(c);
 		
 		query.sort().on("createtime", Order.DESCENDING);
 		if(pageSize>0){
-			query.skip(page.getPageStartRow());
+			query.skip((start-1)*pageSize);
 			query.limit(pageSize);
 		}
 		lt = mongoTemplate.find(query, UserPermissionMongo.class);
@@ -155,7 +155,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		
 		query.sort().on("createtime", Order.DESCENDING);
 		if(pageSize>0){
-			query.skip(page.getPageStartRow());
+			query.skip((start-1)*pageSize);
 			query.limit(pageSize);
 		}
 		lt = mongoTemplate.find(query, UserPermissionMongo.class);
