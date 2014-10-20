@@ -50,8 +50,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		StringBuffer sb=new StringBuffer();
 		List<Long> receiveList=new ArrayList<Long>();
 		for (int j = 0; j < receive_uid.length; j++) {
-			receiveList.add(receive_uid[i]);
-			User user=userService.selectByPrimaryKey(receive_uid[i]);
+			receiveList.add(receive_uid[j]);
+			User user=userService.selectByPrimaryKey(receive_uid[j]);
 			if(user!=null && user.getId()>0){
 				if(j>0){
 					sb.append(","+user.getName());
