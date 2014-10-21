@@ -12,8 +12,6 @@ public class KnowledgeCollection implements Serializable {
 
     private Date timestamp;
 
-    private String knowledgetype;
-
     private String source;
 
     private Long categoryId;
@@ -21,8 +19,6 @@ public class KnowledgeCollection implements Serializable {
     private String collectionTags;
 
     private String collectionComment;
-
-    private Long collectionUserid;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,14 +54,6 @@ public class KnowledgeCollection implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getKnowledgetype() {
-        return knowledgetype;
-    }
-
-    public void setKnowledgetype(String knowledgetype) {
-        this.knowledgetype = knowledgetype;
-    }
-
     public String getSource() {
         return source;
     }
@@ -96,13 +84,5 @@ public class KnowledgeCollection implements Serializable {
 
     public void setCollectionComment(String collectionComment) {
         this.collectionComment = collectionComment;
-    }
-
-    public Long getCollectionUserid() {
-        return collectionUserid;
-    }
-
-    public void setCollectionUserid(Long collectionUserid) {
-        this.collectionUserid = collectionUserid;
     }
 }

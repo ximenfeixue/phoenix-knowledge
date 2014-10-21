@@ -32,9 +32,14 @@ public class KnowledgeHomeServiceTest extends TestBase {
 //    public void testGetTypeList() {
 //        knowledgeHomeService.getTypeList(0, 0);
 //    }
+    //知识与人的关系
+    @Test
+    public void beRelation() {
+        System.out.println(knowledgeHomeService.beRelation(2, 10132));
+    }
     @Test
     public void testGetTypeList() {
-        System.out.println(knowledgeHomeService.beRelation(2, 10132));
+        knowledgeHomeService.selectAllKnowledgeCategoryByParam("1", "", 0, "000000007", 10132l, 1, 1);
     }
 
 }

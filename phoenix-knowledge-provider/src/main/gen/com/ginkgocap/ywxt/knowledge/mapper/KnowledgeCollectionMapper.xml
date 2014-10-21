@@ -6,12 +6,10 @@
     <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
     <result column="timestamp" property="timestamp" jdbcType="TIMESTAMP" />
-    <result column="knowledgeType" property="knowledgetype" jdbcType="CHAR" />
     <result column="source" property="source" jdbcType="VARCHAR" />
     <result column="category_id" property="categoryId" jdbcType="BIGINT" />
     <result column="collection_tags" property="collectionTags" jdbcType="VARCHAR" />
     <result column="collection_comment" property="collectionComment" jdbcType="VARCHAR" />
-    <result column="collection_userId" property="collectionUserid" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, knowledge_id, column_id, timestamp, knowledgeType, source, category_id, collection_tags, 
-    collection_comment, collection_userId
+    id, knowledge_id, column_id, timestamp, source, category_id, collection_tags, collection_comment
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample" >
     select
@@ -110,13 +107,11 @@
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     insert into tb_knowledge_collection (id, knowledge_id, column_id, 
-      timestamp, knowledgeType, source, 
-      category_id, collection_tags, collection_comment, 
-      collection_userId)
+      timestamp, source, category_id, 
+      collection_tags, collection_comment)
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, 
-      #{timestamp,jdbcType=TIMESTAMP}, #{knowledgetype,jdbcType=CHAR}, #{source,jdbcType=VARCHAR}, 
-      #{categoryId,jdbcType=BIGINT}, #{collectionTags,jdbcType=VARCHAR}, #{collectionComment,jdbcType=VARCHAR}, 
-      #{collectionUserid,jdbcType=BIGINT})
+      #{timestamp,jdbcType=TIMESTAMP}, #{source,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, 
+      #{collectionTags,jdbcType=VARCHAR}, #{collectionComment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     insert into tb_knowledge_collection
@@ -133,9 +128,6 @@
       <if test="timestamp != null" >
         timestamp,
       </if>
-      <if test="knowledgetype != null" >
-        knowledgeType,
-      </if>
       <if test="source != null" >
         source,
       </if>
@@ -147,9 +139,6 @@
       </if>
       <if test="collectionComment != null" >
         collection_comment,
-      </if>
-      <if test="collectionUserid != null" >
-        collection_userId,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -165,9 +154,6 @@
       <if test="timestamp != null" >
         #{timestamp,jdbcType=TIMESTAMP},
       </if>
-      <if test="knowledgetype != null" >
-        #{knowledgetype,jdbcType=CHAR},
-      </if>
       <if test="source != null" >
         #{source,jdbcType=VARCHAR},
       </if>
@@ -179,9 +165,6 @@
       </if>
       <if test="collectionComment != null" >
         #{collectionComment,jdbcType=VARCHAR},
-      </if>
-      <if test="collectionUserid != null" >
-        #{collectionUserid,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -206,9 +189,6 @@
       <if test="record.timestamp != null" >
         timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.knowledgetype != null" >
-        knowledgeType = #{record.knowledgetype,jdbcType=CHAR},
-      </if>
       <if test="record.source != null" >
         source = #{record.source,jdbcType=VARCHAR},
       </if>
@@ -221,9 +201,6 @@
       <if test="record.collectionComment != null" >
         collection_comment = #{record.collectionComment,jdbcType=VARCHAR},
       </if>
-      <if test="record.collectionUserid != null" >
-        collection_userId = #{record.collectionUserid,jdbcType=BIGINT},
-      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -235,12 +212,10 @@
       knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
       column_id = #{record.columnId,jdbcType=BIGINT},
       timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
-      knowledgeType = #{record.knowledgetype,jdbcType=CHAR},
       source = #{record.source,jdbcType=VARCHAR},
       category_id = #{record.categoryId,jdbcType=BIGINT},
       collection_tags = #{record.collectionTags,jdbcType=VARCHAR},
-      collection_comment = #{record.collectionComment,jdbcType=VARCHAR},
-      collection_userId = #{record.collectionUserid,jdbcType=BIGINT}
+      collection_comment = #{record.collectionComment,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -257,9 +232,6 @@
       <if test="timestamp != null" >
         timestamp = #{timestamp,jdbcType=TIMESTAMP},
       </if>
-      <if test="knowledgetype != null" >
-        knowledgeType = #{knowledgetype,jdbcType=CHAR},
-      </if>
       <if test="source != null" >
         source = #{source,jdbcType=VARCHAR},
       </if>
@@ -272,9 +244,6 @@
       <if test="collectionComment != null" >
         collection_comment = #{collectionComment,jdbcType=VARCHAR},
       </if>
-      <if test="collectionUserid != null" >
-        collection_userId = #{collectionUserid,jdbcType=BIGINT},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -283,12 +252,10 @@
     set knowledge_id = #{knowledgeId,jdbcType=BIGINT},
       column_id = #{columnId,jdbcType=BIGINT},
       timestamp = #{timestamp,jdbcType=TIMESTAMP},
-      knowledgeType = #{knowledgetype,jdbcType=CHAR},
       source = #{source,jdbcType=VARCHAR},
       category_id = #{categoryId,jdbcType=BIGINT},
       collection_tags = #{collectionTags,jdbcType=VARCHAR},
-      collection_comment = #{collectionComment,jdbcType=VARCHAR},
-      collection_userId = #{collectionUserid,jdbcType=BIGINT}
+      collection_comment = #{collectionComment,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

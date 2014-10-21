@@ -192,12 +192,14 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         return knowledgeStaticsMapper.selectByPrimaryKey(id);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid,
             Long userid, int page, int size) {
+        int start = (page - 1) * size;
         int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid, state, sortid, Constants.gtnid, tid, lid);
-        List<KnowledgeCategory> kcl = knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid,
-                Constants.gtnid, tid, lid);
+        List kcl = knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid,
+                Constants.gtnid, tid, lid,start,size);
         PageUtil p = new PageUtil(count, page, size);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("page", p);

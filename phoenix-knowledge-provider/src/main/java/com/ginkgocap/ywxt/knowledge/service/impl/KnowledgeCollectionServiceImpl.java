@@ -46,7 +46,6 @@ public class KnowledgeCollectionServiceImpl implements
 		KnowledgeCollection coll = new KnowledgeCollection();
 		coll.setKnowledgeId(kid);
 		coll.setColumnId(columnid);
-		coll.setKnowledgetype(type);
 		coll.setSource(source);
 		coll.setTimestamp(new Date());
 		coll.setCategoryId(categoryid);

@@ -100,4 +100,11 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				know_desc, column_id, pic_path);
 	}
 
+    @Override
+    public int insertKnowledgeRCategory(long knowledgeid, long[] categoryid, long userid, String title, String author,
+            String path, Date createtime, String tag, String know_desc, long column_id, String pic_path) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

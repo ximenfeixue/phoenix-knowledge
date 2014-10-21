@@ -10,9 +10,10 @@ public interface KnowledgeCategoryValueMapper {
 
     int batchInsert(List<KnowledgeCategory> list);
 
-    List<KnowledgeCategory> selectKnowledgeIds(@Param("userId") long userId, @Param("type") int type,
+    @SuppressWarnings("rawtypes")
+    List selectKnowledgeIds(@Param("userId") long userId, @Param("type") int type,
             @Param("sortId") String sortId, @Param("gtnid") Long gtnid, @Param("tid") String tid,
-            @Param("lid") String lid);
+            @Param("lid") String lid,@Param("start") int start, @Param("size")int size);
 
     int countKnowledgeIds(@Param("userId") long userId, @Param("type") int type, @Param("sortId") String sortId,
             @Param("gtnid") Long gtnid, @Param("tid") String tid, @Param("lid") String lid);

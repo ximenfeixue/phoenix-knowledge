@@ -23,38 +23,54 @@
 				 #{item.createtime},#{item.tag},#{item.cDesc},#{item.columnId},#{item.picPath})  
     </foreach>  
  </insert>
- <select id="selectKnowledgeIds" resultType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
-		SELECT distinct kc.*
-		FROM tb_knowledge_category kc,
-		tb_user_category uc
-		WHERE kc.category_id = uc.id
-		AND uc.type = #{type}
-		AND kc.user_id=#{userId}
-		AND kc.status=1 
-		<if test="tid !=null and tid!=''">
-		AND kc.source==#{tid}
-		</if>
-		<if test="lid !=null and lid!=''">
-		AND kc.column_type=#{lid} 
-		</if>
-		and  uc.sortid like CONCAT(#{sortId}, '%')
+ <select id="selectKnowledgeIds" resultType="map" >
+	SELECT DISTINCT b.*,
+	CASE
+	        WHEN b.user_id=#{userId} THEN 'me'
+	        ELSE 'other'
+	END source
+	FROM tb_knowledge_category kc,
+	tb_user_category
+	uc,tb_knowledge_base b
+	WHERE kc.category_id = uc.id
+	AND b.knowledge_id=kc.knowledge_id
+	AND kc.status=1
+	AND uc.category_type = 0
+	AND uc.user_id=#{userId}
+	AND uc.sortid LIKE CONCAT(#{sortId}, '%')
+	<if test="tid !=null and tid!=''">
+		AND b.column_type=#{tid}
+	</if>
+	<if test="lid == 0 ">
+		AND b.user_id=#{userId}
+	</if>
+	<if test="lid == 1 ">
+		AND b.user_id!=#{userId}
+	</if>
+	LIMIT #{start},#{size}
 </select>
  <select id="countKnowledgeIds" resultType="int" >
  		select count(1) from (
-		SELECT distinct kc.*
-		FROM tb_knowledge_category kc,
-		tb_user_category uc
-		WHERE kc.category_id = uc.id
-		AND uc.type = #{type}
-		AND kc.user_id=#{userId}
-		<if test="tid !=null and tid!=''">
-		AND kc.source==#{tid}
-		</if>
-		<if test="lid !=null and lid!=''">
-		AND kc.column_type=#{lid} 
-		</if>
-		AND kc.status=1 
-		and  uc.sortid like CONCAT(#{sortId}, '%'))j
+			SELECT DISTINCT b.*
+			FROM tb_knowledge_category kc,
+			tb_user_category
+			uc,tb_knowledge_base b
+			WHERE kc.category_id = uc.id
+			AND b.knowledge_id=kc.knowledge_id
+			AND kc.status=1
+			AND uc.category_type = 0
+			AND uc.user_id=#{userId}
+			AND uc.sortid LIKE CONCAT(#{sortId}, '%')
+			<if test="tid !=null and tid!=''">
+				AND b.column_type=#{tid}
+			</if>
+			<if test="lid == 0 ">
+				AND b.user_id=#{userId}
+			</if>
+			<if test="lid == 1 ">
+				AND b.user_id!=#{userId}
+			</if>
+		)j
 </select>
 
  <delete id="deleteKnowledge">
