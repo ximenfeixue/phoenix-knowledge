@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -8,6 +9,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
@@ -22,7 +25,8 @@ import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 
 @Service("knowledgeReaderService")
-public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
+public abstract class KnowledgeReaderServiceImpl implements
+		KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
 			.getLogger(KnowledgeReaderServiceImpl.class);
@@ -38,6 +42,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private KnowledgeReaderDAO knowledgeReaderDAO;
+
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -156,4 +163,19 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		return result;
 	}
 
+	@Override
+	public long getKUIdByKId(long kid, String type) {
+		long kuid = -1;
+		try {
+			String obj = Constants.getTableName(type + "");
+			Knowledge knowledge = (Knowledge) mongoTemplate.findById(kid,
+					Class.forName(obj),
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+			kuid = knowledge.getUid();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return kuid;
+	}
 }

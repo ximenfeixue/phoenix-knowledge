@@ -75,4 +75,13 @@ public interface KnowledgeReaderService {
 	 */
 	Map<String, Object> addCollection(long kid, long userid, String type,
 			String source, long columnid, long categoryid);
+
+	/**
+	 * 获取知识用户ID
+	 * @param kid 知识ID
+	 * @return
+	 */
+	long getKUIdByKId(long kid,String type);
+	
+	
 }
