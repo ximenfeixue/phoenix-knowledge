@@ -46,9 +46,8 @@
 		and ( receive_user_id=#{receive_user_id} 
 			or send_user_id=#{receive_user_id}
 			or receive_user_id=#{receive_user_id}
-			or( type =2 and ( receive_user_id=-1 or receive_user_id=0)
-				type =3 and ( receive_user_id=-1 or receive_user_id=0)
-			  )
+			or (type =2 and ( receive_user_id=-1 or receive_user_id=0))
+			or (type =3 and ( receive_user_id=-1 or receive_user_id=0))
 			) 
 		</if>
 		<if test="receive_user_id == null">
