@@ -245,6 +245,146 @@ public class ColumnTagExample {
             return (Criteria) this;
         }
 
+        public Criteria andColumnnameIsNull() {
+            addCriterion("columnName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameIsNotNull() {
+            addCriterion("columnName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameEqualTo(String value) {
+            addCriterion("columnName =", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameNotEqualTo(String value) {
+            addCriterion("columnName <>", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameGreaterThan(String value) {
+            addCriterion("columnName >", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameGreaterThanOrEqualTo(String value) {
+            addCriterion("columnName >=", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameLessThan(String value) {
+            addCriterion("columnName <", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameLessThanOrEqualTo(String value) {
+            addCriterion("columnName <=", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameLike(String value) {
+            addCriterion("columnName like", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameNotLike(String value) {
+            addCriterion("columnName not like", value, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameIn(List<String> values) {
+            addCriterion("columnName in", values, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameNotIn(List<String> values) {
+            addCriterion("columnName not in", values, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameBetween(String value1, String value2) {
+            addCriterion("columnName between", value1, value2, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameNotBetween(String value1, String value2) {
+            addCriterion("columnName not between", value1, value2, "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathIsNull() {
+            addCriterion("column_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathIsNotNull() {
+            addCriterion("column_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathEqualTo(String value) {
+            addCriterion("column_path =", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotEqualTo(String value) {
+            addCriterion("column_path <>", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathGreaterThan(String value) {
+            addCriterion("column_path >", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathGreaterThanOrEqualTo(String value) {
+            addCriterion("column_path >=", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLessThan(String value) {
+            addCriterion("column_path <", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLessThanOrEqualTo(String value) {
+            addCriterion("column_path <=", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLike(String value) {
+            addCriterion("column_path like", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotLike(String value) {
+            addCriterion("column_path not like", value, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathIn(List<String> values) {
+            addCriterion("column_path in", values, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotIn(List<String> values) {
+            addCriterion("column_path not in", values, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathBetween(String value1, String value2) {
+            addCriterion("column_path between", value1, value2, "columnPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathNotBetween(String value1, String value2) {
+            addCriterion("column_path not between", value1, value2, "columnPath");
+            return (Criteria) this;
+        }
+
         public Criteria andTagIsNull() {
             addCriterion("tag is null");
             return (Criteria) this;
@@ -432,6 +572,16 @@ public class ColumnTagExample {
 
         public Criteria andCreatetimeNotBetween(Date value1, Date value2) {
             addCriterion("createtime not between", value1, value2, "createtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnnameLikeInsensitive(String value) {
+            addCriterion("upper(columnName) like", value.toUpperCase(), "columnname");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumnPathLikeInsensitive(String value) {
+            addCriterion("upper(column_path) like", value.toUpperCase(), "columnPath");
             return (Criteria) this;
         }
 

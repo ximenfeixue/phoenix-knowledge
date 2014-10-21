@@ -18,7 +18,7 @@ public class UserCategory implements Serializable {
 
     private Long parentId;
 
-    private Byte type;
+    private Short categoryType;
 
     private static final long serialVersionUID = 1L;
 
@@ -78,11 +78,11 @@ public class UserCategory implements Serializable {
         this.parentId = parentId;
     }
 
-    public Byte getType() {
-        return type;
+    public Short getCategoryType() {
+        return categoryType;
     }
 
-    public void setType(Byte type) {
-        this.type = type;
+    public void setCategoryType(Short categoryType) {
+        this.categoryType = categoryType;
     }
 }

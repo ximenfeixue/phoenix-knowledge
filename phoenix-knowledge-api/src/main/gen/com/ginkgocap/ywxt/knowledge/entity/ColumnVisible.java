@@ -16,7 +16,7 @@ public class ColumnVisible implements Serializable {
 
     private Long pcid;
 
-    private Byte state;
+    private Short state;
 
     private String columnName;
 
@@ -72,11 +72,11 @@ public class ColumnVisible implements Serializable {
         this.pcid = pcid;
     }
 
-    public Byte getState() {
+    public Short getState() {
         return state;
     }
 
-    public void setState(Byte state) {
+    public void setState(Short state) {
         this.state = state;
     }
 

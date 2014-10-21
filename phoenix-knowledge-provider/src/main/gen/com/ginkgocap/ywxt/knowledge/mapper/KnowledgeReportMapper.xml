@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeReportMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport" >
-    <result column="id" property="id" jdbcType="BIGINT" />
+    <id column="id" property="id" jdbcType="BIGINT" />
     <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
     <result column="type" property="type" jdbcType="CHAR" />
     <result column="rep_desc" property="repDesc" jdbcType="VARCHAR" />
@@ -87,6 +87,16 @@
       </if>
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_knowledge_report
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_knowledge_report
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReportExample" >
     delete from tb_knowledge_report
     <if test="_parameter != null" >
@@ -187,5 +197,35 @@
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport" >
+    update tb_knowledge_report
+    <set >
+      <if test="knowledgeId != null" >
+        knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="repDesc != null" >
+        rep_desc = #{repDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport" >
+    update tb_knowledge_report
+    set knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      type = #{type,jdbcType=CHAR},
+      rep_desc = #{repDesc,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

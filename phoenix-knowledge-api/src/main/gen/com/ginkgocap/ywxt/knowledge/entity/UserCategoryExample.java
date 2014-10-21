@@ -575,63 +575,63 @@ public class UserCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("type is null");
+        public Criteria andCategoryTypeIsNull() {
+            addCriterion("category_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNotNull() {
-            addCriterion("type is not null");
+        public Criteria andCategoryTypeIsNotNull() {
+            addCriterion("category_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Byte value) {
-            addCriterion("type =", value, "type");
+        public Criteria andCategoryTypeEqualTo(Short value) {
+            addCriterion("category_type =", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Byte value) {
-            addCriterion("type <>", value, "type");
+        public Criteria andCategoryTypeNotEqualTo(Short value) {
+            addCriterion("category_type <>", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Byte value) {
-            addCriterion("type >", value, "type");
+        public Criteria andCategoryTypeGreaterThan(Short value) {
+            addCriterion("category_type >", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("type >=", value, "type");
+        public Criteria andCategoryTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("category_type >=", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Byte value) {
-            addCriterion("type <", value, "type");
+        public Criteria andCategoryTypeLessThan(Short value) {
+            addCriterion("category_type <", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("type <=", value, "type");
+        public Criteria andCategoryTypeLessThanOrEqualTo(Short value) {
+            addCriterion("category_type <=", value, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Byte> values) {
-            addCriterion("type in", values, "type");
+        public Criteria andCategoryTypeIn(List<Short> values) {
+            addCriterion("category_type in", values, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Byte> values) {
-            addCriterion("type not in", values, "type");
+        public Criteria andCategoryTypeNotIn(List<Short> values) {
+            addCriterion("category_type not in", values, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Byte value1, Byte value2) {
-            addCriterion("type between", value1, value2, "type");
+        public Criteria andCategoryTypeBetween(Short value1, Short value2) {
+            addCriterion("category_type between", value1, value2, "categoryType");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("type not between", value1, value2, "type");
+        public Criteria andCategoryTypeNotBetween(Short value1, Short value2) {
+            addCriterion("category_type not between", value1, value2, "categoryType");
             return (Criteria) this;
         }
 

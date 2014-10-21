@@ -565,6 +565,146 @@ public class KnowledgeCollectionExample {
             return (Criteria) this;
         }
 
+        public Criteria andCollectionTagsIsNull() {
+            addCriterion("collection_tags is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsIsNotNull() {
+            addCriterion("collection_tags is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsEqualTo(String value) {
+            addCriterion("collection_tags =", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsNotEqualTo(String value) {
+            addCriterion("collection_tags <>", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsGreaterThan(String value) {
+            addCriterion("collection_tags >", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsGreaterThanOrEqualTo(String value) {
+            addCriterion("collection_tags >=", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsLessThan(String value) {
+            addCriterion("collection_tags <", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsLessThanOrEqualTo(String value) {
+            addCriterion("collection_tags <=", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsLike(String value) {
+            addCriterion("collection_tags like", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsNotLike(String value) {
+            addCriterion("collection_tags not like", value, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsIn(List<String> values) {
+            addCriterion("collection_tags in", values, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsNotIn(List<String> values) {
+            addCriterion("collection_tags not in", values, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsBetween(String value1, String value2) {
+            addCriterion("collection_tags between", value1, value2, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsNotBetween(String value1, String value2) {
+            addCriterion("collection_tags not between", value1, value2, "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentIsNull() {
+            addCriterion("collection_comment is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentIsNotNull() {
+            addCriterion("collection_comment is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentEqualTo(String value) {
+            addCriterion("collection_comment =", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentNotEqualTo(String value) {
+            addCriterion("collection_comment <>", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentGreaterThan(String value) {
+            addCriterion("collection_comment >", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentGreaterThanOrEqualTo(String value) {
+            addCriterion("collection_comment >=", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentLessThan(String value) {
+            addCriterion("collection_comment <", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentLessThanOrEqualTo(String value) {
+            addCriterion("collection_comment <=", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentLike(String value) {
+            addCriterion("collection_comment like", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentNotLike(String value) {
+            addCriterion("collection_comment not like", value, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentIn(List<String> values) {
+            addCriterion("collection_comment in", values, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentNotIn(List<String> values) {
+            addCriterion("collection_comment not in", values, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentBetween(String value1, String value2) {
+            addCriterion("collection_comment between", value1, value2, "collectionComment");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentNotBetween(String value1, String value2) {
+            addCriterion("collection_comment not between", value1, value2, "collectionComment");
+            return (Criteria) this;
+        }
+
         public Criteria andKnowledgetypeLikeInsensitive(String value) {
             addCriterion("upper(knowledgeType) like", value.toUpperCase(), "knowledgetype");
             return (Criteria) this;
@@ -572,6 +712,16 @@ public class KnowledgeCollectionExample {
 
         public Criteria andSourceLikeInsensitive(String value) {
             addCriterion("upper(source) like", value.toUpperCase(), "source");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionTagsLikeInsensitive(String value) {
+            addCriterion("upper(collection_tags) like", value.toUpperCase(), "collectionTags");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionCommentLikeInsensitive(String value) {
+            addCriterion("upper(collection_comment) like", value.toUpperCase(), "collectionComment");
             return (Criteria) this;
         }
     }

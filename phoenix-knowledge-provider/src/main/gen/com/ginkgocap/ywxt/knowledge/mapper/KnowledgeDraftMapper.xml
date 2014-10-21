@@ -3,8 +3,8 @@
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft" >
     <id column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
-    <result column="draftname" property="draftname" jdbcType="CHAR" />
-    <result column="drafttype" property="drafttype" jdbcType="CHAR" />
+    <result column="draftname" property="draftname" jdbcType="VARCHAR" />
+    <result column="drafttype" property="drafttype" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="userid" property="userid" jdbcType="BIGINT" />
   </resultMap>
@@ -105,7 +105,7 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft" >
     insert into tb_knowledge_draft (knowledge_id, draftname, drafttype, 
       createtime, userid)
-    values (#{knowledgeId,jdbcType=BIGINT}, #{draftname,jdbcType=CHAR}, #{drafttype,jdbcType=CHAR}, 
+    values (#{knowledgeId,jdbcType=BIGINT}, #{draftname,jdbcType=VARCHAR}, #{drafttype,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{userid,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft" >
@@ -132,10 +132,10 @@
         #{knowledgeId,jdbcType=BIGINT},
       </if>
       <if test="draftname != null" >
-        #{draftname,jdbcType=CHAR},
+        #{draftname,jdbcType=VARCHAR},
       </if>
       <if test="drafttype != null" >
-        #{drafttype,jdbcType=CHAR},
+        #{drafttype,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
@@ -158,10 +158,10 @@
         knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
       </if>
       <if test="record.draftname != null" >
-        draftname = #{record.draftname,jdbcType=CHAR},
+        draftname = #{record.draftname,jdbcType=VARCHAR},
       </if>
       <if test="record.drafttype != null" >
-        drafttype = #{record.drafttype,jdbcType=CHAR},
+        drafttype = #{record.drafttype,jdbcType=VARCHAR},
       </if>
       <if test="record.createtime != null" >
         createtime = #{record.createtime,jdbcType=TIMESTAMP},
@@ -177,8 +177,8 @@
   <update id="updateByExample" parameterType="map" >
     update tb_knowledge_draft
     set knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
-      draftname = #{record.draftname,jdbcType=CHAR},
-      drafttype = #{record.drafttype,jdbcType=CHAR},
+      draftname = #{record.draftname,jdbcType=VARCHAR},
+      drafttype = #{record.drafttype,jdbcType=VARCHAR},
       createtime = #{record.createtime,jdbcType=TIMESTAMP},
       userid = #{record.userid,jdbcType=BIGINT}
     <if test="_parameter != null" >
@@ -189,10 +189,10 @@
     update tb_knowledge_draft
     <set >
       <if test="draftname != null" >
-        draftname = #{draftname,jdbcType=CHAR},
+        draftname = #{draftname,jdbcType=VARCHAR},
       </if>
       <if test="drafttype != null" >
-        drafttype = #{drafttype,jdbcType=CHAR},
+        drafttype = #{drafttype,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null" >
         createtime = #{createtime,jdbcType=TIMESTAMP},
@@ -205,8 +205,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft" >
     update tb_knowledge_draft
-    set draftname = #{draftname,jdbcType=CHAR},
-      drafttype = #{drafttype,jdbcType=CHAR},
+    set draftname = #{draftname,jdbcType=VARCHAR},
+      drafttype = #{drafttype,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       userid = #{userid,jdbcType=BIGINT}
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}

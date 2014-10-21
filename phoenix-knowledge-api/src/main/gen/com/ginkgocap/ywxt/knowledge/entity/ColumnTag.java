@@ -8,6 +8,10 @@ public class ColumnTag implements Serializable {
 
     private Long columnId;
 
+    private String columnname;
+
+    private String columnPath;
+
     private String tag;
 
     private Long userId;
@@ -30,6 +34,22 @@ public class ColumnTag implements Serializable {
 
     public void setColumnId(Long columnId) {
         this.columnId = columnId;
+    }
+
+    public String getColumnname() {
+        return columnname;
+    }
+
+    public void setColumnname(String columnname) {
+        this.columnname = columnname;
+    }
+
+    public String getColumnPath() {
+        return columnPath;
+    }
+
+    public void setColumnPath(String columnPath) {
+        this.columnPath = columnPath;
     }
 
     public String getTag() {

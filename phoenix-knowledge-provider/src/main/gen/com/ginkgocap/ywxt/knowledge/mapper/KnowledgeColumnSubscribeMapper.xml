@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeColumnSubscribeMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe" >
-    <result column="id" property="id" jdbcType="BIGINT" />
+    <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
     <result column="sub_date" property="subDate" jdbcType="TIMESTAMP" />
@@ -86,6 +86,16 @@
       </if>
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_knowledge_column_subscribe
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_knowledge_column_subscribe
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribeExample" >
     delete from tb_knowledge_column_subscribe
     <if test="_parameter != null" >
@@ -174,5 +184,31 @@
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe" >
+    update tb_knowledge_column_subscribe
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null" >
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="subDate != null" >
+        sub_date = #{subDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="columnType != null" >
+        column_type = #{columnType,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeColumnSubscribe" >
+    update tb_knowledge_column_subscribe
+    set user_id = #{userId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      sub_date = #{subDate,jdbcType=TIMESTAMP},
+      column_type = #{columnType,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

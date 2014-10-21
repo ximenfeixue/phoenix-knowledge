@@ -18,6 +18,10 @@ public class KnowledgeCollection implements Serializable {
 
     private Long categoryId;
 
+    private String collectionTags;
+
+    private String collectionComment;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -74,5 +78,21 @@ public class KnowledgeCollection implements Serializable {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCollectionTags() {
+        return collectionTags;
+    }
+
+    public void setCollectionTags(String collectionTags) {
+        this.collectionTags = collectionTags;
+    }
+
+    public String getCollectionComment() {
+        return collectionComment;
+    }
+
+    public void setCollectionComment(String collectionComment) {
+        this.collectionComment = collectionComment;
     }
 }

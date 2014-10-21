@@ -10,13 +10,21 @@ public interface KnowledgeColumnSubscribeMapper {
 
     int deleteByExample(KnowledgeColumnSubscribeExample example);
 
+    int deleteByPrimaryKey(Long id);
+
     int insert(KnowledgeColumnSubscribe record);
 
     int insertSelective(KnowledgeColumnSubscribe record);
 
     List<KnowledgeColumnSubscribe> selectByExample(KnowledgeColumnSubscribeExample example);
 
+    KnowledgeColumnSubscribe selectByPrimaryKey(Long id);
+
     int updateByExampleSelective(@Param("record") KnowledgeColumnSubscribe record, @Param("example") KnowledgeColumnSubscribeExample example);
 
     int updateByExample(@Param("record") KnowledgeColumnSubscribe record, @Param("example") KnowledgeColumnSubscribeExample example);
+
+    int updateByPrimaryKeySelective(KnowledgeColumnSubscribe record);
+
+    int updateByPrimaryKey(KnowledgeColumnSubscribe record);
 }

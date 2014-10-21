@@ -12,6 +12,7 @@
     <result column="del_status" property="delStatus" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="subscribe_count" property="subscribeCount" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="SMALLINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, columnName, user_id, parent_id, createtime, path_name, column_level_path, del_status, 
-    update_time, subscribe_count
+    update_time, subscribe_count, type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnExample" >
     select
@@ -112,11 +113,11 @@
     insert into tb_column (id, columnName, user_id, 
       parent_id, createtime, path_name, 
       column_level_path, del_status, update_time, 
-      subscribe_count)
+      subscribe_count, type)
     values (#{id,jdbcType=BIGINT}, #{columnname,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{parentId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, #{pathName,jdbcType=VARCHAR}, 
       #{columnLevelPath,jdbcType=VARCHAR}, #{delStatus,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{subscribeCount,jdbcType=BIGINT})
+      #{subscribeCount,jdbcType=BIGINT}, #{type,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.Column" >
     insert into tb_column
@@ -151,6 +152,9 @@
       <if test="subscribeCount != null" >
         subscribe_count,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -182,6 +186,9 @@
       </if>
       <if test="subscribeCount != null" >
         #{subscribeCount,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -224,6 +231,9 @@
       <if test="record.subscribeCount != null" >
         subscribe_count = #{record.subscribeCount,jdbcType=BIGINT},
       </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=SMALLINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -240,7 +250,8 @@
       column_level_path = #{record.columnLevelPath,jdbcType=VARCHAR},
       del_status = #{record.delStatus,jdbcType=TINYINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      subscribe_count = #{record.subscribeCount,jdbcType=BIGINT}
+      subscribe_count = #{record.subscribeCount,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=SMALLINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -275,6 +286,9 @@
       <if test="subscribeCount != null" >
         subscribe_count = #{subscribeCount,jdbcType=BIGINT},
       </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=SMALLINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -288,7 +302,8 @@
       column_level_path = #{columnLevelPath,jdbcType=VARCHAR},
       del_status = #{delStatus,jdbcType=TINYINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      subscribe_count = #{subscribeCount,jdbcType=BIGINT}
+      subscribe_count = #{subscribeCount,jdbcType=BIGINT},
+      type = #{type,jdbcType=SMALLINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

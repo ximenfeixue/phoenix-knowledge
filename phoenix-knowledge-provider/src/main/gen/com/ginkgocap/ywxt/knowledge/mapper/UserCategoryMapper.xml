@@ -9,7 +9,7 @@
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="path_name" property="pathName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="category_type" property="categoryType" jdbcType="SMALLINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -70,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, categoryName, sortid, createtime, path_name, parent_id, type
+    id, user_id, categoryName, sortid, createtime, path_name, parent_id, category_type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample" >
     select
@@ -108,10 +108,10 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserCategory" >
     insert into tb_user_category (id, user_id, categoryName, 
       sortid, createtime, path_name, 
-      parent_id, type)
+      parent_id, category_type)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{categoryname,jdbcType=VARCHAR}, 
       #{sortid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{pathName,jdbcType=VARCHAR}, 
-      #{parentId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT})
+      #{parentId,jdbcType=BIGINT}, #{categoryType,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserCategory" >
     insert into tb_user_category
@@ -137,8 +137,8 @@
       <if test="parentId != null" >
         parent_id,
       </if>
-      <if test="type != null" >
-        type,
+      <if test="categoryType != null" >
+        category_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -163,8 +163,8 @@
       <if test="parentId != null" >
         #{parentId,jdbcType=BIGINT},
       </if>
-      <if test="type != null" >
-        #{type,jdbcType=TINYINT},
+      <if test="categoryType != null" >
+        #{categoryType,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -198,8 +198,8 @@
       <if test="record.parentId != null" >
         parent_id = #{record.parentId,jdbcType=BIGINT},
       </if>
-      <if test="record.type != null" >
-        type = #{record.type,jdbcType=TINYINT},
+      <if test="record.categoryType != null" >
+        category_type = #{record.categoryType,jdbcType=SMALLINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -215,7 +215,7 @@
       createtime = #{record.createtime,jdbcType=TIMESTAMP},
       path_name = #{record.pathName,jdbcType=VARCHAR},
       parent_id = #{record.parentId,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=TINYINT}
+      category_type = #{record.categoryType,jdbcType=SMALLINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -241,8 +241,8 @@
       <if test="parentId != null" >
         parent_id = #{parentId,jdbcType=BIGINT},
       </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=TINYINT},
+      <if test="categoryType != null" >
+        category_type = #{categoryType,jdbcType=SMALLINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -255,7 +255,7 @@
       createtime = #{createtime,jdbcType=TIMESTAMP},
       path_name = #{pathName,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=BIGINT},
-      type = #{type,jdbcType=TINYINT}
+      category_type = #{categoryType,jdbcType=SMALLINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

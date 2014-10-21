@@ -8,7 +8,7 @@
     <result column="ctime" property="ctime" jdbcType="TIMESTAMP" />
     <result column="utime" property="utime" jdbcType="TIMESTAMP" />
     <result column="pcid" property="pcid" jdbcType="BIGINT" />
-    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="state" property="state" jdbcType="SMALLINT" />
     <result column="column_name" property="columnName" jdbcType="VARCHAR" />
     <result column="sort_id" property="sortId" jdbcType="VARCHAR" />
   </resultMap>
@@ -113,7 +113,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, 
       #{ctime,jdbcType=TIMESTAMP}, #{utime,jdbcType=TIMESTAMP}, #{pcid,jdbcType=BIGINT}, 
-      #{state,jdbcType=TINYINT}, #{columnName,jdbcType=VARCHAR}, #{sortId,jdbcType=VARCHAR}
+      #{state,jdbcType=SMALLINT}, #{columnName,jdbcType=VARCHAR}, #{sortId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ColumnVisible" >
@@ -167,7 +167,7 @@
         #{pcid,jdbcType=BIGINT},
       </if>
       <if test="state != null" >
-        #{state,jdbcType=TINYINT},
+        #{state,jdbcType=SMALLINT},
       </if>
       <if test="columnName != null" >
         #{columnName,jdbcType=VARCHAR},
@@ -205,7 +205,7 @@
         pcid = #{record.pcid,jdbcType=BIGINT},
       </if>
       <if test="record.state != null" >
-        state = #{record.state,jdbcType=TINYINT},
+        state = #{record.state,jdbcType=SMALLINT},
       </if>
       <if test="record.columnName != null" >
         column_name = #{record.columnName,jdbcType=VARCHAR},
@@ -226,7 +226,7 @@
       ctime = #{record.ctime,jdbcType=TIMESTAMP},
       utime = #{record.utime,jdbcType=TIMESTAMP},
       pcid = #{record.pcid,jdbcType=BIGINT},
-      state = #{record.state,jdbcType=TINYINT},
+      state = #{record.state,jdbcType=SMALLINT},
       column_name = #{record.columnName,jdbcType=VARCHAR},
       sort_id = #{record.sortId,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -252,7 +252,7 @@
         pcid = #{pcid,jdbcType=BIGINT},
       </if>
       <if test="state != null" >
-        state = #{state,jdbcType=TINYINT},
+        state = #{state,jdbcType=SMALLINT},
       </if>
       <if test="columnName != null" >
         column_name = #{columnName,jdbcType=VARCHAR},
@@ -270,7 +270,7 @@
       ctime = #{ctime,jdbcType=TIMESTAMP},
       utime = #{utime,jdbcType=TIMESTAMP},
       pcid = #{pcid,jdbcType=BIGINT},
-      state = #{state,jdbcType=TINYINT},
+      state = #{state,jdbcType=SMALLINT},
       column_name = #{columnName,jdbcType=VARCHAR},
       sort_id = #{sortId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

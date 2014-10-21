@@ -24,6 +24,8 @@ public class Column implements Serializable {
 
     private Long subscribeCount;
 
+    private Short type;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -104,5 +106,13 @@ public class Column implements Serializable {
 
     public void setSubscribeCount(Long subscribeCount) {
         this.subscribeCount = subscribeCount;
+    }
+
+    public Short getType() {
+        return type;
+    }
+
+    public void setType(Short type) {
+        this.type = type;
     }
 }
