@@ -46,6 +46,7 @@ public class KnowledgeRecycleDAOImpl implements KnowledgeRecycleDAO {
 
 		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
 		Criteria criteria = example.createCriteria();
+		criteria.andUseridEqualTo(userid);
 		return knowledgeRecycleMapper.countByExample(example);
 	}
 

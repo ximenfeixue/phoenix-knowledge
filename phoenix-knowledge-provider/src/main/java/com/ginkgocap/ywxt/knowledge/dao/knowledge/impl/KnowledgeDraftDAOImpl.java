@@ -51,6 +51,7 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 		if (StringUtils.isNotBlank(type)) {
 			criteria.andDrafttypeEqualTo(type);
 		}
+		criteria.andUseridEqualTo(userid);
 		return knowledgeDraftMapper.countByExample(example);
 	}
 
