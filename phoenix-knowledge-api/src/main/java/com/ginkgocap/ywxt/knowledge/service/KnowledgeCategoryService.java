@@ -21,8 +21,8 @@ public interface KnowledgeCategoryService {
 	 */
 	int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
 			long userid, String title, String author, String path,
-			String share_author, Date createtime, String tag, String know_desc,
-			long column_id, String pic_path);
+			Date createtime, String tag, String know_desc, long column_id,
+			String pic_path);
 
 	/**
 	 * 刪除知识，把知识目录中间表删除
@@ -44,15 +44,15 @@ public interface KnowledgeCategoryService {
 	int deleteKnowledgeCategory(long knowledgeid);
 
 	int updateKnowledgeCategory(long knowledgeid, long categoryid);
-	
-	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid, long categoryid);
-	
+
+	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
+			long categoryid);
+
 	int updateKnowledgeCategorystatus(long knowledgeid, long categoryid);
-	
-	int insertCategory(long knowledgeid, long categoryid,
-			long userid, String title, String author, String path,
-			String share_author, Date createtime, String tag, String know_desc,
-			long column_id, String pic_path);
-	
+
+	int insertCategory(long knowledgeid, long categoryid, long userid,
+			String title, String author, String path, String share_author,
+			Date createtime, String tag, String know_desc, long column_id,
+			String pic_path);
 
 }

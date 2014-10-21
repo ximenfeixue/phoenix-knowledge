@@ -25,8 +25,7 @@ import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 
 @Service("knowledgeReaderService")
-public abstract class KnowledgeReaderServiceImpl implements
-		KnowledgeReaderService {
+public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
 			.getLogger(KnowledgeReaderServiceImpl.class);
