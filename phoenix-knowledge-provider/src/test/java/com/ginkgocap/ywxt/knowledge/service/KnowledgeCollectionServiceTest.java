@@ -26,6 +26,11 @@ public class KnowledgeCollectionServiceTest extends TestBase {
 
 	@Test
 	public void testinsertKnowledgeR() {
-
+	}
+	
+	//返回收藏夹下知识的分页信息
+	@Test
+	public void queryKnowledgeAll() {
+	    knowledgeCollectionService.queryKnowledgeAll("1","1", 10132l, 1, 10);
 	}
 }

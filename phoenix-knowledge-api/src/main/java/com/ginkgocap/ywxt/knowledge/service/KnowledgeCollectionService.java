@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 
 /**
@@ -43,4 +45,35 @@ public interface KnowledgeCollectionService {
 	List<Long> selectKnowledgeCollection(long column_id, String knowledgeType,
 			long category_id, int pageno, int pagesize);
 
+	   /**
+     * 返回收藏夹下知识的分页信息
+     * @param source 6种来源
+     * @param knowledgeType 11种类型
+     * @param collectionUserId 当前知识收藏的用户
+     * @param pageno 当前页
+     * @param pagesize 每页大小
+     * @return
+     */
+    Map<String,Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize);
+    
+    /**
+     * 分页按条件查询收藏的知识
+     * @param source 6种来源
+     * @param knowledgeType 11种类型
+     * @param collectionUserId 当前知识收藏的用户
+     * @param pageno 当前页
+     * @param pagesize 每页大小
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    List selectKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize);
+
+    /**
+     * 统计所有收藏的知识
+     * @param source 6种来源
+     * @param knowledgeType 11种类型
+     * @param collectionUserId 当前知识收藏的用户
+     * @return
+     */
+    long countKnowledgeAll(String source, String knowledgeType, long collectionUserId);
 }

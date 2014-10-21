@@ -705,6 +705,66 @@ public class KnowledgeCollectionExample {
             return (Criteria) this;
         }
 
+        public Criteria andCollectionUseridIsNull() {
+            addCriterion("collection_userId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridIsNotNull() {
+            addCriterion("collection_userId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridEqualTo(Long value) {
+            addCriterion("collection_userId =", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridNotEqualTo(Long value) {
+            addCriterion("collection_userId <>", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridGreaterThan(Long value) {
+            addCriterion("collection_userId >", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridGreaterThanOrEqualTo(Long value) {
+            addCriterion("collection_userId >=", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridLessThan(Long value) {
+            addCriterion("collection_userId <", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridLessThanOrEqualTo(Long value) {
+            addCriterion("collection_userId <=", value, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridIn(List<Long> values) {
+            addCriterion("collection_userId in", values, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridNotIn(List<Long> values) {
+            addCriterion("collection_userId not in", values, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridBetween(Long value1, Long value2) {
+            addCriterion("collection_userId between", value1, value2, "collectionUserid");
+            return (Criteria) this;
+        }
+
+        public Criteria andCollectionUseridNotBetween(Long value1, Long value2) {
+            addCriterion("collection_userId not between", value1, value2, "collectionUserid");
+            return (Criteria) this;
+        }
+
         public Criteria andKnowledgetypeLikeInsensitive(String value) {
             addCriterion("upper(knowledgeType) like", value.toUpperCase(), "knowledgetype");
             return (Criteria) this;

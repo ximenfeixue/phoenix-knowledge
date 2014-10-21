@@ -26,6 +26,8 @@ public class KnowledgeBase implements Serializable {
 
     private Short columnType;
 
+    private Short essence;
+
     private static final long serialVersionUID = 1L;
 
     public Long getKnowledgeId() {
@@ -114,5 +116,13 @@ public class KnowledgeBase implements Serializable {
 
     public void setColumnType(Short columnType) {
         this.columnType = columnType;
+    }
+
+    public Short getEssence() {
+        return essence;
+    }
+
+    public void setEssence(Short essence) {
+        this.essence = essence;
     }
 }

@@ -24,7 +24,7 @@ public interface UserCategoryValueMapper {
      * @param type 
      * @return
      */
-    String selectMaxSortId(@Param("uid")long uid,@Param("parentSortId")String parentSortId, @Param("type")Byte type);
+    String selectMaxSortId(@Param("uid")long uid,@Param("parentSortId")String parentSortId, @Param("type")Short type);
     /**
      * 通过phoenix_user.tb_user.id得到此用户sortId下经过树形结构排序的所有分类
      * @param uid

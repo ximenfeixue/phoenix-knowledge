@@ -13,6 +13,7 @@
     <result column="column_id" property="columnId" jdbcType="BIGINT" />
     <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
     <result column="column_type" property="columnType" jdbcType="SMALLINT" />
+    <result column="essence" property="essence" jdbcType="SMALLINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List" >
     knowledge_id, user_id, title, author, path, createtime, tag, c_desc, column_id, pic_path, 
-    column_type
+    column_type, essence
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeBaseExample" >
     select
@@ -113,11 +114,13 @@
     insert into tb_knowledge_base (knowledge_id, user_id, title, 
       author, path, createtime, 
       tag, c_desc, column_id, 
-      pic_path, column_type)
+      pic_path, column_type, essence
+      )
     values (#{knowledgeId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
       #{author,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{tag,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{columnId,jdbcType=BIGINT}, 
-      #{picPath,jdbcType=VARCHAR}, #{columnType,jdbcType=SMALLINT})
+      #{picPath,jdbcType=VARCHAR}, #{columnType,jdbcType=SMALLINT}, #{essence,jdbcType=SMALLINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase" >
     insert into tb_knowledge_base
@@ -155,6 +158,9 @@
       <if test="columnType != null" >
         column_type,
       </if>
+      <if test="essence != null" >
+        essence,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="knowledgeId != null" >
@@ -189,6 +195,9 @@
       </if>
       <if test="columnType != null" >
         #{columnType,jdbcType=SMALLINT},
+      </if>
+      <if test="essence != null" >
+        #{essence,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -234,6 +243,9 @@
       <if test="record.columnType != null" >
         column_type = #{record.columnType,jdbcType=SMALLINT},
       </if>
+      <if test="record.essence != null" >
+        essence = #{record.essence,jdbcType=SMALLINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -251,7 +263,8 @@
       c_desc = #{record.cDesc,jdbcType=VARCHAR},
       column_id = #{record.columnId,jdbcType=BIGINT},
       pic_path = #{record.picPath,jdbcType=VARCHAR},
-      column_type = #{record.columnType,jdbcType=SMALLINT}
+      column_type = #{record.columnType,jdbcType=SMALLINT},
+      essence = #{record.essence,jdbcType=SMALLINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -289,6 +302,9 @@
       <if test="columnType != null" >
         column_type = #{columnType,jdbcType=SMALLINT},
       </if>
+      <if test="essence != null" >
+        essence = #{essence,jdbcType=SMALLINT},
+      </if>
     </set>
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
@@ -303,7 +319,8 @@
       c_desc = #{cDesc,jdbcType=VARCHAR},
       column_id = #{columnId,jdbcType=BIGINT},
       pic_path = #{picPath,jdbcType=VARCHAR},
-      column_type = #{columnType,jdbcType=SMALLINT}
+      column_type = #{columnType,jdbcType=SMALLINT},
+      essence = #{essence,jdbcType=SMALLINT}
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
 </mapper>

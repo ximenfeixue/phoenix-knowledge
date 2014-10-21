@@ -72,7 +72,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
             //得到要添加的分类的父类sortId
             String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
             //通过parentSortId得到子类最大已添加的sortId
-            String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId,category.getType());
+            String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId,category.getCategoryType());
             if (StringUtils.isBlank(category.getSortid())) {
                 //如果用户第一次添加，将childMaxSortId赋值
                 String newSortId = new String("");

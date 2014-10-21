@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,10 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeCollectionService")
 public class KnowledgeCollectionServiceImpl implements
@@ -22,6 +26,9 @@ public class KnowledgeCollectionServiceImpl implements
 
 	@Autowired
 	private KnowledgeCollectionDAO knowledgeCollectionDAO;
+	@Resource
+    private KnowledgeCollectionValueMapper knowledgeCollectionValueMapper;
+
 
 	@Override
 	public Map<String, Object> insertKnowledgeCollection(long kid,
@@ -69,5 +76,30 @@ public class KnowledgeCollectionServiceImpl implements
 		return knowledgeCollectionDAO.selectKnowledgeCollection(column_id,
 				knowledgeType, category_id, pageno, pagesize);
 	}
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List selectKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize) {
+        return knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, pageno, pagesize);
+    }
+
+    @Override
+    public long countKnowledgeAll(String source, String knowledgeType, long collectionUserId) {
+        return knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,
+            int pageno, int pagesize) {
+        Integer start = (pageno - 1) * pagesize;
+        Map<String,Object> m =new HashMap<String,Object>();
+        long count = this.countKnowledgeAll(source, knowledgeType, collectionUserId);
+        List<Map<String,Object>> list = this.selectKnowledgeAll(source, knowledgeType, collectionUserId, start, pagesize);
+        PageUtil p=new PageUtil((int) count, pageno, pagesize);
+        m.put("page", p);
+        m.put("list", list);
+        return m;
+    }
 
 }

@@ -845,6 +845,66 @@ public class KnowledgeBaseExample {
             return (Criteria) this;
         }
 
+        public Criteria andEssenceIsNull() {
+            addCriterion("essence is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceIsNotNull() {
+            addCriterion("essence is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceEqualTo(Short value) {
+            addCriterion("essence =", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceNotEqualTo(Short value) {
+            addCriterion("essence <>", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceGreaterThan(Short value) {
+            addCriterion("essence >", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceGreaterThanOrEqualTo(Short value) {
+            addCriterion("essence >=", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceLessThan(Short value) {
+            addCriterion("essence <", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceLessThanOrEqualTo(Short value) {
+            addCriterion("essence <=", value, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceIn(List<Short> values) {
+            addCriterion("essence in", values, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceNotIn(List<Short> values) {
+            addCriterion("essence not in", values, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceBetween(Short value1, Short value2) {
+            addCriterion("essence between", value1, value2, "essence");
+            return (Criteria) this;
+        }
+
+        public Criteria andEssenceNotBetween(Short value1, Short value2) {
+            addCriterion("essence not between", value1, value2, "essence");
+            return (Criteria) this;
+        }
+
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
             return (Criteria) this;

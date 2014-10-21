@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionValueMapper" >
- 
+
  <delete id="deleteKnowledge">
   delete from tb_knowledge_collection 
      where  category_id=#{categoryid} 
@@ -25,4 +25,34 @@
 	</if>
 	limit #{pageno},#{pagesize}
  </select>
+ 
+ <!-- 分页查询收藏夹下的知识 -->
+ <select id="selectKnowledgeAll" resultType="map">
+ 	SELECT b.*,c.collection_comment,c.collection_tags,c.source  FROM tb_knowledge_collection c,tb_knowledge_base b
+	WHERE 1=1
+	AND c.knowledge_id=b.knowledge_id
+	AND c.collection_userId=#{collectionUserId}
+	<if test="knowledgeType!=null">
+	AND b.column_type=#{knowledgeType}
+	</if>
+	<if test="source!=null">
+	AND c.source=#{source}
+	</if>
+	LIMIT #{pageno},#{pagesize}
+ </select>
+ 
+ <!-- 统计收藏夹下的知识 -->
+ <select id="countKnowledgeAll" resultType="long">
+ 	SELECT count(1) FROM tb_knowledge_collection c,tb_knowledge_base b
+	WHERE 1=1
+	AND c.knowledge_id=b.knowledge_id
+	AND c.collection_userId=#{collectionUserId}
+	<if test="knowledgeType!=null">
+	AND b.column_type=#{knowledgeType}
+	</if>
+	<if test="source!=null">
+	AND c.source=#{source}
+	</if>
+ </select>
+ 
 </mapper>
