@@ -28,14 +28,19 @@
  
  <!-- 分页查询收藏夹下的知识 -->
  <select id="selectKnowledgeAll" resultType="map">
- 	SELECT b.*,c.collection_comment,c.collection_tags,c.source  FROM tb_knowledge_collection c,tb_knowledge_base b
+ 	SELECT b.*,c.collection_comment,c.collection_tags,c.source  FROM tb_knowledge_collection c,tb_knowledge_base b,tb_user_category uc 
 	WHERE 1=1
+	AND uc.category_type=1
+	AND uc.id=c.category_id
 	AND c.knowledge_id=b.knowledge_id
 	AND c.collection_userId=#{collectionUserId}
-	<if test="knowledgeType!=null">
+	<if test="sortId != null and sortId != ''">
+		AND uc.sortid like CONCAT(#{sortId}, '%') 
+	</if>
+	<if test="knowledgeType!=null and knowledgeType != ''">
 	AND b.column_type=#{knowledgeType}
 	</if>
-	<if test="source!=null">
+	<if test="source!=null  and source != ''">
 	AND c.source=#{source}
 	</if>
 	LIMIT #{pageno},#{pagesize}
@@ -43,14 +48,19 @@
  
  <!-- 统计收藏夹下的知识 -->
  <select id="countKnowledgeAll" resultType="long">
- 	SELECT count(1) FROM tb_knowledge_collection c,tb_knowledge_base b
+ 	SELECT count(1) FROM tb_knowledge_collection c,tb_knowledge_base b,tb_user_category uc 
 	WHERE 1=1
+	AND uc.category_type=1
+	AND uc.id=c.category_id
 	AND c.knowledge_id=b.knowledge_id
 	AND c.collection_userId=#{collectionUserId}
-	<if test="knowledgeType!=null">
+	<if test="sortId != null and sortId != ''">
+		AND uc.sortid like CONCAT(#{sortId}, '%') 
+	</if>
+	<if test="knowledgeType!=null and knowledgeType != ''">
 	AND b.column_type=#{knowledgeType}
 	</if>
-	<if test="source!=null">
+	<if test="source!=null  and source != ''">
 	AND c.source=#{source}
 	</if>
  </select>

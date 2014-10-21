@@ -30,8 +30,8 @@ public interface KnowledgeCollectionValueMapper {
 	 * @return
 	 */
     @SuppressWarnings("rawtypes")
-    List selectKnowledgeAll(@Param("source") String source,
-            @Param("knowledgeType") String knowledgeType, @Param("collectionUserId") long collectionUserId,
+    List selectKnowledgeAll(@Param("source") String source, @Param("knowledgeType") String knowledgeType,
+            @Param("collectionUserId") long collectionUserId, @Param("sortId") String sortId,
             @Param("pageno") int pageno, @Param("pagesize") int pagesize);
 
     /**
@@ -42,5 +42,5 @@ public interface KnowledgeCollectionValueMapper {
      * @return
      */
     long countKnowledgeAll(@Param("source") String source, @Param("knowledgeType") String knowledgeType,
-            @Param("collectionUserId") long collectionUserId);
+            @Param("collectionUserId") long collectionUserId, @Param("sortId") String sortId);
 }

@@ -54,7 +54,7 @@ public interface KnowledgeCollectionService {
      * @param pagesize 每页大小
      * @return
      */
-    Map<String,Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize);
+    Map<String,Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,String sortId, int pageno, int pagesize);
     
     /**
      * 分页按条件查询收藏的知识

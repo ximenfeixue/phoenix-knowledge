@@ -80,22 +80,24 @@ public class KnowledgeCollectionServiceImpl implements
     @SuppressWarnings("rawtypes")
     @Override
     public List selectKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize) {
-        return knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, pageno, pagesize);
+//        return knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, pageno, pagesize);
+        return null;
     }
 
     @Override
     public long countKnowledgeAll(String source, String knowledgeType, long collectionUserId) {
-        return knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId);
+//        return knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId);
+        return 0;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,
+    public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,String sortId,
             int pageno, int pagesize) {
         Integer start = (pageno - 1) * pagesize;
         Map<String,Object> m =new HashMap<String,Object>();
-        long count = this.countKnowledgeAll(source, knowledgeType, collectionUserId);
-        List<Map<String,Object>> list = this.selectKnowledgeAll(source, knowledgeType, collectionUserId, start, pagesize);
+        long count = knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId,sortId);
+        List<Map<String,Object>> list = knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, sortId,start, pagesize);
         PageUtil p=new PageUtil((int) count, pageno, pagesize);
         m.put("page", p);
         m.put("list", list);
