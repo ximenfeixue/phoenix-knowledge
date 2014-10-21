@@ -33,7 +33,7 @@ public class KnowledgeInvestmentServiceImpl implements
 	public Long addKnowledgeInvestment(KnowledgeInvestment k) {
 		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
-		mongoTemplate.save(k);
+		mongoTemplate.save(k,"KnowledgeInvestment");
 		return id;
 	}
 

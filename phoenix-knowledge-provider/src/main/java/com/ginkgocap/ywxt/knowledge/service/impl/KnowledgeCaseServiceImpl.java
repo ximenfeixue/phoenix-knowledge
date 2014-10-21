@@ -33,7 +33,7 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 	public Long addKnowledgeCase(KnowledgeCase k) {
 		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
-		mongoTemplate.save(k);
+		mongoTemplate.save(k,"KnowledgeCase");
 		return id;
 	}
 

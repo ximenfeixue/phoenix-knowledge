@@ -33,7 +33,7 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 	public Long addKnowledgeIndustry(KnowledgeIndustry k) {
 		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
 		k.setId(id);
-		mongoTemplate.save(k);
+		mongoTemplate.save(k,"KnowledgeIndustry");
 		return id;
 	}
 

@@ -88,6 +88,7 @@ public class ImportOldDataTest extends TestBase {
 				}
 			}
 			k.setIsh(0);
+			k.setColumnid("2");
 			knowledgeInvestmentService.addKnowledgeInvestment(k);
 		}
 	}
@@ -119,6 +120,7 @@ public class ImportOldDataTest extends TestBase {
 				k.setReport_status(1);
 			}
 			k.setDesc(case1.getSummary());
+			k.setColumnid("4");
 			knowledgeCaseService.addKnowledgeCase(k);
 		}
 	}
