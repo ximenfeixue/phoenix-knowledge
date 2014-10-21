@@ -2,10 +2,18 @@ package com.ginkgocap.ywxt.knowledge.util;
 
 /**
  * 把string 数组转换Long数组
+ * 
  * @author Administrator
- *
+ * 
  */
 public class KnowledgeUtil {
+
+	private final static String split = ",";
+
+	public static long[] formatString(String str, int begin, int end) {
+		String[] strs = str.substring(begin, end).split(split);
+		return convertionToLong(strs);
+	}
 
 	public static long[] convertionToLong(String[] strs) {// 将String数组转换为Long类型数组
 		long[] longs = new long[strs.length]; // 声明long类型的数组

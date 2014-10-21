@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
 /**
  * 内容的DAO接口
@@ -17,10 +18,8 @@ public interface KnowledgeNewsDAO {
 	 * 新增资讯知识
 	 */
 
-	KnowledgeNews insertknowledge(String title, long userid, String uname,
-			long cid, String cname, String cpath, String content, String pic,
-			String desc, String essence, String taskid, String tags,
-			long knowledgeid,long columnid,String source);
+	KnowledgeNews insertknowledge(long kId,KnowledgeNewsVO vo, String columnPath,
+			long userId, String username);
 
 	/**
 	 * 删除知识
@@ -32,8 +31,8 @@ public interface KnowledgeNewsDAO {
 	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	void updateKnowledge(String title, long userid, String uname,
-			long cid, String cname, String cpath, String content, String pic,
+	void updateKnowledge(String title, long userid, String uname, long cid,
+			String cname, String cpath, String content, String pic,
 			String desc, String essence, String taskid, String tags,
 			long knowledgeid);
 
@@ -63,7 +62,7 @@ public interface KnowledgeNewsDAO {
 	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
 	 */
 	void deleteKnowledgeByid(long knowledgeid);
-	
+
 	void restoreKnowledgeByid(long knowledgeid);
 
 }

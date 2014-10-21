@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -45,26 +46,23 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public KnowledgeNews insertknowledge(String title, long userid,
-			String uname, long cid, String cname, String cpath, String content,
-			String pic, String desc, String essence, String taskid,
-			String tags, long knowledgeid, long columnid,String source) {
+	public KnowledgeNews insertknowledge(long kId, KnowledgeNewsVO vo,
+			String pathName, long userId, String username) {
 
 		KnowledgeNews knowledge = new KnowledgeNews();
-		knowledge.setTitle(title);
-		knowledge.setUid(userid);
-		knowledge.setUname(uname);
-		knowledge.setCid(cid);
-		knowledge.setCname(cname);
-		knowledge.setCpathid(cpath);
-		knowledge.setContent(content);
-		knowledge.setPic(pic);
-		knowledge.setDesc(desc);
-		knowledge.setSource(source);
-		knowledge.setEssence(Integer.parseInt(essence));
-		knowledge.setTaskid(taskid);
-		knowledge.setTags(tags);
-		knowledge.setId(knowledgeid);
+		knowledge.setId(kId);
+		knowledge.setTitle(vo.getTitle());
+		knowledge.setUid(userId);
+		knowledge.setUname(username);
+		knowledge.setCid(userId);
+		knowledge.setCname(username);
+		knowledge.setCpathid(pathName);
+		knowledge.setContent(vo.getContent());
+		knowledge.setPic(vo.getPic());
+		knowledge.setDesc(vo.getContent().substring(0, 50));
+		knowledge.setEssence(Integer.parseInt(vo.getEssence()));
+		knowledge.setTaskid(vo.getTaskId());
+		knowledge.setTags(vo.getTags());
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
 		knowledge.setCreatetime(new Date());

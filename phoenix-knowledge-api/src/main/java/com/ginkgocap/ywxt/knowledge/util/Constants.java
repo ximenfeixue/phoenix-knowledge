@@ -202,7 +202,7 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addCollFail("文章收藏失败!"), addColumnFail(
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"),addKnowledgeFail("添加知识失败!"), addCollFail("文章收藏失败!"), addColumnFail(
 				"添加栏目失败!"), alreadyCollection("您已经收藏过该文章!"), addCommentFail(
 				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
