@@ -132,8 +132,8 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 							}
 							// 通过已添加的最大的SortId生成新的SortId
 							// 设置最新的sortId
-//							knowledgeRCategory.setSortid(newSortId);
-						} else {
+////							knowledgeRCategory.setSortid(newSortId);
+//						} else {
 //							knowledgeRCategory.setSortid(category.getSortId());
 						}
 					} catch (Exception e) {

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
@@ -26,6 +28,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
@@ -63,6 +66,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Resource
 	private KnowledgeMongoIncService knowledgeMongoIncService;
+
+	@Resource
+	private KnowledgeStaticsMapper knowledgeStaticsMapper;
 
 	@Override
 	public void deleteKnowledge(long[] ids) {
@@ -127,14 +133,15 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			List<String> permList = KnowledgeUtil.getPermissionList(vo
 					.getSelectedIds());
 
-			userPermissionService.insertUserPermission(permList,
-					knowledge.getId(), userId, Constants.Type.News.v(),
-					vo.getShareMessage(), (short) Constants.Type.News.v(),
-					vo.getColumnid());
+			int pV = userPermissionService.insertUserPermission(permList,
+					knowledge.getId(), userId, vo.getShareMessage(),
+					Short.parseShort(vo.getColumnType()), vo.getColumnid());
+			if (pV == 0) {
+				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+			}
 		}
 		// 添加知识到知识目录表
-		long[] cIds = KnowledgeUtil.formatString(vo.getCatalogueIds(), 1, vo
-				.getCatalogueIds().length() - 1);
+		long[] cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 				knowledge.getId(), cIds, userId, username, columnPath, vo);
 		if (categoryV == 0) {
@@ -157,7 +164,24 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
 		}
-
+		// 初始化知识统计信息
+		KnowledgeStatics statics = new KnowledgeStatics();
+		statics.setClickcount(0l);
+		statics.setCollectioncount(0l);
+		statics.setCommentcount(0l);
+		statics.setKnowledgeId(kId);
+		statics.setSharecount(0l);
+		statics.setTitle(vo.getTitle());
+		statics.setType(Short.parseShort(vo.getColumnType()));
+		int sV = knowledgeStaticsMapper.insertSelective(statics);
+		if (sV == 0) {
+			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
+					vo.getColumnType());
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeFail.c());
+			return result;
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		logger.info("创建知识成功,知识ID:{}", kId);
 		return result;

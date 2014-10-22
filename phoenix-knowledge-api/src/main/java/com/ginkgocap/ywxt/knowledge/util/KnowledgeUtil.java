@@ -15,6 +15,10 @@ public class KnowledgeUtil {
 
 	private final static String split = ",";
 
+	public static long[] formatString(String str) {
+		String[] strs = str.split(split);
+		return convertionToLong(strs);
+	}
 	public static long[] formatString(String str, int begin, int end) {
 		String[] strs = str.substring(begin, end).split(split);
 		return convertionToLong(strs);

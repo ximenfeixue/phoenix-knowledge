@@ -59,7 +59,8 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setCpathid(pathName);
 		knowledge.setContent(vo.getContent());
 		knowledge.setPic(vo.getPic());
-		knowledge.setDesc(vo.getContent().substring(0, 50));
+		knowledge.setDesc(vo.getContent().length() > 50 ? vo.getContent()
+				.substring(0, 50) : vo.getContent());
 		knowledge.setEssence(Integer.parseInt(vo.getEssence()));
 		knowledge.setTaskid(vo.getTaskId());
 		knowledge.setTags(vo.getTags());

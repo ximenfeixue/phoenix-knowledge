@@ -8,19 +8,14 @@
  insert into tb_knowledge_category (
 			knowledge_id,
 			category_id,
-			sortid,
-			user_id,
-			title,
-			author,
-			path,share_author,createtime,tag,c_desc,column_id,pic_path
+			status
 			
 		) values 
 		 	<foreach collection="list" item="item" index="index" separator="," >  
         (#{item.knowledgeId},
 				 #{item.categoryId},
-				 #{item.sortid},
-				 #{item.userId}, #{item.title}, #{item.author}, #{item.path}, #{item.shareAuthor},
-				 #{item.createtime},#{item.tag},#{item.cDesc},#{item.columnId},#{item.picPath})  
+				 #{item.status}
+				 )  
     </foreach>  
  </insert>
  <select id="selectKnowledgeIds" resultType="map" >

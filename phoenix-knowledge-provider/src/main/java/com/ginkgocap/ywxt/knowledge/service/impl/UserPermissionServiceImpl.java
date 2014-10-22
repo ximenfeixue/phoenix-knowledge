@@ -49,7 +49,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Override
 	public int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, int type, String shareMessage, short column_type,
+			long send_uid,String shareMessage, short column_type,
 			long column_id) {
 
 		List<UserPermission> list = new ArrayList<UserPermission>();
@@ -57,7 +57,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		for (String perm : permList) {
 			// 2:1,2,3,4
 			String[] perInfo = perm.split(":");
-			if (perInfo != null && perInfo.length > 0) {
+			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
 				String perUser = perInfo[1];
 				if (perInfo != null && perInfo.length > 0) {

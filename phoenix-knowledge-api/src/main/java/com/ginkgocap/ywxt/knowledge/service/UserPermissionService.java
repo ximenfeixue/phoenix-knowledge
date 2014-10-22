@@ -26,7 +26,7 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, int type, String shareMessage,  short column_type,long column_id);
+			long send_uid, String shareMessage,  short column_type,long column_id);
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
 	 * 
