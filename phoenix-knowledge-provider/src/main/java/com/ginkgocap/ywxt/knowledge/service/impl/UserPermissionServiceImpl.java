@@ -33,11 +33,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Autowired
 	private UserPermissionValueMapper userPermissionValueMapper;
 	@Resource
-    private MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 	@Resource
 	private UserService userService;
-	
-	
+
+	private final static String split = ",";
+
 	@Override
 	public List<Long> selectByreceive_user_id(long receive_user_id,
 			long send_userid) {
@@ -47,51 +48,106 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento,  short column_type,long column_id) {
-		
-		return userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
-				send_uid, type, mento,   column_type,column_id);
-	}
-	@Override
-	public int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags) {
+	public int insertUserPermission(List<String> permList, long knowledgeid,
+			long send_uid, int type, String shareMessage, short column_type,
+			long column_id) {
 
-		int i= userPermissionDAO.insertUserPermission(receive_uid, knowledgeid,
-				send_uid, type, mento,   column_type,column_id);
-		
-		UserPermissionMongo userPermission = new UserPermissionMongo();
-		StringBuffer sb=new StringBuffer();
-		List<Long> receiveList=new ArrayList<Long>();
-		for (int j = 0; j < receive_uid.length; j++) {
-			User user=userService.selectByPrimaryKey(receive_uid[j]);
-			if(user!=null && user.getId()>0){
-				receiveList.add(receive_uid[j]);
-				if(j>0){
-					sb.append(","+user.getName());
-				}else{
-					sb.append(user.getName());
+		List<UserPermission> list = new ArrayList<UserPermission>();
+		UserPermission userPermission = null;
+		for (String perm : permList) {
+			// 2:1,2,3,4
+			String[] perInfo = perm.split(":");
+			if (perInfo != null && perInfo.length > 0) {
+				String perType = perInfo[0];
+				String perUser = perInfo[1];
+				if (perInfo != null && perInfo.length > 0) {
+					String[] userList = perUser.split(",");
+					for (String userId : userList) {
+						userPermission = new UserPermission();
+						userPermission.setReceiveUserId(Long.parseLong(userId));
+						userPermission.setColumnId(column_id);
+						userPermission.setColumnType(column_type);
+						userPermission.setCreatetime(new Date());
+						userPermission.setKnowledgeId(knowledgeid);
+						userPermission.setMento(shareMessage);
+						userPermission.setType(Integer.parseInt(perType));
+						userPermission.setSendUserId(send_uid);
+						list.add(userPermission);
+					}
 				}
 			}
 		}
-		User user=userService.selectByPrimaryKey(send_uid);
+		return userPermissionValueMapper.batchInsert(list);
+	}
+
+	@Override
+	public int insertUserPermission(List<String> permList, long knowledgeid,
+			long send_uid, int type, String shareMessage, short column_type,
+			long column_id, String title, String desc, String picPath,
+			String tags) {
+		// 用户ID集合
+		List<Long> receiveList = new ArrayList<Long>();
+		// 用户权限集合
+		List<UserPermission> list = new ArrayList<UserPermission>();
+		UserPermission userPerm = null;
+		for (String perm : permList) {
+			// 2:1,2,3,4
+			String[] perInfo = perm.split(":");
+			if (perInfo != null && perInfo.length > 0) {
+				String perType = perInfo[0];
+				String perUser = perInfo[1];
+				if (perInfo != null && perInfo.length > 0) {
+					String[] userList = perUser.split(split);
+					for (String userId : userList) {
+						userPerm = new UserPermission();
+						userPerm.setReceiveUserId(Long.parseLong(userId));
+						userPerm.setColumnId(column_id);
+						userPerm.setColumnType(column_type);
+						userPerm.setCreatetime(new Date());
+						userPerm.setKnowledgeId(knowledgeid);
+						userPerm.setMento(shareMessage);
+						userPerm.setType(Integer.parseInt(perType));
+						userPerm.setSendUserId(send_uid);
+						list.add(userPerm);
+						receiveList.add(Long.parseLong(userId));
+					}
+				}
+			}
+		}
+		int v = userPermissionValueMapper.batchInsert(list);
+
+		UserPermissionMongo userPermission = new UserPermissionMongo();
+		StringBuffer sb = new StringBuffer();
+
+		for (Long uid : receiveList) {
+			User user = userService.selectByPrimaryKey(uid);
+			if (user != null) {
+				sb.append(user.getName());
+				sb.append(split);
+			}
+		}
+		if (sb.length() > 0) {
+			sb = sb.deleteCharAt(sb.length() - 1);
+		}
+		User user = userService.selectByPrimaryKey(send_uid);
 		userPermission.setSendUserName(user.getName());
 		userPermission.setReceiveUserId(receiveList);
 		userPermission.setReceiveName(sb.toString());
 		userPermission.setColumnId(column_id);
 		userPermission.setColumnType(column_type);
 		userPermission.setColumnId(column_id);
-		userPermission.setCreatetime(DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
+				"yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(knowledgeid);
-		userPermission.setMento(mento);
+		userPermission.setMento(shareMessage);
 		userPermission.setSendUserId(send_uid);
 		userPermission.setTitle(title);
 		userPermission.setDesc(desc);
 		userPermission.setPicPath(picPath);
 		userPermission.setTags(tags);
 		mongoTemplate.insert(userPermission);
-		
-		return i;
+
+		return v;
 	}
 
 	@Override
@@ -120,55 +176,55 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Override
 	public Map<String, Object> getMyShare(Long userId, int start, int pageSize) {
-		List<UserPermissionMongo> lt=null;
-		PageUtil page =null;
-		Criteria c=Criteria.where("sendUserId").is(userId);
+		List<UserPermissionMongo> lt = null;
+		PageUtil page = null;
+		Criteria c = Criteria.where("sendUserId").is(userId);
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
-		page= new PageUtil((int) count, start-1, pageSize);
-		
+		page = new PageUtil((int) count, start - 1, pageSize);
+
 		query = new Query(c);
-		
+
 		query.sort().on("createtime", Order.DESCENDING);
-		if(pageSize>0){
-			query.skip((start-1)*pageSize);
+		if (pageSize > 0) {
+			query.skip((start - 1) * pageSize);
 			query.limit(pageSize);
 		}
 		lt = mongoTemplate.find(query, UserPermissionMongo.class);
-		if(lt==null){
-			lt=new ArrayList<UserPermissionMongo>();
+		if (lt == null) {
+			lt = new ArrayList<UserPermissionMongo>();
 		}
-		Map<String,Object> returnMap=new HashMap<String,Object>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("pageUtil", page);
 		returnMap.put("list", lt);
-		
+
 		return returnMap;
 	}
 
 	@Override
 	public Map<String, Object> getShareme(Long userId, int start, int pageSize) {
-		List<UserPermissionMongo> lt=null;
-		PageUtil page =null;
-		Criteria c=Criteria.where("receiveUserId").is(userId);
+		List<UserPermissionMongo> lt = null;
+		PageUtil page = null;
+		Criteria c = Criteria.where("receiveUserId").is(userId);
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
-		page= new PageUtil((int) count, start, pageSize);
-		
+		page = new PageUtil((int) count, start, pageSize);
+
 		query = new Query(c);
-		
+
 		query.sort().on("createtime", Order.DESCENDING);
-		if(pageSize>0){
-			query.skip((start-1)*pageSize);
+		if (pageSize > 0) {
+			query.skip((start - 1) * pageSize);
 			query.limit(pageSize);
 		}
 		lt = mongoTemplate.find(query, UserPermissionMongo.class);
-		if(lt==null){
-			lt=new ArrayList<UserPermissionMongo>();
+		if (lt == null) {
+			lt = new ArrayList<UserPermissionMongo>();
 		}
-		Map<String,Object> returnMap=new HashMap<String,Object>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("pageUtil", page);
 		returnMap.put("list", lt);
-		
+
 		return returnMap;
 	}
 

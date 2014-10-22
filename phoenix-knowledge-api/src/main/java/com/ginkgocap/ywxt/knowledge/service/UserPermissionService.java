@@ -15,20 +15,25 @@ import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 public interface UserPermissionService {
 
 	/**
-	 * 新增知识，把知识ID，栏目ID，存入用户权限表
-	 * 
-	 * @param knowledgeRCategory
+	 * 添加知识权限信息
+	 * @param receive_uid 接收者ID
+	 * @param knowledgeid 知识ID
+	 * @param send_uid 发起者ID
+	 * @param type　知识类型
+	 * @param mento　分享留言
+	 * @param column_type　栏目类型
+	 * @param column_id　栏目ID
 	 * @return
 	 */
-	int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento,  short column_type,long column_id);
+	int insertUserPermission(List<String> permList, long knowledgeid,
+			long send_uid, int type, String shareMessage,  short column_type,long column_id);
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
 	 * 
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertUserPermission(long[] receive_uid, long knowledgeid,
+	int insertUserPermission(List<String> permList, long knowledgeid,
 			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags);
 
 	/**

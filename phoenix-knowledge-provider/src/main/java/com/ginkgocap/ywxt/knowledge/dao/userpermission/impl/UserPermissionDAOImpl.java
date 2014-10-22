@@ -42,33 +42,34 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 	}
 
 	@Override
-	public int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento,short column_type, long column_id) {
+	public int insertUserPermission(List<String> permList, long knowledgeid,
+			long send_uid, int type, String shareMessage, short column_type,
+			long column_id) {
 
 		List<UserPermission> list = new ArrayList<UserPermission>();
 		UserPermission userPermission = null;
-		if (receive_uid != null && receive_uid.length > 0) {
-			for (int i = 0; i < receive_uid.length; i++) {
-				userPermission = new UserPermission();
-				userPermission.setReceiveUserId(receive_uid[i]);
-				userPermission.setColumnId(column_id);
-				userPermission.setColumnType(column_type);
-				userPermission.setCreatetime(new Date());
-				userPermission.setKnowledgeId(knowledgeid);
-				userPermission.setMento(mento);
-				userPermission.setType(type);
-				userPermission.setSendUserId(send_uid);
-				list.add(userPermission);
+		for (String perm : permList) {
+			// 2:1,2,3,4
+			String[] perInfo = perm.split(":");
+			if (perInfo != null && perInfo.length > 0) {
+				String perType = perInfo[0];
+				String perUser = perInfo[1];
+				if (perInfo != null && perInfo.length > 0) {
+					String[] userList = perUser.split(",");
+					for (String userId : userList) {
+						userPermission = new UserPermission();
+						userPermission.setReceiveUserId(Long.parseLong(userId));
+						userPermission.setColumnId(column_id);
+						userPermission.setColumnType(column_type);
+						userPermission.setCreatetime(new Date());
+						userPermission.setKnowledgeId(knowledgeid);
+						userPermission.setMento(shareMessage);
+						userPermission.setType(Integer.parseInt(perType));
+						userPermission.setSendUserId(send_uid);
+						list.add(userPermission);
+					}
+				}
 			}
-		} else {
-			userPermission = new UserPermission();
-			userPermission.setColumnId(column_id);
-			userPermission.setCreatetime(new Date());
-			userPermission.setKnowledgeId(knowledgeid);
-			userPermission.setMento(mento);
-			userPermission.setType(type);
-			userPermission.setSendUserId(send_uid);
-			list.add(userPermission);
 		}
 		return userPermissionValueMapper.batchInsert(list);
 	}

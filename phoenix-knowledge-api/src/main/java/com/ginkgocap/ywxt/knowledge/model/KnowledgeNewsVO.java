@@ -12,6 +12,25 @@ public class KnowledgeNewsVO {
 	private String essence;
 	private String selectedIds;
 	private Integer submittype;
+	private String shareMessage;
+	private String columnType;
+
+	
+	public String getColumnType() {
+		return columnType;
+	}
+
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
+	}
+
+	public String getShareMessage() {
+		return shareMessage;
+	}
+
+	public void setShareMessage(String shareMessage) {
+		this.shareMessage = shareMessage;
+	}
 
 	public String getTitle() {
 		return title;
@@ -68,6 +87,7 @@ public class KnowledgeNewsVO {
 	public void setCatalogueIds(String catalogueIds) {
 		this.catalogueIds = catalogueIds;
 	}
+
 
 	public String getEssence() {
 		return essence;

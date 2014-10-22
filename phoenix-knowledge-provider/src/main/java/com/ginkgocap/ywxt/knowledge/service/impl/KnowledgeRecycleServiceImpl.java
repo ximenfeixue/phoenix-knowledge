@@ -70,7 +70,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 		recycle.setUserid(userid);
 		recycle.setCreatetime(new Date());
 		recycle.setType(type);
-		recycle.setCategoryid(categoryid);
+		recycle.setCatetoryid(categoryid);
 		return knowledgeRecycleMapper.insertSelective(recycle);
 	}
 

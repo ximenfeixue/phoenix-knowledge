@@ -3,9 +3,9 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * 知识Service
@@ -16,10 +16,16 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 public interface KnowledgeNewsService {
 
 	/**
-	 * 新增资讯知识
+	 * 
+	 * @param kId 知识ID
+	 * @param vo 知识对象
+	 * @param path 栏目路径
+	 * @param id 用户ID
+	 * @param username 用户名
+ 	 * @return
 	 */
 
-	Map<String,Object> insertknowledge(long kId,KnowledgeNewsVO vo,String path,long id,String username);
+	Map<String,Object> insertknowledge(KnowledgeNewsVO vo,User user);
 
 	/**
 	 * 删除资讯知识

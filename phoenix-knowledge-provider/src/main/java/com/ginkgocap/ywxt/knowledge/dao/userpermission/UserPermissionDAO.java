@@ -14,8 +14,9 @@ public interface UserPermissionDAO {
 	 * @param knowledgeRCategory
 	 * @return
 	 */
-	int insertUserPermission(long[] receive_uid, long knowledgeid,
-			long send_uid, int type, String mento, short column_type,long column_id);
+	int insertUserPermission(List<String> permList, long knowledgeid,
+			long send_uid, int type, String shareMessage, short column_type,
+			long column_id);
 
 	/**
 	 * 刪除知识，把用户权限记录

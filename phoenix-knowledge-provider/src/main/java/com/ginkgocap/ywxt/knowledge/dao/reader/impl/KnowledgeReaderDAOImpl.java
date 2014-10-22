@@ -55,7 +55,6 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 		KnowledgeCollection coll = new KnowledgeCollection();
 		coll.setKnowledgeId(kid);
 		coll.setCategoryId(categoryid);
-		coll.setKnowledgetype(type);
 		coll.setColumnId(columnid);
 		coll.setSource(new TypeUtils().getRelationNameByType(source));
 		coll.setTimestamp(new Date());

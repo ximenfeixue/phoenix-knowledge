@@ -15,7 +15,13 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 public interface KnowledgeNewsDAO {
 
 	/**
-	 * 新增资讯知识
+	 * 
+	 * @param kId 知识ID
+	 * @param vo 知识对象
+	 * @param columnPath 栏目路径
+	 * @param userId 用户ID
+	 * @param username 用户名
+	 * @return
 	 */
 
 	KnowledgeNews insertknowledge(long kId,KnowledgeNewsVO vo, String columnPath,

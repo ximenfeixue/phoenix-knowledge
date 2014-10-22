@@ -1,5 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 把string 数组转换Long数组
  * 
@@ -34,5 +39,18 @@ public class KnowledgeUtil {
 			System.out.println(longN);
 
 		}
+	}
+
+	public static List<String> getPermissionList(String userPermission) {
+		List<String> perList = new ArrayList<String>();
+		if (StringUtils.isBlank(userPermission)) {
+			return null;
+		}
+		String[] perm = userPermission.split("&");
+		for (String p : perm) {
+			perList.add(p);
+		}
+
+		return perList;
 	}
 }

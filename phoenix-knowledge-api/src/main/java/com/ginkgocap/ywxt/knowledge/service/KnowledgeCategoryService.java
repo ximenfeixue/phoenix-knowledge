@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
 /**
  * 知识相关的关系表
@@ -13,16 +14,6 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
  */
 public interface KnowledgeCategoryService {
 
-	/**
-	 * 新增资讯知识，把知识ID，目录ID，存入到知识目录中间表中
-	 * 
-	 * @param knowledgeRCategory
-	 * @return
-	 */
-	int insertKnowledgeRCategory(long knowledgeid, long categoryid[],
-			long userid, String title, String author, String path,
-			Date createtime, String tag, String know_desc, long column_id,
-			String pic_path);
 
 	/**
 	 * 刪除知识，把知识目录中间表删除
@@ -55,8 +46,17 @@ public interface KnowledgeCategoryService {
 			Date createtime, String tag, String know_desc, long column_id,
 			String pic_path);
 
-    int insertKnowledgeRCategory(long knowledgeid, long[] categoryid, long userid, String title, String author,
-            String path, String share_author, Date createtime, String tag, String know_desc, long column_id,
-            String pic_path);
+	/**
+	 * 添加知识到知识目录关系表
+	 * @param id 知识ID
+	 * @param cIds 目录ID集合
+	 * @param userId 用户ID
+	 * @param username 用户名
+	 * @param columnPath 栏目路径
+	 * @param vo 知识对象
+	 * @return
+	 */
+	int insertKnowledgeRCategory(long id, long[] cIds, long userId,
+			String username, String columnPath, KnowledgeNewsVO vo);
 
 }
