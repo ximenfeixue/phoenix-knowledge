@@ -62,7 +62,7 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 		update.set("title", k.getTitle());
 		update.set("uid", k.getUid());
 		update.set("uname", k.getUname());
-		mongoTemplate.findAndModify(query, update, KnowledgeIndustry.class);
+		mongoTemplate.findAndModify(query, update, KnowledgeIndustry.class, "KnowledgeIndustry");
 		return id;
 	}
 

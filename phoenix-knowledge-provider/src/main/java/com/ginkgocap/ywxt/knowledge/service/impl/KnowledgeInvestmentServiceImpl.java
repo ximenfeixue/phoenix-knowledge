@@ -62,7 +62,7 @@ public class KnowledgeInvestmentServiceImpl implements
 		update.set("title", k.getTitle());
 		update.set("uid", k.getUid());
 		update.set("uname", k.getUname());
-		mongoTemplate.findAndModify(query, update, KnowledgeInvestment.class);
+		mongoTemplate.findAndModify(query, update, KnowledgeInvestment.class,"KnowledgeInvestment");
 		return id;
 	}
 
@@ -71,7 +71,7 @@ public class KnowledgeInvestmentServiceImpl implements
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
 		return (KnowledgeInvestment) mongoTemplate.findOne(query,
-				KnowledgeInvestment.class);
+				KnowledgeInvestment.class,"KnowledgeInvestment");
 	}
 
 	@Override

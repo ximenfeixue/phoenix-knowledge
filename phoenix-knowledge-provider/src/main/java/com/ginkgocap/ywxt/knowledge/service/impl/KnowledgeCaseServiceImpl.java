@@ -62,7 +62,7 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		update.set("title", k.getTitle());
 		update.set("uid", k.getUid());
 		update.set("uname", k.getUname());
-		mongoTemplate.findAndModify(query, update, KnowledgeCase.class);
+		mongoTemplate.findAndModify(query, update, KnowledgeCase.class, "KnowledgeCase");
 		return id;
 	}
 
@@ -70,7 +70,7 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 	public KnowledgeCase getKnowledgeCaseDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeCase) mongoTemplate.find(query, KnowledgeCase.class);
+		return (KnowledgeCase) mongoTemplate.find(query, KnowledgeCase.class, "KnowledgeCase");
 	}
 
 	@Override
