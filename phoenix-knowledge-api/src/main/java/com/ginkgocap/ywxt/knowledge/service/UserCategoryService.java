@@ -63,4 +63,6 @@ public interface UserCategoryService {
     long selectChildCountById(long id);
     
     UserCategory selectByNameAndPid(String name,long pid);
+    
+    void checkNogroup(Long uid,List<Long> idtype);
 }

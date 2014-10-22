@@ -374,83 +374,8 @@ public class KnowledgeCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andSortidIsNull() {
-            addCriterion("sortid is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidIsNotNull() {
-            addCriterion("sortid is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidEqualTo(String value) {
-            addCriterion("sortid =", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidNotEqualTo(String value) {
-            addCriterion("sortid <>", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidGreaterThan(String value) {
-            addCriterion("sortid >", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidGreaterThanOrEqualTo(String value) {
-            addCriterion("sortid >=", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidLessThan(String value) {
-            addCriterion("sortid <", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidLessThanOrEqualTo(String value) {
-            addCriterion("sortid <=", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidLike(String value) {
-            addCriterion("sortid like", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidNotLike(String value) {
-            addCriterion("sortid not like", value, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidIn(List<String> values) {
-            addCriterion("sortid in", values, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidNotIn(List<String> values) {
-            addCriterion("sortid not in", values, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidBetween(String value1, String value2) {
-            addCriterion("sortid between", value1, value2, "sortid");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidNotBetween(String value1, String value2) {
-            addCriterion("sortid not between", value1, value2, "sortid");
-            return (Criteria) this;
-        }
-
         public Criteria andStatusLikeInsensitive(String value) {
             addCriterion("upper(status) like", value.toUpperCase(), "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortidLikeInsensitive(String value) {
-            addCriterion("upper(sortid) like", value.toUpperCase(), "sortid");
             return (Criteria) this;
         }
     }

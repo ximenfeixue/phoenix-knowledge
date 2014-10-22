@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After; 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +44,7 @@ public class UserCategoryServiceTest extends TestBase {
 
     @Test
     public void testInsert() {
-        UserCategory cat = userCategoryService.insert(uc);
+       userCategoryService.insert(uc);
     }
 
     @Test
@@ -67,5 +70,14 @@ public class UserCategoryServiceTest extends TestBase {
     @Test
     public void testSelectUserCategoryTreeBySortId() {
         userCategoryService.selectUserCategoryTreeBySortId(userId, "000000001", (byte) 0);
+    }
+    
+    @Test
+    @Rollback(false)
+    public void testcheckNogroup() {
+        List<Long>l=new ArrayList<Long>();
+        l.add(0l);
+        l.add(1l);
+        userCategoryService.checkNogroup(10132l,l);
     }
 }

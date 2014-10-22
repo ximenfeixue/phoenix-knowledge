@@ -6,7 +6,6 @@
     <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
     <result column="category_id" property="categoryId" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="CHAR" />
-    <result column="sortid" property="sortid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, knowledge_id, category_id, status, sortid
+    id, knowledge_id, category_id, status
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample" >
     select
@@ -104,9 +103,9 @@
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
     insert into tb_knowledge_category (id, knowledge_id, category_id, 
-      status, sortid)
+      status)
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, 
-      #{status,jdbcType=CHAR}, #{sortid,jdbcType=VARCHAR})
+      #{status,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory" >
     insert into tb_knowledge_category
@@ -123,9 +122,6 @@
       <if test="status != null" >
         status,
       </if>
-      <if test="sortid != null" >
-        sortid,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -139,9 +135,6 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=CHAR},
-      </if>
-      <if test="sortid != null" >
-        #{sortid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,9 +159,6 @@
       <if test="record.status != null" >
         status = #{record.status,jdbcType=CHAR},
       </if>
-      <if test="record.sortid != null" >
-        sortid = #{record.sortid,jdbcType=VARCHAR},
-      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -179,8 +169,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
       category_id = #{record.categoryId,jdbcType=BIGINT},
-      status = #{record.status,jdbcType=CHAR},
-      sortid = #{record.sortid,jdbcType=VARCHAR}
+      status = #{record.status,jdbcType=CHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,9 +186,6 @@
       <if test="status != null" >
         status = #{status,jdbcType=CHAR},
       </if>
-      <if test="sortid != null" >
-        sortid = #{sortid,jdbcType=VARCHAR},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -207,8 +193,7 @@
     update tb_knowledge_category
     set knowledge_id = #{knowledgeId,jdbcType=BIGINT},
       category_id = #{categoryId,jdbcType=BIGINT},
-      status = #{status,jdbcType=CHAR},
-      sortid = #{sortid,jdbcType=VARCHAR}
+      status = #{status,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

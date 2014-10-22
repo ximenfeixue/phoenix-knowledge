@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
@@ -123,6 +124,39 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         example.createCriteria().andParentIdEqualTo(pid).andCategorynameEqualTo(name);
         List<UserCategory> l=userCategoryMapper.selectByExample(example);
         return l.get(0);
+    }
+
+    @Override
+    public void checkNogroup(Long uid, List<Long> idtypes) {
+        for (long type : idtypes) {
+            List<UserCategory> l = this.selectUserCategoryByParams(uid, type,"未分组");
+            //初始化未分组
+            if (l.size() == 0) {
+                UserCategory uc = new UserCategory();
+                uc.setCategoryname("未分组");
+                uc.setSortid("111111111");
+                uc.setParentId(0l);
+                uc.setCategoryType((short) type);
+                uc.setUserId(uid);
+                this.insert(uc);
+            }
+        }
+    }
+
+    private List<UserCategory> selectUserCategoryByParams(Long uid, long type, String categoryname) {
+        UserCategoryExample example = new UserCategoryExample();
+        Criteria c = example.createCriteria();
+        if (uid > 0) {
+            c.andUserIdEqualTo(uid);
+        }
+        if (type > 0) {
+            c.andCategoryTypeEqualTo((short) type);
+        }
+        if (categoryname != null && !"".equals(categoryname)) {
+            c.andCategorynameEqualTo(categoryname);
+        }
+        List<UserCategory> ll = userCategoryMapper.selectByExample(example);
+        return ll;
     }
 
 }

@@ -11,8 +11,6 @@ public class KnowledgeCategory implements Serializable {
 
     private String status;
 
-    private String sortid;
-
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -45,13 +43,5 @@ public class KnowledgeCategory implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getSortid() {
-        return sortid;
-    }
-
-    public void setSortid(String sortid) {
-        this.sortid = sortid;
     }
 }
