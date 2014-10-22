@@ -43,6 +43,9 @@
 	<if test="source!=null  and source != ''">
 	AND c.source=#{source}
 	</if>
+	<if test="keyword !=null and keyword != '' ">
+		AND b.title like CONCAT('%',#{keyword},'%')
+	</if>
 	LIMIT #{pageno},#{pagesize}
  </select>
  
@@ -62,6 +65,9 @@
 	</if>
 	<if test="source!=null  and source != ''">
 	AND c.source=#{source}
+	</if>
+	<if test="keyword !=null and keyword != '' ">
+		AND b.title like CONCAT('%',#{keyword},'%')
 	</if>
  </select>
  

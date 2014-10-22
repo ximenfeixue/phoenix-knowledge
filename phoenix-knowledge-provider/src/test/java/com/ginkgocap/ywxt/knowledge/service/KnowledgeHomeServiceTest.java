@@ -39,7 +39,7 @@ public class KnowledgeHomeServiceTest extends TestBase {
     }
     @Test
     public void testGetTypeList() {
-        knowledgeHomeService.selectAllKnowledgeCategoryByParam("1", "", 0, "000000007", 10132l, 1, 1);
+        knowledgeHomeService.selectAllKnowledgeCategoryByParam("1", "", 0, "000000007", 10132l, "",1, 1);
     }
 
 }

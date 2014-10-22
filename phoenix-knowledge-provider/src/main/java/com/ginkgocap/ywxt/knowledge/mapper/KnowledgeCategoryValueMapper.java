@@ -13,10 +13,10 @@ public interface KnowledgeCategoryValueMapper {
     @SuppressWarnings("rawtypes")
     List selectKnowledgeIds(@Param("userId") long userId, @Param("type") int type,
             @Param("sortId") String sortId, @Param("gtnid") Long gtnid, @Param("tid") String tid,
-            @Param("lid") String lid,@Param("start") int start, @Param("size")int size);
+            @Param("lid") String lid,@Param("keyword")String keyword,@Param("start") int start, @Param("size")int size);
 
     int countKnowledgeIds(@Param("userId") long userId, @Param("type") int type, @Param("sortId") String sortId,
-            @Param("gtnid") Long gtnid, @Param("tid") String tid, @Param("lid") String lid);
+            @Param("gtnid") Long gtnid, @Param("tid") String tid, @Param("lid") String lid,@Param("keyword")String keyword);
 
     int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids, @Param("categoryid") long categoryid);
 }

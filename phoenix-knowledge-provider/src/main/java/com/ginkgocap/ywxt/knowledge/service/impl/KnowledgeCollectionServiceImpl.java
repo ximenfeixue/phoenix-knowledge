@@ -91,12 +91,12 @@ public class KnowledgeCollectionServiceImpl implements
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,String sortId,
+    public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,String sortId,String keyword,
             int pageno, int pagesize) {
         Integer start = (pageno - 1) * pagesize;
         Map<String,Object> m =new HashMap<String,Object>();
-        long count = knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId,sortId);
-        List<Map<String,Object>> list = knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, sortId,start, pagesize);
+        long count = knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId,sortId,keyword);
+        List<Map<String,Object>> list = knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, sortId,keyword,start, pagesize);
         PageUtil p=new PageUtil((int) count, pageno, pagesize);
         m.put("page", p);
         m.put("list", list);

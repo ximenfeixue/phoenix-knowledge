@@ -195,11 +195,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @SuppressWarnings("rawtypes")
     @Override
     public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid,
-            Long userid, int page, int size) {
+            Long userid,String keyword, int page, int size) {
         int start = (page - 1) * size;
-        int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid, state, sortid, Constants.gtnid, tid, lid);
+        int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid, state, sortid, Constants.gtnid, tid, lid,keyword);
         List kcl = knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid,
-                Constants.gtnid, tid, lid,start,size);
+                Constants.gtnid, tid, lid,keyword,start,size);
         PageUtil p = new PageUtil(count, page, size);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("page", p);

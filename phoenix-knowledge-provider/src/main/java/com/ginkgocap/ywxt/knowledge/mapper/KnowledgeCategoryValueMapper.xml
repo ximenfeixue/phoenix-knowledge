@@ -47,6 +47,9 @@
 	<if test="lid == 1 ">
 		AND b.user_id!=#{userId}
 	</if>
+	<if test="keyword !=null and keyword != '' ">
+		AND b.title like CONCAT('%',#{keyword},'%')
+	</if>
 	LIMIT #{start},#{size}
 </select>
  <select id="countKnowledgeIds" resultType="int" >
@@ -69,6 +72,9 @@
 			</if>
 			<if test="lid == 1 ">
 				AND b.user_id!=#{userId}
+			</if>
+			<if test="keyword !=null and keyword != '' ">
+				AND b.title like CONCAT('%',#{keyword},'%')
 			</if>
 		)j
 </select>
