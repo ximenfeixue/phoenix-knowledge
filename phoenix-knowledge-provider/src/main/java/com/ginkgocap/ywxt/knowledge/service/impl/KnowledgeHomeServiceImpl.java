@@ -87,13 +87,15 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         return columnValueMapper.selectByParam(column, Constants.gtnid, userId);
     }
 
-    @SuppressWarnings({ "unchecked", "static-access" })
+
+    //首页栏目
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Map<String,Object> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
         Map<String, Object> model = new HashMap<String, Object>();
         String[] names = t.getClass().getName().split("\\.");
         int length = names.length;
-        //栏目
+        //栏目id
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
@@ -105,20 +107,15 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Criteria criteriaUp = new Criteria();
         Criteria criteriaGt = new Criteria();
         List<Long> ids = new ArrayList<Long>();
-
-        //查询栏目大类下的数据：自己，好友，全平台3种
+        StringBuffer refull = new StringBuffer();
+        //栏目类型过滤
         ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
-
-        //查询金桐脑
-//        List<Long> getIds = columnKnowledgeValueMapper.selectKnowledgeIds(Constants.gtnid, columnid);
-//        ids.addAll(getIds);
         //查询资讯
         if (ids != null) {
             criteriaUp.and("_id").in(ids);
         }
         if (leng >= 10 ) {//子栏目查询
             List<Column>rcl=columnService.selectFullPath(cid);
-            StringBuffer refull = new StringBuffer();
             int count=0;
             for(Column v:rcl){
                 count++;
@@ -127,9 +124,13 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                     refull.append("/");
                 }
             }
-            criteriaUp.and("cpathid").regex(refull.toString());
+            criteriaUp.and("cpathid").regex(refull.toString()).and("cid").is(userid);
+            //金桐脑
+            criteriaGt.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString());
+        }else{
+            //金桐脑
+            criteriaGt.and("cid").is(Constants.gtnid);
         }
-        criteriaGt.and("cid").is(Constants.gtnid);
         criteriaPj.orOperator(criteriaUp,criteriaGt);
         criteria.andOperator(criteriaPj);
         Query query = new Query(criteria);
@@ -143,6 +144,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         return model;
     }
 
+    //首页主页
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
@@ -156,14 +158,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
         //查询栏目大类下的数据：全平台
         ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
-//        ColumnKnowledgeExample ckme = new ColumnKnowledgeExample();
-
-        //查询金桐脑
-//        ckme.createCriteria().andUserIdEqualTo(Constants.gtnid).andTypeEqualTo((short) ty.v());
-//        List<ColumnKnowledge> ckl = columnKnowledgeMapper.selectByExample(ckme);
-//        for (ColumnKnowledge c : ckl) {
-//            ids.add(c.getColumnId());
-//        }
 
         //查询资讯
         if (ids != null) {
