@@ -60,8 +60,9 @@ public class Tree {
         if (tList.size() == 0) {//递归完毕
             return;
         }
+        
+        try{
         Node tc = tList.get(0);
-
         if (size < tc.getSortId().length()) {//子节点
             List<Node> nList = new ArrayList<Node>();
 
@@ -85,6 +86,8 @@ public class Tree {
             tList.remove(0);
             buildTree(tc.getId(), tList, lc, tc.getSortId().length(), tc);
         }
+        }catch(Exception e){        }
+        
         return;
     }
     
