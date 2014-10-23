@@ -99,13 +99,17 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
+        String columnname = column.getColumnname();
         int leng = column.getColumnLevelPath().length();
         String ty = column.getColumnLevelPath().substring(0, 9);
         long type = Long.parseLong(ty);
         Criteria criteria =Criteria.where("status").is(4);
         Criteria criteriaPj = new Criteria();
         Criteria criteriaUp = new Criteria();
+        Criteria criteriaMy = new Criteria();
         Criteria criteriaGt = new Criteria();
+        Criteria criteriaGtz = new Criteria();
+        Criteria criteriaGto = new Criteria();
         List<Long> ids = new ArrayList<Long>();
         StringBuffer refull = new StringBuffer();
         //栏目类型过滤
@@ -114,7 +118,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         if (ids != null) {
             criteriaUp.and("_id").in(ids);
         }
-        if (leng >= 10 ) {//子栏目查询
+        //子栏目查询,否则为栏目类型查询
+        if (leng >= 10 ) {
             List<Column>rcl=columnService.selectFullPath(cid);
             int count=0;
             for(Column v:rcl){
@@ -124,15 +129,22 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                     refull.append("/");
                 }
             }
-            criteriaUp.and("cpathid").regex(refull.toString()).and("cid").is(userid);
-            //金桐脑
-            criteriaGt.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString());
+            criteriaUp.and("cpathid").regex(refull.toString()+".*$").and("cid").is(userid);
         }else{
-            //金桐脑
-            criteriaGt.and("cid").is(Constants.gtnid);
+            //一级栏目为自定义的情形
+            if (cid > 11) {
+                refull=new StringBuffer();
+                refull.append(columnname);
+                criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(refull.toString());
+            }
         }
-        criteriaPj.orOperator(criteriaUp,criteriaGt);
+        criteriaMy.and("cid").is(userid);
+        criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(refull.toString());
+        criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString()+"/.*$");
+        criteriaGt.orOperator(criteriaGtz,criteriaGto);
+        criteriaPj.orOperator(criteriaUp,criteriaGt,criteriaMy);
         criteria.andOperator(criteriaPj);
+        //查询知识
         Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
         long count = mongoTemplate.count(query, names[length - 1]);
