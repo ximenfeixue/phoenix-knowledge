@@ -29,12 +29,6 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	private KnowledgeRecycleDAO knowledgeRecycleDAO;
 
 	@Override
-	public int deleteKnowledgeDraft(long[] knowledgeids, long userid) {
-
-		return knowledgeRecycleDAO.deleteKnowledgeRecycle(knowledgeids, userid);
-	}
-
-	@Override
 	public KnowledgeRecycle selectByKnowledgeId(long knowledgeid) {
 
 		return knowledgeRecycleMapper.selectByPrimaryKey(knowledgeid);
@@ -44,14 +38,22 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	public List<KnowledgeRecycle> selectKnowledgeRecycle(long userid,
 			String type, int pageno, int pagesize) {
 
-		return knowledgeRecycleDAO.selectKnowledgeRecycle(userid, type, pageno,
-				pagesize);
+		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUseridEqualTo(userid);
+		example.setOrderByClause("createtime desc");
+		example.setLimitStart(pageno);
+		example.setLimitEnd(pagesize);
+		return knowledgeRecycleMapper.selectByExample(example);
 	}
 
 	@Override
 	public int countKnowledgeRecycle(long userid, String type) {
 
-		return knowledgeRecycleDAO.countKnowledgeRecycle(userid, type);
+		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUseridEqualTo(userid);
+		return knowledgeRecycleMapper.countByExample(example);
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 		recycle.setUserid(userid);
 		recycle.setCreatetime(new Date());
 		recycle.setType(type);
-		recycle.setCatetoryid(categoryid);
+		recycle.setCategoryid(categoryid);
 		return knowledgeRecycleMapper.insertSelective(recycle);
 	}
 

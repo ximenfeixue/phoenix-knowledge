@@ -24,12 +24,6 @@ public interface KnowledgeRecycleService {
 			String type, long userid,long categoryid);
 
 	/**
-	 * 删除草稿箱知识
-	 */
-
-	int deleteKnowledgeDraft(long[] knowledgeids, long userid);
-
-	/**
 	 * 根据知识ID查询草稿箱列表
 	 */
 	KnowledgeRecycle selectByKnowledgeId(long knowledgeid);
