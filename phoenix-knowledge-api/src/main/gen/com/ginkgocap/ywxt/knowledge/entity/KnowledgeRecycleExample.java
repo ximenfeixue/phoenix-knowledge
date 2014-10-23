@@ -445,63 +445,63 @@ public class KnowledgeRecycleExample {
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidIsNull() {
-            addCriterion("catetoryid is null");
+        public Criteria andCategoryidIsNull() {
+            addCriterion("categoryid is null");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidIsNotNull() {
-            addCriterion("catetoryid is not null");
+        public Criteria andCategoryidIsNotNull() {
+            addCriterion("categoryid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidEqualTo(Long value) {
-            addCriterion("catetoryid =", value, "catetoryid");
+        public Criteria andCategoryidEqualTo(Long value) {
+            addCriterion("categoryid =", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidNotEqualTo(Long value) {
-            addCriterion("catetoryid <>", value, "catetoryid");
+        public Criteria andCategoryidNotEqualTo(Long value) {
+            addCriterion("categoryid <>", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidGreaterThan(Long value) {
-            addCriterion("catetoryid >", value, "catetoryid");
+        public Criteria andCategoryidGreaterThan(Long value) {
+            addCriterion("categoryid >", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidGreaterThanOrEqualTo(Long value) {
-            addCriterion("catetoryid >=", value, "catetoryid");
+        public Criteria andCategoryidGreaterThanOrEqualTo(Long value) {
+            addCriterion("categoryid >=", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidLessThan(Long value) {
-            addCriterion("catetoryid <", value, "catetoryid");
+        public Criteria andCategoryidLessThan(Long value) {
+            addCriterion("categoryid <", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidLessThanOrEqualTo(Long value) {
-            addCriterion("catetoryid <=", value, "catetoryid");
+        public Criteria andCategoryidLessThanOrEqualTo(Long value) {
+            addCriterion("categoryid <=", value, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidIn(List<Long> values) {
-            addCriterion("catetoryid in", values, "catetoryid");
+        public Criteria andCategoryidIn(List<Long> values) {
+            addCriterion("categoryid in", values, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidNotIn(List<Long> values) {
-            addCriterion("catetoryid not in", values, "catetoryid");
+        public Criteria andCategoryidNotIn(List<Long> values) {
+            addCriterion("categoryid not in", values, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidBetween(Long value1, Long value2) {
-            addCriterion("catetoryid between", value1, value2, "catetoryid");
+        public Criteria andCategoryidBetween(Long value1, Long value2) {
+            addCriterion("categoryid between", value1, value2, "categoryid");
             return (Criteria) this;
         }
 
-        public Criteria andCatetoryidNotBetween(Long value1, Long value2) {
-            addCriterion("catetoryid not between", value1, value2, "catetoryid");
+        public Criteria andCategoryidNotBetween(Long value1, Long value2) {
+            addCriterion("categoryid not between", value1, value2, "categoryid");
             return (Criteria) this;
         }
 

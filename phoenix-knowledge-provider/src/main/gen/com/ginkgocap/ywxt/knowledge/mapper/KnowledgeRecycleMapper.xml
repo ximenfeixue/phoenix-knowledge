@@ -3,11 +3,11 @@
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeRecycleMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle" >
     <id column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="CHAR" />
+    <result column="type" property="type" jdbcType="CHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="userid" property="userid" jdbcType="BIGINT" />
-    <result column="catetoryid" property="catetoryid" jdbcType="BIGINT" />
+    <result column="categoryid" property="categoryid" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    knowledge_id, title, type, createtime, userid, catetoryid
+    knowledge_id, title, type, createtime, userid, categoryid
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycleExample" >
     select
@@ -105,10 +105,10 @@
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle" >
     insert into tb_knowledge_recycle (knowledge_id, title, type, 
-      createtime, userid, catetoryid
+      createtime, userid, categoryid
       )
-    values (#{knowledgeId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{createtime,jdbcType=TIMESTAMP}, #{userid,jdbcType=BIGINT}, #{catetoryid,jdbcType=BIGINT}
+    values (#{knowledgeId,jdbcType=BIGINT}, #{title,jdbcType=CHAR}, #{type,jdbcType=CHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{userid,jdbcType=BIGINT}, #{categoryid,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle" >
@@ -129,8 +129,8 @@
       <if test="userid != null" >
         userid,
       </if>
-      <if test="catetoryid != null" >
-        catetoryid,
+      <if test="categoryid != null" >
+        categoryid,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -138,10 +138,10 @@
         #{knowledgeId,jdbcType=BIGINT},
       </if>
       <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
+        #{title,jdbcType=CHAR},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=VARCHAR},
+        #{type,jdbcType=CHAR},
       </if>
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
@@ -149,8 +149,8 @@
       <if test="userid != null" >
         #{userid,jdbcType=BIGINT},
       </if>
-      <if test="catetoryid != null" >
-        #{catetoryid,jdbcType=BIGINT},
+      <if test="categoryid != null" >
+        #{categoryid,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -167,10 +167,10 @@
         knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
       </if>
       <if test="record.title != null" >
-        title = #{record.title,jdbcType=VARCHAR},
+        title = #{record.title,jdbcType=CHAR},
       </if>
       <if test="record.type != null" >
-        type = #{record.type,jdbcType=VARCHAR},
+        type = #{record.type,jdbcType=CHAR},
       </if>
       <if test="record.createtime != null" >
         createtime = #{record.createtime,jdbcType=TIMESTAMP},
@@ -178,8 +178,8 @@
       <if test="record.userid != null" >
         userid = #{record.userid,jdbcType=BIGINT},
       </if>
-      <if test="record.catetoryid != null" >
-        catetoryid = #{record.catetoryid,jdbcType=BIGINT},
+      <if test="record.categoryid != null" >
+        categoryid = #{record.categoryid,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -189,11 +189,11 @@
   <update id="updateByExample" parameterType="map" >
     update tb_knowledge_recycle
     set knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
-      title = #{record.title,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=CHAR},
+      type = #{record.type,jdbcType=CHAR},
       createtime = #{record.createtime,jdbcType=TIMESTAMP},
       userid = #{record.userid,jdbcType=BIGINT},
-      catetoryid = #{record.catetoryid,jdbcType=BIGINT}
+      categoryid = #{record.categoryid,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -202,10 +202,10 @@
     update tb_knowledge_recycle
     <set >
       <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
+        title = #{title,jdbcType=CHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=VARCHAR},
+        type = #{type,jdbcType=CHAR},
       </if>
       <if test="createtime != null" >
         createtime = #{createtime,jdbcType=TIMESTAMP},
@@ -213,19 +213,19 @@
       <if test="userid != null" >
         userid = #{userid,jdbcType=BIGINT},
       </if>
-      <if test="catetoryid != null" >
-        catetoryid = #{catetoryid,jdbcType=BIGINT},
+      <if test="categoryid != null" >
+        categoryid = #{categoryid,jdbcType=BIGINT},
       </if>
     </set>
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle" >
     update tb_knowledge_recycle
-    set title = #{title,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
+    set title = #{title,jdbcType=CHAR},
+      type = #{type,jdbcType=CHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       userid = #{userid,jdbcType=BIGINT},
-      catetoryid = #{catetoryid,jdbcType=BIGINT}
+      categoryid = #{categoryid,jdbcType=BIGINT}
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
 </mapper>
