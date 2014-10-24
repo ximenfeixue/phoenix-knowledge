@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.ginkgocap.ywxt.user.model.User;
+
 /**
  * 知识javaBean （资讯，资产管理,宏观，观点，文章）
  * 
@@ -10,6 +12,8 @@ import java.util.Date;
  * 
  */
 public class Knowledge implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	// id
 	private long id;
@@ -69,19 +73,19 @@ public class Knowledge implements Serializable {
 
 	// 标签
 	private String tags;
-	
+
 	// 栏目
 	private String columnid;
 
 	public String getColumnid() {
-        return columnid;
-    }
+		return columnid;
+	}
 
-    public void setColumnid(String columnid) {
-        this.columnid = columnid;
-    }
+	public void setColumnid(String columnid) {
+		this.columnid = columnid;
+	}
 
-    public String getTags() {
+	public String getTags() {
 		return tags;
 	}
 
@@ -252,4 +256,7 @@ public class Knowledge implements Serializable {
 		this.ish = ish;
 	}
 
+	public <T> Knowledge setValue(KnowledgeNewsVO vo,User user) {
+		return null;
+	}
 }

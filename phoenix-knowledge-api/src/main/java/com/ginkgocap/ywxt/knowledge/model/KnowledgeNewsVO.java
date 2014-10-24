@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 public class KnowledgeNewsVO {
+	private Long kId;
 	private String title;
 	private String content;
 	private String pic;
@@ -14,8 +15,25 @@ public class KnowledgeNewsVO {
 	private Integer submittype;
 	private String shareMessage;
 	private String columnType;
-
+	private String columnPath;
 	
+	
+	public Long getkId() {
+		return kId;
+	}
+
+	public void setkId(Long kId) {
+		this.kId = kId;
+	}
+
+	public String getColumnPath() {
+		return columnPath;
+	}
+
+	public void setColumnPath(String columnPath) {
+		this.columnPath = columnPath;
+	}
+
 	public String getColumnType() {
 		return columnType;
 	}

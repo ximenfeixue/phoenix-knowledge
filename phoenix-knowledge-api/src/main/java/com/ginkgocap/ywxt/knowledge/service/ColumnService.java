@@ -246,6 +246,7 @@ public interface ColumnService {
 	 */
 	public Map<String, Object> delColumn(long columnid, long id);
 	
+
 	public String columnname(long columnid);
 	
 	/**
@@ -253,4 +254,11 @@ public interface ColumnService {
 	 * @param uid 用户id
 	 */
     void checkNogroup(Long uid);
+
+	/**
+	 * 根据栏目ID查询栏目路径
+	 * @param columnid
+	 * @return
+	 */
+	public String getColumnPathById(long columnid);
 }

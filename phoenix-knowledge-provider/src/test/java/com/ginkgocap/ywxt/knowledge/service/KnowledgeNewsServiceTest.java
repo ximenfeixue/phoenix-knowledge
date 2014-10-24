@@ -55,7 +55,7 @@ public class KnowledgeNewsServiceTest extends TestBase {
 		vo.setCatalogueIds("1,2,3,4");
 		vo.setColumnid(2l);
 		vo.setTitle("test测试");
-		vo.setColumnType(""+1);
+		vo.setColumnType(""+7);
 		vo.setContent("test正文");
 		vo.setEssence("1");
 		vo.setPic("/webserver/upload");

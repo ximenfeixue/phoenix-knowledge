@@ -16,10 +16,11 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -31,8 +32,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 
 @Component("knowledgeNewsDAO")
-public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
-		KnowledgeNewsDAO {
+public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
 	@Autowired
 	SqlMapClient sqlMapClient;
@@ -40,34 +40,21 @@ public class KnowledgeNewsDAOImpl extends SqlMapClientDaoSupport implements
 	@Resource
 	private MongoTemplate mongoTemplate;
 
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
-
 	@Override
-	public KnowledgeNews insertknowledge(long kId, KnowledgeNewsVO vo,
-			String pathName, long userId, String username) {
+	public Knowledge insertknowledge(KnowledgeNewsVO vo, User user) {
+		String obj = Constants.getTableName(vo.getColumnType());
 
-		KnowledgeNews knowledge = new KnowledgeNews();
-		knowledge.setId(kId);
-		knowledge.setTitle(vo.getTitle());
-		knowledge.setUid(userId);
-		knowledge.setUname(username);
-		knowledge.setCid(userId);
-		knowledge.setCname(username);
-		knowledge.setCpathid(pathName);
-		knowledge.setContent(vo.getContent());
-		knowledge.setPic(vo.getPic());
-		knowledge.setDesc(vo.getContent().length() > 50 ? vo.getContent()
-				.substring(0, 50) : vo.getContent());
-		knowledge.setEssence(Integer.parseInt(vo.getEssence()));
-		knowledge.setTaskid(vo.getTaskId());
-		knowledge.setTags(vo.getTags());
-		knowledge.setStatus(Constants.Status.checked.v());
-		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
-		knowledge.setCreatetime(new Date());
-		mongoTemplate.save(knowledge, "KnowledgeNews");
+		Knowledge knowledge = null;
+		try {
+			knowledge = (Knowledge) Class.forName(obj).newInstance();
+			Knowledge currK = knowledge.setValue(vo, user);
+			mongoTemplate.save(currK,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return knowledge;
 	}
 

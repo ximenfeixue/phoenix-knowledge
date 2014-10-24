@@ -24,8 +24,10 @@ public class Constants {
 	public static String status = "status";
 
 	public static String errormessage = "errormessage";
-
+	
 	public final static String msg = "msg";
+	/**未分组SORTID值**/
+	public final static String unGroupSortId = "111111111";
 
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
@@ -202,9 +204,10 @@ public class Constants {
 	}
 
 	public enum ErrorMessage {
-		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"),addKnowledgeFail("添加知识失败!"), addCollFail("文章收藏失败!"), addColumnFail(
-				"添加栏目失败!"), alreadyCollection("您已经收藏过该文章!"), addCommentFail(
-				"评论失败!"), artUserNotExsit("文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
+		artNotExsit("亲爱的用户你好：你所查看的文章不存在或被删除!"), addKnowledgeFail("添加知识失败!"), addCollFail(
+				"文章收藏失败!"), addColumnFail("添加栏目失败!"), alreadyCollection(
+				"您已经收藏过该文章!"), addCommentFail("评论失败!"), artUserNotExsit(
+				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
 				"您已申请过添加好友,请耐心等待!"), IsFriends("您与该用户已是好友关系!"), UserNotExisitInSession(
 				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
@@ -328,7 +331,7 @@ public class Constants {
 	}
 
 	public static enum Ids {
-		jinTN(0),platform(1);
+		jinTN(0), platform(-1);
 
 		private int v;
 
@@ -340,4 +343,5 @@ public class Constants {
 			return v;
 		}
 	}
+
 }

@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,13 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
@@ -28,14 +35,18 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
+import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeNewsService")
 public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
+
+	private final static String dule = "1";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeNewsServiceImpl.class);
@@ -70,10 +81,26 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	@Resource
 	private KnowledgeStaticsMapper knowledgeStaticsMapper;
 
+	@Resource
+	private UserCategoryMapper userCategoryMapper;
+
+	@Resource
+	private KnowledgeRecycleService knowledgeRecycleService;
+
+	@Resource
+	private UserCategoryService userCategoryService;
+
 	@Override
 	public void deleteKnowledge(long[] ids) {
 
-		knowledgeNewsDAO.deleteKnowledge(ids);
+		for (int i = 0; i < ids.length; i++) {
+
+			Criteria criteria = Criteria.where("_id").in(ids);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
 	}
 
 	@Override
@@ -82,26 +109,60 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			String desc, String essence, String taskid, String tags,
 			long knowledgeid) {
 
-		knowledgeNewsDAO.updateKnowledge(title, userid, uname, cid, cname,
-				cpath, content, pic, desc, essence, taskid, tags, knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeNews kdnews = mongoTemplate.findOne(query,
+				KnowledgeNews.class, "KnowledgeNews");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			update.set("title", title);
+			update.set("uid", userid);
+			update.set("uname", uname);
+			update.set("cpathid", cpath);
+			update.set("pic", pic);
+			update.set("desc", desc);
+			update.set("content", content);
+			update.set("essence", essence);
+			update.set("modifytime", new Date());
+			update.set("taskid", taskid);
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
 	}
 
 	@Override
 	public KnowledgeNews selectKnowledge(long knowledgeid) {
 
-		return knowledgeNewsDAO.selectKnowledge(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		return mongoTemplate.findOne(query, KnowledgeNews.class,
+				"KnowledgeNews");
 	}
 
 	@Override
 	public List<KnowledgeNews> selectByParam(Long columnid, long source,
 			Long userid, List<Long> ids, int page, int size) {
-		return knowledgeNewsDAO.selectByParam(columnid, source, userid, ids,
-				page, size);
+		Criteria criteria1 = new Criteria().is(userid);
+		Criteria criteria2 = new Criteria();
+		if (ids != null) {
+			criteria2.and("_id").in(ids);
+		}
+		Criteria criteriaall = new Criteria();
+		criteriaall.orOperator(criteria1, criteria2);
+		Query query = new Query(criteriaall);
+		query.sort().on("createtime", Order.DESCENDING);
+		long count = mongoTemplate.count(query, KnowledgeNews.class);
+		PageUtil p = new PageUtil((int) count, page, size);
+		query.limit(p.getPageStartRow() - 1);
+		query.skip(size);
+		return mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
 	}
 
 	@Override
 	public void deleteKnowledgeByid(long knowledgeid) {
-		knowledgeNewsDAO.deleteKnowledgeByid(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, "KnowledgeNews");
 	}
 
 	@Override
@@ -113,37 +174,53 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		String username = user.getUserName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-		String columnPath = columnService.columnname(vo.getColumnid());
+		// TODO 判断用户是否选择栏目
+		String columnPath = columnService.getColumnPathById(vo.getColumnid());
 		// 知识入Mongo
-		KnowledgeNews knowledge = knowledgeNewsDAO.insertknowledge(kId, vo,
-				columnPath, userId, username);
+		vo.setkId(kId);
+		vo.setColumnPath(columnPath);
 
-		if (knowledge == null) {
-			logger.info("创建知识失败,知识ID:{}", kId);
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
-		// 添加知识到权限表
+		knowledgeNewsDAO.insertknowledge(vo, user);
 
-		if (StringUtils.isNotBlank(vo.getSelectedIds())) {
+		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+
+		if (StringUtils.isNotBlank(vo.getSelectedIds())
+				&& !vo.getSelectedIds().equals(dule)) {
 
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
 			List<String> permList = KnowledgeUtil.getPermissionList(vo
 					.getSelectedIds());
 
-			int pV = userPermissionService.insertUserPermission(permList,
-					knowledge.getId(), userId, vo.getShareMessage(),
+			int pV = userPermissionService.insertUserPermission(permList, kId,
+					userId, vo.getShareMessage(),
 					Short.parseShort(vo.getColumnType()), vo.getColumnid());
 			if (pV == 0) {
 				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 			}
 		}
+		long[] cIds = null;
 		// 添加知识到知识目录表
-		long[] cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-				knowledge.getId(), cIds, userId, username, columnPath, vo);
+		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+			UserCategoryExample example = new UserCategoryExample();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+					.createCriteria();
+			criteria.andSortidEqualTo(Constants.unGroupSortId);
+			criteria.andUserIdEqualTo(userId);
+			List<UserCategory> list = userCategoryMapper
+					.selectByExample(example);
+			if (list != null && list.size() == 1) {
+				cIds = new long[1];
+				cIds[0] = list.get(0).getId();
+
+			} else {
+				// 如果没有未分组目录,创建未分组目录.
+				// TODO
+			}
+		} else {
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+		}
+		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(kId,
+				cIds, userId, username, columnPath, vo);
 		if (categoryV == 0) {
 			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", kId, cIds);
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -152,18 +229,18 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			return result;
 		}
 		// 添加知识到栏目知识表
-		int columnV = columnKnowledgeService.insertColumnKnowledge(
-				vo.getColumnid(), knowledge.getId(), userId,
-				Constants.Type.News.v());
-
-		if (columnV == 0) {
-			logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
-					vo.getColumnid());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
+		// int columnV = columnKnowledgeService.insertColumnKnowledge(
+		// vo.getColumnid(), knowledge.getId(), userId,
+		// Constants.Type.News.v());
+		//
+		// if (columnV == 0) {
+		// logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
+		// vo.getColumnid());
+		// result.put(Constants.status, Constants.ResultType.fail.v());
+		// result.put(Constants.errormessage,
+		// Constants.ErrorMessage.addKnowledgeFail.c());
+		// return result;
+		// }
 		// 初始化知识统计信息
 		KnowledgeStatics statics = new KnowledgeStatics();
 		statics.setClickcount(0l);
@@ -189,22 +266,52 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid) {
-		knowledgeNewsDAO.restoreKnowledgeByid(knowledgeid);
 
+		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
+				.selectByKnowledgeId(knowledgeid);
+
+		String obj = Constants.getTableName(knowledgerecycle.getType());
+
+		try {
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+					obj.length());
+
+			Criteria criteria = Criteria.where("_id").is(knowledgeid);
+
+			Query query = new Query(criteria);
+
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, collectionName);
+
+			UserCategory usercategory = userCategoryService
+					.selectByPrimaryKey(knowledgerecycle.getCategoryid());
+
+			if (usercategory != null) {
+				knowledgeCategoryService.updateKnowledgeCategorystatus(
+						knowledgeid, knowledgerecycle.getCategoryid());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void deleteforeverKnowledge(long knowledgeid) {
 
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		KnowledgeNews kdnews = mongoTemplate.findOne(query,
-				KnowledgeNews.class, "KnowledgeNews");
-		if (kdnews != null) {
+		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
+				.selectByKnowledgeId(knowledgeid);
+
+		String obj = Constants.getTableName(knowledgerecycle.getType());
+		
+		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+				obj.length());
+			Criteria criteria = Criteria.where("_id").is(knowledgeid);
+			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("status", Constants.Status.foreverdelete.v());
-			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
-		}
+			mongoTemplate.updateFirst(query, update, collectionName);
 
 	}
 }

@@ -5,12 +5,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDraftDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.util.Page;
 
@@ -19,6 +23,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Resource
 	private KnowledgeDraftMapper knowledgeDraftMapper;
+
+	@Resource
+	private KnowledgeDraftValueMapper knowledgeDraftValueMapper;
 
 	@Autowired
 	private KnowledgeDraftDAO knowledgeDraftDAO;
@@ -54,7 +61,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public int deleteKnowledgeDraft(long[] knowledgeids, long userid) {
 
-		return knowledgeDraftDAO.deleteKnowledgeDraft(knowledgeids, userid);
+		return knowledgeDraftValueMapper.deleteKnowledge(knowledgeids, userid);
 	}
 
 	@Override
@@ -67,14 +74,28 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
 			int pageno, int pagesize) {
 
-		return knowledgeDraftDAO.selectKnowledgeDraft(userid, type, pageno,
-				pagesize);
+		KnowledgeDraftExample example = new KnowledgeDraftExample();
+		Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(type)) {
+			criteria.andDrafttypeEqualTo(type);
+		}
+		criteria.andUseridEqualTo(userid);
+		example.setOrderByClause("createtime desc");
+		example.setLimitStart(pageno);
+		example.setLimitEnd(pagesize);
+		return knowledgeDraftMapper.selectByExample(example);
 	}
 
 	@Override
 	public int countKnowledgeDraft(long userid, String type) {
 
-		return knowledgeDraftDAO.countKnowledgeDraft(userid, type);
+		KnowledgeDraftExample example = new KnowledgeDraftExample();
+		Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(type)) {
+			criteria.andDrafttypeEqualTo(type);
+		}
+		criteria.andUseridEqualTo(userid);
+		return knowledgeDraftMapper.countByExample(example);
 	}
 
 	@Override
