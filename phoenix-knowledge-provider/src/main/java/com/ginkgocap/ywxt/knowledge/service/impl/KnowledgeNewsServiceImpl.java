@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeNewsService")
 public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
@@ -73,7 +76,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	@Override
 	public void deleteKnowledge(long[] ids) {
 
-		knowledgeNewsDAO.deleteKnowledge(ids);
+		for (int i = 0; i < ids.length; i++) {
+
+			Criteria criteria = Criteria.where("_id").in(ids);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
 	}
 
 	@Override
@@ -82,26 +92,60 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			String desc, String essence, String taskid, String tags,
 			long knowledgeid) {
 
-		knowledgeNewsDAO.updateKnowledge(title, userid, uname, cid, cname,
-				cpath, content, pic, desc, essence, taskid, tags, knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeNews kdnews = mongoTemplate.findOne(query,
+				KnowledgeNews.class, "KnowledgeNews");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			update.set("title", title);
+			update.set("uid", userid);
+			update.set("uname", uname);
+			update.set("cpathid", cpath);
+			update.set("pic", pic);
+			update.set("desc", desc);
+			update.set("content", content);
+			update.set("essence", essence);
+			update.set("modifytime", new Date());
+			update.set("taskid", taskid);
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
 	}
 
 	@Override
 	public KnowledgeNews selectKnowledge(long knowledgeid) {
 
-		return knowledgeNewsDAO.selectKnowledge(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		return mongoTemplate.findOne(query, KnowledgeNews.class,
+				"KnowledgeNews");
 	}
 
 	@Override
 	public List<KnowledgeNews> selectByParam(Long columnid, long source,
 			Long userid, List<Long> ids, int page, int size) {
-		return knowledgeNewsDAO.selectByParam(columnid, source, userid, ids,
-				page, size);
+		Criteria criteria1 = new Criteria().is(userid);
+		Criteria criteria2 = new Criteria();
+		if (ids != null) {
+			criteria2.and("_id").in(ids);
+		}
+		Criteria criteriaall = new Criteria();
+		criteriaall.orOperator(criteria1, criteria2);
+		Query query = new Query(criteriaall);
+		query.sort().on("createtime", Order.DESCENDING);
+		long count = mongoTemplate.count(query, KnowledgeNews.class);
+		PageUtil p = new PageUtil((int) count, page, size);
+		query.limit(p.getPageStartRow() - 1);
+		query.skip(size);
+		return mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
 	}
 
 	@Override
 	public void deleteKnowledgeByid(long knowledgeid) {
-		knowledgeNewsDAO.deleteKnowledgeByid(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, "KnowledgeNews");
 	}
 
 	@Override
@@ -189,7 +233,15 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid) {
-		knowledgeNewsDAO.restoreKnowledgeByid(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		KnowledgeNews kdnews = mongoTemplate.findOne(query,
+				KnowledgeNews.class, "KnowledgeNews");
+		if (kdnews != null) {
+			Update update = new Update();
+			update.set("status", Constants.Status.checked.v());
+			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		}
 
 	}
 
