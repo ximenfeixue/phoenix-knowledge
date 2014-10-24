@@ -17,21 +17,27 @@ public interface KnowledgeNewsService {
 
 	/**
 	 * 
-	 * @param kId 知识ID
-	 * @param vo 知识对象
-	 * @param path 栏目路径
-	 * @param id 用户ID
-	 * @param username 用户名
- 	 * @return
+	 * @param kId
+	 *            知识ID
+	 * @param vo
+	 *            知识对象
+	 * @param path
+	 *            栏目路径
+	 * @param id
+	 *            用户ID
+	 * @param username
+	 *            用户名
+	 * @return
 	 */
 
-	Map<String,Object> insertknowledge(KnowledgeNewsVO vo,User user);
+	Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 删除资讯知识
 	 */
 
-	void deleteKnowledge(long[] ids);
+	Map<String, Object> deleteKnowledge(String knowledgeids, long catetoryid,
+			String types, String titles, User user);
 
 	/**
 	 * 编辑知识
@@ -68,14 +74,14 @@ public interface KnowledgeNewsService {
 	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
 	 */
 	void deleteKnowledgeByid(long knowledgeid);
-	
+
 	/**
 	 * 恢复回收站中的知识
+	 * 
 	 * @param knowledgeid
 	 */
 	void restoreKnowledgeByid(long knowledgeid);
-	
+
 	void deleteforeverKnowledge(long knowledgeid);
-	
-	
+
 }
