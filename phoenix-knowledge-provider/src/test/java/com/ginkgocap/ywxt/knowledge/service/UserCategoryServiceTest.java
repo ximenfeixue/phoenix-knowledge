@@ -73,7 +73,6 @@ public class UserCategoryServiceTest extends TestBase {
     }
     
     @Test
-    @Rollback(false)
     public void testcheckNogroup() {
         List<Long>l=new ArrayList<Long>();
         l.add(0l);

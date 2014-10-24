@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
@@ -347,5 +348,11 @@ public class ColumnServiceTest extends TestBase{
     @Test
     public void testCos(){
         kcs.queryFisrtLevelCustomerColumns(10132l);
+    }
+    
+    @Test
+    @Rollback(false)
+    public void checkNogroup(){
+        kcs.checkNogroup(10132l);
     }
 }

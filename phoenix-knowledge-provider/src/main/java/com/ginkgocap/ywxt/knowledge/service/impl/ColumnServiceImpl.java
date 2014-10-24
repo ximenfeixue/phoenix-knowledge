@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
@@ -590,4 +592,26 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		return columnname;
 	}
+
+    @Override
+    public void checkNogroup(Long uid) {
+            List<Column> l = this.selectColumnByParams(uid,"未分组");
+            //初始化未分组
+            if (l.size() == 0) {
+                this.addColumn("未分组", 0, "未分组", 0, "", uid);
+            }
+    }
+
+    private List<Column> selectColumnByParams(Long uid, String columnname) {
+        ColumnExample example = new ColumnExample();
+        Criteria c = example.createCriteria();
+        if (uid > 0) {
+            c.andUserIdEqualTo(uid);
+        }
+        if (columnname != null && !"".equals(columnname)) {
+            c.andColumnnameEqualTo(columnname);
+        }
+        List<Column> ll = columnMapper.selectByExample(example);
+        return ll;
+    }
 }
