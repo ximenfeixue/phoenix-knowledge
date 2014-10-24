@@ -246,5 +246,10 @@ public interface ColumnService {
 	 */
 	public Map<String, Object> delColumn(long columnid, long id);
 	
-	public String columnname(long columnid);
+	/**
+	 * 根据栏目ID查询栏目路径
+	 * @param columnid
+	 * @return
+	 */
+	public String getColumnPathById(long columnid);
 }

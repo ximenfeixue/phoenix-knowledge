@@ -22,7 +22,11 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
@@ -30,7 +34,6 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
@@ -39,6 +42,8 @@ import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeNewsService")
 public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
+
+	private final static String dule = "1";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeNewsServiceImpl.class);
@@ -72,6 +77,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Resource
 	private KnowledgeStaticsMapper knowledgeStaticsMapper;
+
+	@Resource
+	private UserCategoryMapper userCategoryMapper;
 
 	@Override
 	public void deleteKnowledge(long[] ids) {
@@ -157,10 +165,13 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		String username = user.getUserName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-		String columnPath = columnService.columnname(vo.getColumnid());
+		// TODO 判断用户是否选择栏目
+		String columnPath = columnService.getColumnPathById(vo.getColumnid());
 		// 知识入Mongo
-		KnowledgeNews knowledge = knowledgeNewsDAO.insertknowledge(kId, vo,
-				columnPath, userId, username);
+		vo.setkId(kId);
+		vo.setColumnPath(columnPath);
+		
+		Knowledge knowledge = knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (knowledge == null) {
 			logger.info("创建知识失败,知识ID:{}", kId);
@@ -169,9 +180,10 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
 		}
-		// 添加知识到权限表
+		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 
-		if (StringUtils.isNotBlank(vo.getSelectedIds())) {
+		if (StringUtils.isNotBlank(vo.getSelectedIds())
+				&& !vo.getSelectedIds().equals(dule)) {
 
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
 			List<String> permList = KnowledgeUtil.getPermissionList(vo
@@ -184,8 +196,27 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 			}
 		}
+		long[] cIds = null;
 		// 添加知识到知识目录表
-		long[] cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+			UserCategoryExample example = new UserCategoryExample();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+					.createCriteria();
+			criteria.andSortidEqualTo(Constants.unGroupSortId);
+			criteria.andUserIdEqualTo(userId);
+			List<UserCategory> list = userCategoryMapper
+					.selectByExample(example);
+			if (list != null && list.size() == 1) {
+				cIds = new long[1];
+				cIds[0] = list.get(0).getId();
+
+			} else {
+				// 如果没有未分组目录,创建未分组目录.
+				// TODO
+			}
+		} else {
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+		}
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 				knowledge.getId(), cIds, userId, username, columnPath, vo);
 		if (categoryV == 0) {
@@ -196,18 +227,18 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			return result;
 		}
 		// 添加知识到栏目知识表
-		int columnV = columnKnowledgeService.insertColumnKnowledge(
-				vo.getColumnid(), knowledge.getId(), userId,
-				Constants.Type.News.v());
-
-		if (columnV == 0) {
-			logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
-					vo.getColumnid());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
+		// int columnV = columnKnowledgeService.insertColumnKnowledge(
+		// vo.getColumnid(), knowledge.getId(), userId,
+		// Constants.Type.News.v());
+		//
+		// if (columnV == 0) {
+		// logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
+		// vo.getColumnid());
+		// result.put(Constants.status, Constants.ResultType.fail.v());
+		// result.put(Constants.errormessage,
+		// Constants.ErrorMessage.addKnowledgeFail.c());
+		// return result;
+		// }
 		// 初始化知识统计信息
 		KnowledgeStatics statics = new KnowledgeStatics();
 		statics.setClickcount(0l);

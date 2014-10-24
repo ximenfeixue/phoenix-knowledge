@@ -443,7 +443,7 @@ public class ColumnServiceImpl implements ColumnService {
 		column.setColumnLevelPath(currentColumnLevelPath);
 
 		if (type != 0) {
-			//column.setType((byte) type);
+			// column.setType((byte) type);
 		}
 		long v = columnMapperManual.insertAndGetId(column);
 		if (v == 0) {
@@ -466,7 +466,7 @@ public class ColumnServiceImpl implements ColumnService {
 			columnList.add(ct);
 		}
 		columnTagMapperManual.batchInsertColumnTag(columnList);
-		
+
 		columnVisibleService.saveCid(userid, currentColumnId);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -557,37 +557,35 @@ public class ColumnServiceImpl implements ColumnService {
 		columnTagMapper.deleteByExample(example);
 
 		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
-		
+
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
 	}
 
 	@Override
-	public String columnname(long columnid) {
-
+	public String getColumnPathById(long columnid) {
 		Column column = null;
-		String columnname = "";
+		
 		if (columnid != 0) {
-		 column = columnMapper.selectByPrimaryKey(columnid);
-			columnname = "/" + column.getColumnname();
-			if (column.getParentId() != 0) {
-				column = columnMapper.selectByPrimaryKey(column.getParentId());
-				columnname = "/" + column.getColumnname() + columnname;
+			column = columnMapper.selectByPrimaryKey(columnid);
+			if (column != null) {
+				if (StringUtils.isNotBlank(column.getPathName())) {
+					return column.getPathName();
+				}
+			} else {
+				return null;
 			}
-			if (column.getParentId() != 0) {
-				column =columnMapper.selectByPrimaryKey(column.getParentId());
-				columnname = "/" + column.getColumnname() + columnname;
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < 5; i++) {
+				if (column == null) {
+					break;
+				}
+				sb.append("/").append(column.getColumnname());
+				column = columnMapper.selectByPrimaryKey(columnid);
 			}
-			if (column.getParentId() != 0) {
-				column = columnMapper.selectByPrimaryKey(column.getParentId());
-				columnname = "/" + column.getColumnname() + columnname;
-			}
-			if (column.getParentId() != 0) {
-				column =columnMapper.selectByPrimaryKey(column.getParentId());
-				columnname = "/" + column.getColumnname() + columnname;
-			}
+			return sb.toString();
 		}
-		return columnname;
+		return null;
 	}
 }

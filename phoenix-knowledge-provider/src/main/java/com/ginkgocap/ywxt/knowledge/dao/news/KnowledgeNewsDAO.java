@@ -5,6 +5,7 @@ import java.util.List;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * 内容的DAO接口
@@ -24,8 +25,7 @@ public interface KnowledgeNewsDAO {
 	 * @return
 	 */
 
-	KnowledgeNews insertknowledge(long kId,KnowledgeNewsVO vo, String columnPath,
-			long userId, String username);
+	Knowledge insertknowledge(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 删除知识
