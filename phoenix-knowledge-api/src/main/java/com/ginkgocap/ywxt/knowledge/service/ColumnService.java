@@ -246,6 +246,7 @@ public interface ColumnService {
 	 */
 	public Map<String, Object> delColumn(long columnid, long id);
 	
+
 	/**
 	 * 初始化未分组
 	 * @param uid 用户id

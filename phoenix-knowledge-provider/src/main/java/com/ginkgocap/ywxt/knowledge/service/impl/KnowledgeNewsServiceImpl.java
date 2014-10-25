@@ -91,16 +91,48 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	private UserCategoryService userCategoryService;
 
 	@Override
-	public void deleteKnowledge(long[] ids) {
+	public Map<String, Object> deleteKnowledge(String knowledgeids,
+			long catetoryid, String types, String titles, User user) {
 
-		for (int i = 0; i < ids.length; i++) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
+				.substring(0, knowledgeids.length() - 1).split(","));
+		String[] type = types.split(",");
+		String[] title = titles.split(",");
+		for (int i = 0; i < knowledgeid.length; i++) {
 
-			Criteria criteria = Criteria.where("_id").in(ids);
+			String obj = Constants.getTableName(type[i]);
+
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+					obj.length());
+
+			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
 			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("status", Constants.Status.recycle.v());
-			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+			mongoTemplate.updateFirst(query, update, collectionName);
+			
+			//知识存入回收站
+			int RecycleCount = knowledgeRecycleService
+					.insertKnowledgeRecycle(knowledgeid[i], title[i], type[i],
+							user.getId(), catetoryid);
+			if (RecycleCount == 0) {
+				logger.error("删除知识到回收站失败，知识ID:{}", knowledgeid);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				return result;
+			}
+			// 删除知识目录中的信息
+			int categoryCount = knowledgeCategoryService
+					.updateKnowledgeCategory(knowledgeid[i], catetoryid);
+			if (categoryCount == 0) {
+				logger.error("修改知识目录失败，知识ID:{}", knowledgeid);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+			}
 		}
+		result.put(Constants.status, Constants.ResultType.success.v());
+		logger.info("删除知识成功,知识ID:{}", knowledgeid);
+
+		return result;
 	}
 
 	@Override
@@ -304,14 +336,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 				.selectByKnowledgeId(knowledgeid);
 
 		String obj = Constants.getTableName(knowledgerecycle.getType());
-		
+
 		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
 				obj.length());
-			Criteria criteria = Criteria.where("_id").is(knowledgeid);
-			Query query = new Query(criteria);
-			Update update = new Update();
-			update.set("status", Constants.Status.foreverdelete.v());
-			mongoTemplate.updateFirst(query, update, collectionName);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		Update update = new Update();
+		update.set("status", Constants.Status.foreverdelete.v());
+		mongoTemplate.updateFirst(query, update, collectionName);
 
 	}
 }
