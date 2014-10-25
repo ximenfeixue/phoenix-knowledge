@@ -562,8 +562,7 @@ public class KnowledgeCollectionExample {
 
         public Criteria andCollectionCommentNotBetween(String value1, String value2) {
             addCriterion("collection_comment not between", value1, value2, "collectionComment");
-<<<<<<< Upstream, based on origin/develop
-=======
+
             return (Criteria) this;
         }
 
@@ -624,7 +623,6 @@ public class KnowledgeCollectionExample {
 
         public Criteria andUseridNotBetween(Long value1, Long value2) {
             addCriterion("userId not between", value1, value2, "userid");
->>>>>>> d60e253 收藏CRUD
             return (Criteria) this;
         }
 
