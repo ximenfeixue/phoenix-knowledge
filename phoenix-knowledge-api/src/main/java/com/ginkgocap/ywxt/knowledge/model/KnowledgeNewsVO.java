@@ -9,7 +9,7 @@ public class KnowledgeNewsVO {
 	private String cpath;
 	private String tags;
 	private String catalogueIds;
-	private Long columnid;
+	private long columnid;
 	private String essence;
 	private String selectedIds;
 	private Integer submittype;
@@ -131,12 +131,13 @@ public class KnowledgeNewsVO {
 		this.submittype = submittype;
 	}
 
-	public Long getColumnid() {
+	public long getColumnid() {
 		return columnid;
 	}
 
-	public void setColumnid(Long columnid) {
+	public void setColumnid(long columnid) {
 		this.columnid = columnid;
 	}
+
 
 }

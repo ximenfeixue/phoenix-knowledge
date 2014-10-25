@@ -26,6 +26,13 @@ public interface KnowledgeNewsDAO {
 	 */
 
 	Knowledge insertknowledge(KnowledgeNewsVO vo, User user);
+	
+	/**
+	 * 草稿箱存值
+	 * @return
+	 */
+
+	Knowledge insertknowledgeDraft(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 删除知识

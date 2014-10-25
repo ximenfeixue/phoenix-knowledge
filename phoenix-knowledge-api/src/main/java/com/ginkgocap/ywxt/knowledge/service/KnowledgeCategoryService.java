@@ -38,6 +38,8 @@ public interface KnowledgeCategoryService {
 	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
 			long categoryid);
 
+	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid);
+
 	int updateKnowledgeCategorystatus(long knowledgeid, long categoryid);
 
 	int insertCategory(long knowledgeid, long categoryid, long userid,

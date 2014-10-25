@@ -1,5 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.dao.reader.impl;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,10 +11,17 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
+import com.ginkgocap.ywxt.knowledge.util.TypeUtils;
 
 @Service
 public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
@@ -38,7 +48,6 @@ public class KnowledgeReaderDAOImpl implements KnowledgeReaderDAO {
 		
 		return knowledge;
 	}
-
 
 	@Override
 	public int addStaticsCount(long kid, int commentCount, int shareCount,

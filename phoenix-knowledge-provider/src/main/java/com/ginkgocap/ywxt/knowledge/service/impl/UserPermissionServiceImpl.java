@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
@@ -32,6 +34,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private UserPermissionDAO userPermissionDAO;
 	@Autowired
 	private UserPermissionValueMapper userPermissionValueMapper;
+	@Autowired
+	private UserPermissionMapper userPermissionMapper;
 	@Resource
 	private MongoTemplate mongoTemplate;
 	@Resource
@@ -49,7 +53,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Override
 	public int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid,String shareMessage, short column_type,
+			long send_uid, String shareMessage, short column_type,
 			long column_id) {
 
 		List<UserPermission> list = new ArrayList<UserPermission>();
@@ -226,6 +230,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		returnMap.put("list", lt);
 
 		return returnMap;
+	}
+
+	@Override
+	public List<UserPermission> selectUserPermission(long knowledgeid,
+			long userid) {
+
+		UserPermissionExample example = new UserPermissionExample();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andSendUserIdEqualTo(userid);
+		return userPermissionMapper.selectByExample(example);
 	}
 
 }

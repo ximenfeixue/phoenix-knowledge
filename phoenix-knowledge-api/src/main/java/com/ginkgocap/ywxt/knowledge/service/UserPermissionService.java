@@ -1,10 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 
 /**
  * 知识栏目关系
@@ -73,4 +72,6 @@ public interface UserPermissionService {
 	public Map<String,Object> getMyShare(Long userId,int start,int pageSize);
 	
 	public Map<String,Object> getShareme(Long userId,int start,int pageSize);
+	
+	List<UserPermission> selectUserPermission(long knowledgeid,long userid);
 }

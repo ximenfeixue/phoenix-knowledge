@@ -59,6 +59,24 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 	}
 
 	@Override
+	public Knowledge insertknowledgeDraft(KnowledgeNewsVO vo, User user) {
+		String obj = Constants.getTableName(vo.getColumnType());
+
+		Knowledge knowledge = null;
+		try {
+			knowledge = (Knowledge) Class.forName(obj).newInstance();
+			Knowledge currK = knowledge.setDraftValue(vo, user);
+			mongoTemplate.save(currK,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return knowledge;
+	}
+
+	@Override
 	public void deleteKnowledge(long[] ids) {
 
 		for (int i = 0; i < ids.length; i++) {

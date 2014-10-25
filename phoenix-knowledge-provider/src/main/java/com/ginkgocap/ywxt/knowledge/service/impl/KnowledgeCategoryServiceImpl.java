@@ -181,5 +181,12 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 		return cIds;
 	}
+	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid) {
+
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		return knowledgeCategoryMapper.selectByExample(example);
+	}
 
 }

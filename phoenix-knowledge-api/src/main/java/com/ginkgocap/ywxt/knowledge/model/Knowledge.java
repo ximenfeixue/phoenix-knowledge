@@ -259,4 +259,8 @@ public class Knowledge implements Serializable {
 	public <T> Knowledge setValue(KnowledgeNewsVO vo,User user) {
 		return null;
 	}
+	
+	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo,User user) {
+		return null;
+	}
 }
