@@ -245,123 +245,63 @@ public class KnowledgeCollectionExample {
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdIsNull() {
-            addCriterion("column_id is null");
+        public Criteria andCreatetimeIsNull() {
+            addCriterion("createtime is null");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdIsNotNull() {
-            addCriterion("column_id is not null");
+        public Criteria andCreatetimeIsNotNull() {
+            addCriterion("createtime is not null");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdEqualTo(Long value) {
-            addCriterion("column_id =", value, "columnId");
+        public Criteria andCreatetimeEqualTo(Date value) {
+            addCriterion("createtime =", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotEqualTo(Long value) {
-            addCriterion("column_id <>", value, "columnId");
+        public Criteria andCreatetimeNotEqualTo(Date value) {
+            addCriterion("createtime <>", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdGreaterThan(Long value) {
-            addCriterion("column_id >", value, "columnId");
+        public Criteria andCreatetimeGreaterThan(Date value) {
+            addCriterion("createtime >", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("column_id >=", value, "columnId");
+        public Criteria andCreatetimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("createtime >=", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdLessThan(Long value) {
-            addCriterion("column_id <", value, "columnId");
+        public Criteria andCreatetimeLessThan(Date value) {
+            addCriterion("createtime <", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdLessThanOrEqualTo(Long value) {
-            addCriterion("column_id <=", value, "columnId");
+        public Criteria andCreatetimeLessThanOrEqualTo(Date value) {
+            addCriterion("createtime <=", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdIn(List<Long> values) {
-            addCriterion("column_id in", values, "columnId");
+        public Criteria andCreatetimeIn(List<Date> values) {
+            addCriterion("createtime in", values, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotIn(List<Long> values) {
-            addCriterion("column_id not in", values, "columnId");
+        public Criteria andCreatetimeNotIn(List<Date> values) {
+            addCriterion("createtime not in", values, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdBetween(Long value1, Long value2) {
-            addCriterion("column_id between", value1, value2, "columnId");
+        public Criteria andCreatetimeBetween(Date value1, Date value2) {
+            addCriterion("createtime between", value1, value2, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andColumnIdNotBetween(Long value1, Long value2) {
-            addCriterion("column_id not between", value1, value2, "columnId");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampIsNull() {
-            addCriterion("timestamp is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampIsNotNull() {
-            addCriterion("timestamp is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampEqualTo(Date value) {
-            addCriterion("timestamp =", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampNotEqualTo(Date value) {
-            addCriterion("timestamp <>", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampGreaterThan(Date value) {
-            addCriterion("timestamp >", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampGreaterThanOrEqualTo(Date value) {
-            addCriterion("timestamp >=", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampLessThan(Date value) {
-            addCriterion("timestamp <", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampLessThanOrEqualTo(Date value) {
-            addCriterion("timestamp <=", value, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampIn(List<Date> values) {
-            addCriterion("timestamp in", values, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampNotIn(List<Date> values) {
-            addCriterion("timestamp not in", values, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampBetween(Date value1, Date value2) {
-            addCriterion("timestamp between", value1, value2, "timestamp");
-            return (Criteria) this;
-        }
-
-        public Criteria andTimestampNotBetween(Date value1, Date value2) {
-            addCriterion("timestamp not between", value1, value2, "timestamp");
+        public Criteria andCreatetimeNotBetween(Date value1, Date value2) {
+            addCriterion("createtime not between", value1, value2, "createtime");
             return (Criteria) this;
         }
 
@@ -375,62 +315,52 @@ public class KnowledgeCollectionExample {
             return (Criteria) this;
         }
 
-        public Criteria andSourceEqualTo(String value) {
+        public Criteria andSourceEqualTo(Integer value) {
             addCriterion("source =", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotEqualTo(String value) {
+        public Criteria andSourceNotEqualTo(Integer value) {
             addCriterion("source <>", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceGreaterThan(String value) {
+        public Criteria andSourceGreaterThan(Integer value) {
             addCriterion("source >", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceGreaterThanOrEqualTo(String value) {
+        public Criteria andSourceGreaterThanOrEqualTo(Integer value) {
             addCriterion("source >=", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceLessThan(String value) {
+        public Criteria andSourceLessThan(Integer value) {
             addCriterion("source <", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceLessThanOrEqualTo(String value) {
+        public Criteria andSourceLessThanOrEqualTo(Integer value) {
             addCriterion("source <=", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceLike(String value) {
-            addCriterion("source like", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceNotLike(String value) {
-            addCriterion("source not like", value, "source");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceIn(List<String> values) {
+        public Criteria andSourceIn(List<Integer> values) {
             addCriterion("source in", values, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotIn(List<String> values) {
+        public Criteria andSourceNotIn(List<Integer> values) {
             addCriterion("source not in", values, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceBetween(String value1, String value2) {
+        public Criteria andSourceBetween(Integer value1, Integer value2) {
             addCriterion("source between", value1, value2, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotBetween(String value1, String value2) {
+        public Criteria andSourceNotBetween(Integer value1, Integer value2) {
             addCriterion("source not between", value1, value2, "source");
             return (Criteria) this;
         }
@@ -632,11 +562,6 @@ public class KnowledgeCollectionExample {
 
         public Criteria andCollectionCommentNotBetween(String value1, String value2) {
             addCriterion("collection_comment not between", value1, value2, "collectionComment");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceLikeInsensitive(String value) {
-            addCriterion("upper(source) like", value.toUpperCase(), "source");
             return (Criteria) this;
         }
 

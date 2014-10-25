@@ -8,11 +8,9 @@ public class KnowledgeCollection implements Serializable {
 
     private Long knowledgeId;
 
-    private Long columnId;
+    private Date createtime;
 
-    private Date timestamp;
-
-    private String source;
+    private Integer source;
 
     private Long categoryId;
 
@@ -38,27 +36,19 @@ public class KnowledgeCollection implements Serializable {
         this.knowledgeId = knowledgeId;
     }
 
-    public Long getColumnId() {
-        return columnId;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setColumnId(Long columnId) {
-        this.columnId = columnId;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getSource() {
+    public Integer getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(Integer source) {
         this.source = source;
     }
 

@@ -34,8 +34,13 @@ public class KnowledgeCollectionServiceImpl implements
 	public Map<String, Object> insertKnowledgeCollection(long kid,
 			long columnid, String type, String source, long categoryid) {
 		Map<String, Object> result = new HashMap<String, Object>();
-
-
+		int collectSource = 0;//knowledge's six sort of source
+		try{
+		    collectSource =Integer.parseInt(source);
+		}catch(NumberFormatException e){
+		    e.printStackTrace();
+		}
+		
 		if (knowledgeCollectionDAO.isExsitInCollection(kid, categoryid)) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
@@ -45,9 +50,8 @@ public class KnowledgeCollectionServiceImpl implements
 
 		KnowledgeCollection coll = new KnowledgeCollection();
 		coll.setKnowledgeId(kid);
-		coll.setColumnId(columnid);
-		coll.setSource(source);
-		coll.setTimestamp(new Date());
+		coll.setSource(collectSource);
+		coll.setCreatetime(new Date());
 		coll.setCategoryId(categoryid);
 		int v = knowledgeCollectionDAO.insertKnowledgeCollection(coll);
 		if (v == 0) {

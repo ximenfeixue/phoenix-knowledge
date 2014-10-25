@@ -612,4 +612,5 @@ public class ColumnServiceImpl implements ColumnService {
         List<Column> ll = columnMapper.selectByExample(example);
         return ll;
     }
+
 }

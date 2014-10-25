@@ -4,9 +4,8 @@
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
-    <result column="column_id" property="columnId" jdbcType="BIGINT" />
-    <result column="timestamp" property="timestamp" jdbcType="TIMESTAMP" />
-    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="source" property="source" jdbcType="INTEGER" />
     <result column="category_id" property="categoryId" jdbcType="BIGINT" />
     <result column="collection_tags" property="collectionTags" jdbcType="VARCHAR" />
     <result column="collection_comment" property="collectionComment" jdbcType="VARCHAR" />
@@ -70,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, knowledge_id, column_id, timestamp, source, category_id, collection_tags, collection_comment
+    id, knowledge_id, createtime, source, category_id, collection_tags, collection_comment
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample" >
     select
@@ -106,12 +105,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
-    insert into tb_knowledge_collection (id, knowledge_id, column_id, 
-      timestamp, source, category_id, 
-      collection_tags, collection_comment)
-    values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, 
-      #{timestamp,jdbcType=TIMESTAMP}, #{source,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, 
-      #{collectionTags,jdbcType=VARCHAR}, #{collectionComment,jdbcType=VARCHAR})
+    insert into tb_knowledge_collection (id, knowledge_id, createtime, 
+      source, category_id, collection_tags, 
+      collection_comment)
+    values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{source,jdbcType=INTEGER}, #{categoryId,jdbcType=BIGINT}, #{collectionTags,jdbcType=VARCHAR}, 
+      #{collectionComment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     insert into tb_knowledge_collection
@@ -122,11 +121,8 @@
       <if test="knowledgeId != null" >
         knowledge_id,
       </if>
-      <if test="columnId != null" >
-        column_id,
-      </if>
-      <if test="timestamp != null" >
-        timestamp,
+      <if test="createtime != null" >
+        createtime,
       </if>
       <if test="source != null" >
         source,
@@ -148,14 +144,11 @@
       <if test="knowledgeId != null" >
         #{knowledgeId,jdbcType=BIGINT},
       </if>
-      <if test="columnId != null" >
-        #{columnId,jdbcType=BIGINT},
-      </if>
-      <if test="timestamp != null" >
-        #{timestamp,jdbcType=TIMESTAMP},
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
       </if>
       <if test="source != null" >
-        #{source,jdbcType=VARCHAR},
+        #{source,jdbcType=INTEGER},
       </if>
       <if test="categoryId != null" >
         #{categoryId,jdbcType=BIGINT},
@@ -183,14 +176,11 @@
       <if test="record.knowledgeId != null" >
         knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
       </if>
-      <if test="record.columnId != null" >
-        column_id = #{record.columnId,jdbcType=BIGINT},
-      </if>
-      <if test="record.timestamp != null" >
-        timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.source != null" >
-        source = #{record.source,jdbcType=VARCHAR},
+        source = #{record.source,jdbcType=INTEGER},
       </if>
       <if test="record.categoryId != null" >
         category_id = #{record.categoryId,jdbcType=BIGINT},
@@ -210,9 +200,8 @@
     update tb_knowledge_collection
     set id = #{record.id,jdbcType=BIGINT},
       knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
-      column_id = #{record.columnId,jdbcType=BIGINT},
-      timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
-      source = #{record.source,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      source = #{record.source,jdbcType=INTEGER},
       category_id = #{record.categoryId,jdbcType=BIGINT},
       collection_tags = #{record.collectionTags,jdbcType=VARCHAR},
       collection_comment = #{record.collectionComment,jdbcType=VARCHAR}
@@ -226,14 +215,11 @@
       <if test="knowledgeId != null" >
         knowledge_id = #{knowledgeId,jdbcType=BIGINT},
       </if>
-      <if test="columnId != null" >
-        column_id = #{columnId,jdbcType=BIGINT},
-      </if>
-      <if test="timestamp != null" >
-        timestamp = #{timestamp,jdbcType=TIMESTAMP},
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
       </if>
       <if test="source != null" >
-        source = #{source,jdbcType=VARCHAR},
+        source = #{source,jdbcType=INTEGER},
       </if>
       <if test="categoryId != null" >
         category_id = #{categoryId,jdbcType=BIGINT},
@@ -250,9 +236,8 @@
   <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     update tb_knowledge_collection
     set knowledge_id = #{knowledgeId,jdbcType=BIGINT},
-      column_id = #{columnId,jdbcType=BIGINT},
-      timestamp = #{timestamp,jdbcType=TIMESTAMP},
-      source = #{source,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      source = #{source,jdbcType=INTEGER},
       category_id = #{categoryId,jdbcType=BIGINT},
       collection_tags = #{collectionTags,jdbcType=VARCHAR},
       collection_comment = #{collectionComment,jdbcType=VARCHAR}
