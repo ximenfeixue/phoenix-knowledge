@@ -75,7 +75,19 @@ public interface KnowledgeHomeService {
      */
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size);
     
+    /**
+     * 出现栏目
+     * @param cid 栏目id
+     * @param userId 用户id
+     * @return
+     */
     public List<Node> queryColumns(long cid, long userId) ;
     
-    public int beRelation(long cid, long userId) ;
+    /**
+     * 查询知识和用户的关系
+     * @param kid 知识id
+     * @param userId userid
+     * @return
+     */
+    public int beRelation(long kid, long userId) ;
 }

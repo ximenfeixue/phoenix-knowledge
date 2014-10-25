@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -65,9 +68,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     private ColumnKnowledgeMapper columnKnowledgeMapper;
     @Autowired
     private UserPermissionValueMapper userPermissionValueMapper;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<KnowledgeStatics> getRankList(Long columnid) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.getRankList:{}",columnid);
         Column c = columnMapper.selectByPrimaryKey(columnid);
         if (c != null) {
             String clp = c.getColumnLevelPath().substring(0, 9);
@@ -84,6 +89,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @Override
     public List<Column> getTypeList(Long userId, Long column) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.getTypeList:{}",column);
         return columnValueMapper.selectByParam(column, Constants.gtnid, userId);
     }
 
@@ -92,6 +98,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Map<String,Object> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",state);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",columnid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",userid);
         Map<String, Object> model = new HashMap<String, Object>();
         String[] names = t.getClass().getName().split("\\.");
         int length = names.length;
@@ -160,6 +169,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectIndexByParam:{},",ty);
         String[] names = ty.obj().split("\\.");
         int length = names.length;
         Criteria criteria =Criteria.where("status").is(4);
@@ -195,6 +205,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @Override
     public KnowledgeStatics getPl(long id) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.getPl:{}",id);
         return knowledgeStaticsMapper.selectByPrimaryKey(id);
     }
 
@@ -202,6 +213,12 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @Override
     public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid,
             Long userid,String keyword, int page, int size) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",tid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",lid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",state);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",sortid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",userid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},",keyword);
         int start = (page - 1) * size;
         int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid, state, sortid, Constants.gtnid, tid, lid,keyword);
         List kcl = knowledgeCategoryValueMapper.selectKnowledgeIds(userid, state, sortid,
@@ -215,6 +232,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @Override
     public List<Node> queryColumns(long cid, long userId) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}",cid);
         Column c = columnMapper.selectByPrimaryKey(cid);
         List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
         if (cl != null && cl.size() > 0) {
@@ -225,6 +243,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
     @Override
     public int beRelation(long cid, long userId) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",cid);
         UserPermissionExample example = new UserPermissionExample();
         example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
         int count = userPermissionMapper.countByExample(example);
