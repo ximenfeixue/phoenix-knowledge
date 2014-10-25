@@ -562,7 +562,6 @@ public class KnowledgeCollectionExample {
 
         public Criteria andCollectionCommentNotBetween(String value1, String value2) {
             addCriterion("collection_comment not between", value1, value2, "collectionComment");
-
             return (Criteria) this;
         }
 

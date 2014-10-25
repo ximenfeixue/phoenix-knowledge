@@ -70,12 +70,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-<<<<<<< Upstream, based on origin/develop
-    id, knowledge_id, createtime, source, category_id, collection_tags, collection_comment
-=======
     id, knowledge_id, createtime, source, category_id, collection_tags, collection_comment, 
     userId
->>>>>>> d60e253 收藏CRUD
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample" >
     select
@@ -113,17 +109,10 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     insert into tb_knowledge_collection (id, knowledge_id, createtime, 
       source, category_id, collection_tags, 
-<<<<<<< Upstream, based on origin/develop
-      collection_comment)
-    values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{source,jdbcType=INTEGER}, #{categoryId,jdbcType=BIGINT}, #{collectionTags,jdbcType=VARCHAR}, 
-      #{collectionComment,jdbcType=VARCHAR})
-=======
       collection_comment, userId)
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, 
       #{source,jdbcType=INTEGER}, #{categoryId,jdbcType=BIGINT}, #{collectionTags,jdbcType=VARCHAR}, 
       #{collectionComment,jdbcType=VARCHAR}, #{userid,jdbcType=BIGINT})
->>>>>>> d60e253 收藏CRUD
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection" >
     insert into tb_knowledge_collection
