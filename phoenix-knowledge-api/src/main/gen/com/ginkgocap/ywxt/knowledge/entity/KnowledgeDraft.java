@@ -10,6 +10,8 @@ public class KnowledgeDraft implements Serializable {
 
     private String drafttype;
 
+    private String type;
+
     private Date createtime;
 
     private Long userid;
@@ -38,6 +40,14 @@ public class KnowledgeDraft implements Serializable {
 
     public void setDrafttype(String drafttype) {
         this.drafttype = drafttype;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Date getCreatetime() {

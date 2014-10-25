@@ -21,18 +21,19 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
@@ -90,6 +91,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	@Resource
 	private UserCategoryService userCategoryService;
 
+	@Resource
+	private KnowledgeDraftService knowledgeDraftService;
+	
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
 			long catetoryid, String types, String titles, User user) {
@@ -192,9 +196,17 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public void deleteKnowledgeByid(long knowledgeid) {
+		
+		KnowledgeDraft knowledgeDraft = knowledgeDraftService
+				.selectByKnowledgeId(knowledgeid);
+		
+		String obj = Constants.getTableName(knowledgeDraft.getType());
+
+		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+				obj.length());
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
-		mongoTemplate.remove(query, "KnowledgeNews");
+		mongoTemplate.remove(query, collectionName);
 	}
 
 	@Override

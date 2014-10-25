@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -15,8 +17,10 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.util.Page;
+import com.ginkgocap.ywxt.user.model.User;
 
 @Service("knowledgeDraftService")
 public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
@@ -31,16 +35,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	private KnowledgeDraftDAO knowledgeDraftDAO;
 
 	@Override
-	public int insertKnowledgeDraft(long knowledgeid, String draftname,
-			String type, long userid) {
-
-		KnowledgeDraft draft = new KnowledgeDraft();
-		draft.setKnowledgeId(knowledgeid);
-		draft.setDraftname(draftname);
-		draft.setDrafttype(type);
-		draft.setCreatetime(new Date());
-		draft.setUserid(userid);
-		return knowledgeDraftMapper.insertSelective(draft);
+	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
+			User user) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// KnowledgeDraft draft = new KnowledgeDraft();
+		// draft.setKnowledgeId(knowledgeid);
+		// draft.setDraftname(draftname);
+		// draft.setDrafttype(type);
+		// draft.setCreatetime(new Date());
+		// draft.setUserid(userid);
+		return map;
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public int deleteKnowledgeDraft(long knowledgeid) {
-		
+
 		return 0;
 	}
 

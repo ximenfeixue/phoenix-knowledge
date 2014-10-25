@@ -1,9 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.util.Page;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * 知识相关的关系表
@@ -19,8 +22,7 @@ public interface KnowledgeDraftService {
 	 * @author caihe
 	 * @return
 	 */
-	int insertKnowledgeDraft(long knowledgeid, String draftname, String type,
-			long userid);
+	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 查询草稿箱列表
