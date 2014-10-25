@@ -18,6 +18,8 @@ public class KnowledgeCollection implements Serializable {
 
     private String collectionComment;
 
+    private Long userid;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -74,5 +76,13 @@ public class KnowledgeCollection implements Serializable {
 
     public void setCollectionComment(String collectionComment) {
         this.collectionComment = collectionComment;
+    }
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 }

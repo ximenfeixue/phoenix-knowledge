@@ -57,26 +57,6 @@ public interface KnowledgeReaderService {
 	Map<String, Object> getKnowledgeContent(long kid, String type);
 
 	/**
-	 * 添加收藏
-	 * 
-	 * @param kid
-	 *            知识id
-	 * @param userid
-	 *            登陆用户id
-	 * @param type
-	 *            类型(十一种)
-	 * @param source
-	 *            来源(可以传在阅读器初始化的关系数据)
-	 * @param columnid
-	 *            栏目id
-	 * @param categoryid
-	 *            目录id
-	 * @return
-	 */
-	Map<String, Object> addCollection(long kid, long userid, String type,
-			String source, long columnid, long categoryid);
-
-	/**
 	 * 获取知识用户ID
 	 * @param kid 知识ID
 	 * @return

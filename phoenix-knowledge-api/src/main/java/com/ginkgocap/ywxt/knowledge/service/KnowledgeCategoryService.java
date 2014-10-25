@@ -14,7 +14,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
  */
 public interface KnowledgeCategoryService {
 
-
 	/**
 	 * 刪除知识，把知识目录中间表删除
 	 * 
@@ -48,15 +47,35 @@ public interface KnowledgeCategoryService {
 
 	/**
 	 * 添加知识到知识目录关系表
-	 * @param id 知识ID
-	 * @param cIds 目录ID集合
-	 * @param userId 用户ID
-	 * @param username 用户名
-	 * @param columnPath 栏目路径
-	 * @param vo 知识对象
+	 * 
+	 * @param id
+	 *            知识ID
+	 * @param cIds
+	 *            目录ID集合
+	 * @param userId
+	 *            用户ID
+	 * @param username
+	 *            用户名
+	 * @param columnPath
+	 *            栏目路径
+	 * @param vo
+	 *            知识对象
 	 * @return
 	 */
 	int insertKnowledgeRCategory(long id, long[] cIds, long userId,
 			String username, String columnPath, KnowledgeNewsVO vo);
 
+	/**
+	 * 获取格式化后的目录
+	 * 
+	 * @param ids
+	 *            目录id集合(1,2,3,4)
+	 * @param type
+	 *            类型(0 正常目录 1 收藏夹目录)
+	 * @param userId
+	 *            用户ID
+	 * @return
+	 * @author haiyan
+	 */
+	long[] getCurrentCategoryArray(String ids, int type, long userId);
 }

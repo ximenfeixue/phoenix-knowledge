@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -24,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 
 @Service("knowledgeCategoryService")
 public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
@@ -47,7 +50,6 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
-
 
 	@Override
 	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
@@ -157,6 +159,27 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		}
 
 		return returnV;
+	}
+
+	@Override
+	public long[] getCurrentCategoryArray(String ids, int type, long userId) {
+		long[] cIds = null;
+		if (StringUtils.isBlank(ids)) {
+			UserCategoryExample example = new UserCategoryExample();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+					.createCriteria();
+			criteria.andSortidEqualTo(Constants.unGroupSortId);
+			criteria.andUserIdEqualTo(userId);
+			criteria.andCategoryTypeEqualTo((short) type);
+			List<UserCategory> list = userCategoryMapper
+					.selectByExample(example);
+			cIds = new long[1];
+			cIds[0] = list.get(0).getId();
+		} else {
+			cIds = KnowledgeUtil.formatString(ids);
+		}
+
+		return cIds;
 	}
 
 }

@@ -21,12 +21,12 @@ public class Constants {
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
-	public static String status = "status";
+	public static String status = "result";
 
-	public static String errormessage = "errormessage";
-	
+	public static String errormessage = "msg";
+
 	public final static String msg = "msg";
-	/**未分组SORTID值**/
+	/** 未分组SORTID值 **/
 	public final static String unGroupSortId = "111111111";
 
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
@@ -183,8 +183,9 @@ public class Constants {
 	}
 
 	public enum Relation {
-		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), none(4, "无关系"), platform(
-				5, "全平台");
+		// 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
+		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), none(4, "全平台"), platform(
+				5, "组织");
 
 		private int v;
 		private String c;
@@ -336,6 +337,21 @@ public class Constants {
 		private int v;
 
 		private Ids(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
+	}
+
+	public static enum CategoryType {
+		// 0 正常目录 1 收藏夹
+		common(0), collection(1);
+
+		private int v;
+
+		private CategoryType(int v) {
 			this.v = v;
 		}
 

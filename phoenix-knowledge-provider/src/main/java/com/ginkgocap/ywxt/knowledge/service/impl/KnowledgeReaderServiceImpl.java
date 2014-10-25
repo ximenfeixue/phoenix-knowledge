@@ -144,23 +144,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		return result;
 	}
 
-	@Override
-	public Map<String, Object> addCollection(long kid, long userid,
-			String type, String source, long columnid, long categoryid) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (knowledgeReaderDAO.addCollection(kid, userid, type, source,
-				columnid, categoryid) == 0) {
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addCollFail.c());
-		} else {
-			// 存储收藏数
-			knowledgeReaderDAO.addStaticsCount(kid, 0, 0,
-					Constants.StaticsValue.collCount.v(), 0);
-			result.put(Constants.status, Constants.ResultType.success.v());
-		}
-		return result;
-	}
 
 	@Override
 	public long getKUIdByKId(long kid, String type) {

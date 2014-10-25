@@ -3,9 +3,10 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseVO;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollectionVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * 知识收藏
@@ -14,17 +15,6 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
  * 
  */
 public interface KnowledgeCollectionService {
-
-	/**
-	 * 添加收藏
-	 * @param kid 知识Id
-	 * @param columnid 栏目id
-	 * @param type 知识类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）
-	 * @param source 知识来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
-	 * @param categoryid 目录id
-	 * @return
-	 */
-	Map<String, Object> insertKnowledgeCollection(long kid ,long columnid ,String type,String source,long categoryid);
 
 	/**
 	 * 将知识从收藏夹中删除
@@ -45,35 +35,108 @@ public interface KnowledgeCollectionService {
 	List<Long> selectKnowledgeCollection(long column_id, String knowledgeType,
 			long category_id, int pageno, int pagesize);
 
-	   /**
-     * 返回收藏夹下知识的分页信息
-     * @param source 6种来源
-     * @param knowledgeType 11种类型
-     * @param collectionUserId 当前知识收藏的用户
-     * @param pageno 当前页
-     * @param pagesize 每页大小
-     * @return
-     */
-    Map<String,Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId,String sortId, String keyword,int pageno, int pagesize);
-    
-    /**
-     * 分页按条件查询收藏的知识
-     * @param source 6种来源
-     * @param knowledgeType 11种类型
-     * @param collectionUserId 当前知识收藏的用户
-     * @param pageno 当前页
-     * @param pagesize 每页大小
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-    List selectKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize);
+	/**
+	 * 返回收藏夹下知识的分页信息
+	 * 
+	 * @param source
+	 *            6种来源
+	 * @param knowledgeType
+	 *            11种类型
+	 * @param collectionUserId
+	 *            当前知识收藏的用户
+	 * @param pageno
+	 *            当前页
+	 * @param pagesize
+	 *            每页大小
+	 * @return
+	 */
+	Map<String, Object> queryKnowledgeAll(String source, String knowledgeType,
+			long collectionUserId, String sortId, String keyword, int pageno,
+			int pagesize);
 
-    /**
-     * 统计所有收藏的知识
-     * @param source 6种来源
-     * @param knowledgeType 11种类型
-     * @param collectionUserId 当前知识收藏的用户
-     * @return
-     */
-    long countKnowledgeAll(String source, String knowledgeType, long collectionUserId);
+	/**
+	 * 分页按条件查询收藏的知识
+	 * 
+	 * @param source
+	 *            6种来源
+	 * @param knowledgeType
+	 *            11种类型
+	 * @param collectionUserId
+	 *            当前知识收藏的用户
+	 * @param pageno
+	 *            当前页
+	 * @param pagesize
+	 *            每页大小
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	List selectKnowledgeAll(String source, String knowledgeType,
+			long collectionUserId, int pageno, int pagesize);
+
+	/**
+	 * 统计所有收藏的知识
+	 * 
+	 * @param source
+	 *            6种来源
+	 * @param knowledgeType
+	 *            11种类型
+	 * @param collectionUserId
+	 *            当前知识收藏的用户
+	 * @return
+	 */
+	long countKnowledgeAll(String source, String knowledgeType,
+			long collectionUserId);
+
+	/**
+	 * 添加收藏
+	 * 
+	 * @param vo
+	 *            收藏对象
+	 * @param user
+	 *            用户对象
+	 * @return
+	 * @author haiyan
+	 */
+	Map<String, Object> insertKnowledgeCollection(KnowledgeCollectionVO vo,
+			User user);
+
+	/**
+	 * 是否已收藏
+	 * 
+	 * @param userId 用户Id
+	 * @param kId 知识Id
+	 * @return
+	 * @author haiyan
+	 */
+	boolean isCollection(long userId, long kId);
+
+	/**
+	 * 删除收藏知识
+	 * 
+	 * @param userId 用户Id
+	 * @param kId 知识Id
+	 * @return
+	 * @author haiyan
+	 */
+	boolean delCollection(long userId, long kId);
+
+	/**
+	 * 添加基础信息
+	 * 
+	 * @param vo 
+	 * @param user 知识Id
+	 * @return
+	 * @author haiyan
+	 */
+	boolean addBaseInfo(KnowledgeBaseVO vo, User user);
+	
+	/**
+	 * 查询已收藏目录
+	 * @param userId 用户ID
+	 * @param kId 知识ID
+	 * @return
+	 * @author haiyan
+	 */
+	List<KnowledgeCollection> queryCollCategoryIds(long userId,long kId);
+	
 }
