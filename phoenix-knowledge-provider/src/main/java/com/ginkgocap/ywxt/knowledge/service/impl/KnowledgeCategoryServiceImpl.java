@@ -181,6 +181,8 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 		return cIds;
 	}
+	
+	@Override
 	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid) {
 
 		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
