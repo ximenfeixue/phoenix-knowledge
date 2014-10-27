@@ -20,6 +20,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
+import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
@@ -57,22 +58,22 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Integer> authorAndLoginUserRelation(long loginuserid,
-			long kuid) {
+			long kUid) {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		if (loginuserid == -1) {
-			result.put("relation", Constants.Relation.none.v());
-		} else if (kuid == 0) {
+			result.put("relation", Constants.Relation.platform.v());
+		} else if (kUid == 0) {
 			result.put("relation", Constants.Relation.jinTN.v());
-		} else if (loginuserid == kuid) {
+		} else if (loginuserid == kUid) {
 			result.put("relation", Constants.Relation.self.v());
-		} else if (friendsRelationService.isExistFriends(loginuserid, kuid)) {
+		} else {
 			result.put("relation", Constants.Relation.friends.v());
 		}
 		return result;
 	}
 
 	@Override
-	public Map<String, Boolean> showHeadTag(long kid, String type) {
+	public Map<String, Boolean> showHeadMenu(long kid, String type) {
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		boolean download = false;
 		boolean sourceFile = false;
@@ -105,59 +106,101 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	}
 
 	@Override
-	public Map<String, Object> getKnowledgeContent(long kid, String type) {
+	public Map<String, Object> getKnowledgeContent(Knowledge knowledge,
+			String type) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String content = null;
-		try {
-			Knowledge knowledge = knowledgeReaderDAO.findHtmlContentFromMongo(
-					kid, type);
 
-			if (knowledge == null) {
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.artNotExsit.c());
-				return result;
-			}
-			result.put("title", knowledge.getTitle());
-			result.put(
-					"content",
-					StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
-							.getContent() : knowledge.getHcontent());
-
-			result.put("createtime", DateUtil
-					.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
-			result.put("author", knowledge.getUname());
-			result.put("source", knowledge.getSource());
-
-			result.put("tags", knowledge.getTags());
-			result.put("type", type);
-
-			result.put(Constants.status, Constants.ResultType.success.v());
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			logger.error("未能根据类型:{}创建对象", type);
+		if (knowledge == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artNotExsit.c());
+			return result;
 		}
+
+		result.put("title", knowledge.getTitle());
+		result.put(
+				"content",
+				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
+						.getContent() : knowledge.getHcontent());
+
+		result.put("createtime",
+				DateUtil.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
+		result.put("author", knowledge.getUname());
+		result.put("source", knowledge.getSource());
+
+		List<String> tagsList = KnowledgeUtil.parseTags(knowledge.getTags());
+		result.put("tagsList", tagsList);
+		result.put("type", type);
+
+		result.put(Constants.status, Constants.ResultType.success.v());
+
 		return result;
 	}
 
-
 	@Override
-	public long getKUIdByKId(long kid, String type) {
-		long kuid = -1;
+	public Knowledge getKnowledgeById(long kid, String type) {
+		Knowledge knowledge = null;
 		try {
-			String obj = Constants.getTableName(type + "");
-			Knowledge knowledge = (Knowledge) mongoTemplate.findById(kid,
+			String obj = Constants.getTableName(type);
+			knowledge = (Knowledge) mongoTemplate.findById(kid,
 					Class.forName(obj),
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
-			kuid = knowledge.getUid();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return kuid;
+		return knowledge;
+	}
+
+	@Override
+	public Map<String, Object> getReaderHeadMsg(long kid, long kUId,
+			long userId, String type) {
+		logger.info("进入查询阅读器头部内容请求,知识ID:{},当前登陆用户:{}", kid,
+				userId == -1 ? "未登陆" : userId);
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// 获取统计信息
+		KnowledgeStatics statics = getKnowledgeStatusCount(kid);
+		if (statics != null) {
+			result.put("commentCount", statics.getCommentcount());
+			result.put("clickCount", statics.getClickcount());
+			result.put("collCount", statics.getCollectioncount());
+			result.put("shareCount", statics.getSharecount());
+		}
+		// 存储登陆用户与知识作者关系
+		result.putAll(authorAndLoginUserRelation(userId, kUId));
+		// 存储阅读器功能菜单
+		result.putAll(showHeadMenu(kid, type));
+		// 查询用户基本信息并存储用户名、头像、用户ID
+		User kUser = userService.selectByPrimaryKey(kUId);
+		result.put("uname", kUser.getName());
+		result.put("pic", kUser.getPicPath());
+		result.put("uid", kUser.getId());
+
+		return result;
+	}
+
+	public Map<String, Object> getKnowledgeDetail(long kid, User user,
+			String type) {
+		logger.info("进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}", kid,
+				user != null ? user.getId() : "未登陆");
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 查询知识信息
+		Knowledge knowledge = getKnowledgeById(kid, type);
+		if (knowledge == null) {
+			logger.error("没有找到知识,知识ID:{},知识类型:{}", kid, type);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artNotExsit.c());
+			return result;
+		}
+		// 存储阅读器头部信息
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user.getId(),
+				type));
+		//存储正文内容
+		result.putAll(getKnowledgeContent(knowledge, type));
+		result.put("kid", kid);
+		
+		return result;
 	}
 }

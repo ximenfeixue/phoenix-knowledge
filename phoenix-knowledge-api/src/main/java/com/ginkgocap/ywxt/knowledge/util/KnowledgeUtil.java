@@ -57,4 +57,16 @@ public class KnowledgeUtil {
 
 		return perList;
 	}
+	
+	public static List<String> parseTags(String tags) {
+		List<String> tagList = null;
+		if (StringUtils.isNotBlank(tags)) {
+			tagList = new ArrayList<String>();
+			String[] tag = tags.split(",");
+			for (String t : tag) {
+				tagList.add(t);
+			}
+		}
+		return tagList;
+	}
 }

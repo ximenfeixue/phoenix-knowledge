@@ -55,16 +55,29 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		comment.setPic(user.getPicPath());
 
 		int v = knowledgeCommentMapper.insertSelective(comment);
+
 		if (v == 0) {
 
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addCommentFail.c());
 		} else {
+			// 修改子评论数
+			if (pid != 0) {
+
+				KnowledgeComment pComment = knowledgeCommentMapper
+						.selectByPrimaryKey(pid);
+				long commentCount = pComment.getCount();
+				KnowledgeComment upComment = new KnowledgeComment();
+				upComment.setCount(commentCount + 1);
+				knowledgeCommentMapper.updateByPrimaryKeySelective(upComment);
+			}
+			// 修改统计信息表值
 			knowledgeStaticsMapperManual.updateStatics(kid,
 					Constants.StaticsValue.commentCount.v(), 0, 0, 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 		}
+
 		return result;
 	}
 
@@ -113,7 +126,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 					Constants.ErrorMessage.delCommentFail.c());
 			return result;
 		}
-		
+
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;

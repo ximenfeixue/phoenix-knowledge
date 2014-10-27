@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.user.model.User;
 
 public interface KnowledgeReaderService {
@@ -42,7 +43,7 @@ public interface KnowledgeReaderService {
 	 *            文章类型(十一种类型之一)
 	 * @return
 	 */
-	Map<String, Boolean> showHeadTag(long kid, String type);
+	Map<String, Boolean> showHeadMenu(long kid, String type);
 
 	/**
 	 * 返回文章内容，包括title content
@@ -54,14 +55,44 @@ public interface KnowledgeReaderService {
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	Map<String, Object> getKnowledgeContent(long kid, String type);
+	Map<String, Object> getKnowledgeContent(Knowledge knowledge, String type);
 
 	/**
 	 * 获取知识用户ID
-	 * @param kid 知识ID
+	 * 
+	 * @param kid
+	 *            知识ID
 	 * @return
 	 */
-	long getKUIdByKId(long kid,String type);
-	
-	
+	Knowledge getKnowledgeById(long kid, String type);
+
+	/**
+	 * 获取知识阅读器头部信息
+	 * 
+	 * @param kid
+	 *            知识Id
+	 * @param kUId
+	 *            知识作者ID
+	 * @param userId
+	 *            登陆用户ID
+	 * @param type
+	 *            知识类型
+	 * @return
+	 */
+	Map<String, Object> getReaderHeadMsg(long kid, long kUId, long userId,
+			String type);
+
+	/**
+	 * 获取知识详细信息
+	 * 
+	 * @param kid
+	 *            知识Id
+	 * @param sessUser
+	 *            登陆用户对象
+	 * @param type
+	 *            知识类型
+	 * @return
+	 */
+	Map<String, Object> getKnowledgeDetail(long kid, User sessUser, String type);
+
 }
