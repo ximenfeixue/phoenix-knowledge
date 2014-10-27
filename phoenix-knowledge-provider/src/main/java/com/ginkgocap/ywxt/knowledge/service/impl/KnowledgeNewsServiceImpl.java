@@ -28,6 +28,7 @@ import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
@@ -93,7 +94,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Resource
 	private KnowledgeDraftService knowledgeDraftService;
-	
+
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
 			long catetoryid, String types, String titles, User user) {
@@ -115,8 +116,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			Update update = new Update();
 			update.set("status", Constants.Status.recycle.v());
 			mongoTemplate.updateFirst(query, update, collectionName);
-			
-			//知识存入回收站
+
+			// 知识存入回收站
 			int RecycleCount = knowledgeRecycleService
 					.insertKnowledgeRecycle(knowledgeid[i], title[i], type[i],
 							user.getId(), catetoryid);
@@ -167,12 +168,23 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	}
 
 	@Override
-	public KnowledgeNews selectKnowledge(long knowledgeid) {
+	public Knowledge selectKnowledge(long knowledgeid, String type) {
 
+		String obj = Constants.getTableName(type);
+
+		Knowledge knowledge = null;
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
-		return mongoTemplate.findOne(query, KnowledgeNews.class,
-				"KnowledgeNews");
+		try {
+			knowledge = (Knowledge) Class.forName(obj).newInstance();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return mongoTemplate.findOne(query, Knowledge.class,
+				obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
 	}
 
 	@Override
@@ -196,10 +208,10 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public void deleteKnowledgeByid(long knowledgeid) {
-		
+
 		KnowledgeDraft knowledgeDraft = knowledgeDraftService
 				.selectByKnowledgeId(knowledgeid);
-		
+
 		String obj = Constants.getTableName(knowledgeDraft.getType());
 
 		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,

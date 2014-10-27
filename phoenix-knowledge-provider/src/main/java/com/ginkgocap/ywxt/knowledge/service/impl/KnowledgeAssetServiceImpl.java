@@ -54,7 +54,10 @@ public class KnowledgeAssetServiceImpl implements KnowledgeAssetService {
 	@Override
 	public KnowledgeAsset selectKnowledge(long knowledgeid) {
 
-		return knowledgeAssetDAO.selectKnowledge(knowledgeid);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		return mongoTemplate.findOne(query, KnowledgeAsset.class,
+				"KnowledgeAsset");
 	}
 
 	@Override

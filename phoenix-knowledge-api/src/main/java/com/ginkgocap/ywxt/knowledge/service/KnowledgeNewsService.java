@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.model.User;
@@ -52,7 +53,7 @@ public interface KnowledgeNewsService {
 	 * 查询知识
 	 */
 
-	KnowledgeNews selectKnowledge(long knowledgeid);
+	Knowledge selectKnowledge(long knowledgeid,String type);
 
 	/**
 	 * 根据条件查询资讯
