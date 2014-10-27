@@ -262,4 +262,21 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         }
         return 2;//好友可见
     }
+
+    @Override
+    public List<KnowledgeStatics> getRankHotList(Long column) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.getRankHotList:{}",column);
+        Column c = columnMapper.selectByPrimaryKey(column);
+        if (c != null) {
+            String clp = c.getColumnLevelPath().substring(0, 9);
+            byte type = (byte) Integer.parseInt(clp);
+            KnowledgeStaticsExample ce = new KnowledgeStaticsExample();
+            ce.createCriteria().andSourceEqualTo((short) 0).andTypeEqualTo((short) type);
+            ce.setLimitStart(0);
+            ce.setLimitEnd(10);
+            ce.setOrderByClause("(shareCount * 0.1 + commentcount * 0.2 + collectioncount * 0.3 + clickcount * 0.4)/4 DESC");
+            return knowledgeStaticsMapper.selectByExample(ce);
+        }
+        return null;
+    }
 }

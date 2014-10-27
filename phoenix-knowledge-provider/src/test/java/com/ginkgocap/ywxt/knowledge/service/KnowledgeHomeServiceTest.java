@@ -1,8 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 
@@ -23,12 +26,13 @@ public class KnowledgeHomeServiceTest extends TestBase {
         knowledgeHomeService.selectAllByParam(new KnowledgeNews(), state, columnid, userid, 1, 10);
 
     }
-//
-//    //获取排行列表
-//    @Test
-//    public void testGetRankList() {
-//        knowledgeHomeService.getRankList(0, 0);
-//    }
+
+    //获取排行列表
+    @Test
+    public void testGetRankList() {
+        List<KnowledgeStatics> l=knowledgeHomeService.getRankHotList(1l);
+        System.out.println(1);
+    }
 //
 //    //获取分类列表
 //    @Test

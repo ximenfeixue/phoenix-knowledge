@@ -58,6 +58,12 @@ public interface KnowledgeHomeService {
      * @return
      */
     public List<KnowledgeStatics> getRankList(Long  colunm);
+    /**
+     * 查询热点排行
+     * @param column 栏目id
+     * @return
+     */
+    public List<KnowledgeStatics> getRankHotList(Long  colunm);
     
     /**
      * 根据知识id获取评论等个数
