@@ -28,6 +28,16 @@ public class Constants {
 	public final static String msg = "msg";
 	/** 未分组SORTID值 **/
 	public final static String unGroupSortId = "111111111";
+	/** 未分组名称 **/
+	public final static String unGroupSortName = "未分组";
+	/** 独乐 **/
+	public final static String dule = "dule";
+	/** 大乐 **/
+	public final static String dales = "dales";
+	/** 中乐 **/
+	public final static String zhongles = "zhongles";
+	/** 小乐 **/
+	public final static String xiaoles = "xiaoles";
 
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
@@ -214,7 +224,7 @@ public class Constants {
 				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
 				"评论不存在!"), delCommentNotPermission("无权删除该评论!"), delCommentFail(
 				"删除评论失败!"), notFindColumn("栏目不存在，请刷新页面后重试!"), delColumnNotPermission(
-				"无权删除该栏目!"), delFail("删除失败!");
+				"无权删除该栏目!"), delFail("删除失败!"),paramNotValid("用户权限参数不合法!");
 
 		private String c;
 
@@ -358,6 +368,39 @@ public class Constants {
 		public int v() {
 			return v;
 		}
+	}
+
+	public static enum PermissionType {
+		dule(1, "dule"), dales(2, "dales"), zhongles(3, "zhongles"), xiaoles(4,
+				"xiaoles");
+		private int v;
+
+		private String c;
+
+		private PermissionType(int v, String c) {
+			this.v = v;
+			this.c = c;
+		}
+
+		public int v() {
+			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
+
+	public static Integer getPermissionValue(String c) {
+		if (StringUtils.isBlank(c))
+			return null;
+		PermissionType[] type = PermissionType.values();
+		for (PermissionType t : type) {
+			if (StringUtils.equalsIgnoreCase(t.c, c)) {
+				return t.v;
+			}
+		}
+		return null;
 	}
 
 }

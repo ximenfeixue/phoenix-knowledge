@@ -15,13 +15,12 @@ public interface UserPermissionService {
 
 	/**
 	 * 添加知识权限信息
-	 * @param receive_uid 接收者ID
+	 * @param permList 接收者ID集合
 	 * @param knowledgeid 知识ID
 	 * @param send_uid 发起者ID
-	 * @param type　知识类型
-	 * @param mento　分享留言
-	 * @param column_type　栏目类型
-	 * @param column_id　栏目ID
+	 * @param shareMessage
+	 * @param column_type 知识类型
+	 * @param column_id 栏目ID
 	 * @return
 	 */
 	int insertUserPermission(List<String> permList, long knowledgeid,

@@ -259,4 +259,18 @@ public interface ColumnService {
 	 * @return
 	 */
 	public String getColumnPathById(long columnid);
+
+	/**
+	 * 根据sortId,userId查询columnId
+	 * @param userId 用户Id　
+	 * @return
+	 */
+	public Column getColumnIdBySortId(String sortId, long id);
+
+	/**
+	 * 根据userId查询未分组columnId
+	 * @param userId 用户ID
+	 * @return
+	 */
+	Column getUnGroupColumnIdBySortId(long userId);
 }

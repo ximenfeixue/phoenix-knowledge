@@ -568,7 +568,7 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public String getColumnPathById(long columnid) {
 		Column column = null;
-		
+
 		if (columnid != 0) {
 			column = columnMapper.selectByPrimaryKey(columnid);
 			if (column != null) {
@@ -591,26 +591,45 @@ public class ColumnServiceImpl implements ColumnService {
 		return null;
 	}
 
-    @Override
-    public void checkNogroup(Long uid) {
-            List<Column> l = this.selectColumnByParams(uid,"未分组");
-            //初始化未分组
-            if (l.size() == 0) {
-                this.addColumn("未分组", 0, "未分组", 0, "", uid);
-            }
-    }
+	@Override
+	public void checkNogroup(Long uid) {
+		List<Column> l = this.selectColumnByParams(uid, "未分组");
+		// 初始化未分组
+		if (l.size() == 0) {
+			this.addColumn("未分组", 0, "未分组", 0, "", uid);
+		}
+	}
 
-    private List<Column> selectColumnByParams(Long uid, String columnname) {
-        ColumnExample example = new ColumnExample();
-        Criteria c = example.createCriteria();
-        if (uid > 0) {
-            c.andUserIdEqualTo(uid);
-        }
-        if (columnname != null && !"".equals(columnname)) {
-            c.andColumnnameEqualTo(columnname);
-        }
-        List<Column> ll = columnMapper.selectByExample(example);
-        return ll;
-    }
+	private List<Column> selectColumnByParams(Long uid, String columnname) {
+		ColumnExample example = new ColumnExample();
+		Criteria c = example.createCriteria();
+		if (uid > 0) {
+			c.andUserIdEqualTo(uid);
+		}
+		if (columnname != null && !"".equals(columnname)) {
+			c.andColumnnameEqualTo(columnname);
+		}
+		List<Column> ll = columnMapper.selectByExample(example);
+		return ll;
+	}
+
+	@Override
+	public Column getColumnIdBySortId(String sortId, long userId) {
+		ColumnExample example = new ColumnExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andColumnLevelPathEqualTo(sortId);
+		criteria.andUserIdEqualTo(userId);
+
+		List<Column> list = columnMapper.selectByExample(example);
+		if (list == null)
+			return null;
+		return list.get(0);
+	}
+
+	@Override
+	public Column getUnGroupColumnIdBySortId(long userId) {
+		
+		return getColumnIdBySortId(Constants.unGroupSortId, userId);
+	}
 
 }

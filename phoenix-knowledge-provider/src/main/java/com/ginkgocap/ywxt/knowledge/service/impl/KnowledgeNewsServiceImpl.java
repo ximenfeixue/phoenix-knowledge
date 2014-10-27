@@ -1,9 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
@@ -231,7 +235,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		// TODO 判断用户是否选择栏目
-		String columnPath = columnService.getColumnPathById(vo.getColumnid());
+		String columnPath = null;
+		Column column = null;
+		if (vo.getColumnid() != 0) {
+			columnPath = columnService.getColumnPathById(vo.getColumnid());
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			columnPath = Constants.unGroupSortName;
+		}
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
@@ -242,16 +253,31 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
-
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			List<String> permList = KnowledgeUtil.getPermissionList(vo
+			Boolean dule = KnowledgeUtil.checkKnowledgePermission(vo
 					.getSelectedIds());
-
-			int pV = userPermissionService.insertUserPermission(permList, kId,
-					userId, vo.getShareMessage(),
-					Short.parseShort(vo.getColumnType()), vo.getColumnid());
-			if (pV == 0) {
-				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+			if (dule == null) {
+				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
+				return result;
+			}
+			if (!dule) {
+				// 格式化权限信息
+				List<String> permList = KnowledgeUtil.getPermissionList(vo
+						.getSelectedIds());
+				int pV = userPermissionService.insertUserPermission(
+						permList,
+						kId,
+						userId,
+						vo.getShareMessage(),
+						Short.parseShort(vo.getColumnType()),
+						vo.getColumnid() != 0 ? vo.getColumnid() : column
+								.getId());
+				if (pV == 0) {
+					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+				}
 			}
 		}
 		long[] cIds = null;
@@ -262,15 +288,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					.createCriteria();
 			criteria.andSortidEqualTo(Constants.unGroupSortId);
 			criteria.andUserIdEqualTo(userId);
+			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+					.v());
 			List<UserCategory> list = userCategoryMapper
 					.selectByExample(example);
 			if (list != null && list.size() == 1) {
 				cIds = new long[1];
 				cIds[0] = list.get(0).getId();
 
-			} else {
-				// 如果没有未分组目录,创建未分组目录.
-				// TODO
 			}
 		} else {
 			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
