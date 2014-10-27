@@ -91,6 +91,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 		knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 
+		knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(), vo.getColumnType(),
+				vo.getColumnType(), userId);
+
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
@@ -159,6 +162,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
 		}
+
 		result.put(Constants.status, Constants.ResultType.success.v());
 		logger.info("添加草稿箱成功,知识ID:{}", kId);
 		return result;

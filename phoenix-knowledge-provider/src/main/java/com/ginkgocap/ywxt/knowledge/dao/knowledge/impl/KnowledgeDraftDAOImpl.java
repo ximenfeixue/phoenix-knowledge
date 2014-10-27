@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledge.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -65,6 +66,20 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 	public int deleteKnowledgeDraft(long knowledgeid) {
 
 		return knowledgeDraftMapper.deleteByPrimaryKey(knowledgeid);
+	}
+
+	@Override
+	public int insertKnowledge(long knowledgeid, String draftname,
+			String drafttype, String type, long userid) {
+
+		KnowledgeDraft knowledgedraft = new KnowledgeDraft();
+		knowledgedraft.setKnowledgeId(knowledgeid);
+		knowledgedraft.setDrafttype(drafttype);
+		knowledgedraft.setDraftname(draftname);
+		knowledgedraft.setUserid(userid);
+		knowledgedraft.setType(type);
+		knowledgedraft.setCreatetime(new Date());
+		return knowledgeDraftMapper.insert(knowledgedraft);
 	}
 
 }

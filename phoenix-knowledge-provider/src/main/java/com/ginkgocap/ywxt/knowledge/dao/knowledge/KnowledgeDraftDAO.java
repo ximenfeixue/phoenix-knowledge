@@ -22,4 +22,7 @@ public interface KnowledgeDraftDAO {
 	 */
 
 	int deleteKnowledgeDraft(long knowledgeid);
+	
+	int insertKnowledge(long knowledgeid, String draftname, String drafttype,
+			String type, long userid);
 }

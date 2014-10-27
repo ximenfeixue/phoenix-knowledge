@@ -23,6 +23,7 @@ public interface KnowledgeDraftService {
 	 * @return
 	 */
 	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user);
+	
 
 	/**
 	 * 查询草稿箱列表
