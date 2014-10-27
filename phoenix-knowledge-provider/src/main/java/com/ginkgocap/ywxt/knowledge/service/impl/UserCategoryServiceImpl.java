@@ -48,20 +48,28 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
     @Override
     public String delete(long id) {
+        
+        return deleteNew(id);
         //此分类下子分类的个数
-        long childCount = userCategoryValueMapper.selectChildCountById(id);
-        //此分类下文章的个数
-        long articleCount =knowledgeCategoryService.countByKnowledgeCategoryId(id);
-        //判断若删除此分类，1.此分类下没有子分类  2.此分类下没有发布的文章
-        if (childCount <= 0){
-            if (articleCount <= 0){
-                userCategoryMapper.deleteByPrimaryKey(id);
-            }else{
-                return "articleNotNull";
-            }
-        }else{
-            return "childNotNull";
-        }
+//        long childCount = userCategoryValueMapper.selectChildCountById(id);
+//        //此分类下文章的个数
+//        long articleCount =knowledgeCategoryService.countByKnowledgeCategoryId(id);
+//        //判断若删除此分类，1.此分类下没有子分类  2.此分类下没有发布的文章
+//        if (childCount <= 0){
+//            if (articleCount <= 0){
+//                userCategoryMapper.deleteByPrimaryKey(id);
+//            }else{
+//                return "articleNotNull";
+//            }
+//        }else{
+//            return "childNotNull";
+//        }
+//        return "success";
+    }
+    
+    public String deleteNew(long id) {
+        UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
+        long count = userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(), u.getSortid());
         return "success";
     }
 

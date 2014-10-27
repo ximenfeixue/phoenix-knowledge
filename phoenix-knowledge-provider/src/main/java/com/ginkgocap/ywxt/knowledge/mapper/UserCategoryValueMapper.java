@@ -17,6 +17,13 @@ public interface UserCategoryValueMapper {
      * @return
      */
     long selectChildCountById(long id);
+    
+    /**
+     * 删除目录
+     * @param id
+     * @return
+     */
+    long del(@Param("userId")long userId,@Param("categoryType")long categoryType,@Param("sortid")String sortid);
     /**
      * 通过父类的sortId得到某用户下某及的分类最大的sortId
      * @param uid

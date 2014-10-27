@@ -59,7 +59,7 @@ public class UserCategoryServiceTest extends TestBase {
 
     @Test
     public void testDel() {
-        userCategoryService.delete(41);
+        userCategoryService.delete(114);
     }
 
     @Test

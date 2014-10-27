@@ -31,4 +31,12 @@
 		select count(id) from tb_user_category where parent_id = #{id}
 	</select>
 	
+	<delete id="del">
+		DELETE
+		FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+	</delete>
+	
 </mapper>
