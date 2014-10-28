@@ -296,7 +296,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,vo.getCatalogueIds().length()));
 		}
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(kId,
 				cIds, userId, username, columnPath, vo);
