@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper">
+
+	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
+		SELECT DISTINCT b.*,
+		CASE
+		WHEN b.user_id=#{userId} THEN 'me'
+		ELSE 'other'
+		END source
+		FROM tb_knowledge_base b WHERE 1=1 
+		<if test="tag !=null and tag != '' ">
+			AND b.tag like CONCAT('%',#{tag},'%')
+		</if>
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		LIMIT #{start},#{size}
+	</select>
+
+	<select id="selectCountKnowledgeByTagsAndKeyWords" resultType="int">
+		SELECT count(*)
+		FROM tb_knowledge_base b 
+		WHERE b.user_id=#{userId} 
+		<if test="tag !=null and tag != '' ">
+			AND b.tag like CONCAT('%',#{tag},'%')
+		</if>
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+	</select>
+</mapper>
