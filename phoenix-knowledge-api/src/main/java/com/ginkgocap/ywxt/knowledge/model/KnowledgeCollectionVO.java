@@ -1,6 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-public class KnowledgeCollectionVO {
+import java.io.Serializable;
+
+public class KnowledgeCollectionVO implements Serializable{
+	
+	private static final long serialVersionUID = 4199642681887345246L;
+	
 	/** 知识ID **/
 	private long kId;
 	/** 目录ID集合 **/
