@@ -130,19 +130,21 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     public void init(long userid, long gtnid) {
         List<Column> l = columnValueMapper.selectByParam(null, Constants.gtnid, userid);
         for (Column c : l) {
-            long id = c.getId();
-            long pcid = c.getParentId();
-            String cname = c.getColumnname();
-            ColumnVisible cv = new ColumnVisible();
-            cv.setColumnId(id);
-            cv.setPcid(pcid);
-            cv.setUserId(userid);
-            cv.setCtime(new Date());
-            cv.setUtime(new Date());
-            cv.setSortId(c.getColumnLevelPath());
-            cv.setColumnName(cname);
-            cv.setState((short) 0);
-            columnVisibleMapper.insert(cv);
+            if(!c.getColumnname().equals("未分组")){
+                long id = c.getId();
+                long pcid = c.getParentId();
+                String cname = c.getColumnname();
+                ColumnVisible cv = new ColumnVisible();
+                cv.setColumnId(id);
+                cv.setPcid(pcid);
+                cv.setUserId(userid);
+                cv.setCtime(new Date());
+                cv.setUtime(new Date());
+                cv.setSortId(c.getColumnLevelPath());
+                cv.setColumnName(cname);
+                cv.setState((short) 0);
+                columnVisibleMapper.insert(cv);
+            }
         }
     }
 
