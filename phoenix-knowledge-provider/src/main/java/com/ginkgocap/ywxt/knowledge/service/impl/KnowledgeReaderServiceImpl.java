@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
@@ -20,7 +19,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
-import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
@@ -128,7 +127,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("author", knowledge.getUname());
 		result.put("source", knowledge.getSource());
 
-		List<String> tagsList = KnowledgeUtil.parseTags(knowledge.getTags());
+		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
 		result.put("type", type);
 

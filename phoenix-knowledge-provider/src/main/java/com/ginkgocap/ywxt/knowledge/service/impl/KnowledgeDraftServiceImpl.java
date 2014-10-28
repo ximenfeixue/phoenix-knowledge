@@ -31,6 +31,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.Page;
 import com.ginkgocap.ywxt.user.model.User;
@@ -96,7 +97,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 
-		Boolean dule = KnowledgeUtil.checkKnowledgePermission(vo
+		Boolean dule = JsonUtil.checkKnowledgePermission(vo
 				.getSelectedIds());
 		if (dule == null) {
 			logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
@@ -107,7 +108,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		}
 		if (!dule) {
 			// 格式化权限信息
-			List<String> permList = KnowledgeUtil.getPermissionList(vo
+			List<String> permList = JsonUtil.getPermissionList(vo
 					.getSelectedIds());
 
 			int pV = userPermissionService.insertUserPermission(permList, kId,

@@ -1,12 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -45,6 +42,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -254,7 +252,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			Boolean dule = KnowledgeUtil.checkKnowledgePermission(vo
+			Boolean dule = JsonUtil.checkKnowledgePermission(vo
 					.getSelectedIds());
 			if (dule == null) {
 				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
@@ -265,7 +263,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			}
 			if (!dule) {
 				// 格式化权限信息
-				List<String> permList = KnowledgeUtil.getPermissionList(vo
+				List<String> permList = JsonUtil.getPermissionList(vo
 						.getSelectedIds());
 				int pV = userPermissionService.insertUserPermission(
 						permList,
