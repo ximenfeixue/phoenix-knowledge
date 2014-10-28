@@ -93,7 +93,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 
 		knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
-				vo.getColumnType(), vo.getColumnType(), userId);
+				vo.getColumnName(), vo.getColumnType(), userId);
 
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 

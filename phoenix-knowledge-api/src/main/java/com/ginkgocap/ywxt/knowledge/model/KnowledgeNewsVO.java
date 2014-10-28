@@ -21,6 +21,15 @@ public class KnowledgeNewsVO implements Serializable {
 	private String shareMessage;
 	private String columnType;
 	private String columnPath;
+	private String columnName;
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
