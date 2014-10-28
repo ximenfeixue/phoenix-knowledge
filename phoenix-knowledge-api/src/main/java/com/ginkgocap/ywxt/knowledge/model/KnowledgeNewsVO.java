@@ -1,6 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-public class KnowledgeNewsVO {
+import java.io.Serializable;
+
+public class KnowledgeNewsVO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Long kId;
 	private String title;
 	private String content;
