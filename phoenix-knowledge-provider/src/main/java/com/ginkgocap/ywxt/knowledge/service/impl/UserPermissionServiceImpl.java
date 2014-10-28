@@ -63,12 +63,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1];
+				String perUser = perInfo[1].substring(1,perInfo[1].length()-1);
 				if (perInfo != null && perInfo.length > 0) {
 					String[] userList = perUser.split(",");
 					for (String userId : userList) {
 						userPermission = new UserPermission();
-						userPermission.setReceiveUserId(Long.parseLong(userId));
+						userPermission.setReceiveUserId(Long.parseLong(userId.trim()));
 						userPermission.setColumnId(column_id);
 						userPermission.setColumnType(column_type);
 						userPermission.setCreatetime(new Date());
