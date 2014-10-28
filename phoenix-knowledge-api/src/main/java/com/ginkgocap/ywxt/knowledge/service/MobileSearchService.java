@@ -21,5 +21,7 @@ public interface MobileSearchService {
 	 */
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
 			String scope, String pno, String pszie);
-
+	
+	public Map<String, Object> selectKnowledgeByTagsAndkeywords(Long userid,
+			String keywords, String scope, String tag, int page, int size);
 }
