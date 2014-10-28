@@ -3,9 +3,9 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 
 public class KnowledgeNewsVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long kId;
 	private String title;
 	private String content;
@@ -21,8 +21,11 @@ public class KnowledgeNewsVO implements Serializable {
 	private String shareMessage;
 	private String columnType;
 	private String columnPath;
-	
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	public Long getkId() {
 		return kId;
 	}
@@ -111,7 +114,6 @@ public class KnowledgeNewsVO implements Serializable {
 		this.catalogueIds = catalogueIds;
 	}
 
-
 	public String getEssence() {
 		return essence;
 	}
@@ -143,6 +145,5 @@ public class KnowledgeNewsVO implements Serializable {
 	public void setColumnid(long columnid) {
 		this.columnid = columnid;
 	}
-
 
 }

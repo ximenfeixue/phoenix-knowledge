@@ -63,12 +63,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1].substring(1,perInfo[1].length()-1);
+				String perUser = perInfo[1].substring(1,
+						perInfo[1].length() - 1);
 				if (perInfo != null && perInfo.length > 0) {
 					String[] userList = perUser.split(",");
 					for (String userId : userList) {
 						userPermission = new UserPermission();
-						userPermission.setReceiveUserId(Long.parseLong(userId.trim()));
+						userPermission.setReceiveUserId(Long.parseLong(userId
+								.trim()));
 						userPermission.setColumnId(column_id);
 						userPermission.setColumnType(column_type);
 						userPermission.setCreatetime(new Date());
@@ -157,7 +159,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public int deleteUserPermission(long[] knowledgeids, long userid) {
 
-		return userPermissionDAO.deleteUserPermission(knowledgeids, userid);
+		return userPermissionValueMapper.delete(knowledgeids, userid);
 	}
 
 	@Override
@@ -242,6 +244,16 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andSendUserIdEqualTo(userid);
 		return userPermissionMapper.selectByExample(example);
+	}
+
+	@Override
+	public int deleteUserPermission(long knowledgeid) {
+
+		UserPermissionExample example = new UserPermissionExample();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		return userPermissionMapper.deleteByExample(example);
 	}
 
 }

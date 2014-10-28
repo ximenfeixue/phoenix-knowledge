@@ -28,4 +28,6 @@ public interface ColumnKnowledgeService {
 	int deleteColumnKnowledge(long[] knowledgeids, long columnid);
 	
 	int updateColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
+	
+	int updateColumn(long knowledge_id,long column_id);
 }

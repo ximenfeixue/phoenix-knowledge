@@ -44,10 +44,7 @@ public interface KnowledgeNewsDAO {
 	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
 	 */
 
-	void updateKnowledge(String title, long userid, String uname, long cid,
-			String cname, String cpath, String content, String pic,
-			String desc, String essence, String taskid, String tags,
-			long knowledgeid);
+	void updateKnowledge(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 查询知识

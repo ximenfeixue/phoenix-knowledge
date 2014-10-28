@@ -90,29 +90,29 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 	}
 
 	@Override
-	public void updateKnowledge(String title, long userid, String uname,
-			long cid, String cname, String cpath, String content, String pic,
-			String desc, String essence, String taskid, String tags,
-			long knowledgeid) {
+	public void updateKnowledge(KnowledgeNewsVO vo, User user) {
 
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		KnowledgeNews kdnews = mongoTemplate.findOne(query,
-				KnowledgeNews.class, "KnowledgeNews");
-		if (kdnews != null) {
+		String obj = Constants.getTableName(vo.getColumnType());
+		try {
+			Criteria criteria = Criteria.where("_id").is(vo.getkId());
+			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("status", Constants.Status.checked.v());
-			update.set("title", title);
-			update.set("uid", userid);
-			update.set("uname", uname);
-			update.set("cpathid", cpath);
-			update.set("pic", pic);
-			update.set("desc", desc);
-			update.set("content", content);
-			update.set("essence", essence);
+			update.set("title", vo.getTitle());
+			update.set("uid", user.getId());
+			update.set("uname", user.getName());
+			update.set("cpathid", vo.getColumnPath());
+			update.set("pic", vo.getPic());
+			update.set("desc", vo.getShareMessage());
+			update.set("content", vo.getContent());
+			update.set("essence", vo.getEssence());
 			update.set("modifytime", new Date());
-			update.set("taskid", taskid);
-			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+			update.set("taskid", vo.getTaskId());
+			mongoTemplate.updateFirst(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

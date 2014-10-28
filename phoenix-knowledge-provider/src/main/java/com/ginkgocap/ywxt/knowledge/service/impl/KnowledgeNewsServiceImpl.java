@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -97,6 +97,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	@Resource
 	private KnowledgeDraftService knowledgeDraftService;
 
+	@Resource
+	private KnowledgeBaseMapper knowledgeBaseMapper;
+
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
 			long catetoryid, String types, String titles, User user) {
@@ -143,30 +146,114 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	}
 
 	@Override
-	public void updateKnowledge(String title, long userid, String uname,
-			long cid, String cname, String cpath, String content, String pic,
-			String desc, String essence, String taskid, String tags,
-			long knowledgeid) {
+	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
 
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		KnowledgeNews kdnews = mongoTemplate.findOne(query,
-				KnowledgeNews.class, "KnowledgeNews");
-		if (kdnews != null) {
-			Update update = new Update();
-			update.set("status", Constants.Status.checked.v());
-			update.set("title", title);
-			update.set("uid", userid);
-			update.set("uname", uname);
-			update.set("cpathid", cpath);
-			update.set("pic", pic);
-			update.set("desc", desc);
-			update.set("content", content);
-			update.set("essence", essence);
-			update.set("modifytime", new Date());
-			update.set("taskid", taskid);
-			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		knowledgeNewsDAO.updateKnowledge(vo, user);
+
+		// TODO 判断用户是否选择栏目
+		String columnPath = null;
+		Column column = null;
+		if (vo.getColumnid() != 0) {
+			columnPath = columnService.getColumnPathById(vo.getColumnid());
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			columnPath = Constants.unGroupSortName;
 		}
+
+		// 修改栏目知识关系
+		int columnknowledgeCount = columnKnowledgeService.updateColumn(
+				vo.getkId(), vo.getColumnid());
+
+		if (columnknowledgeCount == 0) {
+			logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			return result;
+		}
+
+		// 删除用户权限数据
+		int userPermissionCount = userPermissionService.deleteUserPermission(vo
+				.getkId());
+		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+
+		if (StringUtils.isNotBlank(vo.getSelectedIds())
+				&& !vo.getSelectedIds().equals(dule)) {
+			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
+			Boolean dule = JsonUtil.checkKnowledgePermission(vo
+					.getSelectedIds());
+			if (dule == null) {
+				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
+				return result;
+			}
+			if (!dule) {
+				// 格式化权限信息
+				List<String> permList = JsonUtil.getPermissionList(vo
+						.getSelectedIds());
+				int pV = userPermissionService.insertUserPermission(
+						permList,
+						vo.getkId(),
+						user.getId(),
+						vo.getShareMessage(),
+						Short.parseShort(vo.getColumnType()),
+						vo.getColumnid() != 0 ? vo.getColumnid() : column
+								.getId());
+				if (pV == 0) {
+					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
+							vo.getkId());
+				}
+			}
+		}
+		
+		//删除该知识下的所有目录
+		int categoryCount = knowledgeCategoryService.deleteKnowledgeCategory(vo
+				.getkId());
+		//删除该知识的基本信息
+		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+
+		if (categoryCount > 0) {
+			logger.error("删除该知识下的所有目录，知识ID:{}", vo.getkId());
+			long[] cIds = null;
+			// 添加知识到知识目录表
+			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+				UserCategoryExample example = new UserCategoryExample();
+				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+						.createCriteria();
+				criteria.andSortidEqualTo(Constants.unGroupSortId);
+				criteria.andUserIdEqualTo(user.getId());
+				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+						.v());
+				List<UserCategory> list = userCategoryMapper
+						.selectByExample(example);
+				if (list != null && list.size() == 1) {
+					cIds = new long[1];
+					cIds[0] = list.get(0).getId();
+
+				}
+			} else {
+				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds()
+						.substring(1, vo.getCatalogueIds().length()));
+			}
+			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
+					vo.getkId(), cIds, user.getId(), user.getName(),
+					columnPath, vo);
+			if (categoryV == 0) {
+				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+						vo.getkId(), cIds);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+		}
+
+		result.put(Constants.status, Constants.ResultType.success.v());
+		logger.info("编辑知识成功,知识ID:{}", vo.getkId());
+		return result;
+
 	}
 
 	@Override
@@ -296,7 +383,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,vo.getCatalogueIds().length()));
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()));
 		}
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(kId,
 				cIds, userId, username, columnPath, vo);

@@ -54,19 +54,27 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	@Override
 	public int deleteKnowledgeRCategory(long[] knowledgeids, long categoryid) {
 
-		return knowledgeBetweenDAO.deleteKnowledgeRCategory(knowledgeids,
+		return knowledgeCategoryValueMapper.deleteKnowledge(knowledgeids,
 				categoryid);
 	}
 
 	@Override
 	public int countByKnowledgeCategoryId(long categoryid) {
-		return knowledgeBetweenDAO.countByKnowledgeCategoryId(categoryid);
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		if (categoryid > 0) {
+			criteria.andCategoryIdEqualTo(categoryid);
+		}
+		return knowledgeCategoryMapper.countByExample(example);
 	}
 
 	@Override
 	public int deleteKnowledgeCategory(long knowledgeid) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
 
-		return 0;
+		return knowledgeCategoryMapper.deleteByExample(example);
 	}
 
 	@Override
@@ -151,7 +159,8 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 			base.setTag(vo.getTags());
 			base.setAuthor(username);
 			base.setPath(columnPath);
-			base.setEssence(Short.parseShort(vo.getEssence()));
+			base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
+					.equals(vo.getEssence(), "on") ? "1" : "0" : "0"));
 			base.setPicPath(vo.getPic());
 			base.setUserId(userId);
 
@@ -181,7 +190,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 
 		return cIds;
 	}
-	
+
 	@Override
 	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid) {
 

@@ -44,10 +44,7 @@ public interface KnowledgeNewsService {
 	 * 编辑知识
 	 */
 
-	void updateKnowledge(String title, long userid, String uname, long cid,
-			String cname, String cpath, String content, String pic,
-			String desc, String essence, String taskid, String tags,
-			long knowledgeid);
+	Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 查询知识
