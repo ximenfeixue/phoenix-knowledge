@@ -426,7 +426,29 @@ public class Constants {
             return v + "";
         }
     }
+    
+ // 0-资讯，1-投融工具，2-行业，3-经典案例  4-资产管理，5-宏观，6-观点，7-判例，8-法律法规，9-文章
+  	public enum TagNum {
+  		News(0), Investment(1), Industry(2), Case(3),Asset(4), Macro(5), Opinion(6), Example(7), Law(8), Article(9);
 
+  		private int v;
+
+
+  		private TagNum(int v) {
+  			this.v = v;
+  		}
+
+  		public int v() {
+  			return v;
+  		}
+
+  		@Override
+  		public String toString() {
+  			return String.valueOf(v);
+  		}
+
+  	}
+    
     public static void main(String[] args) {
         System.out.println(Constants.MenuType.collect);
     }
