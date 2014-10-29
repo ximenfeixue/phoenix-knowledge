@@ -65,4 +65,6 @@ public interface UserCategoryService {
     UserCategory selectByNameAndPid(String name,long pid);
     
     void checkNogroup(Long uid,List<Long> idtype);
+
+    String selectUserCategoryTreeByParams(long userId, String sortId, Byte type, String columnType);
 }

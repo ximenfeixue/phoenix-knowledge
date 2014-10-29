@@ -120,6 +120,23 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         }
         return "";
     }
+    
+    @Override
+    public String selectUserCategoryTreeByParams(long userId, String sortId, Byte type, String columnType) {
+        List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId, type);
+        if (cl != null && cl.size() > 0) {
+            JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
+                    "categoryname", "parentId", "sortid")));
+            JSONArray ja = jo.getJSONArray("list");
+            for (int i = 0; i < ja.size(); i++) {
+                JSONObject joi = ja.getJSONObject(i);
+                if (columnType.equals(joi.getString("id"))) {
+                    return joi.getJSONArray("list").toString();
+                }
+            }
+        }
+        return "";
+    }
 
     @Override
     public long selectChildCountById(long id) {
