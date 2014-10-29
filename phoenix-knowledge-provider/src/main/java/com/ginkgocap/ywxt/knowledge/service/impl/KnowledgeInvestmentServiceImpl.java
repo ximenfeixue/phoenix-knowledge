@@ -115,4 +115,12 @@ public class KnowledgeInvestmentServiceImpl implements
 		}
 
 	}
+
+	@Override
+	public KnowledgeInvestment getKnowledgeInvestmentDetailByOid(Long oid) {
+		Criteria c = Criteria.where("oid").is(oid);
+		Query query = new Query(c);
+		return (KnowledgeInvestment) mongoTemplate.findOne(query,
+				KnowledgeInvestment.class,"KnowledgeInvestment");
+	}
 }
