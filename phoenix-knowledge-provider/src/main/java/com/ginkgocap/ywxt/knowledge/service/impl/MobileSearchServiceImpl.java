@@ -71,6 +71,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
 				size);
 		int start = (page - 1) * size;
+		/**判断是否传的是默认值*/
+		start = start<0?0:start;
 		int count = mobileKnowledgeMapper
 				.selectCountKnowledgeByTagsAndKeyWords(userid, tag, keywords);
 		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByTagsAndKeyWords(
