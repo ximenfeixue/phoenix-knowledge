@@ -31,6 +31,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.Constants.Ids;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("columnSubscribeService")
 public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
@@ -198,39 +199,39 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		return null;
 	}
 
-    @Override
-    public long updateSubscribeCount(long columnid) {
-        long count=this.countByKC(columnid);
-        Column cc=new Column();
-        cc.setId(columnid);
-        cc.setSubscribeCount(count);          
-        cm.updateByPrimaryKeySelective(cc);
-        return columnService.queryById(columnid).getSubscribeCount();
-    }
+	@Override
+	public long updateSubscribeCount(long columnid) {
+		long count = this.countByKC(columnid);
+		Column cc = new Column();
+		cc.setId(columnid);
+		cc.setSubscribeCount(count);
+		cm.updateByPrimaryKeySelective(cc);
+		return columnService.queryById(columnid).getSubscribeCount();
+	}
 
-    //    @Override
-    //    public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-    //       
-    //        //TODO 判断是否已存在
-    //        
-    ////        this.isExist(kcs.getUserId(), kcs.getColumnId());
-    //        
-    //        if (StringUtils.isEmpty(kcs.getColumnType())) {
-    //            KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-    //           
-    //            //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
-    //            kc=KCHelper.setKCType(kc);
-    //            String columnType=KCHelper.getMysqlkcType(kc.getKcType());
-    //            
-    //            kcs.setColumnType(columnType);
-    //        }
-    //       
-    //        
-    //        Date date=new Date();
-    //        kcs.setSubDate(date);
-    //        
-    //        return kcsDao.insert(kcs);
-    //    }
+	// @Override
+	// public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
+	//
+	// //TODO 判断是否已存在
+	//
+	// // this.isExist(kcs.getUserId(), kcs.getColumnId());
+	//
+	// if (StringUtils.isEmpty(kcs.getColumnType())) {
+	// KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
+	//
+	// //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
+	// kc=KCHelper.setKCType(kc);
+	// String columnType=KCHelper.getMysqlkcType(kc.getKcType());
+	//
+	// kcs.setColumnType(columnType);
+	// }
+	//
+	//
+	// Date date=new Date();
+	// kcs.setSubDate(date);
+	//
+	// return kcsDao.insert(kcs);
+	// }
 	@Override
 	public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list,
 			int type) {
@@ -349,9 +350,11 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				long v = mongoTemplate.count(query,
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
-				result.put("count", v);
+				PageUtil p = new PageUtil((int) v, pno, psize);
+				
+				result.put("page", p);
 
-				result.put("totalpage", v % psize == 0 ? v / psize : v / psize
+				result.put("totalPage", v % psize == 0 ? v / psize : v / psize
 						+ 1);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

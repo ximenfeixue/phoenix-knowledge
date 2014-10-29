@@ -13,7 +13,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
@@ -44,6 +47,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private MongoTemplate mongoTemplate;
+
+	@Resource
+	private KnowledgeCollectionMapper knowledgeCollectionMapper;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -175,8 +181,20 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("uname", kUser.getName());
 		result.put("pic", kUser.getPicPath());
 		result.put("uid", kUser.getId());
+		result.put("isColl", getIsCollStatus(kid, userId));
 
 		return result;
+	}
+
+	private Boolean getIsCollStatus(long kid, long userId) {
+		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(kid);
+		criteria.andUseridEqualTo(userId);
+
+		int v = knowledgeCollectionMapper.countByExample(example);
+		
+		return v > 0;
 	}
 
 	public Map<String, Object> getKnowledgeDetail(long kid, User user,
@@ -196,10 +214,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 存储阅读器头部信息
 		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user.getId(),
 				type));
-		//存储正文内容
+		// 存储正文内容
 		result.putAll(getKnowledgeContent(knowledge, type));
 		result.put("kid", kid);
-		
+
 		return result;
 	}
 }

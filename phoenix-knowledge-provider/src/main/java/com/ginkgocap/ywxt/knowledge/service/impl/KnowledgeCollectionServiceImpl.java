@@ -143,11 +143,11 @@ public class KnowledgeCollectionServiceImpl implements
 			if (isCollection(user.getId(), vo.getkId())) {
 				// 删除
 				if (!delCollection(user.getId(), vo.getkId())) {
-					logger.error("删除已收藏数据失败[001]!,知识ID:{},用户ID:{}", vo.getkId(),
-							user.getId());
+					logger.error("删除已收藏数据失败[001]!,知识ID:{},用户ID:{}",
+							vo.getkId(), user.getId());
 					result.put(Constants.status, Constants.ResultType.fail.v());
 					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addCollFail.c()+"[001]");
+							Constants.ErrorMessage.addCollFail.c() + "[001]");
 					return result;
 				}
 			}
@@ -194,7 +194,7 @@ public class KnowledgeCollectionServiceImpl implements
 						user.getId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c()+"[002]");
+						Constants.ErrorMessage.addCollFail.c() + "[002]");
 				return result;
 			}
 			// 添加基本信息表
@@ -204,10 +204,11 @@ public class KnowledgeCollectionServiceImpl implements
 			if (!addBaseInfo(bVo, user)) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c()+"[003]");
+						Constants.ErrorMessage.addCollFail.c() + "[003]");
 				return result;
 			}
-			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0, Constants.StaticsValue.collCount.v(), 0);
+			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0,
+					Constants.StaticsValue.collCount.v(), 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 
 		} catch (ClassNotFoundException e) {
@@ -215,7 +216,7 @@ public class KnowledgeCollectionServiceImpl implements
 					+ "找到对应类,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addCollFail.c()+"[004]");
+					Constants.ErrorMessage.addCollFail.c() + "[004]");
 			return result;
 		}
 		return result;
@@ -255,6 +256,7 @@ public class KnowledgeCollectionServiceImpl implements
 
 		int v = knowledgeCollectionMapper.deleteByExample(example);
 
+		knowledgeStaticsMapperManual.updateStatics(kId, 0, 0, -1, 0);
 		return v > 0;
 
 	}
