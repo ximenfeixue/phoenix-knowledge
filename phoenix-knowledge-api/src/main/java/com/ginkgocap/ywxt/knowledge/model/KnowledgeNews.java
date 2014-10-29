@@ -42,6 +42,7 @@ public class KnowledgeNews extends Knowledge {
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
+		this.setTaskid(vo.getTaskId());
 
 		return this;
 	}
