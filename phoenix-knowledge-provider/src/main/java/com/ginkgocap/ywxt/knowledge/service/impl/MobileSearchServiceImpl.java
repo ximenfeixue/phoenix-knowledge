@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeCollectionServiceImpl.class);
 	
+	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
