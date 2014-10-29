@@ -37,8 +37,8 @@
 		and (user_id=#{userId} or user_id=0)
 		<if test="sortId != null and sortId != ''">
 			and column_level_path like CONCAT(#{sortId}, '%')
+			and column_level_path != #{sortId}
 		</if>
-		and column_level_path != #{sortId}
 		order by column_level_path
 	</select>
 
