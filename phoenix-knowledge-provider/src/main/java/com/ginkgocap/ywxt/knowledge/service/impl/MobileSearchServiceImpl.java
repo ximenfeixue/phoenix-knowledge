@@ -7,12 +7,14 @@ import java.util.Map;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
 
+@Service("mobileSearchService")
 public class MobileSearchServiceImpl implements MobileSearchService {
 	
 	private static final Logger logger = LoggerFactory
