@@ -425,6 +425,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
 		}
+		result.put("knowledgeid", kId);
+		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
 		logger.info("创建知识成功,知识ID:{}", kId);
 		return result;
