@@ -402,5 +402,32 @@ public class Constants {
 		}
 		return null;
 	}
+	
+    public enum MenuType {
+        collect(1, "收藏"), main(0, "主目录");
+        int v;
+        String obj;
 
+        private MenuType(int v, String obj) {
+            this.v = v;
+            this.obj = obj;
+        }
+
+        public int getV() {
+            return v;
+        }
+
+        public String getObj() {
+            return obj;
+        }
+
+        @Override
+        public String toString() {
+            return v + "";
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Constants.MenuType.collect);
+    }
 }

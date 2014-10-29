@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.util.tree;
 
+import java.io.Serializable;
 import java.util.List;
 /**
  * node节点 
@@ -7,7 +8,13 @@ import java.util.List;
  * @author  <p>当前负责人 bianzhiwei</p>   
  *
  */
-public class Node {
+public class Node  implements Serializable{
+    /**    
+     * serialVersionUID <p>TODO（用一句话描述这个变量表示什么）</p>    
+     *     
+     */    
+    
+    private static final long serialVersionUID = 1L;
     private long id;
     private long userId;
     private long parentId;
