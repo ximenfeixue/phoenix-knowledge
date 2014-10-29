@@ -17,7 +17,6 @@ public class KnowledgeNewsVO implements Serializable {
 	private String columnid;
 	private String essence;
 	private String selectedIds;
-	private String submittype;
 	private String shareMessage;
 	private String columnType;
 	private String columnPath;
@@ -150,14 +149,6 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setColumnid(String columnid) {
 		this.columnid = columnid;
-	}
-
-	public String getSubmittype() {
-		return submittype;
-	}
-
-	public void setSubmittype(String submittype) {
-		this.submittype = submittype;
 	}
 
 	public long getOid() {
