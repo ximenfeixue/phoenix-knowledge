@@ -8,10 +8,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService;
 
+@Service("appKnowledgeNewsService")
 public class AppKnowledgeNewsServiceImpl implements AppKnowledgeNewsService {
 
 	@Resource
@@ -27,7 +29,7 @@ public class AppKnowledgeNewsServiceImpl implements AppKnowledgeNewsService {
 	@Override
 	public List<KnowledgeNews> selectKnowledgeByUserId(Long userId) {
 		
-		Criteria criteria = new Criteria().is(userId);
+		Criteria criteria = Criteria.where("uid").is(userId);
 		Query query = new Query(criteria);
 		query.sort().on("createtime", Order.DESCENDING);
 		
