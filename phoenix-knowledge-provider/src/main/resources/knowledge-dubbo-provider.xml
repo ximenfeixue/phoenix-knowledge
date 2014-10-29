@@ -77,4 +77,5 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService"  ref="knowledgeRecycleService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService"  ref="userCategoryService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.SearchService"  ref="searchService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService"  ref="mobileSearchService" version="1.0.0"/>
 </beans>
