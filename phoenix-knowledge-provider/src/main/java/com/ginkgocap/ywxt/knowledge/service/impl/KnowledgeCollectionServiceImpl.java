@@ -26,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseVO;
@@ -60,6 +61,8 @@ public class KnowledgeCollectionServiceImpl implements
 	private KnowledgeCollectionMapper knowledgeCollectionMapper;
 	@Resource
 	private KnowledgeCategoryService knowledgeCategoryService;
+	@Resource
+	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
 
 	@Override
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
@@ -127,15 +130,24 @@ public class KnowledgeCollectionServiceImpl implements
 			Knowledge knowledge = (Knowledge) mongoTemplate.findById(
 					vo.getkId(), Class.forName(c), util.getCollectionName(c));
 
+			if (knowledge == null) {
+				logger.error("未找到知识数据!,知识ID:{},用户ID:{}", vo.getkId(),
+						user.getId());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.artNotExsit.c());
+				return result;
+			}
+
 			// 判断是否已收藏过该文章，若已收藏过，删除全部收藏
 			if (isCollection(user.getId(), vo.getkId())) {
 				// 删除
-				if (delCollection(user.getId(), vo.getkId())) {
-					logger.error("删除已收藏数据失败!,知识ID:{},用户ID:{}", vo.getkId(),
+				if (!delCollection(user.getId(), vo.getkId())) {
+					logger.error("删除已收藏数据失败[001]!,知识ID:{},用户ID:{}", vo.getkId(),
 							user.getId());
 					result.put(Constants.status, Constants.ResultType.fail.v());
 					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addCollFail.c());
+							Constants.ErrorMessage.addCollFail.c()+"[001]");
 					return result;
 				}
 			}
@@ -178,11 +190,11 @@ public class KnowledgeCollectionServiceImpl implements
 			int cV = knowledgeCollectionMapperManual
 					.batchInsertCollection(list);
 			if (cV == 0) {
-				logger.error("添加知识收藏表失败!,知识ID:{},用户ID:{}", vo.getkId(),
+				logger.error("添加知识收藏表失败[002]!,知识ID:{},用户ID:{}", vo.getkId(),
 						user.getId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c());
+						Constants.ErrorMessage.addCollFail.c()+"[002]");
 				return result;
 			}
 			// 添加基本信息表
@@ -192,10 +204,10 @@ public class KnowledgeCollectionServiceImpl implements
 			if (!addBaseInfo(bVo, user)) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c());
+						Constants.ErrorMessage.addCollFail.c()+"[003]");
 				return result;
 			}
-
+			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0, Constants.StaticsValue.collCount.v(), 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 
 		} catch (ClassNotFoundException e) {
@@ -203,7 +215,7 @@ public class KnowledgeCollectionServiceImpl implements
 					+ "找到对应类,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addCollFail.c());
+					Constants.ErrorMessage.addCollFail.c()+"[004]");
 			return result;
 		}
 		return result;

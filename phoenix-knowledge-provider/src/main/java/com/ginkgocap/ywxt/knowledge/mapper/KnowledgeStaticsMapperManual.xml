@@ -12,7 +12,7 @@
 			shareCount = shareCount+ #{shareCount}
 		</if>
 		<if test="collCount != 0">
-			collCount = collCount + #{collCount}
+			collectionCount = collectionCount + #{collCount}
 		</if>
 		<if test="clickCount != 0">
 			clickCount = clickCount + #{clickCount}

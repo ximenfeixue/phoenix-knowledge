@@ -315,7 +315,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
 				.selectByExample(example);
 		if (list == null || list.size() == 0) {
-			result.put("subList", "");
+			result.put("results", "");
 			result.put("count", 0);
 		} else {
 			// 查询订阅栏目下的知识Id集合
@@ -344,7 +344,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 						query, Class.forName(obj),
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
-				result.put("subList", subList);
+				result.put("results", subList);
 
 				long v = mongoTemplate.count(query,
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));

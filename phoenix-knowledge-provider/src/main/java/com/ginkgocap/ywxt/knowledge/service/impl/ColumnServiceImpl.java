@@ -12,15 +12,16 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
-import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
@@ -29,6 +30,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -54,6 +56,8 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnMapperManual columnMapperManual;
 	@Autowired
 	private ColumnTagMapper columnTagMapper;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
@@ -474,24 +478,29 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		long currentColumnId = column.getId();
 		// 存储栏目标签信息
-		TagUtils tagUtil = new TagUtils();
-		String[] currTags = tagUtil.getTagListByTags(tags);
-		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
-		for (String tag : currTags) {
-			ColumnTag ct = new ColumnTag();
-			ct.setColumnId(currentColumnId);
-			ct.setCreatetime(d);
-			ct.setTag(tag);
-			ct.setUserId(userid);
-			columnList.add(ct);
-		}
-		columnTagMapperManual.batchInsertColumnTag(columnList);
+
+		batchSaveColumnTags(userid, currentColumnId, tags);
 
 		columnVisibleService.saveCid(userid, currentColumnId);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
+	}
+
+	public void batchSaveColumnTags(long userid, long columnId, String tags) {
+		TagUtils tagUtil = new TagUtils();
+		String[] currTags = tagUtil.getTagListByTags(tags);
+		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
+		for (String tag : currTags) {
+			ColumnTag ct = new ColumnTag();
+			ct.setColumnId(columnId);
+			ct.setCreatetime(new Date());
+			ct.setTag(tag);
+			ct.setUserId(userid);
+			columnList.add(ct);
+		}
+		columnTagMapperManual.batchInsertColumnTag(columnList);
 	}
 
 	/** 获取sortId全路径 **/
@@ -559,8 +568,8 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
-
 		// 删除栏目表
+
 		int v = columnMapper.deleteByPrimaryKey(columnid);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -568,14 +577,29 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.delFail.c());
 			return result;
 		}
+		// 更改mongo中知识所属栏目ID为未分组
+		ColumnExample col = new ColumnExample();
+		Criteria criteria = col.createCriteria();
+		criteria.andColumnLevelPathGreaterThan(Constants.unGroupSortId);
+		criteria.andUserIdEqualTo(userid);
+		List<Column> colList = columnMapper.selectByExample(col);
+		if (colList != null) {
+			Query query = new Query(
+					org.springframework.data.mongodb.core.query.Criteria.where(
+							"columnid").is(columnid));
+			Update update = new Update();
+			update.set("columnid", colList.get(0).getId());
+			String obj = Constants.getTableName(column.getType() + "");
+			mongoTemplate.updateMulti(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+		}
 		// 删除栏目标签表
 		ColumnTagExample example = new ColumnTagExample();
 		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria critera = example
 				.createCriteria();
 		critera.andColumnIdEqualTo(columnid);
-
 		columnTagMapper.deleteByExample(example);
-
+		// 删除栏目定制表
 		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -646,8 +670,55 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Override
 	public Column getUnGroupColumnIdBySortId(long userId) {
-		
+
 		return getColumnIdBySortId(Constants.unGroupSortId, userId);
+	}
+
+	@Override
+	public Map<String, Object> updateColumn(long id, String columnName,
+			String tags, long userId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Column column = columnMapper.selectByPrimaryKey(id);
+		if (column == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.notFindColumn.c());
+			return result;
+		}
+		if (column.getUserId() != userId) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delColumnNotPermission.c());
+			return result;
+		}
+		Column col = new Column();
+		col.setColumnname(columnName);
+		col.setUpdateTime(new Date());
+		int v = columnMapper.updateByPrimaryKeySelective(col);
+		if (v == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.updateFail.c());
+			return result;
+		}
+		// 修改Mongod栏目路径
+
+		// 删除栏目标签信息
+		ColumnTagExample example = new ColumnTagExample();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andColumnIdEqualTo(id);
+		int ctV = columnTagMapper.deleteByExample(example);
+		if (ctV == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.updateFail.c());
+			return result;
+		}
+		batchSaveColumnTags(userId, id, tags);
+		result.put(Constants.status, Constants.ResultType.success.v());
+
+		return result;
 	}
 
 }

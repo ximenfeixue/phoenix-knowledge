@@ -194,7 +194,7 @@ public class Constants {
 
 	public enum Relation {
 		// 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
-		self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
+		self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
 				5, "组织");
 
 		private int v;
@@ -224,7 +224,7 @@ public class Constants {
 				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
 				"评论不存在!"), delCommentNotPermission("无权删除该评论!"), delCommentFail(
 				"删除评论失败!"), notFindColumn("栏目不存在，请刷新页面后重试!"), delColumnNotPermission(
-				"无权删除该栏目!"), delFail("删除失败!"),paramNotValid("用户权限参数不合法!");
+				"无权删除该栏目!"), delFail("删除失败!"),paramNotValid("用户权限参数不合法!"),updateFail("更新失败!");
 
 		private String c;
 

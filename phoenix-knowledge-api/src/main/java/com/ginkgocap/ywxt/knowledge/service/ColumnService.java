@@ -240,21 +240,24 @@ public interface ColumnService {
 
 	/**
 	 * 删除栏目
-	 * @param columnid 
+	 * 
+	 * @param columnid
 	 * @param userid
 	 * @return
 	 */
 	public Map<String, Object> delColumn(long columnid, long id);
-	
 
 	/**
 	 * 初始化未分组
-	 * @param uid 用户id
+	 * 
+	 * @param uid
+	 *            用户id
 	 */
-    void checkNogroup(Long uid);
+	void checkNogroup(Long uid);
 
 	/**
 	 * 根据栏目ID查询栏目路径
+	 * 
 	 * @param columnid
 	 * @return
 	 */
@@ -262,17 +265,33 @@ public interface ColumnService {
 
 	/**
 	 * 根据sortId,userId查询columnId
-	 * @param userId 用户Id　
+	 * 
+	 * @param userId
+	 *            用户Id　
 	 * @return
 	 */
 	public Column getColumnIdBySortId(String sortId, long id);
 
 	/**
 	 * 根据userId查询未分组columnId
-	 * @param userId 用户ID
+	 * 
+	 * @param userId
+	 *            用户ID
 	 * @return
 	 */
 	Column getUnGroupColumnIdBySortId(long userId);
-
+	
     String selectColumnTreeByParams(long userId, String sortId, String status, String type);
+
+	/**
+	 * 修改栏目  
+	 * @param id 栏目ID
+	 * @param columnName 栏目名称 
+	 * @param tags 栏目标签 
+	 * @param userId 用户ID
+	 * @return
+	 */
+	public Map<String, Object> updateColumn(long id, String columnName,
+			String tags, long userId);
+
 }
