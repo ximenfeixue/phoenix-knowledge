@@ -155,8 +155,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (vo.getColumnid() != 0) {
-			columnPath = columnService.getColumnPathById(vo.getColumnid());
+		if (Long.parseLong(vo.getColumnid()) != 0) {
+			columnPath = columnService.getColumnPathById(Long.parseLong(vo
+					.getColumnid()));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
@@ -164,7 +165,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		// 修改栏目知识关系
 		int columnknowledgeCount = columnKnowledgeService.updateColumn(
-				vo.getkId(), vo.getColumnid());
+				vo.getkId(), Long.parseLong(vo.getColumnid()));
 
 		if (columnknowledgeCount == 0) {
 			logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
@@ -199,19 +200,19 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 						user.getId(),
 						vo.getShareMessage(),
 						Short.parseShort(vo.getColumnType()),
-						vo.getColumnid() != 0 ? vo.getColumnid() : column
-								.getId());
+						Long.parseLong(vo.getColumnid()) != 0 ? Long
+								.parseLong(vo.getColumnid()) : column.getId());
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
 			}
 		}
-		
-		//删除该知识下的所有目录
+
+		// 删除该知识下的所有目录
 		int categoryCount = knowledgeCategoryService.deleteKnowledgeCategory(vo
 				.getkId());
-		//删除该知识的基本信息
+		// 删除该知识的基本信息
 		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
 
 		if (categoryCount > 0) {
@@ -322,8 +323,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (vo.getColumnid() != 0) {
-			columnPath = columnService.getColumnPathById(vo.getColumnid());
+		if (Long.parseLong(vo.getColumnid()) != 0) {
+			columnPath = columnService.getColumnPathById(Long.parseLong(vo
+					.getColumnid()));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
@@ -335,12 +337,10 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-		String selectedIds=vo.getSelectedIds().replace("&quot;", "\"");
-		if (StringUtils.isNotBlank(selectedIds)
-				&& !selectedIds.equals(dule)) {
+		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
+		if (StringUtils.isNotBlank(selectedIds) && !selectedIds.equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
+			Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
 			if (dule == null) {
 				logger.error("解析权限信息失败，参数为：{}", selectedIds);
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -357,8 +357,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 						userId,
 						vo.getShareMessage(),
 						Short.parseShort(vo.getColumnType()),
-						vo.getColumnid() != 0 ? vo.getColumnid() : column
-								.getId());
+						Long.parseLong(vo.getColumnid()) != 0 ? Long
+								.parseLong(vo.getColumnid()) : column.getId());
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 				}
