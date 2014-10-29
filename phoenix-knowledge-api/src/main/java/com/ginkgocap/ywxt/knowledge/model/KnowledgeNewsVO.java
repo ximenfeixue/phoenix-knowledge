@@ -23,6 +23,11 @@ public class KnowledgeNewsVO implements Serializable {
 	private String columnPath;
 	private String columnName;
 
+	//老知识id
+	private long oid;
+	//价格
+	private float price;
+	
 	public String getColumnName() {
 		return columnName;
 	}
@@ -153,6 +158,22 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setSubmittype(String submittype) {
 		this.submittype = submittype;
+	}
+
+	public long getOid() {
+		return oid;
+	}
+
+	public void setOid(long oid) {
+		this.oid = oid;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
 }
