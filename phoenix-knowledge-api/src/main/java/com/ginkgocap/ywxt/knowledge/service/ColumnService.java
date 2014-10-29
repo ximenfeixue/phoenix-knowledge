@@ -273,4 +273,6 @@ public interface ColumnService {
 	 * @return
 	 */
 	Column getUnGroupColumnIdBySortId(long userId);
+
+    String selectColumnTreeByParams(long userId, String sortId, String status, String type);
 }

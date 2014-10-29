@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -167,6 +168,23 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		return "";
 	}
+	
+	@Override
+    public String selectColumnTreeByParams(long userId, String sortId, String status, String columnType) {
+        List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
+        if (cl != null && cl.size() > 0) {
+            JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname",
+                    "parentId", "columnLevelPath")));
+            JSONArray ja = jo.getJSONArray("list");
+            for (int i = 0; i < ja.size(); i++) {
+                JSONObject joi = ja.getJSONObject(i);
+                if (columnType.equals(joi.getString("id"))) {
+                    return joi.getJSONArray("list").toString();
+                }
+            }
+        }
+        return "";
+    }
 
 	@Override
 	public List<Column> selectFullPath(long id) {
