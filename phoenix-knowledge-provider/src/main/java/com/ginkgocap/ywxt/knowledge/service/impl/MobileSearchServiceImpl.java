@@ -18,10 +18,10 @@ import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("mobileSearchService")
 public class MobileSearchServiceImpl implements MobileSearchService {
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeCollectionServiceImpl.class);
-	
+
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 
@@ -48,7 +48,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 
 		return result;
 	}
-	
+
 	@Override
 	public Map<String, Object> selectKnowledgeByTagsAndkeywords(Long userid,
 			String keywords, String scope, String tag, int page, int size) {
@@ -71,12 +71,45 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
 				size);
 		int start = (page - 1) * size;
-		/**判断是否传的是默认值*/
-		start = start<0?0:start;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
 		int count = mobileKnowledgeMapper
 				.selectCountKnowledgeByTagsAndKeyWords(userid, tag, keywords);
 		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByTagsAndKeyWords(
 				userid, tag, keywords, start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
+
+	@Override
+	public Map<String, Object> selectKnowledgeByMyCollectionAndkeywords(
+			Long userid, String keywords, String scope, int page, int size) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				userid);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				keywords);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				scope);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				page);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper
+				.selectCountKnowledgeByMyCollectionAndKeyWords(userid, keywords);
+		List<?> kcl = mobileKnowledgeMapper
+				.selectKnowledgeByMyCollectionAndKeyWords(userid, keywords,
+						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("page", p);

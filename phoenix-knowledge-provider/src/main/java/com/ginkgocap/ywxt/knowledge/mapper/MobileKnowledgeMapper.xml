@@ -30,4 +30,29 @@
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
 	</select>
+	
+	<select id="selectKnowledgeByMyCollectionAndKeyWords" resultType="map">
+		SELECT DISTINCT b.*,
+		CASE
+	        WHEN b.user_id=#{userId} THEN 'me'
+	        ELSE 'other'
+		END source
+		FROM tb_knowledge_collection kc,
+		tb_knowledge_base b
+		WHERE kc.knowledge_id = b.knowledge_id
+		AND b.user_id = kc.userId
+		AND b.user_id=#{userId}
+		AND b.title like CONCAT('%',#{keyword},'%')
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountKnowledgeByMyCollectionAndKeyWords" resultType="int">
+		SELECT count(*)
+		FROM tb_knowledge_base b ,tb_knowledge_collection kc
+		WHERE 
+		kc.knowledge_id = b.knowledge_id
+		AND b.user_id = kc.userId
+		AND b.user_id=#{userId} 
+		AND b.title like CONCAT('%',#{keyword},'%')
+	</select>
 </mapper>
