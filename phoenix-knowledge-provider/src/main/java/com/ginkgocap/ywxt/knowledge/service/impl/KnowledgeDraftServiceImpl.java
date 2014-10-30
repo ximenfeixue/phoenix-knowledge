@@ -85,7 +85,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 
 		// TODO 判断用户是否选择栏目
-		String columnPath = columnService.getColumnPathById(Long.parseLong(vo.getColumnid()));
+		String columnPath = columnService.getColumnPathById(Long.parseLong(vo.getColumnid()!=null?vo.getColumnid():"0"));
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
@@ -96,11 +96,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				vo.getColumnName(), vo.getColumnType(), userId);
 
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-
-		Boolean dule = JsonUtil.checkKnowledgePermission(vo
-				.getSelectedIds());
+		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
+		Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
 		if (dule == null) {
-			logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+			logger.error("解析权限信息失败，参数为：{}", selectedIds);
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.paramNotValid.c());
@@ -108,8 +107,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		}
 		if (!dule) {
 			// 格式化权限信息
-			List<String> permList = JsonUtil.getPermissionList(vo
-					.getSelectedIds());
+			List<String> permList = JsonUtil.getPermissionList(selectedIds);
 
 			int pV = userPermissionService.insertUserPermission(permList, kId,
 					userId, vo.getShareMessage(),
@@ -120,7 +118,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		}
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1, 1))) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();
@@ -137,9 +135,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				// TODO
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1, 1));
 		}
-		if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
+		if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1, 1))) {
 
 			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 					kId, cIds, userId, username, columnPath, vo);
