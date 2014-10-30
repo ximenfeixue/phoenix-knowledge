@@ -1,50 +1,20 @@
 CREATE DATABASE IF NOT EXISTS `phoenix_knowledge`  DEFAULT CHARACTER SET utf8 ;
 USE `phoenix_knowledge`;
-
-DROP TABLE IF EXISTS `tb_article`;
-CREATE TABLE `tb_article` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `uid` bigint(20) DEFAULT NULL COMMENT 'phoenix_user.tb_user.uid',
-  `author` varchar(255) DEFAULT NULL COMMENT '文章作者，默认为当前登录用户的name',
-  `source` varchar(255) DEFAULT NULL COMMENT '文章来源',
-  `articleType` varchar(1) DEFAULT '0' COMMENT '文章类型，默认0：文章内容；1：url',
-  `articleTitle` varchar(255) DEFAULT NULL COMMENT '文章标题',
-  `articleContent` longtext COMMENT '文章内容',
-  `categoryid` bigint(20) DEFAULT NULL COMMENT 'phoenix_knowledge.tb_category.id',
-  `sortId` varchar(255) DEFAULT NULL COMMENT 'phoenix_knowledge.tb_category.sortId',
-  `pubdate` timestamp NULL DEFAULT NULL COMMENT '文章发布时间',
-  `modifyTime` timestamp NULL DEFAULT NULL COMMENT '最后修改时间',
-  `essence` varchar(255) DEFAULT '0' COMMENT '是否加精 0:否 1:是',
-  `recycleBin` varchar(255) DEFAULT '0' COMMENT '是否标志为回收站文章0:否  1:是',
-  `state` varchar(255) DEFAULT NULL,
-  `clickNum` bigint(20) DEFAULT NULL COMMENT '文章点击次数',
-  `task_id` varchar(765) DEFAULT NULL COMMENT '与文章附件表关联',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
-
-
-DROP TABLE IF EXISTS `tb_category`;
-CREATE TABLE `tb_category` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `uid` bigint(20) DEFAULT NULL COMMENT 'phoenix_user.tb_user.id',
-  `name` varchar(255) DEFAULT NULL COMMENT '分类名称',
-  `parentId` bigint(20) DEFAULT '0' COMMENT '父类ID',
-  `sortId` varchar(255) DEFAULT NULL COMMENT '排序ID，九位一级 如000000001000000001,为一级分类下的第一个分类',
-  `state` varchar(255) DEFAULT '0' COMMENT '分类状态 0:正常   1:删除',
-  `subtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `modtime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
-
-CREATE DATABASE IF NOT EXISTS `phoenix_knowledge`  DEFAULT CHARACTER SET utf8 ;
-USE `phoenix_knowledge`;
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014-9-16 15:50:59                           */
+/* Created on:     2014-10-30 16:15:34                          */
 /*==============================================================*/
 
 
+drop table if exists tb_column;
+
 drop table if exists tb_column_knowledge;
+
+drop table if exists tb_column_tag;
+
+drop table if exists tb_column_visible;
+
+drop table if exists tb_knowledge_base;
 
 drop table if exists tb_knowledge_book_bookmark;
 
@@ -52,101 +22,30 @@ drop table if exists tb_knowledge_category;
 
 drop table if exists tb_knowledge_collection;
 
-drop table if exists tb_knowledge_column;
-
 drop table if exists tb_knowledge_column_subscribe;
 
 drop table if exists tb_knowledge_comment;
 
-drop table if exists tb_knowledge_r_tag;
+drop table if exists tb_knowledge_draft;
+
+drop table if exists tb_knowledge_recycle;
 
 drop table if exists tb_knowledge_report;
 
 drop table if exists tb_knowledge_statics;
 
-drop table if exists tb_knowledge_tag;
-
 drop table if exists tb_user_category;
 
 drop table if exists tb_user_permission;
 
+drop table if exists tb_user_tags;
+
 /*==============================================================*/
-/* Table: tb_column_knowledge                                   */
+/* Table: tb_column                                             */
 /*==============================================================*/
-create table tb_column_knowledge
+create table tb_column
 (
-   column_id            bigint(20) comment '栏目id',
-   knowledge_id         bigint(20) comment '知识id',
-   user_id              bigint(20) comment '用户id',
-   type                 smallint comment '类型(11种类型)'
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
-
-alter table tb_column_knowledge comment '栏目知识关系表';
-
-/*==============================================================*/
-/* Table: tb_knowledge_book_bookmark                            */
-/*==============================================================*/
-create table tb_knowledge_book_bookmark
-(
-   id                   bigint(20) not null comment 'id',
-   knowledge_id         bigint(20) comment '知识id',
-   pageno               int(5) comment '书签页码',
-   title                varchar(50) comment '书签标题',
-   "desc"               varchar(255) comment '书签描述',
-   createtime           timestamp comment '创建时间',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
-
-alter table tb_knowledge_book_bookmark comment '知识书签表';
-
-/*==============================================================*/
-/* Table: tb_knowledge_category                                 */
-/*==============================================================*/
-create table tb_knowledge_category
-(
-   id                   bigint(20) not null comment 'id',
-   knowledge_id         bigint(20) comment '知识id',
-   category_id          bigint(20) comment '目录Id',
-   status               char(1) comment '状态（0：不生效，1：生效）',
-   sortid               varchar(255) comment '排序id',
-   user_id              bigint(20) comment '用户id',
-   title                varchar(255) comment '标题',
-   author               varchar(50) comment '作者名称',
-   path                 smallint comment '栏目路径',
-   share_author         varchar(255) comment '分享者',
-   createtime           timestamp comment '发表时间',
-   tag                  varchar(255) comment '标签',
-   "desc"               varchar(255) comment '简介',
-   column_id            bigint(20) comment '栏目id',
-   pic_path             varchar(255) comment '封面图片地址',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
-
-alter table tb_knowledge_category comment '知识目录表';
-
-/*==============================================================*/
-/* Table: tb_knowledge_collection                               */
-/*==============================================================*/
-create table tb_knowledge_collection
-(
-   id                   bigint(20) not null comment 'id',
-   knowledge_id         bigint(20) comment '知识id',
-   column_id            bigint(20) comment '栏目id',
-   timestamp            datetime comment '收藏时间',
-   knowledgeType        char(2) comment '知识类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
-   source               varchar(255) comment '来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)',
-   category_id          bigint(20) comment '目录id(左侧目录.id)',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
-
-alter table tb_knowledge_collection comment '知识收藏表';
-
-/*==============================================================*/
-/* Table: tb_knowledge_column                                   */
-/*==============================================================*/
-create table tb_knowledge_column
-(
-   id                   bigint(20) not null comment '栏目id',
+   id                   bigint(20) not null auto_increment comment '栏目id',
    columnName           varchar(50) comment '栏目名称',
    user_id              bigint(20) comment '用户Id',
    parent_id            bigint(20) comment '父级id',
@@ -156,22 +55,145 @@ create table tb_knowledge_column
    del_status           tinyint comment '删除状态(1：删除 0- 正常)',
    update_time          timestamp comment '更新时间',
    subscribe_count      bigint(20) comment '订阅数',
+   type                 smallint comment '栏目类型',
    primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
-alter table tb_knowledge_column comment '栏目表';
+alter table tb_column comment '栏目表';
+
+/*==============================================================*/
+/* Table: tb_column_knowledge                                   */
+/*==============================================================*/
+create table tb_column_knowledge
+(
+   knowledge_id         bigint(20) not null comment '知识id',
+   column_id            bigint(20) comment '栏目id',
+   user_id              bigint(20) comment '用户id',
+   type                 smallint comment '类型(11种类型)',
+   primary key (knowledge_id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_column_knowledge comment '栏目知识关系表';
+
+/*==============================================================*/
+/* Table: tb_column_tag                                         */
+/*==============================================================*/
+create table tb_column_tag
+(
+   id                   bigint(20) not null auto_increment comment '标签ID',
+   column_id            bigint(20) comment '栏目id',
+   columnName           varchar(32) comment '栏目名称',
+   column_path          varchar(255) comment '栏目路径',
+   tag                  varchar(255) comment '标签（多个标签用逗号分隔）',
+   user_id              bigint(20) comment '用户id',
+   createtime           timestamp comment '创建时间',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_column_tag comment '栏目标签表';
+
+/*==============================================================*/
+/* Table: tb_column_visible                                     */
+/*==============================================================*/
+create table tb_column_visible
+(
+   id                   BIGINT(20) not null auto_increment comment '主键',
+   user_id              BIGINT(20) default NULL comment '用户id',
+   column_id            BIGINT(20) default NULL comment '栏目id',
+   ctime                TIMESTAMP not null default '0000-00-00 00:00:00' comment '创建时间',
+   utime                TIMESTAMP not null default '0000-00-00 00:00:00' comment '修改时间',
+   pcid                 bigint(20) default 0 comment '父栏目id',
+   state                smallint default 0 comment '0 可见 1 不可见',
+   column_name          VARCHAR(200) default NULL comment '栏目名称',
+   sort_id              varchar(200) comment '排序id',
+   primary key (id)
+)
+ENGINE=INNODB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8;
+
+alter table tb_column_visible comment '栏目定制表';
+
+/*==============================================================*/
+/* Table: tb_knowledge_base                                     */
+/*==============================================================*/
+create table tb_knowledge_base
+(
+   knowledge_id         bigint(20) not null comment '知识ID',
+   user_id              bigint(20) comment '用户id',
+   title                varchar(255) comment '标题',
+   author               varchar(50) comment '作者名称',
+   path                 varchar(50) comment '栏目路径',
+   createtime           timestamp comment '发表时间',
+   tag                  varchar(255) comment '标签',
+   c_desc               varchar(255) comment '简介',
+   column_id            bigint(20) comment '栏目id',
+   pic_path             varchar(255) comment '封面图片地址',
+   column_type          smallint comment '11种栏目类型',
+   essence              smallint comment 'essence 是否加精（0-不加 1-加）',
+   primary key (knowledge_id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_knowledge_base comment '知识基本表';
+
+/*==============================================================*/
+/* Table: tb_knowledge_book_bookmark                            */
+/*==============================================================*/
+create table tb_knowledge_book_bookmark
+(
+   id                   bigint(20) not null auto_increment comment 'id',
+   knowledge_id         bigint(20) comment '知识id',
+   pageno               int(5) comment '书签页码',
+   title                varchar(50) comment '书签标题',
+   b_desc               varchar(255) comment '书签描述',
+   createtime           timestamp comment '创建时间',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_knowledge_book_bookmark comment '知识书签表';
+
+/*==============================================================*/
+/* Table: tb_knowledge_category                                 */
+/*==============================================================*/
+create table tb_knowledge_category
+(
+   id                   bigint(20) not null auto_increment comment 'id',
+   knowledge_id         bigint(20) comment '知识id',
+   category_id          bigint(20) comment '目录Id',
+   status               char(1) comment '状态（0：不生效，1：生效）',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_knowledge_category comment '知识目录表';
+
+/*==============================================================*/
+/* Table: tb_knowledge_collection                               */
+/*==============================================================*/
+create table tb_knowledge_collection
+(
+   id                   bigint(20) not null auto_increment comment 'id',
+   knowledge_id         bigint(20) comment '知识id',
+   createtime           timestamp comment '收藏时间',
+   source               int(1) comment '来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)',
+   category_id          bigint(20) comment '目录id(左侧目录.id)',
+   collection_tags      varchar(255) comment '收藏标签',
+   collection_comment   varchar(1000) comment '收藏评论',
+   userId               bigint(20) comment '用户ID',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_knowledge_collection comment '知识收藏表';
 
 /*==============================================================*/
 /* Table: tb_knowledge_column_subscribe                         */
 /*==============================================================*/
 create table tb_knowledge_column_subscribe
 (
-   id                   bigint(20) comment 'id',
+   id                   bigint(20) not null auto_increment comment 'id',
    user_id              bigint(20) comment '用户id',
    column_id            bigint(20) comment '栏目id',
    sub_date             timestamp comment '订阅时间',
-   column_type          smallint comment '栏目类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）'
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+   column_type          smallint comment '栏目类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_knowledge_column_subscribe comment '订阅信息表';
 
@@ -180,7 +202,7 @@ alter table tb_knowledge_column_subscribe comment '订阅信息表';
 /*==============================================================*/
 create table tb_knowledge_comment
 (
-   id                   bigint(20) not null comment '评论id',
+   id                   bigint(20) not null auto_increment comment '评论id',
    knowledge_id         bigint(20) comment '知识id',
    content              varchar(500) comment '评论内容',
    createtime           timestamp comment '评论时间',
@@ -188,39 +210,58 @@ create table tb_knowledge_comment
    parentid             bigint(20) comment '上级评论id（0：根级，非0：对应评论Id）',
    user_id              bigint(20) comment '用户id',
    count                bigint(20) comment '子评论数',
+   username             varchar(255) comment '用户名',
+   pic                  varchar(255) comment '头像地址',
    primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_knowledge_comment comment '知识评论表';
 
 /*==============================================================*/
-/* Table: tb_knowledge_r_tag                                    */
+/* Table: tb_knowledge_draft                                    */
 /*==============================================================*/
-create table tb_knowledge_r_tag
+create table tb_knowledge_draft
 (
-   id                   bigint(20) not null comment 'id',
-   knowledge_id         bigint(20) comment '知识id',
-   column_id            bigint(20) comment '栏目id',
-   tag_id               bigint(20) comment '标签id',
-   type                 char(1) comment '类型(0:栏目，1：知识)',
-   user_id              bigint(20) comment '用户id',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+   knowledge_id         bigint(20) not null auto_increment comment '知识id',
+   draftname            varchar(100) comment '草稿名称',
+   drafttype            varchar(10) comment '草稿类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
+   createtime           timestamp comment '保存时间',
+   userid               bigint(20) comment '用户ID',
+   type                 char(1) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
+   primary key (knowledge_id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
-alter table tb_knowledge_r_tag comment '知识标签表';
+alter table tb_knowledge_draft comment '知识草稿箱';
+
+/*==============================================================*/
+/* Table: tb_knowledge_recycle                                  */
+/*==============================================================*/
+create table tb_knowledge_recycle
+(
+   knowledge_id         bigint(20) not null comment '知识id',
+   title                varchar(100) comment '知识名称',
+   type                 varchar(10) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
+   createtime           timestamp comment '更新时间',
+   userid               bigint(20) comment '用户ID',
+   catetoryid           bigint(20) comment '目录ID',
+   primary key (knowledge_id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_knowledge_recycle comment '知识回收站';
 
 /*==============================================================*/
 /* Table: tb_knowledge_report                                   */
 /*==============================================================*/
 create table tb_knowledge_report
 (
-   id                   bigint(20) comment 'id',
+   id                   bigint(20) not null auto_increment comment 'id',
    knowledge_id         bigint(20) comment '知识id',
-   type                 char(2) comment '类型',
+   type                 char(2) comment '类型(1-色情淫秽 2-骚扰谩骂 3- 广告欺诈 4-反动言论 5-其他)',
    rep_desc             varchar(500) comment '描述',
    createtime           timestamp comment '创建时间',
-   user_id              bigint(20) comment '举报人id'
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+   user_id              bigint(20) comment '举报人id',
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_knowledge_report comment '知识举报表';
 
@@ -230,45 +271,33 @@ alter table tb_knowledge_report comment '知识举报表';
 create table tb_knowledge_statics
 (
    knowledge_id         bigint(20) not null comment '知识id',
-   commentCount         bigint(20) comment '评论数',
-   shareCount           bigint(20) comment '分享数',
-   collectionCount      bigint(20) comment '收藏数',
-   clickCount           bigint(20) comment '点击数',
-   source               smallint comment '来源',
+   commentCount         bigint(20) default 0 comment '评论数',
+   shareCount           bigint(20) default 0 comment '分享数',
+   collectionCount      bigint(20) default 0 comment '收藏数',
+   clickCount           bigint(20) default 0 comment '点击数',
    title                varchar(255) comment '标题',
-   type                 smallint comment '类型',
+   source               smallint comment '知识来源(0-系统 1-用户)',
+   type                 smallint,
    primary key (knowledge_id)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_knowledge_statics comment '知识统计表';
-
-/*==============================================================*/
-/* Table: tb_knowledge_tag                                      */
-/*==============================================================*/
-create table tb_knowledge_tag
-(
-   id                   bigint(20) not null comment '标签id',
-   tagname              varchar(50) comment '标签名称',
-   user_id              bigint(20) comment '用户Id',
-   primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
-
-alter table tb_knowledge_tag comment '标签表';
 
 /*==============================================================*/
 /* Table: tb_user_category                                      */
 /*==============================================================*/
 create table tb_user_category
 (
-   id                   bigint(20) not null comment 'id',
-   userid               bigint(20) comment '用户Id',
+   id                   bigint(20) not null auto_increment comment 'id',
+   user_id              bigint(20) comment '用户Id',
    categoryName         varchar(50) comment '目录名称',
    sortid               varchar(255) comment '路径Id，000000001000000001',
    createtime           timestamp comment '创建时间',
-   modifytime           timestamp comment '父级id',
-   parentid             bigint(20),
+   path_name            varchar(255) comment '路径名称',
+   parent_id            bigint(20) comment '父级id',
+   category_type        smallint comment '0 正常目录 1 收藏夹',
    primary key (id)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_user_category comment '目录表(左树)';
 
@@ -280,11 +309,25 @@ create table tb_user_permission
    receive_user_id      bigint(20) comment '接收者Id',
    knowledge_id         bigint(20) comment '知识id',
    send_user_id         bigint(20) comment '发起者id',
-   type                 int(1) comment '类型（1-收藏，2-分享，3-可见性，4-全平台可见）',
+   type                 int(1) comment '类型（2-大乐，3-中乐，4-小乐）',
    mento                varchar(255) comment '分享留言',
    createtime           timestamp comment '创建时间',
-   column_id            smallint comment '知识所属类目ID，共十一种顶级类目之一'
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+   column_type          smallint comment '知识所属类目ID，共十一种顶级类目之一',
+   column_id            bigint(20) comment '栏目id'
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 alter table tb_user_permission comment '用户权限表';
+
+/*==============================================================*/
+/* Table: tb_user_tags                                          */
+/*==============================================================*/
+create table tb_user_tags
+(
+   tagId                bigint not null auto_increment comment '标签ID',
+   userId               bigint comment '用户ID',
+   tagname              varchar(255) comment '标签名称',
+   primary key (tagId)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_user_tags comment '用户标签表';
 
