@@ -22,5 +22,5 @@ public interface MobileSearchService {
 
 	/** 范围性搜索数据,来源&栏目版的知识数据 */
 	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid,
-			int source, long columnId, String scope, int page, int size);
+			long columnId, String scope, int page, int size);
 }
