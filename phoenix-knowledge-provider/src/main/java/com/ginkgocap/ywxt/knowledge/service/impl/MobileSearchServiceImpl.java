@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,14 @@ import javax.annotation.Resource;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Order;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -21,7 +27,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeCollectionServiceImpl.class);
-
+	@Resource
+	private MongoTemplate mongoTemplate;
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 
@@ -109,6 +116,67 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				.selectCountKnowledgeByMyCollectionAndKeyWords(userid, keywords);
 		List<?> kcl = mobileKnowledgeMapper
 				.selectKnowledgeByMyCollectionAndKeyWords(userid, keywords,
+						start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
+
+	@Override
+	public Map<String, Object> selectShareMeByKeywords(Long userid,
+			String keywords, String scope, int start, int size) {
+		List<UserPermissionMongo> lt = null;
+		PageUtil page = null;
+		String pattern = "^.*" + keywords + ".*$"; 
+		Criteria c = Criteria.where("receiveUserId").is(userid);
+		c.andOperator(new Criteria("title").regex(pattern));
+		Query query = new Query(c);
+		long count = mongoTemplate.count(query, UserPermissionMongo.class);
+		page = new PageUtil((int) count, start, size);
+		query = new Query(c);
+		query.sort().on("createtime", Order.DESCENDING);
+		if (size > 0) {
+			query.skip((start - 1) * size);
+			query.limit(size);
+		}
+		lt = mongoTemplate.find(query, UserPermissionMongo.class);
+		if (lt == null) {
+			lt = new ArrayList<UserPermissionMongo>();
+		}
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("pageUtil", page);
+		returnMap.put("list", lt);
+
+		return returnMap;
+	}
+
+	@Override
+	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid,
+			int source, long columnId, String scope, int page, int size) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				userid);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				columnId);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				scope);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				page);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper
+				.selectCountKnowledgeByMyCollectionAndKeyWords(columnId, userid);
+		List<?> kcl = mobileKnowledgeMapper
+				.selectKnowledgeBySourceAndKeywords(columnId, userid,
 						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();

@@ -55,4 +55,19 @@
 		AND b.user_id=#{userId} 
 		AND b.title like CONCAT('%',#{keyword},'%')
 	</select>
+	
+	<select id="selectKnowledgeBySourceAndKeywords" resultType="map">
+		SELECT DISTINCT b.*
+		FROM tb_knowledge_base b
+		WHERE b.column_id = #{columnId}
+		AND b.user_id = #{userId}
+		LIMIT #{start},#{size}
+	</select>
+	
+		<select id="selectCountKnowledgeBySourceAndKeywords" resultType="int">
+		SELECT count(*)
+		FROM tb_knowledge_base b
+		WHERE b.column_id = #{columnId}
+		AND b.user_id = #{userId}
+	</select>
 </mapper>
