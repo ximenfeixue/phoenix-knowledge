@@ -47,8 +47,6 @@
 			or send_user_id=#{receive_user_id}
 			or receive_user_id=-1 
 			or receive_user_id=0
-			or type=2
-			or type=3
 			) 
 		</if>
 		<if test="receive_user_id == null">
