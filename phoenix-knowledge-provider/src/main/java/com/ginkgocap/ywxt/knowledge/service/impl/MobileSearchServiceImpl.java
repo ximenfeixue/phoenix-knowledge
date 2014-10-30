@@ -173,9 +173,9 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		/** 判断是否传的是默认值 */
 		start = start < 0 ? 0 : start;
 		int count = mobileKnowledgeMapper
-				.selectCountKnowledgeByMyCollectionAndKeyWords(columnId, userid);
+				.selectCountKnowledgeBySourceAndColumn(columnId, userid);
 		List<?> kcl = mobileKnowledgeMapper
-				.selectKnowledgeBySourceAndKeywords(columnId, userid,
+				.selectKnowledgeBySourceAndColumn(columnId, userid,
 						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();
