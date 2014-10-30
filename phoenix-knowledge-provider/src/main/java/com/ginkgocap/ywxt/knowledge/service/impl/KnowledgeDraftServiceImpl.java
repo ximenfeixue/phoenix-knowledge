@@ -85,7 +85,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 
 		// TODO 判断用户是否选择栏目
-		String columnPath = columnService.getColumnPathById(Long.parseLong(vo.getColumnid()!=null?vo.getColumnid():"0"));
+		String columnPath = columnService.getColumnPathById(Long.parseLong(StringUtils.isBlank(vo.getColumnid())?"0":vo.getColumnid()));
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
