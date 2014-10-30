@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -113,6 +115,16 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 			update.set("status", Constants.Status.recycle.v());
 			mongoTemplate.updateFirst(query, update, "KnowledgeCase");
 		}
+	}
+
+	@Override
+	public List<KnowledgeCase> getUserCase(Long userId, Long id,int size, int limit) {
+		Criteria c = Criteria.where("uid").is(userId);
+		if(id>0){
+			c.and("id").ne(id);
+		}
+		Query query = new Query(c);
+		return (List<KnowledgeCase>) mongoTemplate.find(query, KnowledgeCase.class, "KnowledgeCase");
 	}
 
 }
