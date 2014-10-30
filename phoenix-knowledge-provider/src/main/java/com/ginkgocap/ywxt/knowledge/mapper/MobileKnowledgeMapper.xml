@@ -60,7 +60,9 @@
 		SELECT DISTINCT b.*
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
+		<if test="userId = -2">
 		AND b.user_id = #{userId}
+		</if>
 		LIMIT #{start},#{size}
 	</select>
 	
@@ -68,6 +70,8 @@
 		SELECT count(*)
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
+		<if test="userId = -2">
 		AND b.user_id = #{userId}
+		</if>
 	</select>
 </mapper>

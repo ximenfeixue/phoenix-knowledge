@@ -153,8 +153,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 
 	@Override
-	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid,
-			int source, long columnId, String scope, int page, int size) {
+	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid, long columnId, String scope, int page, int size) {
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
 				userid);
