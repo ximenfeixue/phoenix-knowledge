@@ -70,7 +70,7 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 	public KnowledgeIndustry getKnowledgeIndustryDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeIndustry) mongoTemplate.find(query,
+		return (KnowledgeIndustry) mongoTemplate.findOne(query,
 				KnowledgeIndustry.class);
 	}
 
