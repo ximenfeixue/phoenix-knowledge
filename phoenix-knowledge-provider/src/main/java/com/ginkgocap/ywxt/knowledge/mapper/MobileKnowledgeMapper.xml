@@ -95,4 +95,23 @@
    		#{friends}
     	</foreach>
 	</select>
+	
+	<select id="selectKnowledgeByUserId" resultType="map">
+		SELECT DISTINCT b.*
+		FROM tb_knowledge_base b
+		WHERE b.user_id = #{userId}
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountForKnowledgeByUserId" resultType="int">
+		SELECT DISTINCT b.*
+		FROM tb_knowledge_base b
+		WHERE b.user_id = #{userId}
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+	</select>
 </mapper>

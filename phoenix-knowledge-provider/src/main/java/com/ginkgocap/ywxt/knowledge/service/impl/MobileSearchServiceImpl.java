@@ -224,4 +224,36 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		m.put("list", kcl);
 		return m;
 	}
+
+	@Override
+	public Map<String, Object> selectKnowledgeByUserIdAndKeywords(Long userid,
+			String keywords, String scope, int page, int size) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByUserIdAndKeywords:{},",
+				userid);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByUserIdAndKeywords:{},",
+				keywords);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByUserIdAndKeywords:{},",
+				scope);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByUserIdAndKeywords:{},",
+				page);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByUserIdAndKeywords:{},",
+				size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper.selectCountForKnowledgeByUserId(
+				userid, keywords);
+		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByUserId(userid,
+				keywords, start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
 }
