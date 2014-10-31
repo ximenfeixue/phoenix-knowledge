@@ -95,19 +95,19 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	public Map<String, Object> selectKnowledgeByMyCollectionAndkeywords(
 			Long userid, String keywords, String scope, int page, int size) {
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByMyCollectionAndkeywords:{},",
 				userid);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByMyCollectionAndkeywords:{},",
 				keywords);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByMyCollectionAndkeywords:{},",
 				scope);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByMyCollectionAndkeywords:{},",
 				page);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByMyCollectionAndkeywords:{},",
 				size);
 		int start = (page - 1) * size;
 		/** 判断是否传的是默认值 */
@@ -155,19 +155,19 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Override
 	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid, long columnId, String scope, int page, int size) {
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeBySourceAndColumn:{},",
 				userid);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeBySourceAndColumn:{},",
 				columnId);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeBySourceAndColumn:{},",
 				scope);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeBySourceAndColumn:{},",
 				page);
 		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeByTagsAndkeywords:{},",
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectKnowledgeBySourceAndColumn:{},",
 				size);
 		int start = (page - 1) * size;
 		/** 判断是否传的是默认值 */
@@ -176,6 +176,47 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				.selectCountKnowledgeBySourceAndColumn(columnId, userid);
 		List<?> kcl = mobileKnowledgeMapper
 				.selectKnowledgeBySourceAndColumn(columnId, userid,
+						start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
+
+	@Override
+	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
+			String friends, String keywords, String scope, int page, int size) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
+				keywords);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
+				friends);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
+				scope);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
+				page);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
+				size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		/** 临时数组 */
+		String[] temp = friends.split(",");
+		/** 传递数据 */
+		long[] tempFriends = new long[temp.length];
+		/** 替换 */
+		for (int i = 0; i < tempFriends.length; i++) {
+			tempFriends[i] = Long.parseLong(temp[i]);
+		}
+		int count = mobileKnowledgeMapper
+				.selectCountForMyFriendKnowledgeByKeyWords(tempFriends, keywords);
+		List<?> kcl = mobileKnowledgeMapper
+				.selectMyFriendKnowledgeByKeyWords(tempFriends, keywords,
 						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();
