@@ -122,7 +122,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		}
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1, 1))) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();
@@ -140,9 +141,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 		} else {
 			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
-					1));
+					vo.getCatalogueIds().length()));
 		}
-		if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1, 1))) {
+		if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1,
+				vo.getCatalogueIds().length()))) {
 
 			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 					kId, cIds, userId, username, columnPath, vo);

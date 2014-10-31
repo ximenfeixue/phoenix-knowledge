@@ -353,15 +353,11 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			if (!dule) {
 				// 格式化权限信息
 				List<String> permList = JsonUtil.getPermissionList(selectedIds);
-				int pV = userPermissionService
-						.insertUserPermission(
-								permList,
-								kId,
-								userId,
-								vo.getShareMessage(),
-								Short.parseShort(vo.getColumnType()),
-								Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-										.getColumnid()));
+				int pV = userPermissionService.insertUserPermission(permList,
+						kId, userId, vo.getShareMessage(), Short.parseShort(vo
+								.getColumnType()), Long.parseLong(StringUtils
+								.isBlank(vo.getColumnid()) ? "0" : vo
+								.getColumnid()));
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 				}
@@ -369,7 +365,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		}
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1, 1))) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();
