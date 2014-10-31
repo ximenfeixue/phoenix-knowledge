@@ -242,25 +242,35 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public int beRelation(long cid, long userId) {
+    public int beRelation(int t,long cid, long userId) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",cid);
         UserPermissionExample example = new UserPermissionExample();
         example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
-        int count = userPermissionMapper.countByExample(example);
+        int count = countKnowledgeByMongo(t,cid,userId);
         if (count > 0) {
-            return 1;//自己
+            return Constants.Relation.self.v();//自己
         }
         example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(-1l);
         count = userPermissionMapper.countByExample(example);
         if (count > 0) {
-            return 4;//全平台
+            return Constants.Relation.platform.v();//全平台
         }
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andSendUserIdEqualTo(0l);
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(0l);
         count = userPermissionMapper.countByExample(example);
         if (count > 0) {
-            return 3;//gt
+            return Constants.Relation.jinTN.v();//gt
         }
-        return 2;//好友可见
+        return Constants.Relation.friends.v();//好友可见
+    }
+
+    private int countKnowledgeByMongo(int t, long cid, long userId) {
+        String[] names = Constants.Type.values()[t-1].obj().split("\\.");
+        int length = names.length;
+        Criteria criteria = Criteria.where("status").is(4);
+        criteria.and("cid").is(userId);
+        Query query = new Query(criteria);
+        long count = mongoTemplate.count(query, names[length - 1]);
+        return (int) count;
     }
 
     @Override
