@@ -186,10 +186,10 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 
 	@Override
 	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
-			String friends, String keywords, String scope, int page, int size) {
+			String friends, long columnId, String scope, int page, int size) {
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
-				keywords);
+				columnId);
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendKnowledgeByKeywords:{},",
 				friends);
@@ -214,9 +214,9 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 			tempFriends[i] = Long.parseLong(temp[i]);
 		}
 		int count = mobileKnowledgeMapper
-				.selectCountForMyFriendKnowledgeByKeyWords(tempFriends, keywords);
+				.selectCountForMyFriendKnowledgeByKeyWords(tempFriends, columnId);
 		List<?> kcl = mobileKnowledgeMapper
-				.selectMyFriendKnowledgeByKeyWords(tempFriends, keywords,
+				.selectMyFriendKnowledgeByKeyWords(tempFriends, columnId,
 						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();

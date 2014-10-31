@@ -60,7 +60,7 @@
 		SELECT DISTINCT b.*
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
-		<if test="userId = -2">
+		<if test="userId != -2">
 		AND b.user_id = #{userId}
 		</if>
 		LIMIT #{start},#{size}
@@ -70,7 +70,7 @@
 		SELECT count(*)
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
-		<if test="userId = -2">
+		<if test="userId != -2">
 		AND b.user_id = #{userId}
 		</if>
 	</select>
@@ -78,10 +78,7 @@
 	<select id="selectMyFriendKnowledgeByKeyWords" resultType="map">
 		SELECT DISTINCT b.*
 		FROM tb_knowledge_base b
-		WHERE 1=1
-		<if test="keyword !=null and keyword != '' ">
-			AND b.title like CONCAT('%',#{keyword},'%')
-		</if>
+		WHERE b.column_id = #{columnId}
 		AND b.user_id in 
 		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
    		#{friends}
@@ -92,10 +89,7 @@
 	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="map">
 		SELECT count(*)
 		FROM tb_knowledge_base b
-		WHERE 1=1
-		<if test="keyword !=null and keyword != '' ">
-			AND b.title like CONCAT('%',#{keyword},'%')
-		</if>
+		WHERE b.column_id = #{columnId}
 		AND b.user_id in 
 		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
    		#{friends}
