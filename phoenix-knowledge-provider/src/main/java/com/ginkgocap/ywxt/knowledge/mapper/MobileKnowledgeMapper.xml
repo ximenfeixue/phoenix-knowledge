@@ -66,12 +66,39 @@
 		LIMIT #{start},#{size}
 	</select>
 	
-		<select id="selectCountKnowledgeBySourceAndColumn" resultType="int">
+	<select id="selectCountKnowledgeBySourceAndColumn" resultType="int">
 		SELECT count(*)
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
 		<if test="userId = -2">
 		AND b.user_id = #{userId}
 		</if>
+	</select>
+	
+	<select id="selectMyFriendKnowledgeByKeyWords" resultType="map">
+		SELECT DISTINCT b.*
+		FROM tb_knowledge_base b
+		WHERE 1=1
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		AND b.user_id in 
+		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
+   		#{friends}
+    	</foreach>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="map">
+		SELECT count(*)
+		FROM tb_knowledge_base b
+		WHERE 1=1
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		AND b.user_id in 
+		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
+   		#{friends}
+    	</foreach>
 	</select>
 </mapper>

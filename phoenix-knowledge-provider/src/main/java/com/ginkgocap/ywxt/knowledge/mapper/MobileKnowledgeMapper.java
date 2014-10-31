@@ -26,7 +26,15 @@ public interface MobileKnowledgeMapper {
 	List selectKnowledgeBySourceAndColumn(@Param("columnId") long columnId,
 			@Param("userId") long userId, @Param("start") int start,
 			@Param("size") int size);
-	
+
 	int selectCountKnowledgeBySourceAndColumn(@Param("columnId") long columnId,
 			@Param("userId") long userId);
+
+	@SuppressWarnings("rawtypes")
+	List selectMyFriendKnowledgeByKeyWords(@Param("friends") long[] friends,
+			@Param("keyword") String keyword, @Param("start") int start,
+			@Param("size") int size);
+
+	int selectCountForMyFriendKnowledgeByKeyWords(
+			@Param("friends") long[] friends, @Param("keyword") String keyword);
 }

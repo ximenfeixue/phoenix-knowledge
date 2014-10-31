@@ -2,6 +2,13 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 
+/**
+ * @Description: 移动端官方搜索接口
+ * @Author: zhangzhen
+ * @CreateDate: 2014-10-20
+ * @Version: [v1.0]
+ */
+
 public interface MobileSearchService {
 
 	/** 关键词搜索 */
@@ -23,4 +30,8 @@ public interface MobileSearchService {
 	/** 范围性搜索数据,来源&栏目版的知识数据 */
 	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid,
 			long columnId, String scope, int page, int size);
+
+	/** 我的好友的知识并按关键字过滤分页显示 */
+	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
+			String friends, String keywords, String scope, int page, int size);
 }
