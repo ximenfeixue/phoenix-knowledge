@@ -174,7 +174,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         if (uid > 0) {
             c.andUserIdEqualTo(uid);
         }
-        if (type > 0) {
+        if (type >= 0) {
             c.andCategoryTypeEqualTo((short) type);
         }
         if (categoryname != null && !"".equals(categoryname)) {
