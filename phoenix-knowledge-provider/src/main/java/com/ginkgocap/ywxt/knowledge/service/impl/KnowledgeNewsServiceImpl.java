@@ -458,11 +458,11 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			mongoTemplate.updateFirst(query, update, collectionName);
 
 			UserCategory usercategory = userCategoryService
-					.selectByPrimaryKey(knowledgerecycle.getCategoryid());
+					.selectByPrimaryKey(knowledgerecycle.getCatetoryid());
 
 			if (usercategory != null) {
 				knowledgeCategoryService.updateKnowledgeCategorystatus(
-						knowledgeid, knowledgerecycle.getCategoryid());
+						knowledgeid, knowledgerecycle.getCatetoryid());
 			}
 
 		} catch (Exception e) {

@@ -14,7 +14,7 @@ public class KnowledgeRecycle implements Serializable {
 
     private Long userid;
 
-    private Long categoryid;
+    private Long catetoryid;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,11 +58,11 @@ public class KnowledgeRecycle implements Serializable {
         this.userid = userid;
     }
 
-    public Long getCategoryid() {
-        return categoryid;
+    public Long getCatetoryid() {
+        return catetoryid;
     }
 
-    public void setCategoryid(Long categoryid) {
-        this.categoryid = categoryid;
+    public void setCatetoryid(Long catetoryid) {
+        this.catetoryid = catetoryid;
     }
 }
