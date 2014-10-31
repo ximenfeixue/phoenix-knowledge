@@ -282,7 +282,11 @@ public interface ColumnService {
 	Column getUnGroupColumnIdBySortId(long userId);
 	
     String selectColumnTreeByParams(long userId, String sortId, String status, String type);
-
+    
+    /**
+     * 
+     */
+    String selectColumnTreeByParamsCustom(long userId, String sortId);
 	/**
 	 * 修改栏目  
 	 * @param id 栏目ID

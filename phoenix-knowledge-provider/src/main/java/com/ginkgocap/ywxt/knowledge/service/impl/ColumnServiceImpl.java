@@ -172,23 +172,40 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		return "";
 	}
-	
+
 	@Override
-    public String selectColumnTreeByParams(long userId, String sortId, String status, String columnType) {
-        List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
-        if (cl != null && cl.size() > 0) {
-            JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname",
-                    "parentId", "columnLevelPath")));
-            JSONArray ja = jo.getJSONArray("list");
-            for (int i = 0; i < ja.size(); i++) {
-                JSONObject joi = ja.getJSONObject(i);
-                if (columnType.equals(joi.getString("id"))) {
-                    return joi.getJSONArray("list").toString();
-                }
-            }
-        }
-        return "";
-    }
+	public String selectColumnTreeByParams(long userId, String sortId,
+			String status, String columnType) {
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
+				sortId);
+		if (cl != null && cl.size() > 0) {
+			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
+					.convert2Node(cl, "userId", "id", "columnname", "parentId",
+							"columnLevelPath")));
+			JSONArray ja = jo.getJSONArray("list");
+			for (int i = 0; i < ja.size(); i++) {
+				JSONObject joi = ja.getJSONObject(i);
+				if (columnType.equals(joi.getString("id"))) {
+					return joi.getJSONArray("list").toString();
+				}
+			}
+		}
+		return "";
+	}
+
+	@Override
+	public String selectColumnTreeByParamsCustom(long userId, String sortId) {
+
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
+				sortId);
+		if (cl != null && cl.size() > 0) {
+			return JSONObject.fromObject(
+					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
+							"columnname", "parentId", "columnLevelPath")))
+					.toString();
+		}
+		return "";
+	}
 
 	@Override
 	public List<Column> selectFullPath(long id) {
@@ -335,8 +352,14 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Override
 	public List<Column> queryByUserId(long createUserId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		ColumnExample example = new ColumnExample();
+
+		Criteria criteria = example.createCriteria();
+
+		criteria.andUserIdEqualTo(createUserId);
+
+		return columnMapper.selectByExample(example);
 	}
 
 	@Override

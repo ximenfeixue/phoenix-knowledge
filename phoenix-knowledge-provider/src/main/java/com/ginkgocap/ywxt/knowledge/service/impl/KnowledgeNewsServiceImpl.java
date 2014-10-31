@@ -324,8 +324,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		String columnPath = null;
 		Column column = null;
 		if (Long.parseLong(vo.getColumnid()) != 0) {
-			columnPath = columnService.getColumnPathById(Long.parseLong(vo
-					.getColumnid()));
+			columnPath = columnService.getColumnPathById(Long
+					.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+							.getColumnid()));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
@@ -351,14 +352,18 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			if (!dule) {
 				// 格式化权限信息
 				List<String> permList = JsonUtil.getPermissionList(selectedIds);
-				int pV = userPermissionService.insertUserPermission(
-						permList,
-						kId,
-						userId,
-						vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()) != 0 ? Long
-								.parseLong(vo.getColumnid()) : column.getId());
+				int pV = userPermissionService
+						.insertUserPermission(
+								permList,
+								kId,
+								userId,
+								vo.getShareMessage(),
+								Short.parseShort(vo.getColumnType()),
+								Long.parseLong(vo.getColumnid()) != 0 ? Long
+										.parseLong(StringUtils.isBlank(vo
+												.getColumnid()) ? "0" : vo
+												.getColumnid()) : column
+										.getId());
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 				}
@@ -366,7 +371,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		}
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1, 1))) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();

@@ -85,7 +85,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 
 		// TODO 判断用户是否选择栏目
-		String columnPath = columnService.getColumnPathById(Long.parseLong(StringUtils.isBlank(vo.getColumnid())?"0":vo.getColumnid()));
+		String columnPath = columnService.getColumnPathById(Long
+				.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+						.getColumnid()));
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
@@ -110,8 +112,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			List<String> permList = JsonUtil.getPermissionList(selectedIds);
 
 			int pV = userPermissionService.insertUserPermission(permList, kId,
-					userId, vo.getShareMessage(),
-					Short.parseShort(vo.getColumnType()), Long.parseLong(vo.getColumnid()));
+					userId, vo.getShareMessage(), Short.parseShort(vo
+							.getColumnType()),
+					Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0"
+							: vo.getColumnid()));
 			if (pV == 0) {
 				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 			}
@@ -135,7 +139,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				// TODO
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1, 1));
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
+					1));
 		}
 		if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1, 1))) {
 
