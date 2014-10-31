@@ -86,7 +86,7 @@
 		LIMIT #{start},#{size}
 	</select>
 	
-	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="map">
+	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="int">
 		SELECT count(*)
 		FROM tb_knowledge_base b
 		WHERE b.column_id = #{columnId}
