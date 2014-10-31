@@ -33,5 +33,5 @@ public interface MobileSearchService {
 
 	/** 我的好友的知识并按关键字过滤分页显示 */
 	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
-			String friends, String keywords, String scope, int page, int size);
+			String friends, long columnId, String scope, int page, int size);
 }
