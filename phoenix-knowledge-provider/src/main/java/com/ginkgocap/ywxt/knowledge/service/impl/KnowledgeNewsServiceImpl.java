@@ -323,7 +323,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (Long.parseLong(vo.getColumnid()) != 0) {
+		if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid()) != 0) {
 			columnPath = columnService.getColumnPathById(Long
 					.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 							.getColumnid()));
@@ -359,11 +360,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 								userId,
 								vo.getShareMessage(),
 								Short.parseShort(vo.getColumnType()),
-								Long.parseLong(vo.getColumnid()) != 0 ? Long
-										.parseLong(StringUtils.isBlank(vo
-												.getColumnid()) ? "0" : vo
-												.getColumnid()) : column
-										.getId());
+								Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+										.getColumnid()));
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 				}

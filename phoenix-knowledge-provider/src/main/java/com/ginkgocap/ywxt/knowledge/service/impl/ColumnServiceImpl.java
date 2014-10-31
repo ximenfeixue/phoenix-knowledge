@@ -686,9 +686,9 @@ public class ColumnServiceImpl implements ColumnService {
 		criteria.andUserIdEqualTo(userId);
 
 		List<Column> list = columnMapper.selectByExample(example);
-		if (list == null)
-			return null;
-		return list.get(0);
+		if (list != null && list.size() > 0)
+			return list.get(0);
+		return null;
 	}
 
 	@Override
