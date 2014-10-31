@@ -126,12 +126,24 @@ public class KnowledgeUtil {
 		List<String> tagList = null;
 		if (StringUtils.isNotBlank(tags)) {
 			tagList = new ArrayList<String>();
-			String[] tag = tags.split(",");
+			String[] tag = tags.split(split);
 			for (String t : tag) {
 				tagList.add(t);
 			}
 		}
 		return tagList;
+	}
+
+	public static List<Long> parseIds(String ids) {
+		List<Long> idList = null;
+		if (StringUtils.isNotBlank(ids)) {
+			idList = new ArrayList<Long>();
+			String[] idsArr = ids.split(split);
+			for (String id : idsArr) {
+				idList.add(Long.parseLong(id));
+			}
+		}
+		return idList;
 	}
 
 	public static List<String> getPermissionList(String perIds) {

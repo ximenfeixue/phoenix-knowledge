@@ -139,4 +139,13 @@ public interface KnowledgeCollectionService {
 	 */
 	List<KnowledgeCollection> queryCollCategoryIds(long userId,long kId);
 	
+	/**
+	 * 批量删除收藏知识
+	 * @param userId  用户ID
+	 * @param kIds 知识ID集合
+	 * @return
+	 */
+	
+	 Map<String, Object> delCollection(long userId, String kIds); 
+	
 }

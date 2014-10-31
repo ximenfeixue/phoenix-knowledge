@@ -38,6 +38,7 @@ import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
+import com.mongodb.util.Hash;
 
 @Service("knowledgeCollectionService")
 public class KnowledgeCollectionServiceImpl implements
@@ -313,4 +314,32 @@ public class KnowledgeCollectionServiceImpl implements
 		return knowledgeCollectionMapper.selectByExample(example);
 	}
 
+	@Override
+	public Map<String, Object> delCollection(long userId, String kIds) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (StringUtils.isBlank(kIds)) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.paramNotBlank.c());
+		}
+		List<Long> idList = KnowledgeUtil.parseIds(kIds);
+		// 删除收藏信息表
+		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUseridEqualTo(userId);
+		criteria.andKnowledgeIdIn(idList);
+
+		int v = knowledgeCollectionMapper.deleteByExample(example);
+
+		if (v > 0) {
+			result.put(Constants.status, Constants.ResultType.success.v());
+		}
+		// 修改知识收藏数(后期优化)
+		for (Long id : idList) {
+
+			knowledgeStaticsMapperManual.updateStatics(id, 0, 0, -1, 0);
+		}
+		
+		return result;
+	}
 }
