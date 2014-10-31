@@ -4,12 +4,9 @@
 	namespace="com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper">
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
-		SELECT DISTINCT b.*,
-		CASE
-		WHEN b.user_id=#{userId} THEN 'me'
-		ELSE 'other'
-		END source
-		FROM tb_knowledge_base b WHERE 1=1 
+		SELECT DISTINCT b.*
+		FROM tb_knowledge_base b 
+		WHERE b.user_id=#{userId}
 		<if test="tag !=null and tag != '' ">
 			AND b.tag like CONCAT('%',#{tag},'%')
 		</if>
@@ -32,11 +29,7 @@
 	</select>
 	
 	<select id="selectKnowledgeByMyCollectionAndKeyWords" resultType="map">
-		SELECT DISTINCT b.*,
-		CASE
-	        WHEN b.user_id=#{userId} THEN 'me'
-	        ELSE 'other'
-		END source
+		SELECT DISTINCT b.* 
 		FROM tb_knowledge_collection kc,
 		tb_knowledge_base b
 		WHERE kc.knowledge_id = b.knowledge_id
@@ -96,22 +89,4 @@
     	</foreach>
 	</select>
 	
-	<select id="selectKnowledgeByUserId" resultType="map">
-		SELECT DISTINCT b.*
-		FROM tb_knowledge_base b
-		WHERE b.user_id = #{userId}
-		<if test="keyword !=null and keyword != '' ">
-			AND b.title like CONCAT('%',#{keyword},'%')
-		</if>
-		LIMIT #{start},#{size}
-	</select>
-	
-	<select id="selectCountForKnowledgeByUserId" resultType="int">
-		SELECT DISTINCT b.*
-		FROM tb_knowledge_base b
-		WHERE b.user_id = #{userId}
-		<if test="keyword !=null and keyword != '' ">
-			AND b.title like CONCAT('%',#{keyword},'%')
-		</if>
-	</select>
 </mapper>

@@ -37,12 +37,4 @@ public interface MobileKnowledgeMapper {
 
 	int selectCountForMyFriendKnowledgeByKeyWords(
 			@Param("friends") long[] friends, @Param("columnId") long columnId);
-
-	@SuppressWarnings("rawtypes")
-	List selectKnowledgeByUserId(@Param("userId") long userId,
-			@Param("keyword") String keyword, @Param("start") int start,
-			@Param("size") int size);
-
-	int selectCountForKnowledgeByUserId(@Param("userId") long userId,
-			@Param("keyword") String keyword);
 }
