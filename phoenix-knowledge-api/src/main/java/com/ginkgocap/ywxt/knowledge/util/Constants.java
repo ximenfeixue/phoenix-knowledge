@@ -195,7 +195,7 @@ public class Constants {
 	public enum Relation {
 		// 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
 		self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
-				5, "组织");
+				5, "组织"),notFriends(6,"不是好友");
 
 		private int v;
 		private String c;

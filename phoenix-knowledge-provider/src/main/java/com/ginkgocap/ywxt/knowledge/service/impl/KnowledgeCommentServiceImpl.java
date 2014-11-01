@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCommentMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCommentMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -24,6 +25,8 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 
 	@Resource
 	private KnowledgeCommentMapper knowledgeCommentMapper;
+	@Resource
+	private KnowledgeCommentMapperManual knowledgeCommentMapperManual;
 
 	@Resource
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
@@ -64,18 +67,14 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		} else {
 			// 修改子评论数
 			if (pid != 0) {
-
-				KnowledgeComment pComment = knowledgeCommentMapper
-						.selectByPrimaryKey(pid);
-				long commentCount = pComment.getCount();
-				KnowledgeComment upComment = new KnowledgeComment();
-				upComment.setCount(commentCount + 1);
-				knowledgeCommentMapper.updateByPrimaryKeySelective(upComment);
+				knowledgeCommentMapperManual.updateCountByPrimaryKey(pid, 1);
 			}
 			// 修改统计信息表值
 			knowledgeStaticsMapperManual.updateStatics(kid,
 					Constants.StaticsValue.commentCount.v(), 0, 0, 0);
-			result.put(Constants.status, Constants.ResultType.success.v());
+
+			result.putAll(findCommentList(kid, pid, 1, 10));
+			result.put("pno", 1);
 		}
 
 		return result;
@@ -97,7 +96,6 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 				.selectByExample(example);
 		result.put("list", list);
 		result.put("totalcount", knowledgeCommentMapper.countByExample(example));
-
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}

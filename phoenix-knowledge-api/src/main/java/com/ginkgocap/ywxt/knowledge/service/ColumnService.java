@@ -298,4 +298,11 @@ public interface ColumnService {
 	public Map<String, Object> updateColumn(long id, String columnName,
 			String tags, long userId);
 
+	/**
+	 * 查询ID值
+	 * @param id 栏目ID
+	 * @return
+	 */
+	public Map<String, Object> queryOne(long id);
+
 }

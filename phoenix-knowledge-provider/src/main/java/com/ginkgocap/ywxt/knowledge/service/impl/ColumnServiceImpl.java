@@ -30,7 +30,6 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -740,6 +739,22 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		batchSaveColumnTags(userId, id, tags);
 		result.put(Constants.status, Constants.ResultType.success.v());
+
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> queryOne(long id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Column column = columnMapper.selectByPrimaryKey(id);
+		ColumnTagExample example = new ColumnTagExample();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andColumnIdEqualTo(id);
+		List<ColumnTag> ct = columnTagMapper.selectByExample(example);
+		result.put(Constants.status, Constants.ResultType.success.v());
+		result.put("list", ct);
+		result.put("column", column);
 
 		return result;
 	}

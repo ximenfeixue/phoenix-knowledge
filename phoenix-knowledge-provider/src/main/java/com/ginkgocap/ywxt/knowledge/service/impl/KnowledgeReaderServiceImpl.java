@@ -32,6 +32,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
 			.getLogger(KnowledgeReaderServiceImpl.class);
+	
 
 	@Resource
 	private UserService userService;
@@ -72,7 +73,14 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else if (loginuserid == kUid) {
 			result.put("relation", Constants.Relation.self.v());
 		} else {
-			result.put("relation", Constants.Relation.friends.v());
+			int r = friendsRelationService.getFriendsStatus(loginuserid, kUid);
+			// (-1=是自己 or 0=不是好友 or 1=好友等待中 or 2=已是好友)
+			if (r == 0 || r == 1) {
+				result.put("relation", Constants.Relation.notFriends.v());
+			} else if (r == 2) {
+				result.put("relation", Constants.Relation.friends.v());
+			}
+
 		}
 		return result;
 	}
@@ -178,9 +186,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.putAll(showHeadMenu(kid, type));
 		// 查询用户基本信息并存储用户名、头像、用户ID
 		User kUser = userService.selectByPrimaryKey(kUId);
-		result.put("uname", kUser.getName());
-		result.put("pic", kUser.getPicPath());
-		result.put("uid", kUser.getId());
+		result.put("user", kUser);
 		result.put("isColl", getIsCollStatus(kid, userId));
 
 		return result;
@@ -193,7 +199,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		criteria.andUseridEqualTo(userId);
 
 		int v = knowledgeCollectionMapper.countByExample(example);
-		
+
 		return v > 0;
 	}
 
