@@ -27,7 +27,7 @@ public class KnowledgeNews extends Knowledge {
 		this.setTitle(vo.getTitle());
 		this.setCid(user.getId());
 		this.setCname(user.getName());
-		this.setSource("");
+		this.setSource(vo.getSrouce());
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());

@@ -13,6 +13,7 @@ public class KnowledgeNewsVO implements Serializable {
 	private String taskId;
 	private String cpath;
 	private String tags;
+	private String srouce;
 	private String catalogueIds;
 	private String columnid;
 	private String essence;
@@ -26,6 +27,50 @@ public class KnowledgeNewsVO implements Serializable {
 	private long oid;
 	// 价格
 	private float price;
+
+	// 法律法规-发文单位
+	private String postUnit;
+
+	// 法律法规-文号
+	private String titanic;
+
+	// 法律法规-发布日期
+	private String submitTime;
+
+	// 法律法规-执行日期
+	private String performTime;
+
+	public String getPostUnit() {
+		return postUnit;
+	}
+
+	public void setPostUnit(String postUnit) {
+		this.postUnit = postUnit;
+	}
+
+	public String getTitanic() {
+		return titanic;
+	}
+
+	public void setTitanic(String titanic) {
+		this.titanic = titanic;
+	}
+
+	public String getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(String submitTime) {
+		this.submitTime = submitTime;
+	}
+
+	public String getPerformTime() {
+		return performTime;
+	}
+
+	public void setPerformTime(String performTime) {
+		this.performTime = performTime;
+	}
 
 	public String getColumnName() {
 		return columnName;
@@ -165,6 +210,14 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public String getSrouce() {
+		return srouce;
+	}
+
+	public void setSrouce(String srouce) {
+		this.srouce = srouce;
 	}
 
 }
