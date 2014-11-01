@@ -72,7 +72,7 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 	public KnowledgeCase getKnowledgeCaseDetail(Long id) {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
-		return (KnowledgeCase) mongoTemplate.find(query, KnowledgeCase.class, "KnowledgeCase");
+		return (KnowledgeCase) mongoTemplate.findOne(query, KnowledgeCase.class, "KnowledgeCase");
 	}
 
 	@Override
