@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +37,14 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 
 	@Override
 	public List<KnowledgeRecycle> selectKnowledgeRecycle(long userid,
-			String type, int pageno, int pagesize) {
+			String type, String keyword, int pageno, int pagesize) {
 
 		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUseridEqualTo(userid);
+		if (StringUtils.isNotBlank(keyword)) {
+			criteria.andTitleLike("%" + keyword + "%");
+		}
 		example.setOrderByClause("createtime desc");
 		example.setLimitStart(pageno);
 		example.setLimitEnd(pagesize);
@@ -48,11 +52,14 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	}
 
 	@Override
-	public int countKnowledgeRecycle(long userid, String type) {
+	public int countKnowledgeRecycle(long userid, String type, String keyword) {
 
 		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUseridEqualTo(userid);
+		if (StringUtils.isNotBlank(keyword)) {
+			criteria.andTitleLike("%" + keyword + "%");
+		}
 		return knowledgeRecycleMapper.countByExample(example);
 	}
 
@@ -64,7 +71,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 
 	@Override
 	public int insertKnowledgeRecycle(long knowledgeid, String recyclename,
-			String type, long userid,long categoryid) {
+			String type, long userid, long categoryid) {
 
 		KnowledgeRecycle recycle = new KnowledgeRecycle();
 		recycle.setKnowledgeId(knowledgeid);

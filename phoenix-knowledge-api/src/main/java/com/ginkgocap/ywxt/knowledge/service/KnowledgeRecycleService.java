@@ -28,10 +28,10 @@ public interface KnowledgeRecycleService {
 	 */
 	KnowledgeRecycle selectByKnowledgeId(long knowledgeid);
 
-	List<KnowledgeRecycle> selectKnowledgeRecycle(long userid, String type,
+	List<KnowledgeRecycle> selectKnowledgeRecycle(long userid, String type,String keyword,
 			int pageno, int pagesize);
 
-	int countKnowledgeRecycle(long userid, String type);
+	int countKnowledgeRecycle(long userid, String type,String keyword);
 
 	/**
 	 * 删除回收站知识
