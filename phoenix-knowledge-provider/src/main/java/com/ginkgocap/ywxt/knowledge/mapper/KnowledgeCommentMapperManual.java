@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
 
 public interface KnowledgeCommentMapperManual {
 
-	int updateCountByPrimaryKey(long commentId, int count);
+	int updateCountByPrimaryKey(@Param("commentId") long commentId, @Param("count") int count);
 }
