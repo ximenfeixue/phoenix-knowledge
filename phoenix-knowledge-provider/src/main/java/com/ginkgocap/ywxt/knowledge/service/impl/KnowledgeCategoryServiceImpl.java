@@ -14,9 +14,9 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
@@ -27,6 +27,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 
 @Service("knowledgeCategoryService")
 public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
@@ -157,7 +158,8 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 					.getColumnid()) ? "0" : vo.getColumnid()));
 			base.setColumnType((short) Constants.KnowledgeType.News.v());
 			base.setCreatetime(new Date());
-			base.setTag(vo.getTags());
+			base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil
+					.ToEnglishSymbol(vo.getTags()) : "");
 			base.setAuthor(username);
 			base.setPath(columnPath);
 			base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
