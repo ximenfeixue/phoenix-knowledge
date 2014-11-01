@@ -53,5 +53,9 @@ public class KnowledgeHomeServiceTest extends TestBase {
         knowledgeHomeService.selectAllKnowledgeCategoryByParam("", "", 0, "", 10132l,
                 "", 1, 20);
     }
+    @Test
+    public void selectAllByParam() {
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 32 + "", 10132l, 1, 20);
+    }
 
 }

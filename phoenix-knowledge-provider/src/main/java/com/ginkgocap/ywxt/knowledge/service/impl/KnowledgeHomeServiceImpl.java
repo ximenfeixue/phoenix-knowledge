@@ -147,7 +147,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                 criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(refull.toString());
             }
         }
-        criteriaMy.and("cid").is(userid);
+        criteriaMy.and("cid").is(userid).and("cpathid").is(refull.toString());
         criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(refull.toString());
         criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString()+"/.*$");
         criteriaGt.orOperator(criteriaGtz,criteriaGto);
