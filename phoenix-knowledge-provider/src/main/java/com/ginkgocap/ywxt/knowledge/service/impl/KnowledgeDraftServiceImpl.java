@@ -210,12 +210,15 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
-			int pageno, int pagesize) {
+			String keyword, int pageno, int pagesize) {
 
 		KnowledgeDraftExample example = new KnowledgeDraftExample();
 		Criteria criteria = example.createCriteria();
 		if (StringUtils.isNotBlank(type)) {
 			criteria.andDrafttypeEqualTo(type);
+		}
+		if (StringUtils.isNotBlank(keyword)) {
+			criteria.andDraftnameLike("%" + keyword + "%");
 		}
 		criteria.andUseridEqualTo(userid);
 		example.setOrderByClause("createtime desc");
@@ -225,12 +228,15 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
-	public int countKnowledgeDraft(long userid, String type) {
+	public int countKnowledgeDraft(long userid, String type,String keyword) {
 
 		KnowledgeDraftExample example = new KnowledgeDraftExample();
 		Criteria criteria = example.createCriteria();
 		if (StringUtils.isNotBlank(type)) {
 			criteria.andDrafttypeEqualTo(type);
+		}
+		if (StringUtils.isNotBlank(keyword)) {
+			criteria.andDraftnameLike("%" + keyword + "%");
 		}
 		criteria.andUseridEqualTo(userid);
 		return knowledgeDraftMapper.countByExample(example);

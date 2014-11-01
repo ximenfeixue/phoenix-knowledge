@@ -47,10 +47,10 @@ public interface KnowledgeDraftService {
 	 */
 	KnowledgeDraft selectByKnowledgeId(long knowledgeid);
 
-	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
+	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,String keyword,
 			int pageno, int pagesize);
 
-	int countKnowledgeDraft(long userid, String type);
+	int countKnowledgeDraft(long userid, String type,String keyword);
 
 	/**
 	 * 删除草稿箱知识
