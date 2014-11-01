@@ -129,6 +129,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         }
         //子栏目查询,否则为栏目类型查询
         if (leng >= 10 ) {
+            criteriaMy.and("cid").is(userid).and("cpathid").is(refull.toString());
             List<Column>rcl=columnService.selectFullPath(cid);
             int count=0;
             for(Column v:rcl){
@@ -140,6 +141,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
             }
             criteriaUp.and("cpathid").regex(refull.toString()+".*$").and("cid").is(userid);
         }else{
+            criteriaMy.and("cid").is(userid);
             //一级栏目为自定义的情形
             if (cid > 11) {
                 refull=new StringBuffer();
@@ -147,7 +149,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                 criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(refull.toString());
             }
         }
-        criteriaMy.and("cid").is(userid).and("cpathid").is(refull.toString());
         criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(refull.toString());
         criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString()+"/.*$");
         criteriaGt.orOperator(criteriaGtz,criteriaGto);

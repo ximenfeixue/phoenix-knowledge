@@ -55,7 +55,7 @@ public class KnowledgeHomeServiceTest extends TestBase {
     }
     @Test
     public void selectAllByParam() {
-        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 32 + "", 10132l, 1, 20);
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 1 + "", 10132l, 1, 20);
     }
 
 }
