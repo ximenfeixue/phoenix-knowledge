@@ -228,7 +228,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
-	public int countKnowledgeDraft(long userid, String type,String keyword) {
+	public int countKnowledgeDraft(long userid, String type, String keyword) {
 
 		KnowledgeDraftExample example = new KnowledgeDraftExample();
 		Criteria criteria = example.createCriteria();
@@ -245,7 +245,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public int deleteKnowledgeDraft(long knowledgeid) {
 
-		return 0;
+		return knowledgeDraftMapper.deleteByPrimaryKey(knowledgeid);
 	}
 
 }

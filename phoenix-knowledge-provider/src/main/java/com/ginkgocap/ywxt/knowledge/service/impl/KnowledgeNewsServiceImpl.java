@@ -150,8 +150,6 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		knowledgeNewsDAO.updateKnowledge(vo, user);
-
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
@@ -165,48 +163,53 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			columnPath = Constants.unGroupSortName;
 		}
 
-		// 修改栏目知识关系
-		int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
-				.getkId(),
-				Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-						.getColumnid()));
+		knowledgeNewsDAO.updateKnowledge(vo, user);
+		// // 修改栏目知识关系
+		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
+		// .getkId(),
+		// Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+		// .getColumnid()));
+		//
+		// if (columnknowledgeCount == 0) {
+		// logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
+		// result.put(Constants.status, Constants.ResultType.fail.v());
+		// return result;
+		// }
 
-		if (columnknowledgeCount == 0) {
-			logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			return result;
-		}
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 
-		// 删除用户权限数据
-		int userPermissionCount = userPermissionService.deleteUserPermission(vo
-				.getkId());
-		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
-		if (StringUtils.isNotBlank(selectedIds)
-				&& !vo.getSelectedIds().equals(dule)) {
-			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
-			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", selectedIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			if (!dule) {
-				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(selectedIds);
-				int pV = userPermissionService
-						.insertUserPermission(permList, vo.getkId(), user
-								.getId(), vo.getShareMessage(), Short
-								.parseShort(vo.getColumnType()),
-								Long.parseLong(StringUtils.isBlank(vo
-										.getColumnid()) ? "0" : vo
-										.getColumnid()));
-				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-							vo.getkId());
+			// 删除用户权限数据
+			int userPermissionCount = userPermissionService
+					.deleteUserPermission(vo.getkId(), user.getId());
+			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+			String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
+			if (StringUtils.isNotBlank(selectedIds)
+					&& !vo.getSelectedIds().equals(dule)) {
+				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
+				Boolean dule = JsonUtil.checkKnowledgePermission(vo
+						.getSelectedIds());
+				if (dule == null) {
+					logger.error("解析权限信息失败，参数为：{}", selectedIds);
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.paramNotValid.c());
+					return result;
+				}
+				if (!dule) {
+					// 格式化权限信息
+					List<String> permList = JsonUtil
+							.getPermissionList(selectedIds);
+					int pV = userPermissionService.insertUserPermission(
+							permList, vo.getkId(), user.getId(), vo
+									.getShareMessage(), Short.parseShort(vo
+									.getColumnType()), Long
+									.parseLong(StringUtils.isBlank(vo
+											.getColumnid()) ? "0" : vo
+											.getColumnid()));
+					if (pV == 0) {
+						logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
+								vo.getkId());
+					}
 				}
 			}
 		}
@@ -254,6 +257,21 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			}
 		}
 
+		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
+				.getkId());
+		if (draft != null) {
+
+			int draftV = knowledgeDraftService
+					.deleteKnowledgeDraft(vo.getkId());
+
+			if (draftV == 0) {
+				logger.error("删除该知识所在的草稿箱信息，知识ID:{}", vo.getkId());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		logger.info("编辑知识成功,知识ID:{}", vo.getkId());
 		return result;

@@ -177,7 +177,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public int deleteUserPermission(long knowledgeid, long userid) {
 
-		return userPermissionDAO.deleteUserPermission(knowledgeid, userid);
+		UserPermissionExample example = new UserPermissionExample();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andSendUserIdEqualTo(userid);
+		return userPermissionMapper.deleteByExample(example);
 	}
 
 	@Override
