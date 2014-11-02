@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 
+import com.ginkgocap.ywxt.user.model.User;
+
 public interface KnowledgeCommentService {
 
 	/**
@@ -17,7 +19,7 @@ public interface KnowledgeCommentService {
 	 *            评论内容
 	 * @return
 	 */
-	Map<String, Object> addComment(long kid, long userid, long pid,
+	Map<String, Object> addComment(long kid, User user, long pid,
 			String content);
 
 	/**
@@ -27,17 +29,19 @@ public interface KnowledgeCommentService {
 	 *            知识Id
 	 * @param pid
 	 *            父级Id (0查一级，非0查2级)
-	 * @param psize 
+	 * @param psize  
 	 * @param pno 
+	 * @param user
 	 * @return
 	 */
-	Map<String, Object> findCommentList(long kid, long pid, Integer pno, Integer psize);
+	Map<String, Object> findCommentList(long kid, long pid, Integer pno, Integer psize,User user);
 
 	/**
 	 * 删除评论
 	 * @param id 评论id
+	 * @param kId 知识Id
 	 * @param userid 登陆用户Id
 	 * @return
 	 */
-	Map<String, Object> delComment(long id, long userid); 
+	Map<String, Object> delComment(long id,long kId, User user); 
 }

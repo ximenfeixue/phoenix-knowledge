@@ -752,8 +752,18 @@ public class ColumnServiceImpl implements ColumnService {
 				.createCriteria();
 		criteria.andColumnIdEqualTo(id);
 		List<ColumnTag> ct = columnTagMapper.selectByExample(example);
+		String tags = "";
+		if (ct != null && ct.size() > 0) {
+			StringBuffer buffer = new StringBuffer();
+			for (ColumnTag tag : ct) {
+				buffer.append(tag);
+				buffer.append(",");
+			}
+			buffer.deleteCharAt(buffer.length() - 1);
+			tags = buffer.toString();
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
-		result.put("list", ct);
+		result.put("tags", tags);
 		result.put("column", column);
 
 		return result;
