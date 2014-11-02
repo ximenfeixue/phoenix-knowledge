@@ -155,17 +155,21 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (Long.parseLong(vo.getColumnid()) != 0) {
-			columnPath = columnService.getColumnPathById(Long.parseLong(vo
-					.getColumnid()));
+		if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid()) != 0) {
+			columnPath = columnService.getColumnPathById(Long
+					.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+							.getColumnid()));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
 		}
 
 		// 修改栏目知识关系
-		int columnknowledgeCount = columnKnowledgeService.updateColumn(
-				vo.getkId(), Long.parseLong(vo.getColumnid()));
+		int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
+				.getkId(),
+				Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+						.getColumnid()));
 
 		if (columnknowledgeCount == 0) {
 			logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
@@ -177,14 +181,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		int userPermissionCount = userPermissionService.deleteUserPermission(vo
 				.getkId());
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-
-		if (StringUtils.isNotBlank(vo.getSelectedIds())
+		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
+		if (StringUtils.isNotBlank(selectedIds)
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
 			Boolean dule = JsonUtil.checkKnowledgePermission(vo
 					.getSelectedIds());
 			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+				logger.error("解析权限信息失败，参数为：{}", selectedIds);
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.paramNotValid.c());
@@ -192,16 +196,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			}
 			if (!dule) {
 				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo
-						.getSelectedIds());
-				int pV = userPermissionService.insertUserPermission(
-						permList,
-						vo.getkId(),
-						user.getId(),
-						vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()) != 0 ? Long
-								.parseLong(vo.getColumnid()) : column.getId());
+				List<String> permList = JsonUtil.getPermissionList(selectedIds);
+				int pV = userPermissionService
+						.insertUserPermission(permList, vo.getkId(), user
+								.getId(), vo.getShareMessage(), Short
+								.parseShort(vo.getColumnType()),
+								Long.parseLong(StringUtils.isBlank(vo
+										.getColumnid()) ? "0" : vo
+										.getColumnid()));
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
@@ -219,7 +221,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			logger.error("删除该知识下的所有目录，知识ID:{}", vo.getkId());
 			long[] cIds = null;
 			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+			if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
 				UserCategoryExample example = new UserCategoryExample();
 				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 						.createCriteria();
