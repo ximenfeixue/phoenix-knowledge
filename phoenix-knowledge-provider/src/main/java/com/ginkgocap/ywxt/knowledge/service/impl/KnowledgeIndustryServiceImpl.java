@@ -71,7 +71,7 @@ public class KnowledgeIndustryServiceImpl implements KnowledgeIndustryService {
 		Criteria c = Criteria.where("id").is(id);
 		Query query = new Query(c);
 		return (KnowledgeIndustry) mongoTemplate.findOne(query,
-				KnowledgeIndustry.class);
+				KnowledgeIndustry.class,"KnowledgeIndustry");
 	}
 
 	@Override
