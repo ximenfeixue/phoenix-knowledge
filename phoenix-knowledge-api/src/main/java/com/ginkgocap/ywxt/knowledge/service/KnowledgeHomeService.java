@@ -91,9 +91,10 @@ public interface KnowledgeHomeService {
     
     /**
      * 查询知识和用户的关系
+     * @param id 
      * @param kid 知识id
      * @param userId userid
      * @return
      */
-    public int beRelation(int t,long kid, long userId) ;
+    public int beRelation(long id, int t,long kid, long userId) ;
 }

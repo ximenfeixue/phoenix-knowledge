@@ -108,7 +108,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
-        String columnname = column.getColumnname();
         int leng = column.getColumnLevelPath().length();
         String ty = column.getColumnLevelPath().substring(0, 9);
         long type = Long.parseLong(ty);
@@ -116,42 +115,35 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Criteria criteriaPj = new Criteria();
         Criteria criteriaUp = new Criteria();
         Criteria criteriaMy = new Criteria();
+        Criteria criteriaMyo = new Criteria();
+        Criteria criteriaMyz = new Criteria();
         Criteria criteriaGt = new Criteria();
         Criteria criteriaGtz = new Criteria();
         Criteria criteriaGto = new Criteria();
         List<Long> ids = new ArrayList<Long>();
-        StringBuffer refull = new StringBuffer();
+        String reful=column.getPathName();
         //栏目类型过滤
         ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
-        //查询资讯
+       
         if (ids != null) {
             criteriaUp.and("_id").in(ids);
         }
         //子栏目查询,否则为栏目类型查询
         if (leng >= 10 ) {
-            criteriaMy.and("cid").is(userid).and("cpathid").is(refull.toString());
-            List<Column>rcl=columnService.selectFullPath(cid);
-            int count=0;
-            for(Column v:rcl){
-                count++;
-                refull.append(v.getColumnname());
-                if(rcl.size()!=count){
-                    refull.append("/");
-                }
-            }
-            criteriaUp.and("cpathid").regex(refull.toString()+".*$").and("cid").is(userid);
+            criteriaMyo.and("cid").is(userid).and("cpathid").regex(reful+"/.*$");
+            criteriaMyz.and("cid").is(userid).and("cpathid").regex(reful+".*$");
+            criteriaUp.and("cpathid").regex(reful+".*$").and("cid").is(userid);
         }else{
             criteriaMy.and("cid").is(userid);
             //一级栏目为自定义的情形
             if (cid > 11) {
-                refull=new StringBuffer();
-                refull.append(columnname);
-                criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(refull.toString());
+                criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(reful);
             }
         }
-        criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(refull.toString());
-        criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(refull.toString()+"/.*$");
+        criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(reful);
+        criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(reful+"/.*$");
         criteriaGt.orOperator(criteriaGtz,criteriaGto);
+        criteriaMy.orOperator(criteriaMyz,criteriaMyo);
         criteriaPj.orOperator(criteriaUp,criteriaGt,criteriaMy);
         criteria.andOperator(criteriaPj);
         //查询知识
@@ -243,11 +235,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public int beRelation(int t,long cid, long userId) {
+    public int beRelation(long id,int t,long cid, long userId) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",cid);
         UserPermissionExample example = new UserPermissionExample();
         example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
-        int count = countKnowledgeByMongo(t,cid,userId);
+        int count = countKnowledgeByMongo(id,t,cid,userId);
         if (count > 0) {
             return Constants.Relation.self.v();//自己
         }
@@ -264,11 +256,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         return Constants.Relation.friends.v();//好友可见
     }
 
-    private int countKnowledgeByMongo(int t, long cid, long userId) {
+    private int countKnowledgeByMongo(long id, int t, long cid, long userId) {
         String[] names = Constants.Type.values()[t-1].obj().split("\\.");
         int length = names.length;
         Criteria criteria = Criteria.where("status").is(4);
-        criteria.and("cid").is(userId);
+        criteria.and("cid").is(userId).and("_id").is(id);
         Query query = new Query(criteria);
         long count = mongoTemplate.count(query, names[length - 1]);
         return (int) count;
