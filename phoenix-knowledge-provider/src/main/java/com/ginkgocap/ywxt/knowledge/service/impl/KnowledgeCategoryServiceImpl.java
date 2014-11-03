@@ -87,7 +87,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andCategoryIdEqualTo(categoryid);
-		return knowledgeCategoryMapper.updateByExample(knowledgecategory,
+		return knowledgeCategoryMapper.updateByExampleSelective(knowledgecategory,
 				example);
 	}
 

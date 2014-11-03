@@ -150,8 +150,21 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
     @Override
     public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
         Map<String, Object> result = new HashMap<String, Object>();
-        long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(
-                ","));
+        long[] knowledgeid = null;
+        
+        //检查是否为标准数据
+        try {
+            if (knowledgeids.endsWith(",")) {
+                knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
+            } else {
+                knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.split(","));
+            }
+        } catch (Exception e) {
+            result.put(Constants.status, Constants.ResultType.fail.v());
+            return result;
+        }
+        
+        //批量删除
         for (int i = 0; i < knowledgeid.length; i++) {
             KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
             String title = "";
