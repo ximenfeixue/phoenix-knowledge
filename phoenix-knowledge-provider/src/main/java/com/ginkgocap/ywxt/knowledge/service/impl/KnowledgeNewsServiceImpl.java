@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
@@ -46,6 +47,8 @@ import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.util.sso.session.SessionManager;
+
 
 @Service("knowledgeNewsService")
 public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
@@ -63,7 +66,6 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
-
 	@Resource
 	private MongoTemplate mongoTemplate;
 
@@ -144,6 +146,40 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		return result;
 	}
+	
+    @Override
+    public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(
+                ","));
+        for (int i = 0; i < knowledgeid.length; i++) {
+            KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
+            String title = "";
+            long ct = 0;
+            if (bl != null) {
+                title = bl.getTitle();
+                ct = bl.getColumnType();
+            }else{
+                continue;
+            }
+            String obj = Constants.getTableName(ct + "");
+            String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
+            Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
+            Query query = new Query(criteria);
+            Update update = new Update();
+            update.set("status", Constants.Status.recycle.v());
+
+            //删除更新关联表
+            try {
+                mongoTemplate.updateFirst(query, update, collectionName);
+                knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title, ct + "", userid, catetoryid);
+                knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], catetoryid);
+            } catch (Exception e) {
+                result.put(Constants.status, Constants.ResultType.fail.v());
+            }
+        }
+        return result;
+    }
 
 	@Override
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {

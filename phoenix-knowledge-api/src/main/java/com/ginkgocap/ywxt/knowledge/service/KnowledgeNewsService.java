@@ -82,4 +82,7 @@ public interface KnowledgeNewsService {
 
 	void deleteforeverKnowledge(long knowledgeid);
 
+
+    Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid, long userid);
+
 }
