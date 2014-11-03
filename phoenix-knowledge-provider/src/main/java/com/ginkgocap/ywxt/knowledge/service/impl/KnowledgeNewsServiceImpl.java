@@ -198,6 +198,9 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					// 格式化权限信息
 					List<String> permList = JsonUtil
 							.getPermissionList(selectedIds);
+					// 大乐全平台分享
+					userPermissionService.insertUserShare(permList,
+							vo.getkId(), vo, user);
 					int pV = userPermissionService.insertUserPermission(
 							permList, vo.getkId(), user.getId(), vo
 									.getShareMessage(), Short.parseShort(vo

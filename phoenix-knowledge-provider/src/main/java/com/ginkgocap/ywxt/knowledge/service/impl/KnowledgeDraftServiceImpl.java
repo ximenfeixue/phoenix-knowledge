@@ -110,7 +110,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		if (!dule) {
 			// 格式化权限信息
 			List<String> permList = JsonUtil.getPermissionList(selectedIds);
-
+			// 大乐全平台分享
+			userPermissionService.insertUserShare(permList, kId, vo, user);
 			int pV = userPermissionService.insertUserPermission(permList, kId,
 					userId, vo.getShareMessage(), Short.parseShort(vo
 							.getColumnType()),
