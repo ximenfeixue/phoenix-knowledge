@@ -267,9 +267,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		for (String perm : permList) {
 			// 2:1,2,3,4
 			String[] perInfo = perm.split(":");
-			if (perInfo != null && perInfo.length > 0) {
+			if (perInfo != null && perInfo.length == 2) {
+				String perType = perInfo[0];
 				String perUser = perInfo[1];
-				if (perInfo != null && perInfo.length > 0) {
+				if (perInfo != null && perInfo.length > 0
+						&& Integer.parseInt(perType) == 2) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
 						if (Integer.parseInt(userId) == -1) {
@@ -281,5 +283,4 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}
 		}
 	}
-
 }
