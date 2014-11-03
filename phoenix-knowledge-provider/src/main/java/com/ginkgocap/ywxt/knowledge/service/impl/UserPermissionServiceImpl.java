@@ -20,6 +20,7 @@ import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.user.model.User;
@@ -262,7 +263,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public void insertUserShare(List<String> permList) {
+	public void insertUserShare(List<String> permList,KnowledgeNewsVO vo) {
 
 		for (String perm : permList) {
 			// 2:1,2,3,4

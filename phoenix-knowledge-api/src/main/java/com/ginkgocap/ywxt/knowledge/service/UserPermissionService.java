@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
 /**
  * 知识栏目关系
@@ -39,7 +40,7 @@ public interface UserPermissionService {
 	 * @param permList
 	 * @return
 	 */
-	void insertUserShare(List<String> permList);
+	void insertUserShare(List<String> permList, KnowledgeNewsVO vo);
 
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
