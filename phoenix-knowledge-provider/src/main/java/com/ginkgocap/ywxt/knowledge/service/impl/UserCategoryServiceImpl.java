@@ -74,10 +74,17 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     }
 
     @Override
-    public void insert(UserCategory category) {
+    public String insert(UserCategory category) {
         //得到要添加的分类的父类parentId
         try {
+            long userid = category.getUserId();
             long parentId = category.getParentId();
+            String cname = category.getCategoryname();
+            Short ct = category.getCategoryType();
+            List<UserCategory> lu = this.selectUserCategoryByParams(userid, parentId, ct, cname);
+            if (lu != null && lu.size() > 0) {
+                return "false";
+            }
             //得到要添加的分类的父类sortId
             String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
             //通过parentSortId得到子类最大已添加的sortId
@@ -99,6 +106,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "success";
     }
 
     @Override
@@ -154,7 +162,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
     @Override
     public void checkNogroup(Long uid, List<Long> idtypes) {
         for (long type : idtypes) {
-            List<UserCategory> l = this.selectUserCategoryByParams(uid, type,"未分组");
+            List<UserCategory> l = this.selectUserCategoryByParams(uid,0l, type,"未分组");
             //初始化未分组
             if (l.size() == 0) {
                 UserCategory uc = new UserCategory();
@@ -168,7 +176,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         }
     }
 
-    private List<UserCategory> selectUserCategoryByParams(Long uid, long type, String categoryname) {
+    private List<UserCategory> selectUserCategoryByParams(Long uid, long pid,long type, String categoryname) {
         UserCategoryExample example = new UserCategoryExample();
         Criteria c = example.createCriteria();
         if (uid > 0) {
@@ -180,6 +188,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         if (categoryname != null && !"".equals(categoryname)) {
             c.andCategorynameEqualTo(categoryname);
         }
+        c.andParentIdEqualTo(pid);
         List<UserCategory> ll = userCategoryMapper.selectByExample(example);
         return ll;
     }
