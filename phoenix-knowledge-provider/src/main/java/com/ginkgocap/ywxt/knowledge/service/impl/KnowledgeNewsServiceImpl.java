@@ -147,7 +147,6 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 	@Override
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
-
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		// TODO 判断用户是否选择栏目
@@ -163,6 +162,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			columnPath = Constants.unGroupSortName;
 		}
 
+		vo.setColumnPath(columnPath);
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 		// // 修改栏目知识关系
 		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
@@ -186,8 +186,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			if (StringUtils.isNotBlank(selectedIds)
 					&& !vo.getSelectedIds().equals(dule)) {
 				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-				Boolean dule = JsonUtil.checkKnowledgePermission(vo
-						.getSelectedIds());
+				Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
 				if (dule == null) {
 					logger.error("解析权限信息失败，参数为：{}", selectedIds);
 					result.put(Constants.status, Constants.ResultType.fail.v());
@@ -220,41 +219,38 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		// 删除该知识的基本信息
 		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
 
-		if (categoryCount > 0) {
-			logger.error("删除该知识下的所有目录，知识ID:{}", vo.getkId());
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
-					vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(user.getId());
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
+		long[] cIds = null;
+		// 添加知识到知识目录表
+		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
+			UserCategoryExample example = new UserCategoryExample();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+					.createCriteria();
+			criteria.andSortidEqualTo(Constants.unGroupSortId);
+			criteria.andUserIdEqualTo(user.getId());
+			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+					.v());
+			List<UserCategory> list = userCategoryMapper
+					.selectByExample(example);
+			if (list != null && list.size() == 1) {
+				cIds = new long[1];
+				cIds[0] = list.get(0).getId();
 
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds()
-						.substring(1, vo.getCatalogueIds().length()));
 			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, user.getId(), user.getName(),
-					columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
+		} else {
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()));
+		}
+		int categoryV = knowledgeCategoryService
+				.insertKnowledgeRCategory(vo.getkId(), cIds, user.getId(),
+						user.getName(), columnPath, vo);
+		if (categoryV == 0) {
+			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+					vo.getkId(), cIds);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeFail.c());
+			return result;
 		}
 
 		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
@@ -273,6 +269,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			}
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
+		result.put("knowledgeid", vo.getkId());
+		result.put("type", vo.getColumnType());
 		logger.info("编辑知识成功,知识ID:{}", vo.getkId());
 		return result;
 
@@ -377,6 +375,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					// 格式化权限信息
 					List<String> permList = JsonUtil
 							.getPermissionList(selectedIds);
+					//中乐，大乐，小乐，中是否有全平台
+					userPermissionService.insertUserShare(permList);
 					int pV = userPermissionService.insertUserPermission(
 							permList, kId, userId, vo.getShareMessage(), Short
 									.parseShort(vo.getColumnType()), Long

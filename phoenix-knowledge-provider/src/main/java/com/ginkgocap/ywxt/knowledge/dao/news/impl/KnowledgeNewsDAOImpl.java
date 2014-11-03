@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -103,11 +104,14 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("uname", user.getName());
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
-			update.set("desc", vo.getShareMessage());
+			update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
+					.substring(0, 50) : vo.getContent());
 			update.set("content", vo.getContent());
-			update.set("essence", vo.getEssence());
+			update.set("essence", Integer.parseInt(StringUtils.isBlank(vo
+					.getEssence()) ? "0" : vo.getEssence()));
 			update.set("modifytime", new Date());
 			update.set("taskid", vo.getTaskId());
+			update.set("columnid", vo.getColumnid());
 			update.set("postUnit", vo.getPostUnit());
 			update.set("titanic", vo.getTitanic());
 			update.set("submitTime", vo.getSubmitTime());

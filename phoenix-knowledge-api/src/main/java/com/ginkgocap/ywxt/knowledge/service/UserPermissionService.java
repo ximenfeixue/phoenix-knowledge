@@ -15,16 +15,32 @@ public interface UserPermissionService {
 
 	/**
 	 * 添加知识权限信息
-	 * @param permList 接收者ID集合
-	 * @param knowledgeid 知识ID
-	 * @param send_uid 发起者ID
+	 * 
+	 * @param permList
+	 *            接收者ID集合
+	 * @param knowledgeid
+	 *            知识ID
+	 * @param send_uid
+	 *            发起者ID
 	 * @param shareMessage
-	 * @param column_type 知识类型
-	 * @param column_id 栏目ID
+	 * @param column_type
+	 *            知识类型
+	 * @param column_id
+	 *            栏目ID
 	 * @return
 	 */
 	int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, String shareMessage,  short column_type,long column_id);
+			long send_uid, String shareMessage, short column_type,
+			long column_id);
+
+	/**
+	 * 如果是全平台，走分享接口
+	 * 
+	 * @param permList
+	 * @return
+	 */
+	void insertUserShare(List<String> permList);
+
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
 	 * 
@@ -32,7 +48,9 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, int type, String mento,  short column_type,long column_id,String title,String desc,String picPath,String tags);
+			long send_uid, int type, String mento, short column_type,
+			long column_id, String title, String desc, String picPath,
+			String tags);
 
 	/**
 	 * 刪除知识，把用户权限记录
@@ -42,7 +60,7 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	int deleteUserPermission(long[] knowledgeids, long userid);
-	
+
 	int deleteUserPermission(long knowledgeid);
 
 	// 查询知识ID
@@ -62,17 +80,21 @@ public interface UserPermissionService {
 	List<Long> selectByParams(Long receive_user_id, Long column_id, Long type);
 
 	int deleteUserPermission(long knowledgeid, long userid);
-	
+
 	/**
 	 * 获取我的分享
-	 * @param userId 用户id
-	 * @param start start
- 	 * @param pageSize step  (为0时查询全部数据)
+	 * 
+	 * @param userId
+	 *            用户id
+	 * @param start
+	 *            start
+	 * @param pageSize
+	 *            step (为0时查询全部数据)
 	 * @return
 	 */
-	public Map<String,Object> getMyShare(Long userId,int start,int pageSize);
-	
-	public Map<String,Object> getShareme(Long userId,int start,int pageSize);
-	
-	List<UserPermission> selectUserPermission(long knowledgeid,long userid);
+	public Map<String, Object> getMyShare(Long userId, int start, int pageSize);
+
+	public Map<String, Object> getShareme(Long userId, int start, int pageSize);
+
+	List<UserPermission> selectUserPermission(long knowledgeid, long userid);
 }

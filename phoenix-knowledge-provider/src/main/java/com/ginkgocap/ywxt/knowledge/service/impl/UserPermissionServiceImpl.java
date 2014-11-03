@@ -261,4 +261,25 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		return userPermissionMapper.deleteByExample(example);
 	}
 
+	@Override
+	public void insertUserShare(List<String> permList) {
+
+		for (String perm : permList) {
+			// 2:1,2,3,4
+			String[] perInfo = perm.split(":");
+			if (perInfo != null && perInfo.length > 0) {
+				String perUser = perInfo[1];
+				if (perInfo != null && perInfo.length > 0) {
+					String[] userList = perUser.split(split);
+					for (String userId : userList) {
+						if (Integer.parseInt(userId) == -1) {
+							getMyShare(Long.parseLong(userId), 1, 10);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
