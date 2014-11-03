@@ -284,4 +284,43 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}
 		}
 	}
+
+	@Override
+	public boolean insertUserPermissionMongo(List<Long> receiveList,
+			String title, String desc, String picPath, String tags,
+			long send_uid, String mento, short column_type,
+			long column_id,long knowledgeid) {
+		UserPermissionMongo userPermission = new UserPermissionMongo();
+		StringBuffer sb = new StringBuffer();
+
+		for (Long uid : receiveList) {
+			User user = userService.selectByPrimaryKey(uid);
+			if (user != null) {
+				sb.append(user.getName());
+				sb.append(split);
+			}
+		}
+		if (sb.length() > 0) {
+			sb = sb.deleteCharAt(sb.length() - 1);
+		}
+		User user = userService.selectByPrimaryKey(send_uid);
+		userPermission.setSendUserName(user.getName());
+		userPermission.setReceiveUserId(receiveList);
+		userPermission.setReceiveName(sb.toString());
+		userPermission.setColumnId(column_id);
+		userPermission.setColumnType(column_type);
+		userPermission.setColumnId(column_id);
+		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
+				"yyyy-MM-dd HH:mm:ss"));
+		userPermission.setKnowledgeId(knowledgeid);
+		userPermission.setMento(mento);
+		userPermission.setSendUserId(send_uid);
+		userPermission.setTitle(title);
+		userPermission.setDesc(desc);
+		userPermission.setPicPath(picPath);
+		userPermission.setTags(tags);
+		mongoTemplate.insert(userPermission);
+		return false;
+	}
+
 }
