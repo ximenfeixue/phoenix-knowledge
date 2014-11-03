@@ -263,23 +263,34 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public void insertUserShare(List<String> permList,KnowledgeNewsVO vo) {
+	public void insertUserShare(List<String> permList, long kId,
+			KnowledgeNewsVO vo, User user) {
 
+		// 用户ID集合
+		List<Long> receiveList = new ArrayList<Long>();
+		// 用户权限集合
 		for (String perm : permList) {
 			// 2:1,2,3,4
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1];
+				String perUser = perInfo[1].substring(1,
+						perInfo[1].length() - 1);
 				if (perInfo != null && perInfo.length > 0
 						&& Integer.parseInt(perType) == 2) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						if (Integer.parseInt(userId) == -1) {
-							getMyShare(Long.parseLong(userId), 1, 10);
-							break;
+						if (Integer.parseInt(userId.trim()) == -1) {
+							receiveList.add(Long.parseLong(userId));
+							insertUserPermissionMongo(receiveList,
+									vo.getTitle(), vo.getShareMessage(),
+									vo.getPic(), vo.getTags(), user.getId(),
+									vo.getShareMessage(),
+									Short.parseShort(vo.getColumnType()),
+									Long.parseLong(vo.getColumnid()), kId);
 						}
 					}
+
 				}
 			}
 		}
@@ -288,8 +299,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public boolean insertUserPermissionMongo(List<Long> receiveList,
 			String title, String desc, String picPath, String tags,
-			long send_uid, String mento, short column_type,
-			long column_id,long knowledgeid) {
+			long send_uid, String mento, short column_type, long column_id,
+			long knowledgeid) {
 		UserPermissionMongo userPermission = new UserPermissionMongo();
 		StringBuffer sb = new StringBuffer();
 

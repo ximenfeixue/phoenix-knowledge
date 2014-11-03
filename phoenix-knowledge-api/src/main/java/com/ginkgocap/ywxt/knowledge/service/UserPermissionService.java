@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * 知识栏目关系
@@ -40,7 +41,8 @@ public interface UserPermissionService {
 	 * @param permList
 	 * @return
 	 */
-	void insertUserShare(List<String> permList, KnowledgeNewsVO vo);
+	void insertUserShare(List<String> permList, long kId, KnowledgeNewsVO vo,
+			User user);
 
 	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
@@ -98,22 +100,34 @@ public interface UserPermissionService {
 	public Map<String, Object> getShareme(Long userId, int start, int pageSize);
 
 	List<UserPermission> selectUserPermission(long knowledgeid, long userid);
-	
+
 	/**
 	 * 
 	 * @@param permList 接收者ID集合
-	 * @param title 标题
-	 * @param desc 描述
-	 * @param picPath 图片路径
-	 * @param tags 标签
-	 * @param send_uid 发送人ID
-	 * @param type 类型
-	 * @param mento 分享信息
-	 * @param column_type 栏目类型
-	 * @param column_id 栏目ID
-	 * @param knowledgeid 知识ID
+	 * @param title
+	 *            标题
+	 * @param desc
+	 *            描述
+	 * @param picPath
+	 *            图片路径
+	 * @param tags
+	 *            标签
+	 * @param send_uid
+	 *            发送人ID
+	 * @param type
+	 *            类型
+	 * @param mento
+	 *            分享信息
+	 * @param column_type
+	 *            栏目类型
+	 * @param column_id
+	 *            栏目ID
+	 * @param knowledgeid
+	 *            知识ID
 	 * @return
 	 */
-	public boolean insertUserPermissionMongo(List<Long> receiveList,String title, String desc, String picPath,
-			String tags,long send_uid, String mento, short column_type,long column_id,long knowledgeid);
+	public boolean insertUserPermissionMongo(List<Long> receiveList,
+			String title, String desc, String picPath, String tags,
+			long send_uid, String mento, short column_type, long column_id,
+			long knowledgeid);
 }
