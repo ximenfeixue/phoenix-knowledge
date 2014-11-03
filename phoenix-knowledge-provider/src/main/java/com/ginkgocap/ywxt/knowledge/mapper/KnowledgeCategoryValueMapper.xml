@@ -32,7 +32,7 @@
 	AND kc.status=1
 	AND uc.category_type = 0
 	AND uc.user_id=#{userId}
-	AND uc.sortid LIKE CONCAT(#{sortId}, '%')
+	AND uc.sortid =#{sortId} 
 	<if test="tid !=null and tid!=''">
 		AND b.column_type=#{tid}
 	</if>
@@ -58,7 +58,7 @@
 			AND kc.status=1
 			AND uc.category_type = 0
 			AND uc.user_id=#{userId}
-			AND uc.sortid LIKE CONCAT(#{sortId}, '%')
+			AND uc.sortid=#{sortId} 
 			<if test="tid !=null and tid!=''">
 				AND b.column_type=#{tid}
 			</if>
