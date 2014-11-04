@@ -1,6 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
@@ -9,6 +17,7 @@ import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -29,8 +38,8 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
 
-	@Autowired
-	SqlMapClient sqlMapClient;
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public Long saveKnowledge(Knowledge knowledge, Object knowledgeDetail) {
@@ -148,7 +157,6 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
 				count = deleteKnowledgeRCategory(knowledge.getId(), categoryid);
 				if (count > 0) {
-					// insertKnowledgeRCategory(knowledge, categoryids);
 					return 1;
 				}
 			}
@@ -178,7 +186,20 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
 	@Override
 	public int checkLawNameRepeat(String knowledgetitle) {
-		return knowledgeDao.checkLayNameRepeat(knowledgetitle);
+		if (StringUtils.isNotBlank(knowledgetitle)) {
+
+			Criteria criteria = Criteria.where("title").is(knowledgetitle);
+			Query query = new Query(criteria);
+			List<KnowledgeLaw> list = mongoTemplate.find(query,
+					KnowledgeLaw.class,"KnowledgeLaw");
+			if (list != null && list.size() > 0) {
+				return 0;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
