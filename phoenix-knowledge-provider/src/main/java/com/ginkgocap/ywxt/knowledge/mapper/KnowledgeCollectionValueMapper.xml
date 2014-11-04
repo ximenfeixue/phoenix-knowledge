@@ -44,7 +44,9 @@
 	<if test="keyword !=null and keyword != '' ">
 		AND b.title like CONCAT('%',#{keyword},'%')
 	</if>
+	ORDER BY b.createtime DESC
 	LIMIT #{pageno},#{pagesize}
+	
  </select>
  
  <!-- 统计收藏夹下的知识 -->

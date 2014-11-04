@@ -45,6 +45,7 @@
 	<if test="keyword !=null and keyword != '' ">
 		AND b.title like CONCAT('%',#{keyword},'%')
 	</if>
+	ORDER BY b.createtime DESC
 	LIMIT #{start},#{size}
 </select>
  <select id="countKnowledgeIds" resultType="int" >
