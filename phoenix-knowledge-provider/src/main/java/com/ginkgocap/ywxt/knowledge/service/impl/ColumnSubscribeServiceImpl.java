@@ -242,6 +242,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public Map<String, Object> selectRankList(int count, long userid) {
 		ColumnExample ce = new ColumnExample();
+		ce.createCriteria().andColumnLevelPathLike("__________________").andDelStatusEqualTo((byte) 0);
 		ce.setLimitStart(0);
 		ce.setLimitEnd(count);
 		ce.setOrderByClause("subscribe_count desc");
