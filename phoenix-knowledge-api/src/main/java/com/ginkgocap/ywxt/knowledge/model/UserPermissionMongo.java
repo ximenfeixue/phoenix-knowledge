@@ -148,6 +148,4 @@ public class UserPermissionMongo implements Serializable {
 		this.id = id;
 	}
 
-
-
 }

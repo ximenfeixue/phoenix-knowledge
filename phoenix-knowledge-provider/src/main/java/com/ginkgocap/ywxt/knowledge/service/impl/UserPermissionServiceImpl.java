@@ -26,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
+import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.utils.DateUtils;
 
@@ -324,6 +325,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			sb = sb.deleteCharAt(sb.length() - 1);
 		}
 		User user = userService.selectByPrimaryKey(send_uid);
+		String id=MakePrimaryKey.getPrimaryKey();
+		userPermission.setId(id);
 		userPermission.setSendUserName(user.getName());
 		userPermission.setReceiveUserId(receiveList);
 		userPermission.setReceiveName(sb.toString());
