@@ -1,12 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 
 /**
  * <p>
@@ -62,5 +65,16 @@ public class UserPermissionTest extends TestBase {
 	@Test
 	public void selectByParams() {
 		userPermissionService.selectByParams(1l, 1l, 1l);
+	}
+	@Test
+	public void getMyshare() {
+		Map map=userPermissionService.getMyShare(14359l, "", 1, 100);
+		
+		List<UserPermissionMongo> list=(List<UserPermissionMongo>) map.get("list");
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			UserPermissionMongo userPermissionMongo = (UserPermissionMongo) iterator
+					.next();
+			System.out.println(userPermissionMongo);
+		}
 	}
 }

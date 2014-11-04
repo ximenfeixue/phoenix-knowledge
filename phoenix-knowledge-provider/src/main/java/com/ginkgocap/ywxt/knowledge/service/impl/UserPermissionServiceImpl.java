@@ -198,12 +198,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
-		page = new PageUtil((int) count, start - 1, pageSize);
 
 		query = new Query(c);
 
 		query.sort().on("createtime", Order.DESCENDING);
 		if (pageSize > 0) {
+			page = new PageUtil((int) count, start - 1, pageSize);
 			query.skip((start - 1) * pageSize);
 			query.limit(pageSize);
 		}
@@ -223,14 +223,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("receiveUserId").is(userId);
+		if(!"".equals(title)){
+			Pattern pattern=Pattern.compile("^.*"+title+".*$");
+			c.and("title").regex(pattern);
+		}
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
-		page = new PageUtil((int) count, start, pageSize);
 
 		query = new Query(c);
 
 		query.sort().on("createtime", Order.DESCENDING);
 		if (pageSize > 0) {
+			page = new PageUtil((int) count, start, pageSize);
 			query.skip((start - 1) * pageSize);
 			query.limit(pageSize);
 		}
