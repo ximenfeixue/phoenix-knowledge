@@ -344,17 +344,38 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean deleteMyShare(List<String> ids) {
-		Criteria c = Criteria.where("id").in(ids);
-		Query query = new Query(c);
-		mongoTemplate.findAndRemove(query, UserPermissionMongo.class);
-		return false;
+	public boolean deleteMyShare(String ids) {
+		String id[] = ids.split(",");
+		for (int i = 0; i < id.length; i++) {
+			Criteria c = Criteria.where("id").is(id[i]);
+			Query query = new Query(c);
+			mongoTemplate.findAndRemove(query, UserPermissionMongo.class);
+		}
+		return true;
 	}
 
 	@Override
-	public boolean deleteShareMe(String ids) {
-		// TODO Auto-generated method stub
+	public boolean deleteShareMe(String ids,Long userId) {
+		String id[] = ids.split(",");
+		User user=userService.selectByPrimaryKey(userId);
+		String name=user.getName();
+		for (int i = 0; i < id.length; i++) {
+			Criteria c = Criteria.where("id").is(id[i]);
+			Query query = new Query(c);
+			UserPermissionMongo upm=mongoTemplate.findOne(query, UserPermissionMongo.class);
+			List<Long> recivedId=upm.getReceiveUserId();
+			recivedId.remove(userId);
+			upm.setReceiveUserId(recivedId);
+			String recivedName=upm.getReceiveName();
+			if(recivedName.indexOf(name)==0){
+				recivedName=recivedName.replace(name+",", "");
+			}else{
+				recivedName=recivedName.replace(","+name, "");
+			}
+			upm.setReceiveName(recivedName);
+			mongoTemplate.save(upm);
+		}
+		
 		return false;
 	}
-
 }

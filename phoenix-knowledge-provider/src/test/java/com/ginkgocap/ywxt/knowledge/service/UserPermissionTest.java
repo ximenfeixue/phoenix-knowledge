@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -77,4 +78,13 @@ public class UserPermissionTest extends TestBase {
 			System.out.println(userPermissionMongo);
 		}
 	}
+	
+	@Test
+	public void deleteUserPermissionMongo() throws Exception {
+		List<String> list=new ArrayList<String>();
+		list.add("545844fb8e729e16bc3118c8");
+		list.add("54572b94a01fd17cad114dd2");
+		userPermissionService.deleteMyShare(list);
+	}
+	
 }

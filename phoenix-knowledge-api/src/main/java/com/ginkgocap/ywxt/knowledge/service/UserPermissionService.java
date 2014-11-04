@@ -131,7 +131,7 @@ public interface UserPermissionService {
 			long send_uid, String mento, short column_type, long column_id,
 			long knowledgeid);
 	
-	public boolean deleteMyShare(List<String> list);
+	public boolean deleteMyShare(String ids);
 	
-	public boolean deleteShareMe(String ids);
+	public boolean deleteShareMe(String ids,Long userId);
 }
