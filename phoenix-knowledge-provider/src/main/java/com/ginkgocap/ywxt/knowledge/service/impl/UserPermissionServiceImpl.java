@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -187,10 +188,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public Map<String, Object> getMyShare(Long userId, int start, int pageSize) {
+	public Map<String, Object> getMyShare(Long userId,String title, int start, int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("sendUserId").is(userId);
+		if(!"".equals(title)){
+			Pattern pattern=Pattern.compile("^.*"+title+".*$");
+			c.and("title").regex(pattern);
+		}
 		Query query = new Query(c);
 		long count = mongoTemplate.count(query, UserPermissionMongo.class);
 		page = new PageUtil((int) count, start - 1, pageSize);
@@ -214,7 +219,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public Map<String, Object> getShareme(Long userId, int start, int pageSize) {
+	public Map<String, Object> getShareme(Long userId,String title, int start, int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("receiveUserId").is(userId);

@@ -95,9 +95,9 @@ public interface UserPermissionService {
 	 *            step (为0时查询全部数据)
 	 * @return
 	 */
-	public Map<String, Object> getMyShare(Long userId, int start, int pageSize);
+	public Map<String, Object> getMyShare(Long userId,String title ,int start, int pageSize);
 
-	public Map<String, Object> getShareme(Long userId, int start, int pageSize);
+	public Map<String, Object> getShareme(Long userId,String title ,int start, int pageSize);
 
 	List<UserPermission> selectUserPermission(long knowledgeid, long userid);
 
