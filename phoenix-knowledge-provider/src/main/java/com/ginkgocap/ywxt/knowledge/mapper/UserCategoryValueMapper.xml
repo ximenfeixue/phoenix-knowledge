@@ -31,6 +31,10 @@
 		select count(id) from tb_user_category where parent_id = #{id}
 	</select>
 	
+	<select id="selectChildByParentId" resultType="BaseResultMap">
+		select * from tb_user_category where parent_id = #{parentId}
+	</select>
+	
 	<delete id="del">
 		DELETE
 		FROM tb_user_category
