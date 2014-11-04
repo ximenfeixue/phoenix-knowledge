@@ -343,4 +343,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		return false;
 	}
 
+	@Override
+	public boolean deleteMyShare(String ids) {
+		Criteria c = Criteria.where("id	").in(ids);
+		Query query = new Query(c);
+		mongoTemplate.findAndRemove(query, UserPermissionMongo.class);
+		return false;
+	}
+
+	@Override
+	public boolean deleteShareMe(String ids) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -130,4 +130,8 @@ public interface UserPermissionService {
 			String title, String desc, String picPath, String tags,
 			long send_uid, String mento, short column_type, long column_id,
 			long knowledgeid);
+	
+	public boolean deleteMyShare(String ids);
+	
+	public boolean deleteShareMe(String ids);
 }
