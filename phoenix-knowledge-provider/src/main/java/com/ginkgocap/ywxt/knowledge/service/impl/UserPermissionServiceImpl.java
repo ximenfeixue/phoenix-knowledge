@@ -344,8 +344,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean deleteMyShare(String ids) {
-		Criteria c = Criteria.where("id	").in(ids);
+	public boolean deleteMyShare(List<String> ids) {
+		Criteria c = Criteria.where("id").in(ids);
 		Query query = new Query(c);
 		mongoTemplate.findAndRemove(query, UserPermissionMongo.class);
 		return false;
