@@ -7,14 +7,14 @@ import java.util.List;
 public class UserPermissionMongo implements Serializable {
 	
 	private static final long serialVersionUID = 5092135711686623071L;
-
+	
+	private String id;
+	
 	private List<Long> receiveUserId;
 	
 	private String receiveName;
 	
 	private String sendUserName;
-
- 
 
 	private Long knowledgeId;
 
@@ -138,6 +138,14 @@ public class UserPermissionMongo implements Serializable {
 
 	public void setSendUserName(String sendUserName) {
 		this.sendUserName = sendUserName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 
