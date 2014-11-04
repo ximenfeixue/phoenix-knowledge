@@ -39,4 +39,6 @@ public interface UserCategoryValueMapper {
      * @return
      */
     List<UserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId,@Param("type")Byte type);
+    
+    List<UserCategory> selectChildByParentId(@Param("parentId") long parentId);
 }
