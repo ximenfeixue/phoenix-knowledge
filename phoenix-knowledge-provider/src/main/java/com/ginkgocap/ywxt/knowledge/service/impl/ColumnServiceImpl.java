@@ -230,8 +230,7 @@ public class ColumnServiceImpl implements ColumnService {
 	public boolean isExist(long parentColumnId, String columnName) {
 		ColumnExample ce = new ColumnExample();
 
-		ce.createCriteria().andParentIdEqualTo(parentColumnId)
-				.andColumnnameEqualTo(columnName);
+		ce.createCriteria().andColumnnameEqualTo(columnName);
 
 		return columnMapper.countByExample(ce) > 0 ? true : false;
 	}
