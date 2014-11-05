@@ -194,6 +194,18 @@
 			<version>1.9.9</version>
 		</dependency>
 		<!-- JSON end -->
+		
+		<!-- logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<version>1.0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.7</version>
+		</dependency>
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -546,11 +558,11 @@
 			<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<!-- 大数据请求地址 -->
-				<http.url>192.168.130.144</http.url>
+				<http.url>http://192.168.130.144:8088/datatransfer/</http.url>
 				<!-- 大数据请端口 -->
 				<http.port>8088</http.port>
 				<!-- redis地址 -->
-				<redis.host>192.168.101.131</redis.host>
+				<redis.host>192.168.120.178</redis.host>
 				<!-- redis端口 -->
 				<redis.port>6379</redis.port>
 				<!-- mongo地址 -->
@@ -569,11 +581,12 @@
 				<log4j.level>debug</log4j.level>
 				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
 				<log4j.path>d:/log</log4j.path>
+				<logback.path>d:/knowledge-provider</logback.path>
 				<qatest.schema.skip>false</qatest.schema.skip>
 				<!-- dubbo注册中心的地址 -->
 				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
 				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
+				<dubbo.registry.address>zookeeper://192.168.120.178:2181?client=zkclient</dubbo.registry.address>
 				<dubbo.protocol.port>8812</dubbo.protocol.port>
 				<!-- 应用端的挂载配置路径 -->
 				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
