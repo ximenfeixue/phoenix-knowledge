@@ -242,7 +242,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		Map<String,Object> result = new HashMap<String, Object>();
 		/** 查询提交 根据栏目查询 */
 		Criteria 	criteria = Criteria.where("columnid").is(columnId);
-		if(source == -2) //如果为-2，查询指定栏目下的全部知识
+		if(source != -2) //如果为-2，查询指定栏目下的全部知识
 		criteria.and("cid").is(source);
 		Query query = new Query(criteria);
 		long count = mongoTemplate.count(query, KnowledgeNews.class);
