@@ -393,6 +393,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 		Short source = 1;
+		String content = "";
 		// 获取Session用户值
 		long userId = user.getId();
 		String username = user.getUserName();
@@ -410,10 +411,14 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
 		}
+
+		if (StringUtils.isNotBlank(vo.getContent())) {
+			content = vo.getContent().replace("&quot;", " ");
+		}
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
-
+		vo.setContent(content);
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
