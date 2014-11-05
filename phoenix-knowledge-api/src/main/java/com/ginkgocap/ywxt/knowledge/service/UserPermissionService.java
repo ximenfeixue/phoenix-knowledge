@@ -45,6 +45,14 @@ public interface UserPermissionService {
 			User user);
 
 	/**
+	 * 查看用户来源，如果是中乐或大乐中存在全平台或金桐脑标记为系统
+	 * 
+	 * @param permList
+	 * @return
+	 */
+	boolean checkUserSource(List<String> permList);
+
+	/**
 	 * 新增知识，把知识ID，栏目ID，存入用户权限表
 	 * 
 	 * @param knowledgeRCategory
@@ -95,9 +103,11 @@ public interface UserPermissionService {
 	 *            step (为0时查询全部数据)
 	 * @return
 	 */
-	public Map<String, Object> getMyShare(Long userId,String title ,int start, int pageSize);
+	public Map<String, Object> getMyShare(Long userId, String title, int start,
+			int pageSize);
 
-	public Map<String, Object> getShareme(Long userId,String title ,int start, int pageSize);
+	public Map<String, Object> getShareme(Long userId, String title, int start,
+			int pageSize);
 
 	List<UserPermission> selectUserPermission(long knowledgeid, long userid);
 
@@ -130,8 +140,8 @@ public interface UserPermissionService {
 			String title, String desc, String picPath, String tags,
 			long send_uid, String mento, short column_type, long column_id,
 			long knowledgeid);
-	
+
 	public boolean deleteMyShare(String ids);
-	
-	public boolean deleteShareMe(String ids,Long userId);
+
+	public boolean deleteShareMe(String ids, Long userId);
 }

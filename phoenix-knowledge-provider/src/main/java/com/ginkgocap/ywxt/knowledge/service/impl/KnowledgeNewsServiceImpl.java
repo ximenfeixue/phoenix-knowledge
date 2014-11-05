@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +48,6 @@ import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.util.sso.session.SessionManager;
-
 
 @Service("knowledgeNewsService")
 public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
@@ -146,53 +145,60 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 
 		return result;
 	}
-	
-    @Override
-    public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        long[] knowledgeid = null;
-        
-        //检查是否为标准数据
-        try {
-            if (knowledgeids.endsWith(",")) {
-                knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
-            } else {
-                knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.split(","));
-            }
-        } catch (Exception e) {
-            result.put(Constants.status, Constants.ResultType.fail.v());
-            return result;
-        }
-        
-        //批量删除
-        for (int i = 0; i < knowledgeid.length; i++) {
-            KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
-            String title = "";
-            long ct = 0;
-            if (bl != null) {
-                title = bl.getTitle();
-                ct = bl.getColumnType();
-            }else{
-                continue;
-            }
-            String obj = Constants.getTableName(ct + "");
-            String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-            Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
-            Query query = new Query(criteria);
-            Update update = new Update();
-            update.set("status", Constants.Status.recycle.v());
 
-            //删除更新关联表
-            try {
-                mongoTemplate.updateFirst(query, update, collectionName);
-                knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title, ct + "", userid, catetoryid);
-                knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], catetoryid);
-            } catch (Exception e) {
-                result.put(Constants.status, Constants.ResultType.fail.v());
-            }
-        }
-        return result;
-    }
+	@Override
+	public Map<String, Object> deleteKnowledgeNew(String knowledgeids,
+			long catetoryid, long userid) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		long[] knowledgeid = null;
+
+		// 检查是否为标准数据
+		try {
+			if (knowledgeids.endsWith(",")) {
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
+						.substring(0, knowledgeids.length() - 1).split(","));
+			} else {
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
+						.split(","));
+			}
+		} catch (Exception e) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			return result;
+		}
+
+		// 批量删除
+		for (int i = 0; i < knowledgeid.length; i++) {
+			KnowledgeBase bl = knowledgeBaseMapper
+					.selectByPrimaryKey(knowledgeid[i]);
+			String title = "";
+			long ct = 0;
+			if (bl != null) {
+				title = bl.getTitle();
+				ct = bl.getColumnType();
+			} else {
+				continue;
+			}
+			String obj = Constants.getTableName(ct + "");
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+					obj.length());
+			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+
+			// 删除更新关联表
+			try {
+				mongoTemplate.updateFirst(query, update, collectionName);
+				knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i],
+						title, ct + "", userid, catetoryid);
+				knowledgeCategoryService.updateKnowledgeCategory(
+						knowledgeid[i], catetoryid);
+			} catch (Exception e) {
+				result.put(Constants.status, Constants.ResultType.fail.v());
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
@@ -386,6 +392,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
+		Short source = 1;
 		// 获取Session用户值
 		long userId = user.getId();
 		String username = user.getUserName();
@@ -430,6 +437,12 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 					// 大乐全平台分享
 					userPermissionService.insertUserShare(permList, kId, vo,
 							user);
+					// 判断基础信息来源
+					boolean flag = userPermissionService
+							.checkUserSource(permList);
+					if (flag) {
+						source = 0;
+					}
 					int pV = userPermissionService.insertUserPermission(
 							permList, kId, userId, vo.getShareMessage(), Short
 									.parseShort(vo.getColumnType()), Long
@@ -495,6 +508,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		statics.setCommentcount(0l);
 		statics.setKnowledgeId(kId);
 		statics.setSharecount(0l);
+		statics.setSource(source);
 		statics.setTitle(vo.getTitle());
 		statics.setType(Short.parseShort(vo.getColumnType()));
 		int sV = knowledgeStaticsMapper.insertSelective(statics);

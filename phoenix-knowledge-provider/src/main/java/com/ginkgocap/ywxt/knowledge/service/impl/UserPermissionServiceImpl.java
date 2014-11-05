@@ -189,12 +189,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public Map<String, Object> getMyShare(Long userId,String title, int start, int pageSize) {
+	public Map<String, Object> getMyShare(Long userId, String title, int start,
+			int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("sendUserId").is(userId);
-		if(!"".equals(title)){
-			Pattern pattern=Pattern.compile("^.*"+title+".*$");
+		if (!"".equals(title)) {
+			Pattern pattern = Pattern.compile("^.*" + title + ".*$");
 			c.and("title").regex(pattern);
 		}
 		Query query = new Query(c);
@@ -220,12 +221,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public Map<String, Object> getShareme(Long userId,String title, int start, int pageSize) {
+	public Map<String, Object> getShareme(Long userId, String title, int start,
+			int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("receiveUserId").is(userId);
-		if(!"".equals(title)){
-			Pattern pattern=Pattern.compile("^.*"+title+".*$");
+		if (!"".equals(title)) {
+			Pattern pattern = Pattern.compile("^.*" + title + ".*$");
 			c.and("title").regex(pattern);
 		}
 		Query query = new Query(c);
@@ -325,7 +327,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			sb = sb.deleteCharAt(sb.length() - 1);
 		}
 		User user = userService.selectByPrimaryKey(send_uid);
-		String id=MakePrimaryKey.getPrimaryKey();
+		String id = MakePrimaryKey.getPrimaryKey();
 		userPermission.setId(id);
 		userPermission.setSendUserName(user.getName());
 		userPermission.setReceiveUserId(receiveList);
@@ -358,27 +360,56 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean deleteShareMe(String ids,Long userId) {
+	public boolean deleteShareMe(String ids, Long userId) {
 		String id[] = ids.split(",");
-		User user=userService.selectByPrimaryKey(userId);
-		String name=user.getName();
+		User user = userService.selectByPrimaryKey(userId);
+		String name = user.getName();
 		for (int i = 0; i < id.length; i++) {
 			Criteria c = Criteria.where("id").is(id[i]);
 			Query query = new Query(c);
-			UserPermissionMongo upm=mongoTemplate.findOne(query, UserPermissionMongo.class);
-			List<Long> recivedId=upm.getReceiveUserId();
+			UserPermissionMongo upm = mongoTemplate.findOne(query,
+					UserPermissionMongo.class);
+			List<Long> recivedId = upm.getReceiveUserId();
 			recivedId.remove(userId);
 			upm.setReceiveUserId(recivedId);
-			String recivedName=upm.getReceiveName();
-			if(recivedName.indexOf(name)==0){
-				recivedName=recivedName.replace(name+",", "");
-			}else{
-				recivedName=recivedName.replace(","+name, "");
+			String recivedName = upm.getReceiveName();
+			if (recivedName.indexOf(name) == 0) {
+				recivedName = recivedName.replace(name + ",", "");
+			} else {
+				recivedName = recivedName.replace("," + name, "");
 			}
 			upm.setReceiveName(recivedName);
 			mongoTemplate.save(upm);
 		}
-		
+
+		return false;
+	}
+
+	@Override
+	public boolean checkUserSource(List<String> permList) {
+		// 用户权限集合
+		for (String perm : permList) {
+			// 2:1,2,3,4
+			String[] perInfo = perm.split(":");
+			if (perInfo != null && perInfo.length == 2) {
+				String perType = perInfo[0];
+				String perUser = perInfo[1].substring(1,
+						perInfo[1].length() - 1);
+				if (perInfo != null
+						&& perInfo.length > 0
+						&& (Integer.parseInt(perType) == 2 || Integer
+								.parseInt(perType) == 3)) {
+					String[] userList = perUser.split(split);
+					for (String userId : userList) {
+						if (Integer.parseInt(userId.trim()) == -1
+								|| Integer.parseInt(userId.trim()) == 0) {
+							return true;
+						}
+					}
+
+				}
+			}
+		}
 		return false;
 	}
 }
