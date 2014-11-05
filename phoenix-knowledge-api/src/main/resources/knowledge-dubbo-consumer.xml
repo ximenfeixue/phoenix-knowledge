@@ -46,6 +46,7 @@
     <dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" version="1.0.0"/>
     <dubbo:reference id="knowledgeNewsService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeNewsAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeNewsAdminService" version="1.0.0"/>
     <dubbo:reference id="knowledgeAssetService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssetService" version="1.0.0"/>
     <dubbo:reference id="knowledgeCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService" version="1.0.0"/>
     <dubbo:reference id="columnknowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService" version="1.0.0"/>
