@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
@@ -32,6 +33,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 
+	//已作废
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
@@ -56,6 +58,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return result;
 	}
 
+	//已作废
 	@Override
 	public Map<String, Object> selectKnowledgeByTagsAndkeywords(Long userid,
 			String keywords, String scope, String tag, int page, int size) {
@@ -91,6 +94,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return m;
 	}
 
+	//已作废
 	@Override
 	public Map<String, Object> selectKnowledgeByMyCollectionAndkeywords(
 			Long userid, String keywords, String scope, int page, int size) {
@@ -124,6 +128,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return m;
 	}
 
+	//已作废
 	@Override
 	public Map<String, Object> selectShareMeByKeywords(Long userid,
 			String keywords, String scope, int start, int size) {
@@ -152,6 +157,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return returnMap;
 	}
 
+	//已作废
 	@Override
 	public Map<String, Object> selectKnowledgeBySourceAndColumn(Long userid, long columnId, String scope, int page, int size) {
 		logger.info(
@@ -184,6 +190,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return m;
 	}
 
+	//已作废
 	@Override
 	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
 			String friends, long columnId, String scope, int page, int size) {
@@ -217,6 +224,52 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				.selectCountForMyFriendKnowledgeByKeyWords(tempFriends, columnId);
 		List<?> kcl = mobileKnowledgeMapper
 				.selectMyFriendKnowledgeByKeyWords(tempFriends, columnId,
+						start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
+
+	@Override//根据栏目和来源获取知识列表 ( 0-全部;1-金桐脑;2-全平台;4-自己 )
+	public Map<String, Object> selectknowledgeByColumnIdAndSource(long columnId, long source, String scope, int page, int size) {
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",columnId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	source);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",scope);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	page);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
+		Map<String,Object> result = new HashMap<String, Object>();
+		/** 查询提交 根据栏目查询 */
+		Criteria 	criteria = Criteria.where("columnid").is(columnId);
+		if(source == -2) //如果为-2，查询指定栏目下的全部知识
+		criteria.and("cid").is(source);
+		Query query = new Query(criteria);
+		long count = mongoTemplate.count(query, KnowledgeNews.class);
+		PageUtil p = new PageUtil((int) count, page, size);
+		query.limit(p.getPageStartRow() - 1);
+		query.skip(size);
+		List<KnowledgeNews> kns= mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
+		result.put("page", p);
+		result.put("list", kns);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> selectMyFriendknowledgeByColumnId(long columnId,
+			long userId, String scope, int page, int size) {
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",columnId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",	userId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",scope);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	page);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper
+				.selectCountForMyFriendKnowledgeByColumnId(columnId, userId);
+		List<?> kcl = mobileKnowledgeMapper
+				.selectMyFriendKnowledgeByColumnId(columnId, userId,
 						start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();

@@ -89,4 +89,20 @@
     	</foreach>
 	</select>
 	
+	<select id="selectMyFriendKnowledgeByColumnId" resultType="map">
+	SELECT DISTINCT b.*
+		FROM tb_knowledge_base b
+		WHERE b.column_id = #{columnId}
+		AND b.knowledge_id in 
+		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountForMyFriendKnowledgeByColumnId" resultType="int">
+	SELECT count(*)
+		FROM tb_knowledge_base b
+		WHERE b.column_id = #{columnId}
+		AND b.knowledge_id in 
+		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
+	</select>
 </mapper>
