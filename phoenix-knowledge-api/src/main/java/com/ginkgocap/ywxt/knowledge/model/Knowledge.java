@@ -77,6 +77,17 @@ public class Knowledge implements Serializable {
 	// 栏目
 	private String columnid;
 
+	// 关联
+	private String asso;
+
+	public String getAsso() {
+		return asso;
+	}
+
+	public void setAsso(String asso) {
+		this.asso = asso;
+	}
+
 	public String getColumnid() {
 		return columnid;
 	}
@@ -256,11 +267,11 @@ public class Knowledge implements Serializable {
 		this.ish = ish;
 	}
 
-	public <T> Knowledge setValue(KnowledgeNewsVO vo,User user) {
+	public <T> Knowledge setValue(KnowledgeNewsVO vo, User user) {
 		return null;
 	}
-	
-	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo,User user) {
+
+	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo, User user) {
 		return null;
 	}
 }

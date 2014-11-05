@@ -105,6 +105,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setPostUnit(vo.getPostUnit());
 		this.setTitanic(vo.getTitanic());
 		this.setSubmitTime(vo.getSubmitTime());
+		this.setAsso(vo.getAsso());
 
 		return this;
 	}
@@ -139,7 +140,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setPostUnit(vo.getPostUnit());
 		this.setTitanic(vo.getTitanic());
 		this.setSubmitTime(vo.getSubmitTime());
-
+		this.setAsso(vo.getAsso());
 		return this;
 	}
 }

@@ -42,6 +42,7 @@ public class KnowledgeAsset extends Knowledge {
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
+		this.setAsso(vo.getAsso());
 		
 		return this;
 	}
@@ -71,7 +72,7 @@ public class KnowledgeAsset extends Knowledge {
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
-
+		this.setAsso(vo.getAsso());
 		return this;
 	}
 
