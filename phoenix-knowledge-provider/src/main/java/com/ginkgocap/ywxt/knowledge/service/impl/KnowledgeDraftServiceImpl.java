@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,11 @@ import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
@@ -74,9 +77,12 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Autowired
 	private KnowledgeStaticsMapper knowledgeStaticsMapper;
 
+	@Resource
+	private KnowledgeBaseMapper knowledgeBaseMapper;
+
 	@Override
 	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
-			User user) {
+			User user, String knowledgeid) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取Session用户值
 		long userId = user.getId();
@@ -92,10 +98,127 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 
-		knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+		if (StringUtils.isNotBlank(knowledgeid)) {
 
-		knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
-				vo.getColumnName(), vo.getColumnType(), userId);
+			// TODO 判断用户是否选择栏目
+			columnPath = null;
+			Column column = null;
+			if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+					.getColumnid()) != 0) {
+				columnPath = columnService.getColumnPathById(Long
+						.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0"
+								: vo.getColumnid()));
+			} else {
+				column = columnService.getUnGroupColumnIdBySortId(user.getId());
+				columnPath = Constants.unGroupSortName;
+			}
+
+			vo.setColumnPath(columnPath);
+			vo.setkId(Long.parseLong(knowledgeid));
+			knowledgeNewsDAO.updateKnowledge(vo, user);
+
+			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+
+				// 删除用户权限数据
+				int userPermissionCount = userPermissionService
+						.deleteUserPermission(vo.getkId(), user.getId());
+				// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+				String selectedIds = vo.getSelectedIds()
+						.replace("&quot;", "\"");
+				if (StringUtils.isNotBlank(selectedIds)
+						&& !vo.getSelectedIds().equals(dule)) {
+					// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
+					Boolean dule = JsonUtil
+							.checkKnowledgePermission(selectedIds);
+					if (dule == null) {
+						logger.error("解析权限信息失败，参数为：{}", selectedIds);
+						result.put(Constants.status,
+								Constants.ResultType.fail.v());
+						result.put(Constants.errormessage,
+								Constants.ErrorMessage.paramNotValid.c());
+						return result;
+					}
+					if (!dule) {
+						// 格式化权限信息
+						List<String> permList = JsonUtil
+								.getPermissionList(selectedIds);
+						// 大乐全平台分享
+						userPermissionService.insertUserShare(permList,
+								vo.getkId(), vo, user);
+						int pV = userPermissionService.insertUserPermission(
+								permList, vo.getkId(), user.getId(), vo
+										.getShareMessage(), Short.parseShort(vo
+										.getColumnType()), Long
+										.parseLong(StringUtils.isBlank(vo
+												.getColumnid()) ? "0" : vo
+												.getColumnid()));
+						if (pV == 0) {
+							logger.error(
+									"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
+									vo.getkId());
+						}
+					}
+				}
+			}
+
+			// 删除该知识下的所有目录
+			int categoryCount = knowledgeCategoryService
+					.deleteKnowledgeCategory(vo.getkId());
+			// 删除该知识的基本信息
+			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+
+			long[] cIds = null;
+			// 添加知识到知识目录表
+			if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
+				UserCategoryExample example = new UserCategoryExample();
+				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+						.createCriteria();
+				criteria.andSortidEqualTo(Constants.unGroupSortId);
+				criteria.andUserIdEqualTo(user.getId());
+				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+						.v());
+				List<UserCategory> list = userCategoryMapper
+						.selectByExample(example);
+				if (list != null && list.size() == 1) {
+					cIds = new long[1];
+					cIds[0] = list.get(0).getId();
+
+				}
+			} else {
+				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds()
+						.substring(1, vo.getCatalogueIds().length()));
+			}
+			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
+					vo.getkId(), cIds, user.getId(), user.getName(),
+					columnPath, vo);
+			if (categoryV == 0) {
+				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+						vo.getkId(), cIds);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+			
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
+					.parseLong(knowledgeid));
+
+			if (knowledgeDraft != null) {
+				this.updateKnowledgeDaraft(Long.parseLong(knowledgeid),
+						vo.getTitle(), vo.getColumnName(), userId,
+						vo.getColumnType());
+			} else {
+
+				knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+						vo.getColumnName(), vo.getColumnType(), userId);
+			}
+		} else {
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+					vo.getColumnName(), vo.getColumnType(), userId);
+
+		}
 
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
@@ -247,6 +370,20 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	public int deleteKnowledgeDraft(long knowledgeid) {
 
 		return knowledgeDraftMapper.deleteByPrimaryKey(knowledgeid);
+	}
+
+	@Override
+	public int updateKnowledgeDaraft(long knowledgeid, String draftname,
+			String drafttype, long userid, String type) {
+
+		KnowledgeDraft knowledgedraft = new KnowledgeDraft();
+		knowledgedraft.setKnowledgeId(knowledgeid);
+		knowledgedraft.setDraftname(draftname);
+		knowledgedraft.setDrafttype(drafttype);
+		knowledgedraft.setUserid(userid);
+		knowledgedraft.setType(type);
+		knowledgedraft.setCreatetime(new Date());
+		return knowledgeDraftMapper.updateByPrimaryKeySelective(knowledgedraft);
 	}
 
 }

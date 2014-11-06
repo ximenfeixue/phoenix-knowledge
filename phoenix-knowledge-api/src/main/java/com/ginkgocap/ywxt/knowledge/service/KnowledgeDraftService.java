@@ -22,8 +22,7 @@ public interface KnowledgeDraftService {
 	 * @author caihe
 	 * @return
 	 */
-	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user);
-	
+	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user,String knowledgeid);
 
 	/**
 	 * 查询草稿箱列表
@@ -47,15 +46,18 @@ public interface KnowledgeDraftService {
 	 */
 	KnowledgeDraft selectByKnowledgeId(long knowledgeid);
 
-	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,String keyword,
-			int pageno, int pagesize);
+	List<KnowledgeDraft> selectKnowledgeDraft(long userid, String type,
+			String keyword, int pageno, int pagesize);
 
-	int countKnowledgeDraft(long userid, String type,String keyword);
+	int countKnowledgeDraft(long userid, String type, String keyword);
 
 	/**
 	 * 删除草稿箱知识
 	 */
 
 	int deleteKnowledgeDraft(long knowledgeid);
+
+	int updateKnowledgeDaraft(long knowledgeid, String draftname,
+			String drafttype, long userid, String type);
 
 }
