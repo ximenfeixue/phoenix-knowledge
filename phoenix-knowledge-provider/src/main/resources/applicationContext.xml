@@ -136,4 +136,8 @@
 	  <property name="basePackage" value="com.ginkgocap.ywxt.knowledge.mapper" />
 	  <property name="sqlSessionFactoryBeanName" value="mybatisSqlSessionFactory" />
 	</bean>
+	
+	<bean  class="com.ginkgocap.ywxt.knowledge.util.HTTPUtil">
+		<property name="location" value="${data.http.url}" />
+	</bean>
 </beans>
