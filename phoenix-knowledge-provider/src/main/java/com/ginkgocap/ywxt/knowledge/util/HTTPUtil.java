@@ -80,7 +80,7 @@ public class HTTPUtil {
 
 		return null;
 	}
-
+	
 	public static  String get(String url, Map<String, String> params) {
 
 		HttpGet get = null;
@@ -170,4 +170,42 @@ public class HTTPUtil {
 		this.location = location;
 	}
 
+	/** 移动端 zhangzhen add 2014-11-6 */
+	public static String mobilePost(String url, Map<String, String> params) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		HttpPost post = new HttpPost(url);
+		if (params != null) {
+			List<NameValuePair> list = new ArrayList<NameValuePair>();
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonStr = mapper.writeValueAsString(params);
+				list.add(new BasicNameValuePair("json", jsonStr));
+				UrlEncodedFormEntity formEntity;
+				formEntity = new UrlEncodedFormEntity(list, "utf-8");
+				post.setEntity(formEntity);
+				logger.info("开始以POST方式访问路径{}，参数为{}", url, formEntity.toString());
+				HttpResponse response = httpClient.execute(post);
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					result.put(Constants.status, response.getStatusLine()
+							.getStatusCode());
+					HttpEntity entity = response.getEntity();
+					String respJson = EntityUtils.toString(entity);
+					logger.info("访问路径{}成功", url);
+					return respJson;
+				}
+
+			} catch (UnsupportedEncodingException e) {
+				logger.error("编码错误", e);
+			} catch (ClientProtocolException e) {
+				logger.error("协议错误", e);
+			} catch (IOException e) {
+				logger.error("IO错误", e);
+			} finally {
+				post.releaseConnection();
+			}
+		}
+		return null;
+	}
+	
 }

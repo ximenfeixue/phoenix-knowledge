@@ -299,8 +299,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		params.put("scope", scope+"");
 		params.put("keyword", keyword);
 		params.put("userid", userid + "");
-		String str = HTTPUtil.post("http://192.168.130.119:8090/knowledge/keyword/search.json", params);
+		String str = HTTPUtil.mobilePost("http://192.168.130.119:8090/knowledge/keyword/search.json", params);
 		return JSONObject.fromObject(str);
 	}
-
+	
 }
