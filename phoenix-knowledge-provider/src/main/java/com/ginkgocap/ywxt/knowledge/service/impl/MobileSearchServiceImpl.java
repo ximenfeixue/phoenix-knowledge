@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -276,6 +283,24 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		m.put("page", p);
 		m.put("list", kcl);
 		return m;
+	}
+
+	@Override
+	public JSONObject searchKnowledge(long userid, String keyword,
+			String tag, int scope, int pno, int psize, String qf, int type,
+			String sort) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("qf", qf);
+		params.put("tag", tag);
+		params.put("sort", sort);
+		params.put("pno", pno+"");
+		params.put("type", type+"");
+		params.put("psize", psize+"");
+		params.put("scope", scope+"");
+		params.put("keyword", keyword);
+		params.put("userid", userid + "");
+		String str = HTTPUtil.post("user/tags/search.json", params);
+		return JSONObject.fromObject(str);
 	}
 
 }
