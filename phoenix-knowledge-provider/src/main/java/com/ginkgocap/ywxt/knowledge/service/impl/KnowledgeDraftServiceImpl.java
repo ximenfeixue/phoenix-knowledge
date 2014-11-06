@@ -98,7 +98,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 
-		if (StringUtils.isNotBlank(vo.getkId() + "")) {
+		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			// TODO 判断用户是否选择栏目
 			columnPath = null;
@@ -114,7 +114,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 
 			vo.setColumnPath(columnPath);
-			vo.setkId(Long.parseLong(vo.getkId() + ""));
+			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -202,10 +202,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 
 			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
-					.parseLong(vo.getkId() + ""));
+					.parseLong(vo.getKnowledgeid()));
 
 			if (knowledgeDraft != null) {
-				this.updateKnowledgeDaraft(Long.parseLong(vo.getkId() + ""),
+				this.updateKnowledgeDaraft(Long.parseLong(vo.getKnowledgeid()),
 						vo.getTitle(), vo.getColumnName(), userId,
 						vo.getColumnType());
 			} else {
@@ -298,12 +298,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 
-			result.put(Constants.status, Constants.ResultType.success.v());
-			logger.info("添加草稿箱成功,知识ID:{}", kId);
-			return result;
-
 		}
-		return null;
+		result.put(Constants.status, Constants.ResultType.success.v());
+		logger.info("添加草稿箱成功,知识ID:{}", kId);
+		return result;
 
 	}
 

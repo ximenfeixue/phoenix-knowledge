@@ -23,6 +23,8 @@ public class KnowledgeNewsVO implements Serializable {
 	private String columnPath;
 	private String columnName;
 	private String asso;
+	// 草稿箱用
+	private String knowledgeid;
 
 	// 老知识id
 	private long oid;
@@ -227,6 +229,14 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setAsso(String asso) {
 		this.asso = asso;
+	}
+
+	public String getKnowledgeid() {
+		return knowledgeid;
+	}
+
+	public void setKnowledgeid(String knowledgeid) {
+		this.knowledgeid = knowledgeid;
 	}
 
 }
