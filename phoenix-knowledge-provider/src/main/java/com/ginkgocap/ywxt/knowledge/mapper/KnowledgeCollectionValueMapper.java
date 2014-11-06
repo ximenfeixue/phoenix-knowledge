@@ -6,10 +6,11 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 
 public interface KnowledgeCollectionValueMapper {
 
-	int batchInsert(List<KnowledgeCategory> list);
+	int batchInsert(List<KnowledgeCollection> list);
 
 	int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids,
 			@Param("categoryid") long categoryid);

@@ -344,17 +344,32 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
     @Override
-    public void move(long id, List<Long> knowledgeids, List<Long> categoryids) {
+    public void move(long id, List<Long> knowledgeids, List<Long> categoryids,long cid) {
         if(knowledgeids.size()==0){
             return;
         }
         //查询关系表
-        List<KnowledgeCollection>kl=null;
+        List<KnowledgeCollection> kl = getListByParams(id,cid,knowledgeids);
+
         //删除关系
-        //
-        for(Long c:categoryids){
-            //插入新关系
+        //暂时不做
+        
+        //插入新关系
+        for (Long c : categoryids) {
             
+            //TODO 是否判断重复（暂时不做）
+            for(KnowledgeCollection k :kl){
+                k.setCategoryId(c);
+            }
+            //保存
+            knowledgeCollectionValueMapper.batchInsert(kl);
         }
+    }
+
+    private List<KnowledgeCollection> getListByParams(long id, long cid, List<Long> knowledgeids) {
+        KnowledgeCollectionExample example = new KnowledgeCollectionExample();
+        example.createCriteria().andCategoryIdEqualTo(cid).andKnowledgeIdIn(knowledgeids).andUseridEqualTo(id);
+        List<KnowledgeCollection> l = knowledgeCollectionMapper.selectByExample(example);
+        return l;
     }
 }

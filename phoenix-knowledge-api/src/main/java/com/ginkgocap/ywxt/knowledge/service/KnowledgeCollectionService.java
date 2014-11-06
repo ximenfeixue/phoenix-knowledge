@@ -158,6 +158,6 @@ public interface KnowledgeCollectionService {
 	  * @author bianzhiwei
 	  * @since 2014-11-06
 	  */
-	 void move(long id, List<Long> knowledgeids, List<Long> categoryids); 
+	 void move(long id, List<Long> knowledgeids, List<Long> categoryids,long cid); 
 	
 }

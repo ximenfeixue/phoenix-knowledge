@@ -2,6 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionValueMapper" >
 
+<insert id="batchInsert">
+  insert into tb_knowledge_collection ( <include refid="Base_Column_List" /> ) 
+  values 
+    <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.knowledgeId},
+		  #{item.source},
+		  #{item.categoryId},
+		  #{item.collectionTags},
+		  #{item.collectionComment},
+		  #{item.userid})
+    </foreach>
+</insert>
+<sql id="Base_Column_List">
+ knowledge_id,
+  source,
+  category_id,
+  collection_tags,
+  collection_comment,
+  userid
+</sql>
  <delete id="deleteKnowledge">
   delete from tb_knowledge_collection 
      where  category_id=#{categoryid} 
