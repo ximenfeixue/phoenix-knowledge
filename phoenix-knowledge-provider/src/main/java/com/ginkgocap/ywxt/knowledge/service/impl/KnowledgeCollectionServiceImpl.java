@@ -342,4 +342,19 @@ public class KnowledgeCollectionServiceImpl implements
 		
 		return result;
 	}
+
+    @Override
+    public void move(long id, List<Long> knowledgeids, List<Long> categoryids) {
+        if(knowledgeids.size()==0){
+            return;
+        }
+        //查询关系表
+        List<KnowledgeCollection>kl=null;
+        //删除关系
+        //
+        for(Long c:categoryids){
+            //插入新关系
+            
+        }
+    }
 }

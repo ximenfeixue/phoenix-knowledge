@@ -147,5 +147,17 @@ public interface KnowledgeCollectionService {
 	 */
 	
 	 Map<String, Object> delCollection(long userId, String kIds); 
+	 
+	 /**
+	  * 收藏知识移动
+	  * move()： <p>实现知识在本收藏目录树中进行移动移动</p>
+	  * @param userId 用户id
+	  * @param knowledgeids 知识id(多个以英文逗号分隔)
+	  * @param categoryids 目录id(多个以英文逗号分隔)
+	  * @return map<String,String> 返回成功失败信息
+	  * @author bianzhiwei
+	  * @since 2014-11-06
+	  */
+	 void move(long id, List<Long> knowledgeids, List<Long> categoryids); 
 	
 }
