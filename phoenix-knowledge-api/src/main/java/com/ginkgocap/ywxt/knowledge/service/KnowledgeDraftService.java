@@ -22,7 +22,7 @@ public interface KnowledgeDraftService {
 	 * @author caihe
 	 * @return
 	 */
-	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user,String knowledgeid);
+	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 查询草稿箱列表

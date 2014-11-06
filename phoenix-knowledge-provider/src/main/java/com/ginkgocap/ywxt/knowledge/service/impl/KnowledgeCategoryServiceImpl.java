@@ -203,4 +203,52 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		return knowledgeCategoryMapper.selectByExample(example);
 	}
 
+	@Override
+	public int insertKnowledgeCategoryDraft(long kId, long[] cIds, long userId,
+			String username, String columnPath, KnowledgeNewsVO vo) {
+		int returnV = 0;
+		// 批量插入知识目录表
+		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
+		KnowledgeCategory knowledgeRCategory = null;
+		for (int k = 0; k < cIds.length; k++) {
+			UserCategory category = userCategoryService
+					.selectByPrimaryKey(cIds[k]);
+			if (category != null) {
+				knowledgeRCategory = new KnowledgeCategory();
+				knowledgeRCategory.setKnowledgeId(kId);
+				knowledgeRCategory.setCategoryId(cIds[k]);
+				// 1生效 0不生效
+				knowledgeRCategory.setStatus("0");
+
+				list.add(knowledgeRCategory);
+			}
+		}
+		int v = knowledgeCategoryValueMapper.batchInsert(list);
+
+		if (v != 0) {
+			// 插入知识基类
+			KnowledgeBase base = new KnowledgeBase();
+			base.setKnowledgeId(kId);
+			base.setTitle(vo.getTitle());
+			base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
+					.substring(0, 50) : vo.getContent());
+			base.setColumnId(Long.parseLong(StringUtils.isBlank(vo
+					.getColumnid()) ? "0" : vo.getColumnid()));
+			base.setColumnType(Short.parseShort(vo.getColumnType()));
+			base.setCreatetime(new Date());
+			base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil
+					.ToEnglishSymbol(vo.getTags()) : "");
+			base.setAuthor(username);
+			base.setPath(columnPath);
+			base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
+					.equals(vo.getEssence(), "on") ? "1" : "0" : "0"));
+			base.setPicPath(vo.getPic());
+			base.setUserId(userId);
+
+			returnV = knowledgeBaseMapper.insertSelective(base);
+		}
+
+		return returnV;
+	}
+
 }

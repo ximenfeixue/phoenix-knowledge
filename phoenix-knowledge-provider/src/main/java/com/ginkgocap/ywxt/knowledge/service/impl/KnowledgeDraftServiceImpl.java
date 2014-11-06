@@ -82,7 +82,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
-			User user, String knowledgeid) {
+			User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取Session用户值
 		long userId = user.getId();
@@ -98,7 +98,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 
-		if (StringUtils.isNotBlank(knowledgeid)) {
+		if (StringUtils.isNotBlank(vo.getkId() + "")) {
 
 			// TODO 判断用户是否选择栏目
 			columnPath = null;
@@ -114,7 +114,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 
 			vo.setColumnPath(columnPath);
-			vo.setkId(Long.parseLong(knowledgeid));
+			vo.setkId(Long.parseLong(vo.getkId() + ""));
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -200,12 +200,12 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						Constants.ErrorMessage.addKnowledgeFail.c());
 				return result;
 			}
-			
+
 			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
-					.parseLong(knowledgeid));
+					.parseLong(vo.getkId() + ""));
 
 			if (knowledgeDraft != null) {
-				this.updateKnowledgeDaraft(Long.parseLong(knowledgeid),
+				this.updateKnowledgeDaraft(Long.parseLong(vo.getkId() + ""),
 						vo.getTitle(), vo.getColumnName(), userId,
 						vo.getColumnType());
 			} else {
@@ -217,92 +217,94 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-
-		}
-
-		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-		String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
-		Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
-		if (dule == null) {
-			logger.error("解析权限信息失败，参数为：{}", selectedIds);
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.paramNotValid.c());
-			return result;
-		}
-		if (!dule) {
-			// 格式化权限信息
-			List<String> permList = JsonUtil.getPermissionList(selectedIds);
-			// 大乐全平台分享
-			userPermissionService.insertUserShare(permList, kId, vo, user);
-			int pV = userPermissionService.insertUserPermission(permList, kId,
-					userId, vo.getShareMessage(), Short.parseShort(vo
-							.getColumnType()),
-					Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0"
-							: vo.getColumnid()));
-			if (pV == 0) {
-				logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+			String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
+			Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
+			if (dule == null) {
+				logger.error("解析权限信息失败，参数为：{}", selectedIds);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
+				return result;
 			}
-		}
-		long[] cIds = null;
-		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
-				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
-			UserCategoryExample example = new UserCategoryExample();
-			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-					.createCriteria();
-			criteria.andSortidEqualTo(Constants.unGroupSortId);
-			criteria.andUserIdEqualTo(userId);
-			List<UserCategory> list = userCategoryMapper
-					.selectByExample(example);
-			if (list != null && list.size() == 1) {
-				cIds = new long[1];
-				cIds[0] = list.get(0).getId();
+			if (!dule) {
+				// 格式化权限信息
+				List<String> permList = JsonUtil.getPermissionList(selectedIds);
+				// 大乐全平台分享
+				userPermissionService.insertUserShare(permList, kId, vo, user);
+				int pV = userPermissionService.insertUserPermission(permList,
+						kId, userId, vo.getShareMessage(), Short.parseShort(vo
+								.getColumnType()), Long.parseLong(StringUtils
+								.isBlank(vo.getColumnid()) ? "0" : vo
+								.getColumnid()));
+				if (pV == 0) {
+					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+				}
+			}
+			long[] cIds = null;
+			// 添加知识到知识目录表
+			if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
+				UserCategoryExample example = new UserCategoryExample();
+				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+						.createCriteria();
+				criteria.andSortidEqualTo(Constants.unGroupSortId);
+				criteria.andUserIdEqualTo(userId);
+				List<UserCategory> list = userCategoryMapper
+						.selectByExample(example);
+				if (list != null && list.size() == 1) {
+					cIds = new long[1];
+					cIds[0] = list.get(0).getId();
 
+				} else {
+					// 如果没有未分组目录,创建未分组目录.
+					// TODO
+				}
 			} else {
-				// 如果没有未分组目录,创建未分组目录.
-				// TODO
+				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds()
+						.substring(1, vo.getCatalogueIds().length()));
 			}
-		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
-					vo.getCatalogueIds().length()));
-		}
-		if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1,
-				vo.getCatalogueIds().length()))) {
+			if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1,
+					vo.getCatalogueIds().length()))) {
 
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					kId, cIds, userId, username, columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", kId,
-						cIds);
+				int categoryV = knowledgeCategoryService
+						.insertKnowledgeRCategory(kId, cIds, userId, username,
+								columnPath, vo);
+				if (categoryV == 0) {
+					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+							kId, cIds);
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.addKnowledgeFail.c());
+					return result;
+				}
+			}
+			// 初始化知识统计信息
+			KnowledgeStatics statics = new KnowledgeStatics();
+			statics.setClickcount(0l);
+			statics.setCollectioncount(0l);
+			statics.setCommentcount(0l);
+			statics.setKnowledgeId(kId);
+			statics.setSharecount(0l);
+			statics.setTitle(vo.getTitle());
+			statics.setType(Short.parseShort(vo.getColumnType()));
+			int sV = knowledgeStaticsMapper.insertSelective(statics);
+			if (sV == 0) {
+				logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
+						vo.getColumnType());
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.addKnowledgeFail.c());
 				return result;
 			}
-		}
-		// 初始化知识统计信息
-		KnowledgeStatics statics = new KnowledgeStatics();
-		statics.setClickcount(0l);
-		statics.setCollectioncount(0l);
-		statics.setCommentcount(0l);
-		statics.setKnowledgeId(kId);
-		statics.setSharecount(0l);
-		statics.setTitle(vo.getTitle());
-		statics.setType(Short.parseShort(vo.getColumnType()));
-		int sV = knowledgeStaticsMapper.insertSelective(statics);
-		if (sV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
-					vo.getColumnType());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
 
-		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.info("添加草稿箱成功,知识ID:{}", kId);
-		return result;
+			result.put(Constants.status, Constants.ResultType.success.v());
+			logger.info("添加草稿箱成功,知识ID:{}", kId);
+			return result;
+
+		}
+		return null;
+
 	}
 
 	@Override
