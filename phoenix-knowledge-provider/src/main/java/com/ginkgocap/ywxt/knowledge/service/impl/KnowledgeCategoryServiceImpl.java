@@ -156,7 +156,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 					.substring(0, 50) : vo.getContent());
 			base.setColumnId(Long.parseLong(StringUtils.isBlank(vo
 					.getColumnid()) ? "0" : vo.getColumnid()));
-			base.setColumnType((short) Constants.KnowledgeType.News.v());
+			base.setColumnType(Short.parseShort(vo.getColumnType()));
 			base.setCreatetime(new Date());
 			base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil
 					.ToEnglishSymbol(vo.getTags()) : "");
