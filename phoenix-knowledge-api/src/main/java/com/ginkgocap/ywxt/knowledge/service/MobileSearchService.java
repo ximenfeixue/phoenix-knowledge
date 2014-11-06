@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 /**
  * @Description: 移动端官方搜索接口
  * @Author: zhangzhen
@@ -34,17 +36,21 @@ public interface MobileSearchService {
 	/** 我的好友的知识并按关键字过滤分页显示 */
 	public Map<String, Object> selectMyFriendKnowledgeByKeywords(
 			String friends, long columnId, String scope, int page, int size);
-	
+
 	/**
-	 *  根据我的栏目和来源查询知识列表
-	 *  根据栏目和来源获取知识列表 ( 0-全部;1-金桐脑;2-全平台;4-自己 )
-	 *  */
+	 * 根据我的栏目和来源查询知识列表 根据栏目和来源获取知识列表 ( 0-全部;1-金桐脑;2-全平台;4-自己 )
+	 * */
 	public Map<String, Object> selectknowledgeByColumnIdAndSource(
 			long columnId, long source, String scope, int page, int size);
-	
-	/** 查询我的所有好友的指定栏目下，所有知识
-	 * 根据栏目和来源获取知识列表 ( 3-好友 )
-	 *  */
-	public Map<String, Object> selectMyFriendknowledgeByColumnId(
-			long columnId,long userId, String scope, int page, int size);
+
+	/**
+	 * 查询我的所有好友的指定栏目下，所有知识 根据栏目和来源获取知识列表 ( 3-好友 )
+	 * */
+	public Map<String, Object> selectMyFriendknowledgeByColumnId(long columnId,
+			long userId, String scope, int page, int size);
+
+	/** 整合查询 zz join*/
+	public JSONObject searchKnowledge(long userid, String keyword,
+			String tag, int scope, int pno, int psize, String qf, int type,
+			String sort);
 }
