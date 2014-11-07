@@ -224,18 +224,14 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		List<KnowledgeCategory> categorylist = knowledgeCategoryService
 				.selectKnowledgeCategory(knowledgeid);
 		List<UserCategory> cl = new ArrayList<UserCategory>();
-
 		if (categorylist != null && categorylist.size() > 0) {
 			for (KnowledgeCategory knowledgeCategory : categorylist) {
 				UserCategory usercategory = selectByPrimaryKey(knowledgeCategory
-						.getKnowledgeId());
+						.getCategoryId());
 				cl.add(usercategory);
 			}
-		}
-		if (cl != null && cl.size() > 0) {
-			return JSONArray.fromObject(
-					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
-							"categoryname", "parentId", "sortid"))).toString();
+			JSONArray jsonArray = JSONArray.fromObject(cl);
+			return jsonArray.toString();
 		}
 		return "";
 	}
