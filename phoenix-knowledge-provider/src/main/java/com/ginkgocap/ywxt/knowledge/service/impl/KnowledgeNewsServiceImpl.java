@@ -218,6 +218,7 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		}
 
 		vo.setColumnPath(columnPath);
+		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 		// // 修改栏目知识关系
 		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
