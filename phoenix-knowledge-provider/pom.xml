@@ -558,7 +558,7 @@
 			<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<!-- 大数据请求地址 -->
-				<http.url>http://192.168.130.144:8088/datatransfer/</http.url>
+				<data.http.url>http://192.168.130.119:8090/</data.http.url>
 				<!-- 大数据请端口 -->
 				<http.port>8088</http.port>
 				<!-- redis地址 -->
