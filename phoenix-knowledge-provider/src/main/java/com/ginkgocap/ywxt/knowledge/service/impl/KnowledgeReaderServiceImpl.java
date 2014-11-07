@@ -32,7 +32,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	private Logger logger = LoggerFactory
 			.getLogger(KnowledgeReaderServiceImpl.class);
-	
 
 	@Resource
 	private UserService userService;
@@ -65,6 +64,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	@Override
 	public Map<String, Integer> authorAndLoginUserRelation(long loginuserid,
 			long kUid) {
+		logger.info("进入获取用户关系请求,登陆用户ID:{},知识所属用户ID:{}", loginuserid, kUid);
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		if (loginuserid == -1) {
 			result.put("relation", Constants.Relation.platform.v());
@@ -82,11 +82,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			}
 
 		}
+		logger.info("获取用户关系请求成功,登陆用户ID:{},知识所属用户ID:{}", loginuserid, kUid);
 		return result;
 	}
 
 	@Override
 	public Map<String, Boolean> showHeadMenu(long kid, String type) {
+		logger.info("进入获取阅读器功能列表请求,知识id:{},type:{}", kid, type);
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		boolean download = false;
 		boolean sourceFile = false;
@@ -115,12 +117,14 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("sourceFile", sourceFile);
 		result.put("category", category);
 		result.put("mark", mark);
+		logger.info("获取阅读器功能列表请求成功!,知识id:{},type:{}", kid, type);
 		return result;
 	}
 
 	@Override
 	public Map<String, Object> getKnowledgeContent(Knowledge knowledge,
 			String type) {
+		logger.info("进入获取知识内容请求,知识type:{}", type);
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		if (knowledge == null) {
@@ -146,12 +150,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("type", type);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-
+		logger.info("获取知识内容请求成功,知识type:{}", type);
 		return result;
 	}
 
 	@Override
 	public Knowledge getKnowledgeById(long kid, String type) {
+		logger.info("进入获取知识实体请求,知识ID:{},类型为:{}", kid, type);
 		Knowledge knowledge = null;
 		try {
 			String obj = Constants.getTableName(type);
@@ -161,7 +166,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+			logger.error("获取知识实体请求失败,知识ID:{},类型为:{}", kid, type);
 		}
+		logger.info("获取知识实体请求成功,知识ID:{},类型为:{}", kid, type);
 		return knowledge;
 	}
 
@@ -179,6 +186,14 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			result.put("clickCount", statics.getClickcount());
 			result.put("collCount", statics.getCollectioncount());
 			result.put("shareCount", statics.getSharecount());
+		} else {
+			boolean succ = addKnowledgeStatics(kid, kUId, type);
+			if (succ) {
+				result.put("commentCount", 0);
+				result.put("clickCount", 0);
+				result.put("collCount", 0);
+				result.put("shareCount", 0);
+			}
 		}
 		// 存储登陆用户与知识作者关系
 		result.putAll(authorAndLoginUserRelation(userId, kUId));
@@ -190,6 +205,43 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("isColl", getIsCollStatus(kid, userId));
 
 		return result;
+	}
+
+	/**
+	 * 添加统计信息
+	 * 
+	 * @param kId
+	 *            用户ID
+	 * @param kUId
+	 *            知识作者ID
+	 * @param type
+	 *            知识类型
+	 * @return
+	 */
+	private Boolean addKnowledgeStatics(long kId, long kUId, String type) {
+		Knowledge knowledge = getKnowledgeById(kId, type);
+		if (knowledge == null) {
+			logger.error("没有找到知识,知识ID:{},知识类型:{}", kId, type);
+			return false;
+		}
+		KnowledgeStatics knowledgeStatics = new KnowledgeStatics();
+		knowledgeStatics.setClickcount(0l);
+		knowledgeStatics.setCollectioncount(0l);
+		knowledgeStatics.setCommentcount(0l);
+		knowledgeStatics.setKnowledgeId(kId);
+		knowledgeStatics.setSharecount(0l);
+		if (kUId == 0 || kUId == -1) {
+			knowledgeStatics.setSource((short) Constants.StaticsType.sys.v());
+		} else {
+			knowledgeStatics.setSource((short) Constants.StaticsType.user.v());
+		}
+		knowledgeStatics.setTitle(knowledge.getTitle());
+		knowledgeStatics.setType(Short.parseShort(type));
+
+		int v = knowledgeStaticsService
+				.insertKnowledgeStatics(knowledgeStatics);
+
+		return v > 0;
 	}
 
 	private Boolean getIsCollStatus(long kid, long userId) {
@@ -205,7 +257,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	public Map<String, Object> getKnowledgeDetail(long kid, User user,
 			String type) {
-		logger.info("进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}", kid,
+		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 查询知识信息
@@ -223,7 +275,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 存储正文内容
 		result.putAll(getKnowledgeContent(knowledge, type));
 		result.put("kid", kid);
-
+		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
+				user != null ? user.getId() : "未登陆");
 		return result;
 	}
 }
