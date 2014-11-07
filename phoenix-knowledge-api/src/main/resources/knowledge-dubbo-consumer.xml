@@ -70,5 +70,6 @@
     <dubbo:reference id="knowledgeRecycleService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService" version="1.0.0"/>
     <dubbo:reference id="searchService" interface="com.ginkgocap.ywxt.knowledge.service.SearchService" version="1.0.0"/>
     <dubbo:reference id="mobileSearchService" interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService" version="1.0.0"/>
+    <dubbo:reference id="attachmentService" interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService" version="1.0.0"/>
     <dubbo:reference id="appKnowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService" version="1.0.0"/>
 </beans>
