@@ -189,9 +189,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds()
 						.substring(1, vo.getCatalogueIds().length()));
 			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, user.getId(), user.getName(),
-					columnPath, vo);
+			int categoryV = knowledgeCategoryService
+					.insertKnowledgeCategoryDraft(vo.getkId(), cIds,
+							user.getId(), user.getName(), columnPath, vo);
 			if (categoryV == 0) {
 				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
 						vo.getkId(), cIds);
@@ -210,7 +210,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						vo.getColumnType());
 			} else {
 
-				knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+				knowledgeDraftDAO.insertKnowledge(
+						Long.parseLong(vo.getKnowledgeid()), vo.getTitle(),
 						vo.getColumnName(), vo.getColumnType(), userId);
 			}
 		} else {
@@ -268,8 +269,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					vo.getCatalogueIds().length()))) {
 
 				int categoryV = knowledgeCategoryService
-						.insertKnowledgeRCategory(kId, cIds, userId, username,
-								columnPath, vo);
+						.insertKnowledgeCategoryDraft(kId, cIds, userId,
+								username, columnPath, vo);
 				if (categoryV == 0) {
 					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
 							kId, cIds);

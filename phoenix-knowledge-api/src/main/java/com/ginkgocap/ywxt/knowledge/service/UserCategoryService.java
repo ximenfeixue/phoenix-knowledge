@@ -56,6 +56,15 @@ public interface UserCategoryService {
     String selectUserCategoryTreeBySortId(long userId, String sortId,Byte type);
     
     /**
+     * 查询编辑目录树
+     * @param userId 用户id
+     * @param sortId 排序id :为空表示所有
+     * @param status 状态:0正常 1删除
+     * @return 
+     */
+    String selecteidtUserCategoryTreeBySortId(long knowledgeid);
+    
+    /**
      * 查询子目录个数
      * @param id id
      * @return 个数
