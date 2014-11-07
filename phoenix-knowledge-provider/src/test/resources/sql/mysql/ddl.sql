@@ -40,6 +40,25 @@ drop table if exists tb_user_permission;
 
 drop table if exists tb_user_tags;
 
+DROP TABLE IF EXISTS tb_attachment;
+
+/*==============================================================*/
+/* Table: tb_attachment                                         */
+/*==============================================================*/
+CREATE TABLE tb_attachment
+(
+   id                   BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+   taskId               VARCHAR(255) COMMENT 'taskID',
+   file_name            VARCHAR(500) COMMENT '文件名称',
+   file_size            BIGINT(20) COMMENT '文件大小',
+   file_type            VARCHAR(30) COMMENT '文件类型',
+   download_url         VARCHAR(500) COMMENT '下载地址',
+   userId               BIGINT(20) COMMENT '创建人id',
+   PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_attachment COMMENT '附件表';
+
 /*==============================================================*/
 /* Table: tb_column                                             */
 /*==============================================================*/
