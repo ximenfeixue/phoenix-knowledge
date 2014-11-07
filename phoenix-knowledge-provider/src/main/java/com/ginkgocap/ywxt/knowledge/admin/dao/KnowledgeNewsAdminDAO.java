@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.admin.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 
@@ -18,9 +19,10 @@ public interface KnowledgeNewsAdminDAO {
 	 * 获取非金桐脑资讯分页列表
 	 * @param start
 	 * @param size
+	 * @param map 查询条件
 	 * @return
 	 */
-	List<KnowledgeNews> selectKnowledgeNewsList(Integer start, Integer size);
+	Map<String,Object> selectKnowledgeNewsList(Integer start, Integer size,Map<String,String> map);
 	
 	/**
 	 * 获取非金桐脑资讯数量

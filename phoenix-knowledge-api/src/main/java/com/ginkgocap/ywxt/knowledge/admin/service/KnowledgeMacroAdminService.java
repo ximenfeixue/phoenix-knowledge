@@ -3,45 +3,45 @@ package com.ginkgocap.ywxt.knowledge.admin.service;
 import java.util.List;
 import java.util.Map;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
 
 /**
- * 知识后台Service
+ * 宏观后台Service
  * 
  * @author fuliwen
  * 
  */
-public interface KnowledgeNewsAdminService {
+public interface KnowledgeMacroAdminService {
 
 	
 	/**
 	 * 后台获取所有数据
 	 * @return
 	 */
-	List<KnowledgeNews> selectAll();
+	List<KnowledgeMacro> selectAll();
 	
 	/**
-	 * 获取所有非金桐闹资讯
+	 * 获取所有非金桐闹宏观
 	 */
 	Map<String,Object> selectByParam(DataGridModel dgm,Map<String,String> map);
 	
 	/**
-	 * 获取单条资讯
+	 * 获取单条宏观
 	 * @param id
 	 * @return 
 	 */
-	KnowledgeNews selectKnowledgeNewsById(long id);
+	KnowledgeMacro selectKnowledgeMacroById(long id);
 	
 	/**
-	 * 删除资讯
+	 * 删除宏观
 	 * @param id
 	 */
-	void deleteKnowledgeNewsById(long id);
+	void deleteKnowledgeMacroById(long id);
 	
 	/**
-	 * 审核资讯
+	 * 审核宏观
 	 * @param id
 	 */
-	void checkKnowledgeNewsById(long id, int status);
+	void checkKnowledgeMacroById(long id, int status);
 }
