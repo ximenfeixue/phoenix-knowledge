@@ -222,6 +222,7 @@ public interface ColumnService {
 
 	/**
 	 * 添加栏目
+	 * 
 	 * @param columnname
 	 *            栏目名称
 	 * @param pid
@@ -280,19 +281,26 @@ public interface ColumnService {
 	 * @return
 	 */
 	Column getUnGroupColumnIdBySortId(long userId);
-	
-    String selectColumnTreeByParams(long userId, String sortId, String status, String type);
-    
-    /**
+
+	String selectColumnTreeByParams(long userId, String sortId, String status,
+			String type);
+
+	/**
      * 
      */
-    String selectColumnTreeByParamsCustom(long userId, String sortId);
+	String selectColumnTreeByParamsCustom(long userId, String sortId);
+
 	/**
-	 * 修改栏目  
-	 * @param id 栏目ID
-	 * @param columnName 栏目名称 
-	 * @param tags 栏目标签 
-	 * @param userId 用户ID
+	 * 修改栏目
+	 * 
+	 * @param id
+	 *            栏目ID
+	 * @param columnName
+	 *            栏目名称
+	 * @param tags
+	 *            栏目标签
+	 * @param userId
+	 *            用户ID
 	 * @return
 	 */
 	public Map<String, Object> updateColumn(long id, String columnName,
@@ -300,9 +308,15 @@ public interface ColumnService {
 
 	/**
 	 * 查询ID值
-	 * @param id 栏目ID
+	 * 
+	 * @param id
+	 *            栏目ID
 	 * @return
 	 */
 	public Map<String, Object> queryOne(long id);
+
+	Column selectByPrimaryKey(long columnid);
+
+	Map<String, Object> selectparColumnidBycolumnid(long columnid);
 
 }

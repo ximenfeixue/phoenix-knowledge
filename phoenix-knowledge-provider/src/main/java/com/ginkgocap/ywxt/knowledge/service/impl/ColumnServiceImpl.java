@@ -768,4 +768,37 @@ public class ColumnServiceImpl implements ColumnService {
 		return result;
 	}
 
+	@Override
+	public Column selectByPrimaryKey(long columnid) {
+
+		return columnMapper.selectByPrimaryKey(columnid);
+	}
+
+	@Override
+	public Map<String, Object> selectparColumnidBycolumnid(long columnid) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		Column column = null;
+		String parcolumnid = "";
+		if (columnid != 0) {
+
+			column = columnMapper.selectByPrimaryKey(columnid);
+			map.put("columnid", columnid);
+			map.put("columnName", column.getColumnname());
+		}
+		for (int i = 0; i < 5; i++) {
+			if (column.getParentId() == 0) {
+				parcolumnid = column.getId() + "";
+				map.put("parcolumnid", parcolumnid);
+				break;
+			}
+			column = columnMapper.selectByPrimaryKey(column.getParentId());
+		}
+		if (StringUtils.isNotBlank(parcolumnid)) {
+			column = columnMapper.selectByPrimaryKey(Long
+					.parseLong(parcolumnid));
+			map.put("parcolumnName", column.getColumnname());
+		}
+		return map;
+	}
 }
