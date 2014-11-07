@@ -15,7 +15,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.AttachmentMapper;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
-@Service
+@Service("attachmentService")
 public class AttachmentServiceImpl implements AttachmentService {
 
 	@Resource
