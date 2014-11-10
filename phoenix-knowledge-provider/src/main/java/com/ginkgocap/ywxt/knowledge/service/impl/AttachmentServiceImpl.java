@@ -36,9 +36,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 		long attId = attachmentMapperManual.insertAndGetId(att);
 
 		if (attId > 0) {
-			logger.info("添加附件到数据库请F求成功!");
+			logger.info("添加附件到数据库请F求成功,附件ID:{}",attId);
 			result.put(Constants.status, Constants.ResultType.success.v());
-			result.put("attId", attId);
+			result.put("attId", att.getId());
 		} else {
 			logger.error("添加附件到数据库请求失败,用户：{}", att.getUserid());
 			result.put(Constants.status, Constants.ResultType.fail.v());
