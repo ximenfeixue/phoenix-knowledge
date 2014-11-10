@@ -80,6 +80,16 @@ public class Knowledge implements Serializable {
 	// 关联
 	private String asso;
 
+	private String selectedIds;
+
+	public String getSelectedIds() {
+		return selectedIds;
+	}
+
+	public void setSelectedIds(String selectedIds) {
+		this.selectedIds = selectedIds;
+	}
+
 	public String getAsso() {
 		return asso;
 	}

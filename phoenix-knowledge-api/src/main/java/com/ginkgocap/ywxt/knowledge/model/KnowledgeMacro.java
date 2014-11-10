@@ -44,6 +44,7 @@ public class KnowledgeMacro extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 	
@@ -73,6 +74,7 @@ public class KnowledgeMacro extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 }

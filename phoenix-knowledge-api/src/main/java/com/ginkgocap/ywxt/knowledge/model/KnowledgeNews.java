@@ -16,6 +16,7 @@ import com.ginkgocap.ywxt.user.model.User;
 public class KnowledgeNews extends Knowledge {
 
 	private static final long serialVersionUID = 1L;
+	
 
 	@Override
 	public <T> Knowledge setValue(KnowledgeNewsVO vo, User user) {
@@ -44,6 +45,7 @@ public class KnowledgeNews extends Knowledge {
 		this.setHcontent("");
 		this.setTaskid(vo.getTaskId());
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 
@@ -73,6 +75,7 @@ public class KnowledgeNews extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 

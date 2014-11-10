@@ -42,7 +42,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
-
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 	
@@ -71,7 +71,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
-
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 

@@ -106,7 +106,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setTitanic(vo.getTitanic());
 		this.setSubmitTime(vo.getSubmitTime());
 		this.setAsso(vo.getAsso());
-
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 
@@ -141,6 +141,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setTitanic(vo.getTitanic());
 		this.setSubmitTime(vo.getSubmitTime());
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 }

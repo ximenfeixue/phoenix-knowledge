@@ -43,7 +43,7 @@ public class KnowledgeAsset extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
-		
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 	
@@ -73,6 +73,7 @@ public class KnowledgeAsset extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
 		return this;
 	}
 

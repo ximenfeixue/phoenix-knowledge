@@ -416,6 +416,8 @@ public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
 		if (StringUtils.isNotBlank(vo.getContent())) {
 			content = vo.getContent().replace("&quot;", " ");
 		}
+
+
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
