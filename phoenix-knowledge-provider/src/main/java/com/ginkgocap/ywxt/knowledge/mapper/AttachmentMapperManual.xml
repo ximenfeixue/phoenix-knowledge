@@ -5,7 +5,7 @@
 		keyProperty="id" parameterType="com.ginkgocap.ywxt.knowledge.entity.Attachment">
 		insert into
 		tb_attachment(taskId,file_name,file_size,file_type,download_url,userId)
-		values ( #{taskId}, #{fileName}, #{fileSize}, #{fileType},
+		values ( #{taskid}, #{fileName}, #{fileSize}, #{fileType},
 		#{downloadUrl}, #{userid} )
 	</insert>
 </mapper>
