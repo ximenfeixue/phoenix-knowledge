@@ -36,7 +36,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 		long attId = attachmentMapperManual.insertAndGetId(att);
 
 		if (attId > 0) {
-			logger.info("添加附件到数据库请F求成功,附件ID:{}",attId);
+			logger.info("添加附件到数据库请F求成功,附件ID:{}", attId);
 			result.put(Constants.status, Constants.ResultType.success.v());
 			result.put("attId", att.getId());
 		} else {
@@ -76,6 +76,16 @@ public class AttachmentServiceImpl implements AttachmentService {
 		result.put("hasAtt", attList == null || attList.size() == 0 ? false
 				: true);
 		return result;
+	}
+
+	@Override
+	public Integer deleteAttachment(long attId) {
+		logger.info("进入删除附件请求,附件Id:{}", attId);
+		
+		int v = attachmentMapper.deleteByPrimaryKey(attId);
+		
+		logger.info("删除附件成功,附件Id:{}", attId);
+		return v;
 	}
 
 }

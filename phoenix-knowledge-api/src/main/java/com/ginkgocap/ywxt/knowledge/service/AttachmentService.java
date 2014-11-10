@@ -32,4 +32,10 @@ public interface AttachmentService {
 	 * @return
 	 */
 	Map<String, Object> queryAttachmentByTaskId(String taskid);
+
+	/**
+	 * 删除附件
+	 * @param attId 附件Id
+	 */
+	Integer deleteAttachment(long attId); 
 }
