@@ -12,6 +12,7 @@ public interface KnowledgeReaderService {
 	 * 获取用户信息
 	 * 
 	 * @param userid
+	 *            用户Id
 	 * @return
 	 */
 	User getUserInfo(long userid);
@@ -26,11 +27,13 @@ public interface KnowledgeReaderService {
 	KnowledgeStatics getKnowledgeStatusCount(long kid);
 
 	/**
-	 * 查询登陆用户与作者关系 self(0, "自己"), friends(1, "好友"), jinTN(3, "金桐脑"),none(4,
-	 * "无关系");
+	 * 查询登陆用户与作者关系 self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4,
+	 * "全平台"), org(5, "组织"),notFriends(6,"不是好友");
 	 * 
 	 * @param loginuserid
+	 *            登陆用户Id
 	 * @param kuid
+	 *            知识所属用户Id
 	 * @return
 	 */
 	Map<String, Integer> authorAndLoginUserRelation(long loginuserid, long kuid);
@@ -39,6 +42,7 @@ public interface KnowledgeReaderService {
 	 * 返回文章头部标签显示
 	 * 
 	 * @param kid
+	 *            知识Id
 	 * @param type
 	 *            文章类型(十一种类型之一)
 	 * @return

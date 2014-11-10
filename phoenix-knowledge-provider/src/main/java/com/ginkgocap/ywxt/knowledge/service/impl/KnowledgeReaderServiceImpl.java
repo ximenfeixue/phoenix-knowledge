@@ -18,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -47,6 +48,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private MongoTemplate mongoTemplate;
+
+	@Resource
+	private AttachmentService attachmentService;
 
 	@Resource
 	private KnowledgeCollectionMapper knowledgeCollectionMapper;
@@ -274,6 +278,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				type));
 		// 存储正文内容
 		result.putAll(getKnowledgeContent(knowledge, type));
+		// 查询附件
+		result.putAll(attachmentService.queryAttachmentByTaskId(knowledge
+				.getTaskid()));
 		result.put("kid", kid);
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
