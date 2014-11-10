@@ -14,6 +14,7 @@ import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample;
 import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.AttachmentMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.AttachmentMapperManual;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
@@ -22,6 +23,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 	@Resource
 	private AttachmentMapper attachmentMapper;
+	@Resource
+	private AttachmentMapperManual attachmentMapperManual;
 
 	private final Logger logger = LoggerFactory
 			.getLogger(AttachmentServiceImpl.class);
@@ -30,11 +33,12 @@ public class AttachmentServiceImpl implements AttachmentService {
 	public Map<String, Object> addAttachmentFile(Attachment att) {
 		logger.info("进入添加附件文件请求");
 		Map<String, Object> result = new HashMap<String, Object>();
-		int v = attachmentMapper.insertSelective(att);
+		long attId = attachmentMapperManual.insertSelective(att);
 
-		if (v > 0) {
+		if (attId > 0) {
 			logger.info("添加附件到数据库请F求成功!");
 			result.put(Constants.status, Constants.ResultType.success.v());
+			result.put("attId", attId);
 		} else {
 			logger.error("添加附件到数据库请求失败,用户：{}", att.getUserid());
 			result.put(Constants.status, Constants.ResultType.fail.v());
