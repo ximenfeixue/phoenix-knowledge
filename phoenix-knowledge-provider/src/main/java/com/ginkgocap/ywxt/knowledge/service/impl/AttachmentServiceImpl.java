@@ -33,7 +33,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 	public Map<String, Object> addAttachmentFile(Attachment att) {
 		logger.info("进入添加附件文件请求");
 		Map<String, Object> result = new HashMap<String, Object>();
-		long attId = attachmentMapperManual.insertSelective(att);
+		long attId = attachmentMapperManual.insertAndGetId(att);
 
 		if (attId > 0) {
 			logger.info("添加附件到数据库请F求成功!");
