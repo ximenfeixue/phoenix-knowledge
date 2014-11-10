@@ -6,5 +6,5 @@ import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 
 public interface AttachmentMapperManual {
 
-	long insertSelective(@Param("attachment") Attachment attachment);
+	long insertSelective(Attachment attachment);
 }
