@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,8 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -47,15 +48,14 @@ import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
-import com.ginkgocap.ywxt.util.sso.session.SessionManager;
 
-@Service("knowledgeNewsService")
-public class KnowledgeNewsServiceImpl implements KnowledgeNewsService {
+@Service("knowledgeService")
+public class KnowledgeServiceImpl implements KnowledgeService {
 
 	private final static String dule = "1";
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(KnowledgeNewsServiceImpl.class);
+			.getLogger(KnowledgeServiceImpl.class);
 
 	@Autowired
 	private KnowledgeDao knowledgeDao;

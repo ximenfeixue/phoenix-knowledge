@@ -8,5 +8,4 @@
 		values ( #{taskid}, #{fileName}, #{fileSize}, #{fileType},
 		#{downloadUrl}, #{userid} )
 	</insert>
-
 </mapper>

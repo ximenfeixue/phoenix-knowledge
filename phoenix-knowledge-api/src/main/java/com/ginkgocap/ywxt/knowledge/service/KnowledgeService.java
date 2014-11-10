@@ -14,7 +14,7 @@ import com.ginkgocap.ywxt.user.model.User;
  * @author zhangwei
  * 
  */
-public interface KnowledgeNewsService {
+public interface KnowledgeService {
 
 	/**
 	 * 

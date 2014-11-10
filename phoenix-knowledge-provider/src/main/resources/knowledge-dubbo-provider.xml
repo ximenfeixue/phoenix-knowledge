@@ -40,12 +40,6 @@
 		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     
-     <!-- <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" ref="articleService" version="1.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.category.CategoryService" ref="categoryService" version="1.0.0"/>
-   <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.MobileArticleService" ref="mobileArticleService" version="1.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.category.MobileCategoryService" ref="mobileCategoryService" version="1.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService"  ref="knowledgeShareService"  version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService" ref="favoritesService" version="1.0.0"/>-->
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" ref="columnVisibleService" version="1.0.0"/>
@@ -55,18 +49,14 @@
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" ref="knowledgeMongoIncService" version="1.0.0"/>
      <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeNewsService"  ref="knowledgeNewsService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService"  ref="knowledgeService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeNewsAdminService"  ref="knowledgeNewsAdminService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeMacroAdminService"  ref="knowledgeMacroAdminService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeIndustryAdminService"  ref="knowledgeIndustryAdminService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeInvestmentAdminService"  ref="knowledgeInvestmentAdminService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssetService"  ref="knowledgeAssetService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService"  ref="knowledgeCategoryService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService"  ref="columnknowledgeService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserPermissionService"  ref="userpermissionService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMacroService"  ref="knowledgeMacroService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOpinionService"  ref="knowledgeOpinionService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeArticleService"  ref="knowledgeArticleService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService"  ref="knowledgeTagService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService"  ref="knowledgeCaseService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService"  ref="knowledgeIndustryService" version="1.0.0"/>

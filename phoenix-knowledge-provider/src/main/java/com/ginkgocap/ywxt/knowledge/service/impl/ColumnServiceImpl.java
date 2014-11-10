@@ -604,7 +604,7 @@ public class ColumnServiceImpl implements ColumnService {
 		criteria.andColumnLevelPathGreaterThan(Constants.unGroupSortId);
 		criteria.andUserIdEqualTo(userid);
 		List<Column> colList = columnMapper.selectByExample(col);
-		if (colList != null) {
+		if (colList != null && colList.size() > 0) {
 			Query query = new Query(
 					org.springframework.data.mongodb.core.query.Criteria.where(
 							"columnid").is(columnid));

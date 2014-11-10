@@ -45,7 +45,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	private final static String dule = "1";
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(KnowledgeNewsServiceImpl.class);
+			.getLogger(KnowledgeDraftServiceImpl.class);
 
 	@Resource
 	private KnowledgeDraftMapper knowledgeDraftMapper;
