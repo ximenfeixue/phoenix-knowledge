@@ -787,18 +787,28 @@ public class ColumnServiceImpl implements ColumnService {
 			map.put("columnName", column.getColumnname());
 		}
 		for (int i = 0; i < 5; i++) {
-			if (column.getParentId() == 0) {
-				parcolumnid = column.getId() + "";
-				map.put("parcolumnid", parcolumnid);
-				break;
+			if (i == 0) {
+				if (column.getParentId() == 0) {
+					parcolumnid = column.getId() + "";
+					map.put("parcolumnid", -1);
+					map.put("parcolumnName","自义定栏目" );
+					break;
+				}
+			} else {
+				if (column.getParentId() == 0) {
+					parcolumnid = column.getId() + "";
+					map.put("parcolumnid", parcolumnid);
+					if (StringUtils.isNotBlank(parcolumnid)) {
+						column = columnMapper.selectByPrimaryKey(Long
+								.parseLong(parcolumnid));
+						map.put("parcolumnName", column.getColumnname());
+					}
+					break;
+				}
 			}
 			column = columnMapper.selectByPrimaryKey(column.getParentId());
 		}
-		if (StringUtils.isNotBlank(parcolumnid)) {
-			column = columnMapper.selectByPrimaryKey(Long
-					.parseLong(parcolumnid));
-			map.put("parcolumnName", column.getColumnname());
-		}
+
 		return map;
 	}
 }
