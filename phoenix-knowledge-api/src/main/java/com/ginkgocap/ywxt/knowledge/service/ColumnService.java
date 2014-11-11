@@ -101,6 +101,15 @@ public interface ColumnService {
 	public List<Column> queryByParentIdAndSystem(long parentId, long userId);
 
 	/**
+	 * 检查一级栏目名称是否存在
+	 * @param parentId
+	 * @param columnName
+	 * @param userId
+	 * @return 栏目列表
+	 */
+	public boolean checkColumnByParams(String columnName, long parentId, long userId);
+	
+	/**
 	 * queryByUserId 查询用户订阅的所有栏目
 	 * 
 	 * @param createUserId

@@ -11,6 +11,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,7 +44,10 @@ public class ColumnServiceImpl implements ColumnService {
 	public static int ROOT_PARENT_ID = 0;
 	public static int MAX_ALLOWED_LEVEL = 7;
 	private static final int sortV = 9;
-
+	
+	private Logger logger = LoggerFactory
+			.getLogger(ColumnServiceImpl.class);
+	
 	@Autowired
 	ColumnMapper columnMapper;
 	@Autowired
@@ -57,7 +62,8 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnTagMapper columnTagMapper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
+	
+	
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
 	 * 
@@ -816,5 +822,25 @@ public class ColumnServiceImpl implements ColumnService {
 	public List<Column> querySubByUserIdOrderById(long createUserId) {
 		List<Column> list = columnValueMapper.selectSubByUserIdOrderById(createUserId);
 		return list;
+	}
+	
+	@Override
+	public boolean checkColumnByParams(String columnName, long parentId,
+			long uid) {
+		logger.info("--进入验证栏目名称请求,栏目名称:{},当前登陆用户:{}--", columnName,
+				uid);
+		ColumnExample example = new ColumnExample();
+		Criteria c = example.createCriteria();
+		List<Long> values = new ArrayList<Long>();
+		values.add(0L);
+		values.add(uid);
+		c.andUserIdIn(values);
+		if (columnName != null && !"".equals(columnName)) {
+			c.andColumnnameEqualTo(columnName);
+		}
+		int count = columnMapper.countByExample(example);
+		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName,
+				uid);
+		return count>0 ? false:true;
 	}
 }
