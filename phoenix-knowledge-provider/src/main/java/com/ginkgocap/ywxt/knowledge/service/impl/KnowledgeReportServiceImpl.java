@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeReportMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.user.form.DataGridModel;
 
 @Service("knowledgeReportService")
 public class KnowledgeReportServiceImpl implements KnowledgeReportService {
@@ -38,6 +39,25 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 			result.put(Constants.status, Constants.ResultType.success.v());
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Object> selectByParam(DataGridModel dgm,
+			Map<String, String> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateStatus(long id, int status, String info) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByKnowledgeId(long id) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
