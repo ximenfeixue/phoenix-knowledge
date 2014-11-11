@@ -177,6 +177,20 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		return "";
 	}
+	
+	@Override
+	public String selectColumnTreeBySortIdAndPid(long userId, String sortId,
+			String status ,long pid) {
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortIdAndPid(userId,
+				sortId, pid);
+		if (cl != null && cl.size() > 0) {
+			return JSONObject.fromObject(
+					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
+							"columnname", "parentId", "columnLevelPath")))
+					.toString();
+		}
+		return "";
+	}
 
 	@Override
 	public String selectColumnTreeByParams(long userId, String sortId,
@@ -492,10 +506,8 @@ public class ColumnServiceImpl implements ColumnService {
 		column.setUpdateTime(d);
 		column.setUserId(userid);
 		column.setColumnLevelPath(currentColumnLevelPath);
-
-		if (type != 0) {
-			// column.setType((byte) type);
-		}
+		// 设置类型
+		column.setType((short)type);
 		long v = columnMapperManual.insertAndGetId(column);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());

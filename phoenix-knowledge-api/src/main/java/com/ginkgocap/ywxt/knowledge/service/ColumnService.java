@@ -202,6 +202,16 @@ public interface ColumnService {
 	 * @return
 	 */
 	String selectColumnTreeBySortId(long userId, String sortId, String status);
+	
+	/**
+	 * 根据用户id和父级id查询栏目树
+	 * @param userId
+	 * @param sortId
+	 * @param status
+	 * @param pid
+	 * @return
+	 */
+	String selectColumnTreeBySortIdAndPid(long userId, String sortId, String status,long pid);
 
 	/**
 	 * 获取全路径

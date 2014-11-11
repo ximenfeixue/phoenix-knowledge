@@ -42,6 +42,19 @@
 		order by column_level_path
 	</select>
 	
+	<select id="selectColumnTreeBySortIdAndPid" resultMap="BaseResultMap">
+		select *
+		from tb_column
+		where del_status=0
+		and (user_id=#{userId} or user_id=0)
+		and (parent_id=#{pid})
+		<if test="sortId != null and sortId != ''">
+			and column_level_path like CONCAT(#{sortId}, '%')
+			and column_level_path != #{sortId}
+		</if>
+		order by column_level_path
+	</select>
+	
 	<select id="selectColumnTreeByCustom" resultMap="BaseResultMap">
 		select *
 		from tb_column

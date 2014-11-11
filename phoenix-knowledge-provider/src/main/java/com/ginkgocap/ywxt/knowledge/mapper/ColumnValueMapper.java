@@ -24,6 +24,14 @@ public interface ColumnValueMapper {
     List<Column>  selectColumnTreeBySortId(@Param("userId")long userId,@Param("sortId")String sortId);
     
     /**
+     * 查询目录树
+     * @param userId 用户id
+     * @param sortId 排序id :为空表示所有
+     * @param pid 	父级id
+     * @return 
+     */
+    List<Column>  selectColumnTreeBySortIdAndPid(@Param("userId")long userId,@Param("sortId")String sortId,@Param("pid")long pid);
+    /**
      * 查询自义定树树
      * @param userId 用户id
      * @param sortId 排序id :为空表示所有
