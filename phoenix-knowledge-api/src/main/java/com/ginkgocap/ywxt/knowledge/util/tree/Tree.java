@@ -86,7 +86,9 @@ public class Tree {
             tList.remove(0);
             buildTree(tc.getId(), tList, lc, tc.getSortId().length(), tc);
         }
-        }catch(Exception e){        }
+        }catch(Exception e){       
+            System.err.println("error节点："+pid+"出错");
+        }
         
         return;
     }
