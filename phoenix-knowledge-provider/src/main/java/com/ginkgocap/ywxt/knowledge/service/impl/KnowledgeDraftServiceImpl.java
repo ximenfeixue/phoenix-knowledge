@@ -259,8 +259,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			} else {
 				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 			}
-			if (StringUtils.isNotBlank(vo.getCatalogueIds().substring(1,
-					vo.getCatalogueIds().length()))) {
+			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
 
 				int categoryV = knowledgeCategoryService
 						.insertKnowledgeCategoryDraft(kId, cIds, userId,
