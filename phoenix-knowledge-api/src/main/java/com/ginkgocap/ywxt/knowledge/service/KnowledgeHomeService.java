@@ -42,13 +42,20 @@ public interface KnowledgeHomeService {
     public <T> Map<String, Object> selectAllByParam(T t,int state, String columnid, Long userid, int page, int size);
     
     /**
-     * 查询目录
-     * @param state 0默认 1收藏
+     * 查询目录知识     
+     * @param tid 11种类型
+     * @param lid 6种来源
+     * @param state 状态 0：云知识目录 1：收藏夹目录
      * @param sortid 排序id
      * @param userid 用户id
-     * @param page页
-     * @param size 页大小
-     * @return
+     * @param keyword 关键词
+     * @param page 当前页
+     * @param size 每页大小
+     * @return map<pre>example：
+     * selectAllKnowledgeCategoryByParam("1","1",0,"000000001", 1l,"关键词", 1, 20);</pre>
+     * @see {@link KnowledgeHomeServiceImpl#selectAllByParam}
+     * @author bianzhiwei
+     * @since 2014.11.11
      */
     public Map<String,Object>  selectAllKnowledgeCategoryByParam(String tid,String lid,int state, String sortid, Long userid,String keyword, int page, int size);
 
