@@ -42,6 +42,9 @@ public class KnowledgeNewsVO implements Serializable {
 
 	// 法律法规-执行日期
 	private String performTime;
+	
+	// 描述
+	private String desc;
 
 	public String getPostUnit() {
 		return postUnit;
@@ -237,6 +240,14 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setKnowledgeid(String knowledgeid) {
 		this.knowledgeid = knowledgeid;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 }

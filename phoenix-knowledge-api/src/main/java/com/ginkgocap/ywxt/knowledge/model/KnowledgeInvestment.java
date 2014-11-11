@@ -60,6 +60,8 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		
 		this.setOid(vo.getOid());
 		
+		this.setDesc(vo.getDesc());
+		
 		return this;
 	}
 
@@ -89,7 +91,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setOid(vo.getOid());
-		
+		this.setDesc(vo.getDesc());
 		return this;
 	}
 	
