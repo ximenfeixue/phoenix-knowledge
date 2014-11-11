@@ -391,21 +391,22 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
-		Short source = 1;
+		//知识来源，（0，系统，1，用户）
+		Short source = (short)Constants.KnowledgeSource.user.v();
 		String content = "";
 		// 获取Session用户值
 		long userId = user.getId();
 		String username = user.getUserName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid();
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-				.getColumnid()) != 0) {
+		if (Long.parseLong(columnid) != 0) {
 			columnPath = columnService.getColumnPathById(Long
-					.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-							.getColumnid()));
+					.parseLong(columnid));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
@@ -415,11 +416,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			content = vo.getContent().replace("&quot;", " ");
 		}
 
-
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 		vo.setContent(content);
+		vo.setColumnid(columnid);
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -447,7 +448,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					boolean flag = userPermissionService
 							.checkUserSource(permList);
 					if (flag) {
-						source = 0;
+						source = (short)Constants.KnowledgeSource.system.v();
 					}
 					int pV = userPermissionService.insertUserPermission(
 							permList, kId, userId, vo.getShareMessage(), Short

@@ -137,6 +137,21 @@ public class Constants {
 		}
 
 	}
+	
+	public enum KnowledgeSource {
+		system(0), user(1);
+
+		private int v;
+
+		private KnowledgeSource(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
+
+	}
 
 	public enum HighLight {
 		unlight(0), light(1);
