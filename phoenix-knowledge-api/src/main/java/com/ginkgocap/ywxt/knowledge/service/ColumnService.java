@@ -79,7 +79,16 @@ public interface ColumnService {
 	 * @return 栏目列表
 	 */
 	public List<Column> queryByParentId(long parentId, long userId);
-
+	/**
+	 * countByParentId根据上级栏目查询子栏目数量
+	 * 
+	 * @param parentColumnId
+	 *            父栏目id
+	 * @param createUserId
+	 *            创建者名称
+	 * @return 栏目列表
+	 */
+	public int countByParentId(long parentId, long userId);
 	/**
 	 * queryByUserId 查询用户创建的所有栏目
 	 * 
@@ -99,7 +108,7 @@ public interface ColumnService {
 	 * @return 栏目列表
 	 */
 	public List<Column> queryByParentIdAndSystem(long parentId, long userId);
-
+	
 	/**
 	 * 检查一级栏目名称是否存在
 	 * @param parentId

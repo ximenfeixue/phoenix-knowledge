@@ -293,7 +293,15 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> list = columnMapper.selectByExample(ce);
 		return list;
 	}
-
+	public int countByParentId(long parentId, long userId) {
+		ColumnExample ce = new ColumnExample();
+		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId)
+				.andUserIdEqualTo(userId);
+		filterDel(c);
+		ce.setOrderByClause("id ASC");
+		int count = columnMapper.countByExample(ce);
+		return count;
+	}
 	@Override
 	public List<Column> queryByParentIdAndSystem(long parentId, long userId) {
 		List<Long> values = new ArrayList<Long>();
@@ -311,7 +319,7 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> list = columnMapper.selectByExample(ce);
 		return list;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> querySubAndStatus(long userId) {
 		//
@@ -531,15 +539,19 @@ public class ColumnServiceImpl implements ColumnService {
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
 		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
-		for (String tag : currTags) {
-			ColumnTag ct = new ColumnTag();
-			ct.setColumnId(columnId);
-			ct.setCreatetime(new Date());
-			ct.setTag(tag);
-			ct.setUserId(userid);
-			columnList.add(ct);
+		if(currTags!=null){
+			for (String tag : currTags) {
+				ColumnTag ct = new ColumnTag();
+				ct.setColumnId(columnId);
+				ct.setCreatetime(new Date());
+				ct.setTag(tag);
+				ct.setUserId(userid);
+				columnList.add(ct);
+			}
 		}
-		columnTagMapperManual.batchInsertColumnTag(columnList);
+		if(columnList.size()>0){
+			columnTagMapperManual.batchInsertColumnTag(columnList);
+		}
 	}
 
 	/** 获取sortId全路径 **/
@@ -730,10 +742,9 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
-		Column col = new Column();
-		col.setColumnname(columnName);
-		col.setUpdateTime(new Date());
-		int v = columnMapper.updateByPrimaryKeySelective(col);
+		column.setColumnname(columnName);
+		column.setUpdateTime(new Date());
+		int v = columnMapper.updateByPrimaryKeySelective(column);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
