@@ -43,6 +43,8 @@ public class KnowledgeArticle extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setAsso(vo.getAsso());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
 	
@@ -72,6 +74,8 @@ public class KnowledgeArticle extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setAsso(vo.getAsso());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
 

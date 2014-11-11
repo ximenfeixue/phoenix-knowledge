@@ -107,6 +107,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setSubmitTime(vo.getSubmitTime());
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
 
@@ -142,6 +143,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setSubmitTime(vo.getSubmitTime());
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
 }
