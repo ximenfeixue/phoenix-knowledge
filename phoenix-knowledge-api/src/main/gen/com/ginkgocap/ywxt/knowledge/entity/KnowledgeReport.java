@@ -24,6 +24,8 @@ public class KnowledgeReport implements Serializable {
 
     private String results;
 
+    private Integer status;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -104,5 +106,13 @@ public class KnowledgeReport implements Serializable {
 
     public void setResults(String results) {
         this.results = results;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
