@@ -45,10 +45,7 @@
     <dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" version="1.0.0"/>
     <dubbo:reference id="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeNewsAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeNewsAdminService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeMacroAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeMacroAdminService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeIndustryAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeIndustryAdminService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeInvestmentAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeInvestmentAdminService" version="1.0.0"/>
+    <dubbo:reference id="knowledgeAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService" version="1.0.0"/>
     <dubbo:reference id="knowledgeCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService" version="1.0.0"/>
     <dubbo:reference id="columnknowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService" version="1.0.0"/>
     <dubbo:reference id="userpermissionService" interface="com.ginkgocap.ywxt.knowledge.service.UserPermissionService" version="1.0.0"/>
