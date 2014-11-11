@@ -63,7 +63,7 @@
 		where del_status=0 and id IN
 		(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
 	</select>
-
+	
 	<select id="selectByParam" resultMap="BaseResultMap">
 		select
 		<include refid="allColumns" />
@@ -124,6 +124,25 @@
 		from
 		<include refid="tb_name" />
 		where del_status=0 and user_id = #{systemId} and LENGTH(column_level_path) = 18
+	</select>
+	
+	<select id="selectSubByUserIdOrderById" resultMap="BaseResultMap"
+		parameterType="Long">
+		select DISTINCT
+		c.id,
+		c.columnName,
+		c.parent_id,
+		c.user_id,
+		c.column_level_path,
+		c.path_name,
+		c.createtime,
+		c.update_time,
+		c.del_status,
+		c.subscribe_count
+		from
+		<include refid="tb_name" /> c,tb_knowledge_column_subscribe t 
+		where c.del_status=0 and c.id IN
+		(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId}) order by t.id DESC
 	</select>
 	
 </mapper>

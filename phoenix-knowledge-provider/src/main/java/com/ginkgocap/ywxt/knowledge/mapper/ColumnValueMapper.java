@@ -72,4 +72,10 @@ public interface ColumnValueMapper {
      * @return
      */
     public void updateCLP(Map<String,Object> map);
+    /**
+     * 查询用户订阅的所有栏目 并按订阅顺序倒叙查询
+     * @param userId 用户id
+     * @return 用户订阅的所有栏目列表
+     */
+    public List<Column> selectSubByUserIdOrderById(long userId);
 }

@@ -811,4 +811,10 @@ public class ColumnServiceImpl implements ColumnService {
 
 		return map;
 	}
+
+	@Override
+	public List<Column> querySubByUserIdOrderById(long createUserId) {
+		List<Column> list = columnValueMapper.selectSubByUserIdOrderById(createUserId);
+		return list;
+	}
 }
