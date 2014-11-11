@@ -16,6 +16,14 @@ public class KnowledgeReport implements Serializable {
 
     private Long userId;
 
+    private String username;
+
+    private String knowledgetitle;
+
+    private Date updatetime;
+
+    private String results;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -64,5 +72,37 @@ public class KnowledgeReport implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getKnowledgetitle() {
+        return knowledgetitle;
+    }
+
+    public void setKnowledgetitle(String knowledgetitle) {
+        this.knowledgetitle = knowledgetitle;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getResults() {
+        return results;
+    }
+
+    public void setResults(String results) {
+        this.results = results;
     }
 }

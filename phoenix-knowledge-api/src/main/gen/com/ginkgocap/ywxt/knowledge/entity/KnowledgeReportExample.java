@@ -505,6 +505,276 @@ public class KnowledgeReportExample {
             return (Criteria) this;
         }
 
+        public Criteria andUsernameIsNull() {
+            addCriterion("userName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameIsNotNull() {
+            addCriterion("userName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameEqualTo(String value) {
+            addCriterion("userName =", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameNotEqualTo(String value) {
+            addCriterion("userName <>", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameGreaterThan(String value) {
+            addCriterion("userName >", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameGreaterThanOrEqualTo(String value) {
+            addCriterion("userName >=", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameLessThan(String value) {
+            addCriterion("userName <", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameLessThanOrEqualTo(String value) {
+            addCriterion("userName <=", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameLike(String value) {
+            addCriterion("userName like", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameNotLike(String value) {
+            addCriterion("userName not like", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameIn(List<String> values) {
+            addCriterion("userName in", values, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameNotIn(List<String> values) {
+            addCriterion("userName not in", values, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameBetween(String value1, String value2) {
+            addCriterion("userName between", value1, value2, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameNotBetween(String value1, String value2) {
+            addCriterion("userName not between", value1, value2, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleIsNull() {
+            addCriterion("knowledgeTitle is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleIsNotNull() {
+            addCriterion("knowledgeTitle is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleEqualTo(String value) {
+            addCriterion("knowledgeTitle =", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleNotEqualTo(String value) {
+            addCriterion("knowledgeTitle <>", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleGreaterThan(String value) {
+            addCriterion("knowledgeTitle >", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleGreaterThanOrEqualTo(String value) {
+            addCriterion("knowledgeTitle >=", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleLessThan(String value) {
+            addCriterion("knowledgeTitle <", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleLessThanOrEqualTo(String value) {
+            addCriterion("knowledgeTitle <=", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleLike(String value) {
+            addCriterion("knowledgeTitle like", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleNotLike(String value) {
+            addCriterion("knowledgeTitle not like", value, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleIn(List<String> values) {
+            addCriterion("knowledgeTitle in", values, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleNotIn(List<String> values) {
+            addCriterion("knowledgeTitle not in", values, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleBetween(String value1, String value2) {
+            addCriterion("knowledgeTitle between", value1, value2, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleNotBetween(String value1, String value2) {
+            addCriterion("knowledgeTitle not between", value1, value2, "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeIsNull() {
+            addCriterion("updateTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeIsNotNull() {
+            addCriterion("updateTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeEqualTo(Date value) {
+            addCriterion("updateTime =", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeNotEqualTo(Date value) {
+            addCriterion("updateTime <>", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeGreaterThan(Date value) {
+            addCriterion("updateTime >", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("updateTime >=", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeLessThan(Date value) {
+            addCriterion("updateTime <", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeLessThanOrEqualTo(Date value) {
+            addCriterion("updateTime <=", value, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeIn(List<Date> values) {
+            addCriterion("updateTime in", values, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeNotIn(List<Date> values) {
+            addCriterion("updateTime not in", values, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeBetween(Date value1, Date value2) {
+            addCriterion("updateTime between", value1, value2, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatetimeNotBetween(Date value1, Date value2) {
+            addCriterion("updateTime not between", value1, value2, "updatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsIsNull() {
+            addCriterion("results is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsIsNotNull() {
+            addCriterion("results is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsEqualTo(String value) {
+            addCriterion("results =", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsNotEqualTo(String value) {
+            addCriterion("results <>", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsGreaterThan(String value) {
+            addCriterion("results >", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsGreaterThanOrEqualTo(String value) {
+            addCriterion("results >=", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsLessThan(String value) {
+            addCriterion("results <", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsLessThanOrEqualTo(String value) {
+            addCriterion("results <=", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsLike(String value) {
+            addCriterion("results like", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsNotLike(String value) {
+            addCriterion("results not like", value, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsIn(List<String> values) {
+            addCriterion("results in", values, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsNotIn(List<String> values) {
+            addCriterion("results not in", values, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsBetween(String value1, String value2) {
+            addCriterion("results between", value1, value2, "results");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsNotBetween(String value1, String value2) {
+            addCriterion("results not between", value1, value2, "results");
+            return (Criteria) this;
+        }
+
         public Criteria andTypeLikeInsensitive(String value) {
             addCriterion("upper(type) like", value.toUpperCase(), "type");
             return (Criteria) this;
@@ -512,6 +782,21 @@ public class KnowledgeReportExample {
 
         public Criteria andRepDescLikeInsensitive(String value) {
             addCriterion("upper(rep_desc) like", value.toUpperCase(), "repDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameLikeInsensitive(String value) {
+            addCriterion("upper(userName) like", value.toUpperCase(), "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgetitleLikeInsensitive(String value) {
+            addCriterion("upper(knowledgeTitle) like", value.toUpperCase(), "knowledgetitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andResultsLikeInsensitive(String value) {
+            addCriterion("upper(results) like", value.toUpperCase(), "results");
             return (Criteria) this;
         }
     }
