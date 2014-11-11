@@ -280,8 +280,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
-				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();
@@ -297,8 +296,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
-					vo.getCatalogueIds().length()));
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 		}
 		int categoryV = knowledgeCategoryService
 				.insertKnowledgeRCategory(vo.getkId(), cIds, user.getId(),
@@ -467,8 +465,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		long[] cIds = null;
 		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds().substring(1,
-				vo.getCatalogueIds().length()))) { // 如果目录ID为空,默认添加到未分组目录中.
+		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
 			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
 					.createCriteria();
@@ -484,8 +481,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			}
 		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds().substring(1,
-					vo.getCatalogueIds().length()));
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 		}
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(kId,
 				cIds, userId, username, columnPath, vo);
