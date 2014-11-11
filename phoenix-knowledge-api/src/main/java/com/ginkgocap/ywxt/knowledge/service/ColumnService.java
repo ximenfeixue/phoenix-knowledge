@@ -318,5 +318,14 @@ public interface ColumnService {
 	Column selectByPrimaryKey(long columnid);
 
 	Map<String, Object> selectparColumnidBycolumnid(long columnid);
+	
+	/**
+	 * queryByUserId 查询用户订阅的所有栏目并按id倒叙排列
+	 * 
+	 * @param createUserId
+	 *            用户id
+	 * @return 用户订阅的所有栏目列表
+	 */
+	public List<Column> querySubByUserIdOrderById(long createUserId);
 
 }
