@@ -6,23 +6,22 @@ public class KnowledgeNewsVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long kId;
-	private String title;
-	private String content;
-	private String pic;
-	private String taskId;
-	private String cpath;
-	private String tags;
-	private String srouce;
-	private String catalogueIds;
-	private String columnid;
-	private String essence;
-	private String selectedIds;
-	private String shareMessage;
-	private String columnType;
-	private String columnPath;
-	private String columnName;
-	private String asso;
+	private Long kId; // 知识ID
+	private String title; // 知识标题
+	private String content; // 知识内容
+	private String pic; // 知识封面图片
+	private String taskId; // 知识附件
+	private String tags; // 知识
+	private String source; // 知识来源
+	private String catalogueIds; // 知识所在目录 (目录数组)
+	private String columnid; // 知识所属栏目
+	private String essence; // 知识加精状态( 是否加精（0-不加 1-加）)
+	private String selectedIds; // 知识所属权限
+	private String shareMessage; // 分享感言
+	private String columnType; // 知识所属类型(类型（1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）)
+	private String columnPath; // 知识所在的栏目路径
+	private String columnName; // 知识所属栏目类型名(用于草稿箱查询)
+	private String asso; // 知识关联
 	// 草稿箱用
 	private String knowledgeid;
 
@@ -42,7 +41,7 @@ public class KnowledgeNewsVO implements Serializable {
 
 	// 法律法规-执行日期
 	private String performTime;
-	
+
 	// 描述
 	private String desc;
 
@@ -154,14 +153,6 @@ public class KnowledgeNewsVO implements Serializable {
 		this.taskId = taskId;
 	}
 
-	public String getCpath() {
-		return cpath;
-	}
-
-	public void setCpath(String cpath) {
-		this.cpath = cpath;
-	}
-
 	public String getTags() {
 		return tags;
 	}
@@ -218,12 +209,12 @@ public class KnowledgeNewsVO implements Serializable {
 		this.price = price;
 	}
 
-	public String getSrouce() {
-		return srouce;
+	public String getSource() {
+		return source;
 	}
 
-	public void setSrouce(String srouce) {
-		this.srouce = srouce;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getAsso() {

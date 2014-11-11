@@ -86,7 +86,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setTitle(vo.getTitle());
 		this.setCid(user.getId());
 		this.setCname(user.getName());
-		this.setSource(vo.getSrouce());
+		this.setSource(vo.getSource());
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
@@ -121,7 +121,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setTitle(vo.getTitle());
 		this.setCid(user.getId());
 		this.setCname(user.getName());
-		this.setSource("");
+		this.setSource(vo.getSource());
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
