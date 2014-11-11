@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
 	namespace="com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper">
+	
+	<sql id="tb_name_base">tb_knowledge_base</sql>
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
 		SELECT DISTINCT b.*
-		FROM tb_knowledge_base b 
+		FROM <include refid="tb_name_base" /> b 
 		WHERE b.user_id=#{userId}
 		<if test="tag !=null and tag != '' ">
 			AND b.tag like CONCAT('%',#{tag},'%')
@@ -18,7 +20,7 @@
 
 	<select id="selectCountKnowledgeByTagsAndKeyWords" resultType="int">
 		SELECT count(*)
-		FROM tb_knowledge_base b 
+		FROM <include refid="tb_name_base" /> b 
 		WHERE b.user_id=#{userId} 
 		<if test="tag !=null and tag != '' ">
 			AND b.tag like CONCAT('%',#{tag},'%')
@@ -31,7 +33,7 @@
 	<select id="selectKnowledgeByMyCollectionAndKeyWords" resultType="map">
 		SELECT DISTINCT b.* 
 		FROM tb_knowledge_collection kc,
-		tb_knowledge_base b
+		<include refid="tb_name_base" /> b
 		WHERE kc.knowledge_id = b.knowledge_id
 		AND b.user_id = kc.userId
 		AND b.user_id=#{userId}
@@ -41,7 +43,7 @@
 	
 	<select id="selectCountKnowledgeByMyCollectionAndKeyWords" resultType="int">
 		SELECT count(*)
-		FROM tb_knowledge_base b ,tb_knowledge_collection kc
+		FROM <include refid="tb_name_base" /> b ,tb_knowledge_collection kc
 		WHERE 
 		kc.knowledge_id = b.knowledge_id
 		AND b.user_id = kc.userId
@@ -51,7 +53,7 @@
 	
 	<select id="selectKnowledgeBySourceAndColumn" resultType="map">
 		SELECT DISTINCT b.*
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		<if test="userId != -2">
 		AND b.user_id = #{userId}
@@ -61,7 +63,7 @@
 	
 	<select id="selectCountKnowledgeBySourceAndColumn" resultType="int">
 		SELECT count(*)
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		<if test="userId != -2">
 		AND b.user_id = #{userId}
@@ -70,7 +72,7 @@
 	
 	<select id="selectMyFriendKnowledgeByKeyWords" resultType="map">
 		SELECT DISTINCT b.*
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		AND b.user_id in 
 		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
@@ -81,7 +83,7 @@
 	
 	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="int">
 		SELECT count(*)
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		AND b.user_id in 
 		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
@@ -91,7 +93,7 @@
 	
 	<select id="selectMyFriendKnowledgeByColumnId" resultType="map">
 	SELECT DISTINCT b.*
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		AND b.knowledge_id in 
 		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
@@ -100,9 +102,30 @@
 	
 	<select id="selectCountForMyFriendKnowledgeByColumnId" resultType="int">
 	SELECT count(*)
-		FROM tb_knowledge_base b
+		FROM <include refid="tb_name_base" /> b
 		WHERE b.column_id = #{columnId}
 		AND b.knowledge_id in 
 		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
+	</select>
+	
+	<select id="selectKnowledgeForSourceByColumn" resultType="map">
+		SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b,tb_column_knowledge c
+		WHERE c.knowledge_id = b.knowledge_id
+		AND c.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountKnowledgeForSourceByColumn" resultType="int">
+		SELECT COUNT(*)
+		FROM <include refid="tb_name_base" /> b,tb_column_knowledge c
+		WHERE c.knowledge_id = b.knowledge_id
+		AND c.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
 	</select>
 </mapper>

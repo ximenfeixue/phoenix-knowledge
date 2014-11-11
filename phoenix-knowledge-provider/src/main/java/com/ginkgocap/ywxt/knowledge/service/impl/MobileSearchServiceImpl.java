@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +9,6 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +19,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
-import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -247,18 +241,18 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	page);
 		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
 		Map<String,Object> result = new HashMap<String, Object>();
-		/** 查询提交 根据栏目查询 */
-		Criteria 	criteria = Criteria.where("columnid").is(columnId);
-		if(source != -2) //如果为-2，查询指定栏目下的全部知识
-		criteria.and("cid").is(source);
-		Query query = new Query(criteria);
-		long count = mongoTemplate.count(query, KnowledgeNews.class);
-		PageUtil p = new PageUtil((int) count, page, size);
-		query.limit(p.getPageStartRow() - 1);
-		query.skip(size);
-		List<KnowledgeNews> kns= mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
-		result.put("page", p);
-		result.put("list", kns);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper
+				.selectCountKnowledgeForSourceByColumn(columnId, source);
+		List<?> kcl = mobileKnowledgeMapper
+				.selectKnowledgeForSourceByColumn(columnId, source,
+						start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
 		return result;
 	}
 
