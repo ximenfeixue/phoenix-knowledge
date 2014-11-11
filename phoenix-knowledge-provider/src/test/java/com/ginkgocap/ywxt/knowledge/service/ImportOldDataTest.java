@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import com.ginkgocap.ywxt.cloud.service.InvestmentCommonService;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.utils.DateUtils;
 
 /**
@@ -31,7 +35,7 @@ public class ImportOldDataTest extends TestBase {
 	}
 
 	@Autowired
-	private KnowledgeMainService knowledgeMainService;
+	private KnowledgeService knowledgeService;
 	@Autowired
 	private InvestmentCommonService investmentCommonService;
 	@Autowired
@@ -59,26 +63,26 @@ public class ImportOldDataTest extends TestBase {
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			KnowledgeInvestment k=new KnowledgeInvestment();
 			InvestmentWord investmentWord = (InvestmentWord) iterator.next();
-			k.setOid(investmentWord.getId());
-			k.setTitle(investmentWord.getTitle());
-			k.setCid(investmentWord.getCreateUserId()==null?0:investmentWord.getCreateUserId());
-			k.setCname(investmentWord.getCreateUserName());
-			k.setUid(investmentWord.getCreateUserId()==null?0:investmentWord.getCreateUserId());
-			k.setUname(investmentWord.getCreateUserName());
-			if(investmentWord.getCreateDate()!=null){
-				k.setCreatetime(DateUtils.StringToDate(investmentWord.getCreateDate(), "yyyy-MM-dd HH:mm:ss"));
-			}
-			String investmentStatus=investmentWord.getInvestmentStatus().toString();
-			if(investmentStatus.equals("0")){
-				k.setStatus(2);
-			}else if(investmentStatus.equals("1")){
-				k.setStatus(4);
-			}else if(investmentStatus.equals("2")){
-				k.setStatus(5);
-			}else{
-				k.setStatus(5);
-				k.setReport_status(1);
-			}
+//			k.setOid(investmentWord.getId());
+//			k.setTitle(investmentWord.getTitle());
+//			k.setCid(investmentWord.getCreateUserId()==null?0:investmentWord.getCreateUserId());
+//			k.setCname(investmentWord.getCreateUserName());
+//			k.setUid(investmentWord.getCreateUserId()==null?0:investmentWord.getCreateUserId());
+//			k.setUname(investmentWord.getCreateUserName());
+//			if(investmentWord.getCreateDate()!=null){
+//				k.setCreatetime(DateUtils.StringToDate(investmentWord.getCreateDate(), "yyyy-MM-dd HH:mm:ss"));
+//			}
+//			String investmentStatus=investmentWord.getInvestmentStatus().toString();
+//			if(investmentStatus.equals("0")){
+//				k.setStatus(2);
+//			}else if(investmentStatus.equals("1")){
+//				k.setStatus(4);
+//			}else if(investmentStatus.equals("2")){
+//				k.setStatus(5);
+//			}else{
+//				k.setStatus(5);
+//				k.setReport_status(1);
+//			}
 			InvestmentVersion version=investmentAuthenticationService.getFirstVersion(investmentWord.getId());
 			if(version!=null){
 				k.setContent(version.getContent()==null?"":version.getContent());
@@ -87,9 +91,30 @@ public class ImportOldDataTest extends TestBase {
 					k.setModifytime(DateUtils.StringToDate(version.getEditDate(), "yyyy-MM-dd HH:mm:ss"));
 				}
 			}
-			k.setIsh(0);
-			k.setColumnid("2");
-			knowledgeInvestmentService.addKnowledgeInvestment(k);
+//			k.setIsh(0);
+//			k.setColumnid("2");
+//			knowledgeInvestmentService.addKnowledgeInvestment(k);
+			
+			KnowledgeNewsVO vo =new KnowledgeNewsVO();
+			vo.setColumnid("");
+			vo.setCatalogueIds(",");
+			vo.setColumnType(Constants.Type.Investment.v()+"");
+			vo.setContent(version.getContent()==null?"":version.getContent());
+			vo.setCpath("");
+			vo.setPic(version.getCardPicPath()==null?"":version.getCardPicPath());
+			vo.setSelectedIds("{&quot;dule&quot;:true,&quot;xiaoles&quot;:[],&quot;zhongles&quot;:[],&quot;dales&quot;:[]}");
+			vo.setShareMessage("");
+			vo.setTags("");
+			vo.setTaskId("");
+			vo.setTitle(investmentWord.getTitle());
+			vo.setOid(investmentWord.getId());
+			vo.setColumnName("投融工具");
+			//插入知识
+			
+			User user=new User();
+			user.setId(investmentWord.getCreateUserId()==null?0:investmentWord.getCreateUserId());
+			user.setName(investmentWord.getCreateUserName());
+			Map insertReturnMap=knowledgeService.insertknowledge(vo, user);
 		}
 	}
 	
