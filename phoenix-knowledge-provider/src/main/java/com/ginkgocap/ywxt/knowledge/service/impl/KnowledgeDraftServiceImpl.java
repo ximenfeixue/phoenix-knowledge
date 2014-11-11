@@ -89,25 +89,23 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		String username = user.getUserName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid();
 		// TODO 判断用户是否选择栏目
 		String columnPath = columnService.getColumnPathById(Long
-				.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-						.getColumnid()));
+				.parseLong(columnid));
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
-
+		vo.setColumnid(columnid);
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			// TODO 判断用户是否选择栏目
 			columnPath = null;
 			Column column = null;
-			if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-					.getColumnid()) != 0) {
+			if (Long.parseLong(columnid) != 0) {
 				columnPath = columnService.getColumnPathById(Long
-						.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0"
-								: vo.getColumnid()));
+						.parseLong(columnid));
 			} else {
 				column = columnService.getUnGroupColumnIdBySortId(user.getId());
 				columnPath = Constants.unGroupSortName;
