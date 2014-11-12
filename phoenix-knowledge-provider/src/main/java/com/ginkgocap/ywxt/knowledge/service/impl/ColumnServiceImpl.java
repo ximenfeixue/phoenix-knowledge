@@ -728,6 +728,7 @@ public class ColumnServiceImpl implements ColumnService {
 		if (columnname != null && !"".equals(columnname)) {
 			c.andColumnnameEqualTo(columnname);
 		}
+		c.andParentIdEqualTo(0l);
 		List<Column> ll = columnMapper.selectByExample(example);
 		return ll;
 	}
