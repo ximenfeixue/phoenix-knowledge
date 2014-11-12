@@ -214,13 +214,11 @@ public interface ColumnService {
 	
 	/**
 	 * 根据用户id和父级id查询栏目树
-	 * @param userId
-	 * @param sortId
-	 * @param status
+	 * @param userId	
 	 * @param pid
 	 * @return
 	 */
-	Map<String,Object> selectColumnTreeBySortIdAndPid(long userId, String sortId, String status,long pid);
+	Map<String,Object> selectColumnByPid(long userId, long pid);
 
 	/**
 	 * 获取全路径

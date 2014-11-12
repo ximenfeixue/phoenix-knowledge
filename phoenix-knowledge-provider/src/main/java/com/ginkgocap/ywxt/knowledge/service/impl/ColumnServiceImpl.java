@@ -28,10 +28,13 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnVOValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -52,6 +55,8 @@ public class ColumnServiceImpl implements ColumnService {
 	ColumnMapper columnMapper;
 	@Autowired
 	private ColumnValueMapper columnValueMapper;
+	@Autowired
+	private ColumnVOValueMapper columnVOValueMapper;
 	@Autowired
 	private ColumnVisibleService columnVisibleService;
 	@Autowired
@@ -179,14 +184,12 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 	
 	@Override
-	public Map<String,Object> selectColumnTreeBySortIdAndPid(long userId, String sortId,
-			String status ,long pid) {
+	public Map<String,Object> selectColumnByPid(long userId, long pid) {
 		logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid,
 				userId);
 		Map<String,Object> result = new HashMap<String,Object>();
 		// 根据父级id查询栏目
-		List<Column> cl = columnValueMapper.selectColumnTreeBySortIdAndPid(userId,
-				sortId, pid);
+		List<ColumnVO> cl = columnVOValueMapper.selectColumnByPid(userId, pid);
 		
 		logger.info("--根据父级id查询栏目树请求成功,父级栏目id:{},当前登陆用户:{}--", pid,
 				userId);
@@ -526,6 +529,8 @@ public class ColumnServiceImpl implements ColumnService {
 			return result;
 		}
 		long currentColumnId = column.getId();
+		// 新增栏目通知大数据
+//		String str = HTTPUtil.post("user/tags/search.json", params);
 		// 存储栏目标签信息
 
 		batchSaveColumnTags(userid, currentColumnId, tags);

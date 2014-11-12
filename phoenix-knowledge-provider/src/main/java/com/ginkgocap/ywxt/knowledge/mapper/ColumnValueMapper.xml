@@ -45,16 +45,6 @@
 		order by column_level_path
 	</select>
 	
-	<select id="selectColumnTreeBySortIdAndPid" resultMap="BaseResultMap">
-		select 
-		<include refid="allColumns" />
-		from tb_column
-		where del_status=0
-		and (user_id=#{userId} or user_id=0)
-		and (parent_id=#{pid})
-		order by column_level_path
-	</select>
-	
 	<select id="selectColumnTreeByCustom" resultMap="BaseResultMap">
 		select 
 		<include refid="allColumns" />
