@@ -720,7 +720,7 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> l = this.selectColumnByParams(uid, "未分组");
 		// 初始化未分组
 		if (l.size() == 0) {
-			this.addColumnForNongroup("未分组", 0, "未分组", 0, "", uid);
+			this.addColumnForNongroup("未分组", 0, "未分组", 1, "", uid);
 		}
 	}
 
