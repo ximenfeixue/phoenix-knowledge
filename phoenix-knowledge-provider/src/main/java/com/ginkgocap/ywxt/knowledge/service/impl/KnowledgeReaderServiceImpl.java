@@ -263,6 +263,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			String type) {
 		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
+		//TODO查询权限
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 查询知识信息
 		Knowledge knowledge = getKnowledgeById(kid, type);

@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
@@ -59,6 +61,9 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 
 	@Resource
 	private ColumnKnowledgeMapper columnKnowledgeMapper;
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(KnowledgeCollectionServiceImpl.class);
 
 	@Override
 	public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
@@ -242,7 +247,8 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public Map<String, Object> selectRankList(int count, long userid) {
 		ColumnExample ce = new ColumnExample();
-		ce.createCriteria().andColumnLevelPathLike("__________________").andDelStatusEqualTo((byte) 0);
+		ce.createCriteria().andColumnLevelPathLike("__________________")
+				.andDelStatusEqualTo((byte) 0);
 		ce.setLimitStart(0);
 		ce.setLimitEnd(count);
 		ce.setOrderByClause("subscribe_count desc");
@@ -309,21 +315,23 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public Map<String, Object> selectMySubscribe(long id, String type,
 			Integer source, Integer pno, Integer psize) {
+		logger.info("进入查询我的订阅请求,用户:{},类型{}", id, type);
 		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeColumnSubscribeExample example = new KnowledgeColumnSubscribeExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(id);
+		criteria.andColumnTypeEqualTo(Short.parseShort(type));
 		example.setOrderByClause("sub_date desc");
 		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
 				.selectByExample(example);
 		if (list == null || list.size() == 0) {
-			result.put("results", "");
+			result.put("results", list);
 			result.put("count", 0);
 		} else {
 			// 查询订阅栏目下的知识Id集合
-			List<Long> columnList = new ArrayList<Long>();
+			List<String> columnList = new ArrayList<String>();
 			for (KnowledgeColumnSubscribe sub : list) {
-				columnList.add(sub.getColumnId());
+				columnList.add(sub.getColumnId()+"");
 
 			}
 			// 根据ID集合查询Mongodb数据
@@ -331,9 +339,9 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			org.springframework.data.mongodb.core.query.Criteria c = createQueryCriteria(
 					id, columnList, source, pno, psize);
 			query.addCriteria(c);
-			query.limit(psize);
-			query.skip((pno - 1) * psize);
-			query.sort().on("createtime", Order.DESCENDING);
+			 query.limit(psize);
+			 query.skip((pno - 1) * psize);
+			 query.sort().on("createtime", Order.DESCENDING);
 			String obj = Constants.getTableName(type + "");
 			if (StringUtils.isBlank(obj)) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -341,31 +349,30 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				return result;
 			}
 			try {
-				@SuppressWarnings("unchecked")
-				List<Knowledge> subList = (List<Knowledge>) mongoTemplate.find(
-						query, Class.forName(obj),
+				List<Knowledge> subList = mongoTemplate.find(query,
+						Knowledge.class,
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 				result.put("results", subList);
 
-				long v = mongoTemplate.count(query,
-						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+				long v = subList.size();
 
 				PageUtil p = new PageUtil((int) v, pno, psize);
-				
+
 				result.put("page", p);
 
 				result.put("totalPage", v % psize == 0 ? v / psize : v / psize
 						+ 1);
-			} catch (ClassNotFoundException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error("查询我的订阅请求异常,用户:{},类型{}", id, type);
 			}
 		}
 		return result;
 	}
 
 	private org.springframework.data.mongodb.core.query.Criteria createQueryCriteria(
-			long uid, List<Long> columnList, Integer source, Integer pno,
+			long uid, List<String> columnList, Integer source, Integer pno,
 			Integer psize) {
 		org.springframework.data.mongodb.core.query.Criteria c = null;
 		if (source == Constants.Relation.jinTN.v()) {
@@ -387,7 +394,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		} else if (source == Constants.Relation.platform.v()) {
 			c = org.springframework.data.mongodb.core.query.Criteria
 					.where("columnid").in(columnList).and("uid")
-					.is(Constants.Ids.platform);
+					.in(Constants.Ids.platform.v());
 		}
 		return c;
 	}

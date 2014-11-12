@@ -44,6 +44,11 @@ public class ColumnSubscribeServiceTest extends TestBase {
     @After
     public void tearDown() throws Exception {
     }
+    
+    @Test
+    public void testFindSubKnowledge(){
+    	System.out.println(kcsService.selectMySubscribe(1, "1", 1, 1, 10));
+    }
 
     @Test
     @Rollback(false)
