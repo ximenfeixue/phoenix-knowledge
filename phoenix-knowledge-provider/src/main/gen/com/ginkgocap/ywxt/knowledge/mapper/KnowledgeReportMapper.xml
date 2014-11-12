@@ -13,6 +13,7 @@
     <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="results" property="results" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="columnType" property="columntype" jdbcType="SMALLINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, knowledge_id, type, rep_desc, createtime, user_id, userName, knowledgeTitle, 
-    updateTime, results, status
+    updateTime, results, status, columnType
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReportExample" >
     select
@@ -113,11 +114,13 @@
     insert into tb_knowledge_report (id, knowledge_id, type, 
       rep_desc, createtime, user_id, 
       userName, knowledgeTitle, updateTime, 
-      results, status)
+      results, status, columnType
+      )
     values (#{id,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{type,jdbcType=CHAR}, 
       #{repDesc,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}, 
       #{username,jdbcType=VARCHAR}, #{knowledgetitle,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
-      #{results,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+      #{results,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{columntype,jdbcType=SMALLINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport" >
     insert into tb_knowledge_report
@@ -155,6 +158,9 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="columntype != null" >
+        columnType,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -189,6 +195,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="columntype != null" >
+        #{columntype,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -234,6 +243,9 @@
       <if test="record.status != null" >
         status = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.columntype != null" >
+        columnType = #{record.columntype,jdbcType=SMALLINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -251,7 +263,8 @@
       knowledgeTitle = #{record.knowledgetitle,jdbcType=VARCHAR},
       updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
       results = #{record.results,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER}
+      status = #{record.status,jdbcType=INTEGER},
+      columnType = #{record.columntype,jdbcType=SMALLINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -289,6 +302,9 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="columntype != null" >
+        columnType = #{columntype,jdbcType=SMALLINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -303,7 +319,8 @@
       knowledgeTitle = #{knowledgetitle,jdbcType=VARCHAR},
       updateTime = #{updatetime,jdbcType=TIMESTAMP},
       results = #{results,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      columnType = #{columntype,jdbcType=SMALLINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -26,6 +26,8 @@ public class KnowledgeReport implements Serializable {
 
     private Integer status;
 
+    private Short columntype;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -114,5 +116,13 @@ public class KnowledgeReport implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Short getColumntype() {
+        return columntype;
+    }
+
+    public void setColumntype(Short columntype) {
+        this.columntype = columntype;
     }
 }

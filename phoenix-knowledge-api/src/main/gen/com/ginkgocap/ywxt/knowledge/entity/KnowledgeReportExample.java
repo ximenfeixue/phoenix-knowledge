@@ -835,6 +835,66 @@ public class KnowledgeReportExample {
             return (Criteria) this;
         }
 
+        public Criteria andColumntypeIsNull() {
+            addCriterion("columnType is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeIsNotNull() {
+            addCriterion("columnType is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeEqualTo(Short value) {
+            addCriterion("columnType =", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeNotEqualTo(Short value) {
+            addCriterion("columnType <>", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeGreaterThan(Short value) {
+            addCriterion("columnType >", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("columnType >=", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeLessThan(Short value) {
+            addCriterion("columnType <", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeLessThanOrEqualTo(Short value) {
+            addCriterion("columnType <=", value, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeIn(List<Short> values) {
+            addCriterion("columnType in", values, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeNotIn(List<Short> values) {
+            addCriterion("columnType not in", values, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeBetween(Short value1, Short value2) {
+            addCriterion("columnType between", value1, value2, "columntype");
+            return (Criteria) this;
+        }
+
+        public Criteria andColumntypeNotBetween(Short value1, Short value2) {
+            addCriterion("columnType not between", value1, value2, "columntype");
+            return (Criteria) this;
+        }
+
         public Criteria andTypeLikeInsensitive(String value) {
             addCriterion("upper(type) like", value.toUpperCase(), "type");
             return (Criteria) this;
