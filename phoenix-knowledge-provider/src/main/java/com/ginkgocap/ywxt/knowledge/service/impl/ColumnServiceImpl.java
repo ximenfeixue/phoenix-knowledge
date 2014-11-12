@@ -181,8 +181,14 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public String selectColumnTreeBySortIdAndPid(long userId, String sortId,
 			String status ,long pid) {
+		logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid,
+				userId);
+		// 根据父级id查询栏目
 		List<Column> cl = columnValueMapper.selectColumnTreeBySortIdAndPid(userId,
 				sortId, pid);
+		
+		logger.info("--根据父级id查询栏目树请求成功,父级栏目id:{},当前登陆用户:{}--", pid,
+				userId);
 		if (cl != null && cl.size() > 0) {
 			return JSONObject.fromObject(
 					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
