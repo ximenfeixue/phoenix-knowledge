@@ -560,7 +560,7 @@
 				<!-- 大数据请求地址 -->
 				<data.http.url>http://192.168.130.119:8090/</data.http.url>
 				<!-- 大数据请端口 -->
-				<http.port>8088</http.port>
+				<http.port>8088</http.port> 
 				<!-- redis地址 -->
 				<redis.host>192.168.101.131</redis.host>
 				<!-- redis端口 -->
