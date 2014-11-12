@@ -154,8 +154,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 			base.setTitle(vo.getTitle());
 			base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
 					.substring(0, 50) : vo.getContent());
-			base.setColumnId(Long.parseLong(StringUtils.isBlank(vo
-					.getColumnid()) ? "0" : vo.getColumnid()));
+			base.setColumnId(Long.parseLong(vo.getColumnid()));
 			base.setColumnType(Short.parseShort(vo.getColumnType()));
 			base.setCreatetime(new Date());
 			base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil

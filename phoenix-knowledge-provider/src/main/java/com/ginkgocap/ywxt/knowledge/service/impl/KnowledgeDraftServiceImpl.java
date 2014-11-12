@@ -145,12 +145,10 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						userPermissionService.insertUserShare(permList,
 								vo.getkId(), vo, user);
 						int pV = userPermissionService.insertUserPermission(
-								permList, vo.getkId(), user.getId(), vo
-										.getShareMessage(), Short.parseShort(vo
-										.getColumnType()), Long
-										.parseLong(StringUtils.isBlank(vo
-												.getColumnid()) ? "0" : vo
-												.getColumnid()));
+								permList, vo.getkId(), user.getId(),
+								vo.getShareMessage(),
+								Short.parseShort(vo.getColumnType()),
+								Long.parseLong(vo.getColumnid()));
 						if (pV == 0) {
 							logger.error(
 									"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
@@ -231,10 +229,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, kId, vo, user);
 				int pV = userPermissionService.insertUserPermission(permList,
-						kId, userId, vo.getShareMessage(), Short.parseShort(vo
-								.getColumnType()), Long.parseLong(StringUtils
-								.isBlank(vo.getColumnid()) ? "0" : vo
-								.getColumnid()));
+						kId, userId, vo.getShareMessage(),
+						Short.parseShort(vo.getColumnType()),
+						Long.parseLong(vo.getColumnid()));
 				if (pV == 0) {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
 				}

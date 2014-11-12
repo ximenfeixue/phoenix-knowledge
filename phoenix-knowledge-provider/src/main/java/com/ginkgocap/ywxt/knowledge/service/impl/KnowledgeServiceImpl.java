@@ -207,16 +207,17 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		if (Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-				.getColumnid()) != 0) {
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid();
+		if (Long.parseLong(columnid) != 0) {
 			columnPath = columnService.getColumnPathById(Long
-					.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-							.getColumnid()));
+					.parseLong(columnid));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			columnPath = Constants.unGroupSortName;
 		}
 
+		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
 		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		knowledgeNewsDAO.updateKnowledge(vo, user);
@@ -258,12 +259,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					userPermissionService.insertUserShare(permList,
 							vo.getkId(), vo, user);
 					int pV = userPermissionService.insertUserPermission(
-							permList, vo.getkId(), user.getId(), vo
-									.getShareMessage(), Short.parseShort(vo
-									.getColumnType()), Long
-									.parseLong(StringUtils.isBlank(vo
-											.getColumnid()) ? "0" : vo
-											.getColumnid()));
+							permList, vo.getkId(), user.getId(),
+							vo.getShareMessage(),
+							Short.parseShort(vo.getColumnType()),
+							Long.parseLong(vo.getColumnid()));
 					if (pV == 0) {
 						logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 								vo.getkId());
@@ -460,11 +459,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						source = (short) Constants.KnowledgeSource.system.v();
 					}
 					int pV = userPermissionService.insertUserPermission(
-							permList, kId, userId, vo.getShareMessage(), Short
-									.parseShort(vo.getColumnType()), Long
-									.parseLong(StringUtils.isBlank(vo
-											.getColumnid()) ? "0" : vo
-											.getColumnid()));
+							permList, kId, userId, vo.getShareMessage(),
+							Short.parseShort(vo.getColumnType()),
+							Long.parseLong(columnid));
 					if (pV == 0) {
 						logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 								kId);
