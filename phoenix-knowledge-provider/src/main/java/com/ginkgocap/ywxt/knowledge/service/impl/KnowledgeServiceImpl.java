@@ -409,6 +409,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					.parseLong(columnid));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			if (column == null) {
+				// TODO 没有未没分组栏目，添加
+
+			} else {
+				columnid = column.getId() + "";
+			}
+
 			columnPath = Constants.unGroupSortName;
 		}
 
@@ -426,9 +433,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
-			if (StringUtils.isNotBlank(selectedIds)
-					&& !selectedIds.equals(dule)) {
+			if (StringUtils.isNotBlank(vo.getSelectedIds())
+					&& !vo.getSelectedIds().equals(dule)) {
+				String selectedIds = vo.getSelectedIds()
+						.replace("&quot;", "\"");
 				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
 				Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
 				if (dule == null) {
