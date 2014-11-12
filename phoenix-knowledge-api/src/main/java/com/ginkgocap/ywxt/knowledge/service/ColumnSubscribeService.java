@@ -235,4 +235,17 @@ public interface ColumnSubscribeService {
 	 */
 	public Map<String, Object> selectMySubscribe(long id, String type,
 			Integer source, Integer pno, Integer psize);
+
+	/**
+	 * 我的订阅内部查询
+	 * @param userId 用户ID 
+	 * @param keywords 关键词
+	 * @param type 知识类型
+	 * @param source 知识来源
+	 * @param currentPage 当前页
+	 * @param pageSize 数量
+	 * @return
+	 */
+	public Map<String, Object> searchKnowledgeFromSub(long userId, String keywords,
+			String type, Integer source, Integer currentPage, Integer pageSize);
 }

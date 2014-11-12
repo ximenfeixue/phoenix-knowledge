@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -37,12 +38,6 @@ import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("columnSubscribeService")
 public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
-
-	// @Autowired
-	// private KnowledgeColumnDao knowledgeColumnDao;
-	//
-	// @Autowired
-	// private KnowledgeColumnSubscribeDao kcsDao;
 
 	@Autowired
 	KnowledgeColumnSubscribeMapper kcsm;
@@ -315,65 +310,11 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public Map<String, Object> selectMySubscribe(long id, String type,
 			Integer source, Integer pno, Integer psize) {
-		logger.info("进入查询我的订阅请求,用户:{},类型{}", id, type);
-		Map<String, Object> result = new HashMap<String, Object>();
-		KnowledgeColumnSubscribeExample example = new KnowledgeColumnSubscribeExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(id);
-		criteria.andColumnTypeEqualTo(Short.parseShort(type));
-		example.setOrderByClause("sub_date desc");
-		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
-				.selectByExample(example);
-		if (list == null || list.size() == 0) {
-			result.put("results", list);
-			result.put("count", 0);
-		} else {
-			// 查询订阅栏目下的知识Id集合
-			List<String> columnList = new ArrayList<String>();
-			for (KnowledgeColumnSubscribe sub : list) {
-				columnList.add(sub.getColumnId()+"");
-
-			}
-			// 根据ID集合查询Mongodb数据
-			Query query = new Query();
-			org.springframework.data.mongodb.core.query.Criteria c = createQueryCriteria(
-					id, columnList, source, pno, psize);
-			query.addCriteria(c);
-			 query.limit(psize);
-			 query.skip((pno - 1) * psize);
-			 query.sort().on("createtime", Order.DESCENDING);
-			String obj = Constants.getTableName(type + "");
-			if (StringUtils.isBlank(obj)) {
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage, "没有找到类型为" + type + "的对象.");
-				return result;
-			}
-			try {
-				List<Knowledge> subList = mongoTemplate.find(query,
-						Knowledge.class,
-						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
-
-				result.put("results", subList);
-
-				long v = subList.size();
-
-				PageUtil p = new PageUtil((int) v, pno, psize);
-
-				result.put("page", p);
-
-				result.put("totalPage", v % psize == 0 ? v / psize : v / psize
-						+ 1);
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("查询我的订阅请求异常,用户:{},类型{}", id, type);
-			}
-		}
-		return result;
+		return searchKnowledgeFromSub(id, null, type, source, pno, psize);
 	}
 
 	private org.springframework.data.mongodb.core.query.Criteria createQueryCriteria(
-			long uid, List<String> columnList, Integer source, Integer pno,
-			Integer psize) {
+			long uid, List<String> columnList, Integer source, String keywords) {
 		org.springframework.data.mongodb.core.query.Criteria c = null;
 		if (source == Constants.Relation.jinTN.v()) {
 			c = org.springframework.data.mongodb.core.query.Criteria
@@ -396,101 +337,73 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 					.where("columnid").in(columnList).and("uid")
 					.in(Constants.Ids.platform.v());
 		}
+		if (StringUtils.isNotBlank(keywords)) {
+			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$",
+					Pattern.CASE_INSENSITIVE);
+			c.and("title").regex(pattern);
+		}
 		return c;
 	}
 
-	// @Override
-	// public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-	//
-	// //TODO 判断是否已存在
-	//
-	// // this.isExist(kcs.getUserId(), kcs.getColumnId());
-	//
-	// if (StringUtils.isEmpty(kcs.getColumnType())) {
-	// KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-	//
-	// //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
-	// kc=KCHelper.setKCType(kc);
-	// String columnType=KCHelper.getMysqlkcType(kc.getKcType());
-	//
-	// kcs.setColumnType(columnType);
-	// }
-	//
-	//
-	// Date date=new Date();
-	// kcs.setSubDate(date);
-	//
-	// return kcsDao.insert(kcs);
-	// }
+	@Override
+	public Map<String, Object> searchKnowledgeFromSub(long id, String keywords,
+			String type, Integer source, Integer pno, Integer psize) {
+		logger.info("进入查询我的订阅请求,用户:{},类型{}", id, type);
+		Map<String, Object> result = new HashMap<String, Object>();
+		KnowledgeColumnSubscribeExample example = new KnowledgeColumnSubscribeExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(id);
+		criteria.andColumnTypeEqualTo(Short.parseShort(type));
+		example.setOrderByClause("sub_date desc");
+		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
+				.selectByExample(example);
+		if (list == null || list.size() == 0) {
+			result.put("results", list);
+			result.put("count", 0);
+		} else {
+			// 查询订阅栏目下的知识Id集合
+			List<String> columnList = new ArrayList<String>();
+			for (KnowledgeColumnSubscribe sub : list) {
+				columnList.add(sub.getColumnId() + "");
 
-	/*
-	 * 
-	 * @Override public int update(KnowledgeColumnSubscribe kcs) { return
-	 * kcsDao.update(kcs); }
-	 * 
-	 * @Override public KnowledgeColumnSubscribe merge(KnowledgeColumnSubscribe
-	 * kcs) {
-	 * 
-	 * if (null == kcs) { return null; }
-	 * 
-	 * Long id =-1l;
-	 * 
-	 * //在不使用包装类型的情况下 try { id = kcs.getId(); } catch (NullPointerException e) {
-	 * e.printStackTrace();
-	 * 
-	 * KnowledgeColumnSubscribe kcsi=kcsDao.insert(kcs); return kcsi; }
-	 * 
-	 * if (id>0) { this.update(kcs); return kcs; }
-	 * 
-	 * return null; }
-	 * 
-	 * @Override public void deleteByUIdAndKCId(long userId, long columnId) {
-	 * kcsDao.deleteByUIdAndKCId(userId, columnId);
-	 * 
-	 * }
-	 * 
-	 * @Override public void deleteByPK(long id) { kcsDao.deleteByPK(id); }
-	 * 
-	 * @Override public List<KnowledgeColumnSubscribe> selectByUserId(long
-	 * userId) { return kcsDao.selectByUserId(userId); }
-	 * 
-	 * @Override public List<KnowledgeColumn> selectKCListByUserId(long userId)
-	 * { // TODO Auto-generated method stub return null; }
-	 * 
-	 * @Override public List<Long> selectUserIdListByKc(long columnId) { // TODO
-	 * Auto-generated method stub return null; }
-	 * 
-	 * @Override public List<KnowledgeColumnSubscribe> selectByKCId(long
-	 * columnId) { // TODO Auto-generated method stub return null; }
-	 * 
-	 * @Override public int countByKC(long columnId) { // TODO Auto-generated
-	 * method stub return 0; }
-	 * 
-	 * @Override public List<Integer> countAllByKC(long userId) { // TODO
-	 * Auto-generated method stub return null; }
-	 * 
-	 * @Override public int countByUserId(long userId) { // TODO Auto-generated
-	 * method stub return 0; }
-	 * 
-	 * @Override public List<KnowledgeSimpleMerge> selectSubKnowByUserId(long
-	 * userId) { // TODO Auto-generated method stub return null; }
-	 * 
-	 * @Override public List<KnowledgeSimpleMerge> selectSubKnowByUserId(long
-	 * userId, int type) { // TODO Auto-generated method stub return null; }
-	 * 
-	 * @Override public List<KnowledgeSimpleMerge>
-	 * selectSubKnowByKCList(List<KnowledgeColumn> list) { // TODO
-	 * Auto-generated method stub return null; }
-	 * 
-	 * @Override public List<KnowledgeSimpleMerge>
-	 * selectSubKnowByKCList(List<KnowledgeColumn> list, int type) { // TODO
-	 * Auto-generated method stub return null; }
-	 * 
-	 * @Override public boolean isExist(long userId, long columnId) { Long
-	 * num=kcsDao.countSubNumber(userId, columnId); if (num>0) { return true; }
-	 * return false; }
-	 * 
-	 * @Override public Long countSubNumber(long userId, long columnId) { return
-	 * kcsDao.countSubNumber(userId, columnId); }
-	 */
+			}
+			try {
+				String obj = Constants.getTableName(type + "");
+				// 根据ID集合查询Mongodb数据
+				Query query = new Query();
+				org.springframework.data.mongodb.core.query.Criteria c = createQueryCriteria(
+						id, columnList, source, keywords);
+				query.addCriteria(c);
+
+				long v = mongoTemplate.count(query,
+						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+				query.limit(psize);
+				query.skip((pno - 1) * psize);
+				query.sort().on("createtime", Order.DESCENDING);
+				if (StringUtils.isBlank(obj)) {
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage, "没有找到类型为" + type
+							+ "的对象.");
+					return result;
+				}
+				List<Knowledge> subList = mongoTemplate.find(query,
+						Knowledge.class,
+						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+				result.put("results", subList);
+
+				PageUtil p = new PageUtil((int) v, pno, psize);
+
+				result.put("page", p);
+
+				result.put("totalPage", v % psize == 0 ? v / psize : v / psize
+						+ 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("查询我的订阅请求异常,用户:{},类型{}", id, type);
+			}
+		}
+		return result;
+	}
+
 }
