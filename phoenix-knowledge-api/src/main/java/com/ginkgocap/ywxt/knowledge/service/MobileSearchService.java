@@ -52,5 +52,5 @@ public interface MobileSearchService {
 	/** 整合查询 zz join*/
 	public JSONObject searchKnowledge(long userid, String keyword,
 			String tag, int scope, int pno, int psize, String qf, int type,
-			String sort);
+			String sort) throws Exception;
 }
