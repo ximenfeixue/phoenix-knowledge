@@ -33,6 +33,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	private MongoTemplate mongoTemplate;
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
+	
+	private final String dataUrl = "http://192.168.130.119:8090";
 
 	//已作废
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -282,7 +284,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Override
 	public JSONObject searchKnowledge(long userid, String keyword,
 			String tag, int scope, int pno, int psize, String qf, int type,
-			String sort) {
+			String sort) throws Exception{
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("qf", qf);
 		params.put("tag", tag);
@@ -293,7 +295,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		params.put("scope", scope+"");
 		params.put("keyword", keyword);
 		params.put("userid", userid + "");
-		String str = HTTPUtil.mobilePost("http://192.168.130.119:8090/knowledge/keyword/search.json", params);
+		String str = HTTPUtil.mobilePost(dataUrl+"/knowledge/keyword/search.json", params);
 		return JSONObject.fromObject(str);
 	}
 	
