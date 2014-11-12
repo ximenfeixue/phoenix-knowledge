@@ -137,7 +137,7 @@ public class Constants {
 		}
 
 	}
-	
+
 	public enum KnowledgeSource {
 		system(0), user(1);
 
@@ -212,7 +212,7 @@ public class Constants {
 	public enum Relation {
 		// 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
 		self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
-				5, "组织"),notFriends(6,"不是好友");
+				5, "组织"), notFriends(6, "不是好友");
 
 		private int v;
 		private String c;
@@ -237,11 +237,13 @@ public class Constants {
 				"您已经收藏过该文章!"), addCommentFail("评论失败!"), artUserNotExsit(
 				"文章作者不存在!"), addReportFail("添加举报失败!"), columnNotFound(
 				"未找到知识所属栏目"), addFriendsFail("添加好友失败!"), addFriendsWaiting(
-				"您已申请过添加好友,请耐心等待!"),checkColumnFail("栏目名已存在!"), IsFriends("您与该用户已是好友关系!"), UserNotExisitInSession(
-				"请确认是否登陆!"), contentIsBlank("评论内容不能为空!"), commentNotExsit(
-				"评论不存在!"), delCommentNotPermission("无权删除该评论!"), delCommentFail(
-				"删除评论失败!"), notFindColumn("栏目不存在，请刷新页面后重试!"), delColumnNotPermission(
-				"无权删除该栏目!"), delFail("删除失败!"),paramNotValid("用户权限参数不合法!"),updateFail("更新失败!"),paramNotBlank("参数不能为空");
+				"您已申请过添加好友,请耐心等待!"), checkColumnFail("栏目名已存在!"), IsFriends(
+				"您与该用户已是好友关系!"), UserNotExisitInSession("请确认是否登陆!"), contentIsBlank(
+				"评论内容不能为空!"), commentNotExsit("评论不存在!"), delCommentNotPermission(
+				"无权删除该评论!"), delCommentFail("删除评论失败!"), notFindColumn(
+				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
+				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
+				"参数不能为空");
 
 		private String c;
 
@@ -387,6 +389,21 @@ public class Constants {
 		}
 	}
 
+	public static enum KnowledgeCategoryStatus {
+		// 状态（0：不生效，1：生效）
+		uneffect(0), effect(1);
+
+		private int v;
+
+		private KnowledgeCategoryStatus(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
+	}
+
 	public static enum PermissionType {
 		dule(1, "dule"), dales(2, "dales"), zhongles(3, "zhongles"), xiaoles(4,
 				"xiaoles");
@@ -419,54 +436,54 @@ public class Constants {
 		}
 		return null;
 	}
-	
-    public enum MenuType {
-        collect(1, "收藏"), main(0, "主目录");
-        int v;
-        String obj;
 
-        private MenuType(int v, String obj) {
-            this.v = v;
-            this.obj = obj;
-        }
+	public enum MenuType {
+		collect(1, "收藏"), main(0, "主目录");
+		int v;
+		String obj;
 
-        public int getV() {
-            return v;
-        }
+		private MenuType(int v, String obj) {
+			this.v = v;
+			this.obj = obj;
+		}
 
-        public String getObj() {
-            return obj;
-        }
+		public int getV() {
+			return v;
+		}
 
-        @Override
-        public String toString() {
-            return v + "";
-        }
-    }
-    
- // 0-资讯，1-投融工具，2-行业，3-经典案例  4-资产管理，5-宏观，6-观点，7-判例，8-法律法规，9-文章
-  	public enum TagNum {
-  		News(0), Investment(1), Industry(2), Case(3),Asset(4), Macro(5), Opinion(6), Example(7), Law(8), Article(9);
+		public String getObj() {
+			return obj;
+		}
 
-  		private int v;
+		@Override
+		public String toString() {
+			return v + "";
+		}
+	}
 
+	// 0-资讯，1-投融工具，2-行业，3-经典案例 4-资产管理，5-宏观，6-观点，7-判例，8-法律法规，9-文章
+	public enum TagNum {
+		News(0), Investment(1), Industry(2), Case(3), Asset(4), Macro(5), Opinion(
+				6), Example(7), Law(8), Article(9);
 
-  		private TagNum(int v) {
-  			this.v = v;
-  		}
+		private int v;
 
-  		public int v() {
-  			return v;
-  		}
+		private TagNum(int v) {
+			this.v = v;
+		}
 
-  		@Override
-  		public String toString() {
-  			return String.valueOf(v);
-  		}
+		public int v() {
+			return v;
+		}
 
-  	}
-    
-    public static void main(String[] args) {
-        System.out.println(Constants.MenuType.collect);
-    }
+		@Override
+		public String toString() {
+			return String.valueOf(v);
+		}
+
+	}
+
+	public static void main(String[] args) {
+		System.out.println(Constants.MenuType.collect);
+	}
 }

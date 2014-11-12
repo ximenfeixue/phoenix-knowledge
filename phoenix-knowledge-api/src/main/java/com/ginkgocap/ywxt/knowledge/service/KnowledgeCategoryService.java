@@ -67,9 +67,6 @@ public interface KnowledgeCategoryService {
 	int insertKnowledgeRCategory(long id, long[] cIds, long userId,
 			String username, String columnPath, KnowledgeNewsVO vo);
 
-	int insertKnowledgeCategoryDraft(long id, long[] cIds, long userId,
-			String username, String columnPath, KnowledgeNewsVO vo);
-
 	/**
 	 * 获取格式化后的目录
 	 * 

@@ -22,11 +22,11 @@ public class KnowledgeNewsVO implements Serializable {
 	private String columnType; // 知识所属类型(类型（1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）)
 	private String columnPath; // 知识所在的栏目路径
 	private String columnName; // 知识所属栏目类型名(用于草稿箱查询)
-	//关联格式（r:人脉,p:组织,o:知识,k:需求）
+	// 关联格式（r:人脉,p:组织,o:知识,k:需求）
 	// asso:{"r":[{"tag":"33","conn":[{"type":1,"id":2111,"title":"d d d d","ownerId":1,"ownerName":"的的的的的的的"}]}],
-	//"p":[{"tag":"111","conn":[{"type":2,"id":"141527672992500079","name":"五小六","ownerId":1,"ownerName":null,"caree":null,"company":null}]}],
-	//"o":[{"tag":"22","conn":[{"type":5,"id":618,"name":"我的测试客户","ownerId":null,"ownerName":null,"address":null,"hy":","},{"type":5,"id":617,"name":" 中国平安","ownerId":null,"ownerName":null,"address":null,"hy":",保险公司,"}]}],
-	//"k":[]}
+	// "p":[{"tag":"111","conn":[{"type":2,"id":"141527672992500079","name":"五小六","ownerId":1,"ownerName":null,"caree":null,"company":null}]}],
+	// "o":[{"tag":"22","conn":[{"type":5,"id":618,"name":"我的测试客户","ownerId":null,"ownerName":null,"address":null,"hy":","},{"type":5,"id":617,"name":" 中国平安","ownerId":null,"ownerName":null,"address":null,"hy":",保险公司,"}]}],
+	// "k":[]}
 	private String asso; // 知识关联
 	// 草稿箱用
 	private String knowledgeid;
@@ -50,6 +50,17 @@ public class KnowledgeNewsVO implements Serializable {
 
 	// 描述
 	private String desc;
+
+	// 知识存入知识目录表中的 状态（0：不生效，1：生效）
+	private String status;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getPostUnit() {
 		return postUnit;

@@ -391,8 +391,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
-		//知识来源，（0，系统，1，用户）
-		Short source = (short)Constants.KnowledgeSource.user.v();
+		// 知识来源，（0，系统，1，用户）
+		Short source = (short) Constants.KnowledgeSource.user.v();
 		String content = "";
 		// 获取Session用户值
 		long userId = user.getId();
@@ -421,6 +421,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setColumnPath(columnPath);
 		vo.setContent(content);
 		vo.setColumnid(columnid);
+		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -448,7 +449,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					boolean flag = userPermissionService
 							.checkUserSource(permList);
 					if (flag) {
-						source = (short)Constants.KnowledgeSource.system.v();
+						source = (short) Constants.KnowledgeSource.system.v();
 					}
 					int pV = userPermissionService.insertUserPermission(
 							permList, kId, userId, vo.getShareMessage(), Short
