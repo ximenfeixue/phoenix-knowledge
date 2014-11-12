@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 						.getContent() : knowledge.getHcontent());
 
 		result.put("createtime",
-				DateUtil.formatWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
+				DateUtil.parseWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
 		result.put("author", knowledge.getUname());
 		result.put("source", knowledge.getSource());
 
@@ -263,7 +264,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			String type) {
 		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
-		//TODO查询权限
+		// TODO查询权限
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 查询知识信息
 		Knowledge knowledge = getKnowledgeById(kid, type);

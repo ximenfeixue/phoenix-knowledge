@@ -54,6 +54,17 @@ public class KnowledgeNewsVO implements Serializable {
 	// 知识存入知识目录表中的 状态（0：不生效，1：生效）
 	private String status;
 
+	// 知识创建时间
+	private String createtime;
+
+	public String getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
+	}
+
 	public String getStatus() {
 		return status;
 	}

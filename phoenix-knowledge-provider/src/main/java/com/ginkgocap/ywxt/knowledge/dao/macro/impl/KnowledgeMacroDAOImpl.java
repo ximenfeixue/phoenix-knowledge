@@ -68,7 +68,7 @@ public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
 		knowledge.setSource(source);
 		knowledge.setStatus(Constants.Status.checked.v());
 		knowledge.setReport_status(Constants.ReportStatus.unreport.v());
-		knowledge.setCreatetime(new Date());
+//		knowledge.setCreatetime(new Date());
 		mongoTemplate.save(knowledge, "KnowledgeMacro");
 		return knowledge;
 	}

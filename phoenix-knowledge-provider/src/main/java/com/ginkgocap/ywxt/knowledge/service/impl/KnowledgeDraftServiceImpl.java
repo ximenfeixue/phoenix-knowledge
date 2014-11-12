@@ -34,9 +34,11 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.Page;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.user.model.User;
 
 @Service("knowledgeDraftService")
@@ -99,6 +101,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setColumnPath(columnPath);
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
+		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			// TODO 判断用户是否选择栏目

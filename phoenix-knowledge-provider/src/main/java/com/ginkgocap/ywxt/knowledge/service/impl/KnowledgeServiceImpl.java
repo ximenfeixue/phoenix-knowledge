@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +44,10 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -220,6 +222,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
 		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 		// // 修改栏目知识关系
 		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
@@ -428,6 +431,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setContent(content);
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
+		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表

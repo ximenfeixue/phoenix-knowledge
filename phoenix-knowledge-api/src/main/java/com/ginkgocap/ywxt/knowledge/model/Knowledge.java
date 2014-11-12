@@ -57,7 +57,7 @@ public class Knowledge implements Serializable {
 	private int essence;
 
 	// 创建时间
-	private Date createtime;
+	private String createtime;
 
 	// 最后修改时间
 	private Date modifytime;
@@ -229,11 +229,11 @@ public class Knowledge implements Serializable {
 		this.essence = essence;
 	}
 
-	public Date getCreatetime() {
+	public String getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(Date createtime) {
+	public void setCreatetime(String createtime) {
 		this.createtime = createtime;
 	}
 

@@ -95,7 +95,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));
-		this.setCreatetime(new Date());
+		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(vo.getSelectedIds().equals(Constants.Ids.platform.v()) ? Constants.Status.checking
 				.v() : Constants.Status.checked.v());
 		this.setReport_status(Constants.ReportStatus.unreport.v());
@@ -131,7 +131,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));
-		this.setCreatetime(new Date());
+		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(Constants.Status.draft.v());
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());

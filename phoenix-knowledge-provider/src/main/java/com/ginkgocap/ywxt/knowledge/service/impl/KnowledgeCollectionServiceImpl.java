@@ -34,10 +34,12 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollectionVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.utils.DateUtils;
 import com.mongodb.util.Hash;
 
 @Service("knowledgeCollectionService")
@@ -288,7 +290,8 @@ public class KnowledgeCollectionServiceImpl implements
 					.getColumnid()));
 			knowledgeBase.setColumnType(Short.parseShort(vo.getColumType()));
 			knowledgeBase.setEssence((short) vo.getKnowledge().getEssence());
-			knowledgeBase.setCreatetime(vo.getKnowledge().getCreatetime());
+			knowledgeBase.setCreatetime(DateUtil.parseWithYYYYMMDDHHMMSS(vo
+					.getKnowledge().getCreatetime()));
 			knowledgeBase.setPath(vo.getKnowledge().getCpathid());
 			knowledgeBase.setPicPath(vo.getKnowledge().getPic());
 			knowledgeBase.setTag(vo.getKnowledge().getTags());
@@ -339,37 +342,41 @@ public class KnowledgeCollectionServiceImpl implements
 
 			knowledgeStaticsMapperManual.updateStatics(id, 0, 0, -1, 0);
 		}
-		
+
 		return result;
 	}
 
-    @Override
-    public void move(long id, List<Long> knowledgeids, List<Long> categoryids,long cid) {
-        if(knowledgeids.size()==0){
-            return;
-        }
-        //查询关系表
-        List<KnowledgeCollection> kl = getListByParams(id,cid,knowledgeids);
+	@Override
+	public void move(long id, List<Long> knowledgeids, List<Long> categoryids,
+			long cid) {
+		if (knowledgeids.size() == 0) {
+			return;
+		}
+		// 查询关系表
+		List<KnowledgeCollection> kl = getListByParams(id, cid, knowledgeids);
 
-        //删除关系
-        //暂时不做
-        
-        //插入新关系
-        for (Long c : categoryids) {
-            
-            //TODO 是否判断重复（暂时不做）
-            for(KnowledgeCollection k :kl){
-                k.setCategoryId(c);
-            }
-            //保存
-            knowledgeCollectionValueMapper.batchInsert(kl);
-        }
-    }
+		// 删除关系
+		// 暂时不做
 
-    private List<KnowledgeCollection> getListByParams(long id, long cid, List<Long> knowledgeids) {
-        KnowledgeCollectionExample example = new KnowledgeCollectionExample();
-        example.createCriteria().andCategoryIdEqualTo(cid).andKnowledgeIdIn(knowledgeids).andUseridEqualTo(id);
-        List<KnowledgeCollection> l = knowledgeCollectionMapper.selectByExample(example);
-        return l;
-    }
+		// 插入新关系
+		for (Long c : categoryids) {
+
+			// TODO 是否判断重复（暂时不做）
+			for (KnowledgeCollection k : kl) {
+				k.setCategoryId(c);
+			}
+			// 保存
+			knowledgeCollectionValueMapper.batchInsert(kl);
+		}
+	}
+
+	private List<KnowledgeCollection> getListByParams(long id, long cid,
+			List<Long> knowledgeids) {
+		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
+		example.createCriteria().andCategoryIdEqualTo(cid)
+				.andKnowledgeIdIn(knowledgeids).andUseridEqualTo(id);
+		List<KnowledgeCollection> l = knowledgeCollectionMapper
+				.selectByExample(example);
+		return l;
+	}
 }

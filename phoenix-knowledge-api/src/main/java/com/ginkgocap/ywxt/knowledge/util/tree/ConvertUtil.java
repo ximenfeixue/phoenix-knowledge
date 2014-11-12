@@ -1,9 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.util.tree;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import com.ginkgocap.ywxt.utils.DateUtils;
+
 
 /**
  * node转换工具类
@@ -98,11 +102,10 @@ public class ConvertUtil {
 		return str;
 	}
 
-//	 public static void main(String[] args) {
-//	 String str = null;
-//	
-//	 System.out.println(StringUtils.isNotBlank(str) ? ConvertUtil
-//				.ToEnglishSymbol(str) : "");
-//	 }
+
+//	public static void main(String[] args) {
+//
+//		System.out.println();
+//	}
 
 }
