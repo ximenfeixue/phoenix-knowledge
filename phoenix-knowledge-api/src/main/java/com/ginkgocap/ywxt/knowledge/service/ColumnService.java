@@ -220,7 +220,7 @@ public interface ColumnService {
 	 * @param pid
 	 * @return
 	 */
-	String selectColumnTreeBySortIdAndPid(long userId, String sortId, String status,long pid);
+	Map<String,Object> selectColumnTreeBySortIdAndPid(long userId, String sortId, String status,long pid);
 
 	/**
 	 * 获取全路径

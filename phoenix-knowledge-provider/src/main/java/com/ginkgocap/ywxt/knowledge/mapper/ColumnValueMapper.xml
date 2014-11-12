@@ -13,6 +13,7 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="subscribe_count" property="subscribeCount"
 			jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="SMALLINT" />
 	</resultMap>
 
 	<sql id="tb_name">tb_column</sql>
@@ -27,7 +28,8 @@
 		createtime,
 		update_time,
 		del_status,
-		subscribe_count
+		subscribe_count,
+		type
 	</sql>
 
 	<select id="selectColumnTreeBySortId" resultMap="BaseResultMap">
@@ -48,7 +50,7 @@
 		<include refid="allColumns" />
 		from tb_column
 		where del_status=0
-		and (user_id=#{userId})
+		and (user_id=#{userId} or user_id=0)
 		and (parent_id=#{pid})
 		order by column_level_path
 	</select>
