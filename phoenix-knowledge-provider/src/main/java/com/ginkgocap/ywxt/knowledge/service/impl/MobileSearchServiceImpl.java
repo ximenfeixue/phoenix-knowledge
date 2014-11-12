@@ -244,8 +244,6 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
 		Map<String,Object> result = new HashMap<String, Object>();
 		int start = (page - 1) * size;
-		/** 判断是否传的是默认值 */
-		start = start < 0 ? 0 : start;
 		int count = mobileKnowledgeMapper
 				.selectCountKnowledgeForSourceByColumn(columnId, source);
 		List<?> kcl = mobileKnowledgeMapper
@@ -268,7 +266,6 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
 		int start = (page - 1) * size;
 		/** 判断是否传的是默认值 */
-		start = start < 0 ? 0 : start;
 		int count = mobileKnowledgeMapper
 				.selectCountForMyFriendKnowledgeByColumnId(columnId, userId);
 		List<?> kcl = mobileKnowledgeMapper
