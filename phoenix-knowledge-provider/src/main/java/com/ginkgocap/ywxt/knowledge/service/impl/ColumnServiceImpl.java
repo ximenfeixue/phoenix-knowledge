@@ -536,6 +536,30 @@ public class ColumnServiceImpl implements ColumnService {
 
 		return result;
 	}
+	
+	
+	public long addColumnForNongroup(String columnname, long pid,
+	        String pathName, int type, String tags, long userid) {
+
+	    // 存储栏目信息
+	    Date d = new Date();
+	    Column column = new Column();
+	    column.setColumnname(columnname);
+	    column.setParentId(pid);
+	    column.setCreatetime(d);
+	    column.setDelStatus((byte) Constants.ColumnDelStatus.common.v());
+	    column.setSubscribeCount(0l);
+	    column.setPathName(pathName);
+	    column.setUpdateTime(d);
+	    column.setUserId(userid);
+	    column.setColumnLevelPath("111111111");
+	    // 设置类型
+	    column.setType((short)type);
+	    columnMapperManual.insertAndGetId(column);
+	    long currentColumnId = column.getId();
+	    columnVisibleService.saveCid(userid, currentColumnId);
+	    return currentColumnId;
+	}
 
 	public void batchSaveColumnTags(long userid, long columnId, String tags) {
 		TagUtils tagUtil = new TagUtils();
@@ -691,7 +715,7 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> l = this.selectColumnByParams(uid, "未分组");
 		// 初始化未分组
 		if (l.size() == 0) {
-			this.addColumn("未分组", 0, "未分组", 0, "", uid);
+			this.addColumnForNongroup("未分组", 0, "未分组", 0, "", uid);
 		}
 	}
 
