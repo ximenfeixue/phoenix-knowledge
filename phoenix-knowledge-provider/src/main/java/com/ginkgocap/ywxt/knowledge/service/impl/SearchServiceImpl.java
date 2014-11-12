@@ -25,6 +25,7 @@ public class SearchServiceImpl implements SearchService {
 	public Map<String, Object> getUserTag(Long userid, String type) {
 		logger.info("进入搜索首页热门标签请求,用户ID：{},type:{}", userid, type);
 		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("user_id", userid + "");
 		params.put("type", type);
 		String str = HTTPUtil.post("user/tags/search.json", params);
@@ -32,13 +33,15 @@ public class SearchServiceImpl implements SearchService {
 		String tags = null;
 		try {
 			if (!StringUtils.isBlank(str)) {
-				ObjectMapper mapper = new ObjectMapper();
-				JsonNode node = mapper.readTree(str);
-				String status = node.path("status").asText();
-
-				if (status.equals("1")) {
-					tags = node.path("tags").asText();
-				}
+//				ObjectMapper mapper = new ObjectMapper();
+				String restr = str.replace("[", "").replace("]", "");
+				result.put("tags", restr);
+//				JsonNode node = mapper.readTree(str);
+//				String status = node.path("status").asText();
+//
+//				if (status.equals("1")) {
+//					tags = node.path("tags").asText();
+//				}
 
 			}
 		} catch (Exception e) {
@@ -46,9 +49,8 @@ public class SearchServiceImpl implements SearchService {
 			e.printStackTrace();
 		}
 
-		Map<String, Object> result = new HashMap<String, Object>();
 		result.put(Constants.status, Constants.ResultType.success.v());
-		result.put("tags", tags);
+//		result.put("tags", tags);
 		logger.info("搜索首页热门标签请求查询成功,返回值:{}", tags);
 		return result;
 	}
