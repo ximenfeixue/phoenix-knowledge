@@ -650,20 +650,13 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
-		// 删除栏目表
 
-		int v = columnMapper.deleteByPrimaryKey(columnid);
-		if (v == 0) {
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.delFail.c());
-			return result;
-		}
 		// 更改mongo中知识所属栏目ID为未分组
 		ColumnExample col = new ColumnExample();
 		Criteria criteria = col.createCriteria();
-		criteria.andColumnLevelPathGreaterThan(Constants.unGroupSortId);
+		criteria.andColumnLevelPathEqualTo(Constants.unGroupSortId);
 		criteria.andUserIdEqualTo(userid);
+		// 获取未分组栏目
 		List<Column> colList = columnMapper.selectByExample(col);
 		if (colList != null && colList.size() > 0) {
 			Query query = new Query(
@@ -684,6 +677,14 @@ public class ColumnServiceImpl implements ColumnService {
 		// 删除栏目定制表
 		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
 
+		// 删除栏目表
+		int v = columnMapper.deleteByPrimaryKey(columnid);
+		if (v == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delFail.c());
+			return result;
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
