@@ -63,6 +63,12 @@ public class KnowledgeCase extends Knowledge {
 			
 			this.setOid(vo.getOid());
 			this.setPrice(vo.getPrice());
+			
+
+			this.setAsso(vo.getAsso());
+			
+			this.setTaskid(vo.getTaskId());
+			this.setSelectedIds(vo.getSelectedIds());
 			return this;
 		}
 
@@ -93,6 +99,9 @@ public class KnowledgeCase extends Knowledge {
 			this.setHcontent("");
 			this.setOid(vo.getOid());
 			this.setPrice(vo.getPrice());
+			
+			this.setSelectedIds(vo.getSelectedIds());
+			this.setAsso(vo.getAsso());
 			return this;
 		}
 }
