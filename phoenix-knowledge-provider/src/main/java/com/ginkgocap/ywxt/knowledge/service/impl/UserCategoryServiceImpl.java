@@ -77,14 +77,15 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	public String deleteNew(long id) {
-		UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
-		if (u.getCategoryType() == 0) {// 删除目录知识
-			userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(),
-					u.getId(), u.getSortid());
-		} else if (u.getCategoryType() == 1) {// 删除收藏知识
-			userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(),
-					u.getId(), u.getSortid());
-		}
+        UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
+        UserCategory un = null;
+        if (u.getCategoryType() == 0) {// 删除目录知识
+            un = this.selectUserCategoryByParams(u.getUserId(), 0l, 0l, "未分组").get(0);
+            userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
+        } else if (u.getCategoryType() == 1) {// 删除收藏知识
+            un = this.selectUserCategoryByParams(u.getUserId(), 0l, 1l, "未分组").get(0);
+            userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
+        }
 		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(),
 		        u.getSortid());
 		return "success";
