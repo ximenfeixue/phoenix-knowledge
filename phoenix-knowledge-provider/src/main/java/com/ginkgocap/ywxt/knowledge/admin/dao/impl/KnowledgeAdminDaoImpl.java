@@ -54,10 +54,10 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		
 		String cname = searchMap.get("cname");
 		String title = searchMap.get("title");
-		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("submitBeginCTime")+" 00:00:00");
-		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("submitEndCTime"+" 23:59:59"));
-		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("approveBeginCTime")+" 00:00:00");
-		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("approveEndCTime"+" 23:59:59"));
+		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"");
+		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitEndCTime"))?searchMap.get("submitEndCTime")+" 23:59:59":"");
+		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveBeginCTime"))?searchMap.get("approveBeginCTime")+" 00:00:00":"");
+		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveEndCTime"))?searchMap.get("approveEndCTime")+" 23:59:59":"");
 		int status = Integer.parseInt(searchMap.get("status"));
 		// 状态值为-1时，查找状态为3：审核中；4：审核通过；5：未通过 数据
 		if(status== -1) {
@@ -163,15 +163,6 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#deleteKnowledgeIndustryById(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void deleteKnowledgeIndustryById(long id, String collectionName) {
-		Criteria criteria = new Criteria().and("_id").is(id);
-		Query query = new Query(criteria);
-		mongoTemplate.remove(query, collectionName);
-	}
 
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#checkStatusById(java.lang.String, int, java.lang.String)
@@ -182,6 +173,15 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		Query query = new Query(criteria);
 		Update update = new Update().set("status",status).set("modifytime", new Date());
 		mongoTemplate.updateFirst(query, update, collectionNames);
+	}
+
+	@Override
+	public void update(long id, String title, String cpathid, String content,
+			String tags, String collectionName) {
+		Criteria criteria = new Criteria().and("_id").is(id);
+		Query query = new Query(criteria);
+		Update update = new Update().set("title",title).set("cpathid", cpathid).set("content", content).set("tags", tags).set("modifytime", new Date());
+		mongoTemplate.updateFirst(query, update, collectionName);
 	}
 
 }

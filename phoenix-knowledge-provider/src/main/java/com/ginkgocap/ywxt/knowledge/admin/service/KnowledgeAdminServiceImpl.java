@@ -38,13 +38,6 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		return knowledgeAdminDao.selectKnowledgeNewsById(id, collectionName);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#deleteKnowledgeIndustryById(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void deleteKnowledgeIndustryById(long id, String collectionName) {
-		knowledgeAdminDao.deleteKnowledgeIndustryById(id, collectionName);
-	}
 
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#checkStatusById(java.lang.String, int, java.lang.String)
@@ -52,6 +45,14 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	@Override
 	public void checkStatusById(long id, int status, String collectionNames) {
 		knowledgeAdminDao.checkStatusById(id, status, collectionNames);
+	}
+
+	@Override
+	public void update(long id, String title, String cpathid, String content,
+			String tags, String collectionName) {
+		knowledgeAdminDao.update(id,title, cpathid, content,
+				tags, collectionName);
+		
 	}
 
 }

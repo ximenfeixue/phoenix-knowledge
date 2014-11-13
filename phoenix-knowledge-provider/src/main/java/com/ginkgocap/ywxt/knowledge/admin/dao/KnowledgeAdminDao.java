@@ -27,11 +27,6 @@ public interface KnowledgeAdminDao {
 	 * @return
 	 */
 	public Object selectKnowledgeNewsById(long id,String collectionName);
-	/**
-	 * 删除行业
-	 * @param id
-	 */
-	void deleteKnowledgeIndustryById(long id,String collectionName);
 	
 	/**
 	 * 审核行业
@@ -39,4 +34,16 @@ public interface KnowledgeAdminDao {
 	 * @param status
 	 */
 	void checkStatusById(long id, int status,String collectionNames);
+	/**
+	 * 修改知识
+	 * @param id 知识id
+	 * @param title 标题
+	 * @param cpathid 栏目
+	 * @param content 内容
+	 * @param tags 标签
+	 * @param collectionName 知识类型
+	 * liubang
+	 */
+	void update(long id, String title, String cpathid, String content,
+			String tags, String collectionName);
 }

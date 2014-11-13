@@ -33,7 +33,7 @@ public interface KnowledgeAdminService {
 	 * 删除行业
 	 * @param id
 	 */
-	void deleteKnowledgeIndustryById(long id,String collectionName);
+	void update(long id,String title,String cpathid,String content,String tags,String collectionName);
 	
 	/**
 	 * 审核行业
