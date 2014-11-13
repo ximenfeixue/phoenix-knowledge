@@ -899,7 +899,7 @@ public class ColumnServiceImpl implements ColumnService {
 		if (columnName != null && !"".equals(columnName)) {
 			c.andColumnnameEqualTo(columnName);
 		}
-		c.andIdEqualTo(parentId);
+		c.andParentIdEqualTo(parentId);
 		int count = columnMapper.countByExample(example);
 		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		return count > 0 ? false : true;
