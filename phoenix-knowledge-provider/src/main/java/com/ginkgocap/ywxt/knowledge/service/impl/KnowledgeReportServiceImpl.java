@@ -58,10 +58,11 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 		Criteria criteria = example.createCriteria();
 		String cname = searchMap.get("cname");
 		String title = searchMap.get("title");
-		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("submitBeginCTime")+" 00:00:00");
-		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("submitEndCTime"+" 23:59:59"));
-		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("approveBeginCTime")+" 00:00:00");
-		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(searchMap.get("approveEndCTime"+" 23:59:59"));
+		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"");
+		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitEndCTime"))?searchMap.get("submitEndCTime")+" 23:59:59":"");
+		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveBeginCTime"))?searchMap.get("approveBeginCTime")+" 00:00:00":"");
+		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveEndCTime"))?searchMap.get("approveEndCTime")+" 23:59:59":"");
+		
 		int status = Integer.parseInt(searchMap.get("status"));
 		// 状态值为-1时，查找状态为3：审核中；4：审核通过；5：未通过 数据
 		if(status== 0) {

@@ -30,6 +30,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
+import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 /**
@@ -54,10 +55,10 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		
 		String cname = searchMap.get("cname");
 		String title = searchMap.get("title");
-		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"");
-		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitEndCTime"))?searchMap.get("submitEndCTime")+" 23:59:59":"");
-		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveBeginCTime"))?searchMap.get("approveBeginCTime")+" 00:00:00":"");
-		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveEndCTime"))?searchMap.get("approveEndCTime")+" 23:59:59":"");
+		String submitBeginCTime = StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"";
+		String submitEndCTime = StringUtils.isNotBlank(searchMap.get("submitEndCTime"))?searchMap.get("submitEndCTime")+" 23:59:59":"";
+		String approveBeginCTime = StringUtils.isNotBlank(searchMap.get("approveBeginCTime"))?searchMap.get("approveBeginCTime")+" 00:00:00":"";
+		String approveEndCTime = StringUtils.isNotBlank(searchMap.get("approveEndCTime"))?searchMap.get("approveEndCTime")+" 23:59:59":"";
 		int status = Integer.parseInt(searchMap.get("status"));
 		// 状态值为-1时，查找状态为3：审核中；4：审核通过；5：未通过 数据
 		if(status== -1) {
@@ -78,21 +79,21 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			criteria.and("title").regex(".*"+title+".*$","i");
 		}
 		// 按创建时间查询条件
-		if(submitBeginCTime != null && submitEndCTime != null) {
+		if(StringUtils.isNotBlank(submitBeginCTime) && StringUtils.isNotBlank(submitEndCTime)) {
 			criteria.andOperator(Criteria.where("createtime").gte(submitBeginCTime),
 					Criteria.where("createtime").lte(submitEndCTime));
-		}else if(submitBeginCTime != null && submitEndCTime == null) {
+		}else if(StringUtils.isNotBlank(submitBeginCTime ) && StringUtils.isBlank(submitEndCTime )) {
 			criteria.and("createtime").gte(submitBeginCTime);
-		}else if(submitBeginCTime == null && submitEndCTime != null) {
+		}else if(StringUtils.isBlank(submitBeginCTime ) && StringUtils.isNotBlank(submitEndCTime )) {
 			criteria.and("createtime").lte(submitEndCTime);
 		}
 		// 按修改时间查询条件
-		if(approveBeginCTime != null && approveEndCTime != null) {
+		if(StringUtils.isNotBlank(approveBeginCTime ) && StringUtils.isNotBlank(approveEndCTime )) {
 			criteria.andOperator(Criteria.where("modifytime").gte(approveBeginCTime),
 					Criteria.where("modifytime").lte(approveEndCTime));
-		}else if(approveBeginCTime != null && approveEndCTime == null) {
+		}else if(StringUtils.isNotBlank(approveBeginCTime )&& StringUtils.isBlank(approveEndCTime )) {
 			criteria.and("modifytime").gte(approveBeginCTime);
-		}else if(approveBeginCTime == null && approveEndCTime != null) {
+		}else if(StringUtils.isBlank(approveBeginCTime) && StringUtils.isNotBlank(approveEndCTime )) {
 			criteria.and("modifytime").lte(approveEndCTime);
 		}
 		
@@ -171,7 +172,7 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 	public void checkStatusById(long id, int status, String collectionNames) {
 		Criteria criteria = new Criteria().and("_id").is(id);
 		Query query = new Query(criteria);
-		Update update = new Update().set("status",status).set("modifytime", new Date());
+		Update update = new Update().set("status",status).set("modifytime", DateFunc.getDate());
 		mongoTemplate.updateFirst(query, update, collectionNames);
 	}
 
@@ -180,7 +181,7 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			String tags, String collectionName) {
 		Criteria criteria = new Criteria().and("_id").is(id);
 		Query query = new Query(criteria);
-		Update update = new Update().set("title",title).set("cpathid", cpathid).set("content", content).set("tags", tags).set("modifytime", new Date());
+		Update update = new Update().set("title",title).set("cpathid", cpathid).set("content", content).set("tags", tags).set("modifytime", DateFunc.getDate());
 		mongoTemplate.updateFirst(query, update, collectionName);
 	}
 
