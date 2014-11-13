@@ -128,7 +128,6 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	@Override
 	public int insertKnowledgeRCategory(long kId, long[] cIds, long userId,
 			String username, String columnPath, KnowledgeNewsVO vo) {
-		int returnV = 0;
 		// 批量插入知识目录表
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		KnowledgeCategory knowledgeRCategory = null;
@@ -148,28 +147,32 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		int v = knowledgeCategoryValueMapper.batchInsert(list);
 
 		if (v != 0) {
-			// 插入知识基类
-			KnowledgeBase base = new KnowledgeBase();
-			base.setKnowledgeId(kId);
-			base.setTitle(vo.getTitle());
-			base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
-					.substring(0, 50) : vo.getContent());
-			base.setColumnId(Long.parseLong(vo.getColumnid()));
-			base.setColumnType(Short.parseShort(vo.getColumnType()));
-			base.setCreatetime(new Date());
-			base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil
-					.ToEnglishSymbol(vo.getTags()) : "");
-			base.setAuthor(username);
-			base.setPath(columnPath);
-			base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
-					.equals(vo.getEssence(), "on") ? "1" : "0" : "0"));
-			base.setPicPath(vo.getPic());
-			base.setUserId(userId);
+			KnowledgeBase b = knowledgeBaseMapper.selectByPrimaryKey(kId);
+			if (b == null) {
+				// 插入知识基类
+				KnowledgeBase base = new KnowledgeBase();
+				base.setKnowledgeId(kId);
+				base.setTitle(vo.getTitle());
+				base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
+						.substring(0, 50) : vo.getContent());
+				base.setColumnId(Long.parseLong(vo.getColumnid()));
+				base.setColumnType(Short.parseShort(vo.getColumnType()));
+				base.setCreatetime(new Date());
+				base.setTag(StringUtils.isNotBlank(vo.getTags()) ? ConvertUtil
+						.ToEnglishSymbol(vo.getTags()) : "");
+				base.setAuthor(username);
+				base.setPath(columnPath);
+				base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
+						.equals(vo.getEssence(), "on") ? "1" : "0" : "0"));
+				base.setPicPath(vo.getPic());
+				base.setUserId(userId);
 
-			returnV = knowledgeBaseMapper.insertSelective(base);
+				int returnV = knowledgeBaseMapper.insertSelective(base);
+			}
+
 		}
 
-		return returnV;
+		return v;
 	}
 
 	@Override
