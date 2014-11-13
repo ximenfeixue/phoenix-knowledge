@@ -60,7 +60,7 @@ public class Knowledge implements Serializable {
 	private String createtime;
 
 	// 最后修改时间
-	private Date modifytime;
+	private String modifytime;
 
 	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
 	private int status;
@@ -237,11 +237,11 @@ public class Knowledge implements Serializable {
 		this.createtime = createtime;
 	}
 
-	public Date getModifytime() {
+	public String getModifytime() {
 		return modifytime;
 	}
 
-	public void setModifytime(Date modifytime) {
+	public void setModifytime(String modifytime) {
 		this.modifytime = modifytime;
 	}
 

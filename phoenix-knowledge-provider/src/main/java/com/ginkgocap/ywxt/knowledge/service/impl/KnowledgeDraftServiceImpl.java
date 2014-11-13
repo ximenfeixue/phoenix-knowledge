@@ -117,6 +117,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 			vo.setColumnPath(columnPath);
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+			vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
