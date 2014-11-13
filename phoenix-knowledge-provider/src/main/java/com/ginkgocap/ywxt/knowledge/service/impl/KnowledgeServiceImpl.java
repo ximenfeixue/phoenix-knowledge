@@ -573,9 +573,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				knowledgeCategoryService.updateKnowledgeCategorystatus(
 						knowledgeid, knowledgerecycle.getCatetoryid());
 			} else {
-				//查询该用户下的未分组目录ID
+				// 查询该用户下的未分组目录ID
 				List<UserCategory> list = userCategoryService.selectNoGroup(
-						user.getId(), "111111111", (byte) 0);
+						user.getId(), Constants.unGroupSortId, (byte) 0);
 				if (list != null) {
 					UserCategory category = list.get(0);
 					knowledgeCategoryService.insertKnowledgeCategoryNogroup(
