@@ -96,7 +96,7 @@ public interface ColumnService {
 	 *            用户id
 	 * @return 用户创建的所有栏目列表
 	 */
-	public List<Column> queryByUserId(long userId);
+	public List<Column> queryByUserId(long userId,long parentid);
 
 	/**
 	 * 只能用来查询用户的自定义的二级栏目，不能查询一级栏目

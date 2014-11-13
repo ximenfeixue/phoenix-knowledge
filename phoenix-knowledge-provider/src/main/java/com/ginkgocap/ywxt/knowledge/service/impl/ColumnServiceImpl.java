@@ -47,10 +47,9 @@ public class ColumnServiceImpl implements ColumnService {
 	public static int ROOT_PARENT_ID = 0;
 	public static int MAX_ALLOWED_LEVEL = 7;
 	private static final int sortV = 9;
-	
-	private Logger logger = LoggerFactory
-			.getLogger(ColumnServiceImpl.class);
-	
+
+	private Logger logger = LoggerFactory.getLogger(ColumnServiceImpl.class);
+
 	@Autowired
 	ColumnMapper columnMapper;
 	@Autowired
@@ -67,8 +66,7 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnTagMapper columnTagMapper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
-	
+
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
 	 * 
@@ -182,18 +180,16 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		return "";
 	}
-	
+
 	@Override
-	public Map<String,Object> selectColumnByPid(long userId, long pid) {
-		logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid,
-				userId);
-		Map<String,Object> result = new HashMap<String,Object>();
+	public Map<String, Object> selectColumnByPid(long userId, long pid) {
+		logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid, userId);
+		Map<String, Object> result = new HashMap<String, Object>();
 		// 根据父级id查询栏目
 		List<ColumnVO> cl = columnVOValueMapper.selectColumnByPid(userId, pid);
-		
-		logger.info("--根据父级id查询栏目树请求成功,父级栏目id:{},当前登陆用户:{}--", pid,
-				userId);
-		result.put("list",cl);
+
+		logger.info("--根据父级id查询栏目树请求成功,父级栏目id:{},当前登陆用户:{}--", pid, userId);
+		result.put("list", cl);
 		return result;
 	}
 
@@ -298,6 +294,7 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> list = columnMapper.selectByExample(ce);
 		return list;
 	}
+
 	public int countByParentId(long parentId, long userId) {
 		ColumnExample ce = new ColumnExample();
 		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId)
@@ -307,6 +304,7 @@ public class ColumnServiceImpl implements ColumnService {
 		int count = columnMapper.countByExample(ce);
 		return count;
 	}
+
 	@Override
 	public List<Column> queryByParentIdAndSystem(long parentId, long userId) {
 		List<Long> values = new ArrayList<Long>();
@@ -324,7 +322,7 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> list = columnMapper.selectByExample(ce);
 		return list;
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> querySubAndStatus(long userId) {
 		//
@@ -382,13 +380,14 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public List<Column> queryByUserId(long createUserId) {
+	public List<Column> queryByUserId(long createUserId, long parentid) {
 
 		ColumnExample example = new ColumnExample();
 
 		Criteria criteria = example.createCriteria();
 
 		criteria.andUserIdEqualTo(createUserId);
+		criteria.andParentIdEqualTo(parentid);
 
 		return columnMapper.selectByExample(example);
 	}
@@ -520,7 +519,7 @@ public class ColumnServiceImpl implements ColumnService {
 		column.setUserId(userid);
 		column.setColumnLevelPath(currentColumnLevelPath);
 		// 设置类型
-		column.setType((short)type);
+		column.setType((short) type);
 		long v = columnMapperManual.insertAndGetId(column);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -530,7 +529,7 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 		long currentColumnId = column.getId();
 		// 新增栏目通知大数据
-//		String str = HTTPUtil.post("user/tags/search.json", params);
+		// String str = HTTPUtil.post("user/tags/search.json", params);
 		// 存储栏目标签信息
 
 		batchSaveColumnTags(userid, currentColumnId, tags);
@@ -541,36 +540,35 @@ public class ColumnServiceImpl implements ColumnService {
 
 		return result;
 	}
-	
-	
-	public long addColumnForNongroup(String columnname, long pid,
-	        String pathName, int type, String tags, long userid) {
 
-	    // 存储栏目信息
-	    Date d = new Date();
-	    Column column = new Column();
-	    column.setColumnname(columnname);
-	    column.setParentId(pid);
-	    column.setCreatetime(d);
-	    column.setDelStatus((byte) Constants.ColumnDelStatus.common.v());
-	    column.setSubscribeCount(0l);
-	    column.setPathName(pathName);
-	    column.setUpdateTime(d);
-	    column.setUserId(userid);
-	    column.setColumnLevelPath("111111111");
-	    // 设置类型
-	    column.setType((short)type);
-	    columnMapperManual.insertAndGetId(column);
-	    long currentColumnId = column.getId();
-	    columnVisibleService.saveCid(userid, currentColumnId);
-	    return currentColumnId;
+	public long addColumnForNongroup(String columnname, long pid,
+			String pathName, int type, String tags, long userid) {
+
+		// 存储栏目信息
+		Date d = new Date();
+		Column column = new Column();
+		column.setColumnname(columnname);
+		column.setParentId(pid);
+		column.setCreatetime(d);
+		column.setDelStatus((byte) Constants.ColumnDelStatus.common.v());
+		column.setSubscribeCount(0l);
+		column.setPathName(pathName);
+		column.setUpdateTime(d);
+		column.setUserId(userid);
+		column.setColumnLevelPath("111111111");
+		// 设置类型
+		column.setType((short) type);
+		columnMapperManual.insertAndGetId(column);
+		long currentColumnId = column.getId();
+		columnVisibleService.saveCid(userid, currentColumnId);
+		return currentColumnId;
 	}
 
 	public void batchSaveColumnTags(long userid, long columnId, String tags) {
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
 		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
-		if(currTags!=null){
+		if (currTags != null) {
 			for (String tag : currTags) {
 				ColumnTag ct = new ColumnTag();
 				ct.setColumnId(columnId);
@@ -580,7 +578,7 @@ public class ColumnServiceImpl implements ColumnService {
 				columnList.add(ct);
 			}
 		}
-		if(columnList.size()>0){
+		if (columnList.size() > 0) {
 			columnTagMapperManual.batchInsertColumnTag(columnList);
 		}
 	}
@@ -853,7 +851,7 @@ public class ColumnServiceImpl implements ColumnService {
 				if (column.getParentId() == 0) {
 					parcolumnid = column.getId() + "";
 					map.put("parcolumnid", -1);
-					map.put("parcolumnName","自义定栏目" );
+					map.put("parcolumnName", "自义定栏目");
 					break;
 				}
 			} else {
@@ -876,15 +874,15 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Override
 	public List<Column> querySubByUserIdOrderById(long createUserId) {
-		List<Column> list = columnValueMapper.selectSubByUserIdOrderById(createUserId);
+		List<Column> list = columnValueMapper
+				.selectSubByUserIdOrderById(createUserId);
 		return list;
 	}
-	
+
 	@Override
 	public boolean checkColumnByParams(String columnName, long parentId,
 			long uid) {
-		logger.info("--进入验证栏目名称请求,栏目名称:{},当前登陆用户:{}--", columnName,
-				uid);
+		logger.info("--进入验证栏目名称请求,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		ColumnExample example = new ColumnExample();
 		Criteria c = example.createCriteria();
 		List<Long> values = new ArrayList<Long>();
@@ -895,8 +893,7 @@ public class ColumnServiceImpl implements ColumnService {
 			c.andColumnnameEqualTo(columnName);
 		}
 		int count = columnMapper.countByExample(example);
-		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName,
-				uid);
-		return count>0 ? false:true;
+		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName, uid);
+		return count > 0 ? false : true;
 	}
 }
