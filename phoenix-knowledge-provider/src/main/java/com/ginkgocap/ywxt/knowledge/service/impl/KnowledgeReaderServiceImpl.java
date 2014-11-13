@@ -145,11 +145,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
 						.getContent() : knowledge.getHcontent());
 
-		result.put("createtime",
-				DateUtil.parseWithYYYYMMDDHHMMSS(knowledge.getCreatetime()));
+		result.put("createtime", knowledge.getCreatetime());
 		result.put("author", knowledge.getUname());
 		result.put("source", knowledge.getSource());
-
+		result.put("asso", knowledge.getAsso());
+		
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
 		result.put("type", type);

@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,20 +34,22 @@ public class HTTPUtil {
 
 	public static LinkedBlockingQueue<StandByUrl> urls;
 
-	public static String location = "http://192.168.130.144:8088/datatransfer/";
+	public static String location = "http://192.168.130.119:8090/";
 
 	static {
 
 		httpClient = new DefaultHttpClient();
 
+		httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
+		
 		urls = new LinkedBlockingQueue<StandByUrl>();
 
 	}
 
 	public static String post(String url, Map<String, String> params) {
-
 		Map<String, Object> result = new HashMap<String, Object>();
 		HttpPost post = new HttpPost(location + url);
+		
 		if (params != null) {
 			List<NameValuePair> list = new ArrayList<NameValuePair>();
 			try {
