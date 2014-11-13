@@ -76,4 +76,14 @@ public interface UserCategoryService {
     void checkNogroup(Long uid,List<Long> idtype);
 
     String selectUserCategoryTreeByParams(long userId, String sortId, Byte type, String columnType);
+    
+    /**
+     * 根据条件查询目录
+     * @param uid 用户id
+     * @param pid 父id
+     * @param type 目录类型
+     * @param categoryname 目录名称
+     * @return list
+     */
+    List<UserCategory> selectUserCategoryByParams(Long uid, long pid,long type, String categoryname);
 }

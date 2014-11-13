@@ -206,7 +206,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		}
 	}
 
-	private List<UserCategory> selectUserCategoryByParams(Long uid, long pid,
+	@Override
+	public List<UserCategory> selectUserCategoryByParams(Long uid, long pid,
 			long type, String categoryname) {
 		UserCategoryExample example = new UserCategoryExample();
 		Criteria c = example.createCriteria();
