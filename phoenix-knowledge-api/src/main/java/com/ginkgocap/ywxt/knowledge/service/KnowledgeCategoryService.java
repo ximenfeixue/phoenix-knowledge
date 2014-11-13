@@ -80,4 +80,19 @@ public interface KnowledgeCategoryService {
 	 * @author haiyan
 	 */
 	long[] getCurrentCategoryArray(String ids, int type, long userId);
+	
+	/**
+	 * 获取格式化后的目录
+	 * 
+	 * @param ids
+	 *            目录id集合(1,2,3,4)
+	 * @param type
+	 *            类型(0 正常目录 1 收藏夹目录)
+	 * @param userId
+	 *            用户ID
+	 * @return
+	 * @author haiyan
+	 */
+	int  insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid);
+	
 }

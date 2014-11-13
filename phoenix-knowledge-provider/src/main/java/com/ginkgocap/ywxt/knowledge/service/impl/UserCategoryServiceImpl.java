@@ -77,14 +77,14 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
 	public String deleteNew(long id) {
 		UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
-		userCategoryValueMapper.del(u.getUserId(),
-				u.getCategoryType(), u.getSortid());
-		if(u.getCategoryType()==0){//删除目录知识
-		    userCategoryValueMapper.delk(u.getUserId(),
-		            u.getCategoryType(), u.getId(),u.getSortid());
-		}else if(u.getCategoryType()==1){//删除收藏知识
-		    userCategoryValueMapper.delc(u.getUserId(),
-		            u.getCategoryType(), u.getId(),u.getSortid());
+		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(),
+				u.getSortid());
+		if (u.getCategoryType() == 0) {// 删除目录知识
+			userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(),
+					u.getId(), u.getSortid());
+		} else if (u.getCategoryType() == 1) {// 删除收藏知识
+			userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(),
+					u.getId(), u.getSortid());
 		}
 		return "success";
 	}
@@ -242,6 +242,17 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 			return jsonArray.toString();
 		}
 		return "";
+	}
+
+	@Override
+	public List<UserCategory> selectNoGroup(long userId, String sortId,
+			Byte type) {
+		UserCategoryExample example = new UserCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		criteria.andSortidEqualTo(sortId);
+		criteria.andCategoryTypeEqualTo((short) type);
+		return userCategoryMapper.selectByExample(example);
 	}
 
 }

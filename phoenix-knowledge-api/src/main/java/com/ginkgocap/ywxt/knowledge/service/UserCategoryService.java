@@ -78,6 +78,7 @@ public interface UserCategoryService {
     String selectUserCategoryTreeByParams(long userId, String sortId, Byte type, String columnType);
     
     /**
+<<<<<<< Upstream, based on origin/develop
      * 根据条件查询目录
      * @param uid 用户id
      * @param pid 父id
@@ -86,4 +87,11 @@ public interface UserCategoryService {
      * @return list
      */
     List<UserCategory> selectUserCategoryByParams(Long uid, long pid,long type, String categoryname);
+
+    /* 查询目录中未分组ID
+    * @param userid
+    * @param sortId
+    * @return
+    */
+   List<UserCategory> selectNoGroup(long userId, String sortId,Byte type);
 }

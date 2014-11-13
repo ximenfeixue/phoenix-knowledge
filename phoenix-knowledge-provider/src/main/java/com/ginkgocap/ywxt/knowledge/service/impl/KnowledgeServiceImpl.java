@@ -547,7 +547,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public void restoreKnowledgeByid(long knowledgeid) {
+	public void restoreKnowledgeByid(long knowledgeid, User user) {
 
 		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
 				.selectByKnowledgeId(knowledgeid);
@@ -572,6 +572,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			if (usercategory != null) {
 				knowledgeCategoryService.updateKnowledgeCategorystatus(
 						knowledgeid, knowledgerecycle.getCatetoryid());
+			} else {
+				//查询该用户下的未分组目录ID
+				List<UserCategory> list = userCategoryService.selectNoGroup(
+						user.getId(), "111111111", (byte) 0);
+				if (list != null) {
+					UserCategory category = list.get(0);
+					knowledgeCategoryService.insertKnowledgeCategoryNogroup(
+							knowledgeid, category.getId());
+				}
 			}
 
 		} catch (Exception e) {

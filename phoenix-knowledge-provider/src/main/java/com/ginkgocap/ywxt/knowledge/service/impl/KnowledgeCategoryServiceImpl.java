@@ -203,4 +203,15 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		return knowledgeCategoryMapper.selectByExample(example);
 	}
+
+	@Override
+	public int insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid) {
+
+		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
+		knowledgecategory.setStatus(Constants.ReportStatus.report.v() + "");
+		knowledgecategory.setKnowledgeId(knowledgeid);
+		knowledgecategory.setCategoryId(categoryid);
+		return knowledgeCategoryMapper.insertSelective(knowledgecategory);
+	}
+
 }
