@@ -244,13 +244,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			int userPermissionCount = userPermissionService
 					.deleteUserPermission(vo.getkId(), user.getId());
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			String selectedIds = vo.getSelectedIds().replace("&quot;", "\"");
-			if (StringUtils.isNotBlank(selectedIds)
+			if (StringUtils.isNotBlank(vo.getSelectedIds())
 					&& !vo.getSelectedIds().equals(dule)) {
 				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-				Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
+				Boolean dule = JsonUtil.checkKnowledgePermission(vo
+						.getSelectedIds());
 				if (dule == null) {
-					logger.error("解析权限信息失败，参数为：{}", selectedIds);
+					logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 					result.put(Constants.status, Constants.ResultType.fail.v());
 					result.put(Constants.errormessage,
 							Constants.ErrorMessage.paramNotValid.c());
@@ -259,7 +259,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				if (!dule) {
 					// 格式化权限信息
 					List<String> permList = JsonUtil
-							.getPermissionList(selectedIds);
+							.getPermissionList(vo.getSelectedIds());
 					// 大乐全平台分享
 					userPermissionService.insertUserShare(permList,
 							vo.getkId(), vo, user);
@@ -397,7 +397,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 知识来源，（0，系统，1，用户）
 		Short source = (short) Constants.KnowledgeSource.user.v();
-		String content = "";
 		// 获取Session用户值
 		long userId = user.getId();
 		String username = user.getUserName();
@@ -423,15 +422,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			columnPath = Constants.unGroupSortName;
 		}
 
-		if (StringUtils.isNotBlank(vo.getContent())) {
-//			content = vo.getContent().replace("&quot;", " ");
-			content = vo.getContent();
-		}
-
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
-		vo.setContent(content);
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
@@ -443,11 +436,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 			if (StringUtils.isNotBlank(vo.getSelectedIds())
 					&& !vo.getSelectedIds().equals(dule)) {
-				String selectedIds = vo.getSelectedIds();
 				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-				Boolean dule = JsonUtil.checkKnowledgePermission(selectedIds);
+				Boolean dule = JsonUtil.checkKnowledgePermission(vo
+						.getSelectedIds());
 				if (dule == null) {
-					logger.error("解析权限信息失败，参数为：{}", selectedIds);
+					logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 					result.put(Constants.status, Constants.ResultType.fail.v());
 					result.put(Constants.errormessage,
 							Constants.ErrorMessage.paramNotValid.c());
@@ -455,8 +448,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				if (!dule) {
 					// 格式化权限信息
-					List<String> permList = JsonUtil
-							.getPermissionList(selectedIds);
+					List<String> permList = JsonUtil.getPermissionList(vo
+							.getSelectedIds());
 					// 大乐全平台分享
 					userPermissionService.insertUserShare(permList, kId, vo,
 							user);
