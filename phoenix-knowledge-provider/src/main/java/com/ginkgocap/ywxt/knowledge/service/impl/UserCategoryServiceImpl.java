@@ -77,8 +77,6 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
 	public String deleteNew(long id) {
 		UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
-		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(),
-				u.getSortid());
 		if (u.getCategoryType() == 0) {// 删除目录知识
 			userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(),
 					u.getId(), u.getSortid());
@@ -86,6 +84,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 			userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(),
 					u.getId(), u.getSortid());
 		}
+		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(),
+		        u.getSortid());
 		return "success";
 	}
 
