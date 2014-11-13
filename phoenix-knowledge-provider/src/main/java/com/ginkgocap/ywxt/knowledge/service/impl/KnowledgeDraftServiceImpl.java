@@ -102,6 +102,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
+				vo.getEssence(), "on") ? "1" : "0" : "0");
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			// TODO 判断用户是否选择栏目

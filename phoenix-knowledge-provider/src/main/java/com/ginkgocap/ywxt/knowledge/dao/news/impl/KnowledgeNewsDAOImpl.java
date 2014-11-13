@@ -107,8 +107,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
 					.substring(0, 50) : vo.getContent());
 			update.set("content", vo.getContent());
-			update.set("essence", Integer.parseInt(StringUtils.isBlank(vo
-					.getEssence()) ? "0" : vo.getEssence()));
+			update.set("essence", vo.getEssence());
 			update.set("modifytime", vo.getCreatetime());
 			update.set("taskid", vo.getTaskId());
 			update.set("columnid", vo.getColumnid());

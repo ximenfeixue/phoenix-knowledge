@@ -223,6 +223,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setColumnPath(columnPath);
 		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
+				vo.getEssence(), "on") ? "1" : "0" : "0");
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 		// // 修改栏目知识关系
 		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
@@ -432,6 +434,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
+				vo.getEssence(), "on") ? "1" : "0" : "0");
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -504,18 +508,18 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return result;
 		}
 		// 添加知识到栏目知识表
-//		 int columnV = columnKnowledgeService.insertColumnKnowledge(
-//		 vo.getColumnid(), knowledge.getId(), userId,
-//		 Constants.Type.News.v());
-//		
-//		 if (columnV == 0) {
-//		 logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
-//		 vo.getColumnid());
-//		 result.put(Constants.status, Constants.ResultType.fail.v());
-//		 result.put(Constants.errormessage,
-//		 Constants.ErrorMessage.addKnowledgeFail.c());
-//		 return result;
-//		 }
+		// int columnV = columnKnowledgeService.insertColumnKnowledge(
+		// vo.getColumnid(), knowledge.getId(), userId,
+		// Constants.Type.News.v());
+		//
+		// if (columnV == 0) {
+		// logger.error("创建知识未全部完成,添加知识到栏目知识信息失败，知识ID:{},栏目ID:{}", kId,
+		// vo.getColumnid());
+		// result.put(Constants.status, Constants.ResultType.fail.v());
+		// result.put(Constants.errormessage,
+		// Constants.ErrorMessage.addKnowledgeFail.c());
+		// return result;
+		// }
 		// 初始化知识统计信息
 		KnowledgeStatics statics = new KnowledgeStatics();
 		statics.setClickcount(0l);

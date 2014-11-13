@@ -34,8 +34,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setDesc(vo.getContent().length() > 50 ? vo.getContent().substring(
 				0, 50) : vo.getContent());
 		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
-				: vo.getEssence()));
+		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(vo.getSelectedIds().equals(Constants.Ids.platform.v()) ? Constants.Status.checking
 				.v() : Constants.Status.checked.v());
@@ -66,8 +65,7 @@ public class KnowledgeArticle extends Knowledge {
 				.getContent().substring(0, 50) : vo.getContent()
 				: "");
 		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
-				: vo.getEssence()));
+		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(Constants.Status.draft.v());
 		this.setReport_status(Constants.ReportStatus.unreport.v());

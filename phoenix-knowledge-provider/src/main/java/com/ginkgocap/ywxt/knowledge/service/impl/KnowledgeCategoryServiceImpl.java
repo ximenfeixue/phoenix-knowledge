@@ -162,8 +162,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 						.ToEnglishSymbol(vo.getTags()) : "");
 				base.setAuthor(username);
 				base.setPath(columnPath);
-				base.setEssence(Short.parseShort(vo.getEssence() != null ? StringUtils
-						.equals(vo.getEssence(), "on") ? "1" : "0" : "0"));
+				base.setEssence(Short.parseShort(vo.getEssence()));
 				base.setPicPath(vo.getPic());
 				base.setUserId(userId);
 
