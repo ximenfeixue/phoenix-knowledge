@@ -537,7 +537,7 @@ public class ColumnServiceImpl implements ColumnService {
 		columnVisibleService.saveCid(userid, currentColumnId);
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-
+		result.put("id", currentColumnId);
 		return result;
 	}
 
@@ -633,7 +633,7 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public Map<String, Object> delColumn(long columnid, long userid) {
+	public Map<String, Object> delColumn(long columnid, long userid, boolean verify) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(columnid);
 		if (column == null) {
@@ -660,11 +660,18 @@ public class ColumnServiceImpl implements ColumnService {
 			Query query = new Query(
 					org.springframework.data.mongodb.core.query.Criteria.where(
 							"columnid").is(columnid));
+			String obj = Constants.getTableName(column.getType() + "");
+			obj = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
+			// 是否确认操作
+			if(!verify) {
+				long count = mongoTemplate.count(query, obj);
+				if(count>0) result.put("has", true);
+				else	result.put("has", false);
+				return result;
+			}
 			Update update = new Update();
 			update.set("columnid", colList.get(0).getId());
-			String obj = Constants.getTableName(column.getType() + "");
-			mongoTemplate.updateMulti(query, update,
-					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+			mongoTemplate.updateMulti(query, update, obj);
 		}
 		// 删除栏目标签表
 		ColumnTagExample example = new ColumnTagExample();

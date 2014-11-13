@@ -272,7 +272,7 @@ public interface ColumnService {
 	 * @param userid
 	 * @return
 	 */
-	public Map<String, Object> delColumn(long columnid, long id);
+	public Map<String, Object> delColumn(long columnid, long id, boolean verify);
 
 	/**
 	 * 初始化未分组

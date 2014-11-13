@@ -4,7 +4,7 @@
 	<insert id="insertAndGetId" useGeneratedKeys="true" keyProperty="id"
 		parameterType="com.ginkgocap.ywxt.knowledge.entity.Column">
 		insert into
-		tb_column(columnName,user_id,parent_id,createtime,path_name,column_level_path,del_status,update_time,subscribe_count)
-		values(#{columnname},#{userId},#{parentId},#{createtime},#{pathName},#{columnLevelPath},#{delStatus},#{updateTime},#{subscribeCount})
+		tb_column(columnName,user_id,parent_id,createtime,path_name,column_level_path,del_status,update_time,subscribe_count,type)
+		values(#{columnname},#{userId},#{parentId},#{createtime},#{pathName},#{columnLevelPath},#{delStatus},#{updateTime},#{subscribeCount},#{type})
 	</insert>
 </mapper>
