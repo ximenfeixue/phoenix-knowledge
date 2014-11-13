@@ -41,5 +41,20 @@
 		    AND category_type = #{categoryType}
 		    AND user_id = #{userId}
 	</delete>
-	
+	<update id="delk">
+	UPDATE tb_knowledge_category kc SET category_id=#{cid} WHERE EXISTS (
+		SELECT 1 FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+		    AND id =kc.category_id
+	</update>
+	<update id="delc">
+	UPDATE tb_knowledge_collection kc SET category_id=#{cid} WHERE EXISTS (
+		SELECT 1 FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+		    AND id =kc.category_id
+	</update>
 </mapper>

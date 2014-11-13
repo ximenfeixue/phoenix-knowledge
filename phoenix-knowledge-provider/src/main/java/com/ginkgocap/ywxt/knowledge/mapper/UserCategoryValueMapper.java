@@ -24,6 +24,27 @@ public interface UserCategoryValueMapper {
      * @return
      */
     long del(@Param("userId")long userId,@Param("categoryType")long categoryType,@Param("sortid")String sortid);
+    
+    /**
+     * 删除目录时删除目录知识
+     * @param userId 用户id
+     * @param categoryType 目录类型
+     * @param cid 目录id
+     * @param sortid 排序id
+     * @return long
+     */
+    long delk(@Param("userId")long userId,@Param("categoryType")long categoryType,@Param("cid")long cid,@Param("sortid")String sortid);
+    
+    /**
+     * 删除目录时删除收藏知识
+     * @param userId 用户id
+     * @param categoryType 目录类型
+     * @param cid 目录id
+     * @param sortid 排序id
+     * @return long
+     */
+    long delc(@Param("userId")long userId,@Param("categoryType")long categoryType,@Param("cid")long cid,@Param("sortid")String sortid);
+    
     /**
      * 通过父类的sortId得到某用户下某及的分类最大的sortId
      * @param uid
