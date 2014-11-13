@@ -100,6 +100,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setOid(vo.getOid());
 			this.setPrice(vo.getPrice());
 			
+			this.setTaskid(vo.getTaskId());
 			this.setSelectedIds(vo.getSelectedIds());
 			this.setAsso(vo.getAsso());
 			return this;
