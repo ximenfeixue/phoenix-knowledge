@@ -815,7 +815,7 @@ public class ColumnServiceImpl implements ColumnService {
 		if (ct != null && ct.size() > 0) {
 			StringBuffer buffer = new StringBuffer();
 			for (ColumnTag tag : ct) {
-				buffer.append(tag);
+				buffer.append(tag.getTag());
 				buffer.append(",");
 			}
 			buffer.deleteCharAt(buffer.length() - 1);
@@ -892,6 +892,7 @@ public class ColumnServiceImpl implements ColumnService {
 		if (columnName != null && !"".equals(columnName)) {
 			c.andColumnnameEqualTo(columnName);
 		}
+		c.andIdEqualTo(parentId);
 		int count = columnMapper.countByExample(example);
 		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		return count > 0 ? false : true;
