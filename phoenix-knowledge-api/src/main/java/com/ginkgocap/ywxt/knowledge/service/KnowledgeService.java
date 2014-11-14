@@ -78,7 +78,7 @@ public interface KnowledgeService {
 	 * 
 	 * @param knowledgeid
 	 */
-	void restoreKnowledgeByid(long knowledgeid,User user);
+	void restoreKnowledgeByid(long knowledgeid,long userid);
 
 	void deleteforeverKnowledge(long knowledgeid);
 

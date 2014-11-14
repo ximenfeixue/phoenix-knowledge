@@ -258,8 +258,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				if (!dule) {
 					// 格式化权限信息
-					List<String> permList = JsonUtil
-							.getPermissionList(vo.getSelectedIds());
+					List<String> permList = JsonUtil.getPermissionList(vo
+							.getSelectedIds());
 					// 大乐全平台分享
 					userPermissionService.insertUserShare(permList,
 							vo.getkId(), vo, user);
@@ -540,7 +540,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public void restoreKnowledgeByid(long knowledgeid, User user) {
+	public void restoreKnowledgeByid(long knowledgeid, long userid) {
 
 		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
 				.selectByKnowledgeId(knowledgeid);
@@ -568,7 +568,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			} else {
 				// 查询该用户下的未分组目录ID
 				List<UserCategory> list = userCategoryService.selectNoGroup(
-						user.getId(), Constants.unGroupSortId, (byte) 0);
+						userid, Constants.unGroupSortId, (byte) 0);
 				if (list != null) {
 					UserCategory category = list.get(0);
 					knowledgeCategoryService.insertKnowledgeCategoryNogroup(
