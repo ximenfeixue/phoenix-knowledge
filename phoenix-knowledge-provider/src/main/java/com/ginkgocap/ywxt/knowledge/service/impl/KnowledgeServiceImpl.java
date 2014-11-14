@@ -225,6 +225,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
+		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 		// // 修改栏目知识关系
 		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
