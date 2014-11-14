@@ -34,7 +34,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 	
-	private final String dataUrl = "http://192.168.130.184:8090";
+	private final String dataUrl = "http://192.168.130.119:8090";
 
 	//已作废
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -283,13 +283,17 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 			String tag, int scope, int pno, int psize, String qf, int type,
 			String sort) throws Exception{
 		Map<String, String> params = new HashMap<String, String>();
+		if(!qf.equals(""))
 		params.put("qf", qf);
+		if(!tag.equals(""))
 		params.put("tag", tag);
+		if(!sort.equals(""))
 		params.put("sort", sort);
 		params.put("pno", pno+"");
-		params.put("type", type+"");
+		params.put("type", "-"+type+"");
 		params.put("psize", psize+"");
 		params.put("scope", scope+"");
+		if(!keyword.equals(""))
 		params.put("keyword", keyword);
 		params.put("userid", userid + "");
 		String str = HTTPUtil.mobilePost(dataUrl+"/knowledge/keyword/search.json", params);
