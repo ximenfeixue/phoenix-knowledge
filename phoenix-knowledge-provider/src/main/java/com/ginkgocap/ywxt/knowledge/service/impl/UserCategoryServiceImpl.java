@@ -271,7 +271,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 			cIds = new long[1];
 			cIds[0] = list.get(0).getId();
 		}
-		if (null != cIds && cIds.length > 1) {
+		if (null != cIds && cIds.length > 0) {
 			return cIds[0] + "";
 		} else {
 			return null;
