@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import org.springframework.data.mongodb.core.query.Criteria;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService;
 
 @Service("knowledgeTagService")
@@ -19,13 +19,15 @@ public class KnowledgeTagServiceImpl implements KnowledgeTagService {
 
 	@Override
 	public boolean updateKnowledgeTag(long kid, int type, String tags) {
+		String obj = Constants.getTableName(type+"");
 		boolean result = false;
 		try {
 		Criteria c = Criteria.where("_id").is(kid);
 		Update update = new Update();
 		update.set("tags", tags);
 		Query query = new Query(c);
-		mongoTemplate.findAndModify(query, update, KnowledgeInvestment.class,"KnowledgeInvestment");
+		mongoTemplate.updateFirst(query, update,
+				obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 		result = true;
 		} catch (Exception e) {
 		}
