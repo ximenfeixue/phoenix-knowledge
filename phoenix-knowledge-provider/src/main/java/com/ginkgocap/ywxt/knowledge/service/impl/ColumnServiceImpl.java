@@ -111,6 +111,16 @@ public class ColumnServiceImpl implements ColumnService {
 			if (kc.getParentId() == null || kc.getParentId() < 0) {
 				return null;
 			}
+			
+            //检测重复
+            try {
+                if (!checkColumnByParams(kc.getColumnname(), kc.getParentId(), kc.getUserId())) {
+                    return null;
+                }
+            } catch (Exception e) {
+                logger.error("插入栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
+            }
+			
 			kc.setCreatetime(date);
 			kc.setUpdateTime(date);
 			kc.setDelStatus((byte) 0);
@@ -154,15 +164,26 @@ public class ColumnServiceImpl implements ColumnService {
 			// ColumnDao.update(okc);
 			// }
 
+            //检测重复
+            try {
+                if (!checkColumnByParam(kc.getColumnname(), kc.getParentId(), kc.getUserId(),id)) {
+                    return null;
+                }
+            } catch (Exception e) {
+                logger.error("修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
+            }
+            
 			kc.setUpdateTime(date);
 			columnMapper.updateByPrimaryKey(kc);
+			columnVisibleService.saveOrUpdate(kc);
 			return kc;
 		}
 
 		return null;
-	}
+	} 
 
-	@Override
+
+    @Override
 	public Column queryById(long id) {
 		return columnMapper.selectByPrimaryKey(id);
 	}
@@ -198,6 +219,9 @@ public class ColumnServiceImpl implements ColumnService {
 			String status, String columnType) {
 		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
 				sortId);
+		for(Column c:cl){
+		    System.out.println(c.getColumnname()+c.getColumnLevelPath());
+		}
 		if (cl != null && cl.size() > 0) {
 			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
 					.convert2Node(cl, "userId", "id", "columnname", "parentId",
@@ -904,4 +928,23 @@ public class ColumnServiceImpl implements ColumnService {
 		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		return count > 0 ? false : true;
 	}
+	
+    private boolean checkColumnByParam(String columnName, Long parentId, Long uid, Long id) {
+        ColumnExample example = new ColumnExample();
+        Criteria c = example.createCriteria();
+        List<Long> values = new ArrayList<Long>();
+        values.add(0L);
+        values.add(uid);
+        c.andUserIdIn(values);
+        if (id != null) {
+            c.andIdNotEqualTo(id);
+        }
+        if (columnName != null && !"".equals(columnName)) {
+            c.andColumnnameEqualTo(columnName);
+        }
+        c.andParentIdEqualTo(parentId);
+        int count = columnMapper.countByExample(example);
+        return count > 0 ? false : true;
+    }
+
 }

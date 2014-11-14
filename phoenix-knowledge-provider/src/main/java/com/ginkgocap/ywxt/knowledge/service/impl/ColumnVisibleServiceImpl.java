@@ -175,4 +175,32 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         columnVisibleMapper.deleteByExample(cm);
     }
 
+    @Override
+    public void saveOrUpdate(Column c) {
+        Long id = c.getId();
+        long pcid = c.getParentId();
+        long uid = c.getUserId();
+        String cname = c.getColumnname();
+        if(id==null){//新增栏目
+            ColumnVisible cv = new ColumnVisible();
+            cv.setColumnId(id);
+            cv.setPcid(pcid);
+            cv.setUserId(uid);
+            cv.setCtime(new Date());
+            cv.setUtime(new Date());
+            cv.setColumnName(cname);
+            cv.setSortId(c.getColumnLevelPath());
+            cv.setState((short) 0);
+            columnVisibleMapper.insert(cv);
+        }else{//修改栏目
+            ColumnVisible cv = new ColumnVisible();
+            cv.setColumnName(cname);
+            cv.setUtime(new Date());
+            ColumnVisibleExample e = new ColumnVisibleExample();
+            e.createCriteria().andUserIdEqualTo(c.getUserId()).andColumnIdEqualTo(c.getId());
+            columnVisibleMapper.updateByExampleSelective(cv, e);
+        }
+        
+    }
+
 }

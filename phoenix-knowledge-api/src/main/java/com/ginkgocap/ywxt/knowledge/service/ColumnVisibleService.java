@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnVisible;
 
 /** 
@@ -23,6 +24,8 @@ public interface ColumnVisibleService {
     public void updateCids(long userid, String cids,long pcid);
 
     public void saveCid(long userid, long cid);
+    
+    public void saveOrUpdate(Column c);
     
     public void delByUserIdAndColumnId(long userid, long cid);
 
