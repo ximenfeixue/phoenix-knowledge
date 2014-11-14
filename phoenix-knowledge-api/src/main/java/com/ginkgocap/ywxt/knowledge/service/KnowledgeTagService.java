@@ -18,4 +18,7 @@ public interface KnowledgeTagService {
 	 */
 	//int insertKnowledgeTag(KnowledgeTag knowledgeTag);
 
+	
+	/** 知识标签更改方法 */
+	boolean updateKnowledgeTag(long kid,int type,String tags);
 }
