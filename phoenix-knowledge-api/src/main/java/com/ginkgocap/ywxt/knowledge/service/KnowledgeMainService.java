@@ -78,7 +78,16 @@ public interface KnowledgeMainService {
 	 * @param knowledgeid
 	 * 
 	 */
-	int moveCategoryBatch(long knowledgeids[], long categoryids[]);
+	int moveCategoryBatch(long categoryid, long knowledgeids[],
+			long categoryids[]);
+
+	/**
+	 * 将多个目录下多个知识移动到其它多个目录下
+	 * 
+	 * @param knowledgeid
+	 * 
+	 */
+	int moveCategorysBatch(long knowledgeids[], long categoryids[]);
 
 	/**
 	 * 編輯知识，把知识目录中间表删除

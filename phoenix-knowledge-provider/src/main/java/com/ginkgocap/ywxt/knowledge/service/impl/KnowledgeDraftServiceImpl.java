@@ -131,8 +131,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				if (StringUtils.isNotBlank(vo.getSelectedIds())
 						&& !vo.getSelectedIds().equals(dule)) {
 					// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-					Boolean dule = JsonUtil
-							.checkKnowledgePermission(vo.getSelectedIds());
+					Boolean dule = JsonUtil.checkKnowledgePermission(vo
+							.getSelectedIds());
 					if (dule == null) {
 						logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 						result.put(Constants.status,
@@ -143,8 +143,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					}
 					if (!dule) {
 						// 格式化权限信息
-						List<String> permList = JsonUtil
-								.getPermissionList(vo.getSelectedIds());
+						List<String> permList = JsonUtil.getPermissionList(vo
+								.getSelectedIds());
 						// 大乐全平台分享
 						userPermissionService.insertUserShare(permList,
 								vo.getkId(), vo, user);
@@ -215,10 +215,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 		} else {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+			kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			vo.setKnowledgeid(vo.getkId() + "");
+			vo.setkId(kId);
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
+
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo.getSelectedIds());
+			Boolean dule = JsonUtil.checkKnowledgePermission(vo
+					.getSelectedIds());
 			if (dule == null) {
 				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -228,7 +234,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 			if (!dule) {
 				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo.getSelectedIds());
+				List<String> permList = JsonUtil.getPermissionList(vo
+						.getSelectedIds());
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, kId, vo, user);
 				int pV = userPermissionService.insertUserPermission(permList,

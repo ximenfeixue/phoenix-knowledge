@@ -79,7 +79,27 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public int moveCategoryBatch(long[] knowledgeids, long[] categoryids) {
+	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
+			long[] categoryids) {
+
+		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
+		KnowledgeCategory knowledgeRCategory = null;
+		for (int i = 0; i < knowledgeids.length; i++) {
+			for (int k = 0; k < categoryids.length; k++) {
+				knowledgeRCategory = new KnowledgeCategory();
+				knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
+				knowledgeRCategory.setCategoryId(categoryids[k]);
+				knowledgeRCategory
+						.setStatus(Constants.KnowledgeCategoryStatus.effect.v()
+								+ "");
+				list.add(knowledgeRCategory);
+			}
+		}
+		return knowledgeCategoryValueMapper.batchInsert(list);
+	}
+
+	@Override
+	public int moveCategorysBatch(long[] knowledgeids, long[] categoryids) {
 
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		List<KnowledgeCategory> listCategory = new ArrayList<KnowledgeCategory>();
