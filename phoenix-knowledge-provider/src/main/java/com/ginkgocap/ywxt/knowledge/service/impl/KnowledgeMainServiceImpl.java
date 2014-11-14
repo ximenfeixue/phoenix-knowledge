@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,10 +17,13 @@ import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
 import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
-import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeMainService")
 public class KnowledgeMainServiceImpl implements KnowledgeMainService {
@@ -37,6 +41,12 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
 	@Autowired
 	private KnowledgeCategoryDAO knowledgeBetweenDAO;
+
+	@Autowired
+	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
+
+	@Autowired
+	private KnowledgeCategoryService knowledgeCategoryService;
 
 	@Resource
 	private MongoTemplate mongoTemplate;
@@ -69,10 +79,31 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
-	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
-			long[] categoryids) {
+	public int moveCategoryBatch(long[] knowledgeids, long[] categoryids) {
 
-		return knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
+		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
+		List<KnowledgeCategory> listCategory = new ArrayList<KnowledgeCategory>();
+		KnowledgeCategory knowledgeRCategory = null;
+		for (int i = 0; i < knowledgeids.length; i++) {
+			for (int k = 0; k < categoryids.length; k++) {
+				listCategory = knowledgeCategoryService
+						.selectKnowledgeCategory(knowledgeids[i],
+								categoryids[k],
+								Constants.KnowledgeCategoryStatus.effect.v()
+										+ "");
+				if (listCategory != null && listCategory.size() > 0) {
+					continue;
+				}
+				knowledgeRCategory = new KnowledgeCategory();
+				knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
+				knowledgeRCategory.setCategoryId(categoryids[k]);
+				knowledgeRCategory
+						.setStatus(Constants.KnowledgeCategoryStatus.effect.v()
+								+ "");
+				list.add(knowledgeRCategory);
+			}
+		}
+		return knowledgeCategoryValueMapper.batchInsert(list);
 	}
 
 	@Override

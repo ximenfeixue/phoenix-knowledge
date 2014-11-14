@@ -214,4 +214,15 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		return knowledgeCategoryMapper.insertSelective(knowledgecategory);
 	}
 
+	@Override
+	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
+			long categoryid, String status) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andCategoryIdEqualTo(categoryid);
+		criteria.andStatusEqualTo(status);
+		return knowledgeCategoryMapper.selectByExample(example);
+	}
+
 }

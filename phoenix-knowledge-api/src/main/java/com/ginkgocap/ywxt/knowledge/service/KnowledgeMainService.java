@@ -44,6 +44,7 @@ public interface KnowledgeMainService {
 	 * @return
 	 */
 	int checkInvestmentNameRepeat(String knowledgetitle);
+
 	/**
 	 * 检查行业新建名称是否重复
 	 * 
@@ -77,8 +78,7 @@ public interface KnowledgeMainService {
 	 * @param knowledgeid
 	 * 
 	 */
-	int moveCategoryBatch(long categoryid, long knowledgeids[],
-			long categoryids[]);
+	int moveCategoryBatch(long knowledgeids[], long categoryids[]);
 
 	/**
 	 * 編輯知识，把知识目录中间表删除

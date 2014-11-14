@@ -38,6 +38,9 @@ public interface KnowledgeCategoryService {
 	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
 			long categoryid);
 
+	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
+			long categoryid, String status);
+
 	List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid);
 
 	int updateKnowledgeCategorystatus(long knowledgeid, long categoryid);
@@ -80,7 +83,7 @@ public interface KnowledgeCategoryService {
 	 * @author haiyan
 	 */
 	long[] getCurrentCategoryArray(String ids, int type, long userId);
-	
+
 	/**
 	 * 获取格式化后的目录
 	 * 
@@ -93,6 +96,6 @@ public interface KnowledgeCategoryService {
 	 * @return
 	 * @author haiyan
 	 */
-	int  insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid);
-	
+	int insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid);
+
 }

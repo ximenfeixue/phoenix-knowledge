@@ -295,6 +295,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
+		result.put("knowledgeid", vo.getkId());
 		logger.info("添加草稿箱成功,知识ID:{}", kId);
 		return result;
 
