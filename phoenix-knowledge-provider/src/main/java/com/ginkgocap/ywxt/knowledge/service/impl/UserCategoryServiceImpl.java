@@ -20,6 +20,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Category;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 
@@ -253,6 +254,28 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		criteria.andSortidEqualTo(sortId);
 		criteria.andCategoryTypeEqualTo((short) type);
 		return userCategoryMapper.selectByExample(example);
+	}
+
+	@Override
+	public String getDefaultCategoryId(long userId) {
+		long[] cIds = null;
+		UserCategoryExample example = new UserCategoryExample();
+		com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+				.createCriteria();
+		criteria.andSortidEqualTo(Constants.unGroupSortId);
+		criteria.andUserIdEqualTo(userId);
+		criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+				.v());
+		List<UserCategory> list = userCategoryMapper.selectByExample(example);
+		if (list != null && list.size() == 1) {
+			cIds = new long[1];
+			cIds[0] = list.get(0).getId();
+		}
+		if (null != cIds && cIds.length > 1) {
+			return cIds[0] + "";
+		} else {
+			return null;
+		}
 	}
 
 }
