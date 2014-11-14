@@ -46,8 +46,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getContent().length() > 50 ? vo.getContent().substring(
-				0, 50) : vo.getContent());
+		this.setDesc(vo.getDesc());
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));
@@ -81,9 +80,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getContent() != null ? vo.getContent().length() > 50 ? vo
-				.getContent().substring(0, 50) : vo.getContent()
-				: "");
+		this.setDesc(vo.getDesc());
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));
