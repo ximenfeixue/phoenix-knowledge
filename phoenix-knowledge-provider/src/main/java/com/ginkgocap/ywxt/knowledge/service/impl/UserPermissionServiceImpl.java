@@ -24,6 +24,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
@@ -333,7 +334,21 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setMento(vo.getShareMessage());
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
-		userPermission.setDesc(vo.getDesc());
+		String columnType=vo.getColumnType();
+		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取200个字符后插入到我的分享的简介中
+		if(columnType.equals(Constants.Type.Investment.v()+"") || columnType.equals(Constants.Type.Industry.v()+"") || columnType.equals(Constants.Type.Case.v()+"")){
+			userPermission.setDesc(vo.getDesc());
+		}else{
+			String content=vo.getContent();
+			if(content==null){
+				content="";
+			}else if(content.length()<200){
+				
+			}else{
+				content=content.substring(0,200);
+			}
+			userPermission.setDesc(content);
+		}
 		userPermission.setPicPath(vo.getPic());
 		userPermission.setTags(vo.getTags());
 		mongoTemplate.insert(userPermission);
