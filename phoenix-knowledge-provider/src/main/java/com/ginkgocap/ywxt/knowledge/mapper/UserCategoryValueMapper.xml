@@ -55,6 +55,6 @@
 		WHERE sortid LIKE CONCAT(#{sortid},'%')
 		    AND category_type = #{categoryType}
 		    AND user_id = #{userId}
-		    AND id =kc.category_id)
+		    AND id =kc.category_id) 
 	</update>
 </mapper>

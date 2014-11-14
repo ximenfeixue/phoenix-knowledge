@@ -137,9 +137,7 @@ public interface UserPermissionService {
 	 * @return
 	 */
 	public boolean insertUserPermissionMongo(List<Long> receiveList,
-			String title, String desc, String picPath, String tags,
-			long send_uid, String mento, short column_type, long column_id,
-			long knowledgeid);
+			KnowledgeNewsVO vo, User user);
 
 	public boolean deleteMyShare(String ids);
 

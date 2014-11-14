@@ -295,12 +295,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 						if (Integer.parseInt(userId.trim()) == -1) {
 							System.out.println(vo.getColumnid());
 							receiveList.add(Long.parseLong(userId.trim()));
-							insertUserPermissionMongo(receiveList,
-									vo.getTitle(), vo.getShareMessage(),
-									vo.getPic(), vo.getTags(), user.getId(),
-									vo.getShareMessage(),
-									Short.parseShort(vo.getColumnType()),
-									Long.parseLong(vo.getColumnid()), kId);
+							insertUserPermissionMongo(receiveList,vo,user);
 						}
 					}
 
@@ -311,40 +306,37 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Override
 	public boolean insertUserPermissionMongo(List<Long> receiveList,
-			String title, String desc, String picPath, String tags,
-			long send_uid, String mento, short column_type, long column_id,
-			long knowledgeid) {
+			KnowledgeNewsVO vo, User user) {
 		UserPermissionMongo userPermission = new UserPermissionMongo();
 		StringBuffer sb = new StringBuffer();
 
 		for (Long uid : receiveList) {
-			User user = userService.selectByPrimaryKey(uid);
-			if (user != null) {
-				sb.append(user.getName());
+			User shareUser = userService.selectByPrimaryKey(uid);
+			if (shareUser != null) {
+				sb.append(shareUser.getName());
 				sb.append(split);
 			}
 		}
 		if (sb.length() > 0) {
 			sb = sb.deleteCharAt(sb.length() - 1);
 		}
-		User user = userService.selectByPrimaryKey(send_uid);
 		String id = MakePrimaryKey.getPrimaryKey();
 		userPermission.setId(id);
 		userPermission.setSendUserName(user.getName());
 		userPermission.setReceiveUserId(receiveList);
 		userPermission.setReceiveName(sb.toString());
-		userPermission.setColumnId(column_id);
-		userPermission.setColumnType(column_type);
-		userPermission.setColumnId(column_id);
+		userPermission.setColumnId(Long.parseLong(vo.getColumnid()));
+		userPermission.setColumnType(Short.parseShort(vo.getColumnType()));
+		userPermission.setColumnId(Long.parseLong(vo.getColumnid()));
 		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
 				"yyyy-MM-dd HH:mm:ss"));
-		userPermission.setKnowledgeId(knowledgeid);
-		userPermission.setMento(mento);
-		userPermission.setSendUserId(send_uid);
-		userPermission.setTitle(title);
-		userPermission.setDesc(desc);
-		userPermission.setPicPath(picPath);
-		userPermission.setTags(tags);
+		userPermission.setKnowledgeId(vo.getkId());
+		userPermission.setMento(vo.getShareMessage());
+		userPermission.setSendUserId(user.getId());
+		userPermission.setTitle(vo.getTitle());
+		userPermission.setDesc(vo.getDesc());
+		userPermission.setPicPath(vo.getPic());
+		userPermission.setTags(vo.getTags());
 		mongoTemplate.insert(userPermission);
 		return false;
 	}
