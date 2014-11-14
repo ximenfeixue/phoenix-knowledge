@@ -104,46 +104,13 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		KnowledgeCategory knowledgeRCategory = null;
 		for (int i = 0; i < knowledgeids.length; i++) {
 			for (int k = 0; k < categoryids.length; k++) {
-				Category category = categoryDao
-						.selectByPrimaryKey(categoryids[k]);
-				if (category != null) {
-					knowledgeRCategory = new KnowledgeCategory();
-					knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
-					knowledgeRCategory.setCategoryId(categoryids[k]);
-					try {
-						// 得到要添加的分类的父类parentId
-						long parentId = category.getParentId();
-						// 得到要添加的分类的父类sortId
-						String parentSortId = parentId > 0 ? categoryDao
-								.selectByPrimaryKey(parentId).getSortId() : "";
-						// 通过parentSortId得到子类最大已添加的sortId
-						String childMaxSortId = categoryDao.selectMaxSortId(
-								category.getUid(), parentSortId);
-						if (StringUtils.isBlank(category.getSortId())) {
-							// 如果用户第一次添加，将childMaxSortId赋值
-							String newSortId = new String("");
-							if (childMaxSortId == null
-									|| "null".equals(childMaxSortId)
-									|| "".equals(childMaxSortId)) {
-								newSortId = parentSortId + "000000001";
-							} else {
-								newSortId = helper
-										.generateSortId(childMaxSortId);
-							}
-							// 通过已添加的最大的SortId生成新的SortId
-							// 设置最新的sortId
-////							knowledgeRCategory.setSortid(newSortId);
-//						} else {
-//							knowledgeRCategory.setSortid(category.getSortId());
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					list.add(knowledgeRCategory);
-				} else {
-					continue;
-				}
-
+				knowledgeRCategory = new KnowledgeCategory();
+				knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
+				knowledgeRCategory.setCategoryId(categoryids[k]);
+				knowledgeRCategory
+						.setStatus(Constants.KnowledgeCategoryStatus.effect.v()
+								+ "");
+				list.add(knowledgeRCategory);
 			}
 		}
 		return knowledgeCategoryValueMapper.batchInsert(list);
