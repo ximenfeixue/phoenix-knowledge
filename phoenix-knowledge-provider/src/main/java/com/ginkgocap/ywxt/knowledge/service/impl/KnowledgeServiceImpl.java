@@ -248,11 +248,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				if (!dule) {
 					// 格式化权限信息
-					List<String> permList = JsonUtil.getPermissionList(vo
-							.getSelectedIds());
-					// 大乐全平台分享
-					userPermissionService.insertUserShare(permList,
-							vo.getkId(), vo, user);
+					List<String> permList = insertUserShare(vo, user);
 					int pV = userPermissionService.insertUserPermission(
 							permList, vo.getkId(), user.getId(),
 							vo.getShareMessage(),
@@ -325,6 +321,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		logger.info("编辑知识成功,知识ID:{}", vo.getkId());
 		return result;
 
+	}
+
+	@Override
+	public List<String> insertUserShare(KnowledgeNewsVO vo, User user) {
+		List<String> permList = JsonUtil.getPermissionList(vo
+				.getSelectedIds());
+		// 大乐全平台分享
+		userPermissionService.insertUserShare(permList,
+				vo.getkId(), vo, user);
+		return permList;
 	}
 
 	@Override

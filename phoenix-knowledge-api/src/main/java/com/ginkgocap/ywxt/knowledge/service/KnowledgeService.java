@@ -84,5 +84,12 @@ public interface KnowledgeService {
 
 
     Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid, long userid);
+    
+    /**
+     * 添加用户分享
+     * @param vo 知识对象
+     * @param user 登陆用户对象
+     */
+    List<String> insertUserShare(KnowledgeNewsVO vo, User user);
 
 }
