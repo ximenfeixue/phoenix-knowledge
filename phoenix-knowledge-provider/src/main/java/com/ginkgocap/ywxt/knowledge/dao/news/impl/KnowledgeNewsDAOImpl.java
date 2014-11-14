@@ -116,6 +116,9 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("submitTime", vo.getSubmitTime());
 			update.set("performTime", vo.getPerformTime());
 			update.set("selectedIds", vo.getSelectedIds());
+			update.set("asso", vo.getAsso());
+			update.set("tags", vo.getTags());
+			
 			mongoTemplate.updateFirst(query, update,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
