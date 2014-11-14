@@ -94,4 +94,10 @@ public interface UserCategoryService {
     * @return
     */
    List<UserCategory> selectNoGroup(long userId, String sortId,Byte type);
+   
+   
+   /** zhangzhen 加入
+    * 默认目录id查询项
+    * */
+   String getDefaultCategoryId(long userId);
 }
