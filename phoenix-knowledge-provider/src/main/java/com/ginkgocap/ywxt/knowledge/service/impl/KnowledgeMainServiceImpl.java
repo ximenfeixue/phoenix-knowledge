@@ -72,12 +72,7 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 
-		int count = knowledgeBetweenDAO.deleteKnowledgeRCategory(knowledgeids,
-				categoryid);
-		if (count > 0) {
-			return knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
-		}
-		return 0;
+		return knowledgeDao.moveCategoryBatch(knowledgeids, categoryids);
 	}
 
 	@Override
@@ -191,7 +186,7 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 			Criteria criteria = Criteria.where("title").is(knowledgetitle);
 			Query query = new Query(criteria);
 			List<KnowledgeLaw> list = mongoTemplate.find(query,
-					KnowledgeLaw.class,"KnowledgeLaw");
+					KnowledgeLaw.class, "KnowledgeLaw");
 			if (list != null && list.size() > 0) {
 				return 0;
 			} else {
