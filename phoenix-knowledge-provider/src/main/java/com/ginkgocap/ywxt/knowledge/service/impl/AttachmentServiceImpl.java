@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 		att.setTaskid(taskId);
 		att.setUserid(userId);
 		att.setFileType(fileType);
+		att.setCreatetime(new Date());
 
 		return addAttachmentFile(att);
 	}
@@ -81,9 +83,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	public Integer deleteAttachment(long attId) {
 		logger.info("进入删除附件请求,附件Id:{}", attId);
-		
+
 		int v = attachmentMapper.deleteByPrimaryKey(attId);
-		
+
 		logger.info("删除附件成功,附件Id:{}", attId);
 		return v;
 	}

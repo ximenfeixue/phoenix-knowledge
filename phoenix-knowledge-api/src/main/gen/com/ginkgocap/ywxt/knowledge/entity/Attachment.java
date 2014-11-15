@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Attachment implements Serializable {
     private Long id;
@@ -16,6 +17,8 @@ public class Attachment implements Serializable {
     private String downloadUrl;
 
     private Long userid;
+
+    private Date createtime;
 
     private static final long serialVersionUID = 1L;
 
@@ -73,5 +76,13 @@ public class Attachment implements Serializable {
 
     public void setUserid(Long userid) {
         this.userid = userid;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
     }
 }
