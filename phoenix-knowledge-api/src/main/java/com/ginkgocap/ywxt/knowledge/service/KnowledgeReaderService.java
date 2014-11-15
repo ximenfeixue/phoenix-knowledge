@@ -5,6 +5,11 @@ import java.util.Map;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.user.model.User;
+/**
+ * 
+ * @author haiyan
+ *
+ */
 
 public interface KnowledgeReaderService {
 
@@ -48,6 +53,22 @@ public interface KnowledgeReaderService {
 	 * @return
 	 */
 	Map<String, Boolean> showHeadMenu(long kid, String type);
+
+	/**
+	 * 返回文章头部标签显示
+	 * 
+	 * @param kid
+	 *            知识Id
+	 * @param type
+	 *            知识类型
+	 * @param userId
+	 *            用户ID
+	 * @param authorId
+	 *            知识作者ID
+	 * @return
+	 */
+	Map<String, Boolean> showHeadMenu(long kid, String type, long userId,
+			long authorId);
 
 	/**
 	 * 返回文章内容，包括title content

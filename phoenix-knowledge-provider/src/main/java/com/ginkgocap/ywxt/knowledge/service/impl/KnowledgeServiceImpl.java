@@ -429,8 +429,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			if (column == null) {
-				// TODO 没有未没分组栏目，添加
-
+				//  没有未没分组栏目，添加
+				columnService.checkNogroup(userId);
 			} else {
 				columnid = column.getId() + "";
 			}

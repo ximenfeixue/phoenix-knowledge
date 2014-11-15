@@ -212,7 +212,7 @@ public class Constants {
 	public enum Relation {
 		// 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
 		self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
-				5, "组织"), notFriends(6, "不是好友");
+				5, "组织"), notFriends(6, "不是好友"),waitAgree(7, "等待确认");
 
 		private int v;
 		private String c;
@@ -243,7 +243,7 @@ public class Constants {
 				"无权删除该评论!"), delCommentFail("删除评论失败!"), notFindColumn(
 				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
-				"参数不能为空");
+				"参数不能为空"),contentTooLong("内容过长");
 
 		private String c;
 

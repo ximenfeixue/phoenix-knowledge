@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +18,11 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
@@ -80,8 +79,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else {
 			int r = friendsRelationService.getFriendsStatus(loginuserid, kUid);
 			// (-1=是自己 or 0=不是好友 or 1=好友等待中 or 2=已是好友)
-			if (r == 0 || r == 1) {
+			if (r == 0) {
 				result.put("relation", Constants.Relation.notFriends.v());
+			} else if (r == 1) {
+				result.put("relation", Constants.Relation.waitAgree.v());
 			} else if (r == 2) {
 				result.put("relation", Constants.Relation.friends.v());
 			}
@@ -96,16 +97,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		logger.info("进入获取阅读器功能列表请求,知识id:{},type:{}", kid, type);
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		boolean download = false;
-		boolean sourceFile = false;
 		boolean category = false;
 		boolean mark = false;
 
-		if (Integer.parseInt(type) == Constants.Type.News.v()) {
-			sourceFile = true;
-		} else if (Integer.parseInt(type) == Constants.Type.Industry.v()) {
+		if (Integer.parseInt(type) == Constants.Type.Industry.v()) {
 			category = true;
-		} else if (Integer.parseInt(type) == Constants.Type.Asset.v()) {
-			sourceFile = true;
 		} else if (Integer.parseInt(type) == Constants.Type.BookReport.v()) {
 			mark = true;
 			download = true;
@@ -115,14 +111,25 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			category = true;
 		} else if (Integer.parseInt(type) == Constants.Type.Investment.v()) {
 			category = true;
-		} else if (Integer.parseInt(type) == Constants.Type.Macro.v()) {
-			sourceFile = true;
 		}
 		result.put("download", download);
-		result.put("sourceFile", sourceFile);
 		result.put("category", category);
 		result.put("mark", mark);
 		logger.info("获取阅读器功能列表请求成功!,知识id:{},type:{}", kid, type);
+		return result;
+	}
+
+	@Override
+	public Map<String, Boolean> showHeadMenu(long kid, String type,
+			long userId, long authorId) {
+		Map<String, Boolean> result = new HashMap<String, Boolean>();
+
+		result.putAll(showHeadMenu(kid, type));
+
+		result.put("edit", userId == authorId);
+
+		result.put("sourceFile", authorId == Constants.Ids.jinTN.v());
+
 		return result;
 	}
 
@@ -131,12 +138,20 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			String type) {
 		logger.info("进入获取知识内容请求,知识type:{}", type);
 		Map<String, Object> result = new HashMap<String, Object>();
-
 		if (knowledge == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artNotExsit.c());
 			return result;
+		}
+		if (Integer.parseInt(type) == Constants.Type.Law.v()) {
+			KnowledgeLaw law = (KnowledgeLaw) knowledge;
+
+			result.put("postUnit", law.getPostUnit());
+			result.put("titanic", law.getTitanic());
+			result.put("submitTime", law.getSubmitTime());
+			result.put("performTime", law.getPerformTime());
+
 		}
 
 		result.put("title", knowledge.getTitle());
@@ -147,9 +162,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		result.put("createtime", knowledge.getCreatetime());
 		result.put("author", knowledge.getUname());
-		result.put("source", knowledge.getSource());
+		result.put("source",
+				knowledge.getSource() == null ? "" : knowledge.getSource());
 		result.put("asso", knowledge.getAsso());
-		
+
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
 		result.put("type", type);
@@ -178,7 +194,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	}
 
 	@Override
-	public Map<String, Object> getReaderHeadMsg(long kid, long kUId,
+	public Map<String, Object> getReaderHeadMsg(long kid, long authorId,
 			long userId, String type) {
 		logger.info("进入查询阅读器头部内容请求,知识ID:{},当前登陆用户:{}", kid,
 				userId == -1 ? "未登陆" : userId);
@@ -192,7 +208,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			result.put("collCount", statics.getCollectioncount());
 			result.put("shareCount", statics.getSharecount());
 		} else {
-			boolean succ = addKnowledgeStatics(kid, kUId, type);
+			boolean succ = addKnowledgeStatics(kid, authorId, type);
 			if (succ) {
 				result.put("commentCount", 0);
 				result.put("clickCount", 0);
@@ -201,11 +217,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			}
 		}
 		// 存储登陆用户与知识作者关系
-		result.putAll(authorAndLoginUserRelation(userId, kUId));
+		result.putAll(authorAndLoginUserRelation(userId, authorId));
 		// 存储阅读器功能菜单
-		result.putAll(showHeadMenu(kid, type));
+		result.putAll(showHeadMenu(kid, type, userId, authorId));
 		// 查询用户基本信息并存储用户名、头像、用户ID
-		User kUser = userService.selectByPrimaryKey(kUId);
+		User kUser = userService.selectByPrimaryKey(authorId);
 		result.put("user", kUser);
 		result.put("isColl", getIsCollStatus(kid, userId));
 
