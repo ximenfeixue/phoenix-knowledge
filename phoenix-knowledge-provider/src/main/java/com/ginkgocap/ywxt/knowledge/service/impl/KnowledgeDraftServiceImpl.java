@@ -146,8 +146,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						List<String> permList = JsonUtil.getPermissionList(vo
 								.getSelectedIds());
 						// 大乐全平台分享
-						userPermissionService.insertUserShare(permList,
-								vo.getkId(), vo, user);
+//						userPermissionService.insertUserShare(permList,
+//								vo.getkId(), vo, user);
 						int pV = userPermissionService.insertUserPermission(
 								permList, vo.getkId(), user.getId(),
 								vo.getShareMessage(),
@@ -214,14 +214,15 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						vo.getColumnName(), vo.getColumnType(), userId);
 			}
 		} else {
+//			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+			// 草稿箱备用库
+//			kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+//			vo.setKnowledgeid(vo.getkId() + "");
+//			vo.setkId(kId);
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
-			kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-			vo.setKnowledgeid(vo.getkId() + "");
-			vo.setkId(kId);
-			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+
 			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 			Boolean dule = JsonUtil.checkKnowledgePermission(vo
 					.getSelectedIds());
@@ -237,7 +238,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				List<String> permList = JsonUtil.getPermissionList(vo
 						.getSelectedIds());
 				// 大乐全平台分享
-				userPermissionService.insertUserShare(permList, kId, vo, user);
+//				userPermissionService.insertUserShare(permList, kId, vo, user);
 				int pV = userPermissionService.insertUserPermission(permList,
 						kId, userId, vo.getShareMessage(),
 						Short.parseShort(vo.getColumnType()),
