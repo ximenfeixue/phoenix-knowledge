@@ -191,8 +191,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			// 删除更新关联表
 			try {
 				mongoTemplate.updateFirst(query, update, collectionName);
-				knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i],
-						title, ct + "", userid, catetoryid);
+				//多个目录下同一知识，如果回收站里有，不插入回收站
+				KnowledgeRecycle recycle = knowledgeRecycleService
+						.selectByKnowledgeId(knowledgeid[i]);
+				if (recycle == null) {
+					
+					knowledgeRecycleService.insertKnowledgeRecycle(
+							knowledgeid[i], title, ct + "", userid, catetoryid);
+				}
 				knowledgeCategoryService.updateKnowledgeCategory(
 						knowledgeid[i], catetoryid);
 			} catch (Exception e) {
@@ -325,11 +331,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Override
 	public List<String> insertUserShare(KnowledgeNewsVO vo, User user) {
-		List<String> permList = JsonUtil.getPermissionList(vo
-				.getSelectedIds());
+		List<String> permList = JsonUtil.getPermissionList(vo.getSelectedIds());
 		// 大乐全平台分享
-		userPermissionService.insertUserShare(permList,
-				vo.getkId(), vo, user);
+		userPermissionService.insertUserShare(permList, vo.getkId(), vo, user);
 		return permList;
 	}
 
