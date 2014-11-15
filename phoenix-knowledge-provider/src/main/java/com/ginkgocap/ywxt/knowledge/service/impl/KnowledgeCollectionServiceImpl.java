@@ -252,14 +252,15 @@ public class KnowledgeCollectionServiceImpl implements
 
 	@Override
 	public boolean delCollection(long userId, long kId) {
+		logger.error("进入删除收藏信息请求!,用户ID:{},知识ID:{}",userId,kId);
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUseridEqualTo(userId);
 		criteria.andKnowledgeIdEqualTo(kId);
-
 		int v = knowledgeCollectionMapper.deleteByExample(example);
-
+		
 		knowledgeStaticsMapperManual.updateStatics(kId, 0, 0, -1, 0);
+		
 		return v > 0;
 
 	}
