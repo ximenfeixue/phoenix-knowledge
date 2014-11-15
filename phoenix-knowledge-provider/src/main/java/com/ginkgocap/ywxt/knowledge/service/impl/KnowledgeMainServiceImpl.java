@@ -84,8 +84,17 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		KnowledgeCategory knowledgeRCategory = null;
+		List<KnowledgeCategory> listCategory = new ArrayList<KnowledgeCategory>();
 		for (int i = 0; i < knowledgeids.length; i++) {
 			for (int k = 0; k < categoryids.length; k++) {
+				listCategory = knowledgeCategoryService
+						.selectKnowledgeCategory(knowledgeids[i],
+								categoryids[k],
+								Constants.KnowledgeCategoryStatus.effect.v()
+										+ "");
+				if (listCategory != null && listCategory.size() > 0) {
+					continue;
+				}
 				knowledgeRCategory = new KnowledgeCategory();
 				knowledgeRCategory.setKnowledgeId(knowledgeids[i]);
 				knowledgeRCategory.setCategoryId(categoryids[k]);
