@@ -20,17 +20,17 @@
 
 		where knowledge_id = #{kid}
 		
-		<if test="commentCount < 0">
-			and commentCount > 0
+		<if test="commentCount &lt; 0">
+			and commentCount &gt; 0
 		</if>
-		<if test="shareCount < 0">
-			and shareCount > 0
+		<if test="shareCount &lt; 0">
+			and shareCount &gt; 0
 		</if>
-		<if test="collCount < 0">
-			and collectionCount > 0
+		<if test="collCount &lt; 0">
+			and collectionCount &gt; 0
 		</if>
-		<if test="clickCount < 0">
-			and clickCount > 0
+		<if test="clickCount &lt; 0">
+			and clickCount &gt; 0
 		</if>
 
 	</update>
