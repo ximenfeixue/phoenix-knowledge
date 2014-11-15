@@ -10,8 +10,12 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonUtil {
+	private static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
+
 	public static Boolean checkKnowledgePermission(String str) {
 		boolean flag = false;
 		ObjectMapper mapper = new ObjectMapper();
@@ -29,6 +33,7 @@ public class JsonUtil {
 	}
 
 	public static Map<Integer, Object> getPermissionMap(String userPermissionStr) {
+		logger.info("开始解析权限字符串,字符串:{}", userPermissionStr);
 		Map<Integer, Object> result = new HashMap<Integer, Object>();
 		List<String> perList = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -71,7 +76,9 @@ public class JsonUtil {
 				}
 			}
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
+			logger.info("解析权限字符串失败,字符串:{}", userPermissionStr);
+			return result;
 		}
 
 		return result;
@@ -111,7 +118,7 @@ public class JsonUtil {
 		}
 		return permList;
 	}
-	
+
 	public static void main(String[] args) {
 		// String[] testStr = { "23", "33", "44" };
 		// long[] longs = KnowledgeUtil.convertionToLong(testStr);
@@ -121,7 +128,8 @@ public class JsonUtil {
 		//
 		// }
 
-//		String str = "{\"dule\":false,\"dales\":[1,2,3],\"xiaoles\":[34,7],\"zhongles\":[4]}";
-//		KnowledgeUtil.getPermissionList(str);
+		// String str =
+		// "{\"dule\":false,\"dales\":[1,2,3],\"xiaoles\":[34,7],\"zhongles\":[4]}";
+		// KnowledgeUtil.getPermissionList(str);
 	}
 }
