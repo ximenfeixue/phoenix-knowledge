@@ -100,4 +100,5 @@ public interface UserCategoryService {
     * 默认目录id查询项
     * */
    String getDefaultCategoryId(long userId);
+   
 }

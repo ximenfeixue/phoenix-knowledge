@@ -23,6 +23,7 @@ import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
@@ -191,11 +192,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			// 删除更新关联表
 			try {
 				mongoTemplate.updateFirst(query, update, collectionName);
-				//多个目录下同一知识，如果回收站里有，不插入回收站
+				// 多个目录下同一知识，如果回收站里有，不插入回收站
 				KnowledgeRecycle recycle = knowledgeRecycleService
 						.selectByKnowledgeId(knowledgeid[i]);
 				if (recycle == null) {
-					
+
 					knowledgeRecycleService.insertKnowledgeRecycle(
 							knowledgeid[i], title, ct + "", userid, catetoryid);
 				}
@@ -315,6 +316,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			if (draftV == 0) {
 				logger.error("删除该知识所在的草稿箱信息，知识ID:{}", vo.getkId());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+		}
+		KnowledgeRecycle recycle = knowledgeRecycleService
+				.selectByKnowledgeId(vo.getkId());
+		if (recycle != null) {
+
+			int recycleV = knowledgeRecycleService.deleteKnowledgeRecycle(vo
+					.getkId());
+
+			if (recycleV == 0) {
+				logger.error("删除该知识所在的回收站信息，知识ID:{}", vo.getkId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.addKnowledgeFail.c());
@@ -559,20 +575,57 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			update.set("status", Constants.Status.checked.v());
 			mongoTemplate.updateFirst(query, update, collectionName);
 
-			UserCategory usercategory = userCategoryService
-					.selectByPrimaryKey(knowledgerecycle.getCatetoryid());
+			List<KnowledgeCategory> listcategory = knowledgeCategoryService
+					.selectKnowledgeCategory(knowledgeid);
+			if (listcategory != null && listcategory.size() > 0) {
+				for (KnowledgeCategory knowledgeCategory : listcategory) {
+					UserCategory usercategory = userCategoryService
+							.selectByPrimaryKey(knowledgeCategory
+									.getCategoryId());
 
-			if (usercategory != null) {
-				knowledgeCategoryService.updateKnowledgeCategorystatus(
-						knowledgeid, knowledgerecycle.getCatetoryid());
+					if (usercategory != null) {
+						knowledgeCategoryService.updateKnowledgeCategorystatus(
+								knowledgeid, knowledgeCategory.getCategoryId());
+					} else {
+						// 查询该用户下的未分组目录ID
+						List<UserCategory> list = userCategoryService
+								.selectNoGroup(userid, Constants.unGroupSortId,
+										(byte) 0);
+						if (list != null) {
+							// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
+							UserCategory category = list.get(0);
+							List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+									.selectKnowledgeCategory(
+											knowledgeid,
+											category.getId(),
+											Constants.KnowledgeCategoryStatus.effect
+													.v() + "");
+							if (listnogroup.size() == 0) {
+								knowledgeCategoryService
+										.insertKnowledgeCategoryNogroup(
+												knowledgeid, category.getId());
+							}
+						}
+					}
+				}
 			} else {
 				// 查询该用户下的未分组目录ID
 				List<UserCategory> list = userCategoryService.selectNoGroup(
 						userid, Constants.unGroupSortId, (byte) 0);
 				if (list != null) {
+					// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
 					UserCategory category = list.get(0);
-					knowledgeCategoryService.insertKnowledgeCategoryNogroup(
-							knowledgeid, category.getId());
+					List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+							.selectKnowledgeCategory(
+									knowledgeid,
+									category.getId(),
+									Constants.KnowledgeCategoryStatus.effect
+											.v() + "");
+					if (listnogroup.size() == 0) {
+						knowledgeCategoryService
+								.insertKnowledgeCategoryNogroup(knowledgeid,
+										category.getId());
+					}
 				}
 			}
 

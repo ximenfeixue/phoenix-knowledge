@@ -225,4 +225,15 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		return knowledgeCategoryMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<KnowledgeCategory> selectKnowledgeCategory(long knowledgeid,
+			String status) {
+		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andStatusEqualTo(Constants.KnowledgeCategoryStatus.effect.v()
+				+ "");
+		return knowledgeCategoryMapper.selectByExample(example);
+	}
+
 }
