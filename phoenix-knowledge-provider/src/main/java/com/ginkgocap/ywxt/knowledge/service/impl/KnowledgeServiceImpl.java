@@ -227,17 +227,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		knowledgeNewsDAO.updateKnowledge(vo, user);
-		// // 修改栏目知识关系
-		// int columnknowledgeCount = columnKnowledgeService.updateColumn(vo
-		// .getkId(),
-		// Long.parseLong(StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-		// .getColumnid()));
-		//
-		// if (columnknowledgeCount == 0) {
-		// logger.error("修改知识栏目失败，知识ID:{}", vo.getkId());
-		// result.put(Constants.status, Constants.ResultType.fail.v());
-		// return result;
-		// }
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 
