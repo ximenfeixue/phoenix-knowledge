@@ -249,6 +249,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		List<String> listword = sensitiveWordService.sensitiveWord(vo
 				.getContent());
 		if (listword != null && listword.size() > 0) {
+			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
@@ -471,6 +472,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		List<String> listword = sensitiveWordService.sensitiveWord(vo
 				.getContent());
 		if (listword != null && listword.size() > 0) {
+			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
