@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,9 @@ import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
@@ -55,6 +58,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	@Resource
 	private KnowledgeCollectionMapper knowledgeCollectionMapper;
 
+	@Resource
+	private UserPermissionMapper userPermissionMapper;
+
 	@Override
 	public User getUserInfo(long userid) {
 		return userService.selectByPrimaryKey(userid);
@@ -66,29 +72,39 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	}
 
 	@Override
-	public Map<String, Integer> authorAndLoginUserRelation(long loginuserid,
-			long kUid) {
-		logger.info("进入获取用户关系请求,登陆用户ID:{},知识所属用户ID:{}", loginuserid, kUid);
+	public Map<String, Integer> authorAndLoginUserRelation(User user, long kUid) {
+		logger.info("进入获取用户关系请求,登陆用户ID:{},知识所属用户ID:{}", user == null ? "未登陆用户"
+				: user.getId(), kUid);
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		if (loginuserid == -1) {
-			result.put("relation", Constants.Relation.platform.v());
-		} else if (kUid == 0) {
-			result.put("relation", Constants.Relation.jinTN.v());
-		} else if (loginuserid == kUid) {
-			result.put("relation", Constants.Relation.self.v());
+		// 未登陆用户显示加为好友状态
+		if (user == null) {
+			result.put("relation", Constants.Relation.notFriends.v());
+
 		} else {
-			int r = friendsRelationService.getFriendsStatus(loginuserid, kUid);
-			// (-1=是自己 or 0=不是好友 or 1=好友等待中 or 2=已是好友)
-			if (r == 0) {
-				result.put("relation", Constants.Relation.notFriends.v());
-			} else if (r == 1) {
-				result.put("relation", Constants.Relation.waitAgree.v());
-			} else if (r == 2) {
-				result.put("relation", Constants.Relation.friends.v());
+
+			if (user.getId() == -1) {
+				result.put("relation", Constants.Relation.platform.v());
+			} else if (kUid == 0) {
+				result.put("relation", Constants.Relation.jinTN.v());
+			} else if (user.getId() == kUid) {
+				result.put("relation", Constants.Relation.self.v());
+			} else {
+				int r = friendsRelationService.getFriendsStatus(user.getId(),
+						kUid);
+				// (-1=是自己 or 0=不是好友 or 1=好友等待中 or 2=已是好友)
+				if (r == 0) {
+					result.put("relation", Constants.Relation.notFriends.v());
+				} else if (r == 1) {
+					result.put("relation", Constants.Relation.waitAgree.v());
+				} else if (r == 2) {
+					result.put("relation", Constants.Relation.friends.v());
+				}
+
 			}
 
 		}
-		logger.info("获取用户关系请求成功,登陆用户ID:{},知识所属用户ID:{}", loginuserid, kUid);
+		logger.info("获取用户关系请求成功,登陆用户ID:{},知识所属用户ID:{}", user == null ? "未登陆用户"
+				: user.getId(), kUid);
 		return result;
 	}
 
@@ -120,13 +136,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	}
 
 	@Override
-	public Map<String, Boolean> showHeadMenu(long kid, String type,
-			long userId, long authorId) {
+	public Map<String, Boolean> showHeadMenu(long kid, String type, User user,
+			long authorId) {
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 
 		result.putAll(showHeadMenu(kid, type));
 
-		result.put("edit", userId == authorId);
+		result.put("edit", user == null ? false : user.getId() == authorId);
 
 		result.put("sourceFile", authorId == Constants.Ids.jinTN.v());
 
@@ -195,9 +211,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Object> getReaderHeadMsg(long kid, long authorId,
-			long userId, String type) {
+			User user, String type) {
 		logger.info("进入查询阅读器头部内容请求,知识ID:{},当前登陆用户:{}", kid,
-				userId == -1 ? "未登陆" : userId);
+				user == null ? "未登陆" : user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		// 获取统计信息
@@ -217,13 +233,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			}
 		}
 		// 存储登陆用户与知识作者关系
-		result.putAll(authorAndLoginUserRelation(userId, authorId));
+		result.putAll(authorAndLoginUserRelation(user, authorId));
 		// 存储阅读器功能菜单
-		result.putAll(showHeadMenu(kid, type, userId, authorId));
+		result.putAll(showHeadMenu(kid, type, user, authorId));
 		// 查询用户基本信息并存储用户名、头像、用户ID
 		User kUser = userService.selectByPrimaryKey(authorId);
 		result.put("user", kUser);
-		result.put("isColl", getIsCollStatus(kid, userId));
+		result.put("isColl", getIsCollStatus(kid, user));
 
 		return result;
 	}
@@ -265,11 +281,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		return v > 0;
 	}
 
-	private Boolean getIsCollStatus(long kid, long userId) {
+	private Boolean getIsCollStatus(long kid, User user) {
+		if (user == null)
+			return false;
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(kid);
-		criteria.andUseridEqualTo(userId);
+		criteria.andUseridEqualTo(user.getId());
 
 		int v = knowledgeCollectionMapper.countByExample(example);
 
@@ -280,10 +298,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			String type) {
 		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
-		// TODO查询权限
 		Map<String, Object> result = new HashMap<String, Object>();
-		// 查询知识信息
 		Knowledge knowledge = getKnowledgeById(kid, type);
+		// 查询知识信息
 		if (knowledge == null) {
 			logger.error("没有找到知识,知识ID:{},知识类型:{}", kid, type);
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -291,9 +308,15 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 					Constants.ErrorMessage.artNotExsit.c());
 			return result;
 		}
+		// 查询用户对文章的查看权限
+		if (!getArticlePermission(knowledge, user)) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artPermissionNotFound.c());
+			return result;
+		}
 		// 存储阅读器头部信息
-		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user.getId(),
-				type));
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
 		// 存储正文内容
 		result.putAll(getKnowledgeContent(knowledge, type));
 		// 查询附件
@@ -303,5 +326,34 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;
+	}
+
+	// private boolean getArticlePermission(Knowledge knowledge) {
+	// return getArticlePermission(knowledge, null);
+	// }
+
+	private boolean getArticlePermission(Knowledge knowledge, User user) {
+		if (knowledge.getUid() == Constants.Ids.jinTN.v())
+			return true;
+		UserPermissionExample example = new UserPermissionExample();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
+				.createCriteria();
+		if (user == null) {
+			criteria.andReceiveUserIdEqualTo((long) Constants.Ids.platform.v());
+			criteria.andKnowledgeIdEqualTo(knowledge.getId());
+
+		} else {
+			if (user.getId() == knowledge.getUid())
+				return true;
+
+			List<Long> idList = new ArrayList<Long>();
+			idList.add((long) Constants.Ids.platform.v());
+			idList.add(user.getId());
+			criteria.andKnowledgeIdEqualTo(knowledge.getId());
+			criteria.andReceiveUserIdIn(idList);
+		}
+		int v = userPermissionMapper.countByExample(example);
+
+		return v > 0;
 	}
 }

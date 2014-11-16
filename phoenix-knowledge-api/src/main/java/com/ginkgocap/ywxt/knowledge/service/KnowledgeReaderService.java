@@ -5,10 +5,11 @@ import java.util.Map;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.user.model.User;
+
 /**
  * 
  * @author haiyan
- *
+ * 
  */
 
 public interface KnowledgeReaderService {
@@ -35,13 +36,13 @@ public interface KnowledgeReaderService {
 	 * 查询登陆用户与作者关系 self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4,
 	 * "全平台"), org(5, "组织"),notFriends(6,"不是好友");
 	 * 
-	 * @param loginuserid
-	 *            登陆用户Id
+	 * @param user
+	 *            登陆用户
 	 * @param kuid
 	 *            知识所属用户Id
 	 * @return
 	 */
-	Map<String, Integer> authorAndLoginUserRelation(long loginuserid, long kuid);
+	Map<String, Integer> authorAndLoginUserRelation(User user, long kuid);
 
 	/**
 	 * 返回文章头部标签显示
@@ -61,13 +62,13 @@ public interface KnowledgeReaderService {
 	 *            知识Id
 	 * @param type
 	 *            知识类型
-	 * @param userId
-	 *            用户ID
+	 * @param user
+	 *            用户
 	 * @param authorId
 	 *            知识作者ID
 	 * @return
 	 */
-	Map<String, Boolean> showHeadMenu(long kid, String type, long userId,
+	Map<String, Boolean> showHeadMenu(long kid, String type, User user,
 			long authorId);
 
 	/**
@@ -98,13 +99,13 @@ public interface KnowledgeReaderService {
 	 *            知识Id
 	 * @param kUId
 	 *            知识作者ID
-	 * @param userId
-	 *            登陆用户ID
+	 * @param user
+	 *            登陆用户
 	 * @param type
 	 *            知识类型
 	 * @return
 	 */
-	Map<String, Object> getReaderHeadMsg(long kid, long kUId, long userId,
+	Map<String, Object> getReaderHeadMsg(long kid, long kUId, User uesr,
 			String type);
 
 	/**

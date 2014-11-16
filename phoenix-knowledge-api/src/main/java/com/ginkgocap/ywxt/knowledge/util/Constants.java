@@ -243,7 +243,7 @@ public class Constants {
 				"无权删除该评论!"), delCommentFail("删除评论失败!"), notFindColumn(
 				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
-				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词");
+				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"),artPermissionNotFound("对不起,您没有查看该文章的权限!");
 
 		private String c;
 
