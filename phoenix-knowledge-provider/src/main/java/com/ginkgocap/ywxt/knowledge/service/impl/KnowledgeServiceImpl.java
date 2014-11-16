@@ -504,7 +504,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
-			result.put("listworderror", listword);
+			result.put("listword", listword);
 			return result;
 		}
 		// 法律法规名称不可重复
