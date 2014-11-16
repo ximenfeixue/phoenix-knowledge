@@ -204,8 +204,20 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					knowledgeRecycleService.insertKnowledgeRecycle(
 							knowledgeid[i], title, ct + "", userid, catetoryid);
 				}
-				knowledgeCategoryService.updateKnowledgeCategory(
-						knowledgeid[i], catetoryid);
+				if (catetoryid == -1) {
+					List<KnowledgeCategory> list = knowledgeCategoryService
+							.selectKnowledgeCategory(knowledgeid[i]);
+					if (list != null && list.size() > 0) {
+						for (KnowledgeCategory knowledgeCategory : list) {
+							knowledgeCategoryService.updateKnowledgeCategory(
+									knowledgeid[i],
+									knowledgeCategory.getCategoryId());
+						}
+					}
+				} else {
+					knowledgeCategoryService.updateKnowledgeCategory(
+							knowledgeid[i], catetoryid);
+				}
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
@@ -608,56 +620,61 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			update.set("status", Constants.Status.checked.v());
 			mongoTemplate.updateFirst(query, update, collectionName);
 
-			List<KnowledgeCategory> listcategory = knowledgeCategoryService
-					.selectKnowledgeCategory(knowledgeid);
-			if (listcategory != null && listcategory.size() > 0) {
-				for (KnowledgeCategory knowledgeCategory : listcategory) {
-					UserCategory usercategory = userCategoryService
-							.selectByPrimaryKey(knowledgeCategory
-									.getCategoryId());
+			if (knowledgerecycle.getCatetoryid() != -1) {
+				List<KnowledgeCategory> listcategory = knowledgeCategoryService
+						.selectKnowledgeCategory(knowledgeid);
+				if (listcategory != null && listcategory.size() > 0) {
+					for (KnowledgeCategory knowledgeCategory : listcategory) {
+						UserCategory usercategory = userCategoryService
+								.selectByPrimaryKey(knowledgeCategory
+										.getCategoryId());
 
-					if (usercategory != null) {
-						knowledgeCategoryService.updateKnowledgeCategorystatus(
-								knowledgeid, knowledgeCategory.getCategoryId());
-					} else {
-						// 查询该用户下的未分组目录ID
-						List<UserCategory> list = userCategoryService
-								.selectNoGroup(userid, Constants.unGroupSortId,
-										(byte) 0);
-						if (list != null) {
-							// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-							UserCategory category = list.get(0);
-							List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-									.selectKnowledgeCategory(
-											knowledgeid,
-											category.getId(),
-											Constants.KnowledgeCategoryStatus.effect
-													.v() + "");
-							if (listnogroup.size() == 0) {
-								knowledgeCategoryService
-										.insertKnowledgeCategoryNogroup(
-												knowledgeid, category.getId());
+						if (usercategory != null) {
+							knowledgeCategoryService
+									.updateKnowledgeCategorystatus(knowledgeid,
+											knowledgeCategory.getCategoryId());
+						} else {
+							// 查询该用户下的未分组目录ID
+							List<UserCategory> list = userCategoryService
+									.selectNoGroup(userid,
+											Constants.unGroupSortId, (byte) 0);
+							if (list != null) {
+								// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
+								UserCategory category = list.get(0);
+								List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+										.selectKnowledgeCategory(
+												knowledgeid,
+												category.getId(),
+												Constants.KnowledgeCategoryStatus.effect
+														.v() + "");
+								if (listnogroup.size() == 0) {
+									knowledgeCategoryService
+											.insertKnowledgeCategoryNogroup(
+													knowledgeid,
+													category.getId());
+								}
 							}
 						}
 					}
-				}
-			} else {
-				// 查询该用户下的未分组目录ID
-				List<UserCategory> list = userCategoryService.selectNoGroup(
-						userid, Constants.unGroupSortId, (byte) 0);
-				if (list != null) {
-					// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-					UserCategory category = list.get(0);
-					List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-							.selectKnowledgeCategory(
-									knowledgeid,
-									category.getId(),
-									Constants.KnowledgeCategoryStatus.effect
-											.v() + "");
-					if (listnogroup.size() == 0) {
-						knowledgeCategoryService
-								.insertKnowledgeCategoryNogroup(knowledgeid,
-										category.getId());
+				} else {
+					// 查询该用户下的未分组目录ID
+					List<UserCategory> list = userCategoryService
+							.selectNoGroup(userid, Constants.unGroupSortId,
+									(byte) 0);
+					if (list != null) {
+						// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
+						UserCategory category = list.get(0);
+						List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+								.selectKnowledgeCategory(
+										knowledgeid,
+										category.getId(),
+										Constants.KnowledgeCategoryStatus.effect
+												.v() + "");
+						if (listnogroup.size() == 0) {
+							knowledgeCategoryService
+									.insertKnowledgeCategoryNogroup(
+											knowledgeid, category.getId());
+						}
 					}
 				}
 			}
