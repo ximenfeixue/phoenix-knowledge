@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDraftDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
-import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
@@ -38,7 +38,7 @@ import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.Page;
-import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
+import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.model.User;
 
 @Service("knowledgeDraftService")
@@ -79,6 +79,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Autowired
 	private KnowledgeStaticsMapper knowledgeStaticsMapper;
 
+	@Autowired
+	private SensitiveWordService sensitiveWordService;
+
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
 
@@ -104,6 +107,15 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
+		// 查询知识内容敏感词
+		List<String> listword = sensitiveWordService.sensitiveWord(vo
+				.getContent());
+		if (listword != null && listword.size() > 0) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.sensitiveWord.c());
+			result.put("listword", listword);
+			return result;
+		}
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			// TODO 判断用户是否选择栏目
@@ -146,8 +158,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						List<String> permList = JsonUtil.getPermissionList(vo
 								.getSelectedIds());
 						// 大乐全平台分享
-//						userPermissionService.insertUserShare(permList,
-//								vo.getkId(), vo, user);
+						// userPermissionService.insertUserShare(permList,
+						// vo.getkId(), vo, user);
 						int pV = userPermissionService.insertUserPermission(
 								permList, vo.getkId(), user.getId(),
 								vo.getShareMessage(),
@@ -214,11 +226,11 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						vo.getColumnName(), vo.getColumnType(), userId);
 			}
 		} else {
-//			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+			// knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			// 草稿箱备用库
-//			kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-//			vo.setKnowledgeid(vo.getkId() + "");
-//			vo.setkId(kId);
+			// kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			// vo.setKnowledgeid(vo.getkId() + "");
+			// vo.setkId(kId);
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 
 			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
@@ -238,7 +250,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				List<String> permList = JsonUtil.getPermissionList(vo
 						.getSelectedIds());
 				// 大乐全平台分享
-//				userPermissionService.insertUserShare(permList, kId, vo, user);
+				// userPermissionService.insertUserShare(permList, kId, vo,
+				// user);
 				int pV = userPermissionService.insertUserPermission(permList,
 						kId, userId, vo.getShareMessage(),
 						Short.parseShort(vo.getColumnType()),

@@ -237,6 +237,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
+
+		// 查询知识内容敏感词
+		List<String> listword = sensitiveWordService.sensitiveWord(vo
+				.getContent());
+		if (listword != null && listword.size() > 0) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.sensitiveWord.c());
+			result.put("listword", listword);
+			return result;
+		}
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -433,7 +443,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
 			if (column == null) {
-				//  没有未没分组栏目，添加
+				// 没有未没分组栏目，添加
 				columnService.checkNogroup(userId);
 			} else {
 				columnid = column.getId() + "";
@@ -457,9 +467,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
-			return result; 
+			return result;
 		}
-		
+
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
