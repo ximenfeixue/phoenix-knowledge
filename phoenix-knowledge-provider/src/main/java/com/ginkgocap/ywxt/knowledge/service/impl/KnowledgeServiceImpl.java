@@ -39,6 +39,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
@@ -48,7 +49,6 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -107,6 +107,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private SensitiveWordService sensitiveWordService;
+
+	@Autowired
+	private KnowledgeMainService knowledgeMainService;
 
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
@@ -262,10 +265,23 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
+			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
+		}
+
+		// 法律法规名称不可重复
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
+			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
+			if (count == 0) {
+				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.hasName.c());
+				return result;
+			}
 		}
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
@@ -485,10 +501,22 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
+			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
-			result.put("listword", listword);
+			result.put("listworderror", listword);
 			return result;
+		}
+		// 法律法规名称不可重复
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
+			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
+			if (count == 0) {
+				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.hasName.c());
+				return result;
+			}
 		}
 
 		knowledgeNewsDAO.insertknowledge(vo, user);
