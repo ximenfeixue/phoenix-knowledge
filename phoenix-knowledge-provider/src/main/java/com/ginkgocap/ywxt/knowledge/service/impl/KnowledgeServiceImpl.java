@@ -49,6 +49,7 @@ import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
+import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -103,6 +104,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
+
+	@Autowired
+	private SensitiveWordService sensitiveWordService;
 
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
@@ -446,6 +450,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
+		// 查询知识内容敏感词
+		List<String> listword = sensitiveWordService.sensitiveWord(vo
+				.getContent());
+		if (listword != null && listword.size() > 0) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.sensitiveWord.c());
+			result.put("listword", listword);
+			return result; 
+		}
+		
 		knowledgeNewsDAO.insertknowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
