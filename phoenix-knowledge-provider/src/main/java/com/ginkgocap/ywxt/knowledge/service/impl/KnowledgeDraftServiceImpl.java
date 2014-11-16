@@ -97,8 +97,22 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
 		// TODO 判断用户是否选择栏目
-		String columnPath = columnService.getColumnPathById(Long
-				.parseLong(columnid));
+		String columnPath = null;
+		Column column = null;
+		if (Long.parseLong(columnid) != 0) {
+			columnPath = columnService.getColumnPathById(Long
+					.parseLong(columnid));
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			if (column == null) {
+				// 没有未没分组栏目，添加
+				columnService.checkNogroup(user.getId());
+			} else {
+				columnid = column.getId() + "";
+			}
+
+			columnPath = Constants.unGroupSortName;
+		}
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
@@ -118,20 +132,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		}
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
-			// TODO 判断用户是否选择栏目
-			columnPath = null;
-			Column column = null;
-			if (Long.parseLong(columnid) != 0) {
-				columnPath = columnService.getColumnPathById(Long
-						.parseLong(columnid));
-			} else {
-				column = columnService.getUnGroupColumnIdBySortId(user.getId());
-				columnPath = Constants.unGroupSortName;
-			}
-
-			vo.setColumnPath(columnPath);
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表

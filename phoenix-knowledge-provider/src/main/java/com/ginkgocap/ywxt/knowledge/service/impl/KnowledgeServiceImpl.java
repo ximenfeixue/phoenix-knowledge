@@ -217,16 +217,23 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid();
 		// TODO 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
-		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-				.getColumnid();
 		if (Long.parseLong(columnid) != 0) {
 			columnPath = columnService.getColumnPathById(Long
 					.parseLong(columnid));
 		} else {
 			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			if (column == null) {
+				// 没有未没分组栏目，添加
+				columnService.checkNogroup(user.getId());
+			} else {
+				columnid = column.getId() + "";
+			}
+
 			columnPath = Constants.unGroupSortName;
 		}
 
