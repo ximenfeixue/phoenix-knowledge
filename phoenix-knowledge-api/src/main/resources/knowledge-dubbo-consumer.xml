@@ -32,7 +32,7 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
     <!-- 需要单独注释掉此service类，打成jar提供给手机端调用否则会与其他服务提供者冲突，web端则放开此方法
      -->
-     <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/>
+<!--      <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/> -->
      
      <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
     <dubbo:reference id="mobileArticleService" interface="com.ginkgocap.ywxt.knowledge.service.MobileArticleService" version="1.0.0"/>
