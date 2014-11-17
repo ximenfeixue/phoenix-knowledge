@@ -90,4 +90,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 		return v;
 	}
 
+	@Override
+	public Attachment selectByPrimaryKey(long attId) {
+		logger.info("进入获取附件请求,附件Id:{}", attId);
+		
+		Attachment attachment = attachmentMapper.selectByPrimaryKey(attId);
+		
+		logger.info("获取附件成功,附件Id:{}", attId);
+		return attachment;
+	}
 }

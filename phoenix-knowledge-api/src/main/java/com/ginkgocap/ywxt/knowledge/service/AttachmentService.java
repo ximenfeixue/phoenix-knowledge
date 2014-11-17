@@ -37,5 +37,12 @@ public interface AttachmentService {
 	 * 删除附件
 	 * @param attId 附件Id
 	 */
-	Integer deleteAttachment(long attId); 
+	Integer deleteAttachment(long attId);
+	
+	/**
+	 * 通过附件id获取附件
+	 * @param attId 附件Id
+	 * return 附件
+	 */
+	Attachment selectByPrimaryKey(long attId);
 }
