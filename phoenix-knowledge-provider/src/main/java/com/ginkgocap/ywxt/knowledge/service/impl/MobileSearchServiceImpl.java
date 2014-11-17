@@ -295,6 +295,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		params.put("scope", scope+"");
 		if(!keyword.equals(""))
 		params.put("keyword", keyword);
+		if(userid != -2) //考虑到全平台与金桐网的id，所以设置userid《-1
 		params.put("userid", userid + "");
 		String str = HTTPUtil.mobilePost(dataUrl+"/knowledge/keyword/search.json", params);
 		return JSONObject.fromObject(str);
