@@ -78,7 +78,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		// 未登陆用户显示加为好友状态
 		if (user == null) {
-			result.put("relation", Constants.Relation.notFriends.v());
+			 if (kUid == 0) {
+					result.put("relation", Constants.Relation.jinTN.v());
+			 }else{
+				 result.put("relation", Constants.Relation.notFriends.v());
+			 }
 
 		} else {
 

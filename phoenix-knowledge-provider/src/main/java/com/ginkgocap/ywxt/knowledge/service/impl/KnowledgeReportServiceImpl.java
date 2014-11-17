@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,8 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeReportService")
@@ -26,17 +27,25 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 
 	@Resource
 	private KnowledgeReportMapper knowledgeReportMapper;
+	@Resource
+	private UserService userService;
 
 	@Override
 	public Map<String, Object> addReport(long kid, String type, String desc,
-			long userid) {
+			User user, String title, String columnType) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeReport report = new KnowledgeReport();
 		report.setKnowledgeId(kid);
 		report.setType(type);
 		report.setRepDesc(desc);
-		report.setUserId(userid);
+		report.setUserId(user.getId());
 		report.setCreatetime(new Date());
+		report.setUsername(user.getName());
+		report.setKnowledgetitle(title);
+		report.setUpdatetime(new Date());
+		report.setResults("");
+		report.setStatus(Constants.ReportResolveStatus.unresolve.v());
+		report.setColumntype(Short.parseShort(columnType));
 		int v = knowledgeReportMapper.insertSelective(report);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -51,60 +60,69 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 	@Override
 	public Map<String, Object> selectByParam(DataGridModel dgm,
 			Map<String, String> searchMap) {
-		Map<String ,Object> result =new HashMap<String ,Object> (); 
+		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeReportExample example = new KnowledgeReportExample();
 		int page = dgm.getPage();
 		int row = dgm.getRows();
 		Criteria criteria = example.createCriteria();
 		String cname = searchMap.get("cname");
 		String title = searchMap.get("title");
-		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"");
-		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("submitEndCTime"))?searchMap.get("submitEndCTime")+" 23:59:59":"");
-		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveBeginCTime"))?searchMap.get("approveBeginCTime")+" 00:00:00":"");
-		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils.isNotBlank(searchMap.get("approveEndCTime"))?searchMap.get("approveEndCTime")+" 23:59:59":"");
-		
+		Date submitBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils
+				.isNotBlank(searchMap.get("submitBeginCTime")) ? searchMap
+				.get("submitBeginCTime") + " 00:00:00" : "");
+		Date submitEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils
+				.isNotBlank(searchMap.get("submitEndCTime")) ? searchMap
+				.get("submitEndCTime") + " 23:59:59" : "");
+		Date approveBeginCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils
+				.isNotBlank(searchMap.get("approveBeginCTime")) ? searchMap
+				.get("approveBeginCTime") + " 00:00:00" : "");
+		Date approveEndCTime = DateUtil.parseWithYYYYMMDDHHMMSS(StringUtils
+				.isNotBlank(searchMap.get("approveEndCTime")) ? searchMap
+				.get("approveEndCTime") + " 23:59:59" : "");
+
 		int status = Integer.parseInt(searchMap.get("status"));
 		// 状态值为-1时，查找状态为3：审核中；4：审核通过；5：未通过 数据
-		if(status== 0) {
+		if (status == 0) {
 			criteria.andStatusEqualTo(0);
-		}else if(status== 1){
+		} else if (status == 1) {
 			criteria.andStatusNotEqualTo(0);
 		}
 		// 按举报人查询
-		if(StringUtils.isNotBlank(cname)) {
-			criteria.andUsernameLike("%"+cname+"%");
+		if (StringUtils.isNotBlank(cname)) {
+			criteria.andUsernameLike("%" + cname + "%");
 		}
 		// 按知识标题查询
-		if(StringUtils.isNotBlank(title)) {
-			criteria.andKnowledgetitleLike("%"+title+"%");
+		if (StringUtils.isNotBlank(title)) {
+			criteria.andKnowledgetitleLike("%" + title + "%");
 		}
 		String type = searchMap.get("type");
-		if(StringUtils.isNotBlank(type)){
+		if (StringUtils.isNotBlank(type)) {
 			criteria.andTypeEqualTo(type);
 		}
 		// 按创建时间查询条件
-		if(submitBeginCTime != null && submitEndCTime != null) {
+		if (submitBeginCTime != null && submitEndCTime != null) {
 			criteria.andCreatetimeBetween(submitBeginCTime, submitEndCTime);
-		}else if(submitBeginCTime != null && submitEndCTime == null) {
+		} else if (submitBeginCTime != null && submitEndCTime == null) {
 			criteria.andCreatetimeGreaterThan(submitBeginCTime);
-		}else if(submitBeginCTime == null && submitEndCTime != null) {
+		} else if (submitBeginCTime == null && submitEndCTime != null) {
 			criteria.andCreatetimeLessThan(submitEndCTime);
 		}
 		// 按修改时间查询条件
-		if(approveBeginCTime != null && approveEndCTime != null) {
+		if (approveBeginCTime != null && approveEndCTime != null) {
 			criteria.andUpdatetimeBetween(approveBeginCTime, approveEndCTime);
-		}else if(approveBeginCTime != null && approveEndCTime == null) {
+		} else if (approveBeginCTime != null && approveEndCTime == null) {
 			criteria.andUpdatetimeGreaterThan(approveBeginCTime);
-		}else if(approveBeginCTime == null && approveEndCTime != null) {
+		} else if (approveBeginCTime == null && approveEndCTime != null) {
 			criteria.andUpdatetimeLessThan(approveEndCTime);
 		}
 		int count = knowledgeReportMapper.countByExample(example);
-		PageUtil p = new PageUtil( count, page, row);
+		PageUtil p = new PageUtil(count, page, row);
 		example.setLimitStart(p.getPageStartRow() - 1);
 		example.setLimitEnd(row);
-		List<KnowledgeReport>  list = knowledgeReportMapper.selectByExample(example);
+		List<KnowledgeReport> list = knowledgeReportMapper
+				.selectByExample(example);
 		result.put("rows", list);
-		result.put("page",p);
+		result.put("page", p);
 		result.put("total", count);
 		return result;
 	}
