@@ -31,7 +31,8 @@
 		a.type,
 		b.ishas 
 		FROM tb_column a 
-		LEFT JOIN (SELECT DISTINCT parent_id , 1  'ishas' FROM tb_column) b 
+		LEFT JOIN (SELECT DISTINCT parent_id , 1  'ishas' FROM tb_column where del_status=0
+		and (user_id=#{userId} or user_id=0)) b 
 		ON a.id = b.parent_id
 		where a.del_status=0
 		and (a.user_id=#{userId} or a.user_id=0)
