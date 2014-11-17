@@ -153,8 +153,13 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				KnowledgeBase base = new KnowledgeBase();
 				base.setKnowledgeId(kId);
 				base.setTitle(vo.getTitle());
-				base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
-						.substring(0, 50) : vo.getContent());
+				if(b.getColumnType()==Constants.Type.Investment.v() || b.getColumnType()==Constants.Type.Industry.v() || b.getColumnType()==Constants.Type.Case.v()){
+					base.setcDesc(vo.getDesc().length() > 50 ? vo.getDesc()
+							.substring(0, 50).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "") : vo.getDesc().replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", ""));
+				}else{
+					base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
+							.substring(0, 50) : vo.getContent());
+				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
 				base.setColumnType(Short.parseShort(vo.getColumnType()));
 				base.setCreatetime(new Date());
