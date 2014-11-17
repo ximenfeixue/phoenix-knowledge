@@ -279,4 +279,28 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		}
 	}
 
+    @Override
+    public List<UserCategory> selectUserCategoryByParam(Long uid, Long pid, int type, String sortid,
+            String categoryname) {
+        UserCategoryExample example = new UserCategoryExample();
+        Criteria c = example.createCriteria();
+        if (uid != null) {
+            c.andUserIdEqualTo(uid);
+        }
+        if (type >= 0) {
+            c.andCategoryTypeEqualTo((short) type);
+        }
+        if (!"".equals(sortid) || null != sortid) {
+            c.andSortidEqualTo(sortid);
+        }
+        if (pid != null) {
+            c.andParentIdEqualTo(pid);
+        }
+        if (categoryname != null && !"".equals(categoryname)) {
+            c.andCategorynameEqualTo(categoryname);
+        }
+        List<UserCategory> ll = userCategoryMapper.selectByExample(example);
+        return ll;
+    }
+
 }

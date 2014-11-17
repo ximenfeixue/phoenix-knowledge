@@ -86,6 +86,17 @@ public interface UserCategoryService {
      * @return list
      */
     List<UserCategory> selectUserCategoryByParams(Long uid, long pid,long type, String categoryname);
+    
+    /**
+     * 根据条件查询目录
+     * @param uid 用户id
+     * @param pid 父id
+     * @param type 目录类型
+     * @param sortid 排序id
+     * @param categoryname 目录名称
+     * @return list
+     */
+    List<UserCategory> selectUserCategoryByParam(Long uid, Long pid,int type, String sortid,String categoryname);
 
     /**
      *  查询目录中未分组ID

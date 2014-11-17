@@ -103,5 +103,5 @@ public interface KnowledgeHomeService {
      * @param userId userid
      * @return
      */
-    public int beRelation(long id, int t,long kid, long userId) ;
+    public int beRelation(long id, int t,long kid, Long userId) ;
 }
