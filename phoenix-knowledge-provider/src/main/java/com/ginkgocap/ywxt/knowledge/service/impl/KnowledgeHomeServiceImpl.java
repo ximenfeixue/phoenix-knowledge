@@ -235,7 +235,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     }
 
     @Override
-    public int beRelation(long id,int t,long cid, long userId) {
+    public int beRelation(long id,int t,long cid, Long userId) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",cid);
         UserPermissionExample example = new UserPermissionExample();
         example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
