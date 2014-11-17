@@ -79,14 +79,14 @@ public class SearchServiceImpl implements SearchService {
 			String scope, String pno, String psize) {
 		logger.info("进入搜索关键词请求,用户ID：{},关键词:{}", userid, keywords);
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("user_id", userid + "");
+		params.put("userid", userid + "");
 		params.put("keywords", keywords);
 		params.put("scope", scope);
 		params.put("qf", "title,tags,content");
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HTTPUtil.post("knowledge/keyword/search.json", params);
+		String str = HTTPUtil.post("/knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
@@ -106,13 +106,13 @@ public class SearchServiceImpl implements SearchService {
 			String scope, String pno, String psize) {
 		logger.info("进入搜索标签请求,用户ID：{},标签:{}", userid, keywords);
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("user_id", userid + "");
+		params.put("userid", userid + "");
 		params.put("tag", keywords);
 		params.put("scope", scope);
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HTTPUtil.post("knowledge/tag/search.json", params);
+		String str = HTTPUtil.post("/knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;

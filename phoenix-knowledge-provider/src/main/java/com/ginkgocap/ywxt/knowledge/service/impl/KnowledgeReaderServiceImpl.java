@@ -78,11 +78,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		// 未登陆用户显示加为好友状态
 		if (user == null) {
-			 if (kUid == 0) {
-					result.put("relation", Constants.Relation.jinTN.v());
-			 }else{
-				 result.put("relation", Constants.Relation.notFriends.v());
-			 }
+			if (kUid == 0) {
+				result.put("relation", Constants.Relation.jinTN.v());
+			} else {
+				result.put("relation", Constants.Relation.notFriends.v());
+			}
 
 		} else {
 
@@ -327,6 +327,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.putAll(attachmentService.queryAttachmentByTaskId(knowledge
 				.getTaskid()));
 		result.put("kid", kid);
+		result.put("sourceAddr",
+				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;
