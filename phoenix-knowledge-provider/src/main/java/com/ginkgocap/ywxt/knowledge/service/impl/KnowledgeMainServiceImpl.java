@@ -104,7 +104,12 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 				list.add(knowledgeRCategory);
 			}
 		}
-		return knowledgeCategoryValueMapper.batchInsert(list);
+		if (list != null && list.size() > 0) {
+
+			return knowledgeCategoryValueMapper.batchInsert(list);
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
