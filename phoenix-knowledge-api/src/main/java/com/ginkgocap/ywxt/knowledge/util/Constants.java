@@ -196,7 +196,7 @@ public class Constants {
 	}
 
 	public enum ResultType {
-		fail(0), success(1);
+		fail(0), success(1), sensitiveWords(2), sameNameError(3);
 
 		private int v;
 

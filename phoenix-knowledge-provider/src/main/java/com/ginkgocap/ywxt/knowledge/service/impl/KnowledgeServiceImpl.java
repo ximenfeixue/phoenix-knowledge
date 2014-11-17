@@ -265,21 +265,23 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
-			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.status,
+					Constants.ResultType.sensitiveWords.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
 		}
-
 		// 法律法规名称不可重复
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
 			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
 			if (count == 0) {
 				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.status,
+						Constants.ResultType.sameNameError.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.hasName.c());
+
 				return result;
 			}
 		}
@@ -501,7 +503,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
-			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.status,
+					Constants.ResultType.sensitiveWords.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
@@ -512,9 +515,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
 			if (count == 0) {
 				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.status,
+						Constants.ResultType.sameNameError.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.hasName.c());
+
 				return result;
 			}
 		}
