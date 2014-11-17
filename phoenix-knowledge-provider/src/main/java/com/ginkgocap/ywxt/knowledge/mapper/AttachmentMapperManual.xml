@@ -4,8 +4,8 @@
 	<insert id="insertAndGetId" useGeneratedKeys="true"
 		keyProperty="id" parameterType="com.ginkgocap.ywxt.knowledge.entity.Attachment">
 		insert into
-		tb_attachment(taskId,file_name,file_size,file_type,download_url,userId)
+		tb_attachment(taskId,file_name,file_size,file_type,download_url,userId,createtime)
 		values ( #{taskid}, #{fileName}, #{fileSize}, #{fileType},
-		#{downloadUrl}, #{userid} )
+		#{downloadUrl}, #{userid},#{createtime} )
 	</insert>
 </mapper>
