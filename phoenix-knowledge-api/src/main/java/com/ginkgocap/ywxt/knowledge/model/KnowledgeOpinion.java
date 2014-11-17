@@ -34,8 +34,7 @@ public class KnowledgeOpinion extends Knowledge {
 		this.setDesc(vo.getContent().length() > 50 ? vo.getContent().substring(
 				0, 50) : vo.getContent());
 		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
-				: vo.getEssence()));
+		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(vo.getSelectedIds().equals(Constants.Ids.platform.v()) ? Constants.Status.checking
 				.v() : Constants.Status.checked.v());
@@ -43,9 +42,11 @@ public class KnowledgeOpinion extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
-	
+
 	@Override
 	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo, User user) {
 		this.setColumnid(vo.getColumnid() + "");
@@ -64,14 +65,15 @@ public class KnowledgeOpinion extends Knowledge {
 				.getContent().substring(0, 50) : vo.getContent()
 				: "");
 		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
-				: vo.getEssence()));
+		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(Constants.Status.draft.v());
 		this.setReport_status(Constants.ReportStatus.unreport.v());
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setAsso(vo.getAsso());
+		this.setSelectedIds(vo.getSelectedIds());
+		this.setTaskid(vo.getTaskId());
 		return this;
 	}
 }
