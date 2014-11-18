@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.knowledge;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 public interface KnowledgeDraftDAO {
 
@@ -25,4 +26,5 @@ public interface KnowledgeDraftDAO {
 	
 	int insertKnowledge(long knowledgeid, String draftname, String drafttype,
 			String type, long userid);
+	
 }

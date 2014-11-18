@@ -2,6 +2,9 @@ package com.ginkgocap.ywxt.knowledge.dao.news;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
@@ -45,7 +48,7 @@ public interface KnowledgeNewsDAO {
 	 */
 
 	void updateKnowledge(KnowledgeNewsVO vo, User user);
-
+	
 	/**
 	 * 查询知识
 	 */
@@ -74,5 +77,17 @@ public interface KnowledgeNewsDAO {
 	void deleteKnowledgeByid(long knowledgeid);
 
 	void restoreKnowledgeByid(long knowledgeid);
+	
+	Knowledge getDraftByMainIdAndUser(Long knowledgeId,String type,Long userId);
+	
+	/**
+	 * 编辑知识(资讯，文章，宏观，资产管理，判例，观点)
+	 */
+	
+	void updateKnowledgeDraft(KnowledgeNewsVO vo, User user);
+
+	public void deleteKnowledgeById(long knowledgeid,String type);
+
+
 
 }

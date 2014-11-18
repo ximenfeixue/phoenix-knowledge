@@ -97,6 +97,10 @@
     delete from tb_knowledge_draft
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByPrimaryKeyAndUserId" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft" >
+    delete from tb_knowledge_draft
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT} and user_id=#{userid,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample" >
     delete from tb_knowledge_draft
     <if test="_parameter != null" >

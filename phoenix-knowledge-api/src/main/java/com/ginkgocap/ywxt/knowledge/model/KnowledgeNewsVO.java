@@ -17,7 +17,6 @@ public class KnowledgeNewsVO implements Serializable {
 	private String columnid; // 知识所属栏目
 	private String essence; // 知识加精状态( 是否加精（0-不加 1-加）)
 	private String selectedIds; // 知识所属权限 格式(
-								// {"dule":false,"xiaoles":[17,14449],"zhongles":[0,10357,14358],"dales":[14360,-1]})
 	private String shareMessage; // 分享感言
 	private String columnType; // 知识所属类型(类型（1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）)
 	private String columnPath; // 知识所在的栏目路径
@@ -58,6 +57,8 @@ public class KnowledgeNewsVO implements Serializable {
 	private String createtime;
 
 	private String synonyms; //同义词
+	
+	private Long knowledgeMainId;//代表草稿箱中存储了真正知识的ID
 	
 	public String getCreatetime() {
 		return createtime;
@@ -277,6 +278,14 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setSynonyms(String synonyms) {
 		this.synonyms = synonyms;
+	}
+
+	public Long getKnowledgeMainId() {
+		return knowledgeMainId;
+	}
+
+	public void setKnowledgeMainId(Long knowledgeMainId) {
+		this.knowledgeMainId = knowledgeMainId;
 	}
 
 }

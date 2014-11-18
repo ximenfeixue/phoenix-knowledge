@@ -81,10 +81,14 @@ public class Knowledge implements Serializable {
 	private String asso;
 
 	private String selectedIds;
-
+	
+	
+	
 	// 系统时间（大数据推送带过来的数据）
 	private String sysTime;
-
+	
+	private Long knowledgeMainId;//代表草稿箱中存储了真正知识的ID
+	
 	public String getSysTime() {
 		return sysTime;
 	}
@@ -294,5 +298,13 @@ public class Knowledge implements Serializable {
 
 	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo, User user) {
 		return null;
+	}
+
+	public Long getKnowledgeMainId() {
+		return knowledgeMainId;
+	}
+
+	public void setKnowledgeMainId(Long knowledgeMainId) {
+		this.knowledgeMainId = knowledgeMainId;
 	}
 }

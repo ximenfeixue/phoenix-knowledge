@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -176,4 +177,75 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			mongoTemplate.updateFirst(query, update, "KnowledgeNews");
 		}
 	}
+
+	@Override
+	public Knowledge getDraftByMainIdAndUser(Long knowledgeId, String type,
+			Long userId) {
+		String obj = Constants.getTableName(type);
+
+		Knowledge knowledge = null;
+		try {
+			Criteria criteria = Criteria.where("_id").is(knowledgeId);
+			if(userId!=null){
+				criteria.and("uid").is(userId);
+			}
+			Query query = new Query(criteria);
+			knowledge = (Knowledge) Class.forName(obj).newInstance();
+			return (Knowledge) mongoTemplate.findOne(query,Class.forName(obj),obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return knowledge;
+
+	}
+	
+	@Override
+	public void updateKnowledgeDraft(KnowledgeNewsVO vo, User user) {
+
+		String obj = Constants.getTableName(vo.getColumnType());
+		try {
+			Criteria criteria = Criteria.where("_id").is(vo.getkId());
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.draft.v());
+			update.set("title", vo.getTitle());
+			update.set("uid", user.getId());
+			update.set("uname", user.getName());
+			update.set("cpathid", vo.getColumnPath());
+			update.set("pic", vo.getPic());
+			update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
+					.substring(0, 50) : vo.getContent());
+			update.set("content", vo.getContent());
+			update.set("essence", vo.getEssence());
+			update.set("modifytime", vo.getCreatetime());
+			update.set("taskid", vo.getTaskId());
+			update.set("columnid", vo.getColumnid());
+			update.set("postUnit", vo.getPostUnit());
+			update.set("titanic", vo.getTitanic());
+			update.set("submitTime", vo.getSubmitTime());
+			update.set("performTime", vo.getPerformTime());
+			update.set("selectedIds", vo.getSelectedIds());
+			update.set("asso", vo.getAsso());
+			update.set("tags", vo.getTags());
+			
+			mongoTemplate.updateFirst(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void deleteKnowledgeById(long knowledgeid, String type) {
+			String obj = Constants.getTableName(type);
+			Criteria criteria = Criteria.where("_id").is(knowledgeid);
+			Query query = new Query(criteria);
+			mongoTemplate.remove(query, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+	}
+
+	
 }

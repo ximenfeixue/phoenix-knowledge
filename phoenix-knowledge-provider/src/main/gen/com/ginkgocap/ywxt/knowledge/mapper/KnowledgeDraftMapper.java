@@ -11,6 +11,8 @@ public interface KnowledgeDraftMapper {
     int deleteByExample(KnowledgeDraftExample example);
 
     int deleteByPrimaryKey(Long knowledgeId);
+    
+    int deleteByPrimaryKeyAndUserId(KnowledgeDraft knowledgeDraft);
 
     int insert(KnowledgeDraft record);
 

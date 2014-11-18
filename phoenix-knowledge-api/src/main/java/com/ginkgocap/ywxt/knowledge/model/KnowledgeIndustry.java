@@ -56,6 +56,7 @@ public class KnowledgeIndustry extends Knowledge {
 		
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
+		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		return this;
 	}
 
@@ -87,6 +88,7 @@ public class KnowledgeIndustry extends Knowledge {
 		
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
+		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		return this;
 	}
 	

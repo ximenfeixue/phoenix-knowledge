@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.util.Page;
 import com.ginkgocap.ywxt.user.model.User;
@@ -23,7 +24,7 @@ public interface KnowledgeDraftService {
 	 * @return
 	 */
 	Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo, User user);
-
+	
 	/**
 	 * 查询草稿箱列表
 	 * 
@@ -59,5 +60,38 @@ public interface KnowledgeDraftService {
 
 	int updateKnowledgeDaraft(long knowledgeid, String draftname,
 			String drafttype, long userid, String type);
-
+	
+	
+	/**
+	 * 知识存入草稿箱(待测版本)
+	 * @author zhangwei
+	 * @return
+	 */
+	Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo, User user);
+	
+	/**
+	 * 删除单个知识
+	 * @param knowledgeId 知识对应的KnowledgeMainId (别传错了)
+	 * @param type 知识类型
+	 * @return
+	 */
+	int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type);
+	/**
+	 * 删除单个知识
+	 * @param knowledgeId
+	 * @param type
+	 * @param userId
+	 * @return
+	 */
+	int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type, Long userId);
+	
+	
+	/**
+	 * 删除单个草稿箱知识
+	 */
+	
+	public Knowledge getDraftByMainId(Long knowledgeId,String type);
+	
+    public Knowledge getDraftByMainIdAndUser(Long knowledgeId,String type,Long userId);
+	
 }
