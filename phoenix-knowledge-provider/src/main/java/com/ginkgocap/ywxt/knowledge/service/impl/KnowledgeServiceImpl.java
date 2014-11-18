@@ -531,7 +531,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			columnPath = Constants.unGroupSortName;
 		}
-
+		if (vo.getAsso().equals("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+			vo.setAsso("");
+		}
 		// 知识入Mongo
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
