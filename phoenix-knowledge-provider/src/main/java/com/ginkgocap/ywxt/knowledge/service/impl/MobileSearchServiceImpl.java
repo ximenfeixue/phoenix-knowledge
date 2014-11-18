@@ -290,7 +290,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		if(!sort.equals(""))
 		params.put("sort", sort);
 		params.put("pno", pno+"");
-		params.put("type", "-"+type+"");
+		params.put("type", type+"");
 		params.put("psize", psize+"");
 		params.put("scope", scope+"");
 		if(!keyword.equals(""))
