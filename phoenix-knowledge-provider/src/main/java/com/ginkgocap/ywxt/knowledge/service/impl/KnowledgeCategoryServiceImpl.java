@@ -153,13 +153,37 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				KnowledgeBase base = new KnowledgeBase();
 				base.setKnowledgeId(kId);
 				base.setTitle(vo.getTitle());
-				int columnType=Integer.parseInt(vo.getColumnType());
-				if(columnType==Constants.Type.Investment.v() || columnType==Constants.Type.Industry.v() || columnType==Constants.Type.Case.v()){
-					base.setcDesc(vo.getDesc().length() > 50 ? vo.getDesc()
-							.substring(0, 50).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "") : vo.getDesc().replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", ""));
-				}else{
-					base.setcDesc(vo.getContent().length() > 50 ? vo.getContent()
-							.substring(0, 50) : vo.getContent());
+				int columnType = Integer.parseInt(vo.getColumnType());
+				String desc = vo.getDesc();
+				// 知识内容截取存入简介
+				String content = vo.getContent();
+				if (content == null) {
+					content = "";
+				} else if (content.length() < 50) {
+					content = content.replaceAll("</?[^>]+>", "").replaceAll(
+							"\\s*|\t|\r|\n", "");
+				} else {
+					content = content.substring(0, 50)
+							.replaceAll("</?[^>]+>", "")
+							.replaceAll("\\s*|\t|\r|\n", "")
+							+ "...";
+				}
+
+				if (columnType == Constants.Type.Investment.v()
+						|| columnType == Constants.Type.Industry.v()
+						|| columnType == Constants.Type.Case.v()) {
+					if (desc != null && desc.length() > 0) {
+						base.setcDesc(desc.length() > 50 ? desc
+								.substring(0, 50).replaceAll("</?[^>]+>", "")
+								.replaceAll("\\s*|\t|\r|\n", "")
+								+ "..." : desc.replaceAll("</?[^>]+>", "")
+								.replaceAll("\\s*|\t|\r|\n", ""));
+					} else {
+						base.setcDesc(content);
+					}
+				} else {
+
+					base.setcDesc(content);
 				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
 				base.setColumnType(Short.parseShort(vo.getColumnType()));
