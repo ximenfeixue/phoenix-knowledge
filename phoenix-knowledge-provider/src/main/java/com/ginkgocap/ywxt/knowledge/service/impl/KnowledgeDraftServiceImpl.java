@@ -575,17 +575,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 
-			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
-					.parseLong(vo.getKnowledgeid()));
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo.getKnowledgeMainId());
 
 			if (knowledgeDraft != null) {
-				this.updateKnowledgeDaraft(Long.parseLong(vo.getKnowledgeid()),
+				this.updateKnowledgeDaraft(vo.getKnowledgeMainId(),
 						vo.getTitle(), vo.getColumnName(), userId,
 						vo.getColumnType());
 			} else {
 
 				knowledgeDraftDAO.insertKnowledge(
-						Long.parseLong(vo.getKnowledgeid()), vo.getTitle(),
+						vo.getKnowledgeMainId(), vo.getTitle(),
 						vo.getColumnName(), vo.getColumnType(), userId);
 			}
 		} else {
@@ -597,7 +596,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			vo.setKnowledgeMainId(draftKId);//草稿中存放真正知识的ID
 			vo.setkId(kId);//插入草稿ID
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库并当作真实的知识草稿
-			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 			Boolean dule = JsonUtil.checkKnowledgePermission(vo
