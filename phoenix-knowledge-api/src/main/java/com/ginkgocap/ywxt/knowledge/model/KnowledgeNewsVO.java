@@ -57,6 +57,8 @@ public class KnowledgeNewsVO implements Serializable {
 	// 知识创建时间
 	private String createtime;
 
+	private String synonyms; //同义词
+	
 	public String getCreatetime() {
 		return createtime;
 	}
@@ -267,6 +269,14 @@ public class KnowledgeNewsVO implements Serializable {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	public String getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(String synonyms) {
+		this.synonyms = synonyms;
 	}
 
 }

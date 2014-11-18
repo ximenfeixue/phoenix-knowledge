@@ -22,7 +22,10 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 	private static final long serialVersionUID = 6269965672863016722L;
 	// 老知识ID
 	private long oid;
-
+	
+	//同义词
+	private String synonyms;
+	
 	public long getOid() {
 		return oid;
 	}
@@ -63,6 +66,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setSynonyms(vo.getSynonyms());
 		return this;
 	}
 
@@ -94,7 +98,16 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
+		this.setSynonyms(vo.getSynonyms());
 		return this;
+	}
+
+	public String getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(String synonyms) {
+		this.synonyms = synonyms;
 	}
 	
 }
