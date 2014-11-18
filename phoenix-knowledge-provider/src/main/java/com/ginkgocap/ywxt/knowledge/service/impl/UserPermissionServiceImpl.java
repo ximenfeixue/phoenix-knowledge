@@ -332,17 +332,31 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
 		String columnType=vo.getColumnType();
+		String desc=vo.getDesc();
 		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取200个字符后插入到我的分享的简介中
 		if(columnType.equals(Constants.Type.Investment.v()+"") || columnType.equals(Constants.Type.Industry.v()+"") || columnType.equals(Constants.Type.Case.v()+"")){
-			userPermission.setDesc(vo.getDesc());
+			if(desc!=null && desc.length()>0){
+				userPermission.setDesc(desc.length() > 65?desc.substring(0, 65).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"..." :
+											desc.replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...");
+			}else{
+				String content=vo.getContent();
+				if(content==null){
+					content="";
+				}else if(content.length()<65){
+					content=content.replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
+				}else{
+					content=content.substring(0,65).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
+				}
+				userPermission.setDesc(content);
+			}
 		}else{
 			String content=vo.getContent();
 			if(content==null){
 				content="";
-			}else if(content.length()<200){
-				
+			}else if(content.length()<65){
+				content=content+"...";
 			}else{
-				content=content.substring(0,200);
+				content=content.substring(0,65)+"...";
 			}
 			userPermission.setDesc(content);
 		}
