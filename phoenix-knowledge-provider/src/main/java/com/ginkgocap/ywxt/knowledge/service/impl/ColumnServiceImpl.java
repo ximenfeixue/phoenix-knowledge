@@ -111,16 +111,17 @@ public class ColumnServiceImpl implements ColumnService {
 			if (kc.getParentId() == null || kc.getParentId() < 0) {
 				return null;
 			}
-			
-            //检测重复
-            try {
-                if (!checkColumnByParams(kc.getColumnname(), kc.getParentId(), kc.getUserId())) {
-                    return null;
-                }
-            } catch (Exception e) {
-                logger.error("插入栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
-            }
-			
+
+			// 检测重复
+			try {
+				if (!checkColumnByParams(kc.getColumnname(), kc.getParentId(),
+						kc.getUserId())) {
+					return null;
+				}
+			} catch (Exception e) {
+				logger.error("插入栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
+			}
+
 			kc.setCreatetime(date);
 			kc.setUpdateTime(date);
 			kc.setDelStatus((byte) 0);
@@ -164,15 +165,16 @@ public class ColumnServiceImpl implements ColumnService {
 			// ColumnDao.update(okc);
 			// }
 
-            //检测重复
-            try {
-                if (!checkColumnByParam(kc.getColumnname(), kc.getParentId(), kc.getUserId(),id)) {
-                    return null;
-                }
-            } catch (Exception e) {
-                logger.error("修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
-            }
-            
+			// 检测重复
+			try {
+				if (!checkColumnByParam(kc.getColumnname(), kc.getParentId(),
+						kc.getUserId(), id)) {
+					return null;
+				}
+			} catch (Exception e) {
+				logger.error("修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
+			}
+
 			kc.setUpdateTime(date);
 			columnMapper.updateByPrimaryKey(kc);
 			columnVisibleService.saveOrUpdate(kc);
@@ -180,10 +182,9 @@ public class ColumnServiceImpl implements ColumnService {
 		}
 
 		return null;
-	} 
+	}
 
-
-    @Override
+	@Override
 	public Column queryById(long id) {
 		return columnMapper.selectByPrimaryKey(id);
 	}
@@ -219,8 +220,8 @@ public class ColumnServiceImpl implements ColumnService {
 			String status, String columnType) {
 		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
 				sortId);
-		for(Column c:cl){
-		    System.out.println(c.getColumnname()+c.getColumnLevelPath());
+		for (Column c : cl) {
+			System.out.println(c.getColumnname() + c.getColumnLevelPath());
 		}
 		if (cl != null && cl.size() > 0) {
 			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
@@ -273,11 +274,14 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Override
 	public boolean isExist(long parentColumnId, String columnName) {
-		ColumnExample ce = new ColumnExample();
+		ColumnExample example = new ColumnExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andColumnnameEqualTo(columnName);
+		if (parentColumnId != -1) {
+			criteria.andParentIdEqualTo(parentColumnId);
+		}
 
-		ce.createCriteria().andColumnnameEqualTo(columnName);
-
-		return columnMapper.countByExample(ce) > 0 ? true : false;
+		return columnMapper.countByExample(example) > 0 ? true : false;
 	}
 
 	@Override
@@ -657,7 +661,8 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public Map<String, Object> delColumn(long columnid, long userid, boolean verify) {
+	public Map<String, Object> delColumn(long columnid, long userid,
+			boolean verify) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(columnid);
 		if (column == null) {
@@ -687,10 +692,12 @@ public class ColumnServiceImpl implements ColumnService {
 			String obj = Constants.getTableName(column.getType() + "");
 			obj = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 			// 是否确认操作
-			if(!verify) {
+			if (!verify) {
 				long count = mongoTemplate.count(query, obj);
-				if(count>0) result.put("has", true);
-				else	result.put("has", false);
+				if (count > 0)
+					result.put("has", true);
+				else
+					result.put("has", false);
 				return result;
 			}
 			Update update = new Update();
@@ -928,23 +935,24 @@ public class ColumnServiceImpl implements ColumnService {
 		logger.info("--验证栏目名称请求成功,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		return count > 0 ? false : true;
 	}
-	
-    private boolean checkColumnByParam(String columnName, Long parentId, Long uid, Long id) {
-        ColumnExample example = new ColumnExample();
-        Criteria c = example.createCriteria();
-        List<Long> values = new ArrayList<Long>();
-        values.add(0L);
-        values.add(uid);
-        c.andUserIdIn(values);
-        if (id != null) {
-            c.andIdNotEqualTo(id);
-        }
-        if (columnName != null && !"".equals(columnName)) {
-            c.andColumnnameEqualTo(columnName);
-        }
-        c.andParentIdEqualTo(parentId);
-        int count = columnMapper.countByExample(example);
-        return count > 0 ? false : true;
-    }
+
+	private boolean checkColumnByParam(String columnName, Long parentId,
+			Long uid, Long id) {
+		ColumnExample example = new ColumnExample();
+		Criteria c = example.createCriteria();
+		List<Long> values = new ArrayList<Long>();
+		values.add(0L);
+		values.add(uid);
+		c.andUserIdIn(values);
+		if (id != null) {
+			c.andIdNotEqualTo(id);
+		}
+		if (columnName != null && !"".equals(columnName)) {
+			c.andColumnnameEqualTo(columnName);
+		}
+		c.andParentIdEqualTo(parentId);
+		int count = columnMapper.countByExample(example);
+		return count > 0 ? false : true;
+	}
 
 }
