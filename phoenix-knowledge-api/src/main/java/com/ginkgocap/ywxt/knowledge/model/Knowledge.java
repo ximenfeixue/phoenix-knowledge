@@ -82,6 +82,17 @@ public class Knowledge implements Serializable {
 
 	private String selectedIds;
 
+	// 系统时间（大数据推送带过来的数据）
+	private String sysTime;
+
+	public String getSysTime() {
+		return sysTime;
+	}
+
+	public void setSysTime(String sysTime) {
+		this.sysTime = sysTime;
+	}
+
 	public String getSelectedIds() {
 		return selectedIds;
 	}

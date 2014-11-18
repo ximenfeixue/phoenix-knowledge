@@ -180,7 +180,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
 						.getContent() : knowledge.getHcontent());
 
-		result.put("createtime", knowledge.getCreatetime());
+		result.put(
+				"createtime",
+				StringUtils.isBlank(knowledge.getSysTime()) ? knowledge
+						.getCreatetime() : knowledge.getSysTime());
 		result.put("author", knowledge.getUname());
 		result.put("source",
 				knowledge.getSource() == null ? "" : knowledge.getSource());
