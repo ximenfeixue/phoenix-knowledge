@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,13 @@ import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
+import com.ginkgocap.ywxt.user.form.EtUserInfo;
+import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.model.UserFeed;
+import com.ginkgocap.ywxt.user.service.DiaryService;
+import com.ginkgocap.ywxt.user.service.UserFeedService;
+import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeService")
@@ -110,6 +117,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private KnowledgeMainService knowledgeMainService;
+
+	@Autowired
+	private UserFeedService userFeedService;
+
+	@Autowired
+	private DiaryService diaryService;
 
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
@@ -389,6 +402,35 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				return result;
 			}
 		}
+		try {
+			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
+					.v()) {
+				UserFeed feed = new UserFeed();
+				feed.setContent(vo.getContent());
+				feed.setCreatedBy(user.getName());
+				feed.setCreatedById(user.getId());
+				feed.setCtime(DateFunc.getDate());
+				feed.setGroupName("仅好友可见");
+				feed.setScope(1);// 设置可见级别
+				feed.setGroupName("");
+				feed.setTargetId(vo.getkId());
+				feed.setTitle(vo.getTitle());
+				feed.setType(1);
+				feed.setImgPath("");// 长观点地址
+				feed.setDelstatus(0);// 删除状态
+				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(
+						vo.getContent(), -1, user.getId());
+				feed.setReceivers(receivers);// 获取接收人信息
+				feed.setDiaryType(1);
+				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
+				feed.setEtInfo(etInfo);
+				userFeedService.saveOrUpdate(feed);
+			}
+		} catch (Exception e) {
+			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
+			e.printStackTrace();
+		}
+
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -625,6 +667,35 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
+		}
+		// 动态存观点
+		try {
+			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
+					.v()) {
+				UserFeed feed = new UserFeed();
+				feed.setContent(vo.getContent());
+				feed.setCreatedBy(user.getName());
+				feed.setCreatedById(user.getId());
+				feed.setCtime(DateFunc.getDate());
+				feed.setGroupName("仅好友可见");
+				feed.setScope(1);// 设置可见级别
+				feed.setGroupName("");
+				feed.setTargetId(vo.getkId());
+				feed.setTitle(vo.getTitle());
+				feed.setType(1);
+				feed.setImgPath("");// 长观点地址
+				feed.setDelstatus(0);// 删除状态
+				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(
+						vo.getContent(), -1, user.getId());
+				feed.setReceivers(receivers);// 获取接收人信息
+				feed.setDiaryType(1);
+				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
+				feed.setEtInfo(etInfo);
+				userFeedService.saveOrUpdate(feed);
+			}
+		} catch (Exception e) {
+			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
+			e.printStackTrace();
 		}
 		result.put("knowledgeid", kId);
 		result.put("type", vo.getColumnType());
