@@ -467,7 +467,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		Short source = (short) Constants.KnowledgeSource.user.v();
 		// 获取Session用户值
 		long userId = user.getId();
-		String username = user.getUserName();
+		String username = user.getName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
