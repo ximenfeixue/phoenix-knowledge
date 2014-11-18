@@ -27,6 +27,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeDraftValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
@@ -423,5 +424,299 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		knowledgedraft.setCreatetime(new Date());
 		return knowledgeDraftMapper.updateByPrimaryKeySelective(knowledgedraft);
 	}
+	
+	@Override
+	public Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo,
+			User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 获取Session用户值
+		long userId = user.getId();
+		String username = user.getName();
 
+		
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
+				.getColumnid();
+		// TODO 判断用户是否选择栏目
+		String columnPath = null;
+		Column column = null;
+		if (Long.parseLong(columnid) != 0) {
+			columnPath = columnService.getColumnPathById(Long
+					.parseLong(columnid));
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			if (column == null) {
+				// 没有未没分组栏目，添加
+				columnService.checkNogroup(user.getId());
+			} else {
+				columnid = column.getId() + "";
+			}
+
+			columnPath = Constants.unGroupSortName;
+		}
+		// 知识入Mongo
+		vo.setColumnPath(columnPath);
+		vo.setColumnid(columnid);
+		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
+		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
+				vo.getEssence(), "on") ? "1" : "0" : "0");
+		// 查询知识内容敏感词
+		List<String> listword = sensitiveWordService.sensitiveWord(vo
+				.getContent());
+		if (listword != null && listword.size() > 0) {
+			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
+			result.put(Constants.status,
+					Constants.ResultType.sensitiveWords.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.sensitiveWord.c());
+			result.put("listword", listword);
+			return result;
+		}
+		// 法律法规名称不可重复
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
+			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
+			if (count == 0) {
+				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+				result.put(Constants.status,
+						Constants.ResultType.sameNameError.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.hasName.c());
+
+				return result;
+			}
+		}
+		if (vo.getkId()>0) {
+			Knowledge k=getDraftByMainIdAndUser(vo.getkId(),vo.getColumnType(),user.getId());
+			if(k!=null || k.getId()>0){
+				vo.setKnowledgeMainId(vo.getkId());
+				vo.setkId(k.getId());
+				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
+			}else{
+				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+				vo.setKnowledgeMainId(vo.getkId());
+				vo.setkId(kId);
+				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
+			}
+			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+
+				// 删除用户权限数据
+				int userPermissionCount = userPermissionService
+						.deleteUserPermission(vo.getkId(), user.getId());
+				// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+				if (StringUtils.isNotBlank(vo.getSelectedIds())
+						&& !vo.getSelectedIds().equals(dule)) {
+					// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
+					Boolean dule = JsonUtil.checkKnowledgePermission(vo
+							.getSelectedIds());
+					if (dule == null) {
+						logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+						result.put(Constants.status,
+								Constants.ResultType.fail.v());
+						result.put(Constants.errormessage,
+								Constants.ErrorMessage.paramNotValid.c());
+						return result;
+					}
+					if (!dule) {
+						// 格式化权限信息
+						List<String> permList = JsonUtil.getPermissionList(vo
+								.getSelectedIds());
+						// 大乐全平台分享
+						// userPermissionService.insertUserShare(permList,
+						// vo.getkId(), vo, user);
+						int pV = userPermissionService.insertUserPermission(
+								permList, vo.getkId(), user.getId(),
+								vo.getShareMessage(),
+								Short.parseShort(vo.getColumnType()),
+								Long.parseLong(vo.getColumnid()));
+						if (pV == 0) {
+							logger.error(
+									"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
+									vo.getkId());
+						}
+					}
+				}
+			}
+
+			// 删除该知识下的所有目录
+			int categoryCount = knowledgeCategoryService
+					.deleteKnowledgeCategory(vo.getkId());
+			// 删除该知识的基本信息
+			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+
+			long[] cIds = null;
+			// 添加知识到知识目录表
+			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+				UserCategoryExample example = new UserCategoryExample();
+				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+						.createCriteria();
+				criteria.andSortidEqualTo(Constants.unGroupSortId);
+				criteria.andUserIdEqualTo(user.getId());
+				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+						.v());
+				List<UserCategory> list = userCategoryMapper
+						.selectByExample(example);
+				if (list != null && list.size() == 1) {
+					cIds = new long[1];
+					cIds[0] = list.get(0).getId();
+
+				}
+			} else {
+				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+			}
+			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
+					vo.getkId(), cIds, user.getId(), user.getName(),
+					columnPath, vo);
+			if (categoryV == 0) {
+				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+						vo.getkId(), cIds);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
+					.parseLong(vo.getKnowledgeid()));
+
+			if (knowledgeDraft != null) {
+				this.updateKnowledgeDaraft(Long.parseLong(vo.getKnowledgeid()),
+						vo.getTitle(), vo.getColumnName(), userId,
+						vo.getColumnType());
+			} else {
+
+				knowledgeDraftDAO.insertKnowledge(
+						Long.parseLong(vo.getKnowledgeid()), vo.getTitle(),
+						vo.getColumnName(), vo.getColumnType(), userId);
+			}
+		} else {
+			//id=0 相当新增
+			long draftKId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			vo.setkId(draftKId);
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库假装当作草稿防止被查询出来
+			vo.setKnowledgeMainId(draftKId);//草稿中存放真正知识的ID
+			vo.setkId(kId);//插入草稿ID
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库并当作真实的知识草稿
+			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+					vo.getColumnName(), vo.getColumnType(), userId);
+			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+			Boolean dule = JsonUtil.checkKnowledgePermission(vo
+					.getSelectedIds());
+			if (dule == null) {
+				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
+				return result;
+			}
+			if (!dule) {
+				// 格式化权限信息
+				List<String> permList = JsonUtil.getPermissionList(vo
+						.getSelectedIds());
+				// 大乐全平台分享
+				// userPermissionService.insertUserShare(permList, kId, vo,
+				// user);
+				int pV = userPermissionService.insertUserPermission(permList,
+						kId, userId, vo.getShareMessage(),
+						Short.parseShort(vo.getColumnType()),
+						Long.parseLong(vo.getColumnid()));
+				if (pV == 0) {
+					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
+				}
+			}
+			long[] cIds = null;
+			// 添加知识到知识目录表
+			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+				UserCategoryExample example = new UserCategoryExample();
+				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+						.createCriteria();
+				criteria.andSortidEqualTo(Constants.unGroupSortId);
+				criteria.andUserIdEqualTo(userId);
+				List<UserCategory> list = userCategoryMapper
+						.selectByExample(example);
+				if (list != null && list.size() == 1) {
+					cIds = new long[1];
+					cIds[0] = list.get(0).getId();
+
+				} else {
+					// 如果没有未分组目录,创建未分组目录.
+					// TODO
+				}
+			} else {
+				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+			}
+			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
+
+				int categoryV = knowledgeCategoryService
+						.insertKnowledgeRCategory(kId, cIds, userId, username,
+								columnPath, vo);
+				if (categoryV == 0) {
+					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+							kId, cIds);
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.addKnowledgeFail.c());
+					return result;
+				}
+			}
+			// 初始化知识统计信息
+			KnowledgeStatics statics = new KnowledgeStatics();
+			statics.setClickcount(0l);
+			statics.setCollectioncount(0l);
+			statics.setCommentcount(0l);
+			statics.setKnowledgeId(kId);
+			statics.setSharecount(0l);
+			statics.setTitle(vo.getTitle());
+			statics.setType(Short.parseShort(vo.getColumnType()));
+			int sV = knowledgeStaticsMapper.insertSelective(statics);
+			if (sV == 0) {
+				logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
+						vo.getColumnType());
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addKnowledgeFail.c());
+				return result;
+			}
+
+		}
+		result.put(Constants.status, Constants.ResultType.success.v());
+		result.put("kId", vo.getKnowledgeMainId());
+		logger.info("添加草稿箱成功,草稿知识ID:{}", vo.getkId());
+		return result;
+
+	}
+
+	@Override
+	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type) {
+		return deleteKnowledgeSingalDraft(knowledgeMainId,type,null);
+	}
+	
+	@Override
+	public int deleteKnowledgeSingalDraft(Long knowledgeMainId,String type, Long userId) {
+		
+		Knowledge k=getDraftByMainIdAndUser(knowledgeMainId,type,userId);
+		knowledgeNewsDAO.deleteKnowledgeById(k.getId(),type);
+		
+		if(userId==null){
+			return knowledgeDraftMapper.deleteByPrimaryKey(k.getId());
+		}else{
+			KnowledgeDraft knowledgeDraft=new KnowledgeDraft();
+			knowledgeDraft.setKnowledgeId(k.getId());
+			knowledgeDraft.setUserid(userId);
+			return knowledgeDraftMapper.deleteByPrimaryKeyAndUserId(knowledgeDraft);
+		}
+	}
+
+	@Override
+	public Knowledge getDraftByMainId(Long knowledgeId,String type) {
+		return this.getDraftByMainIdAndUser(knowledgeId,type, null);
+	}
+
+	@Override
+	public Knowledge getDraftByMainIdAndUser(Long knowledgeId,String type,Long userId) {
+		return knowledgeNewsDAO.getDraftByMainIdAndUser(knowledgeId, type, userId);
+	}
+
+	
+	
 }
