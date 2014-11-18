@@ -333,19 +333,19 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setTitle(vo.getTitle());
 		String columnType=vo.getColumnType();
 		String desc=vo.getDesc();
-		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取92个字符后插入到我的分享的简介中
+		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取90个字符后插入到我的分享的简介中
 		if(columnType.equals(Constants.Type.Investment.v()+"") || columnType.equals(Constants.Type.Industry.v()+"") || columnType.equals(Constants.Type.Case.v()+"")){
 			if(desc!=null && desc.length()>0){
-				userPermission.setDesc(desc.length() > 92?desc.substring(0, 92).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"..." :
+				userPermission.setDesc(desc.length() > 90?desc.substring(0, 90).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"..." :
 											desc.replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", ""));
 			}else{
 				String content=vo.getContent();
 				if(content==null){
 					content="";
-				}else if(content.length()<92){
+				}else if(content.length()<90){
 					content=content.replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "");
 				}else{
-					content=content.substring(0,92).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
+					content=content.substring(0,90).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
 				}
 				userPermission.setDesc(content);
 			}
@@ -353,10 +353,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String content=vo.getContent();
 			if(content==null){
 				content="";
-			}else if(content.length()<92){
+			}else if(content.length()<90){
 				content=content.replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "");
 			}else{
-				content=content.substring(0,92).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
+				content=content.substring(0,90).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"...";
 			}
 			userPermission.setDesc(content);
 		}
