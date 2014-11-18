@@ -560,7 +560,7 @@ public class ColumnServiceImpl implements ColumnService {
 		// String str = HTTPUtil.post("user/tags/search.json", params);
 		// 存储栏目标签信息
 
-		batchSaveColumnTags(userid, currentColumnId, tags);
+		batchSaveColumnTags(userid, currentColumnId, tags,columnname,currentColumnLevelPath);
 
 		columnVisibleService.saveCid(userid, currentColumnId);
 
@@ -592,7 +592,15 @@ public class ColumnServiceImpl implements ColumnService {
 		return currentColumnId;
 	}
 
-	public void batchSaveColumnTags(long userid, long columnId, String tags) {
+	/**
+	 * 存储栏目标签
+	 * @param userid
+	 * @param columnId
+	 * @param tags
+	 * @param columnName
+	 * @param columnLevelPath
+	 */
+	public void batchSaveColumnTags(long userid, long columnId, String tags, String columnName, String columnLevelPath) {
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
 		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
@@ -603,6 +611,8 @@ public class ColumnServiceImpl implements ColumnService {
 				ct.setCreatetime(new Date());
 				ct.setTag(tag);
 				ct.setUserId(userid);
+				ct.setColumnname(columnName);
+				ct.setColumnPath(columnLevelPath);
 				columnList.add(ct);
 			}
 		}
@@ -834,7 +844,7 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.updateFail.c());
 			return result;
 		}
-		batchSaveColumnTags(userId, id, tags);
+		batchSaveColumnTags(userId, id, tags,column.getColumnname(),column.getColumnLevelPath());
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
