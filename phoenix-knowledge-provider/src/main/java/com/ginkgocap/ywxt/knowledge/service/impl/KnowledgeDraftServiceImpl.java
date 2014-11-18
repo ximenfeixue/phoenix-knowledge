@@ -138,7 +138,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			return result;
 		}
 		// 法律法规名称不可重复
-		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
 			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
 			if (count == 0) {
 				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
