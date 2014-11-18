@@ -333,7 +333,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setTitle(vo.getTitle());
 		String columnType=vo.getColumnType();
 		String desc=vo.getDesc();
-		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取200个字符后插入到我的分享的简介中
+		//判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取65个字符后插入到我的分享的简介中
 		if(columnType.equals(Constants.Type.Investment.v()+"") || columnType.equals(Constants.Type.Industry.v()+"") || columnType.equals(Constants.Type.Case.v()+"")){
 			if(desc!=null && desc.length()>0){
 				userPermission.setDesc(desc.length() > 65?desc.substring(0, 65).replaceAll("</?[^>]+>", "").replaceAll("\\s*|\t|\r|\n", "")+"..." :
