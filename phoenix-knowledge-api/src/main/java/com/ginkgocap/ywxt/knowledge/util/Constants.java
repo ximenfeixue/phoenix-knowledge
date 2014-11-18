@@ -258,7 +258,7 @@ public class Constants {
 				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
-				"对不起,您没有查看该文章的权限!"), hasName("名称重复!");
+				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"),parseError("解析错误!");
 
 		private String c;
 
@@ -497,6 +497,17 @@ public class Constants {
 		}
 
 	}
+	public static Integer MATERIAL_REQUIREMENT = 1; 
+
+	public static Integer MATERIAL_PEOPLE = 2; 
+
+	public static Integer MATERIAL_COMMON_USER = 3; 
+
+	public static Integer MATERIAL_ORGANIZATION_USER = 4; 
+
+	public static Integer MATERIAL_CUSTOMER = 5; 
+
+	public static Integer MATERIAL_KNOWLEDGE = 6;
 
 	public static void main(String[] args) {
 		System.out.println(Constants.MenuType.collect);
