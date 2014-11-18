@@ -238,7 +238,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     public int beRelation(long id,int t,long cid, Long userId) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",cid);
         UserPermissionExample example = new UserPermissionExample();
-        example.createCriteria().andKnowledgeIdEqualTo(cid).andReceiveUserIdEqualTo(userId);
+        example.createCriteria().andKnowledgeIdEqualTo(cid).andSendUserIdEqualTo(userId);
         int count = countKnowledgeByMongo(id,t,cid,userId);
         if (count > 0) {
             return Constants.Relation.self.v();//自己
