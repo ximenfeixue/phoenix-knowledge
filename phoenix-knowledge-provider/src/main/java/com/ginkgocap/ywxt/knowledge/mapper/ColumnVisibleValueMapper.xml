@@ -34,5 +34,28 @@
 		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
 		WHERE t.user_id=#{userId} and t.sort_id like CONCAT(#{sortId},'%'); 
 	</update>
-
+<insert id="init">
+	insert into tb_column_visible (
+	id,
+	user_id,
+	column_id,
+	ctime,
+	utime,
+	pcid,
+	state,
+	column_name,
+	sort_id
+	) values
+	<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.userId},
+		#{item.columnId},
+		#{item.ctime},
+		#{item.utime},
+		#{item.pcid},
+		#{item.state},
+		#{item.columnName},
+		#{item.sortId}
+		) 
+		</foreach>
+</insert>
 </mapper>

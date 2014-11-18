@@ -129,6 +129,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     @Override
     public void init(long userid, long gtnid) {
         List<Column> l = columnValueMapper.selectByParam(null, Constants.gtnid, userid);
+        List<ColumnVisible> cvl =new ArrayList<ColumnVisible>();
         for (Column c : l) {
             if(!c.getColumnname().equals("未分组")){
                 long id = c.getId();
@@ -143,8 +144,11 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
                 cv.setSortId(c.getColumnLevelPath());
                 cv.setColumnName(cname);
                 cv.setState((short) 0);
-                columnVisibleMapper.insert(cv);
+                cvl.add(cv);
             }
+        }
+        if(cvl.size()>0){//批量插入
+            columnVisibleValueMapper.init(cvl);
         }
     }
 
