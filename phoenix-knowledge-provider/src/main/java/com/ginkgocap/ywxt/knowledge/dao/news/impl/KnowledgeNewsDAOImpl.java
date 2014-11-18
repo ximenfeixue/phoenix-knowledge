@@ -185,7 +185,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
 		Knowledge knowledge = null;
 		try {
-			Criteria criteria = Criteria.where("_id").is(knowledgeId);
+			Criteria criteria = Criteria.where("knowledgeMainId").is(knowledgeId);
 			if(userId!=null){
 				criteria.and("uid").is(userId);
 			}
