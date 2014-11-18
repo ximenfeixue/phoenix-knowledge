@@ -82,6 +82,8 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 
+		// 删除当前知识所在的目录
+		knowledgeCategoryValueMapper.deleteKnowledge(knowledgeids, categoryid);
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		KnowledgeCategory knowledgeRCategory = null;
 		List<KnowledgeCategory> listCategory = new ArrayList<KnowledgeCategory>();
