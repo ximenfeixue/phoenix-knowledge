@@ -36,7 +36,6 @@
 	</update>
 <insert id="init">
 	insert into tb_column_visible (
-	id,
 	user_id,
 	column_id,
 	ctime,
