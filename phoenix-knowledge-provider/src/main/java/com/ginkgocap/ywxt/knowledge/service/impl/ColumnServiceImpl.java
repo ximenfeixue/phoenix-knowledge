@@ -33,8 +33,8 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
+import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -66,6 +66,9 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnTagMapper columnTagMapper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private DataCenterService dataCenterService;
 
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
@@ -526,6 +529,8 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public Map<String, Object> addColumn(String columnname, long pid,
 			String pathName, int type, String tags, long userid) {
+		
+		logger.info("--进入添加栏目请求,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		Map<String, Object> result = new HashMap<String, Object>();
 		String currentColumnLevelPath = getColumnLevelPath(pid);
 		if (StringUtils.isBlank(currentColumnLevelPath)) {
@@ -556,14 +561,22 @@ public class ColumnServiceImpl implements ColumnService {
 			return result;
 		}
 		long currentColumnId = column.getId();
-		// 新增栏目通知大数据
-		// String str = HTTPUtil.post("user/tags/search.json", params);
+		
+		logger.info("--进入添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		// 存储栏目标签信息
-
 		batchSaveColumnTags(userid, currentColumnId, tags,columnname,currentColumnLevelPath);
 
+		logger.info("--结束添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		columnVisibleService.saveCid(userid, currentColumnId);
-
+		
+		// 新增栏目通知大数据
+		try {
+			logger.info("--进入添加栏目请求时通知大数据,栏目名称:{},当前登陆用户:{}--", columnname, userid);
+			dataCenterService.noticeDataCenterWhileColumnChange(currentColumnId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("--进入添加栏目请求时通知大数据异常,栏目名称:{},当前登陆用户:{}--", columnname, userid);
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("id", currentColumnId);
 		return result;
@@ -673,6 +686,7 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public Map<String, Object> delColumn(long columnid, long userid,
 			boolean verify) {
+		logger.info("--进入删除栏目请求,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(columnid);
 		if (column == null) {
@@ -693,6 +707,7 @@ public class ColumnServiceImpl implements ColumnService {
 		Criteria criteria = col.createCriteria();
 		criteria.andColumnLevelPathEqualTo(Constants.unGroupSortId);
 		criteria.andUserIdEqualTo(userid);
+		logger.info("--进入删除栏目请求时获取未分组栏目,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		// 获取未分组栏目
 		List<Column> colList = columnMapper.selectByExample(col);
 		if (colList != null && colList.size() > 0) {
@@ -712,19 +727,24 @@ public class ColumnServiceImpl implements ColumnService {
 			}
 			Update update = new Update();
 			update.set("columnid", colList.get(0).getId());
+			logger.info("--进入删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 			mongoTemplate.updateMulti(query, update, obj);
+			logger.info("--完成删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		}
 		// 删除栏目标签表
 		ColumnTagExample example = new ColumnTagExample();
 		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria critera = example
 				.createCriteria();
 		critera.andColumnIdEqualTo(columnid);
+		logger.info("--进入删除栏目请求时,删除相应栏目标签,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		columnTagMapper.deleteByExample(example);
+		logger.info("--结束删除栏目请求时,删除相应栏目标签,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		// 删除栏目定制表
 		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
 
 		// 删除栏目表
 		int v = columnMapper.deleteByPrimaryKey(columnid);
+		logger.info("--结束删除栏目请求,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
