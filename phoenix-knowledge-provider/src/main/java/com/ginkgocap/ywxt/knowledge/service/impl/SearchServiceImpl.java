@@ -1,12 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +13,16 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.service.SearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 
 @Service("searchService")
 public class SearchServiceImpl implements SearchService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SearchServiceImpl.class);
+
+	@Resource
+	private HTTPUrlConfig httpUrlConfig;
 
 	@Override
 	public Map<String, Object> getUserTag(Long userid, String type) {
@@ -28,20 +31,14 @@ public class SearchServiceImpl implements SearchService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("user_id", userid + "");
 		params.put("type", type);
-		String str = HTTPUtil.post("user/tags/search.json", params);
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+				+ "user/tags/search.json", params);
 
 		String tags = null;
 		try {
 			if (!StringUtils.isBlank(str)) {
-//				ObjectMapper mapper = new ObjectMapper();
 				String restr = str.replace("[", "").replace("]", "");
 				result.put("tags", restr);
-//				JsonNode node = mapper.readTree(str);
-//				String status = node.path("status").asText();
-//
-//				if (status.equals("1")) {
-//					tags = node.path("tags").asText();
-//				}
 
 			}
 		} catch (Exception e) {
@@ -50,7 +47,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-//		result.put("tags", tags);
+		// result.put("tags", tags);
 		logger.info("搜索首页热门标签请求查询成功,返回值:{}", tags);
 		return result;
 	}
@@ -86,7 +83,8 @@ public class SearchServiceImpl implements SearchService {
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HTTPUtil.post("/knowledge/keyword/search.json", params);
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+				+ "/knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
@@ -112,7 +110,8 @@ public class SearchServiceImpl implements SearchService {
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HTTPUtil.post("/knowledge/keyword/search.json", params);
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+				+ "/knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
@@ -134,7 +133,8 @@ public class SearchServiceImpl implements SearchService {
 		params.put("user_id", userid + "");
 		params.put("kid", kid + "");
 		params.put("type", type);
-		String str = HTTPUtil.post("knowledge/put.json", params);
+		String str = HTTPUtil.post(httpUrlConfig.getPushUrl()
+				+ "knowledge/put.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;

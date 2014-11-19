@@ -200,7 +200,7 @@
 			<version>1.9.9</version>
 		</dependency>
 		<!-- JSON end -->
-		
+
 		<!-- logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -563,10 +563,14 @@
 			</activation>
 			<properties>
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-				<!-- 大数据请求地址 -->
-				<data.http.url>http://192.168.130.119:8090/</data.http.url>
-				<!-- 大数据请端口 -->
-				<http.port>8088</http.port>
+
+				<!-- 大数据搜索请求地址 -->
+				<knowledge.data.searchUrl>http://192.168.130.119:8090/</knowledge.data.searchUrl>
+				<!-- 大数据解析请求地址 -->
+				<knowledge.data.parseUrl>http://192.168.130.120:8000/</knowledge.data.parseUrl>
+				<!-- 大数据推送请求地址 -->
+				<knowledge.data.pushUrl>http://192.168.130.120:8000/</knowledge.data.pushUrl>
+
 				<!-- redis地址 -->
 				<redis.host>192.168.101.131</redis.host>
 				<!-- redis端口 -->

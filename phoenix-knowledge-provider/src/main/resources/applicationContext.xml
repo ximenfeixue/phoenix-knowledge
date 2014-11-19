@@ -138,7 +138,9 @@
 	  <property name="sqlSessionFactoryBeanName" value="mybatisSqlSessionFactory" />
 	</bean>
 	
-	<bean  class="com.ginkgocap.ywxt.knowledge.util.HTTPUtil">
-		<property name="location" value="${data.http.url}" />
+	<bean id="httpUrlConfig" class="com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig">
+		<property name="searchUrl" value="${knowledge.data.searchUrl}" />
+		<property name="parseUrl" value="${knowledge.data.parseUrl}" />
+		<property name="pushUrl" value="${knowledge.data.pushUrl}" />
 	</bean>
 </beans>

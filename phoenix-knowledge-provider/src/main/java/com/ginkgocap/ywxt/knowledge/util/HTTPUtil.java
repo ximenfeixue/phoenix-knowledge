@@ -35,8 +35,6 @@ public class HTTPUtil {
 
 	public static LinkedBlockingQueue<StandByUrl> urls;
 
-	public static String location = "http://192.168.130.119:8090/";
-
 	static {
 
 		httpClient = new DefaultHttpClient();
@@ -49,7 +47,7 @@ public class HTTPUtil {
 
 	public static String post(String url, Map<String, String> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		HttpPost post = new HttpPost(location + url);
+		HttpPost post = new HttpPost(url);
 		
 		if (params != null) {
 			List<NameValuePair> list = new ArrayList<NameValuePair>();
@@ -164,14 +162,6 @@ public class HTTPUtil {
 			this.methord = methord;
 		}
 
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	/** 移动端 zhangzhen add 2014-11-6 */

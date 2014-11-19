@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 
 @Service("dataCenterService")
@@ -18,6 +21,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(DataCenterServiceImpl.class);
 
+	@Resource
+	private HTTPUrlConfig httpUrlConfig;
+	
 	@Override
 	public Map<String, Object> getCaseDataFromDataCenter(String path, long id) {
 		logger.info("进入转换经典案例请求");
@@ -33,7 +39,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("path", path);
 
-			String str = HTTPUtil.post("", params);
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl()+"pdf/", params);
 			if (StringUtils.isBlank(str)) {
 				logger.error("转换错误,转换返回值为空!");
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -55,6 +61,10 @@ public class DataCenterServiceImpl implements DataCenterService {
 		}
 		logger.info("转换经典案例成功,返回值:{}", path);
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		
 	}
 
 }
