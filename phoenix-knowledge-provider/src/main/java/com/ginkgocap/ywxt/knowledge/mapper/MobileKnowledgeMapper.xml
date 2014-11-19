@@ -7,8 +7,10 @@
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
 		SELECT DISTINCT b.*
-		FROM <include refid="tb_name_base" /> b 
+		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
 		WHERE b.user_id=#{userId}
+		AND b.knowledge_id=c.knowledge_id
+		AND c.`status`=1 
 		<if test="tag !=null and tag != '' ">
 			AND b.tag like CONCAT('%',#{tag},'%')
 		</if>
