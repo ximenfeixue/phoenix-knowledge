@@ -470,8 +470,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} catch (Exception e) {
 			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
 			e.printStackTrace();
-		}
-
+		}	
+		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),vo.getColumnType(),user.getId());
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
