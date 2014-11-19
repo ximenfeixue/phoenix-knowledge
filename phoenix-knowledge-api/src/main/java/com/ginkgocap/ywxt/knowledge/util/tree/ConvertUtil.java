@@ -95,7 +95,7 @@ public class ConvertUtil {
 	}
 
 	public static String ToEnglishSymbol(String str) {
-		String[] regs = { "！", "，", "。", "；", "!", ",", ".", ";" };
+		String[] regs = { "！", "，", "。", "；", "!", ",", ".", ";"," " };
 		for (int i = 0; i < regs.length / 2; i++) {
 			str = str.replaceAll(regs[i], regs[i + regs.length / 2]);
 		}
@@ -103,9 +103,9 @@ public class ConvertUtil {
 	}
 
 
-//	public static void main(String[] args) {
-//
-//		System.out.println();
-//	}
+	public static void main(String[] args) {
+
+		System.out.println(ToEnglishSymbol("slkfjd,sdflsdkfjsd,sdflsdfkjsdf"));
+	}
 
 }

@@ -566,6 +566,9 @@ public class ColumnServiceImpl implements ColumnService {
 		// 存储栏目标签信息
 		batchSaveColumnTags(userid, currentColumnId, tags,columnname,currentColumnLevelPath);
 
+		batchSaveColumnTags(userid, currentColumnId, tags, columnname,
+				currentColumnLevelPath);
+
 		logger.info("--结束添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		columnVisibleService.saveCid(userid, currentColumnId);
 		
@@ -607,13 +610,15 @@ public class ColumnServiceImpl implements ColumnService {
 
 	/**
 	 * 存储栏目标签
+	 * 
 	 * @param userid
 	 * @param columnId
 	 * @param tags
 	 * @param columnName
 	 * @param columnLevelPath
 	 */
-	public void batchSaveColumnTags(long userid, long columnId, String tags, String columnName, String columnLevelPath) {
+	public void batchSaveColumnTags(long userid, long columnId, String tags,
+			String columnName, String columnLevelPath) {
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
 		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
@@ -864,7 +869,8 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.updateFail.c());
 			return result;
 		}
-		batchSaveColumnTags(userId, id, tags,column.getColumnname(),column.getColumnLevelPath());
+		batchSaveColumnTags(userId, id, tags, column.getColumnname(),
+				column.getColumnLevelPath());
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
@@ -910,9 +916,15 @@ public class ColumnServiceImpl implements ColumnService {
 		String parcolumnid = "";
 		if (columnid != 0) {
 
-			column = columnMapper.selectByPrimaryKey(columnid);
-			map.put("columnid", columnid);
-			map.put("columnName", column.getColumnname());
+			try {
+				column = columnMapper.selectByPrimaryKey(columnid);
+				map.put("columnid", columnid);
+				map.put("columnName", column.getColumnname());
+
+			} catch (Exception e) {
+				logger.error("栏目名称不存在,栏目ID{}", columnid);
+				e.printStackTrace();
+			}
 		}
 		for (int i = 0; i < 5; i++) {
 			if (i == 0) {

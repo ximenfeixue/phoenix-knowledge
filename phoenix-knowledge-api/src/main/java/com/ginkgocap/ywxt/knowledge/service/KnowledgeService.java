@@ -50,7 +50,7 @@ public interface KnowledgeService {
 	 * 查询知识
 	 */
 
-	Knowledge selectKnowledge(long knowledgeid,String type);
+	Knowledge selectKnowledge(long knowledgeid, String type);
 
 	/**
 	 * 根据条件查询资讯
@@ -78,18 +78,31 @@ public interface KnowledgeService {
 	 * 
 	 * @param knowledgeid
 	 */
-	void restoreKnowledgeByid(long knowledgeid,long userid);
+	void restoreKnowledgeByid(long knowledgeid, long userid);
 
 	void deleteforeverKnowledge(long knowledgeid);
 
+	Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid,
+			long userid);
 
-    Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid, long userid);
-    
-    /**
-     * 添加用户分享
-     * @param vo 知识对象
-     * @param user 登陆用户对象
-     */
-    List<String> insertUserShare(KnowledgeNewsVO vo, User user);
+	/**
+	 * 添加用户分享
+	 * 
+	 * @param vo
+	 *            知识对象
+	 * @param user
+	 *            登陆用户对象
+	 */
+	List<String> insertUserShare(KnowledgeNewsVO vo, User user);
+
+	/**
+	 * 用户权限分享
+	 * 
+	 * @param vo
+	 *            知识对象
+	 * @param user
+	 *            登陆用户对象
+	 */
+	Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user);
 
 }
