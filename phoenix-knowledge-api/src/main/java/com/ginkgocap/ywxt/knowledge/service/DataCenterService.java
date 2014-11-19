@@ -11,4 +11,11 @@ public interface DataCenterService {
 	 * @return
 	 */
 	Map<String,Object> getCaseDataFromDataCenter(String path);
+	
+	/**
+	 * 添加栏目通知数据中心
+	 * @param columnId 栏目ID
+	 * @return
+	 */
+	Map<String,Object> noticeDataCenterWhileColumnChange(long columnId);
 }

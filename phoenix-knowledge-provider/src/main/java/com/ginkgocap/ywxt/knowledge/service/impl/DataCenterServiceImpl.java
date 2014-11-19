@@ -1,11 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +26,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 
 	@Resource
 	private HTTPUrlConfig httpUrlConfig;
-	
+
 	@Override
 	public Map<String, Object> getCaseDataFromDataCenter(String path) {
 		logger.info("进入转换经典案例请求");
@@ -39,7 +42,8 @@ public class DataCenterServiceImpl implements DataCenterService {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("path", path);
 
-			String str = HTTPUtil.post(httpUrlConfig.getParseUrl()+"pdf/", params);
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "pdf/",
+					params);
 			if (StringUtils.isBlank(str)) {
 				logger.error("转换错误,转换返回值为空!");
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -55,6 +59,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 						Constants.ErrorMessage.parseError.c());
 				return result;
 			}
+			result.put(Constants.status, Constants.ResultType.success.v());
 		} catch (Exception e) {
 			logger.error("搜转换经典案例失败{}", e.toString());
 			e.printStackTrace();
@@ -62,5 +67,33 @@ public class DataCenterServiceImpl implements DataCenterService {
 		logger.info("转换经典案例成功,返回值:{}", path);
 		return result;
 	}
-	
+
+	@Override
+	public Map<String, Object> noticeDataCenterWhileColumnChange(long columnId) {
+		logger.info("进入添加栏目通知数据中心请求");
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("columnId", columnId + "");
+
+		String str = HTTPUtil.post(httpUrlConfig.getPushUrl(), params);
+		if (StringUtils.isBlank(str)) {
+			logger.error("通知失败!栏目ID:{}",columnId);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.parseError.c());
+			return result;
+		}
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.readValue(str, Map.class);
+		}  catch (Exception e) {
+			e.printStackTrace();
+			logger.error("通知失败!栏目ID:{}",columnId);
+		}
+		
+		result.put(Constants.status, Constants.ResultType.success.v());
+		
+		return result;
+	}
+
 }
