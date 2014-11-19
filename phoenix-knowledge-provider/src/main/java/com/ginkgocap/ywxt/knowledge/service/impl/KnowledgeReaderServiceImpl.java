@@ -317,10 +317,19 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		}
 		// 查询用户对文章的查看权限
 		if (!getArticlePermission(knowledge, user)) {
+			
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artPermissionNotFound.c());
 			return result;
+			
+		}else{
+			if(knowledge.getStatus() == Constants.Status.recycle.v()){
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.artNotExsit.c());
+				return result;
+			}
 		}
 		// 存储阅读器头部信息
 		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
@@ -345,6 +354,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	// }
 
 	private boolean getArticlePermission(Knowledge knowledge, User user) {
+		
 		if (knowledge.getUid() == Constants.Ids.jinTN.v())
 			return true;
 		UserPermissionExample example = new UserPermissionExample();
