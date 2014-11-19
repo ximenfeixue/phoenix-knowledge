@@ -575,16 +575,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 
-			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo.getKnowledgeMainId());
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo.getkId());
 
 			if (knowledgeDraft != null) {
-				this.updateKnowledgeDaraft(vo.getKnowledgeMainId(),
+				this.updateKnowledgeDaraft(vo.getkId(),
 						vo.getTitle(), vo.getColumnName(), userId,
 						vo.getColumnType());
 			} else {
 
 				knowledgeDraftDAO.insertKnowledge(
-						vo.getKnowledgeMainId(), vo.getTitle(),
+						vo.getkId(), vo.getTitle(),
 						vo.getColumnName(), vo.getColumnType(), userId);
 			}
 		} else {
