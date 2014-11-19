@@ -321,25 +321,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					return result;
 				}
 			}
-			// 初始化知识统计信息
-			KnowledgeStatics statics = new KnowledgeStatics();
-			statics.setClickcount(0l);
-			statics.setCollectioncount(0l);
-			statics.setCommentcount(0l);
-			statics.setKnowledgeId(kId);
-			statics.setSharecount(0l);
-			statics.setTitle(vo.getTitle());
-			statics.setType(Short.parseShort(vo.getColumnType()));
-			int sV = knowledgeStaticsMapper.insertSelective(statics);
-			if (sV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
-						vo.getColumnType());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
