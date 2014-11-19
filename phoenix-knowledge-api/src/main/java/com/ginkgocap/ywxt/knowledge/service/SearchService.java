@@ -15,23 +15,22 @@ public interface SearchService {
 	 */
 	public Map<String, Object> getUserTag(Long userid, String type);
 
-	/**
-	 * 关键词搜索
-	 * 
-	 * @param userid
-	 *            用户ID
-	 * @param keywords
-	 *            关键词
-	 * @param scope
-	 *            范围
-	 * @param pno
-	 *            当前页号
-	 * @param pszie
-	 *            每页请求条数
-	 * @return
-	 */
+    /**
+     * 关键词搜索(主搜索)
+     * @param userid   用户ID
+     * @param keywords  关键词
+     * @param scope  范围
+     * @param sort 排序           
+     * @param hlpre 高亮前缀           
+     * @param hlext高亮后缀           
+     * @param pno  当前页号
+     * @param pszie  每页请求条数
+     * @return map
+     * @author bianzhiwei
+     * @since 20141119
+     */
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
-			String scope, String pno, String pszie);
+			String scope,String sort,String hlpre,String hlext , String pno, String pszie);
 
 	/**
 	 * 标签搜索

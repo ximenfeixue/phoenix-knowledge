@@ -73,12 +73,15 @@ public class SearchServiceImpl implements SearchService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
-			String scope, String pno, String psize) {
+			String scope, String sort,String hlpre,String hlext,String pno, String psize) {
 		logger.info("进入搜索关键词请求,用户ID：{},关键词:{}", userid, keywords);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("userid", userid + "");
-		params.put("keywords", keywords);
+		params.put("keyword", keywords);
 		params.put("scope", scope);
+		params.put("sort", sort);
+		params.put("hlpre", hlpre);
+		params.put("hlext", hlext);
 		params.put("qf", "title,tags,content");
 		params.put("pno", pno);
 		params.put("psize", psize);
