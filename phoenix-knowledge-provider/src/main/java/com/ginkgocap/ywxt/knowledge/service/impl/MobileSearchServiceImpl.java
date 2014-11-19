@@ -34,7 +34,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Resource
 	private MobileKnowledgeMapper mobileKnowledgeMapper;
 	
-	private final String dataUrl = "http://192.168.130.119:8090";
+	private final String dataUrl = "http://192.168.130.221:8090";
 
 	//已作废
 	@SuppressWarnings({ "unchecked", "rawtypes" })
