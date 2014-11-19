@@ -265,6 +265,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			columnPath = Constants.unGroupSortName;
 		}
 
+		if (vo.getAsso().equals("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+			vo.setAsso("");
+		}
+
 		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
 		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
