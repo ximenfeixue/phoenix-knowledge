@@ -44,6 +44,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.SearchService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -123,6 +124,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private DiaryService diaryService;
+
+	@Autowired
+	private SearchService searchservice;
 
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
@@ -244,7 +248,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Override
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
-
+		// 知识来源，（0，系统，1，用户）
+		Short source = (short) Constants.KnowledgeSource.user.v();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
 		// TODO 判断用户是否选择栏目
@@ -324,7 +329,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				if (!dule) {
 					// 格式化权限信息
-					List<String> permList = insertUserShare(vo, user);
+					List<String> permList = JsonUtil.getPermissionList(vo
+							.getSelectedIds());
+					// 大乐全平台分享
+					userPermissionService.insertUserShare(permList,
+							vo.getkId(), vo, user);
+					// 分享到金桐脑
+					searchservice.shareToJinTN(user.getId(), vo);
+					// 判断基础信息来源
+					boolean flag = userPermissionService
+							.checkUserSource(permList);
+					if (flag) {
+						source = (short) Constants.KnowledgeSource.system.v();
+					}
 					int pV = userPermissionService.insertUserPermission(
 							permList, vo.getkId(), user.getId(),
 							vo.getShareMessage(),
@@ -405,6 +422,26 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						Constants.ErrorMessage.addKnowledgeFail.c());
 				return result;
 			}
+		}
+
+		// 初始化知识统计信息
+		KnowledgeStatics statics = new KnowledgeStatics();
+		statics.setClickcount(0l);
+		statics.setCollectioncount(0l);
+		statics.setCommentcount(0l);
+		statics.setKnowledgeId(vo.getkId());
+		statics.setSharecount(0l);
+		statics.setTitle(vo.getTitle());
+		statics.setSource(source);
+		statics.setType(Short.parseShort(vo.getColumnType()));
+		int sV = knowledgeStaticsMapper.insertSelective(statics);
+		if (sV == 0) {
+			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
+					vo.getkId(), vo.getColumnType());
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeFail.c());
+			return result;
 		}
 		try {
 			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
@@ -595,6 +632,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					// 大乐全平台分享
 					userPermissionService.insertUserShare(permList, kId, vo,
 							user);
+					// 分享到金桐脑
+					searchservice.shareToJinTN(userId, vo);
 					// 判断基础信息来源
 					boolean flag = userPermissionService
 							.checkUserSource(permList);
