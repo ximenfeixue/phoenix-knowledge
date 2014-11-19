@@ -424,7 +424,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		knowledgedraft.setCreatetime(new Date());
 		return knowledgeDraftMapper.updateByPrimaryKeySelective(knowledgedraft);
 	}
-	
+
 	@Override
 	public Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo,
 			User user) {
@@ -433,7 +433,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		long userId = user.getId();
 		String username = user.getName();
 
-		
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
 		// TODO 判断用户是否选择栏目
@@ -473,7 +472,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			return result;
 		}
 		// 法律法规名称不可重复
-		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
 			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
 			if (count == 0) {
 				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
@@ -485,13 +484,14 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 		}
-		if (vo.getkId()>0) {
-			Knowledge k=getDraftByMainIdAndUser(vo.getkId(),vo.getColumnType(),user.getId());
-			if(k!=null || k.getId()>0){
+		if (vo.getkId() > 0) {
+			Knowledge k = getDraftByMainIdAndUser(vo.getkId(),
+					vo.getColumnType(), user.getId());
+			if (k != null || k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
-			}else{
+			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
@@ -575,7 +575,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 
-			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo.getKnowledgeMainId());
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo
+					.getKnowledgeMainId());
 
 			if (knowledgeDraft != null) {
 				this.updateKnowledgeDaraft(vo.getKnowledgeMainId(),
@@ -583,19 +584,19 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						vo.getColumnType());
 			} else {
 
-				knowledgeDraftDAO.insertKnowledge(
-						vo.getKnowledgeMainId(), vo.getTitle(),
-						vo.getColumnName(), vo.getColumnType(), userId);
+				knowledgeDraftDAO.insertKnowledge(vo.getKnowledgeMainId(),
+						vo.getTitle(), vo.getColumnName(), vo.getColumnType(),
+						userId);
 			}
 		} else {
-			//id=0 相当新增
+			// id=0 相当新增
 			long draftKId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			vo.setkId(draftKId);
-			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库假装当作草稿防止被查询出来
-			vo.setKnowledgeMainId(draftKId);//草稿中存放真正知识的ID
-			vo.setkId(kId);//插入草稿ID
-			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库并当作真实的知识草稿
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库假装当作草稿防止被查询出来
+			vo.setKnowledgeMainId(draftKId);// 草稿中存放真正知识的ID
+			vo.setkId(kId);// 插入草稿ID
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
@@ -687,35 +688,37 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Override
 	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type) {
-		return deleteKnowledgeSingalDraft(knowledgeMainId,type,null);
+		return deleteKnowledgeSingalDraft(knowledgeMainId, type, null);
 	}
-	
+
 	@Override
-	public int deleteKnowledgeSingalDraft(Long knowledgeMainId,String type, Long userId) {
-		
-		Knowledge k=getDraftByMainIdAndUser(knowledgeMainId,type,userId);
-		knowledgeNewsDAO.deleteKnowledgeById(k.getId(),type);
-		
-		if(userId==null){
+	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type,
+			Long userId) {
+
+		Knowledge k = getDraftByMainIdAndUser(knowledgeMainId, type, userId);
+		knowledgeNewsDAO.deleteKnowledgeById(k.getId(), type);
+
+		if (userId == null) {
 			return knowledgeDraftMapper.deleteByPrimaryKey(k.getId());
-		}else{
-			KnowledgeDraft knowledgeDraft=new KnowledgeDraft();
+		} else {
+			KnowledgeDraft knowledgeDraft = new KnowledgeDraft();
 			knowledgeDraft.setKnowledgeId(k.getId());
 			knowledgeDraft.setUserid(userId);
-			return knowledgeDraftMapper.deleteByPrimaryKeyAndUserId(knowledgeDraft);
+			return knowledgeDraftMapper
+					.deleteByPrimaryKeyAndUserId(knowledgeDraft);
 		}
 	}
 
 	@Override
-	public Knowledge getDraftByMainId(Long knowledgeId,String type) {
-		return this.getDraftByMainIdAndUser(knowledgeId,type, null);
+	public Knowledge getDraftByMainId(Long knowledgeId, String type) {
+		return this.getDraftByMainIdAndUser(knowledgeId, type, null);
 	}
 
 	@Override
-	public Knowledge getDraftByMainIdAndUser(Long knowledgeId,String type,Long userId) {
-		return knowledgeNewsDAO.getDraftByMainIdAndUser(knowledgeId, type, userId);
+	public Knowledge getDraftByMainIdAndUser(Long knowledgeId, String type,
+			Long userId) {
+		return knowledgeNewsDAO.getDraftByMainIdAndUser(knowledgeId, type,
+				userId);
 	}
 
-	
-	
 }
