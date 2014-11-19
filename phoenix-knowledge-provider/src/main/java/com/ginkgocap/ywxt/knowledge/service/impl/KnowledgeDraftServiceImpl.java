@@ -596,7 +596,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			vo.setKnowledgeMainId(draftKId);//草稿中存放真正知识的ID
 			vo.setkId(kId);//插入草稿ID
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); //插入到正式库并当作真实的知识草稿
-			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
+			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 			Boolean dule = JsonUtil.checkKnowledgePermission(vo
