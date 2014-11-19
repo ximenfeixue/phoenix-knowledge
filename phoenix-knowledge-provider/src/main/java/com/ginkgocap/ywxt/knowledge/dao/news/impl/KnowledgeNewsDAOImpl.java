@@ -202,7 +202,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 	
 	@Override
 	public void updateKnowledgeDraft(KnowledgeNewsVO vo, User user) {
-
+		String type=vo.getColumnType();
 		String obj = Constants.getTableName(vo.getColumnType());
 		try {
 			Criteria criteria = Criteria.where("_id").is(vo.getkId());
@@ -214,8 +214,14 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("uname", user.getName());
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
-			update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
-					.substring(0, 50) : vo.getContent());
+			if(type.equals(Constants.Type.Investment.v() + "")
+					|| type.equals(Constants.Type.Industry.v() + "")
+					|| type.equals(Constants.Type.Case.v() + "")){
+				update.set("desc", vo.getDesc());
+			}else{
+				update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
+						.substring(0, 50) : vo.getContent());
+			}
 			update.set("content", vo.getContent());
 			update.set("essence", vo.getEssence());
 			update.set("modifytime", vo.getCreatetime());
