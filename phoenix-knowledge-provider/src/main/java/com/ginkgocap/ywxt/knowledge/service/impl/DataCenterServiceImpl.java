@@ -25,7 +25,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 	private HTTPUrlConfig httpUrlConfig;
 	
 	@Override
-	public Map<String, Object> getCaseDataFromDataCenter(String path, long id) {
+	public Map<String, Object> getCaseDataFromDataCenter(String path) {
 		logger.info("进入转换经典案例请求");
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
@@ -63,8 +63,4 @@ public class DataCenterServiceImpl implements DataCenterService {
 		return result;
 	}
 	
-	public static void main(String[] args) {
-		
-	}
-
 }

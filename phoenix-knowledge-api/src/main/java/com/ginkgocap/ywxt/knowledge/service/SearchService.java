@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+
 public interface SearchService {
 
 	/**
@@ -61,6 +63,6 @@ public interface SearchService {
 	 *            知识类型
 	 * @return
 	 */
-	public Map<String, Object> shareToJinTN(Long userid, Long kid, String type);
+	public Map<String, Object> shareToJinTN(Long userid,KnowledgeNewsVO vo);
 
 }

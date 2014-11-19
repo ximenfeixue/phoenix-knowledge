@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.SearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
@@ -130,12 +131,21 @@ public class SearchServiceImpl implements SearchService {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Object> shareToJinTN(Long userid, Long kid, String type) {
-		logger.info("进入分享到金桐脑请求,用户ID：{},知识ID:{}", userid, kid);
+	public Map<String, Object> shareToJinTN(Long userid, KnowledgeNewsVO vo) {
+		logger.info("进入分享到金桐脑请求,用户ID：{},知识ID:{}", userid, vo.getkId());
 		Map<String, String> params = new HashMap<String, String>();
+
 		params.put("user_id", userid + "");
-		params.put("kid", kid + "");
-		params.put("type", type);
+		params.put("id", vo.getkId() + "");
+		params.put("type", vo.getColumnType());
+		params.put("columnid", vo.getColumnid());
+		params.put("title", vo.getTags());
+		params.put("pic", vo.getPic());
+		params.put("desc", vo.getDesc());
+		params.put("content", vo.getContent());
+		params.put("tags", vo.getTags());
+		params.put("essence", vo.getEssence());
+
 		String str = HTTPUtil.post(httpUrlConfig.getPushUrl()
 				+ "knowledge/put.json", params);
 

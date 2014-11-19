@@ -10,5 +10,5 @@ public interface DataCenterService {
 	 * @param id 知识ID
 	 * @return
 	 */
-	Map<String,Object> getCaseDataFromDataCenter(String path,long id);
+	Map<String,Object> getCaseDataFromDataCenter(String path);
 }
