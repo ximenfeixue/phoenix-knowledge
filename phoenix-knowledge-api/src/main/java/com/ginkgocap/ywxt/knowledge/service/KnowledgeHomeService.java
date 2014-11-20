@@ -104,4 +104,16 @@ public interface KnowledgeHomeService {
      * @return
      */
     public int beRelation(long id, int t,long kid, Long userId) ;
+    
+    /**
+     * 导入导出查询目录知识
+     * @param userid 用户id
+     * @param groupid 目录id
+     * @param page 当前页
+     * @param size 页面大小
+     * @return map
+     * @author bianzhiwei
+     * @since 2014-11-20
+     */
+    public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,List<Long> groupid, int page, int size);
 }

@@ -78,6 +78,40 @@
 			</if>
 		)j
 </select>
+ <select id="selectKnowledgeId" resultType="map" >
+	SELECT DISTINCT b.*
+	FROM tb_knowledge_category kc,
+	tb_user_category
+	uc,tb_knowledge_base b LEFT JOIN tb_attachment a ON b.taskid=a.taskId
+	WHERE kc.category_id = uc.id
+	AND b.knowledge_id=kc.knowledge_id
+	AND kc.status=1
+	AND uc.category_type = 0
+	AND uc.user_id=#{userId}
+	AND uc.id in
+	 <foreach item="groupid" collection="groupid" open="(" separator="," close=")">
+  		#{groupid}
+   	</foreach>
+	ORDER BY b.createtime DESC
+	LIMIT #{start},#{size}
+</select>
+ <select id="countKnowledgeId" resultType="int" >
+ 		select count(1) from (
+			SELECT DISTINCT b.*
+				FROM tb_knowledge_category kc,
+				tb_user_category
+				uc,tb_knowledge_base b LEFT JOIN tb_attachment a ON b.taskid=a.taskId
+				WHERE kc.category_id = uc.id
+				AND b.knowledge_id=kc.knowledge_id
+				AND kc.status=1
+				AND uc.category_type = 0
+				AND uc.user_id=#{userId}
+				AND uc.id in
+				 <foreach item="groupid" collection="groupid" open="(" separator="," close=")">
+		   		#{groupid}
+		    	</foreach>
+		)j
+</select>
 
  <delete id="deleteKnowledge">
   delete from tb_knowledge_category 

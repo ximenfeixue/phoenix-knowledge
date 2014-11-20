@@ -17,6 +17,12 @@ public interface KnowledgeCategoryValueMapper {
 
     int countKnowledgeIds(@Param("userId") long userId, @Param("type") int type, @Param("sortId") String sortId,
             @Param("gtnid") Long gtnid, @Param("tid") String tid, @Param("lid") String lid,@Param("keyword")String keyword);
+    
+    //导入导出
+    List selectKnowledgeId(@Param("userId") long userId, @Param("groupid") List<Long> groupid, @Param("start") int start,
+            @Param("size") int size);
+    
+    int countKnowledgeId(@Param("userId") long userId, @Param("groupid") List<Long> groupid);
 
     int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids, @Param("categoryid") long categoryid);
 }

@@ -129,6 +129,7 @@ create table tb_knowledge_base
    pic_path             varchar(255) comment '封面图片地址',
    column_type          smallint comment '11种栏目类型',
    essence              smallint comment 'essence 是否加精（0-不加 1-加）',
+   taskid varchar(255) DEFAULT '',
    primary key (knowledge_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
