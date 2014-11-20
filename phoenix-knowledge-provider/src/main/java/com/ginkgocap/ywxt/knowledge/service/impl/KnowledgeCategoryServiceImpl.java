@@ -195,6 +195,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				base.setEssence(Short.parseShort(vo.getEssence()));
 				base.setPicPath(vo.getPic());
 				base.setUserId(userId);
+				base.setTaskid(vo.getTaskId());
 
 				int returnV = knowledgeBaseMapper.insertSelective(base);
 			}
