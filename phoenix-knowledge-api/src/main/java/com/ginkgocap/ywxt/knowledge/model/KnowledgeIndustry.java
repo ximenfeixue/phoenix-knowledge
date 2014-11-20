@@ -53,7 +53,6 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setHcontent("");
 		
 		this.setOid(vo.getOid());
-		this.setDesc(vo.getDesc());
 		
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
@@ -85,7 +84,6 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setIsh(Constants.HighLight.unlight.v());
 		this.setHcontent("");
 		this.setOid(vo.getOid());
-		this.setDesc(vo.getDesc());
 		
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
