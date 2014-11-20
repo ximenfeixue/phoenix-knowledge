@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 
 /**
@@ -40,7 +41,7 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getDesc());
+		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));
@@ -74,7 +75,7 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getDesc());
+		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 				: vo.getEssence()));

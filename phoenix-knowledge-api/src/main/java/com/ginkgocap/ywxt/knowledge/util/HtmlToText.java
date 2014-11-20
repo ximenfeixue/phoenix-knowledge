@@ -56,4 +56,20 @@ public class HtmlToText {
 
 		return textStr;
 	}
+
+	public static String htmlTotest(String htmlStr) {
+		// 知识内容截取存入简介
+		String content = htmlStr;
+		if (content == null) {
+			content = "";
+		} else if (content.length() < 50) {
+			content = content.replaceAll("</?[^>]+>", "").replaceAll(
+					"\\s*|\t|\r|\n", "");
+		} else {
+			content = content.substring(0, 50).replaceAll("</?[^>]+>", "")
+					.replaceAll("\\s*|\t|\r|\n", "")
+					+ "...";
+		}
+		return content;
+	}
 }
