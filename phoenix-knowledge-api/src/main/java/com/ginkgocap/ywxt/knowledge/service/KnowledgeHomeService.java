@@ -115,9 +115,5 @@ public interface KnowledgeHomeService {
      * @author bianzhiwei
      * @since 2014-11-20
      */
-<<<<<<< HEAD
     public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,List<Long> groupid, int page, int size);
-=======
-    public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,Long groupid, int page, int size);
->>>>>>> refs/remotes/origin/develop
 }
