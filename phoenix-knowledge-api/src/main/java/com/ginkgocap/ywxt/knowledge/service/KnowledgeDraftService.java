@@ -70,7 +70,7 @@ public interface KnowledgeDraftService {
 	Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo, User user);
 	
 	/**
-	 * 知识存入草稿箱(待测版本)
+	 * 知识存入草稿箱(待测版本) 专门为编辑投融工具所建，编辑投融工具不需要更新目录权限等
 	 * @author zhangwei
 	 * @return
 	 */
