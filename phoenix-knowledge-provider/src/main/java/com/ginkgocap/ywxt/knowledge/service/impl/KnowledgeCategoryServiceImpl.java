@@ -156,6 +156,19 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 				base.setTitle(vo.getTitle());
 				int columnType = Integer.parseInt(vo.getColumnType());
 				String desc = vo.getDesc();
+				// 知识内容截取存入简介
+				String content = vo.getContent();
+				if (content == null) {
+					content = "";
+				} else if (content.length() < 50) {
+					content = content.replaceAll("</?[^>]+>", "").replaceAll(
+							"\\s*|\t|\r|\n", "");
+				} else {
+					content = content.substring(0, 50)
+							.replaceAll("</?[^>]+>", "")
+							.replaceAll("\\s*|\t|\r|\n", "")
+							+ "...";
+				}
 				if (columnType == Constants.Type.Investment.v()
 						|| columnType == Constants.Type.Industry.v()
 						|| columnType == Constants.Type.Case.v()) {
@@ -166,13 +179,11 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 								+ "..." : desc.replaceAll("</?[^>]+>", "")
 								.replaceAll("\\s*|\t|\r|\n", ""));
 					} else {
-						base.setcDesc(StringUtils.substring(
-								HtmlToText.html2Text(vo.getContent()), 0, 50));
+						base.setcDesc(content);
 					}
 				} else {
 
-					base.setcDesc(StringUtils.substring(
-							HtmlToText.html2Text(vo.getContent()), 0, 50));
+					base.setcDesc(content);
 				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
 				base.setColumnType(Short.parseShort(vo.getColumnType()));
