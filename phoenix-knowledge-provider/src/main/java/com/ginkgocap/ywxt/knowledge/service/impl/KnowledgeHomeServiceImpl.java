@@ -225,6 +225,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     @SuppressWarnings("rawtypes")
     @Override
     public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,List<Long> groupid, int page, int size) {
+        if (userid == null || groupid == null || groupid.size() == 0) {
+            return null;
+        }
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectKnowledgeCategoryForImport:{},",userid);
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectKnowledgeCategoryForImport:{},",groupid);
         int start = (page - 1) * size;
