@@ -61,7 +61,6 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return result;
 	}
 
-	//已作废
 	@Override
 	public Map<String, Object> selectKnowledgeByTagsAndkeywords(Long userid,
 			String keywords, String scope, String tag, int page, int size) {
