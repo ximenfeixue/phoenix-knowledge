@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -55,7 +56,9 @@ public class KnowledgeHomeServiceTest extends TestBase {
     }
     @Test
     public void selectKnowledgeCategoryForImport() {
-        knowledgeHomeService.selectKnowledgeCategoryForImport(10132l, 1l, 1, 20);
+        List<Long> l=new ArrayList<Long>();
+        l.add(1l);
+        knowledgeHomeService.selectKnowledgeCategoryForImport(10132l, l, 1, 20);
     }
 
 }
