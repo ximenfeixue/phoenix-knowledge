@@ -681,6 +681,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			Long userId) {
 
 		Knowledge k = getDraftByMainIdAndUser(knowledgeMainId, type, userId);
+		if(k==null){
+			return 0;
+		}
 		knowledgeNewsDAO.deleteKnowledgeById(k.getId(), type);
 
 		if (userId == null) {
