@@ -68,6 +68,8 @@ public class KnowledgeCase extends Knowledge {
 			this.setTaskid(vo.getTaskId());
 			this.setSelectedIds(vo.getSelectedIds());
 			this.setKnowledgeMainId(vo.getKnowledgeMainId());
+			this.setContent(vo.getContent());
+			
 			return this;
 		}
 
