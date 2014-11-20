@@ -120,8 +120,14 @@ public class KnowledgeCollectionServiceImpl implements
 	@Override
 	public Map<String, Object> insertKnowledgeCollection(
 			KnowledgeCollectionVO vo, User user) {
-		logger.info("进入添加知识收藏,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
+		if (user == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.userNotLogin.c());
+			return result;
+		}
+		logger.info("进入添加知识收藏,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 
 		try {
 
@@ -252,15 +258,15 @@ public class KnowledgeCollectionServiceImpl implements
 
 	@Override
 	public boolean delCollection(long userId, long kId) {
-		logger.error("进入删除收藏信息请求!,用户ID:{},知识ID:{}",userId,kId);
+		logger.error("进入删除收藏信息请求!,用户ID:{},知识ID:{}", userId, kId);
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUseridEqualTo(userId);
 		criteria.andKnowledgeIdEqualTo(kId);
 		int v = knowledgeCollectionMapper.deleteByExample(example);
-		
+
 		knowledgeStaticsMapperManual.updateStatics(kId, 0, 0, -1, 0);
-		
+
 		return v > 0;
 
 	}

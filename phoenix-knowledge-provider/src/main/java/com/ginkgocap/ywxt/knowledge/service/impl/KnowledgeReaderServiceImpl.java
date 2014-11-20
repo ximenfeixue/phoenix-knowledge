@@ -148,6 +148,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		result.put("edit", user == null ? false : user.getId() == authorId);
 
+		result.put("share", user == null ? false : user.getId() == authorId);
+
 		result.put("sourceFile", authorId == Constants.Ids.jinTN.v());
 
 		return result;
@@ -316,21 +318,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			return result;
 		}
 		// 查询用户对文章的查看权限
-		if (!getArticlePermission(knowledge, user)) {
-			
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.artPermissionNotFound.c());
-			return result;
-			
-		}else{
-			if(knowledge.getStatus() == Constants.Status.recycle.v()){
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.artNotExsit.c());
-				return result;
-			}
-		}
+		Map<String, Object> perMap = getArticlePermission(knowledge, user);
+		if (Integer.parseInt(perMap.get(Constants.status) + "") != Constants.ResultType.success
+				.v())
+			return perMap;
+
 		// 存储阅读器头部信息
 		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
 		// 存储正文内容
@@ -341,9 +333,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("kid", kid);
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
-		
-		//生态圈使用
-		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE); 
+
+		// 生态圈使用
+		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;
@@ -353,10 +345,35 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	// return getArticlePermission(knowledge, null);
 	// }
 
-	private boolean getArticlePermission(Knowledge knowledge, User user) {
-		
-		if (knowledge.getUid() == Constants.Ids.jinTN.v())
-			return true;
+	private Map<String, Object> getArticlePermission(Knowledge knowledge,
+			User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 判断如果知识被永久性删除
+		if (knowledge.getStatus() == Constants.Status.foreverdelete.v()) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artNotExsit.c());
+			return result;
+		}
+		// 判断如果文章被删除或被屏蔽
+		if (knowledge.getStatus() != Constants.Status.checked.v()) {
+
+			if (user != null && user.getId() == knowledge.getUid()) { // 如果用户不空，且登陆用户==作者，则可以访问
+				result.put(Constants.status, Constants.ResultType.success.v());
+			} else {
+
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.artNotExsit.c());
+			}
+			return result;
+		}
+		// 如果作者为金桐脑
+		if (knowledge.getUid() == Constants.Ids.jinTN.v()) {
+			result.put(Constants.status, Constants.ResultType.success.v());
+			return result;
+		}
+		// 判断用户对此文章权限
 		UserPermissionExample example = new UserPermissionExample();
 		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
 				.createCriteria();
@@ -365,9 +382,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			criteria.andKnowledgeIdEqualTo(knowledge.getId());
 
 		} else {
-			if (user.getId() == knowledge.getUid())
-				return true;
-
+			if (user.getId() == knowledge.getUid()) {
+				result.put(Constants.status, Constants.ResultType.success.v());
+				return result;
+			}
 			List<Long> idList = new ArrayList<Long>();
 			idList.add((long) Constants.Ids.platform.v());
 			idList.add(user.getId());
@@ -375,7 +393,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			criteria.andReceiveUserIdIn(idList);
 		}
 		int v = userPermissionMapper.countByExample(example);
-
-		return v > 0;
+		if (v > 0) {
+			result.put(Constants.status, Constants.ResultType.success.v());
+		} else {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artPermissionNotFound.c());
+		}
+		return result;
 	}
 }

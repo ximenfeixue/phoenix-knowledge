@@ -41,6 +41,12 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	public Map<String, Object> addComment(long kid, User user, long pid,
 			String content) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		if(user == null){
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.userNotLogin.c());
+			return result;
+		}
 		User currUser = userService.selectByPrimaryKey(user.getId());
 		if (currUser == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());

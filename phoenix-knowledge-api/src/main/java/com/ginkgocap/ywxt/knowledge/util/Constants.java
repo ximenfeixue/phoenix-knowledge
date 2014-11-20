@@ -17,7 +17,7 @@ public class Constants {
 	public static long gtnid = 0l;
 
 	public static List<Long> homeColumnIds = new ArrayList<Long>(asList(1, 2,
-			3, 4, 6, 7, 10,11));
+			3, 4, 6, 7, 10, 11));
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
@@ -80,7 +80,7 @@ public class Constants {
 	}
 
 	private static Collection<? extends Long> asList(int i, int j, int k,
-			int l, int m, int n, int o,int p) {
+			int l, int m, int n, int o, int p) {
 		List<Long> list = new ArrayList<Long>();
 		list.add((long) i);
 		list.add((long) j);
@@ -125,7 +125,7 @@ public class Constants {
 
 	public enum Status {
 		draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6), foreverdelete(
-				7);
+				7), forbid(8);
 
 		private int v;
 
@@ -259,7 +259,7 @@ public class Constants {
 				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
-				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"),parseError("解析错误!");
+				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"),userNotLogin("您未登陆,请先登陆!");
 
 		private String c;
 
@@ -498,15 +498,16 @@ public class Constants {
 		}
 
 	}
-	public static Integer MATERIAL_REQUIREMENT = 1; 
 
-	public static Integer MATERIAL_PEOPLE = 2; 
+	public static Integer MATERIAL_REQUIREMENT = 1;
 
-	public static Integer MATERIAL_COMMON_USER = 3; 
+	public static Integer MATERIAL_PEOPLE = 2;
 
-	public static Integer MATERIAL_ORGANIZATION_USER = 4; 
+	public static Integer MATERIAL_COMMON_USER = 3;
 
-	public static Integer MATERIAL_CUSTOMER = 5; 
+	public static Integer MATERIAL_ORGANIZATION_USER = 4;
+
+	public static Integer MATERIAL_CUSTOMER = 5;
 
 	public static Integer MATERIAL_KNOWLEDGE = 6;
 
