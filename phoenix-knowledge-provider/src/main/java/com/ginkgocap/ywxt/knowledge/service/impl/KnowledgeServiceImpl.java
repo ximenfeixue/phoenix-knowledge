@@ -276,7 +276,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
-		vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+		if(vo.getKnowledgeid()!=null && !"".equals(vo.getKnowledgeid())){
+			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
