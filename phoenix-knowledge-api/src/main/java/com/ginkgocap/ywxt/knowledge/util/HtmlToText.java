@@ -2,52 +2,58 @@ package com.ginkgocap.ywxt.knowledge.util;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class HtmlToText {
-	/** 
-     * html转化为text 
-     * @param inputString 
-     * @return 
-     */ 
-    public static String html2Text(String inputString) { 
-          String htmlStr = inputString; // 含html标签的字符串 
-          String textStr = ""; 
-          java.util.regex.Pattern p_script; 
-          java.util.regex.Matcher m_script; 
-          java.util.regex.Pattern p_style; 
-          java.util.regex.Matcher m_style; 
-          java.util.regex.Pattern p_html; 
-          java.util.regex.Matcher m_html; 
-          try { 
-           String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; // 定义script的正则表达式{或<script>]*?>[\s\S]*?<\/script> 
-           // } 
-           String regEx_style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>"; // 定义style的正则表达式{或<style>]*?>[\s\S]*?<\/style> 
-           // } 
-           String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式 
-           
-           htmlStr = htmlStr.replaceAll("&amp;", "&");
-           htmlStr = htmlStr.replaceAll("&lt;", "<");
-           htmlStr = htmlStr.replaceAll("&gt;", ">");
-           htmlStr = htmlStr.replaceAll("&nbsp;", "");
-           htmlStr = htmlStr.replaceAll("&quot;", "");
+	/**
+	 * html转化为text
+	 * 
+	 * @param inputString
+	 * @return
+	 */
+	public static String html2Text(String inputString) {
+		String htmlStr = inputString; // 含html标签的字符串
+		String textStr = "";
+		java.util.regex.Pattern p_script;
+		java.util.regex.Matcher m_script;
+		java.util.regex.Pattern p_style;
+		java.util.regex.Matcher m_style;
+		java.util.regex.Pattern p_html;
+		java.util.regex.Matcher m_html;
+		try {
+			String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; // 定义script的正则表达式{或<script>]*?>[\s\S]*?<\/script>
+			// }
+			String regEx_style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>"; // 定义style的正则表达式{或<style>]*?>[\s\S]*?<\/style>
+			// }
+			String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
 
-           p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE); 
-           m_script = p_script.matcher(htmlStr); 
-           htmlStr = m_script.replaceAll(""); // 过滤script标签 
+			htmlStr = htmlStr.replaceAll("&amp;", "&");
+			htmlStr = htmlStr.replaceAll("&lt;", "<");
+			htmlStr = htmlStr.replaceAll("&gt;", ">");
+			htmlStr = htmlStr.replaceAll("&nbsp;", "");
+			htmlStr = htmlStr.replaceAll("&quot;", "");
+			htmlStr = htmlStr.replaceAll("&emsp;", "");
+			htmlStr = htmlStr.replaceAll("&emsp;", "");
+			htmlStr = StringUtils.replace(htmlStr, "\n", "");
 
-           p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE); 
-           m_style = p_style.matcher(htmlStr); 
-           htmlStr = m_style.replaceAll(""); // 过滤style标签 
+			p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
+			m_script = p_script.matcher(htmlStr);
+			htmlStr = m_script.replaceAll(""); // 过滤script标签
 
-           p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE); 
-           m_html = p_html.matcher(htmlStr); 
-           htmlStr = m_html.replaceAll(""); // 过滤html标签 
-           htmlStr = htmlStr.replaceAll("&.[0,4];", "");
-           textStr = htmlStr; 
+			p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
+			m_style = p_style.matcher(htmlStr);
+			htmlStr = m_style.replaceAll(""); // 过滤style标签
 
-          } catch (Exception e) { 
-           System.err.println("Html2Text: " + e.getMessage()); 
-          } 
+			p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+			m_html = p_html.matcher(htmlStr);
+			htmlStr = m_html.replaceAll(""); // 过滤html标签
+			htmlStr = htmlStr.replaceAll("&.[0,4];", "");
+			textStr = htmlStr;
 
-          return textStr; 
-        }
+		} catch (Exception e) {
+			System.err.println("Html2Text: " + e.getMessage());
+		}
+
+		return textStr;
+	}
 }
