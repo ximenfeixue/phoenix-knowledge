@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 
 
@@ -32,8 +33,7 @@ public class KnowledgeMacro extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getContent().length() > 50 ? vo.getContent().substring(
-				0, 50) : vo.getContent());
+		this.setDesc(StringUtils.substring(HtmlToText.html2Text(vo.getContent()), 0,50));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
@@ -62,9 +62,7 @@ public class KnowledgeMacro extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(vo.getContent() != null ? vo.getContent().length() > 50 ? vo
-				.getContent().substring(0, 50) : vo.getContent()
-				: "");
+		this.setDesc(StringUtils.substring(HtmlToText.html2Text(vo.getContent()), 0,50));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
