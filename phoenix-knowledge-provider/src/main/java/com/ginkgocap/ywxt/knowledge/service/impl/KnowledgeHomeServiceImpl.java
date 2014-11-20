@@ -222,6 +222,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         m.put("list", kcl);
         return m;
     }
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,Long groupid, int page, int size) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectKnowledgeCategoryForImport:{},",userid);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectKnowledgeCategoryForImport:{},",groupid);
+        int start = (page - 1) * size;
+        int count = knowledgeCategoryValueMapper.countKnowledgeId(userid, groupid);
+        List kcl = knowledgeCategoryValueMapper.selectKnowledgeId(userid, groupid,start,size);
+        PageUtil p = new PageUtil(count, page, size);
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("page", p);
+        m.put("list", kcl);
+        return m;
+    }
 
     @Override
     public List<Node> queryColumns(long cid, long userId) {
