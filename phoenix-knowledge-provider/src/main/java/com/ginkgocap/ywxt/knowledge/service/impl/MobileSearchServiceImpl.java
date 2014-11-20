@@ -89,9 +89,13 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				.selectCountKnowledgeByTagsAndKeyWords(userid, tag, keywords);
 		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByTagsAndKeyWords(
 				userid, tag, keywords, start, size);
-		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();
+		
+		if(size != 0) {
+		PageUtil p = new PageUtil(count, page, size);
 		m.put("page", p);
+		}
+		
 		m.put("list", kcl);
 		return m;
 	}
