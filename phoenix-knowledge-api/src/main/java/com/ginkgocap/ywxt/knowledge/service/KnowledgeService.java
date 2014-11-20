@@ -104,5 +104,12 @@ public interface KnowledgeService {
 	 *            登陆用户对象
 	 */
 	Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user);
+	
+	/**
+	 * 编辑知识(投融工具)
+	 */
+
+	public void updateKnowledgeForInvestment(Long id,String pic,String content,String desc,Long userId);
+	
 
 }

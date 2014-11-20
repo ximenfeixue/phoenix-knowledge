@@ -871,4 +871,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
+
+	@Override
+	public void updateKnowledgeForInvestment(Long id,String pic,
+			String content, String desc,Long userId) {
+		knowledgeDao.updateInvestment(id,pic, content, desc);
+		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
+	}
 }

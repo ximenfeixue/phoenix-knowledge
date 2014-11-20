@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
@@ -238,5 +239,16 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public void updateInvestment(Long id,String pic, String content, String desc) {
+		Criteria c = Criteria.where("_id").is(id);
+		Update update = new Update();
+		update.set("desc", desc);
+		update.set("pic", pic);
+		update.set("content", content);
+		Query query = new Query(c);
+		mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
 	}
 }
