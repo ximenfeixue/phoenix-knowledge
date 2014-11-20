@@ -18,4 +18,24 @@ public interface DataCenterService {
 	 * @return
 	 */
 	Map<String,Object> noticeDataCenterWhileColumnChange(long columnId);
+	/**
+	 * 
+	 * 导出知识成文件
+	 * @param knowledgeIds 知识ids
+	 * @param group 导出内容 1 所选文章 2 所选附件 3 所选文章及附件
+	 * @param uid 用户id
+	 * @param nfsHome nginx 挂在目录
+	 * @param taskId 任务id
+	 * @return
+	 * liubang
+	 */
+	Map<String,Object> getExportFile(long uid,String knowledgeIds,String group,String nfsHome,String taskId);
+	/**
+	 * 获取文件进度
+	 * @param taskId 任务id
+	 * @return
+	 * liubang
+	 */
+	Map<String, Object> processView(String taskId);
+	
 }

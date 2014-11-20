@@ -7,20 +7,20 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeHomeDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
+import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
-import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
-import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledgeExample;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
@@ -32,6 +32,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -60,6 +61,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     KnowledgeHomeDao knowledgeHomeDao;
     @Autowired
     KnowledgeNewsDAO knowledgeNewsDao;
+    @Resource
+    private AttachmentService attachmentService;
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -232,7 +235,29 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectKnowledgeCategoryForImport:{},",groupid);
         int start = (page - 1) * size;
         int count = knowledgeCategoryValueMapper.countKnowledgeId(userid, groupid);
-        List kcl = knowledgeCategoryValueMapper.selectKnowledgeId(userid, groupid,start,size);
+        List<Map<String,Object>> kcl = knowledgeCategoryValueMapper.selectKnowledgeId(userid, groupid,start,size);
+        if(kcl!=null && kcl.size()>0){
+        	for(Map<String,Object> map:kcl){
+        		int haveFile=0;
+        		int fileSize=0;
+        		if(map!=null){
+        			if(StringUtils.isNotBlank(map.get("taskid").toString())){
+        				Map<String, Object> attMap = attachmentService.queryAttachmentByTaskId(map.get("taskid").toString());
+        				if(attMap!=null && attMap.get("attList")!=null){
+        					List<Attachment> attList =(List<Attachment>)attMap.get("attList");
+        					if(attList!=null && attList.size()>0){
+        						haveFile=1;
+        						for(Attachment att:attList){
+        							fileSize+=att.getFileSize();
+        						}
+        					}
+        				}
+        			}
+        		}
+        		map.put("haveFile", haveFile);
+        		map.put("fileSize", fileSize);
+        	}
+        }
         PageUtil p = new PageUtil(count, page, size);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("page", p);
