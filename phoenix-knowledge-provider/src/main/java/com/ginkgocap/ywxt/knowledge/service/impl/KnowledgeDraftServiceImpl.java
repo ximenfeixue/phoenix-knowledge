@@ -472,7 +472,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		if (vo.getkId() > 0) {
 			Knowledge k = getDraftByMainIdAndUser(vo.getkId(),
 					vo.getColumnType(), user.getId());
-			if (k != null || k.getId() > 0) {
+			if (k != null && k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
