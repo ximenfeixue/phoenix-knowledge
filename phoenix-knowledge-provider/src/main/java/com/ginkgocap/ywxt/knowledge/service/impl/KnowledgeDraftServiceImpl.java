@@ -413,6 +413,50 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo,
 			User user) {
+		return this.insertKnowledgeDraftNew(vo, user,false);
+	}
+
+	@Override
+	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type) {
+		return deleteKnowledgeSingalDraft(knowledgeMainId, type, null);
+	}
+
+	@Override
+	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type,
+			Long userId) {
+
+		Knowledge k = getDraftByMainIdAndUser(knowledgeMainId, type, userId);
+		if(k==null){
+			return 0;
+		}
+		knowledgeNewsDAO.deleteKnowledgeById(k.getId(), type);
+
+		if (userId == null) {
+			return knowledgeDraftMapper.deleteByPrimaryKey(k.getId());
+		} else {
+			KnowledgeDraft knowledgeDraft = new KnowledgeDraft();
+			knowledgeDraft.setKnowledgeId(k.getKnowledgeMainId());
+			knowledgeDraft.setUserid(userId);
+			return knowledgeDraftMapper
+					.deleteByPrimaryKeyAndUserId(knowledgeDraft);
+		}
+	}
+
+	@Override
+	public Knowledge getDraftByMainId(Long knowledgeId, String type) {
+		return this.getDraftByMainIdAndUser(knowledgeId, type, null);
+	}
+
+	@Override
+	public Knowledge getDraftByMainIdAndUser(Long knowledgeId, String type,
+			Long userId) {
+		return knowledgeNewsDAO.getDraftByMainIdAndUser(knowledgeId, type,
+				userId);
+	}
+
+	@Override
+	public Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo,
+			User user, boolean isUpdate) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取Session用户值
 		long userId = user.getId();
@@ -482,84 +526,86 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				vo.setkId(kId);
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
-			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-
-				// 删除用户权限数据
-				int userPermissionCount = userPermissionService
-						.deleteUserPermission(vo.getkId(), user.getId());
-				// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-				if (StringUtils.isNotBlank(vo.getSelectedIds())
-						&& !vo.getSelectedIds().equals(dule)) {
-					// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-					Boolean dule = JsonUtil.checkKnowledgePermission(vo
-							.getSelectedIds());
-					if (dule == null) {
-						logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-						result.put(Constants.status,
-								Constants.ResultType.fail.v());
-						result.put(Constants.errormessage,
-								Constants.ErrorMessage.paramNotValid.c());
-						return result;
-					}
-					if (!dule) {
-						// 格式化权限信息
-						List<String> permList = JsonUtil.getPermissionList(vo
+			//判断是否是投融工具更新
+			if(!isUpdate){
+				if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+	
+					// 删除用户权限数据
+					int userPermissionCount = userPermissionService
+							.deleteUserPermission(vo.getkId(), user.getId());
+					// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
+					if (StringUtils.isNotBlank(vo.getSelectedIds())
+							&& !vo.getSelectedIds().equals(dule)) {
+						// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
+						Boolean dule = JsonUtil.checkKnowledgePermission(vo
 								.getSelectedIds());
-						// 大乐全平台分享
-						// userPermissionService.insertUserShare(permList,
-						// vo.getkId(), vo, user);
-						int pV = userPermissionService.insertUserPermission(
-								permList, vo.getkId(), user.getId(),
-								vo.getShareMessage(),
-								Short.parseShort(vo.getColumnType()),
-								Long.parseLong(vo.getColumnid()));
-						if (pV == 0) {
-							logger.error(
-									"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-									vo.getkId());
+						if (dule == null) {
+							logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
+							result.put(Constants.status,
+									Constants.ResultType.fail.v());
+							result.put(Constants.errormessage,
+									Constants.ErrorMessage.paramNotValid.c());
+							return result;
+						}
+						if (!dule) {
+							// 格式化权限信息
+							List<String> permList = JsonUtil.getPermissionList(vo
+									.getSelectedIds());
+							// 大乐全平台分享
+							// userPermissionService.insertUserShare(permList,
+							// vo.getkId(), vo, user);
+							int pV = userPermissionService.insertUserPermission(
+									permList, vo.getkId(), user.getId(),
+									vo.getShareMessage(),
+									Short.parseShort(vo.getColumnType()),
+									Long.parseLong(vo.getColumnid()));
+							if (pV == 0) {
+								logger.error(
+										"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
+										vo.getkId());
+							}
 						}
 					}
 				}
-			}
-
-			// 删除该知识下的所有目录
-			int categoryCount = knowledgeCategoryService
-					.deleteKnowledgeCategory(vo.getkId());
-			// 删除该知识的基本信息
-			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(user.getId());
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
-
+	
+				// 删除该知识下的所有目录
+				int categoryCount = knowledgeCategoryService
+						.deleteKnowledgeCategory(vo.getkId());
+				// 删除该知识的基本信息
+				knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+	
+				long[] cIds = null;
+				// 添加知识到知识目录表
+				if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+					UserCategoryExample example = new UserCategoryExample();
+					com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+							.createCriteria();
+					criteria.andSortidEqualTo(Constants.unGroupSortId);
+					criteria.andUserIdEqualTo(user.getId());
+					criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+							.v());
+					List<UserCategory> list = userCategoryMapper
+							.selectByExample(example);
+					if (list != null && list.size() == 1) {
+						cIds = new long[1];
+						cIds[0] = list.get(0).getId();
+	
+					}
+				} else {
+					cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+				int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
+						vo.getkId(), cIds, user.getId(), user.getName(),
+						columnPath, vo);
+				if (categoryV == 0) {
+					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+							vo.getkId(), cIds);
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.addKnowledgeFail.c());
+					return result;
+				}
 			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, user.getId(), user.getName(),
-					columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-
 			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo
 					.getKnowledgeMainId());
 
@@ -668,45 +714,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		result.put("kId", vo.getKnowledgeMainId());
 		logger.info("添加草稿箱成功,草稿知识ID:{}", vo.getkId());
 		return result;
-
-	}
-
-	@Override
-	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type) {
-		return deleteKnowledgeSingalDraft(knowledgeMainId, type, null);
-	}
-
-	@Override
-	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type,
-			Long userId) {
-
-		Knowledge k = getDraftByMainIdAndUser(knowledgeMainId, type, userId);
-		if(k==null){
-			return 0;
-		}
-		knowledgeNewsDAO.deleteKnowledgeById(k.getId(), type);
-
-		if (userId == null) {
-			return knowledgeDraftMapper.deleteByPrimaryKey(k.getId());
-		} else {
-			KnowledgeDraft knowledgeDraft = new KnowledgeDraft();
-			knowledgeDraft.setKnowledgeId(k.getKnowledgeMainId());
-			knowledgeDraft.setUserid(userId);
-			return knowledgeDraftMapper
-					.deleteByPrimaryKeyAndUserId(knowledgeDraft);
-		}
-	}
-
-	@Override
-	public Knowledge getDraftByMainId(Long knowledgeId, String type) {
-		return this.getDraftByMainIdAndUser(knowledgeId, type, null);
-	}
-
-	@Override
-	public Knowledge getDraftByMainIdAndUser(Long knowledgeId, String type,
-			Long userId) {
-		return knowledgeNewsDAO.getDraftByMainIdAndUser(knowledgeId, type,
-				userId);
 	}
 
 }

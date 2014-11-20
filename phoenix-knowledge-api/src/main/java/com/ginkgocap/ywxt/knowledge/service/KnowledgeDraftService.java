@@ -70,6 +70,13 @@ public interface KnowledgeDraftService {
 	Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo, User user);
 	
 	/**
+	 * 知识存入草稿箱(待测版本)
+	 * @author zhangwei
+	 * @return
+	 */
+	Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo, User user,boolean isUpdate);
+	
+	/**
 	 * 删除单个知识
 	 * @param knowledgeId 知识对应的KnowledgeMainId (别传错了)
 	 * @param type 知识类型
