@@ -690,7 +690,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			return knowledgeDraftMapper.deleteByPrimaryKey(k.getId());
 		} else {
 			KnowledgeDraft knowledgeDraft = new KnowledgeDraft();
-			knowledgeDraft.setKnowledgeId(k.getId());
+			knowledgeDraft.setKnowledgeId(k.getKnowledgeMainId());
 			knowledgeDraft.setUserid(userId);
 			return knowledgeDraftMapper
 					.deleteByPrimaryKeyAndUserId(knowledgeDraft);
