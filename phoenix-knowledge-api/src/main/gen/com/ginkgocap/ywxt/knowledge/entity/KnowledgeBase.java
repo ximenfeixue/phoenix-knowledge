@@ -28,6 +28,8 @@ public class KnowledgeBase implements Serializable {
 
     private Short essence;
 
+    private String taskid;
+
     private static final long serialVersionUID = 1L;
 
     public Long getKnowledgeId() {
@@ -124,5 +126,13 @@ public class KnowledgeBase implements Serializable {
 
     public void setEssence(Short essence) {
         this.essence = essence;
+    }
+
+    public String getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(String taskid) {
+        this.taskid = taskid;
     }
 }

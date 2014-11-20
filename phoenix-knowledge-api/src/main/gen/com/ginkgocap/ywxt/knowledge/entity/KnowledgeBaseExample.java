@@ -905,6 +905,76 @@ public class KnowledgeBaseExample {
             return (Criteria) this;
         }
 
+        public Criteria andTaskidIsNull() {
+            addCriterion("taskid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidIsNotNull() {
+            addCriterion("taskid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidEqualTo(String value) {
+            addCriterion("taskid =", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidNotEqualTo(String value) {
+            addCriterion("taskid <>", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidGreaterThan(String value) {
+            addCriterion("taskid >", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidGreaterThanOrEqualTo(String value) {
+            addCriterion("taskid >=", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidLessThan(String value) {
+            addCriterion("taskid <", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidLessThanOrEqualTo(String value) {
+            addCriterion("taskid <=", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidLike(String value) {
+            addCriterion("taskid like", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidNotLike(String value) {
+            addCriterion("taskid not like", value, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidIn(List<String> values) {
+            addCriterion("taskid in", values, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidNotIn(List<String> values) {
+            addCriterion("taskid not in", values, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidBetween(String value1, String value2) {
+            addCriterion("taskid between", value1, value2, "taskid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidNotBetween(String value1, String value2) {
+            addCriterion("taskid not between", value1, value2, "taskid");
+            return (Criteria) this;
+        }
+
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
             return (Criteria) this;
@@ -932,6 +1002,11 @@ public class KnowledgeBaseExample {
 
         public Criteria andPicPathLikeInsensitive(String value) {
             addCriterion("upper(pic_path) like", value.toUpperCase(), "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskidLikeInsensitive(String value) {
+            addCriterion("upper(taskid) like", value.toUpperCase(), "taskid");
             return (Criteria) this;
         }
     }
