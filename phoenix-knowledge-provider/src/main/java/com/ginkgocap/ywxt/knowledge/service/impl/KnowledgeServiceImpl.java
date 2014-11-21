@@ -131,7 +131,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private KnowledgeStaticsService knowledgeStaticsService;
-//
+
+	//
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
 			long catetoryid, String types, String titles, User user) {
@@ -317,47 +318,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 
-			// 删除用户权限数据
-			int userPermissionCount = userPermissionService
-					.deleteUserPermission(vo.getkId(), user.getId());
-			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			if (StringUtils.isNotBlank(vo.getSelectedIds())
-					&& !vo.getSelectedIds().equals(dule)) {
-				// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-				Boolean dule = JsonUtil.checkKnowledgePermission(vo
-						.getSelectedIds());
-				if (dule == null) {
-					logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.paramNotValid.c());
-					return result;
-				}
-				if (!dule) {
-					// 格式化权限信息
-					List<String> permList = JsonUtil.getPermissionList(vo
-							.getSelectedIds());
-					// 大乐全平台分享
-					userPermissionService.insertUserShare(permList,
-							vo.getkId(), vo, user);
-					// 分享到金桐脑
-					searchservice.shareToJinTN(user.getId(), vo);
-					// 判断基础信息来源
-					boolean flag = userPermissionService
-							.checkUserSource(permList);
-					if (flag) {
-						source = (short) Constants.KnowledgeSource.system.v();
-					}
-					int pV = userPermissionService.insertUserPermission(
-							permList, vo.getkId(), user.getId(),
-							vo.getShareMessage(),
-							Short.parseShort(vo.getColumnType()),
-							Long.parseLong(vo.getColumnid()));
-					if (pV == 0) {
-						logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-								vo.getkId());
-					}
-				}
+			// 添加知识到权限表
+			result = insertUserPermissions(vo, user);
+			Integer status = Integer
+					.parseInt(result.get(Constants.status) + "");
+
+			if (status != 1) {
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
+				return result;
+			}
+			Boolean flag = Boolean.parseBoolean(result.get("flag") + "");
+			if (flag) {
+				source = (short) Constants.KnowledgeSource.system.v();
 			}
 		}
 
@@ -855,6 +828,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			User user) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
+		// 删除知识之前的权限
+		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
@@ -864,6 +839,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			if (dule == null) {
 				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.paramNotValid.c());
 				return result;
 			}
 			if (!dule) {
