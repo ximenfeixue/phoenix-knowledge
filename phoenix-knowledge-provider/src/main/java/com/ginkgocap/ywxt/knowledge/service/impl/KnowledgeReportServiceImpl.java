@@ -8,6 +8,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport;
@@ -29,6 +32,8 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 	private KnowledgeReportMapper knowledgeReportMapper;
 	@Resource
 	private UserService userService;
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public Map<String, Object> addReport(long kid, String type, String desc,
@@ -54,6 +59,17 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 		} else {
 			result.put(Constants.status, Constants.ResultType.success.v());
 		}
+		// 修改mongo举报状态
+		String obj = Constants.getTableName(columnType);
+		org.springframework.data.mongodb.core.query.Criteria criteria = org.springframework.data.mongodb.core.query.Criteria
+				.where("_id").is(kid);
+		Query query = new Query(criteria);
+		Update update = new Update();
+		update.set("report_status", Constants.ReportStatus.report.v());
+
+		mongoTemplate.updateFirst(query, update,
+				obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
 		return result;
 	}
 
