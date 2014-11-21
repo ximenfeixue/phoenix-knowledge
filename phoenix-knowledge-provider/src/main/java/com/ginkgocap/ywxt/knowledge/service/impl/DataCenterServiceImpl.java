@@ -42,7 +42,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 	private AttachmentService attachmentService;
 	private static final Logger logger = LoggerFactory
 			.getLogger(DataCenterServiceImpl.class);
-
+	
 	@Resource
 	private HTTPUrlConfig httpUrlConfig;
 
@@ -92,9 +92,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 		logger.info("进入添加栏目通知数据中心请求");
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("columnId", columnId + "");
+		params.put("id", columnId + "");
 
-		String str = HTTPUtil.post(httpUrlConfig.getPushUrl(), params);
+		String str = HTTPUtil.post(httpUrlConfig.getPushUrl()+"column/add", params);
 		if (StringUtils.isBlank(str)) {
 			logger.error("通知失败!栏目ID:{}",columnId);
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -279,4 +279,36 @@ public class DataCenterServiceImpl implements DataCenterService {
 			f.mkdirs();
 			return f;
 	}
+
+	@Override
+	public Map<String, Object> noticeDataCenterWhileKnowledgeChange(long kId,
+			String oper, String type) {
+		logger.info("进入知识通知数据中心请求");
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("id", kId + "");
+		params.put("oper",oper);
+		params.put("type", type);
+
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()+"knowledge/operation.json", params);
+		if (StringUtils.isBlank(str)) {
+			logger.error("通知失败!知识ID:{}",kId);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.parseError.c());
+			return result;
+		}
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.readValue(str, Map.class);
+		}  catch (Exception e) {
+			e.printStackTrace();
+			logger.error("通知失败!知识ID:{}",kId);
+		}
+		
+		result.put(Constants.status, Constants.ResultType.success.v());
+		
+		return result;
+	}
+
 }

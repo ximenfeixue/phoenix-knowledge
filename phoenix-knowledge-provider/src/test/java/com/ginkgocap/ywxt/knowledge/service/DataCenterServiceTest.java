@@ -14,4 +14,8 @@ public class DataCenterServiceTest extends TestBase{
 	public void parseTest(){
 		dataCenterService.getCaseDataFromDataCenter("http://192.168.101.14:81/cloud/case/0051190063.pdf");
 	}
+	@Test
+	public void pushTest(){
+		dataCenterService.noticeDataCenterWhileColumnChange(1);
+	}
 }

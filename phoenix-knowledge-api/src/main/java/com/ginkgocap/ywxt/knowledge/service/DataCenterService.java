@@ -37,5 +37,13 @@ public interface DataCenterService {
 	 * liubang
 	 */
 	Map<String, Object> processView(String taskId);
+	/** 知识修改通知数据中心
+	 * @param kId 知识ID
+	 * @param oper 操作(add del upd) 
+	 * @param type 知识类型(11种类型)
+	 * @return
+	 */
+	Map<String,Object> noticeDataCenterWhileKnowledgeChange(long kId,String oper,String type);
+	
 	
 }

@@ -121,6 +121,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		}
 		result.put("list", kcVOList);
 		result.put("totalcount", knowledgeCommentMapper.countByExample(example));
+		result.put("total", knowledgeCommentMapper.countByExample(new KnowledgeCommentExample()));
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}

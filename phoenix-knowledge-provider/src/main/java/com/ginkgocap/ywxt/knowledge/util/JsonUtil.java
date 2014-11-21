@@ -88,7 +88,7 @@ public class JsonUtil {
 		List<String> tagList = null;
 		if (StringUtils.isNotBlank(tags)) {
 			tagList = new ArrayList<String>();
-			String[] tag = tags.split(",");
+			String[] tag = tags.split(" ");
 			for (String t : tag) {
 				tagList.add(t);
 			}

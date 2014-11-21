@@ -20,23 +20,23 @@ public class KnowledgeReaderTest extends TestBase {
 	@Test
 	public void testCount() {
 
-		knowledgeReaderService.getKnowledgeContent(1, "1");
+//		knowledgeReaderService.getKnowledgeContent(1, "1");
 	}
 
 	@Test
 	public void testAddComment() {
-		System.out.println(knowledgeCommentService.addComment(1001, 10470309,
-				0, "这文章不错呀"));
+//		System.out.println(knowledgeCommentService.addComment(1001, 10470309,
+//				0, "这文章不错呀"));
 	}
 
 	@Test
 	public void testFindComment() {
-//		System.out.println(knowledgeCommentService.findCommentList(1001, 0));
+//		System.out.println(knowledgeCommentService.findCommentList(332715, 47, 1, 5, user));
 	}
 
 	@Test
 	public void testAddReport() {
-		System.out.println(knowledgeReportService.addReport(1001, "1",
-				"太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了", 10470309));
+//		System.out.println(knowledgeReportService.addReport(1001, "1",
+//				"太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了太垃圾了", 10470309));
 	}
 }

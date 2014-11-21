@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 public class SearchServiceTest extends TestBase {
 	@Autowired
@@ -23,6 +25,20 @@ public class SearchServiceTest extends TestBase {
 	}
 	@Test
 	public void testSearchshare() {
-		searchService.getUserTag(1l, "1");
+		KnowledgeNewsVO vo = new KnowledgeNewsVO();
+		vo.setkId(111l);
+		vo.setColumnType("1");
+		vo.setColumnid("2222");
+		vo.setTitle("title");
+		vo.setPic("/web/cover");
+		vo.setDesc("desc");
+		vo.setContent("content");
+		vo.setTags("ddd,22");
+		vo.setEssence("1");
+		
+		User user = new User();
+		user.setId(111);
+		searchService.shareToJinTN(user.getId(), vo);
 	}
 }
+
