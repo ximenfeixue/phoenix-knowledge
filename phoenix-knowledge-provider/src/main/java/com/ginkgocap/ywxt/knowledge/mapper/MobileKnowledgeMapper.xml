@@ -154,7 +154,8 @@
 	
 	<select id="selectKnowledgeByPermissionMyFriends" resultType="map">
 		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
-		AND t.receive_user_id != -1
+		0 = 0
+		t.receive_user_id != -1
 		AND t.receive_user_id != 0
 		AND t.send_user_id = #{userId} 
 		AND t.column_id = #{columnId} 
@@ -164,6 +165,7 @@
 	
 	<select id="selectKnowledgeCountByPermissionMyFriends" resultType="int">
 		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
 		t.receive_user_id != -1
 		AND t.receive_user_id != 0
 		AND t.send_user_id = #{userId} 
