@@ -42,6 +42,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
 		this.setTaskid(vo.getTaskId());
+		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		return this;
 	}
 
@@ -70,6 +71,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
 		this.setTaskid(vo.getTaskId());
+		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		return this;
 	}
 
