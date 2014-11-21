@@ -281,12 +281,12 @@ public class DataCenterServiceImpl implements DataCenterService {
 	}
 
 	@Override
-	public Map<String, Object> noticeDataCenterWhileKnowledgeChange(long kId,
+	public Map<String, Object> noticeDataCenterWhileKnowledgeChange(String kId,
 			String oper, String type) {
 		logger.info("进入知识通知数据中心请求");
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("id", kId + "");
+		params.put("id", kId);
 		params.put("oper",oper);
 		params.put("type", type);
 

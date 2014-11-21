@@ -43,7 +43,7 @@ public interface DataCenterService {
 	 * @param type 知识类型(11种类型)
 	 * @return
 	 */
-	Map<String,Object> noticeDataCenterWhileKnowledgeChange(long kId,String oper,String type);
+	Map<String,Object> noticeDataCenterWhileKnowledgeChange(String kId,String oper,String type);
 	
 	
 }
