@@ -10,7 +10,7 @@ public interface DataCenterService {
 	 * @param id 知识ID
 	 * @return
 	 */
-	Map<String,Object> getCaseDataFromDataCenter(String path);
+	Map<String,Object> getCaseDataFromDataCenter(String path,String type);
 	
 	/**
 	 * 添加栏目通知数据中心

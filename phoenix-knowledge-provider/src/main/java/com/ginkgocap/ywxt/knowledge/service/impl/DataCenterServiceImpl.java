@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,35 +10,39 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
-import com.ginkgocap.ywxt.knowledge.util.OpenOfficeConvert;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
 import com.ginkgocap.ywxt.util.DateFunc;
-import com.ginkgocap.ywxt.util.GetUploadPath;
-import com.ginkgocap.ywxt.util.MakePrimaryKey;
+import com.ginkgocap.ywxt.util.Encodes;
 
 @Service("dataCenterService")
 public class DataCenterServiceImpl implements DataCenterService {
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
+	@Resource
+	private KnowledgeReaderService knowledgeReaderService;
 	@Resource
 	private AttachmentService attachmentService;
 	private static final Logger logger = LoggerFactory
@@ -47,7 +52,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 	private HTTPUrlConfig httpUrlConfig;
 
 	@Override
-	public Map<String, Object> getCaseDataFromDataCenter(String path) {
+	public Map<String, Object> getCaseDataFromDataCenter(String path,String type) {
 		logger.info("进入转换经典案例请求");
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
@@ -60,8 +65,13 @@ public class DataCenterServiceImpl implements DataCenterService {
 
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("path", path);
+			if(StringUtils.equalsIgnoreCase(type, "doc")|| StringUtils.equalsIgnoreCase(type, "docx") ||StringUtils.equalsIgnoreCase(type, "rtf")){
+				params.put("type", "word");
+			}else if(StringUtils.equalsIgnoreCase(type, "pdf")){
+				params.put("type", "pdf");
+			}
 
-			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "pdf/",
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 					params);
 			if (StringUtils.isBlank(str)) {
 				logger.error("转换错误,转换返回值为空!");
@@ -227,6 +237,38 @@ public class DataCenterServiceImpl implements DataCenterService {
 				File knowledgeDir = createDir(articleDir.getPath() + File.separator + "knowledge",0);
 				//获取大数据生成的知识文档
 				//TODO
+				Knowledge  k = knowledgeReaderService.getKnowledgeById(b.getKnowledgeId(), String.valueOf(b.getColumnType()));
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("path", k.getContent());
+				params.put("type", "html");
+
+				String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
+						params);
+				Map<String,Object> result = new HashMap<String, Object>();
+				if (StringUtils.isBlank(str)) {
+					logger.error("转换错误,转换返回值为空!");
+					result.put(Constants.status, Constants.ResultType.fail.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.parseError.c());
+				}
+				ObjectMapper mapper = new ObjectMapper();
+				result = mapper.readValue(str, Map.class);
+				System.out.println("导出附件:"+str);
+				if(result!=null && result.get("responseData") !=null){
+					JSONObject json = JSONObject.fromObject(result.get("responseData"));
+					String ss ="";
+					if(json.get("data")!=null){
+						ss= json.getString("data");
+					}
+					if(StringUtils.isBlank(ss)){
+						ss = result.get("responseData").toString();
+					}
+					byte[] html = Encodes.decodeBase64(ss);
+					File file = new File(knowledgeDir.getPath()+File.separator+b.getTitle()+".doc");
+					FileOutputStream fos = new FileOutputStream(file);
+					fos.write(html);
+					fos.close();
+				}
 			}
 			// 生成附件包及内容
 			if (StringUtils.equals("2", group) || StringUtils.equals("3", group)) {
