@@ -66,6 +66,7 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			list.add(3);
 			list.add(4);
 			list.add(5);
+			list.add(8);
 			criteria.and("status").in(list);
 		}else {
 			criteria.and("status").is(status);
