@@ -53,4 +53,10 @@ public interface MobileSearchService {
 	public JSONObject searchKnowledge(long userid, String keyword,
 			String tag, int scope, int pno, int psize, String qf, int type,
 			String sort) throws Exception;
+	
+	/** 查询全平台的知识 */
+	public Map<String, Object> selectPermissionByAllPermission(long userId,long columnId,int start,int size);
+	
+	/** 查询好友的知识 */
+	public Map<String, Object> selectPermissionByMyFriends(long userId,long columnId,int start,int size);
 }
