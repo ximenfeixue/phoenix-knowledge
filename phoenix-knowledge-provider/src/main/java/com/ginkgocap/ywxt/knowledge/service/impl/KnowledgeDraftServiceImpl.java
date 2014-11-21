@@ -133,6 +133,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
+		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
 		// 查询知识内容敏感词
 		List<String> listword = sensitiveWordService.sensitiveWord(vo
 				.getContent());
@@ -165,6 +166,11 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					vo.getColumnType());
 			if (knowledge != null) {
 				vo.setKnowledgestatus(knowledge.getStatus());
+				if (knowledge.getStatus() == Constants.Status.checked.v()) {
+
+					vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v()
+							+ "");
+				}
 			}
 
 			knowledgeNewsDAO.updateKnowledge(vo, user);
