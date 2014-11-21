@@ -54,7 +54,9 @@
 	AND uc.id=c.category_id
 	AND uc.user_id=#{collectionUserId}
 	AND c.knowledge_id=b.knowledge_id
+	<if test="sortId != null and sortId != ''">
 	AND uc.sortid =#{sortId} 
+	</if>
 	<if test="knowledgeType!=null and knowledgeType != ''">
 	AND b.column_type=#{knowledgeType}
 	</if>
@@ -77,7 +79,9 @@
 	AND uc.id=c.category_id
 	AND uc.user_id=#{collectionUserId}
 	AND c.knowledge_id=b.knowledge_id
+	<if test="sortId != null and sortId != ''">
 	AND uc.sortid =#{sortId}  
+	</if>
 	<if test="knowledgeType!=null and knowledgeType != ''">
 	AND b.column_type=#{knowledgeType}
 	</if>
