@@ -56,10 +56,21 @@ public class KnowledgeNewsVO implements Serializable {
 	// 知识创建时间
 	private String createtime;
 
-	private String synonyms; //同义词
-	
-	private Long knowledgeMainId;//代表草稿箱中存储了真正知识的ID
-	
+	private String synonyms; // 同义词
+
+	private Long knowledgeMainId;// 代表草稿箱中存储了真正知识的ID
+
+	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站,7永久删除)
+	private int knowledgestatus;
+
+	public int getKnowledgestatus() {
+		return knowledgestatus;
+	}
+
+	public void setKnowledgestatus(int knowledgestatus) {
+		this.knowledgestatus = knowledgestatus;
+	}
+
 	public String getCreatetime() {
 		return createtime;
 	}
