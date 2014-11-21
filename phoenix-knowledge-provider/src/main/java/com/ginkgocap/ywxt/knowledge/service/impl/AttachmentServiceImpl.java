@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 	public Map<String, Object> queryAttachmentByTaskId(String taskId) {
 		logger.info("进入查询知识附件请求,知识Id:{}", taskId);
 		Map<String, Object> result = new HashMap<String, Object>();
+		if (StringUtils.isBlank(taskId)) {
+			result.put("hasAtt", false);
+			return result;
+		}
 		AttachmentExample example = new AttachmentExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andTaskidEqualTo(taskId);
@@ -93,9 +98,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	public Attachment selectByPrimaryKey(long attId) {
 		logger.info("进入获取附件请求,附件Id:{}", attId);
-		
+
 		Attachment attachment = attachmentMapper.selectByPrimaryKey(attId);
-		
+
 		logger.info("获取附件成功,附件Id:{}", attId);
 		return attachment;
 	}
