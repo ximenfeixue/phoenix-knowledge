@@ -128,10 +128,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private SearchService searchservice;
-	
+
 	@Autowired
 	private KnowledgeStaticsService knowledgeStaticsService;
-
+//
 	@Override
 	public Map<String, Object> deleteKnowledge(String knowledgeids,
 			long catetoryid, String types, String titles, User user) {
@@ -280,14 +280,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
-		if(vo.getKnowledgeid()!=null && !"".equals(vo.getKnowledgeid())){
+		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
-
+		vo.setKnowledgestatus(Constants.Status.checked.v());
 		// 查询知识内容敏感词
 		List<String> listword = sensitiveWordService.sensitiveWord(vo
 				.getContent());
@@ -893,9 +893,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public void updateKnowledgeForInvestment(Long id,String pic,
-			String content, String desc,Long userId) {
-		knowledgeDao.updateInvestment(id,pic, content, desc);
+	public void updateKnowledgeForInvestment(Long id, String pic,
+			String content, String desc, Long userId) {
+		knowledgeDao.updateInvestment(id, pic, content, desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
 	}
 }
