@@ -4,6 +4,8 @@
 	namespace="com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper">
 	
 	<sql id="tb_name_base">tb_knowledge_base</sql>
+	
+	<sql id="tb_user_permission">tb_user_permission</sql>
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
 		SELECT DISTINCT b.*
@@ -132,5 +134,39 @@
 		<if test="userId != -2">
 		AND b.user_id = #{userId}
 		</if>
+	</select>
+	
+	<select id="selectKnowledgeByPermissionAllPlatform" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id = -1  
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermissionAllPlatform" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id = -1 
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+	</select>
+	
+	<select id="selectKnowledgeByPermissionMyFriends" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		AND t.receive_user_id != -1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermissionMyFriends" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id != -1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
 	</select>
 </mapper>

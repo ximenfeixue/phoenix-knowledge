@@ -53,4 +53,20 @@ public interface MobileKnowledgeMapper {
 	
 	int selectCountKnowledgeForSourceByColumn(@Param("columnId") long columnId,
 			@Param("userId") long userId);
+	
+	@SuppressWarnings("rawtypes")
+	List selectKnowledgeByPermissionAllPlatform(@Param("userId") long userId,
+			@Param("columnId") long columnId, @Param("start") int start,
+			@Param("size") int size);
+	
+	int selectKnowledgeCountByPermissionAllPlatform(@Param("userId") long userId,
+			@Param("columnId") long columnId);
+	
+	@SuppressWarnings("rawtypes")
+	List selectKnowledgeByPermissionMyFriends(@Param("userId") long userId,
+			@Param("columnId") long columnId, @Param("start") int start,
+			@Param("size") int size);
+	
+	int selectKnowledgeCountByPermissionMyFriends(@Param("userId") long userId,
+			@Param("columnId") long columnId);
 }

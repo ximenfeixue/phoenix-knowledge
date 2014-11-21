@@ -303,5 +303,39 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		String str = HTTPUtil.mobilePost(dataUrl+"/knowledge/keyword/search.json", params);
 		return JSONObject.fromObject(str);
 	}
+
+	@Override
+	public Map<String, Object> selectPermissionByAllPermission(long userId,
+			long columnId, int start, int size) {
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",columnId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",	userId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	start);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
+		int startPage = (start - 1) * size;
+		int count = mobileKnowledgeMapper.selectKnowledgeCountByPermissionAllPlatform(userId, columnId);
+		PageUtil p = new PageUtil(count, start, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByPermissionAllPlatform(userId, columnId, startPage, size);
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
+
+	@Override
+	public Map<String, Object> selectPermissionByMyFriends(long userId,
+			long columnId, int start, int size) {
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",columnId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",	userId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	start);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
+		int startPage = (start - 1) * size;
+		int count = mobileKnowledgeMapper.selectKnowledgeCountByPermissionMyFriends(userId, columnId);
+		PageUtil p = new PageUtil(count, start, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		List<?> kcl = mobileKnowledgeMapper.selectKnowledgeByPermissionMyFriends(userId, columnId, startPage, size);
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
 	
 }
