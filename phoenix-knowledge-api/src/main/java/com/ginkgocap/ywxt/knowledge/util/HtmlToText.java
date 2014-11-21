@@ -35,6 +35,7 @@ public class HtmlToText {
 			htmlStr = htmlStr.replaceAll("&emsp;", "");
 			htmlStr = htmlStr.replaceAll("&emsp;", "");
 			htmlStr = StringUtils.replace(htmlStr, "\n", "");
+			htmlStr = htmlStr.replaceAll("</s", "");
 
 			p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
 			m_script = p_script.matcher(htmlStr);

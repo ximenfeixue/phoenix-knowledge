@@ -91,7 +91,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		this.setDesc(HtmlToText.html2Text(vo.getContent()));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
@@ -124,7 +124,7 @@ public class KnowledgeLaw extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		this.setDesc(HtmlToText.html2Text(vo.getContent()));
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
