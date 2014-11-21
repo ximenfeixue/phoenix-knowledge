@@ -102,88 +102,61 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public Column saveOrUpdate(Column kc) {
 
-		if (null == kc) {
+		if (null == kc) return null;
+		// 获取栏目id
+		Long id = kc.getId();
+		// 获取当前时间
+		Date date = new Date();
+		// 父级id
+		Long pid = kc.getParentId();
+		// 检查上级栏目id
+		if (pid == null || pid < 0)		return null;
+		// 检测必要信息
+		if (!checkColumnByParam(kc.getColumnname(), pid,
+				kc.getUserId(), id)) {
+			logger.error("新增或修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
 			return null;
 		}
-
-		Long id = kc.getId();
-		Date date = new Date();
-
-		if (null == id || id.intValue() <= 0) {
-
-			if (kc.getParentId() == null || kc.getParentId() < 0) {
-				return null;
+		// id不存在，则表示新增栏目
+		if (null == id || id <= 0) {
+			// 添加一级目录默认为资讯type为1
+			if(pid == 0) {
+				kc.setType((short)1);
+			} // 设置type为父级type 
+			else {
+				Column column = columnMapper.selectByPrimaryKey(id);
+				kc.setType(column.getType());
 			}
-
-			// 检测重复
-			try {
-				if (!checkColumnByParams(kc.getColumnname(), kc.getParentId(),
-						kc.getUserId())) {
-					return null;
-				}
-			} catch (Exception e) {
-				logger.error("插入栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
-			}
-
 			kc.setCreatetime(date);
 			kc.setUpdateTime(date);
 			kc.setDelStatus((byte) 0);
 			kc.setSubscribeCount(0l);
-
-			// 参考UserCategoryServiceImpl.insert 生成columnlevelpath
-			// 系统栏目的USERID应为金桐脑的id
-
 			// 插入数据之前必须有columnpath
-
-			List<Column> ancestors = selectAncestors(kc);
-
-			List<Long> pids = new ArrayList<Long>();
-			for (int i = 0; i < ancestors.size(); i++) {
-				pids.add(ancestors.get(i).getParentId());
-			}
-
-			Long pathId = columnValueMapper.selectMaxID() + 1;
-
-			String sort = KCHelper.getSortPath(pids, pathId);
-
-			kc.setColumnLevelPath(sort);
+			String currentColumnLevelPath = getColumnLevelPath(pid);
+			// 设置columnLevelPath
+			kc.setColumnLevelPath(currentColumnLevelPath);
 
 			columnMapper.insert(kc);
-
+			// 新增栏目通知大数据
+			try {
+				logger.info("--进入添加栏目请求时通知大数据,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
+				dataCenterService.noticeDataCenterWhileColumnChange(kc.getId());
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info("--进入添加栏目请求时通知大数据异常,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
+			}
 			ColumnExample ce = new ColumnExample();
 			filterDel(ce.createCriteria().andUpdateTimeEqualTo(date)
 					.andCreatetimeEqualTo(date));
 			kc = columnMapper.selectByExample(ce).get(0);
 			columnVisibleService.saveCid(kc.getUserId(), kc.getId());
 			return kc;
-		}
-
-		if (id > 0) {
-			// Column okc= ColumnDao.queryById(kc.getId());
-			//
-			// if(null != okc){
-			// okc.setColumnLevelPath(kc.getColumnLevelPath());
-			// okc.setSubscribeCount(kc.getSubscribeCount());
-			// okc.setUpdateTime(date);
-			// ColumnDao.update(okc);
-			// }
-
-			// 检测重复
-			try {
-				if (!checkColumnByParam(kc.getColumnname(), kc.getParentId(),
-						kc.getUserId(), id)) {
-					return null;
-				}
-			} catch (Exception e) {
-				logger.error("修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
-			}
-
+		}else if (id > 0) {
 			kc.setUpdateTime(date);
 			columnMapper.updateByPrimaryKey(kc);
 			columnVisibleService.saveOrUpdate(kc);
 			return kc;
 		}
-
 		return null;
 	}
 
