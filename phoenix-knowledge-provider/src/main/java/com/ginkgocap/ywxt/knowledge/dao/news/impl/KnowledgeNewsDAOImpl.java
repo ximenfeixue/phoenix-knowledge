@@ -99,7 +99,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			Criteria criteria = Criteria.where("_id").is(vo.getkId());
 			Query query = new Query(criteria);
 			Update update = new Update();
-			update.set("status", Constants.Status.checked.v());
+			update.set("status", vo.getKnowledgestatus());
 			update.set("title", vo.getTitle());
 			update.set("uid", user.getId());
 			update.set("uname", user.getName());
@@ -119,7 +119,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("selectedIds", vo.getSelectedIds());
 			update.set("asso", vo.getAsso());
 			update.set("tags", vo.getTags());
-			
+
 			mongoTemplate.updateFirst(query, update,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
@@ -185,13 +185,15 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
 		Knowledge knowledge = null;
 		try {
-			Criteria criteria = Criteria.where("knowledgeMainId").is(knowledgeId);
-			if(userId!=null){
+			Criteria criteria = Criteria.where("knowledgeMainId").is(
+					knowledgeId);
+			if (userId != null) {
 				criteria.and("uid").is(userId);
 			}
 			Query query = new Query(criteria);
 			knowledge = (Knowledge) Class.forName(obj).newInstance();
-			return (Knowledge) mongoTemplate.findOne(query,Class.forName(obj),obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+			return (Knowledge) mongoTemplate.findOne(query, Class.forName(obj),
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -199,10 +201,10 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 		return knowledge;
 
 	}
-	
+
 	@Override
 	public void updateKnowledgeDraft(KnowledgeNewsVO vo, User user) {
-		String type=vo.getColumnType();
+		String type = vo.getColumnType();
 		String obj = Constants.getTableName(vo.getColumnType());
 		try {
 			Criteria criteria = Criteria.where("_id").is(vo.getkId());
@@ -214,13 +216,13 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("uname", user.getName());
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
-			if(type.equals(Constants.Type.Investment.v() + "")
+			if (type.equals(Constants.Type.Investment.v() + "")
 					|| type.equals(Constants.Type.Industry.v() + "")
-					|| type.equals(Constants.Type.Case.v() + "")){
+					|| type.equals(Constants.Type.Case.v() + "")) {
 				update.set("desc", vo.getDesc());
-			}else{
-				update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
-						.substring(0, 50) : vo.getContent());
+			} else {
+				update.set("desc", vo.getContent().length() > 50 ? vo
+						.getContent().substring(0, 50) : vo.getContent());
 			}
 			update.set("content", vo.getContent());
 			update.set("essence", vo.getEssence());
@@ -234,7 +236,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("selectedIds", vo.getSelectedIds());
 			update.set("asso", vo.getAsso());
 			update.set("tags", vo.getTags());
-			
+
 			mongoTemplate.updateFirst(query, update,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
@@ -246,12 +248,12 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
 	@Override
 	public void deleteKnowledgeById(long knowledgeid, String type) {
-			String obj = Constants.getTableName(type);
-			Criteria criteria = Criteria.where("_id").is(knowledgeid);
-			Query query = new Query(criteria);
-			mongoTemplate.remove(query, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+		String obj = Constants.getTableName(type);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query,
+				obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 	}
 
-	
 }

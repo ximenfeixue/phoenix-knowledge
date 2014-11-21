@@ -19,7 +19,6 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraftExample.Criteria;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -34,6 +33,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
@@ -89,6 +89,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
+
+	@Autowired
+	private KnowledgeService knowledgeService;
 
 	@Override
 	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
@@ -158,6 +161,12 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+			Knowledge knowledge = knowledgeService.selectKnowledge(vo.getkId(),
+					vo.getColumnType());
+			if (knowledge != null) {
+				vo.setKnowledgestatus(knowledge.getStatus());
+			}
+
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -413,7 +422,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Override
 	public Map<String, Object> insertKnowledgeDraftNew(KnowledgeNewsVO vo,
 			User user) {
-		return this.insertKnowledgeDraftNew(vo, user,false);
+		return this.insertKnowledgeDraftNew(vo, user, false);
 	}
 
 	@Override
@@ -426,7 +435,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			Long userId) {
 
 		Knowledge k = getDraftByMainIdAndUser(knowledgeMainId, type, userId);
-		if(k==null){
+		if (k == null) {
 			return 0;
 		}
 		knowledgeNewsDAO.deleteKnowledgeById(k.getId(), type);
@@ -526,10 +535,11 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				vo.setkId(kId);
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
-			//判断是否是投融工具更新
-			if(!isUpdate){
-				if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-	
+			// 判断是否是投融工具更新
+			if (!isUpdate) {
+				if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law
+						.v()) {// 法律法规只有独乐，不入权限表
+
 					// 删除用户权限数据
 					int userPermissionCount = userPermissionService
 							.deleteUserPermission(vo.getkId(), user.getId());
@@ -549,16 +559,18 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						}
 						if (!dule) {
 							// 格式化权限信息
-							List<String> permList = JsonUtil.getPermissionList(vo
-									.getSelectedIds());
+							List<String> permList = JsonUtil
+									.getPermissionList(vo.getSelectedIds());
 							// 大乐全平台分享
 							// userPermissionService.insertUserShare(permList,
 							// vo.getkId(), vo, user);
-							int pV = userPermissionService.insertUserPermission(
-									permList, vo.getkId(), user.getId(),
-									vo.getShareMessage(),
-									Short.parseShort(vo.getColumnType()),
-									Long.parseLong(vo.getColumnid()));
+							int pV = userPermissionService
+									.insertUserPermission(permList,
+											vo.getkId(), user.getId(), vo
+													.getShareMessage(), Short
+													.parseShort(vo
+															.getColumnType()),
+											Long.parseLong(vo.getColumnid()));
 							if (pV == 0) {
 								logger.error(
 										"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
@@ -567,13 +579,13 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						}
 					}
 				}
-	
+
 				// 删除该知识下的所有目录
 				int categoryCount = knowledgeCategoryService
 						.deleteKnowledgeCategory(vo.getkId());
 				// 删除该知识的基本信息
 				knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-	
+
 				long[] cIds = null;
 				// 添加知识到知识目录表
 				if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
@@ -589,14 +601,14 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					if (list != null && list.size() == 1) {
 						cIds = new long[1];
 						cIds[0] = list.get(0).getId();
-	
+
 					}
 				} else {
 					cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 				}
-				int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-						vo.getkId(), cIds, user.getId(), user.getName(),
-						columnPath, vo);
+				int categoryV = knowledgeCategoryService
+						.insertKnowledgeRCategory(vo.getkId(), cIds,
+								user.getId(), user.getName(), columnPath, vo);
 				if (categoryV == 0) {
 					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
 							vo.getkId(), cIds);
@@ -690,24 +702,24 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					return result;
 				}
 			}
-//			// 初始化知识统计信息
-//			KnowledgeStatics statics = new KnowledgeStatics();
-//			statics.setClickcount(0l);
-//			statics.setCollectioncount(0l);
-//			statics.setCommentcount(0l);
-//			statics.setKnowledgeId(kId);
-//			statics.setSharecount(0l);
-//			statics.setTitle(vo.getTitle());
-//			statics.setType(Short.parseShort(vo.getColumnType()));
-//			int sV = knowledgeStaticsMapper.insertSelective(statics);
-//			if (sV == 0) {
-//				logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
-//						vo.getColumnType());
-//				result.put(Constants.status, Constants.ResultType.fail.v());
-//				result.put(Constants.errormessage,
-//						Constants.ErrorMessage.addKnowledgeFail.c());
-//				return result;
-//			}
+			// // 初始化知识统计信息
+			// KnowledgeStatics statics = new KnowledgeStatics();
+			// statics.setClickcount(0l);
+			// statics.setCollectioncount(0l);
+			// statics.setCommentcount(0l);
+			// statics.setKnowledgeId(kId);
+			// statics.setSharecount(0l);
+			// statics.setTitle(vo.getTitle());
+			// statics.setType(Short.parseShort(vo.getColumnType()));
+			// int sV = knowledgeStaticsMapper.insertSelective(statics);
+			// if (sV == 0) {
+			// logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
+			// vo.getColumnType());
+			// result.put(Constants.status, Constants.ResultType.fail.v());
+			// result.put(Constants.errormessage,
+			// Constants.ErrorMessage.addKnowledgeFail.c());
+			// return result;
+			// }
 
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
