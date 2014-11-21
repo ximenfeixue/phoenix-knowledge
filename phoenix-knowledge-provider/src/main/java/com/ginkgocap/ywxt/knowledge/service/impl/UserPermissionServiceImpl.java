@@ -304,6 +304,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public boolean insertUserPermissionMongo(List<Long> receiveList,
 			KnowledgeNewsVO vo, User user) {
+		Criteria c = Criteria.where("sendUserId").is(user.getId());
+		c.and("knowledgeId").is(vo.getkId());
+		Query query = new Query(c);
+		mongoTemplate.remove(query, UserPermission.class);
 		UserPermissionMongo userPermission = new UserPermissionMongo();
 		StringBuffer sb = new StringBuffer();
 
