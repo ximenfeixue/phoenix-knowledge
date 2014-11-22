@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment;
@@ -37,11 +38,15 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	@Resource
 	private UserService userService;
 
+	private static final int pno = 1;
+
+	private static final int psize = 10;
+
 	@Override
 	public Map<String, Object> addComment(long kid, User user, long pid,
 			String content) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if(user == null){
+		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.userNotLogin.c());
@@ -82,7 +87,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 			knowledgeStaticsMapperManual.updateStatics(kid,
 					Constants.StaticsValue.commentCount.v(), 0, 0, 0);
 
-			result.putAll(findCommentList(kid, pid, 1, 10,user));
+			result.putAll(findCommentList(kid, pid, 1, 10, user));
 			result.put("pno", 1);
 		}
 
@@ -97,14 +102,14 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(kid);
 		result.put("total", knowledgeCommentMapper.countByExample(example));
-		
+
 		criteria.andParentidEqualTo(pid);
 		example.setLimitStart((pno - 1) * psize);
 		example.setLimitEnd(psize);
 		example.setOrderByClause("createtime desc");
 		List<KnowledgeComment> kcList = knowledgeCommentMapper
 				.selectByExample(example);
-		
+
 		List<KnowledgeCommentVO> kcVOList = null;
 		if (kcList != null && kcList.size() > 0) {
 			kcVOList = new ArrayList<KnowledgeCommentVO>();
@@ -125,6 +130,14 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
+
+	// private String text2Html(String content) {
+	// if (StringUtils.isBlank(content)) {
+	// return "";
+	// }
+	//
+	// return content.replaceAll("\n", "<br/>").replaceAll(" ", "&nbsp;");
+	// }
 
 	@Override
 	public Map<String, Object> delComment(long id, long kId, User user) {
@@ -150,16 +163,22 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 					Constants.ErrorMessage.delCommentFail.c());
 			return result;
 		} else {
+			int delV = -1;
 			// 修改子评论数
 			if (kc.getParentid() != 0) {
 				knowledgeCommentMapperManual.updateCountByPrimaryKey(
 						kc.getParentid(), -1);
+			} else {
+				KnowledgeCommentExample example = new KnowledgeCommentExample();
+				Criteria criteria = example.createCriteria();
+				criteria.andParentidEqualTo(id);
+				delV = delV - knowledgeCommentMapper.deleteByExample(example);
 			}
 			// 删除总评论数
-			knowledgeStaticsMapperManual.updateStatics(kId, -1, 0, 0, 0);
+			knowledgeStaticsMapperManual.updateStatics(kId, delV, 0, 0, 0);
 		}
 
-		result.putAll(findCommentList(kId, kc.getParentid(), 1, 10,user));
+		result.putAll(findCommentList(kId, kc.getParentid(), pno, psize, user));
 		result.put("pno", 1);
 		result.put(Constants.status, Constants.ResultType.success.v());
 
