@@ -101,7 +101,6 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		criteria.andParentidEqualTo(pid);
 		example.setLimitStart((pno - 1) * psize);
 		example.setLimitEnd(psize);
-
 		example.setOrderByClause("createtime desc");
 		List<KnowledgeComment> kcList = knowledgeCommentMapper
 				.selectByExample(example);
