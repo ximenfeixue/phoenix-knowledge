@@ -96,6 +96,8 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		KnowledgeCommentExample example = new KnowledgeCommentExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(kid);
+		result.put("total", knowledgeCommentMapper.countByExample(example));
+		
 		criteria.andParentidEqualTo(pid);
 		example.setLimitStart((pno - 1) * psize);
 		example.setLimitEnd(psize);
@@ -121,7 +123,6 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		}
 		result.put("list", kcVOList);
 		result.put("totalcount", knowledgeCommentMapper.countByExample(example));
-		result.put("total", knowledgeCommentMapper.countByExample(new KnowledgeCommentExample()));
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
