@@ -101,7 +101,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		long userId = user.getId();
 		String username = user.getName();
 
-		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+		// long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
 		// TODO 判断用户是否选择栏目
@@ -126,14 +126,13 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			vo.setAsso("");
 		}
 		// 知识入Mongo
-		vo.setkId(kId);
+		// vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 		vo.setColumnid(columnid);
 		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
-		vo.setStatus(Constants.KnowledgeCategoryStatus.uneffect.v() + "");
 		// 查询知识内容敏感词
 		List<String> listword = sensitiveWordService.sensitiveWord(vo
 				.getContent());
@@ -162,18 +161,18 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			Knowledge knowledge = knowledgeService.selectKnowledge(vo.getkId(),
-					vo.getColumnType());
-			if (knowledge != null) {
-				vo.setKnowledgestatus(knowledge.getStatus());
-				if (knowledge.getStatus() == Constants.Status.checked.v()) {
-
-					vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v()
-							+ "");
-				}
+			Knowledge k = getDraftByMainIdAndUser(vo.getkId(),
+					vo.getColumnType(), user.getId());
+			if (k != null && k.getId() > 0) {
+				vo.setKnowledgeMainId(vo.getkId());
+				vo.setkId(k.getId());
+				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
+			} else {
+				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+				vo.setKnowledgeMainId(vo.getkId());
+				vo.setkId(kId);
+				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
-
-			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 
@@ -253,28 +252,29 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				return result;
 			}
 
-			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(Long
-					.parseLong(vo.getKnowledgeid()));
+			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo
+					.getKnowledgeMainId());
 
 			if (knowledgeDraft != null) {
-				this.updateKnowledgeDaraft(Long.parseLong(vo.getKnowledgeid()),
+				this.updateKnowledgeDaraft(vo.getKnowledgeMainId(),
 						vo.getTitle(), vo.getColumnName(), userId,
 						vo.getColumnType());
 			} else {
 
-				knowledgeDraftDAO.insertKnowledge(
-						Long.parseLong(vo.getKnowledgeid()), vo.getTitle(),
-						vo.getColumnName(), vo.getColumnType(), userId);
+				knowledgeDraftDAO.insertKnowledge(vo.getKnowledgeMainId(),
+						vo.getTitle(), vo.getColumnName(), vo.getColumnType(),
+						userId);
 			}
 		} else {
-			// knowledgeNewsDAO.insertknowledgeDraft(vo, user);
-			// 草稿箱备用库
-			// kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-			// vo.setKnowledgeid(vo.getkId() + "");
-			// vo.setkId(kId);
-			knowledgeNewsDAO.insertknowledgeDraft(vo, user);
-
-			knowledgeDraftDAO.insertKnowledge(kId, vo.getTitle(),
+			// id=0 相当新增
+			long draftKId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+			vo.setkId(draftKId);
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库假装当作草稿防止被查询出来
+			vo.setKnowledgeMainId(draftKId);// 草稿中存放真正知识的ID
+			vo.setkId(kId);// 插入草稿ID
+			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
+			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
 			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 			Boolean dule = JsonUtil.checkKnowledgePermission(vo
@@ -338,8 +338,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			}
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
-		result.put("knowledgeid", vo.getkId());
-		logger.info("添加草稿箱成功,知识ID:{}", kId);
+		result.put("knowledgeid", vo.getKnowledgeMainId());
+		logger.info("添加草稿箱成功,知识ID:{}", vo.getkId());
 		return result;
 
 	}

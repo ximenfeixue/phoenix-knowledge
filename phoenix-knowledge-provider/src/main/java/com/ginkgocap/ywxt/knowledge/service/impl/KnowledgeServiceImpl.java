@@ -314,6 +314,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				return result;
 			}
 		}
+//		Knowledge knowledge = knowledgeDraftService.getDraftByMainIdAndUser(
+//				vo.getkId(), vo.getColumnType(), user.getId());
+//		vo.setkId(knowledge.getId());
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -851,7 +854,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-				searchservice.shareToJinTN(user.getId(), vo);
+				// searchservice.shareToJinTN(user.getId(), vo);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
