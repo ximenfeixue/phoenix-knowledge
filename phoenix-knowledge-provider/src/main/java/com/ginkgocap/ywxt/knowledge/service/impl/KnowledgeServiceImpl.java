@@ -314,9 +314,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				return result;
 			}
 		}
-//		Knowledge knowledge = knowledgeDraftService.getDraftByMainIdAndUser(
-//				vo.getkId(), vo.getColumnType(), user.getId());
-//		vo.setkId(knowledge.getId());
+		// Knowledge knowledge = knowledgeDraftService.getDraftByMainIdAndUser(
+		// vo.getkId(), vo.getColumnType(), user.getId());
+		// vo.setkId(knowledge.getId());
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
@@ -744,64 +744,62 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			update.set("status", Constants.Status.checked.v());
 			mongoTemplate.updateFirst(query, update, collectionName);
 
-			if (knowledgerecycle.getCatetoryid() != -1) {
-				List<KnowledgeCategory> listcategory = knowledgeCategoryService
-						.selectKnowledgeCategory(knowledgeid);
-				if (listcategory != null && listcategory.size() > 0) {
-					for (KnowledgeCategory knowledgeCategory : listcategory) {
-						UserCategory usercategory = userCategoryService
-								.selectByPrimaryKey(knowledgeCategory
-										.getCategoryId());
+			// if (knowledgerecycle.getCatetoryid() != -1) {
+			// //回收站恢复，如果是app端，回收站知识不恢复到目录
+			List<KnowledgeCategory> listcategory = knowledgeCategoryService
+					.selectKnowledgeCategory(knowledgeid);
+			if (listcategory != null && listcategory.size() > 0) {
+				for (KnowledgeCategory knowledgeCategory : listcategory) {
+					UserCategory usercategory = userCategoryService
+							.selectByPrimaryKey(knowledgeCategory
+									.getCategoryId());
 
-						if (usercategory != null) {
-							knowledgeCategoryService
-									.updateKnowledgeCategorystatus(knowledgeid,
-											knowledgeCategory.getCategoryId());
-						} else {
-							// 查询该用户下的未分组目录ID
-							List<UserCategory> list = userCategoryService
-									.selectNoGroup(userid,
-											Constants.unGroupSortId, (byte) 0);
-							if (list != null) {
-								// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-								UserCategory category = list.get(0);
-								List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-										.selectKnowledgeCategory(
-												knowledgeid,
-												category.getId(),
-												Constants.KnowledgeCategoryStatus.effect
-														.v() + "");
-								if (listnogroup.size() == 0) {
-									knowledgeCategoryService
-											.insertKnowledgeCategoryNogroup(
-													knowledgeid,
-													category.getId());
-								}
+					if (usercategory != null) {
+						knowledgeCategoryService.updateKnowledgeCategorystatus(
+								knowledgeid, knowledgeCategory.getCategoryId());
+					} else {
+						// 查询该用户下的未分组目录ID
+						List<UserCategory> list = userCategoryService
+								.selectNoGroup(userid, Constants.unGroupSortId,
+										(byte) 0);
+						if (list != null) {
+							// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
+							UserCategory category = list.get(0);
+							List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+									.selectKnowledgeCategory(
+											knowledgeid,
+											category.getId(),
+											Constants.KnowledgeCategoryStatus.effect
+													.v() + "");
+							if (listnogroup.size() == 0) {
+								knowledgeCategoryService
+										.insertKnowledgeCategoryNogroup(
+												knowledgeid, category.getId());
 							}
 						}
 					}
-				} else {
-					// 查询该用户下的未分组目录ID
-					List<UserCategory> list = userCategoryService
-							.selectNoGroup(userid, Constants.unGroupSortId,
-									(byte) 0);
-					if (list != null) {
-						// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-						UserCategory category = list.get(0);
-						List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-								.selectKnowledgeCategory(
-										knowledgeid,
-										category.getId(),
-										Constants.KnowledgeCategoryStatus.effect
-												.v() + "");
-						if (listnogroup.size() == 0) {
-							knowledgeCategoryService
-									.insertKnowledgeCategoryNogroup(
-											knowledgeid, category.getId());
-						}
+				}
+			} else {
+				// 查询该用户下的未分组目录ID
+				List<UserCategory> list = userCategoryService.selectNoGroup(
+						userid, Constants.unGroupSortId, (byte) 0);
+				if (list != null) {
+					// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
+					UserCategory category = list.get(0);
+					List<KnowledgeCategory> listnogroup = knowledgeCategoryService
+							.selectKnowledgeCategory(
+									knowledgeid,
+									category.getId(),
+									Constants.KnowledgeCategoryStatus.effect
+											.v() + "");
+					if (listnogroup.size() == 0) {
+						knowledgeCategoryService
+								.insertKnowledgeCategoryNogroup(knowledgeid,
+										category.getId());
 					}
 				}
 			}
+			// }
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -854,7 +852,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-				 searchservice.shareToJinTN(user.getId(), vo);
+				searchservice.shareToJinTN(user.getId(), vo);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
