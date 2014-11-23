@@ -171,4 +171,22 @@
 		AND t.send_user_id = #{userId} 
 		AND t.column_id = #{columnId} 
 	</select>
+	
+	<select id="selectKnowledgeByPermission" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermission" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+	</select>
 </mapper>

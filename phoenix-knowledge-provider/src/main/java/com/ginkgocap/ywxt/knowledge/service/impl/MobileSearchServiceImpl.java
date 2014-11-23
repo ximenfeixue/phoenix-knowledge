@@ -12,14 +12,18 @@ import net.sf.json.JSONObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.knowledge.dao.mobileKnowledge.MobileKnowledgeDAO;
 import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -29,6 +33,12 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(KnowledgeCollectionServiceImpl.class);
+	
+	@Autowired
+	private MobileKnowledgeDAO mobileKnowledgeDAO;
+	@Autowired//知识详情
+	private KnowledgeService knowledgeService;
+	
 	@Resource
 	private MongoTemplate mongoTemplate;
 	@Resource
@@ -337,5 +347,56 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		m.put("list", kcl);
 		return m;
 	}
+
+	@Override
+	public List<Knowledge> getKnowledge(String columnID, long user_id,
+			String type, int offset, int limit) {
+		 return mobileKnowledgeDAO.getKnowledge(columnID, user_id, type, offset, limit);
+	}
+
+	@Override
+	public Map<Long,Integer> selectKnowledgeByPermission(long userId,
+			long columnId, int start, int size) {
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",columnId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectMyFriendknowledgeByColumnId:{},",	userId);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	start);
+		logger.info(	"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectknowledgeByColumnIdAndSource:{},",	size);
+		@SuppressWarnings("unchecked")
+		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectKnowledgeByPermission(userId, columnId, start, size);
+		Map<Long,Integer> result = new HashMap<Long, Integer>();
+		if(null != kcl) {
+			int tempSize = kcl.size();
+			if(tempSize > 0) {
+				for (int i = 0; i < tempSize; i++) {
+					Map<String,Object> m = kcl.get(i);
+					result.put(Long.parseLong(m.get("knowledge_id").toString()), Integer.parseInt(m.get("type").toString()));
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Long selectKnowledgeCountByPermission(long userId, long columnId) {
+		return mobileKnowledgeMapper.selectKnowledgeCountByPermission(userId, columnId);
+	}
 	
+	@Override
+   public List<Knowledge> getMixKnowledge(String columnID,long user_id,String type,int offset,int limit) {
+		return mobileKnowledgeDAO.getMixKnowledge(columnID, user_id, type, offset, limit);
+    }
+	 
+	@Override
+	public long getMixKnowledgeCount(String columnID,long user_id,String type) {
+		return mobileKnowledgeDAO.getMixKnowledgeCount(columnID, user_id, type);
+	 }
+
+	@Override
+	public List<Knowledge> fileKnowledge(Map<Long, Integer> map) {
+		return mobileKnowledgeDAO.fileKnowledge(map);
+	}
+	
+	
+	
+
 }
