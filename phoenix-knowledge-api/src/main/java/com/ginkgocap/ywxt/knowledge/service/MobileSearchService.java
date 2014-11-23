@@ -1,8 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONObject;
+
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 /**
  * @Description: 移动端官方搜索接口
@@ -59,4 +62,27 @@ public interface MobileSearchService {
 	
 	/** 查询好友的知识 */
 	public Map<String, Object> selectPermissionByMyFriends(long userId,long columnId,int start,int size);
+	
+	/** 根据栏目ID和用户ID获取知识 */
+	public List<Knowledge> getKnowledge(String columnID,long user_id,String type,int offset,int limit);
+	
+	/** 查询全平台与好友的知识 */
+	public Map<Long,Integer> selectKnowledgeByPermission(long userId,long columnId,int start,int size);
+	
+	/** 查询全平台与好友的知识个数 */
+	public Long selectKnowledgeCountByPermission(long userId,long columnId);
+	
+	 /**
+	  * 获取 金桐和自己  混合
+	  */
+	 List<Knowledge> getMixKnowledge(String columnID,long user_id,String type,int offset,int limit);
+	 
+	 long getMixKnowledgeCount(String columnID,long user_id,String type);
+	 
+	 
+	 /**
+	  * 从MySQL中查询出的knowledge_id和type  填充相应的knowledge 形成List
+	  */
+	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
+	
 }
