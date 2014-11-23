@@ -85,4 +85,5 @@ public interface MobileSearchService {
 	  */
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
 	 
+	 long getKnowledgeCountByUserIdAndColumnID(String columnID,long user_id,String type);
 }
