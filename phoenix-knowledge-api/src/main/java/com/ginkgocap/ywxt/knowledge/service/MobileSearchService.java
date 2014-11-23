@@ -70,7 +70,7 @@ public interface MobileSearchService {
 	public Map<Long,Integer> selectKnowledgeByPermission(long userId,long columnId,int start,int size);
 	
 	/** 查询全平台与好友的知识个数 */
-	public Long selectKnowledgeCountByPermission(long userId,long columnId);
+	public int selectKnowledgeCountByPermission(long userId,long columnId);
 	
 	 /**
 	  * 获取 金桐和自己  混合
@@ -84,5 +84,5 @@ public interface MobileSearchService {
 	  * 从MySQL中查询出的knowledge_id和type  填充相应的knowledge 形成List
 	  */
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
-	
+	 
 }
