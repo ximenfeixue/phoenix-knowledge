@@ -259,7 +259,8 @@ public class Constants {
 				"栏目不存在，请刷新页面后重试!"), delColumnNotPermission("无权删除该栏目!"), delFail(
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
-				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"),userNotLogin("您未登陆,请先登陆!");
+				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"), userNotLogin(
+				"您未登陆,请先登陆!");
 
 		private String c;
 
@@ -497,6 +498,21 @@ public class Constants {
 			return String.valueOf(v);
 		}
 
+	}
+
+	// 弹出层类型
+	public enum cssType {
+		people(1), org(2);
+
+		private int v;
+
+		private cssType(int v) {
+			this.v = v;
+		}
+
+		public int v() {
+			return v;
+		}
 	}
 
 	public static Integer MATERIAL_REQUIREMENT = 1;
