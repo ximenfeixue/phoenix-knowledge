@@ -395,5 +395,11 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	public List<Knowledge> fileKnowledge(Map<Long, Integer> map) {
 		return mobileKnowledgeDAO.fileKnowledge(map);
 	}
+
+	@Override
+	public long getKnowledgeCountByUserIdAndColumnID(String columnID,
+			long user_id, String type) {
+		return mobileKnowledgeDAO.getKnowledgeByUserIdAndColumnID(columnID, user_id, type);
+	}
 	
 }
