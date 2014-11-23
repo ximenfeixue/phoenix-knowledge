@@ -196,9 +196,6 @@ public class ColumnServiceImpl implements ColumnService {
 			String status, String columnType) {
 		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
 				sortId);
-		for (Column c : cl) {
-			System.out.println(c.getColumnname() + c.getColumnLevelPath());
-		}
 		if (cl != null && cl.size() > 0) {
 			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
 					.convert2Node(cl, "userId", "id", "columnname", "parentId",
