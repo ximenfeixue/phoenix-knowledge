@@ -377,7 +377,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 
 	@Override
-	public Long selectKnowledgeCountByPermission(long userId, long columnId) {
+	public int selectKnowledgeCountByPermission(long userId, long columnId) {
 		return mobileKnowledgeMapper.selectKnowledgeCountByPermission(userId, columnId);
 	}
 	
@@ -396,7 +396,4 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		return mobileKnowledgeDAO.fileKnowledge(map);
 	}
 	
-	
-	
-
 }

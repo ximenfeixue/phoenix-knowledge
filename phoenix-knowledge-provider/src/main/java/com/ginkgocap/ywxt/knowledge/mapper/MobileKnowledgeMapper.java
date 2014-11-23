@@ -75,6 +75,6 @@ public interface MobileKnowledgeMapper {
 			@Param("columnId") long columnId, @Param("start") int start,
 			@Param("size") int size);
 	
-	Long selectKnowledgeCountByPermission(@Param("userId") long userId,
+	int selectKnowledgeCountByPermission(@Param("userId") long userId,
 			@Param("columnId") long columnId);
 }

@@ -145,7 +145,7 @@
 		LIMIT #{start},#{size}
 	</select>
 	
-	<select id="selectKnowledgeCountByPermissionAllPlatform" resultType="Long">
+	<select id="selectKnowledgeCountByPermissionAllPlatform" resultType="int">
 		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
 		t.receive_user_id = -1 
 		AND t.send_user_id = #{userId} 
