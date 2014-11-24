@@ -124,7 +124,9 @@ public class ColumnServiceImpl implements ColumnService {
 				kc.setType((short)1);
 			} // 设置type为父级type 
 			else {
-				Column column = columnMapper.selectByPrimaryKey(id);
+				logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid, kc.getUserId());
+				Column column = columnMapper.selectByPrimaryKey(pid);
+				logger.info("--根据父级id查询栏目树请求成功,父级栏目id:{},当前登陆用户:{}--", pid, kc.getUserId());
 				kc.setType(column.getType());
 			}
 			kc.setCreatetime(date);
