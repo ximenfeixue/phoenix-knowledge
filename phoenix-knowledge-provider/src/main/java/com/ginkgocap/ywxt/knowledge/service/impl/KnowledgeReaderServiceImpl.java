@@ -433,6 +433,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			idList.add(user.getId());
 			criteria.andKnowledgeIdEqualTo(knowledge.getId());
 			criteria.andReceiveUserIdIn(idList);
+			criteria.andTypeNotEqualTo(Constants.PermissionType.xiaoles.v());
 		}
 		int v = userPermissionMapper.countByExample(example);
 		if (v > 0) {
