@@ -690,7 +690,7 @@ public class ColumnServiceImpl implements ColumnService {
 		if (colList != null && colList.size() > 0) {
 			Query query = new Query(
 					org.springframework.data.mongodb.core.query.Criteria.where(
-							"columnid").is(columnid));
+							"columnid").is(String.valueOf(columnid)));
 			String obj = Constants.getTableName(column.getType() + "");
 			obj = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 			// 是否确认操作
@@ -703,7 +703,8 @@ public class ColumnServiceImpl implements ColumnService {
 				return result;
 			}
 			Update update = new Update();
-			update.set("columnid", colList.get(0).getId());
+			update.set("columnid", String.valueOf(colList.get(0).getId()));
+			update.set("cpathid", Constants.unGroupSortName);
 			logger.info("--进入删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 			mongoTemplate.updateMulti(query, update, obj);
 			logger.info("--完成删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
