@@ -514,6 +514,18 @@ public class Constants {
 			return v;
 		}
 	}
+	
+	public static String getKnowledgeTypeName(String v) {
+		if (StringUtils.isBlank(v))
+			return null;
+		KnowledgeType[] type = KnowledgeType.values();
+		for (KnowledgeType t : type) {
+			if (t.v == Integer.parseInt(v)) {
+				return t.c;
+			}
+		}
+		return null;
+	}
 
 	public static Integer MATERIAL_REQUIREMENT = 1;
 

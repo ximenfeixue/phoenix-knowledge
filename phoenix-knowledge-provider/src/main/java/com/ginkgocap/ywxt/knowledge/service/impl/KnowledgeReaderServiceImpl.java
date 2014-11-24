@@ -14,10 +14,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
+import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -30,6 +32,7 @@ import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
+import com.mongodb.util.Hash;
 
 @Service("knowledgeReaderService")
 public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
@@ -60,6 +63,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private UserPermissionMapper userPermissionMapper;
+
+	@Resource
+	private ColumnMapper columnMapper;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -330,6 +336,12 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 查询附件
 		result.putAll(attachmentService.queryAttachmentByTaskId(knowledge
 				.getTaskid()));
+		// 查询面包导航
+		result.put("columnId", knowledge.getColumnid());
+		Map<String, Object> cnMap = getKnowledgePath(knowledge);
+		String columnType = cnMap.get("columnType") + "";
+		result.put("columnName", StringUtils.isBlank(columnType) ? ""
+				: Constants.getKnowledgeTypeName(columnType));
 		result.put("kid", kid);
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
@@ -344,6 +356,29 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	// private boolean getArticlePermission(Knowledge knowledge) {
 	// return getArticlePermission(knowledge, null);
 	// }
+	/** 获取知识所在全路径ID */
+	private Map<String, Object> getKnowledgePath(Knowledge knowledge) {
+		if (knowledge == null) {
+			return null;
+		}
+		return getKnowledgePath(knowledge.getColumnid());
+	}
+
+	private Map<String, Object> getKnowledgePath(String columnId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// Knowledge
+		if (StringUtils.isBlank(columnId)) {
+			return null;
+		}
+		Column column = columnMapper.selectByPrimaryKey(Long
+				.parseLong(columnId));
+		if (column == null) {
+			return null;
+		}
+		result.put("columnType", column.getType());
+
+		return result;
+	}
 
 	private Map<String, Object> getArticlePermission(Knowledge knowledge,
 			User user) {
