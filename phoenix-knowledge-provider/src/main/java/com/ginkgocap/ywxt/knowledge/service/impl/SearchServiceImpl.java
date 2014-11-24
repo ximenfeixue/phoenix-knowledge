@@ -80,7 +80,9 @@ public class SearchServiceImpl implements SearchService {
 		params.put("userid", userid + "");
 		params.put("keyword", keywords);
 		params.put("scope", scope);
-		params.put("sort", sort);
+		if(sort!=null){
+		    params.put("sort", sort);
+		}
 		params.put("hlpre", hlpre);
 		params.put("hlext", hlext);
 		params.put("qf", "title,tags,content");
