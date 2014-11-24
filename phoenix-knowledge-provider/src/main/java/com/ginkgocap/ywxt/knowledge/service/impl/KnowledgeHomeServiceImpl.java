@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,18 +113,13 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         Long cid = Long.parseLong(columnid);
         //查询栏目类型
         Column column = columnMapper.selectByPrimaryKey(cid);
-        int leng = column.getColumnLevelPath().length();
         String ty = column.getColumnLevelPath().substring(0, 9);
+        int leng = column.getColumnLevelPath().length();
         long type = Long.parseLong(ty);
         Criteria criteria =Criteria.where("status").is(4);
-        Criteria criteriaPj = new Criteria();
         Criteria criteriaUp = new Criteria();
         Criteria criteriaMy = new Criteria();
-        Criteria criteriaMyo = new Criteria();
-        Criteria criteriaMyz = new Criteria();
         Criteria criteriaGt = new Criteria();
-        Criteria criteriaGtz = new Criteria();
-        Criteria criteriaGto = new Criteria();
         List<Long> ids = new ArrayList<Long>();
         String reful=column.getPathName();
         //栏目类型过滤
@@ -131,25 +128,23 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         if (ids != null) {
             criteriaUp.and("_id").in(ids);
         }
-        //子栏目查询,否则为栏目类型查询
-        if (leng >= 10 ) {
-            criteriaMyo.and("cid").is(userid).and("cpathid").regex(reful+"/.*$");
-            criteriaMyz.and("cid").is(userid).and("cpathid").regex(reful+".*$");
-            criteriaUp.and("cpathid").regex(reful+".*$").and("cid").is(userid);
-        }else{
-            criteriaMy.and("cid").is(userid);
-            //一级栏目为自定义的情形
-            if (cid > 11) {
-                criteriaUp = new Criteria().and("cid").is(userid).and("cpathid").is(reful);
-            }
+        Criteria child = new Criteria().and("cpathid").regex(reful+"/.*$");
+        Criteria parent = new Criteria().and("cpathid").is(reful);
+        criteriaGt.and("cid").is(Constants.gtnid);
+        if(cid > 11){ //一级栏目为自定义的情形
+        	criteria.and("cid").is(userid).and("cpathid").is(reful);
+        }else{ //一级栏目为预定义的
+        	criteriaMy.and("cid").is(userid);
+        	if (leng >= 10 ) {
+        		criteriaMy.orOperator(parent,child);
+        		criteriaUp.orOperator(parent,child);
+        		criteriaGt.orOperator(parent,child);
+        	}
+    		criteria.orOperator(criteriaMy,criteriaUp,criteriaGt);
         }
-        criteriaGtz=criteriaGtz.and("cid").is(Constants.gtnid).and("cpathid").is(reful);
-        criteriaGto=criteriaGto.and("cid").is(Constants.gtnid).and("cpathid").regex(reful+"/.*$");
-        criteriaGt.orOperator(criteriaGtz,criteriaGto);
-        criteriaMy.orOperator(criteriaMyz,criteriaMyo);
-        criteriaPj.orOperator(criteriaUp,criteriaGt,criteriaMy);
-        criteria.andOperator(criteriaPj);
         //查询知识
+        String str = ""+JSONObject.fromObject(criteria);
+        logger.info("MongoObject:"+t.getClass()+",Query:"+str);
         Query query = new Query(criteria);
         query.sort().on("createtime", Order.DESCENDING);
         long count = mongoTemplate.count(query, names[length - 1]);
@@ -157,7 +152,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         query.limit(size);
         query.skip(p.getPageStartRow() - 1);
         model.put("page", p);
-        model.put("list", (List<T>) mongoTemplate.find(query, t.getClass(), names[length - 1]));
+        model.put("list", (List) mongoTemplate.find(query, t.getClass(), names[length - 1]));
         return model;
     }
 
@@ -185,6 +180,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         criteriaPj.orOperator(criteriaUp,criteriaGt);
         criteria.andOperator(criteriaPj);
         Query query = new Query(criteria);
+        String str = ""+JSONObject.fromObject(criteria);
+        logger.info("MongoObject:"+ty.obj()+",Query:"+str);
         query.sort().on("createtime", Order.DESCENDING);
         long count;
         try {

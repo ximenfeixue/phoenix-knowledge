@@ -234,7 +234,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			// 生成文章包及内容
 			if (StringUtils.equals("1", group) || StringUtils.equals("3", group)) {
 				// 生成附件的目录
-				File knowledgeDir = createDir(articleDir.getPath() + File.separator + "knowledge",0);
+				File knowledgeDir = createDir(articleDir.getPath() + File.separator + "正文",0);
 				//获取大数据生成的知识文档
 				//TODO
 				Knowledge  k = knowledgeReaderService.getKnowledgeById(b.getKnowledgeId(), String.valueOf(b.getColumnType()));
@@ -273,7 +273,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			// 生成附件包及内容
 			if (StringUtils.equals("2", group) || StringUtils.equals("3", group)) {
 				// 生成附件的目录
-				File  fileDir = createDir(articleDir.getPath() + File.separator + "file",0);
+				File  fileDir = createDir(articleDir.getPath() + File.separator + "附件",0);
 				// 通过文章得到附件列表
 				if(StringUtils.isNotBlank(b.getTaskid())){
     				Map<String, Object> attMap = attachmentService.queryAttachmentByTaskId(b.getTaskid());
