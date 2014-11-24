@@ -24,12 +24,15 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBaseExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnVOValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
@@ -51,7 +54,7 @@ public class ColumnServiceImpl implements ColumnService {
 	private Logger logger = LoggerFactory.getLogger(ColumnServiceImpl.class);
 
 	@Autowired
-	ColumnMapper columnMapper;
+	KnowledgeBaseMapper knowledgeBaseMapper;
 	@Autowired
 	private ColumnValueMapper columnValueMapper;
 	@Autowired
@@ -66,6 +69,8 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnTagMapper columnTagMapper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	ColumnMapper columnMapper;
 	
 	@Autowired
 	private DataCenterService dataCenterService;
@@ -705,9 +710,19 @@ public class ColumnServiceImpl implements ColumnService {
 			Update update = new Update();
 			update.set("columnid", String.valueOf(colList.get(0).getId()));
 			update.set("cpathid", Constants.unGroupSortName);
-			logger.info("--进入删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			logger.info("--进入删除栏目请求时,Mongo数据库具体知识，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 			mongoTemplate.updateMulti(query, update, obj);
-			logger.info("--完成删除栏目请求时,将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			logger.info("--完成删除栏目请求时,Mongo数据库具体知识，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			logger.info("--进入删除栏目请求时,mysql 知识基本表中，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			KnowledgeBaseExample example = new KnowledgeBaseExample();
+			KnowledgeBaseExample.Criteria cri = example.createCriteria();
+			cri.andColumnIdEqualTo(column.getId());
+			cri.andUserIdEqualTo(userid);
+			KnowledgeBase base = new KnowledgeBase();
+			base.setColumnId(column.getId());
+			base.setPath(Constants.unGroupSortName);
+			knowledgeBaseMapper.updateByExampleSelective(base,example);
+			logger.info("--完成删除栏目请求时,mysql 知识基本表中，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		}
 		// 删除栏目标签表
 		ColumnTagExample example = new ColumnTagExample();
