@@ -140,7 +140,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         		criteriaUp.orOperator(parent,child);
         		criteriaGt.orOperator(parent,child);
         	}
-    		criteria.orOperator(criteriaMy,criteriaUp,criteriaGt);
+        	Criteria criteriaPG = new Criteria().orOperator(criteriaMy,criteriaUp,criteriaGt);
+    		criteria.andOperator(criteriaPG);
         }
         //查询知识
         String str = ""+JSONObject.fromObject(criteria);
