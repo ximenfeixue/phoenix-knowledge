@@ -21,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
@@ -32,7 +33,6 @@ import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
-import com.mongodb.util.Hash;
 
 @Service("knowledgeReaderService")
 public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
@@ -66,6 +66,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private ColumnMapper columnMapper;
+
+	@Resource
+	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -314,6 +317,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		Map<String, Object> result = new HashMap<String, Object>();
+		// 添加点击数
+		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
+				Constants.StaticsValue.clickCount.v());
+
 		Knowledge knowledge = getKnowledgeById(kid, type);
 		// 查询知识信息
 		if (knowledge == null) {
