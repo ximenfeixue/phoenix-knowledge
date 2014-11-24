@@ -90,7 +90,7 @@ public class SearchServiceImpl implements SearchService {
 		params.put("psize", psize);
 
 		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
-				+ "/knowledge/keyword/search.json", params);
+				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
@@ -117,7 +117,7 @@ public class SearchServiceImpl implements SearchService {
 		params.put("psize", psize);
 
 		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
-				+ "/knowledge/keyword/search.json", params);
+				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;
