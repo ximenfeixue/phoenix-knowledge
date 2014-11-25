@@ -30,4 +30,11 @@
 	WHERE v.state = 0
 	AND v.column_id = c.id)
 </select>
+
+	<select id="selectColumnIdTreeById" resultType="map" >
+	 		SELECT t.id FROM tb_column t WHERE
+	 		 t.column_level_path LIKE 
+			CONCAT((SELECT column_level_path FROM tb_column WHERE id = #{columnid}), '%')
+	</select>
+
 </mapper>

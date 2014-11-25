@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +69,28 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledge_id);
 		return columnKnowledgeMapper.updateByExample(columnKnowledge, example);
+	}
+
+	@Override
+	public String[] getAllColumnByColumnId(int columnid) {
+		
+		List<Integer> columnIds = columnKnowledgeValueMapper.selectColumnIdTreeById(columnid);
+		
+		if(null != columnIds && columnIds.size() > 0) {
+			
+			int size = columnIds.size();
+			
+			String[] strColumnIds = new String[size];
+			
+			for (int i = 0; i < size; i++) {
+				strColumnIds[i] = columnIds.get(i)+"";
+			}
+			
+			return strColumnIds;
+			
+		} else {
+			return null;
+		}
 	}
 
 }
