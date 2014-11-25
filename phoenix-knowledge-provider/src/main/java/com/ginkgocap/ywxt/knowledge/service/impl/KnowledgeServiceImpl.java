@@ -38,6 +38,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
+import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
@@ -131,6 +132,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private KnowledgeStaticsService knowledgeStaticsService;
+
+	@Autowired
+	private DataCenterService dataCenterService;
 
 	//
 	@Override
@@ -246,6 +250,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
+			// 大数据通知接口
+			dataCenterService.noticeDataCenterWhileKnowledgeChange(
+					knowledgeid[i] + "", "del", ct + "");
 		}
 		return result;
 	}
@@ -471,6 +478,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
+		// 大数据通知接口
+		dataCenterService.noticeDataCenterWhileKnowledgeChange(
+				vo.getkId() + "", "upd", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -717,6 +727,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
 			e.printStackTrace();
 		}
+		// 大数据通知接口
+		dataCenterService.noticeDataCenterWhileKnowledgeChange(kId + "", "add",
+				vo.getColumnType());
 		result.put("knowledgeid", kId);
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -852,7 +865,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-				searchservice.shareToJinTN(user.getId(), vo);
+				 searchservice.shareToJinTN(user.getId(), vo);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
