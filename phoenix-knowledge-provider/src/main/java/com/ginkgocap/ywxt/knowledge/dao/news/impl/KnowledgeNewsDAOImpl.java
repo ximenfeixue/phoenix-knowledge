@@ -22,6 +22,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -105,8 +106,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("uname", user.getName());
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
-			update.set("desc", vo.getContent().length() > 50 ? vo.getContent()
-					.substring(0, 50) : vo.getContent());
+			update.set("desc", HtmlToText.htmlTotest(vo.getContent()));
 			update.set("content", vo.getContent());
 			update.set("essence", vo.getEssence());
 			update.set("modifytime", vo.getCreatetime());
