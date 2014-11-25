@@ -42,14 +42,22 @@ public class MobileKnowledgeDAOImpl extends SqlMapClientDaoSupport implements Mo
 	public List<Knowledge> getKnowledge(String[] columnID,long user_id,String type,int offset,int limit) {
 		String obj = Constants.getTableName(type);
 		String mongo_collection = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		return mongoTemplate.find(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(columnID)).and("status").is(4)).skip(offset).limit(limit), Knowledge.class, mongo_collection);
+		long[] val = new  long[columnID.length];
+		for(int i = 0; i < columnID.length; i++) {
+			val[i] = Long.valueOf(columnID[i]);
+		}
+		return mongoTemplate.find(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(val)).and("status").is(4)).skip(offset).limit(limit), Knowledge.class, mongo_collection);
 	}
 	
-	@Override
+	@Override//{"uid":1,"status":4,"columnid": "1212"}
 	public long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id,String type) {
 		String obj = Constants.getTableName(type);
 		String mongo_collection = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		return mongoTemplate.count(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(columnID)).and("status").is(4)), mongo_collection);
+		long[] val = new  long[columnID.length];
+		for(int i = 0; i < columnID.length; i++) {
+			val[i] = Long.valueOf(columnID[i]);
+		}
+		return mongoTemplate.count(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(val)).and("status").is(4)), mongo_collection);
 	}
 
 	@Override
