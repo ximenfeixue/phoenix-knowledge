@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,7 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 	@Override
 	public String[] getAllColumnByColumnId(int columnid) {
 		
-		List<Integer> columnIds = columnKnowledgeValueMapper.selectColumnIdTreeById(columnid);
+		List<Map<String,String>> columnIds = columnKnowledgeValueMapper.selectColumnIdTreeById(columnid);
 		
 		if(null != columnIds && columnIds.size() > 0) {
 			
@@ -83,7 +84,7 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 			String[] strColumnIds = new String[size];
 			
 			for (int i = 0; i < size; i++) {
-				strColumnIds[i] = columnIds.get(i)+"";
+				strColumnIds[i] = columnIds.get(i).get("id")+"";
 			}
 			
 			return strColumnIds;
