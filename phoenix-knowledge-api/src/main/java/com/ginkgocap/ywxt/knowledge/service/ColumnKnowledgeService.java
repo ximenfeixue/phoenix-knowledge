@@ -30,4 +30,11 @@ public interface ColumnKnowledgeService {
 	int updateColumnKnowledge(long column_id, long knowledge_id,long user_id,int type);
 	
 	int updateColumn(long knowledge_id,long column_id);
+	
+	/**
+	 * zhangzhen 加入
+	 * 查询指定栏目下(包括自己)所有栏目的id
+	 * 2014-11-25
+	 * */
+	String[] getAllColumnByColumnId(int columnid);
 }
