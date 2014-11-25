@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
@@ -40,17 +39,17 @@ public class MobileKnowledgeDAOImpl extends SqlMapClientDaoSupport implements Mo
 	}
 
 	@Override
-	public List<Knowledge> getKnowledge(String columnID,long user_id,String type,int offset,int limit) {
+	public List<Knowledge> getKnowledge(String[] columnID,long user_id,String type,int offset,int limit) {
 		String obj = Constants.getTableName(type);
 		String mongo_collection = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		return mongoTemplate.find(query(where("uid").is(user_id).and("columnid").is(columnID)).skip(offset).limit(limit), Knowledge.class, mongo_collection);
+		return mongoTemplate.find(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(columnID)).and("status").is(4)).skip(offset).limit(limit), Knowledge.class, mongo_collection);
 	}
 	
 	@Override
-	public long getKnowledgeByUserIdAndColumnID(String columnID,long user_id,String type) {
+	public long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id,String type) {
 		String obj = Constants.getTableName(type);
 		String mongo_collection = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		return mongoTemplate.count(query(where("columnid").is(columnID).and("uid").is(user_id)), mongo_collection);
+		return mongoTemplate.count(query(where("uid").is(user_id).and("columnid").in(Arrays.asList(columnID)).and("status").is(4)), mongo_collection);
 	}
 
 	@Override

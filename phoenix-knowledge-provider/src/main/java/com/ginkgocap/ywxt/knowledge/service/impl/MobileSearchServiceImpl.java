@@ -349,7 +349,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 
 	@Override
-	public List<Knowledge> getKnowledge(String columnID, long user_id,
+	public List<Knowledge> getKnowledge(String[] columnID, long user_id,
 			String type, int offset, int limit) {
 		 return mobileKnowledgeDAO.getKnowledge(columnID, user_id, type, offset, limit);
 	}
@@ -397,7 +397,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 
 	@Override
-	public long getKnowledgeCountByUserIdAndColumnID(String columnID,
+	public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,
 			long user_id, String type) {
 		return mobileKnowledgeDAO.getKnowledgeByUserIdAndColumnID(columnID, user_id, type);
 	}

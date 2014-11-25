@@ -14,12 +14,12 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 public interface MobileKnowledgeDAO {
 	
 	/** 移动端需求 - 根据用户id与栏目id查询知识   单一 */
-	List<Knowledge> getKnowledge(String columnID,long user_id,String type,int offset,int limit);
+	List<Knowledge> getKnowledge(String[] columnID,long user_id,String type,int offset,int limit);
 	
 	/**
 	 * 查询相应的数量  （金桐或自己）  单一 
 	 */
-	 long getKnowledgeByUserIdAndColumnID(String columnID,long user_id,String type) ;
+	 long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id,String type) ;
 	 
 	 
 	 /**
