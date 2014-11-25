@@ -50,7 +50,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setS_addr("");
 			this.setCpathid(vo.getColumnPath());
 			this.setPic(vo.getPic());
-			this.setDesc(HtmlToText.html2Text(vo.getDesc()));
+			this.setDesc(HtmlToText.htmlTotest(vo.getDesc()));
 			this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 					: vo.getEssence()));
 			this.setCreatetime(vo.getCreatetime());
@@ -87,7 +87,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setS_addr("");
 			this.setCpathid(vo.getColumnPath());
 			this.setPic(vo.getPic());
-			this.setDesc(HtmlToText.html2Text(vo.getDesc()));
+			this.setDesc(HtmlToText.htmlTotest(vo.getDesc()));
 			this.setContent(vo.getContent());
 			this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0"
 					: vo.getEssence()));
