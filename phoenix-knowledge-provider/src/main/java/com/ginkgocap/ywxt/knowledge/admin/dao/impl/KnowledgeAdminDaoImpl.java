@@ -4,7 +4,6 @@
 package com.ginkgocap.ywxt.knowledge.admin.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
@@ -29,7 +29,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.util.DateUtil;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -160,10 +160,17 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		}else if(StringUtils.equals(collectionName, "KnowledgeInvestment")){//投融工具
 			KnowledgeInvestment news = mongoTemplate.findById(id, KnowledgeInvestment.class, collectionName);
 			return news;
+		}else if(StringUtils.equals(collectionName, "KnowledgeOpinion")){//8-观点
+			KnowledgeOpinion news = mongoTemplate.findById(id, KnowledgeOpinion.class, collectionName);
+			return news;
+		}else if(StringUtils.equals(collectionName, "KnowledgeArticle")){//11-文章
+			KnowledgeArticle news = mongoTemplate.findById(id, KnowledgeArticle.class, collectionName);
+			return news;
 		}else{
+		
 			return null;
 		}
-	}
+}
 
 
 	/* (non-Javadoc)
