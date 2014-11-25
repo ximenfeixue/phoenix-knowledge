@@ -75,7 +75,7 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 	@Override
 	public String[] getAllColumnByColumnId(int columnid) {
 		
-		List<Map<String,String>> columnIds = columnKnowledgeValueMapper.selectColumnIdTreeById(columnid);
+		List<Map<String,Long>> columnIds = columnKnowledgeValueMapper.selectColumnIdTreeById(columnid);
 		
 		if(null != columnIds && columnIds.size() > 0) {
 			
