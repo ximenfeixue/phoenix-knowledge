@@ -112,4 +112,6 @@ public interface UserCategoryService {
     * */
    String getDefaultCategoryId(long userId);
    
+   
+   List<UserCategory> selectUserCategoryList(long userId, String sortId, Byte type);
 }

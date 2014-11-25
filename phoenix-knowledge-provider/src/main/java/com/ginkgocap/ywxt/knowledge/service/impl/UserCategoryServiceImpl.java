@@ -155,6 +155,13 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		}
 		return "";
 	}
+	@Override
+	public List<UserCategory> selectUserCategoryList(long userId, String sortId,
+	        Byte type) {
+	    List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(
+	            userId, sortId, type);
+	    return cl;
+	}
 
 	@Override
 	public String selectUserCategoryTreeByParams(long userId, String sortId,
