@@ -171,7 +171,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 					}
 				} else {
 
-					base.setcDesc(vo.getDesc());
+					base.setcDesc(HtmlToText.htmlTotest(vo.getContent()));
 				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
 				base.setColumnType(Short.parseShort(vo.getColumnType()));
