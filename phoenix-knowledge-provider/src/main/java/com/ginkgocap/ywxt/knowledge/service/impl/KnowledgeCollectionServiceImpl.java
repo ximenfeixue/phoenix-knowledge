@@ -31,6 +31,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseVO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollectionVO;
+import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -39,8 +40,6 @@ import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.MongoUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
-import com.ginkgocap.ywxt.utils.DateUtils;
-import com.mongodb.util.Hash;
 
 @Service("knowledgeCollectionService")
 public class KnowledgeCollectionServiceImpl implements
@@ -66,6 +65,8 @@ public class KnowledgeCollectionServiceImpl implements
 	private KnowledgeCategoryService knowledgeCategoryService;
 	@Resource
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
+	@Resource
+	private DataCenterService dataCenterService;
 
 	@Override
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
@@ -156,7 +157,7 @@ public class KnowledgeCollectionServiceImpl implements
 							vo.getkId(), user.getId());
 					result.put(Constants.status, Constants.ResultType.fail.v());
 					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addCollFail.c() + "[001]");
+							Constants.ErrorMessage.addCollFail.c());
 					return result;
 				}
 			}
@@ -199,12 +200,18 @@ public class KnowledgeCollectionServiceImpl implements
 			int cV = knowledgeCollectionMapperManual
 					.batchInsertCollection(list);
 			if (cV == 0) {
-				logger.error("添加知识收藏表失败[002]!,知识ID:{},用户ID:{}", vo.getkId(),
+				logger.error("添加知识收藏表失败!,知识ID:{},用户ID:{}", vo.getkId(),
 						user.getId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c() + "[002]");
+						Constants.ErrorMessage.addCollFail.c());
 				return result;
+			}
+			// 通知数据中心
+			for (int i = 0; i < cV; i++) {
+				dataCenterService.noticeDataCenterWhileKnowledgeChange(
+						vo.getkId() + "", "upd", vo.getColumType());
+
 			}
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
@@ -213,7 +220,7 @@ public class KnowledgeCollectionServiceImpl implements
 			if (!addBaseInfo(bVo, user)) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c() + "[003]");
+						Constants.ErrorMessage.addCollFail.c());
 				return result;
 			}
 			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0,
@@ -225,7 +232,7 @@ public class KnowledgeCollectionServiceImpl implements
 					+ "找到对应类,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addCollFail.c() + "[004]");
+					Constants.ErrorMessage.addCollFail.c());
 			return result;
 		}
 		return result;
