@@ -74,14 +74,15 @@ public class SearchServiceImpl implements SearchService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
-			String scope, String sort,String hlpre,String hlext,String pno, String psize) {
+			String scope, String sort, String hlpre, String hlext, String pno,
+			String psize) {
 		logger.info("进入搜索关键词请求,用户ID：{},关键词:{}", userid, keywords);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("userid", userid + "");
 		params.put("keyword", keywords);
 		params.put("scope", scope);
-		if(sort!=null){
-		    params.put("sort", sort);
+		if (sort != null) {
+			params.put("sort", sort);
 		}
 		params.put("hlpre", hlpre);
 		params.put("hlext", hlext);
@@ -147,9 +148,15 @@ public class SearchServiceImpl implements SearchService {
 		params.put("content", vo.getContent());
 		params.put("tags", vo.getTags());
 		params.put("essence", vo.getEssence());
+		String str = "";
+		try {
 
-		String str = HTTPUtil.post(httpUrlConfig.getPushUrl()
-				+ "knowledge/put.json", params);
+			str = HTTPUtil.post(httpUrlConfig.getPushUrl()
+					+ "knowledge/put.json", params);
+		} catch (Exception e) {
+			logger.error("调用大数据接口失败", e.toString());
+			e.printStackTrace();
+		}
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map result = null;

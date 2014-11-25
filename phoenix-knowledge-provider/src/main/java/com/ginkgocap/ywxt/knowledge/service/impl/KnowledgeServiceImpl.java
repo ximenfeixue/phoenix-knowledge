@@ -250,9 +250,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
-			// 大数据通知接口
-			dataCenterService.noticeDataCenterWhileKnowledgeChange(
-					knowledgeid[i] + "", "del", ct + "");
+			try {
+				// 大数据通知接口
+				dataCenterService.noticeDataCenterWhileKnowledgeChange(
+						knowledgeid[i] + "", "del", ct + "");
+
+			} catch (Exception e) {
+				logger.error("大数据调用接口不成功,知识ID{}", knowledgeid[i]);
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -479,8 +485,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
 		// 大数据通知接口
-		dataCenterService.noticeDataCenterWhileKnowledgeChange(
-				vo.getkId() + "", "upd", vo.getColumnType());
+		try {
+
+			dataCenterService.noticeDataCenterWhileKnowledgeChange(vo.getkId()
+					+ "", "upd", vo.getColumnType());
+		} catch (Exception e) {
+			logger.error("大数据调用接口不成功,知识ID{}", vo.getkId());
+			e.printStackTrace();
+		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -728,8 +740,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			e.printStackTrace();
 		}
 		// 大数据通知接口
-		dataCenterService.noticeDataCenterWhileKnowledgeChange(kId + "", "add",
-				vo.getColumnType());
+		try {
+
+			dataCenterService.noticeDataCenterWhileKnowledgeChange(kId + "",
+					"add", vo.getColumnType());
+		} catch (Exception e) {
+			logger.error("大数据接口调用不成功,知识ID{}", vo.getkId());
+		}
 		result.put("knowledgeid", kId);
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -865,7 +882,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-				 searchservice.shareToJinTN(user.getId(), vo);
+				searchservice.shareToJinTN(user.getId(), vo);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
