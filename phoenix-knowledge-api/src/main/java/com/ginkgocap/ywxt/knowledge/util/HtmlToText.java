@@ -67,7 +67,7 @@ public class HtmlToText {
 		} else if (content.length() < 50) {
 			content = content.replaceAll("(?isu)<[^>]+>", "");
 		} else {
-			content = content.substring(0, 50).replaceAll("(?isu)<[^>]+>", "")
+			content = content.replaceAll("(?isu)<[^>]+>", "").substring(0, 50)
 					+ "...";
 		}
 		return content;
