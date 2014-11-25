@@ -64,7 +64,7 @@ public interface MobileSearchService {
 	public Map<String, Object> selectPermissionByMyFriends(long userId,long columnId,int start,int size);
 	
 	/** 根据栏目ID和用户ID获取知识 */
-	public List<Knowledge> getKnowledge(String columnID,long user_id,String type,int offset,int limit);
+	public List<Knowledge> getKnowledge(String[] columnID,long user_id,String type,int offset,int limit);
 	
 	/** 查询全平台与好友的知识 */
 	public Map<Long,Integer> selectKnowledgeByPermission(long userId,long columnId,int start,int size);
@@ -85,5 +85,5 @@ public interface MobileSearchService {
 	  */
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
 	 
-	 long getKnowledgeCountByUserIdAndColumnID(String columnID,long user_id,String type);
+	 long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long user_id,String type);
 }
