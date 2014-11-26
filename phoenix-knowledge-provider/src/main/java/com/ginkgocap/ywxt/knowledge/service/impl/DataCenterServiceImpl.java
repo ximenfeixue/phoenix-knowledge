@@ -36,6 +36,8 @@ import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.Encodes;
+import com.ginkgocap.ywxt.util.GetUploadPath;
+import com.ginkgocap.ywxt.util.MakePrimaryKey;
 
 @Service("dataCenterService")
 public class DataCenterServiceImpl implements DataCenterService {
@@ -62,17 +64,19 @@ public class DataCenterServiceImpl implements DataCenterService {
 						Constants.ErrorMessage.paramNotBlank.c());
 				return result;
 			}
-
+			//封装请求参数
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("path", path);
+			params.put("path", path);//请求路径
+			params.put("imgPath", GetUploadPath.getNginxRoot()+"/knowledge/import");
 			if(StringUtils.equalsIgnoreCase(type, "doc")|| StringUtils.equalsIgnoreCase(type, "docx") ||StringUtils.equalsIgnoreCase(type, "rtf")){
-				params.put("type", "word");
+				params.put("type", "word");//文件类型
 			}else if(StringUtils.equalsIgnoreCase(type, "pdf")){
-				params.put("type", "pdf");
+				params.put("type", "pdf");//文件类型
 			}
-
+			//返回请求结果
 			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 					params);
+			//为空则转换错误
 			if (StringUtils.isBlank(str)) {
 				logger.error("转换错误,转换返回值为空!");
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -87,6 +91,26 @@ public class DataCenterServiceImpl implements DataCenterService {
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.parseError.c());
 				return result;
+			}else{
+				System.out.println("导出图片:"+str);
+				JSONObject json = JSONObject.fromObject(result.get("responseData"));
+				String ss ="";
+				if(json.get("imgdata")!=null){
+					ss= json.getString("imgdata");
+				}
+				if(StringUtils.isNotBlank(ss)){
+					String zipPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
+							+ File.separator + "IMGZIP"  + File.separator + StringUtils.replace(DateFunc.getDate(), ":", "_");
+					createDir(zipPath);
+					byte[] html = Encodes.decodeBase64(ss);
+					File file = new File(zipPath+File.separator+MakePrimaryKey.getPrimaryKey()+".zip");
+					FileOutputStream fos = new FileOutputStream(file);
+					fos.write(html);
+					fos.close();
+					ZipUtil util = new ZipUtil(Content.WEBSERVERPATH + Content.EXPORTDOCPATH
+							+ File.separator + "IMGZIP" + "test.zip");
+					util.putZip(file.getPath(), Content.EXPORTMOUNTPATH+"/import",1);
+				}
 			}
 			result.put(Constants.status, Constants.ResultType.success.v());
 		} catch (Exception e) {
@@ -141,7 +165,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 		List<String> errorArticleList = new ArrayList<String>();
 		// 需要压缩的路径
 		String zipPath = Content.WEBSERVERPATH + Content.EXPORTDOCPATH
-						+ File.separator + "GENPATH_" + uid + File.separator + DateFunc.getDate();
+						+ File.separator + "GENPATH_" + uid + File.separator + StringUtils.replace(DateFunc.getDate(), ":", "_");
 		
 		if(knowledgeIdArr!=null && knowledgeIdArr.length>0){
 			int taskNum = knowledgeIdArr.length + 1 + 1;
