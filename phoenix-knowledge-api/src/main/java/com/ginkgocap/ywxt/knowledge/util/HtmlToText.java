@@ -61,14 +61,18 @@ public class HtmlToText {
 
 	public static String htmlTotest(String htmlStr) {
 		// 知识内容截取存入简介
-		String content = htmlStr;
-		if (content == null) {
-			content = "";
-		} else if (content.length() < 50) {
-			content = content.replaceAll("(?isu)<[^>]+>", "");
+		String content = null;
+		if (StringUtils.isNotBlank(htmlStr)) {
+			content = htmlStr.replaceAll("(?isu)<[^>]+>", "");
+		}
+
+		if (StringUtils.isNotBlank(content)) {
+			content = content.length() > 50 ? content.substring(0, 50)
+					: content;
+
 		} else {
-			content = content.replaceAll("(?isu)<[^>]+>", "").substring(0, 50)
-					+ "...";
+			
+			content = "暂无简介";
 		}
 		return content;
 	}
