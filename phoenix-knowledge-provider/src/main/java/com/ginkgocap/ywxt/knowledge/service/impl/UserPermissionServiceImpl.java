@@ -25,6 +25,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
@@ -332,7 +333,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
 				"yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(vo.getkId());
-		userPermission.setMento(vo.getShareMessage());
+		userPermission.setMento(HtmlToText.htmlTotest(vo.getShareMessage()));
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
 		String columnType = vo.getColumnType();
