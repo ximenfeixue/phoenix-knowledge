@@ -86,4 +86,7 @@ public interface MobileSearchService {
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
 	 
 	 long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long user_id,String type);
+	 
+	 /** 查询好友的知识 */
+	 public <T> Map<String,Object> selectAllByParam(int classType, int state, String columnid, Long userid, int page, int size);
 }
