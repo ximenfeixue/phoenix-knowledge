@@ -38,6 +38,7 @@ import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.tree.Branch;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -267,9 +268,14 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
     public List<Node> queryColumns(long cid, long userId) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}",cid);
         Column c = columnMapper.selectByPrimaryKey(cid);
-        List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
-        if (cl != null && cl.size() > 0) {
-            return ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath");
+        try{
+            List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
+            if (cl != null && cl.size() > 0) {
+                return Branch.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath"),cid,c.getParentId()).getList();
+            }
+        }catch(Exception e){
+            logger.error("无法查询栏目子集：KnowledgeHomeServiceImpl.queryColumns()");
+            e.printStackTrace();
         }
         return null;
     }
