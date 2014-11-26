@@ -481,7 +481,11 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	        logger.info("MongoObject:"+class_name+",Query:"+str);
 	       
 	        /**好友知识*/
-	        criteria.and("uid").ne("-1").and("uid").ne("0").and("uid").ne(userid);
+	        List<Long> list = new ArrayList<Long>(); 
+	        list.add(-1L); 
+	        list.add(0L); 
+	        list.add(userid); 
+	        criteria.and("uid").nin(list);
 	        
 	        Query query = new Query(criteria);
 	        query.sort().on("createtime", Order.DESCENDING);
