@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
+import com.ginkgocap.ywxt.user.model.User;
 
 /** 
  * <p>知识首页操作接口</p>  
@@ -24,10 +25,10 @@ public interface KnowledgeHomeService {
     /**
      * 查询分类
      * @param userId 用户id
-     * @param column 栏目
+     * @param column 栏目id
      * @return
      */
-    public List<Column>getTypeList(Long userId,Long column);
+    public List<Column>getTypeList(Long userId,Long columnId);
 
     /**
      * 查询知识
@@ -116,4 +117,5 @@ public interface KnowledgeHomeService {
      * @since 2014-11-20
      */
     public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,List<Long> groupid, int page, int size);
+    
 }

@@ -28,10 +28,20 @@ public class ColumnVO implements Serializable {
     private Short type;
     
     private Boolean ishas;
+    
+    private int state;
 
     private static final long serialVersionUID = 1L;
+    
+    public int getState() {
+		return state;
+	}
 
-    public Long getId() {
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -51,7 +51,7 @@
 			) 
 		</if>
 		<if test="receive_user_id == null">
-			and receive_user_id=-1 
+			and receive_user_id=-1 and type != 4
 		</if>
 		<if test="column_type !=null">
 			and column_type=#{column_type} 
