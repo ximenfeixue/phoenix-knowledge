@@ -67,7 +67,7 @@ public class HtmlToText {
 		}
 
 		if (StringUtils.isNotBlank(content)) {
-			content = content.length() > 50 ? content.substring(0, 50)
+			content = content.length() > 50 ? content.substring(0, 50)+"..."
 					: content;
 
 		} else {
