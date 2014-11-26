@@ -683,8 +683,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 					vo.getkId(), cIds, userId, username, columnPath, vo);
 			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", vo.getkId(),
-						cIds);
+				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+						vo.getkId(), cIds);
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.addKnowledgeFail.c());
@@ -734,8 +734,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 					vo.getkId(), cIds, userId, username, columnPath, vo);
 			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", vo.getkId(),
-						cIds);
+				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+						vo.getkId(), cIds);
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.addKnowledgeFail.c());
@@ -744,19 +744,35 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 初始化知识统计信息
-		KnowledgeStatics statics = new KnowledgeStatics();
-		statics.setClickcount(0l);
-		statics.setCollectioncount(0l);
-		statics.setCommentcount(0l);
-		statics.setKnowledgeId(vo.getkId());
-		statics.setSharecount(0l);
-		statics.setSource(source);
-		statics.setTitle(vo.getTitle());
-		statics.setType(Short.parseShort(vo.getColumnType()));
-		int sV = knowledgeStaticsMapper.insertSelective(statics);
+		int sV = 0;
+		KnowledgeStatics KnowledgeStatics = knowledgeStaticsService
+				.selectByknowledgeId(vo.getkId());
+		if (KnowledgeStatics != null) {
+			KnowledgeStatics statics = new KnowledgeStatics();
+			statics.setClickcount(0l);
+			statics.setCollectioncount(0l);
+			statics.setCommentcount(0l);
+			statics.setKnowledgeId(vo.getkId());
+			statics.setSharecount(0l);
+			statics.setTitle(vo.getTitle());
+			statics.setSource(source);
+			statics.setType(Short.parseShort(vo.getColumnType()));
+			sV = knowledgeStaticsMapper.updateByPrimaryKeySelective(statics);
+		} else {
+			KnowledgeStatics statics = new KnowledgeStatics();
+			statics.setClickcount(0l);
+			statics.setCollectioncount(0l);
+			statics.setCommentcount(0l);
+			statics.setKnowledgeId(vo.getkId());
+			statics.setSharecount(0l);
+			statics.setTitle(vo.getTitle());
+			statics.setSource(source);
+			statics.setType(Short.parseShort(vo.getColumnType()));
+			sV = knowledgeStaticsMapper.insertSelective(statics);
+		}
 		if (sV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}", kId,
-					vo.getColumnType());
+			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
+					vo.getkId(), vo.getColumnType());
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.addKnowledgeFail.c());
