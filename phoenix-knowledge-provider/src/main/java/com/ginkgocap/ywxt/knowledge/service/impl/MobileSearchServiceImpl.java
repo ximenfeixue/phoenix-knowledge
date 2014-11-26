@@ -433,7 +433,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	        if(class_name==null) {
 	        	return null;
 	        }
-	        Class testTypeForName;
+	        Class<?> testTypeForName;
 			try {
 				testTypeForName = Class.forName(class_name);
 			} catch (ClassNotFoundException e) {
@@ -494,7 +494,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	        query.limit(size);
 	        query.skip(p.getPageStartRow() - 1);
 	        model.put("page", p);
-	        model.put("list", (List) mongoTemplate.find(query,testTypeForName.getClass(), names[length - 1]));
+	        model.put("list", (List) mongoTemplate.find(query,testTypeForName , names[length - 1]));
 	        return model;
 	}
 	
