@@ -21,7 +21,7 @@ public class Tree {
     private static Node curNode;
     
     //生成根和枝叶
-    public static Node build(List<Node> categories){
+    public synchronized static Node build(List<Node> categories){
         rootNode = new Node();
         curNode =  new Node();
         rootNode.setId(0);
