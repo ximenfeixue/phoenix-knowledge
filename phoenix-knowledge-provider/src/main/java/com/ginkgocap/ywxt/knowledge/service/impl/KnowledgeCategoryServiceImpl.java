@@ -160,17 +160,11 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 						|| columnType == Constants.Type.Industry.v()
 						|| columnType == Constants.Type.Case.v()) {
 					if (desc != null && desc.length() > 0) {
-						if (HtmlToText.htmlTotest(desc).length() > 50) {
-							base.setcDesc(HtmlToText.htmlTotest(desc)
-									.substring(0, 50));
-						} else {
-							base.setcDesc(HtmlToText.htmlTotest(desc));
-						}
+						base.setcDesc(HtmlToText.htmlTotest(desc));
 					} else {
 						base.setcDesc(HtmlToText.htmlTotest(vo.getContent()));
 					}
 				} else {
-
 					base.setcDesc(HtmlToText.htmlTotest(vo.getContent()));
 				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
