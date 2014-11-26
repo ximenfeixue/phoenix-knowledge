@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.file.model.FileIndex;
+import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample;
 import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample.Criteria;
@@ -27,6 +29,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 	private AttachmentMapper attachmentMapper;
 	@Resource
 	private AttachmentMapperManual attachmentMapperManual;
+	@Resource
+	private FileIndexService fileIndexService;
 
 	private final Logger logger = LoggerFactory
 			.getLogger(AttachmentServiceImpl.class);
@@ -74,13 +78,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 			result.put("hasAtt", false);
 			return result;
 		}
-		AttachmentExample example = new AttachmentExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andTaskidEqualTo(taskId);
-
-		List<Attachment> attList = attachmentMapper.selectByExample(example);
-		result.put("attList", attList);
-		result.put("hasAtt", attList == null || attList.size() == 0 ? false
+		/***-----------------这接口写的真气人-------不写注释我怎么知道status传个毛-------------------------------***/
+		List<FileIndex> fiList = fileIndexService.selectByTaskId(taskId, "1");
+		result.put("attList", fiList);
+		result.put("hasAtt", fiList == null || fiList.size() == 0 ? false
 				: true);
 		return result;
 	}
