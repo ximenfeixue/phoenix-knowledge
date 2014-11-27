@@ -36,8 +36,24 @@
 			and column_id=#{column_id} 
 		</if>
 	</select>
-
 	
+	<select id="selectKnowledgeIdsByParams" resultType="long" >
+
+		select p.knowledge_id from tb_user_permission p INNER JOIN tb_column c on p.column_id = c.id 
+		where (p.type=2 or p.type=3)
+		<if test="receive_user_id !=null">
+			and p.receive_user_id=#{receive_user_id}
+		</if> 
+		and ( c.id in 
+	    <foreach item="columnId1" collection="columnIds" open="(" separator="," close=")">
+		   #{columnId1}
+	   </foreach> or
+	   c.parent_id in 
+	    <foreach item="columnId2" collection="columnIds" open="(" separator="," close=")">
+		   #{columnId2}
+	   </foreach>)
+	</select>
+
 
   <select id="selectByParamsSingle" resultType="long" >
 		select knowledge_id from tb_user_permission c

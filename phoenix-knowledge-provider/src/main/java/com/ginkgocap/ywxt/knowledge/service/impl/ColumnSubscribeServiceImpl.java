@@ -29,6 +29,7 @@ import com.ginkgocap.ywxt.knowledge.form.SubcribeNode;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeColumnSubscribeMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
@@ -51,6 +52,9 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 
 	@Resource
 	private KnowledgeColumnSubscribeMapper knowledgeColumnSubscribeMapper;
+	
+	@Resource
+	private UserPermissionValueMapper userPermissionValueMapper;
 
 	@Resource
 	private MongoTemplate mongoTemplate;
@@ -334,9 +338,12 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 					.where("columnid").in(columnList).and("uid").nin(list);
 
 		} else if (source == Constants.Relation.platform.v()) {
+			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", -1, columnList);
+			// 获取所有大乐，中乐分享到全平台的knowledgeId
+			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(-1l,columnList);
+			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", -1, knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("columnid").in(columnList).and("uid")
-					.in(Constants.Ids.platform.v());
+					.where("_id").in(knowledgeIds);
 		}
 		if (StringUtils.isNotBlank(keywords)) {
 			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$",
