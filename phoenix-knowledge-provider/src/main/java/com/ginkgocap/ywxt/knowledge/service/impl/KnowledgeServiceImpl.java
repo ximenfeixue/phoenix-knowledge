@@ -649,10 +649,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-				// 删除用户权限数据
-				int userPermissionCount = userPermissionService
-						.deleteUserPermission(vo.getkId(), user.getId());
-
+				// 添加知识到权限表
 				result = insertUserPermissions(vo, user);
 				Integer status = Integer.parseInt(result.get(Constants.status)
 						+ "");
