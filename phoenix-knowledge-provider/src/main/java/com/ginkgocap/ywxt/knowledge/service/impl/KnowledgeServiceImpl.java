@@ -27,7 +27,6 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -49,6 +48,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.service.SearchService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
@@ -135,6 +135,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private DataCenterService dataCenterService;
+
+	@Autowired
+	private NoticeThreadPool noticeThreadPool;
 
 	//
 	@Override
@@ -250,15 +253,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
-			try {
-				// 大数据通知接口
-				dataCenterService.noticeDataCenterWhileKnowledgeChange(
-						knowledgeid[i] + "", "del", ct + "");
-
-			} catch (Exception e) {
-				logger.error("大数据调用接口不成功,知识ID{}", knowledgeid[i]);
-				e.printStackTrace();
-			}
+			// 大数据通知接口
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("oper", "del");
+			params.put("type", ct + "");
+			params.put("kId", knowledgeid[i] + "");
+			noticeThreadPool.noticeDataCenter(
+					Constants.noticeType.knowledge.v(), params);
 		}
 		return result;
 	}
@@ -320,8 +321,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					vo.getColumnType());
 
 			if (knowledge != null) {
-				if (!StringUtils
-						.equals(knowledge.getTitle(), vo.getTitle())) {
+				if (!StringUtils.equals(knowledge.getTitle(), vo.getTitle())) {
 
 					int count = knowledgeMainService.checkLawNameRepeat(vo
 							.getTitle());
@@ -471,14 +471,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
 		// 大数据通知接口
-		try {
-
-			dataCenterService.noticeDataCenterWhileKnowledgeChange(vo.getkId()
-					+ "", "upd", vo.getColumnType());
-		} catch (Exception e) {
-			logger.error("大数据调用接口不成功,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("oper", "upd");
+		params.put("type", vo.getColumnType() + "");
+		params.put("kId", vo.getkId() + "");
+		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
+				params);
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -816,13 +814,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 		}
 		// 大数据通知接口
-		try {
-
-			dataCenterService.noticeDataCenterWhileKnowledgeChange(vo.getkId()
-					+ "", "add", vo.getColumnType());
-		} catch (Exception e) {
-			logger.error("大数据接口调用不成功,知识ID{}", vo.getkId());
-		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("oper", "add");
+		params.put("type", vo.getColumnType() + "");
+		params.put("kId", vo.getkId() + "");
+		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
+				params);
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
