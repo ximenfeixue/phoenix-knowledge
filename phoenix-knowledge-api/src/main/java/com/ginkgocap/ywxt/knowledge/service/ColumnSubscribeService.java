@@ -248,4 +248,7 @@ public interface ColumnSubscribeService {
 	 */
 	public Map<String, Object> searchKnowledgeFromSub(long userId, String keywords,
 			String type, Integer source, Integer currentPage, Integer pageSize);
+	
+	/** 移动端订阅方法 */
+	public void mobileSubscribeColumn(int type,long userId,long columnId);
 }
