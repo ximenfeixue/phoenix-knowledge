@@ -517,7 +517,7 @@ public class Constants {
 
 	// 通知类型
 	public enum noticeType {
-		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知");
+		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"),shareToJinTN(4,"分享到金桐脑");
 
 		private int v;
 		private String c;
