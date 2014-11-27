@@ -254,10 +254,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
 			// 大数据通知接口
-			Map<String, String> params = new HashMap<String, String>();
+			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("oper", "del");
-			params.put("type", ct + "");
-			params.put("kId", knowledgeid[i] + "");
+			params.put("type", ct);
+			params.put("kId", knowledgeid[i]);
 			noticeThreadPool.noticeDataCenter(
 					Constants.noticeType.knowledge.v(), params);
 		}
@@ -471,10 +471,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
 		// 大数据通知接口
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("oper", "upd");
-		params.put("type", vo.getColumnType() + "");
-		params.put("kId", vo.getkId() + "");
+		params.put("type", vo.getColumnType());
+		params.put("kId", vo.getkId());
 		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
 				params);
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -652,7 +652,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				// 删除用户权限数据
 				int userPermissionCount = userPermissionService
 						.deleteUserPermission(vo.getkId(), user.getId());
-				// 添加知识到权限表
+
 				result = insertUserPermissions(vo, user);
 				Integer status = Integer.parseInt(result.get(Constants.status)
 						+ "");
@@ -814,10 +814,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 		}
 		// 大数据通知接口
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("oper", "add");
-		params.put("type", vo.getColumnType() + "");
-		params.put("kId", vo.getkId() + "");
+		params.put("type", vo.getColumnType());
+		params.put("kId", vo.getkId());
 		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
 				params);
 		result.put("knowledgeid", vo.getkId());
@@ -955,7 +955,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-				searchservice.shareToJinTN(user.getId(), vo);
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("userId", user.getId());
+				params.put("vo", vo);
+				noticeThreadPool.noticeDataCenter(
+						Constants.noticeType.shareToJinTN.v(), params);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
