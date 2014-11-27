@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
-import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample;
-import com.ginkgocap.ywxt.knowledge.entity.AttachmentExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.AttachmentMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.AttachmentMapperManual;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
@@ -89,20 +87,19 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	public Integer deleteAttachment(long attId) {
 		logger.info("进入删除附件请求,附件Id:{}", attId);
-
-		int v = attachmentMapper.deleteByPrimaryKey(attId);
+		fileIndexService.delete(attId);
 
 		logger.info("删除附件成功,附件Id:{}", attId);
-		return v;
+		//删除方法没返回值，只能返回1
+		return 1;
 	}
 
 	@Override
-	public Attachment selectByPrimaryKey(long attId) {
+	public FileIndex selectByPrimaryKey(long attId) {
 		logger.info("进入获取附件请求,附件Id:{}", attId);
-
-		Attachment attachment = attachmentMapper.selectByPrimaryKey(attId);
+		FileIndex fileIndex = fileIndexService.selectByPrimaryKey(attId);
 
 		logger.info("获取附件成功,附件Id:{}", attId);
-		return attachment;
+		return fileIndex;
 	}
 }
