@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.Map;
 
+import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 
 public interface AttachmentService {
@@ -44,5 +45,5 @@ public interface AttachmentService {
 	 * @param attId 附件Id
 	 * return 附件
 	 */
-	Attachment selectByPrimaryKey(long attId);
+	FileIndex selectByPrimaryKey(long attId);
 }
