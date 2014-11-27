@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
 /**
  * 知识统计
@@ -28,5 +29,14 @@ public interface KnowledgeStaticsService {
 	 * @return
 	 */
 	KnowledgeStatics selectByknowledgeId(long knowledgeid);
+
+	/**
+	 * 初始化知识统计信息
+	 * 
+	 * @param vo
+	 * @param source
+	 * @return
+	 */
+	int initKnowledgeStatics(KnowledgeNewsVO vo, Short source);
 
 }
