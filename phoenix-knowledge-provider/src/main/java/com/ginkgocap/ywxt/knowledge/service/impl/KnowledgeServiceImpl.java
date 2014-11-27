@@ -316,15 +316,25 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		// 法律法规名称不可重复
 		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
-			if (count == 0) {
-				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-				result.put(Constants.status,
-						Constants.ResultType.sameNameError.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.hasName.c());
+			Knowledge knowledge = selectKnowledge(vo.getkId(),
+					vo.getColumnType());
 
-				return result;
+			if (knowledge != null) {
+				if (!StringUtils
+						.equals(knowledge.getTitle(), vo.getTitle())) {
+
+					int count = knowledgeMainService.checkLawNameRepeat(vo
+							.getTitle());
+					if (count == 0) {
+						logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+						result.put(Constants.status,
+								Constants.ResultType.sameNameError.v());
+						result.put(Constants.errormessage,
+								Constants.ErrorMessage.hasName.c());
+
+						return result;
+					}
+				}
 			}
 		}
 		// Knowledge knowledge = knowledgeDraftService.getDraftByMainIdAndUser(
@@ -595,20 +605,50 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		// 法律法规名称不可重复
 		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-			int count = knowledgeMainService.checkLawNameRepeat(vo.getTitle());
-			if (count == 0) {
-				logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-				result.put(Constants.status,
-						Constants.ResultType.sameNameError.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.hasName.c());
 
-				return result;
+			if (StringUtils.isBlank(vo.getKnowledgeid())) {
+
+				int count = knowledgeMainService.checkLawNameRepeat(vo
+						.getTitle());
+				if (count == 0) {
+					logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+					result.put(Constants.status,
+							Constants.ResultType.sameNameError.v());
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.hasName.c());
+
+					return result;
+				}
 			}
+
 		}
 
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+			// 法律法规名称不可重复
+			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
+
+				Knowledge knowledge = selectKnowledge(vo.getkId(),
+						vo.getColumnType());
+
+				if (knowledge != null) {
+					if (!StringUtils
+							.equals(knowledge.getTitle(), vo.getTitle())) {
+
+						int count = knowledgeMainService.checkLawNameRepeat(vo
+								.getTitle());
+						if (count == 0) {
+							logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
+							result.put(Constants.status,
+									Constants.ResultType.sameNameError.v());
+							result.put(Constants.errormessage,
+									Constants.ErrorMessage.hasName.c());
+
+							return result;
+						}
+					}
+				}
+			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 				// 删除用户权限数据
