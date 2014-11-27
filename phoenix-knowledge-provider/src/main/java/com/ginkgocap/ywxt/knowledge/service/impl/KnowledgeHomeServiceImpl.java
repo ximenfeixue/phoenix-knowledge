@@ -332,19 +332,22 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	}
 
 	@Override
-	public List<Node> queryColumns(long cid, long userId) {
-		logger.info(
-				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}",
-				cid);
-		Column c = columnMapper.selectByPrimaryKey(cid);
-		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
-				c.getColumnLevelPath());
-		if (cl != null && cl.size() > 0) {
-			return ConvertUtil.convert2Node(cl, "userId", "id", "columnname",
-					"parentId", "columnLevelPath");
-		}
-		return null;
-	}
+    public List<Node> queryColumns(long cid, long userId) {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}", cid);
+        Column c = columnMapper.selectByPrimaryKey(cid);
+        try {
+            List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
+            if (cl != null && cl.size() > 0) {
+                return Branch.build(
+                        ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath"), cid,
+                        c.getParentId()).getList();
+            }
+        } catch (Exception e) {
+            logger.error("无法获取2,3级栏目数据knowledgeHomeServiceImpl.queryColumns()");
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 	@Override
 	public int beRelation(long id, int t, long cid, Long userId) {
