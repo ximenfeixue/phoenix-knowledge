@@ -59,4 +59,6 @@ public interface KnowledgeCaseService {
 	 * @return
 	 */
 	public List<KnowledgeCase> getUserCase(Long userId,Long id,int size,int limit);
+	
+	public boolean updateCaseAfterTransCase(Long id,String content,int status);
 }

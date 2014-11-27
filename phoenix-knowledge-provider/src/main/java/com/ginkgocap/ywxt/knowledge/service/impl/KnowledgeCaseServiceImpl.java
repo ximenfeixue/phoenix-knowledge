@@ -127,4 +127,15 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		return (List<KnowledgeCase>) mongoTemplate.find(query, KnowledgeCase.class, "KnowledgeCase");
 	}
 
+	@Override
+	public boolean updateCaseAfterTransCase(Long id, String content, int status) {
+		Criteria c = Criteria.where("id").is(id);
+		Update update = new Update();
+		Query query = new Query(c);
+		update.set("tranStatus", status);
+		update.set("content", content);
+		mongoTemplate.findAndModify(query, update, KnowledgeCase.class, "KnowledgeCase");
+		return true;
+	}
+
 }

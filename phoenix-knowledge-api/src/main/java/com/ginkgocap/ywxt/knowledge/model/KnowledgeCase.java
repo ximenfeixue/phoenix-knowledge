@@ -17,8 +17,12 @@ import com.ginkgocap.ywxt.user.model.User;
 public class KnowledgeCase extends Knowledge {
 		// 老知识ID
 		private long oid;
+		
 		//价格
 		private float price;
+		
+		//转换状态
+		private int tranStatus;
 		
 		public float getPrice() {
 			return price;
@@ -69,6 +73,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setSelectedIds(vo.getSelectedIds());
 			this.setKnowledgeMainId(vo.getKnowledgeMainId());
 			this.setContent(vo.getContent());
+			this.setTranStatus(0);
 			
 			return this;
 		}
@@ -103,6 +108,15 @@ public class KnowledgeCase extends Knowledge {
 			this.setSelectedIds(vo.getSelectedIds());
 			this.setAsso(vo.getAsso());
 			this.setKnowledgeMainId(vo.getKnowledgeMainId());
+			this.setTranStatus(0);
 			return this;
+		}
+
+		public int getTranStatus() {
+			return tranStatus;
+		}
+
+		public void setTranStatus(int tranStatus) {
+			this.tranStatus = tranStatus;
 		}
 }
