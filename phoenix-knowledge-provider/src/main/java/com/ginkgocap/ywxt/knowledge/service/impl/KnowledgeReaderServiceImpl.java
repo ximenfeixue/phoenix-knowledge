@@ -350,6 +350,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("columnName", StringUtils.isBlank(columnType) ? ""
 				: Constants.getKnowledgeTypeName(columnType));
 		result.put("kid", kid);
+		result.put("type",type);
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 

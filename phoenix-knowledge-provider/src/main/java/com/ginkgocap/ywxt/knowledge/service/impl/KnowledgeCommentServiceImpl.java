@@ -68,7 +68,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		comment.setStatus(Constants.CommentStatus.common.c());
 		comment.setCount(0l);
 		comment.setContent(content);
-		comment.setUsername(currUser.getUserName());
+		comment.setUsername(currUser.getName());
 		comment.setPic(currUser.getPicPath());
 
 		int v = knowledgeCommentMapper.insertSelective(comment);
