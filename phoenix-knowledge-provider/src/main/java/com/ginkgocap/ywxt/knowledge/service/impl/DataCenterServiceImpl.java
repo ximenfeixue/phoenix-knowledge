@@ -265,7 +265,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("path", k.getContent());
 				params.put("type", "html");
-
+				params.put("imgPath", GetUploadPath.getNginxRoot()+"/knowledge/import");
 				String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 						params);
 				Map<String,Object> result = new HashMap<String, Object>();
