@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.ginkgocap.ywxt.knowledge.entity.ColumnKnowledge;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 知识栏目关系
@@ -37,4 +38,10 @@ public interface ColumnKnowledgeService {
 	 * 2014-11-25
 	 * */
 	String[] getAllColumnByColumnId(int columnid);
+	/**
+	 * zhangzhen 加入
+	 * 查询移动端知识目录
+	 * 2014-11-27
+	 * */
+	List<Map<String,Object>> getMobileColumn(int length,long user_id);
 }
