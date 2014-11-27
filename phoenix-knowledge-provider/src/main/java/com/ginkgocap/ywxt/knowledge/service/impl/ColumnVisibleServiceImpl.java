@@ -248,7 +248,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
 				vo.setId(column.getColumnId());
 				vo.setColumnname(column.getColumnName());
 				// 0 可见 1 不可见
-				vo.setState(0);
+				vo.setState(column.getState());
 
 				list.add(vo);
 			}
