@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
@@ -404,6 +405,22 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public void mobileSubscribeColumn(int type, long userId, long columnId) {
+
+		if (type == 1) {
+			KnowledgeColumnSubscribe kcs = new KnowledgeColumnSubscribe();
+			kcs.setUserId(userId);
+			kcs.setColumnId(columnId);
+			kcs.setSubDate(new Date());
+			add(kcs);
+		} else {
+			deleteByUIdAndKCId(userId, columnId);
+		}
+
 	}
 
 }
