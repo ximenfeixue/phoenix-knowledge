@@ -514,7 +514,28 @@ public class Constants {
 			return v;
 		}
 	}
-	
+
+	// 通知类型
+	public enum noticeType {
+		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知");
+
+		private int v;
+		private String c;
+
+		private noticeType(int v, String c) {
+			this.v = v;
+			this.c = c;
+		}
+
+		public int v() {
+			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
+
 	public static String getKnowledgeTypeName(String v) {
 		if (StringUtils.isBlank(v))
 			return null;

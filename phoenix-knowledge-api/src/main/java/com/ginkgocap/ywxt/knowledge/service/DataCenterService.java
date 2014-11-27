@@ -11,6 +11,14 @@ public interface DataCenterService {
 	 * @return
 	 */
 	Map<String,Object> getCaseDataFromDataCenter(String path,String type);
+	/**
+	 * 通知解析经典案例
+	 * @param id 知识ID
+	 * @param path 经典案例路径
+	 * @param type 文档类型（doc/pdf/txt）
+	 * @return
+	 */
+	Map<String,Object> noticeDataCenterWhileFileChange(long id ,String path,String type);
 	
 	/**
 	 * 添加栏目通知数据中心
