@@ -958,7 +958,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
 				// 分享到金桐脑
-//				searchservice.shareToJinTN(user.getId(), vo);
+				searchservice.shareToJinTN(user.getId(), vo);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
