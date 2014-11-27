@@ -94,4 +94,9 @@ public class ColumnKnowledgeServiceImpl implements ColumnKnowledgeService {
 		}
 	}
 
+	@Override
+	public List<Map<String, Object>> getMobileColumn(int length, long user_id) {
+		return columnKnowledgeValueMapper.selectMobileColumns(length, user_id);
+	}
+
 }

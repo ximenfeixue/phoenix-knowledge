@@ -12,4 +12,6 @@ public interface ColumnKnowledgeValueMapper {
 	List<Long> selectKnowledgeIds(@Param("userId")long userId, @Param("sortId")String sortId);
 	
 	List<Map<String,Long>> selectColumnIdTreeById(@Param("columnid") long columnid);
+	
+	List<Map<String,Object>> selectMobileColumns(@Param("length") int length,@Param("userId") long userId);
 }

@@ -31,10 +31,18 @@
 	AND v.column_id = c.id)
 </select>
 
-	<select id="selectColumnIdTreeById" resultType="map" >
+	<select id="selectColumnIdTreeById" resultType="map">
 	 		SELECT t.id FROM tb_column t WHERE
 	 		 t.column_level_path LIKE 
 			CONCAT((SELECT column_level_path FROM tb_column WHERE id = #{columnid}), '%')
+	</select>
+	
+	<select id="selectMobileColumns" resultType="map">
+	 		SELECT * FROM tb_column t WHERE 
+	 		LENGTH(t.column_level_path) <= #{length} 
+	 		AND t.user_id = #{userId} 
+	 		AND t.del_status = 0 
+	 		ORDER BY t.column_level_path
 	</select>
 
 </mapper>
