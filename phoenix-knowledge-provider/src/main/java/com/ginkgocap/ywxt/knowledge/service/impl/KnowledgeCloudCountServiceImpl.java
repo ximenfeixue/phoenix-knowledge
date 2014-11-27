@@ -8,7 +8,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapperManual;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCloudCountService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
-@Service("KnowledgeCloudCountService")
+@Service("knowledgeCloudCountService")
 public class KnowledgeCloudCountServiceImpl implements KnowledgeCloudCountService {
 	
 	@Resource
