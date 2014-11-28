@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
@@ -26,6 +27,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBaseExample;
+import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
@@ -33,6 +35,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnVOValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
@@ -70,6 +73,8 @@ public class ColumnServiceImpl implements ColumnService {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	ColumnMapper columnMapper;
+	@Autowired
+	UserPermissionValueMapper userPermissionValueMapper;
 	
 	@Autowired
 	private NoticeThreadPool noticeThreadPool;
@@ -103,6 +108,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return list;
 	}
 
+	@Transactional
 	@Override
 	public Column saveOrUpdate(Column kc) {
 
@@ -288,6 +294,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return list;
 	}
 
+	@Transactional
 	@Override
 	public void delById(long id) {
 		// TODO Auto-generated method stub
@@ -504,6 +511,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return list;
 	}
 
+	@Transactional
 	@Override
 	public Map<String, Object> addColumn(String columnname, long pid,
 			String pathName, int type, String tags, long userid) {
@@ -565,6 +573,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return result;
 	}
 
+	@Transactional
 	public long addColumnForNongroup(String columnname, long pid,
 			String pathName, int type, String tags, long userid) {
 
@@ -597,6 +606,7 @@ public class ColumnServiceImpl implements ColumnService {
 	 * @param columnName
 	 * @param columnLevelPath
 	 */
+	@Transactional
 	public void batchSaveColumnTags(long userid, long columnId, String tags,
 			String columnName, String columnLevelPath) {
 		TagUtils tagUtil = new TagUtils();
@@ -668,6 +678,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return clist.get(0).getColumnLevelPath();
 	}
 
+	@Transactional
 	@Override
 	public Map<String, Object> delColumn(long columnid, long userid,
 			boolean verify) {
@@ -726,6 +737,10 @@ public class ColumnServiceImpl implements ColumnService {
 			base.setPath(Constants.unGroupSortName);
 			knowledgeBaseMapper.updateByExampleSelective(base,example);
 			logger.info("--完成删除栏目请求时,mysql 知识基本表中，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			
+			logger.info("--进入删除栏目请求时,分享权限信息表，将相应栏目更新为未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			userPermissionValueMapper.batchUpdateColumn(colList.get(0).getId(), userid, columnid, 1);
+			logger.info("--完成删除栏目请求时,分享权限信息表，将相应栏目更新为未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		}
 		// 删除栏目标签表
 		ColumnTagExample example = new ColumnTagExample();
@@ -820,6 +835,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return getColumnIdBySortId(Constants.unGroupSortId, userId);
 	}
 
+	@Transactional
 	@Override
 	public Map<String, Object> updateColumn(long id, String columnName,
 			String tags, long userId) {

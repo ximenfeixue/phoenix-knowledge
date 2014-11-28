@@ -31,4 +31,26 @@ public interface UserPermissionValueMapper {
 	 * @return
 	 */
 	List<Long> selectKnowledgeIdsByParams(@Param("receive_user_id") long receive_user_id, @Param("columnIds") List<String> columnIds);
+	
+	/**
+	 * 通过发送者id和栏目id获取相应权限
+	 * @param send_user_id 分享者ID
+	 * @param columnid	知识栏目ID
+	 * @param type	分享类型
+	 * @return
+	 */
+	List<UserPermission> selectPermissionsByParams(@Param("send_user_id") long send_user_id, @Param("column_id") long column_id, @Param("type") Integer type);
+	
+	/**
+	 * 更新权限表中的栏目，用于栏目删除时，将相应栏目归类到未分组栏目下
+	 * @param new_column_id
+	 * @param send_user_id
+	 * @param old_column_id
+	 * @param column_type
+	 * @return
+	 */
+	long batchUpdateColumn(@Param("new_column_id") long new_column_id, 
+							@Param("send_user_id") long send_user_id, 
+							@Param("old_column_id") long old_column_id,
+							@Param("column_type") long column_type );
 }

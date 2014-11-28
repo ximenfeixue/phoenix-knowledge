@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper" >
- 
+ 	<resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.UserPermission">
+ 	    <result column="receive_user_id" property="receiveUserId" jdbcType="BIGINT" />
+	    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+	    <result column="send_user_id" property="sendUserId" jdbcType="BIGINT" />
+	    <result column="type" property="type" jdbcType="SMALLINT" />
+	    <result column="mento" property="mento" jdbcType="VARCHAR" />
+	    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+	    <result column="column_id" property="columnId" jdbcType="SMALLINT" />
+	    <result column="column_type" property="columnType" jdbcType="TINYINT" />
+ 	</resultMap>
 
  <insert id="batchInsert" parameterType="java.util.List">
     insert into tb_user_permission (
@@ -22,12 +31,42 @@
 				 #{item.type}, #{item.mento}, #{item.createtime},#{item.columnType}, #{item.columnId})
     </foreach>  
  </insert>
+ 
+  <update id="batchUpdateColumn" >
+    	update tb_user_permission set
+				column_type=#{column_type},
+				column_id=#{new_column_id}
+		where	send_user_id=#{send_user_id}
+		  and 	column_id=#{old_column_id}
+ </update>
 
   <select id="selectByParams" resultType="long" >
 		select knowledge_id from tb_user_permission
 		where 1=1
 		<if test="receive_user_id != null">		
 			and receive_user_id=#{receive_user_id} 
+		</if>
+		<if test="type != null">		
+			and type=#{type} 
+		</if>
+		<if test="column_id != null">		
+			and column_id=#{column_id} 
+		</if>
+	</select>
+	
+	  <select id="selectPermissionsByParams" resultMap="BaseResultMap" >
+		select receive_user_id,
+			knowledge_id,
+			send_user_id,
+			type,
+			mento,
+			createtime,
+			column_id,
+			column_type 
+		from tb_user_permission
+		where 1=1
+		<if test="send_user_id != null">		
+			and send_user_id=#{send_user_id} 
 		</if>
 		<if test="type != null">		
 			and type=#{type} 
