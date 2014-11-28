@@ -970,14 +970,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 			}
 		}
-		// 大数据通知接口
-		try {
-
-			dataCenterService.noticeDataCenterWhileKnowledgeChange(vo.getkId()
-					+ "", "upd", vo.getColumnType());
-		} catch (Exception e) {
-			logger.error("大数据接口调用不成功,知识ID{}", vo.getkId());
-		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
