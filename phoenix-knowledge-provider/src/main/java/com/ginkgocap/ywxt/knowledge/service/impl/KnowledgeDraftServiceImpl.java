@@ -384,6 +384,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeDraft(long[] knowledgeids, long userid) {
 
 		return knowledgeDraftValueMapper.deleteKnowledge(knowledgeids, userid);

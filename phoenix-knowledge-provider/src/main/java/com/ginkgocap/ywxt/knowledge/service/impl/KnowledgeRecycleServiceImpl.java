@@ -87,6 +87,7 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	}
 
 	@Override
+	@Transactional
 	public int emptyKnowledgeRecycle(long userid) {
 		KnowledgeRecycleExample example = new KnowledgeRecycleExample();
 		Criteria criteria = example.createCriteria();
