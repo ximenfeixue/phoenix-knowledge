@@ -435,7 +435,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			// 封装请求参数
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("path", paramsMap.get("path") + "");// 请求路径
-			params.put("id", paramsMap.get("id") + "");
+			params.put("kid", paramsMap.get("kid") + "");
 			params.put("docType", paramsMap.get("docType") + "");
 			params.put("type", paramsMap.get("type") + "");
 			// 返回请求结果
