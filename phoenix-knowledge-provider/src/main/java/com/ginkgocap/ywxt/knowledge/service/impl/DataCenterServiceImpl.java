@@ -385,11 +385,10 @@ public class DataCenterServiceImpl implements DataCenterService {
 			f.mkdirs();
 		return f;
 	}
-
 	@Override
 	public Map<String, Object> noticeDataCenterWhileKnowledgeChange(String kId,
 			String oper, String type) {
-		logger.info("进入知识通知数据中心请求");
+		logger.info("进入知识通知数据中心请求,知识Id:{},知识类型:{}", kId, type);
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", kId);
@@ -412,8 +411,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 			e.printStackTrace();
 			logger.error("通知失败!知识ID:{}", kId);
 		}
-
+		
 		result.put(Constants.status, Constants.ResultType.success.v());
+		logger.error("通知成功!知识ID:{},知识类型:{}", kId, type);
 
 		return result;
 	}
@@ -423,14 +423,14 @@ public class DataCenterServiceImpl implements DataCenterService {
 			Map<String, Object> paramsMap) {
 		logger.info("进入通知转换经典案例请求,知识Id:{}", paramsMap.get("id"));
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
 		if (StringUtils.isBlank(paramsMap.get("path") + "")) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.paramNotBlank.c());
 			return result;
 		}
-		
+
 		try {
 			// 封装请求参数
 			Map<String, String> params = new HashMap<String, String>();
@@ -461,7 +461,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 		}
 		if (Integer.parseInt(result.get("status") + "") == Constants.ResultType.success
 				.v()) {
-			
+
 			logger.info("通知成功,id为：{}", paramsMap.get("id"));
 		}
 		return result;
