@@ -336,7 +336,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
 				"yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(vo.getkId());
-		userPermission.setMento(HtmlToText.htmlTotest(vo.getShareMessage()));
+		userPermission.setMento(vo.getShareMessage());
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
 		String columnType = vo.getColumnType();
