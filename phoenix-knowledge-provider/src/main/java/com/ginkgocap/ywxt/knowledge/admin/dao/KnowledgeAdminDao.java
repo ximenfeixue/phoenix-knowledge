@@ -43,7 +43,8 @@ public interface KnowledgeAdminDao {
 	 * @param tags 标签
 	 * @param collectionName 知识类型
 	 * liubang
+	 * @param collectionName2 
 	 */
-	void update(long id, String title, String cpathid, String content,
+	void update(long id, String title, String cpathid, String content, String desc,
 			String tags, String collectionName);
 }

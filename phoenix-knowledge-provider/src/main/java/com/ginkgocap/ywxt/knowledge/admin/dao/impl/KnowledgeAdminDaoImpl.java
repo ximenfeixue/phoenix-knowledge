@@ -185,11 +185,19 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 	}
 
 	@Override
-	public void update(long id, String title, String cpathid, String content,
+	public void update(long id, String title, String cpathid, String content,String desc,
 			String tags, String collectionName) {
 		Criteria criteria = new Criteria().and("_id").is(id);
 		Query query = new Query(criteria);
-		Update update = new Update().set("title",title).set("cpathid", cpathid).set("content", content).set("tags", tags).set("modifytime", DateFunc.getDate());
+		Update update = new Update().set("title",title).set("cpathid", cpathid).set("tags", tags).set("modifytime", DateFunc.getDate());
+		if(StringUtils.equals(collectionName, "KnowledgeCase")){
+			update.set("desc", content);
+		}else{
+			update.set("content", content);
+		}
+		if(StringUtils.equals(collectionName, "KnowledgeInvestment")){
+			update.set("desc", desc);
+		}
 		mongoTemplate.updateFirst(query, update, collectionName);
 	}
 

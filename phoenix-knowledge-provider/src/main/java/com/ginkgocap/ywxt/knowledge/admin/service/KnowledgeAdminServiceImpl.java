@@ -71,9 +71,9 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	}
 
 	@Override
-	public void update(long id, String title, String cpathid, String content,
+	public void update(long id, String title, String cpathid, String content,String desc,
 			String tags, String collectionName) {
-		knowledgeAdminDao.update(id,title, cpathid, content,
+		knowledgeAdminDao.update(id,title, cpathid, content,desc,
 				tags, collectionName);
 		
 	}
