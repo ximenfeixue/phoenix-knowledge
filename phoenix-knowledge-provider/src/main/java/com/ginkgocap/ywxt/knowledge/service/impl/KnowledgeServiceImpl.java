@@ -992,4 +992,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		knowledgeDao.updateInvestment(id, pic, content, desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
 	}
+	
+	public void updateByPrimaryKey(KnowledgeBase kb) { 
+		knowledgeBaseMapper.updateByPrimaryKey(kb); 
+		}
 }
