@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample;
@@ -43,6 +44,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	private static final int psize = 10;
 
 	@Override
+	@Transactional
 	public Map<String, Object> addComment(long kid, User user, long pid,
 			String content) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -140,6 +142,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	// }
 
 	@Override
+	@Transactional
 	public Map<String, Object> delComment(long id, long kId, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeComment kc = knowledgeCommentMapper.selectByPrimaryKey(id);

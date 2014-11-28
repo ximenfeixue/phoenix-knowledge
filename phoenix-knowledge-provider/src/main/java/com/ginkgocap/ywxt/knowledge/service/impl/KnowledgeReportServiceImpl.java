@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeReportExample;
@@ -36,6 +37,7 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 	private MongoTemplate mongoTemplate;
 
 	@Override
+	@Transactional
 	public Map<String, Object> addReport(long kid, String type, String desc,
 			User user, String title, String columnType) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -144,6 +146,7 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 	}
 
 	@Override
+	@Transactional
 	public int updateStatus(long id, int status, String info) {
 		KnowledgeReport report = knowledgeReportMapper.selectByPrimaryKey(id);
 		report.setStatus(status);
@@ -152,6 +155,7 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteByKnowledgeId(long id) {
 		return knowledgeReportMapper.deleteByPrimaryKey(id);
 	}

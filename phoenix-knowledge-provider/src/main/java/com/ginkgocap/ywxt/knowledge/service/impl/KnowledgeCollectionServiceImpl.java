@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecollection.KnowledgeCollectionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
@@ -69,6 +70,7 @@ public class KnowledgeCollectionServiceImpl implements
 	private DataCenterService dataCenterService;
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
 
 		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids,
@@ -119,6 +121,7 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
 	@Override
+	@Transactional
 	public Map<String, Object> insertKnowledgeCollection(
 			KnowledgeCollectionVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -264,6 +267,7 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
 	@Override
+	@Transactional
 	public boolean delCollection(long userId, long kId) {
 		logger.error("进入删除收藏信息请求!,用户ID:{},知识ID:{}", userId, kId);
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
@@ -279,6 +283,7 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
 	@Override
+	@Transactional
 	public boolean addBaseInfo(KnowledgeBaseVO vo, User user) {
 		logger.error("进入添加知识基本表!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
 				user.getId());
@@ -332,6 +337,7 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
 	@Override
+	@Transactional
 	public Map<String, Object> delCollection(long userId, String kIds) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (StringUtils.isBlank(kIds)) {
@@ -361,6 +367,7 @@ public class KnowledgeCollectionServiceImpl implements
 	}
 
 	@Override
+	@Transactional
 	public void move(long id, List<Long> knowledgeids, List<Long> categoryids,
 			long cid) {
 		if (knowledgeids.size() == 0) {
