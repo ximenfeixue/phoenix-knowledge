@@ -419,41 +419,49 @@ public class DataCenterServiceImpl implements DataCenterService {
 	}
 
 	@Override
-	public Map<String, Object> noticeDataCenterWhileFileChange(long id,
-			String path, String type) {
-		logger.info("进入通知转换经典案例请求,知识Id:{},知识路径：{}", id, path);
+	public Map<String, Object> noticeDataCenterWhileFileChange(
+			Map<String, Object> paramsMap) {
+		logger.info("进入通知转换经典案例请求,知识Id:{}", paramsMap.get("id"));
 		Map<String, Object> result = new HashMap<String, Object>();
+		
+		if (StringUtils.isBlank(paramsMap.get("path") + "")) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.paramNotBlank.c());
+			return result;
+		}
+		
 		try {
-			if (StringUtils.isBlank(path)) {
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotBlank.c());
-				return result;
-			}
 			// 封装请求参数
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("path", path);// 请求路径
-			params.put("id", id + "");
+			params.put("path", paramsMap.get("path") + "");// 请求路径
+			params.put("id", paramsMap.get("id") + "");
+			params.put("docType", paramsMap.get("docType") + "");
+			params.put("type", paramsMap.get("type") + "");
 			// 返回请求结果
 			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 					params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
-				logger.error("转换错误,转换返回值为空!知识ID为:{}",id);
+				logger.error("转换错误,转换返回值为空!知识ID为:{}", paramsMap.get("id"));
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.parseError.c());
 				return result;
 			}
-			
+
 			ObjectMapper mapper = new ObjectMapper();
 			result = mapper.readValue(str, Map.class);
-			
+
 		} catch (Exception e) {
 			logger.error("搜转换经典案例失败{}", e.toString());
 			e.printStackTrace();
 		}
-		logger.info("转换经典案例成功,返回值:{}", path);
+		if (Integer.parseInt(result.get("status") + "") == Constants.ResultType.success
+				.v()) {
+			
+			logger.info("通知成功,id为：{}", paramsMap.get("id"));
+		}
 		return result;
 	}
 

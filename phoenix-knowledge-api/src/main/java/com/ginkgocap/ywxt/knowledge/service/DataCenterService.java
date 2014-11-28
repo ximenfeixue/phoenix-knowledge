@@ -18,7 +18,7 @@ public interface DataCenterService {
 	 * @param type 文档类型（doc/pdf/txt）
 	 * @return
 	 */
-	Map<String,Object> noticeDataCenterWhileFileChange(long id ,String path,String type);
+	Map<String,Object> noticeDataCenterWhileFileChange(Map<String,Object> params);
 	
 	/**
 	 * 添加栏目通知数据中心

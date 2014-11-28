@@ -70,10 +70,7 @@ public class HtmlToText {
 			content = content.length() > 50 ? content.substring(0, 50) + "..."
 					: content;
 
-		} else {
-
-			content = "暂无简介";
-		}
+		} 
 		return content;
 	}
 

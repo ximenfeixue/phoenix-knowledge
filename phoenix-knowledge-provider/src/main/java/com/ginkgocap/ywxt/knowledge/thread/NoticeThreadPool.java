@@ -67,14 +67,7 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 							oper, type);
 
 				} else if (type == Constants.noticeType.cases.v()) { // 经典案例通知
-					String id = params.get("id") + "";
-					String path = params.get("path") + "";
-					String type = params.get("type") + "";
-					if (StringUtils.isBlank(id) || StringUtils.isBlank(path)
-							|| StringUtils.isBlank(type))
-						return;
-					dataCenterService.noticeDataCenterWhileFileChange(
-							Integer.parseInt(id), path, type);
+					dataCenterService.noticeDataCenterWhileFileChange(params);
 				} else if (type == Constants.noticeType.shareToJinTN.v()) { //分享到金桐脑通知
 					String userId = params.get("userId") + "";
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
