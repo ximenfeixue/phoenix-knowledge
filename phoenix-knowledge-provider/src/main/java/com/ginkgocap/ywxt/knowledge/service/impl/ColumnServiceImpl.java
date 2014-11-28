@@ -36,9 +36,8 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService;
-import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
+import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.knowledge.util.TagUtils;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
@@ -73,8 +72,8 @@ public class ColumnServiceImpl implements ColumnService {
 	ColumnMapper columnMapper;
 	
 	@Autowired
-	private DataCenterService dataCenterService;
-
+	private NoticeThreadPool noticeThreadPool;
+	
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
 	 * 
@@ -147,7 +146,9 @@ public class ColumnServiceImpl implements ColumnService {
 			// 新增栏目通知大数据
 			try {
 				logger.info("--进入添加栏目请求时通知大数据,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
-				dataCenterService.noticeDataCenterWhileColumnChange(kc.getId());
+				Map<String,Object> params = new HashMap<String,Object>();
+				params.put("columnId", kc.getId());
+				noticeThreadPool.noticeDataCenter(Constants.noticeType.column.v(), params);
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.info("--进入添加栏目请求时通知大数据异常,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
@@ -552,7 +553,9 @@ public class ColumnServiceImpl implements ColumnService {
 		// 新增栏目通知大数据
 		try {
 			logger.info("--进入添加栏目请求时通知大数据,栏目名称:{},当前登陆用户:{}--", columnname, userid);
-			dataCenterService.noticeDataCenterWhileColumnChange(currentColumnId);
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("columnId", currentColumnId);
+			noticeThreadPool.noticeDataCenter(Constants.noticeType.column.v(), params);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("--进入添加栏目请求时通知大数据异常,栏目名称:{},当前登陆用户:{}--", columnname, userid);
