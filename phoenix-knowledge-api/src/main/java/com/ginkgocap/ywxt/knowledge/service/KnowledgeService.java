@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
@@ -112,4 +113,5 @@ public interface KnowledgeService {
 	public void updateKnowledgeForInvestment(Long id,String pic,String content,String desc,Long userId);
 	
 
+	public void updateByPrimaryKey(KnowledgeBase kb);
 }
