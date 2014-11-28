@@ -567,7 +567,7 @@
 				<!-- 大数据搜索请求地址 -->
 				<knowledge.data.searchUrl>http://192.168.130.119:8090/</knowledge.data.searchUrl>
 				<!-- 大数据解析请求地址 -->
-				<knowledge.data.parseUrl>http://192.168.130.120:8000/</knowledge.data.parseUrl>
+				<knowledge.data.parseUrl>http://192.168.130.120:8000/async_data/</knowledge.data.parseUrl>
 				<!-- 大数据推送请求地址 -->
 				<knowledge.data.pushUrl>http://192.168.130.120:8000/</knowledge.data.pushUrl>
 
