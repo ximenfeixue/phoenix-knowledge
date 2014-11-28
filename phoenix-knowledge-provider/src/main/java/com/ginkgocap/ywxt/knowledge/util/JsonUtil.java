@@ -44,7 +44,7 @@ public class JsonUtil {
 			if (!dule) {
 				JsonNode dalesNodes = rootNode
 						.get(Constants.PermissionType.dales.c());
-				if (dalesNodes.size() > 0) {
+				if (dalesNodes != null && dalesNodes.size() > 0) {
 					perList = new ArrayList<String>();
 					for (JsonNode daleNode : dalesNodes) {
 						perList.add(daleNode.asText());
@@ -55,7 +55,7 @@ public class JsonUtil {
 				}
 				JsonNode zhongleNodes = rootNode
 						.get(Constants.PermissionType.zhongles.c());
-				if (zhongleNodes.size() > 0) {
+				if (zhongleNodes != null && zhongleNodes.size() > 0) {
 					perList = new ArrayList<String>();
 					for (JsonNode zhongle : zhongleNodes) {
 						perList.add(zhongle.asText());
@@ -66,7 +66,7 @@ public class JsonUtil {
 
 				JsonNode xiaoles = rootNode
 						.get(Constants.PermissionType.xiaoles.c());
-				if (xiaoles.size() > 0) {
+				if (xiaoles != null && xiaoles.size() > 0) {
 					perList = new ArrayList<String>();
 					for (JsonNode xiaole : xiaoles) {
 						perList.add(xiaole.asText());
