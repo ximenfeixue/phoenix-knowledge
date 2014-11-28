@@ -295,6 +295,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		vo.setColumnid(columnid);
 		vo.setColumnPath(columnPath);
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
+			vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
+			columnPath = Constants.KnowledgeType.Opinion.c();
+			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
+
+		}
 		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		}
@@ -584,6 +590,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setkId(kId);
 		vo.setColumnPath(columnPath);
 		vo.setColumnid(columnid);
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
+			vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
+			columnPath = Constants.KnowledgeType.Opinion.c();
+			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
+
+		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
