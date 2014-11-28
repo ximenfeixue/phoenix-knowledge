@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDraftDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
@@ -69,6 +70,7 @@ public class KnowledgeDraftDAOImpl implements KnowledgeDraftDAO {
 	}
 
 	@Override
+	@Transactional
 	public int insertKnowledge(long knowledgeid, String draftname,
 			String drafttype, String type, long userid) {
 

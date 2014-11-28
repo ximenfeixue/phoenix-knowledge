@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.statics.KnowledgeStaticsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
@@ -31,6 +32,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 	}
 
 	@Override
+	@Transactional
 	public int initKnowledgeStatics(KnowledgeNewsVO vo, Short source) {
 
 		int sV = 0;

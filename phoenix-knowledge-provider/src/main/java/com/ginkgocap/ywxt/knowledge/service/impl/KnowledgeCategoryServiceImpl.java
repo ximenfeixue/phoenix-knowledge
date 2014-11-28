@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
@@ -71,6 +72,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeCategory(long knowledgeid) {
 		KnowledgeCategoryExample example = new KnowledgeCategoryExample();
 		Criteria criteria = example.createCriteria();
@@ -80,6 +82,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public int updateKnowledgeCategory(long knowledgeid, long categoryid) {
 
 		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
@@ -103,6 +106,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public int updateKnowledgeCategorystatus(long knowledgeid, long categoryid) {
 
 		KnowledgeCategory knowledgecategory = new KnowledgeCategory();
@@ -127,6 +131,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public int insertKnowledgeRCategory(long kId, long[] cIds, long userId,
 			String username, String columnPath, KnowledgeNewsVO vo) {
 		// 批量插入知识目录表
@@ -218,6 +223,7 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public int insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid) {
 
 		KnowledgeCategory knowledgecategory = new KnowledgeCategory();

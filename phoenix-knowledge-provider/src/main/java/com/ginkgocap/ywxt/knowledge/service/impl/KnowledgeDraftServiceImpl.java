@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDraftDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
@@ -429,12 +430,14 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeDraft(long knowledgeid) {
 
 		return knowledgeDraftMapper.deleteByPrimaryKey(knowledgeid);
 	}
 
 	@Override
+	@Transactional
 	public int updateKnowledgeDaraft(long knowledgeid, String draftname,
 			String drafttype, long userid, String type) {
 
@@ -460,6 +463,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeSingalDraft(Long knowledgeMainId, String type,
 			Long userId) {
 

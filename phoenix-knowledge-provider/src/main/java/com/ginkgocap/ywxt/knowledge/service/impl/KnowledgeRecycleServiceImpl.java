@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeRecycleDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
@@ -64,12 +65,14 @@ public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteKnowledgeRecycle(long knowledgeid) {
 
 		return knowledgeRecycleMapper.deleteByPrimaryKey(knowledgeid);
 	}
 
 	@Override
+	@Transactional
 	public int insertKnowledgeRecycle(long knowledgeid, String recyclename,
 			String type, long userid, long categoryid) {
 

@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
@@ -57,6 +58,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
+	@Transactional
 	public int insertUserPermission(List<String> permList, long knowledgeid,
 			long send_uid, String shareMessage, short column_type,
 			long column_id) {
@@ -180,6 +182,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
+	@Transactional
 	public int deleteUserPermission(long knowledgeid, long userid) {
 
 		UserPermissionExample example = new UserPermissionExample();
