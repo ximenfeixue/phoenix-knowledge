@@ -189,10 +189,10 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public UserCategory selectByNameAndPid(String name, long pid) {
+	public UserCategory selectByNameAndPid(String name, long pid,long userid) {
 		UserCategoryExample example = new UserCategoryExample();
 		example.createCriteria().andParentIdEqualTo(pid)
-				.andCategorynameEqualTo(name);
+				.andCategorynameEqualTo(name).andUserIdEqualTo(userid);
 		List<UserCategory> l = userCategoryMapper.selectByExample(example);
 		return l.get(0);
 	}
