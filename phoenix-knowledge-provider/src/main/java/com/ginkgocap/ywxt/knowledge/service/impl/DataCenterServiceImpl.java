@@ -438,6 +438,8 @@ public class DataCenterServiceImpl implements DataCenterService {
 			params.put("kid", paramsMap.get("kid") + "");
 			params.put("docType", paramsMap.get("docType") + "");
 			params.put("type", paramsMap.get("type") + "");
+			params.put("imgPath", GetUploadPath.getNginxRoot()
+					+ "/knowledge/import");
 			// 返回请求结果
 			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 					params);
