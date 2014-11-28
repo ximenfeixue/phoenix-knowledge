@@ -991,6 +991,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			String content, String desc, Long userId) {
 		knowledgeDao.updateInvestment(id, pic, content, desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
+		// 大数据通知接口
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("oper", "upd");
+		params.put("type", "2");
+		params.put("kId", id);
+		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
+				params);
 	}
 	
 	public void updateByPrimaryKey(KnowledgeBase kb) { 
