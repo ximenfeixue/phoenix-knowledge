@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService;
 import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
@@ -79,6 +80,7 @@ public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 	}
 
 	@Override
+	@Transactional
 	public int moveCategoryBatch(long categoryid, long[] knowledgeids,
 			long[] categoryids) {
 

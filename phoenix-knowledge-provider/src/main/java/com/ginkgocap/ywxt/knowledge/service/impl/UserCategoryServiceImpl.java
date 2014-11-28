@@ -8,6 +8,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
@@ -76,6 +77,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		// return "success";
 	}
 
+	@Transactional
 	public String deleteNew(long id) {
         UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
         UserCategory un = null;
@@ -92,6 +94,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public String insert(UserCategory category) {
 		// 得到要添加的分类的父类parentId
 		try {
@@ -133,6 +136,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
+	@Transactional
 	public void update(UserCategory category) {
 		userCategoryMapper.updateByPrimaryKey(category);
 	}
