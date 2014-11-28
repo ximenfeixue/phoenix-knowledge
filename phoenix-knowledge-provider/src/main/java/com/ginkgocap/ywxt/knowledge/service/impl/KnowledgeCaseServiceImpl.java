@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -18,6 +19,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeCaseService")
@@ -30,7 +32,10 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 
 	@Resource
 	private KnowledgeMongoIncService KnowledgeMongoIncService;
-
+	
+	@Resource
+	private NoticeThreadPool noticeThreadPool;
+	
 	@Override
 	public Long addKnowledgeCase(KnowledgeCase k) {
 		Long id = KnowledgeMongoIncService.getKnowledgeIncreaseId();
@@ -136,6 +141,11 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 		update.set("content", content);
 		mongoTemplate.findAndModify(query, update, KnowledgeCase.class, "KnowledgeCase");
 		return true;
+	}
+
+	@Override
+	public void noticeDataCenter(Integer type, Map<String, Object> params) {
+		noticeThreadPool.noticeDataCenter(type, params);
 	}
 
 }

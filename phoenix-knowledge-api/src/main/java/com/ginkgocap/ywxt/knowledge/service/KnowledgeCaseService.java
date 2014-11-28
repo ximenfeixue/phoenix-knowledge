@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
@@ -61,4 +62,6 @@ public interface KnowledgeCaseService {
 	public List<KnowledgeCase> getUserCase(Long userId,Long id,int size,int limit);
 	
 	public boolean updateCaseAfterTransCase(Long id,String content,int status);
+	
+	public void noticeDataCenter(Integer type,Map<String, Object> params);
 }
