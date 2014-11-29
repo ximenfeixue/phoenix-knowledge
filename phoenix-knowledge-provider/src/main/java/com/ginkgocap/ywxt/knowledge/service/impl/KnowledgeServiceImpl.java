@@ -856,7 +856,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			update.set("status", Constants.Status.checked.v());
 			mongoTemplate.updateFirst(query, update, collectionName);
 
-			// if (knowledgerecycle.getCatetoryid() != -1) {
 			// //回收站恢复，如果是app端，回收站知识不恢复到目录
 			List<KnowledgeCategory> listcategory = knowledgeCategoryService
 					.selectKnowledgeCategory(knowledgeid);
@@ -911,7 +910,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					}
 				}
 			}
-			// }
+			// 大数据通知接口
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("oper", "add");
+			params.put("type", knowledgerecycle.getType());
+			params.put("kId", knowledgeid);
+			noticeThreadPool.noticeDataCenter(
+					Constants.noticeType.knowledge.v(), params);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -999,8 +1004,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
 				params);
 	}
-	
-	public void updateByPrimaryKey(KnowledgeBase kb) { 
-		knowledgeBaseMapper.updateByPrimaryKey(kb); 
-		}
+
+	public void updateByPrimaryKey(KnowledgeBase kb) {
+		knowledgeBaseMapper.updateByPrimaryKey(kb);
+	}
 }
