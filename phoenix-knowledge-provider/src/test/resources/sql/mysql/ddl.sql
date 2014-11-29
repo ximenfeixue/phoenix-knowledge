@@ -2560,3 +2560,110 @@ insert into `tb_column` (`id`, `columnName`, `user_id`, `parent_id`, `createtime
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(0,0,1,'全平台'); 
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(-2,0,1,'金桐脑'); 
 UPDATE phoenix_user.tb_user SET id =0 WHERE id = -2 
+
+
+USE `phoenix_cloud`;
+
+CREATE TABLE `tb_industry_word` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+   `title` VARCHAR(255) DEFAULT NULL COMMENT '行业词条名称',
+   `investment_classify_id` INT(11) DEFAULT NULL COMMENT '行业分类id',
+   `create_user_id` BIGINT(20) DEFAULT NULL COMMENT '用户id',
+   `create_user_name` VARCHAR(255) DEFAULT NULL COMMENT '用户登录名',
+   `read_num` BIGINT(20) DEFAULT '0' COMMENT '阅读次数',
+   `create_date` DATETIME DEFAULT NULL COMMENT '创建时间',
+   `investment_status` CHAR(1) DEFAULT '0' COMMENT '行业标题审核状态:等待审核 0 通过 1 未通过 2屏蔽3',
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='行业分类信息表';
+
+
+CREATE TABLE `tb_industry_version` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+   `investment_id` BIGINT(20) DEFAULT NULL COMMENT '行业词条id',
+   `card_explain` VARCHAR(2000) DEFAULT NULL,
+   `create_user_id` BIGINT(20) DEFAULT NULL COMMENT '创建这个词条内容的用户id',
+   `create_user_name` VARCHAR(255) DEFAULT NULL,
+   `create_date` DATETIME DEFAULT NULL,
+   `edit_date` DATETIME DEFAULT NULL,
+   `edit_reason` VARCHAR(500) DEFAULT NULL,
+   `content` LONGTEXT,
+   `version` BIGINT(20) DEFAULT NULL COMMENT '版本号，后台生成的',
+   `audit_status` CHAR(1) DEFAULT NULL COMMENT '此版本词条的审核状态 0为未审核 1为审核通过 2为审核未通过  默认新增词条时为0',
+   `isusing` CHAR(1) DEFAULT NULL COMMENT '使用状态 Y为可以使用 N为屏蔽 默认新增时为N 通过审核后为Y 屏蔽后为N',
+   `card_pic_path` VARCHAR(255) DEFAULT NULL COMMENT '名片图片路径',
+   `card_pic_small_path` VARCHAR(255) DEFAULT NULL COMMENT '名片图片缩略图路径',
+   `card_title` VARCHAR(255) DEFAULT NULL COMMENT '名片标题',
+   PRIMARY KEY (`id`),
+   KEY `idx_investment_version_inid` (`investment_id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='行业内容图片信息';
+
+
+
+ CREATE TABLE `tb_industry_synonyms` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+   `investment_id` BIGINT(20) DEFAULT NULL COMMENT '行业词条id',
+   `synonyms_word` VARCHAR(255) DEFAULT NULL COMMENT '行业词条同义词',
+   `version` BIGINT(20) DEFAULT NULL COMMENT '版本号',
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='行业同义词信息表';
+
+
+CREATE TABLE `tb_industry_pic` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+   `investment_id` BIGINT(20) DEFAULT NULL COMMENT '行业词条id',
+   `url` VARCHAR(255) DEFAULT NULL COMMENT '如果是编辑器中提取的则存在url',
+   `pic_path` VARCHAR(255) DEFAULT NULL COMMENT 'nginx上图片路径，去掉nfs部分',
+   `pic_small_path` VARCHAR(255) DEFAULT NULL COMMENT '本图片的缩略图路径，在图册查看里面使用',
+   `pic_small_edit_path` VARCHAR(255) DEFAULT NULL COMMENT '缩略图 在编辑器里使用',
+   `pic_name` VARCHAR(255) DEFAULT NULL COMMENT '图片名字 nginx生成的',
+   `pic_real_name` VARCHAR(255) DEFAULT NULL COMMENT '图片的真实名字',
+   `pic_desc` VARCHAR(255) DEFAULT NULL COMMENT '图片描述',
+   `ishome_page` CHAR(1) DEFAULT NULL COMMENT '是否把此图片作为封面 默认插入数据库时为N',
+   `create_user_id` BIGINT(20) DEFAULT NULL COMMENT '上传这个图片的用户id',
+   `create_user_name` VARCHAR(255) DEFAULT NULL COMMENT '上传此图片的用户登录名',
+   `create_date` DATETIME DEFAULT NULL COMMENT '创建时间',
+   `pic_book_id` VARCHAR(100) DEFAULT NULL COMMENT '图册编号 随机生成的数字',
+   `pic_book_name` VARCHAR(255) DEFAULT NULL COMMENT '图册名',
+   `pic_type` CHAR(1) DEFAULT NULL COMMENT '图片类型，S是单独上传的图片（单独图片组成图册）\n                                M是上传的整个图册里的图片 C是名片图片',
+   `pic_status` CHAR(1) DEFAULT NULL COMMENT '图片状态：0-待生效 1-已生效 2-屏蔽',
+   `pic_del` CHAR(1) DEFAULT NULL COMMENT '图片待删除标记 1-待删除',
+   `update_date` DATETIME DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='行业图片信息表';
+
+
+CREATE TABLE `tb_industry_reference` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+   `investment_id` BIGINT(20) DEFAULT NULL COMMENT '行业词条id',
+   `material_type` VARCHAR(50) DEFAULT '' COMMENT '引用资料类型，例如网络 著作等',
+   `material_name` VARCHAR(255) DEFAULT '' COMMENT '资料或文章名',
+   `url` VARCHAR(255) DEFAULT '' COMMENT '引用的文章的url',
+   `website` VARCHAR(255) DEFAULT '' COMMENT '引用的文章的网址',
+   `reference_date` VARCHAR(20) DEFAULT '' COMMENT '引用日期',
+   `publication_date` VARCHAR(20) DEFAULT '' COMMENT '发表日期',
+   `version` BIGINT(20) DEFAULT NULL COMMENT '这个参考资料的版本号 后台生成数字',
+   `STATUS` CHAR(1) DEFAULT NULL,
+   `update_date` DATETIME DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='行业词条参考资料信息表';
+
+ CREATE TABLE `tb_industry_catalog` (
+   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+   `investment_id` BIGINT(20) DEFAULT NULL COMMENT '行业词条id',
+   `catalog_name` VARCHAR(255) DEFAULT NULL COMMENT '词条目录名',
+   `level` INT(11) DEFAULT NULL COMMENT '目录级别 一级就是1 二级就是2',
+   `pid` BIGINT(20) DEFAULT NULL COMMENT '上级目录id',
+   `sort` INT(11) DEFAULT NULL COMMENT '排序',
+   `version` BIGINT(20) DEFAULT NULL COMMENT '版本号，后台生成的',
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='词条目录信息表，只有两级目录';
+
+ALTER TABLE tb_investment_version MODIFY card_explain LONGTEXT;
+
+
+ALTER TABLE tb_investment_version MODIFY edit_reason LONGTEXT;
+
+ALTER TABLE tb_industry_version MODIFY card_explain LONGTEXT;
+
+ALTER TABLE tb_case MODIFY summary LONGTEXT;
+
