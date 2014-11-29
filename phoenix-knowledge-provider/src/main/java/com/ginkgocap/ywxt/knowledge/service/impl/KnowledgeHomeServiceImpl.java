@@ -107,10 +107,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	}
 
 	// 首页栏目
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Map<String, Object> selectAllByParam(T t, int state,
 			String columnid, Long userid, int page, int size) {
+		long start = System.currentTimeMillis();
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
 				state);
@@ -120,6 +120,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
 				userid);
+
 		Map<String, Object> model = new HashMap<String, Object>();
 		String[] names = t.getClass().getName().split("\\.");
 		int length = names.length;
@@ -129,7 +130,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Column column = columnMapper.selectByPrimaryKey(cid);
 
 		String ty = column.getColumnLevelPath().substring(0, 9);
-		int leng = column.getColumnLevelPath().length();
 		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
 		// 权限条件过滤
@@ -150,7 +150,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		}
 		// 我的知识条件
 		criteriaMy.and("uid").is(userid);
-			
+
 		// 金桐脑知识条件
 		criteriaGt.and("uid").is(Constants.Ids.jinTN.v());
 
@@ -158,40 +158,24 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		String reful = column.getPathName();
 		// 该栏目路径下的所有文章条件
 		criteriaPath.and("cpathid").regex(reful + ".*$");
-		//汇总条件
+		// 汇总条件
 		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,
 				criteriaGt, criteriaUp).andOperator(criteriaPath);
-		
+
 		criteria.andOperator(criteriaAll);
 
-		// Criteria child = new Criteria().and("cpathid").regex(reful + ".*$");
-		// Criteria parent = new Criteria().and("cpathid").is(reful);
-		// criteriaGt.and("cid").is(Constants.gtnid);
-		// if (cid > 11) { // 一级栏目为自定义的情形
-		// criteria.and("cid").is(userid).and("cpathid").is(reful);
-		// } else { // 一级栏目为预定义的
-		// criteriaMy.and("cid").is(userid);
-		// if (leng >= 10) {
-		// criteriaMy.orOperator(parent, child);
-		// criteriaUp.orOperator(parent, child);
-		// criteriaGt.orOperator(parent, child);
-		// }
-		// Criteria criteriaPG = new Criteria().orOperator(criteriaMy,
-		// criteriaUp, criteriaGt);
-		// criteria.andOperator(criteriaPG);
-		// }
 		// 查询知识
-		String str = "" + JSONObject.fromObject(criteria);
-		logger.info("查询首页数据,栏目ID为:{}条件{}",columnid,str);
 		Query query = new Query(criteria);
-		query.sort().on("createtime", Order.DESCENDING);
-		long count = mongoTemplate.count(query, names[length - 1]);
-		PageUtil p = new PageUtil((int) count, page, size);
+		// query.sort().on("createtime", Order.DESCENDING);
+
 		query.limit(size);
-		query.skip(p.getPageStartRow() - 1);
-		model.put("page", p);
+		query.skip((page - 1)*size);
+		
 		model.put("list", (List) mongoTemplate.find(query, t.getClass(),
 				names[length - 1]));
+		
+		logger.info("总消耗时间为  end= " + (System.currentTimeMillis()-start));
+		
 		return model;
 	}
 
@@ -332,22 +316,26 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	}
 
 	@Override
-    public List<Node> queryColumns(long cid, long userId) {
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}", cid);
-        Column c = columnMapper.selectByPrimaryKey(cid);
-        try {
-            List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
-            if (cl != null && cl.size() > 0) {
-                return Branch.build(
-                        ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath"), cid,
-                        c.getParentId()).getList();
-            }
-        } catch (Exception e) {
-            logger.error("无法获取2,3级栏目数据knowledgeHomeServiceImpl.queryColumns()");
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public List<Node> queryColumns(long cid, long userId) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.queryColumns:{}",
+				cid);
+		Column c = columnMapper.selectByPrimaryKey(cid);
+		try {
+			List<Column> cl = columnValueMapper.selectColumnTreeBySortId(
+					userId, c.getColumnLevelPath());
+			if (cl != null && cl.size() > 0) {
+				return Branch.build(
+						ConvertUtil.convert2Node(cl, "userId", "id",
+								"columnname", "parentId", "columnLevelPath"),
+						cid, c.getParentId()).getList();
+			}
+		} catch (Exception e) {
+			logger.error("无法获取2,3级栏目数据knowledgeHomeServiceImpl.queryColumns()");
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	@Override
 	public int beRelation(long id, int t, long cid, Long userId) {
