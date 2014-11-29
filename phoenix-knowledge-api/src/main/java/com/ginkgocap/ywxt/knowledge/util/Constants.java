@@ -41,6 +41,12 @@ public class Constants {
 	/** 小乐 **/
 	public final static String xiaoles = "xiaoles";
 
+	
+    public static Type getEnumType(Long v) {
+        Type[] type = Type.values();
+        return type[(int) (v - 1)];
+    }
+	
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
 		News(1, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNews"), Investment(
