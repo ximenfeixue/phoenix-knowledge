@@ -2667,3 +2667,18 @@ ALTER TABLE tb_industry_version MODIFY card_explain LONGTEXT;
 
 ALTER TABLE tb_case MODIFY summary LONGTEXT;
 
+-- 导出 phoenix_ecosphere 的数据库结构 
+CREATE DATABASE IF NOT EXISTS `phoenix_ecosphere` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */; 
+USE `phoenix_ecosphere`; 
+
+
+-- 导出 表 phoenix_ecosphere.tb_ecosphere_correct 结构 
+CREATE TABLE IF NOT EXISTS `tb_ecosphere_correct` ( 
+`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增序列', 
+`joinKey` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '用户ID_物料类型ID_物料ID_Segment_ColumnName 1 需求 2 人脉 3 全平台普通用户 4 组织(全平台组织用户) 5 客户 6 知识', 
+`correctType` tinyint(4) NOT NULL COMMENT '1 需求 2 人脉 3 全平台普通用户 4 组织(全平台组织用户) 5 客户 6 知识', 
+`correctSaveId` bigint(20) DEFAULT NULL COMMENT '其它各个维度', 
+`correctSaveStrId` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '人脉ID', 
+PRIMARY KEY (`id`), 
+KEY `userId` (`joinKey`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='生态纠正表'; 
