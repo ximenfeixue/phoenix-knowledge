@@ -421,7 +421,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 	@Override
 	public Map<String, Object> noticeDataCenterWhileFileChange(
 			Map<String, Object> paramsMap) {
-		logger.info("进入通知转换经典案例请求,知识Id:{}", paramsMap.get("id"));
+		logger.info("进入通知转换经典案例请求,知识Id:{}", paramsMap.get("kid"));
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		if (StringUtils.isBlank(paramsMap.get("path") + "")) {
