@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_tag">
+	<typeAlias alias="knowledgetag" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeTag"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeTag" id="knowledgetagMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="knowledge_id" property="knowledge_id" jdbcType="BIGINT"/>
+		<result column="column_id" property="column_id" jdbcType="BIGINT"/>
+		<result column="tag_id" property="tag_id" jdbcType="BIGINT"/>
+		<result column="type" property="type" jdbcType="VARCHAR"/>
+		<result column="user_id" property="user_id" jdbcType="BIGINT"/>
+		
+	</resultMap>
+	
+	<sql id="dyColumns">id,knowledge_id,column_id,tag_id,type,user_id</sql>
+	
+	<update id="update" parameterClass="java.util.Map" >  
+        UPDATE tb_knowledge_category SET  
+	        category_id = #categoryid:BIGINT#,
+			sortid = #sortId:VARCHAR#
+        WHERE   
+        	knowledge_id = #knowledgeid:BIGINT#   
+    </update>
+    
+    <delete id="delete" parameterClass="java.util.Map">
+    delete from tb_knowledge_category 
+     where  category_id=#categoryid:BIGINT# 
+     and  knowledge_id in 
+      <iterate property="knowledgeids" open="(" close=")" conjunction=",">#knowledgeids[]#</iterate>
+    </delete>
+    
+     <delete id="deleteknowledgeid" parameterClass="java.util.Map">
+    delete from tb_knowledge_category 
+     where  category_id=#categoryid:BIGINT# 
+     and  knowledge_id =#knowledgeid:BIGINT# 
+    </delete>
+    
+
+	<insert id="batchInsert" parameterClass="java.util.List">
+		insert into tb_knowledge_category (
+			knowledge_id,
+			category_id,
+			sortid,
+			user_id
+		) values 
+		 	<iterate conjunction=",">
+				(#list[].knowledgeid#,
+				 #list[].categoryid#,
+				 #list[].sortId#,
+				 #list[].userid#,
+				)
+		 	</iterate>
+	</insert>
+	
+	<insert id="insert" parameterClass="knowledgetag">
+		insert into tb_knowledge_r_tag(
+			knowledge_id,column_id,tag_id,type,user_id
+			
+		) values (
+			#knowledge_id:BIGINT#,
+			#column_id:BIGINT#,
+			#tag_id:BIGINT#,
+			#type:VARCHAR#,
+			#user_id:BIGINT#
+			
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+
+</sqlMap>

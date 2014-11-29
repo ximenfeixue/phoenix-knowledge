@@ -1,17 +1,20 @@
 package com.ginkgocap.ywxt.knowledge.util.zip;
 
 import java.io.BufferedInputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
@@ -170,11 +173,50 @@ public class ZipUtil extends ZipOutputStream {
 		return this.fileCount;
 	}
 
-	
+	public int putZip(String zipPath,String descDir,int type) throws IOException{
+		File zipFile = new File(zipPath);
+		File pathFile = new File(descDir);  
+        if(!pathFile.exists()){  
+            pathFile.mkdirs();  
+        }  
+	    ZipFile zip = new ZipFile(zipFile,"GBK");  
+        for(Enumeration entries = zip.getEntries();entries.hasMoreElements();){  
+            ZipEntry entry = (ZipEntry)entries.nextElement(); 
+            String zipEntryName = entry.getName();  
+            InputStream in = zip.getInputStream(entry);  
+            String outPath =StringUtils.replace(descDir+File.separator+StringUtils.replace(zipEntryName, ":", "_"),File.separator, "/") ; 
+            if(type!=0){
+            	outPath = StringUtils.replace(descDir+File.separator+StringUtils.substringAfterLast(zipEntryName, File.separator),File.separator, "/") ;
+            }
+            //判断路径是否存在,不存在则创建文件路径  
+            File file = new File(StringUtils.substringBeforeLast(outPath, "/"));  
+            if(!file.exists()){  
+                file.mkdirs();
+                //D:\Documents\Downloads\13583_exportfile_multiple\2014-11-26 10_04_31\fefeffef\正文
+                //D:\Documents\Downloads\13583_exportfile_multiple\2014-11-26 10:04:31\fefeffef\正文
+            }  
+            //判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压  
+            if(new File(outPath).isDirectory()){  
+                continue;  
+            }  
+            //输出文件路径信息  
+            System.out.println(outPath);  
+            
+            File outFile = new File(outPath);
+            FileOutputStream out = new FileOutputStream(outFile);  
+            int b;  
+            while ((b = in.read()) != -1)  
+                out.write(b);  
+            out.close();
+            in.close();
+        }  
+        System.out.println("******************解压完毕********************");  
+		return 0;
+	}
 	// 测试
 	public static void main(String[] args) {
 		try {
-			java.util.Date d1 = new java.util.Date();
+			/*java.util.Date d1 = new java.util.Date();
 			ZipUtil util = new ZipUtil("D:/GENPATH_10000/zip.zip");
 			// util.buf = new byte[1024*2]; //可以指定缓存
 			util.comment.append("报表批量下载!\n\n");
@@ -190,7 +232,9 @@ public class ZipUtil extends ZipOutputStream {
 			util.setComment(util.comment.toString());
 			util.close();
 			java.util.Date d2 = new java.util.Date();
-			System.out.println("used time = " + (d2.getTime() - d1.getTime()));
+			System.out.println("used time = " + (d2.getTime() - d1.getTime()));*/
+			ZipUtil util = new ZipUtil("D:/Documents/Downloads/1.zip");
+			util.putZip("D:/Documents/Downloads/7_exportfile_multiple.zip", "D:/Documents/Downloads",0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

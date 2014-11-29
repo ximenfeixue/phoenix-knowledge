@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Category;
-import com.ginkgocap.ywxt.knowledge.service.category.CategoryService;
+import com.ginkgocap.ywxt.knowledge.service.CategoryService;
 import com.ginkgocap.ywxt.util.DateFunc;
 
 
@@ -115,5 +115,10 @@ public class CategoryServiceTest extends TestBase{
     	categoryService.update(category);
     	assertTrue("修改测试分类".equals(category.getName()));
     	System.out.println(category.getName());
+    }
+    
+    @Test
+    public void selectColumnTreeBySortId(){
+        categoryService.selectCategoryTreeBySortId(1, null, "0");
     }
 }

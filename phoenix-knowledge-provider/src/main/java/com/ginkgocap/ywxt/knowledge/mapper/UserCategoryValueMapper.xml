@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.UserCategory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="categoryName" property="categoryname" jdbcType="VARCHAR" />
+    <result column="sortid" property="sortid" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="path_name" property="pathName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+  </resultMap>
+  
+	<select id="selectChildBySortId"  resultMap="BaseResultMap" >
+		select * from tb_user_category where (user_id = #{uid} or user_id = 0) 
+		<if test="sortId != null and sortId != ''">
+		and sortId like CONCAT(#{sortId}, '%') 
+		</if>
+		and category_type=#{type}
+		order by sortId
+	</select>	
+
+
+	<select id="selectMaxSortId" resultType="string" >
+		select max(sortid) from tb_user_category where user_id=#{uid} and sortid!='111111111'  AND sortid!='000000000' and category_type=#{type} and sortId like CONCAT(#{parentSortId}, '_________') 
+	</select>
+
+
+	<select id="selectChildCountById" resultType="long" >
+		select count(id) from tb_user_category where parent_id = #{id}
+	</select>
+	<!--<select id="selectChildByParentId" resultType="BaseResultMap">
+		select * from tb_user_category where parent_id = #{parentId}
+	</select>
+	-->
+	<delete id="del">
+		DELETE
+		FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+	</delete>
+	<update id="delk">
+	UPDATE tb_knowledge_category kc SET category_id=#{cid} WHERE EXISTS (
+		SELECT 1 FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+		    AND id =kc.category_id)
+	</update>
+	<update id="delc">
+	UPDATE tb_knowledge_collection kc SET category_id=#{cid} WHERE EXISTS (
+		SELECT 1 FROM tb_user_category
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		    AND category_type = #{categoryType}
+		    AND user_id = #{userId}
+		    AND id =kc.category_id) 
+	</update>
+</mapper>

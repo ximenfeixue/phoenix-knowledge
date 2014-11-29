@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.UserPermission" >
+    <result column="receive_user_id" property="receiveUserId" jdbcType="BIGINT" />
+    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="send_user_id" property="sendUserId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="mento" property="mento" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="column_type" property="columnType" jdbcType="SMALLINT" />
+    <result column="column_id" property="columnId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    receive_user_id, knowledge_id, send_user_id, type, mento, createtime, column_type, 
+    column_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_user_permission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+      <if test="limitStart >= 0 and limitEnd>= 0" >
+        limit #{limitStart}, #{limitEnd}
+      </if>
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample" >
+    delete from tb_user_permission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermission" >
+    insert into tb_user_permission (receive_user_id, knowledge_id, send_user_id, 
+      type, mento, createtime, 
+      column_type, column_id)
+    values (#{receiveUserId,jdbcType=BIGINT}, #{knowledgeId,jdbcType=BIGINT}, #{sendUserId,jdbcType=BIGINT}, 
+      #{type,jdbcType=INTEGER}, #{mento,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{columnType,jdbcType=SMALLINT}, #{columnId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermission" >
+    insert into tb_user_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="receiveUserId != null" >
+        receive_user_id,
+      </if>
+      <if test="knowledgeId != null" >
+        knowledge_id,
+      </if>
+      <if test="sendUserId != null" >
+        send_user_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="mento != null" >
+        mento,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="columnType != null" >
+        column_type,
+      </if>
+      <if test="columnId != null" >
+        column_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="receiveUserId != null" >
+        #{receiveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeId != null" >
+        #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="sendUserId != null" >
+        #{sendUserId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="mento != null" >
+        #{mento,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="columnType != null" >
+        #{columnType,jdbcType=SMALLINT},
+      </if>
+      <if test="columnId != null" >
+        #{columnId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample" resultType="java.lang.Integer" >
+    select count(*) from tb_user_permission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_user_permission
+    <set >
+      <if test="record.receiveUserId != null" >
+        receive_user_id = #{record.receiveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.knowledgeId != null" >
+        knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.sendUserId != null" >
+        send_user_id = #{record.sendUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.mento != null" >
+        mento = #{record.mento,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.columnType != null" >
+        column_type = #{record.columnType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.columnId != null" >
+        column_id = #{record.columnId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_user_permission
+    set receive_user_id = #{record.receiveUserId,jdbcType=BIGINT},
+      knowledge_id = #{record.knowledgeId,jdbcType=BIGINT},
+      send_user_id = #{record.sendUserId,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      mento = #{record.mento,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      column_type = #{record.columnType,jdbcType=SMALLINT},
+      column_id = #{record.columnId,jdbcType=BIGINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

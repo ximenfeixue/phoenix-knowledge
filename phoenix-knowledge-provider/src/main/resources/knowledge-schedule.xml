@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+ 	
+ 	<bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="keepAliveSeconds"  value="200"/>
+		<property name="maxPoolSize"  value="50"/>
+		<property name="queueCapacity"  value="60"/>
+	</bean>
+	
+	<!-- 排行统计start -->
+	<bean id="methodSchedulerFactory_StatisticsInfoHotReply"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="rankTask" />
+		<property name="targetMethod" value="startStatistics" />
+		<property name="arguments" value="info" />
+	</bean>
+
+	<bean id="cronTriggerBean_StatisticsInfoHotReply" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="methodSchedulerFactory_StatisticsInfoHotReply" />
+		<property name="cronExpression" value="* * 2 * * ?" /> <!--每晚2点一次 --> 
+	</bean>
+	<!-- 排行统计end -->
+	
+	<!-- 栏目定时统计订阅数开始 
+	<bean id="columnJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+    	<property name="targetObject" ref="columnTimerTasker" />  
+    	<property name="targetMethod" value="execute" />   
+    	<property name="concurrent" value="false" />  
+	</bean>  
+  
+	<bean id="columnJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail" ref="columnJobDetail" />  
+        <property name="cronExpression" value="0 7/30 * * * ?" />
+	</bean>  
+	 -->
+
+	<!--调度工厂 -->
+	<bean id="SpringJobSchedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTriggerBean_StatisticsInfoHotReply" />
+				<!-- <ref bean="columnJobTrigger" /> -->
+			</list>
+		</property>
+	</bean>
+</beans>

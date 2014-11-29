@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper">
+	<resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.Column">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="columnName" property="columnname" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="column_level_path" property="columnLevelPath"
+			jdbcType="VARCHAR" />
+		<result column="del_status" property="delStatus" jdbcType="TINYINT" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="subscribe_count" property="subscribeCount"
+			jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="tb_name">tb_column</sql>
+	<sql id="column_name">columnName</sql>
+	<sql id="allColumns">
+		id,
+		<include refid="column_name" />,
+		parent_id,
+		user_id,
+		column_level_path,
+		path_name,
+		createtime,
+		update_time,
+		del_status,
+		subscribe_count,
+		type
+	</sql>
+
+	<select id="selectColumnTreeBySortId" resultMap="BaseResultMap">
+		select 
+		<include refid="allColumns" />
+		from tb_column
+		where del_status=0
+		and (user_id=#{userId} or user_id=0)
+		<if test="sortId != null and sortId != ''">
+			and column_level_path like CONCAT(#{sortId}, '%')
+			and column_level_path != #{sortId}
+		</if>
+		order by column_level_path
+	</select>
+	
+	<select id="selectColumnTreeByCustom" resultMap="BaseResultMap">
+		select 
+		<include refid="allColumns" />
+		from tb_column
+		where del_status=0
+		and user_id=#{userId} 
+		<if test="sortId != null and sortId != ''">
+			and column_level_path like CONCAT(#{sortId}, '%')
+			and column_level_path != #{sortId}
+		</if>
+		order by column_level_path
+	</select>
+
+	<select id="selectSubByUserId" resultMap="BaseResultMap"
+		parameterType="Long">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" />
+		where del_status=0 and id IN
+		(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#{userId})
+	</select>
+	
+	<select id="selectByParam" resultMap="BaseResultMap">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" /> t
+		where del_status=0
+		and (1=1
+		<if test="userId != null">
+			and t.user_id=#{userId}
+			or t.user_id=#{gtnid}
+		</if>
+		<if test="userId == null">
+			and t.user_id=#{gtnid}
+		</if>
+		)
+		<if test="column !=null">
+		AND t.parent_id=#{column}
+		</if>
+	
+	</select>
+	<select id="selectByParamVisible" resultMap="BaseResultMap">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" /> t
+		where del_status=0
+		and (1=1
+		<if test="userId != null">
+			and t.user_id=#{userId}
+			or t.user_id=#{gtnid}
+		</if>
+		<if test="userId == null">
+			and t.user_id=#{gtnid}
+		</if>
+		)
+		<if test="column !=null">
+		AND t.parent_id=#{column}
+		</if>
+		<if test="userId != null">
+		AND t.id  IN (SELECT v.column_id FROM tb_column_visible v WHERE v.user_id=#{userId} and v.state=0 )
+		</if>
+	</select>
+	
+	<select id="selectMaxID" resultType="Long">
+	select MAX(id) from <include refid="tb_name" />
+	</select>
+	<update id="updateCLP" parameterType="java.util.Map">
+		UPDATE <include refid="tb_name"/> SET 
+        	column_level_path=#{columnLevelPath}
+        WHERE 
+        	id=#{id}
+	</update>
+	
+	<select id="selectSubC" resultMap="BaseResultMap"
+		parameterType="Long">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" />
+		where del_status=0 and user_id = #{systemId} and LENGTH(column_level_path) = 18
+	</select>
+	
+	<select id="selectSubByUserIdOrderById" resultMap="BaseResultMap"
+		parameterType="Long">
+		select 
+		c.id,
+		c.columnName,
+		c.parent_id,
+		c.user_id,
+		c.column_level_path,
+		c.path_name,
+		c.createtime,
+		c.update_time,
+		c.del_status,
+		c.subscribe_count,
+		c.type
+		from 
+		(SELECT column_id,id FROM tb_knowledge_column_subscribe where user_id=#{userId}) t LEFT join <include refid="tb_name" /> c on c.id=t.column_id 
+		where c.del_status = 0 order by t.id
+	</select>
+	
+</mapper>

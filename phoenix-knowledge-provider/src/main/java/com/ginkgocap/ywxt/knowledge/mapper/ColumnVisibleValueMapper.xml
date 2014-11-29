@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleValueMapper">
+
+	<update id="update" parameterType="java.util.Map">
+		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
+		WHERE t.user_id=#{userId} and t.pcid=#{pcid}
+		<if test="instate==0">
+			and t.column_id in
+			<foreach collection="listl" index="index" item="tag" open="("
+				separator="," close=")">
+				#{tag}
+			</foreach>
+		</if>
+		<if test="instate==1">
+			and t.column_id not in
+			<foreach collection="listl" index="index" item="tag" open="("
+				separator="," close=")">
+				#{tag}
+			</foreach>
+		</if>
+	</update>
+	
+	<select id="selectNotinIds" resultType="long" >
+		select column_id from  tb_column_visible t where  t.user_id=#{userId} and t.pcid=#{pcid}
+		and t.column_id not in
+			<foreach collection="listl" index="index" item="tag" open="("
+				separator="," close=")">
+				#{tag}
+			</foreach>
+	</select>
+	
+	<update id="updateChild" parameterType="java.util.Map">
+		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
+		WHERE t.user_id=#{userId} and t.sort_id like CONCAT(#{sortId},'%'); 
+	</update>
+<insert id="init">
+	insert into tb_column_visible (
+	user_id,
+	column_id,
+	ctime,
+	utime,
+	pcid,
+	state,
+	column_name,
+	sort_id
+	) values
+	<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.userId},
+		#{item.columnId},
+		#{item.ctime},
+		#{item.utime},
+		#{item.pcid},
+		#{item.state},
+		#{item.columnName},
+		#{item.sortId}
+		) 
+		</foreach>
+</insert>
+</mapper>

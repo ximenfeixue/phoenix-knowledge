@@ -18,24 +18,24 @@
 	<bean id="categoryExporter" 
 	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
 	              <property name="service" ref="categoryService"/>
-	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.category.CategoryService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.knowledge.CategoryService"/>
 	</bean>
 	
 	<bean id="articleExporter" 
 	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
 	              <property name="service" ref="articleService"/>
-	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.article.ArticleService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.knowledge.ArticleService"/>
 	</bean>
 	
 	<bean id="shareExporter" 
 	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
 	              <property name="service" ref="knowledgeShareService"/>
-	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.share.KnowledgeShareService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.knowledge.KnowledgeShareService"/>
 	</bean>
 	
 	<bean id="favoritesExporter" 
 	      class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
 	              <property name="service" ref="favoritesService"/>
-	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.favorites.FavoritesService"/>
+	              <property name="serviceInterface" value="com.ginkgocap.ywxt.knowledge.service.knowledge.FavoritesService"/>
 	</bean>
 </beans>

@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
@@ -29,6 +30,11 @@ import com.ginkgocap.ywxt.knowledge.dao.article.ArticleDao;
 	     */
 	    @After
 	    public void tearDown() throws Exception {
+	    }
+	    
+	    @Test
+	    public void select(){
+	        articleDao.articleAllListBySortId(10522551, "1599", "", "");  
 	    }
 //	    @Test
 //	    public void testSelectCountByCategoryId(){

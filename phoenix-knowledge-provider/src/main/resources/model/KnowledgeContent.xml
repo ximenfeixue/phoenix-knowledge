@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_content">
+	<typeAlias alias="knowledgeContent"
+		type="com.ginkgocap.ywxt.knowledge.model.KnowledgeContent" />
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeContent"
+		id="knowledgeContentMap">
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="knowledge_id" property="knowledgeid" jdbcType="BIGINT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="pagecount" property="page_count" jdbcType="INT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="htmlcontent" property="htmlcontent" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="allColumns">
+		id,
+		knowledge_id,
+		content,
+		pagecount,
+		status,
+		htmlcontent
+	</sql>
+	<insert id="insert" parameterClass="knowledgeContent">
+		insert into tb_knowledge_content(
+		knowledge_id,
+		content,
+		pagecount,
+		status,
+		htmlcontent
+		) values (
+		#knowledgeid:BIGINT#,
+		#content:VARCHAR#,
+		#page_count:INT#,
+		#status:VARCHAR#,
+		#htmlcontent:VARCHAR#
+		)
+		<selectKey resultClass="long" type="post" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="selectById" resultMap="knowledgeContentMap"
+		parameterClass="long">
+		select
+		<include refid="allColumns" />
+		from tb_knowledge_content where id=#id#
+	</select>
+	
+	<update id="delete" parameterClass="java.util.Map">
+    update tb_knowledge_content
+ 	 set   status = '0'
+    where knowledge_id  in 
+    <iterate property="knowledgeId" open="(" close=")" conjunction=",">#knowledgeId[]#</iterate>
+  </update>
+  
+  <update id="update" parameterClass="knowledgeContent">
+    update tb_knowledge_content
+ 	 set   content = #content#
+    where knowledge_id =#knowledgeid:BIGINT#
+   
+  </update>
+
+</sqlMap>

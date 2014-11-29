@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual">
+
+	<insert id="batchInsertColumnTag" parameterType="java.util.List">
+		INSERT INTO tb_column_tag (column_id,tag,user_id,createtime)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.columnId},#{item.tag},#{item.userId},#{item.createtime})
+		</foreach>
+	</insert>
+
+</mapper>

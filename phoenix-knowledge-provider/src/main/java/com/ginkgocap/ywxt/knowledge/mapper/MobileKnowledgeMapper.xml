@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper">
+	
+	<sql id="tb_name_base">tb_knowledge_base</sql>
+	
+	<sql id="tb_user_permission">tb_user_permission</sql>
+
+	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
+		SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
+		WHERE b.user_id=#{userId}
+		AND b.knowledge_id=c.knowledge_id
+		AND c.status =1 
+		<if test="tag !=null and tag != '' ">
+			AND b.tag like CONCAT('%',#{tag},'%')
+		</if>
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		 ORDER BY b.createtime DESC  
+		LIMIT #{start},#{size}
+	</select>
+
+	<select id="selectCountKnowledgeByTagsAndKeyWords" resultType="int">
+		SELECT count(*)
+		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
+		WHERE b.user_id=#{userId} 
+		AND b.knowledge_id=c.knowledge_id
+		AND c.status=1 
+		<if test="tag !=null and tag != '' ">
+			AND b.tag like CONCAT('%',#{tag},'%')
+		</if>
+		<if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+	</select>
+	
+	<select id="selectKnowledgeByMyCollectionAndKeyWords" resultType="map">
+		SELECT DISTINCT b.* 
+		FROM tb_knowledge_collection kc,
+		<include refid="tb_name_base" /> b
+		WHERE kc.knowledge_id = b.knowledge_id
+		AND b.user_id = kc.userId
+		AND b.user_id=#{userId}
+		AND b.title like CONCAT('%',#{keyword},'%')
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountKnowledgeByMyCollectionAndKeyWords" resultType="int">
+		SELECT count(*)
+		FROM <include refid="tb_name_base" /> b ,tb_knowledge_collection kc
+		WHERE 
+		kc.knowledge_id = b.knowledge_id
+		AND b.user_id = kc.userId
+		AND b.user_id=#{userId} 
+		AND b.title like CONCAT('%',#{keyword},'%')
+	</select>
+	
+	<select id="selectKnowledgeBySourceAndColumn" resultType="map">
+		SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountKnowledgeBySourceAndColumn" resultType="int">
+		SELECT count(*)
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
+	</select>
+	
+	<select id="selectMyFriendKnowledgeByKeyWords" resultType="map">
+		SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		AND b.user_id in 
+		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
+   		#{friends}
+    	</foreach>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountForMyFriendKnowledgeByKeyWords" resultType="int">
+		SELECT count(*)
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		AND b.user_id in 
+		 <foreach item="friends" collection="friends" open="(" separator="," close=")">
+   		#{friends}
+    	</foreach>
+	</select>
+	
+	<select id="selectMyFriendKnowledgeByColumnId" resultType="map">
+	SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		AND b.knowledge_id in 
+		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountForMyFriendKnowledgeByColumnId" resultType="int">
+	SELECT count(*)
+		FROM <include refid="tb_name_base" /> b
+		WHERE b.column_id = #{columnId}
+		AND b.knowledge_id in 
+		(SELECT DISTINCT p.knowledge_id FROM tb_user_permission p WHERE p.send_user_id !=0 and p.send_user_id != -1 and p.send_user_id != #{userId})
+	</select>
+	
+	<select id="selectKnowledgeForSourceByColumn" resultType="map">
+		SELECT DISTINCT b.*
+		FROM <include refid="tb_name_base" /> b,tb_column_knowledge c
+		WHERE c.knowledge_id = b.knowledge_id
+		AND c.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectCountKnowledgeForSourceByColumn" resultType="int">
+		SELECT COUNT(*)
+		FROM <include refid="tb_name_base" /> b,tb_column_knowledge c
+		WHERE c.knowledge_id = b.knowledge_id
+		AND c.column_id = #{columnId}
+		<if test="userId != -2">
+		AND b.user_id = #{userId}
+		</if>
+	</select>
+	
+	<select id="selectKnowledgeByPermissionAllPlatform" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id = -1  
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermissionAllPlatform" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id = -1 
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+	</select>
+	
+	<select id="selectKnowledgeByPermissionMyFriends" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id  != -1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermissionMyFriends" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id != -1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+	</select>
+	
+	<select id="selectKnowledgeByPermission" resultType="map">
+		SELECT * FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+		ORDER BY t.createtime DESC 
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectKnowledgeCountByPermission" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_user_permission" /> t WHERE 
+		1 = 1
+		AND t.receive_user_id != 0
+		AND t.send_user_id = #{userId} 
+		AND t.column_id = #{columnId} 
+	</select>
+</mapper>

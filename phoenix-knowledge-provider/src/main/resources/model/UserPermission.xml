@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_user_permission">
+<!-- 
+	<typeAlias alias="userPermission" type="com.ginkgocap.ywxt.knowledge.model.UserPermission"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.UserPermission" id="userPermissionMap">
+		<result column="receive_user_id" property="receive_user_id" jdbcType="BIGINT"/>
+		<result column="knowledge_id" property="knowledge_id" jdbcType="BIGINT"/>
+		<result column="send_user_id" property="send_user_id" jdbcType="BIGINT"/>
+		<result column="type" property="type" jdbcType="INT"/>
+		<result column="mento" property="mento" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+		<result column="column_id" property="column_id" jdbcType="BIGINT"/>
+	</resultMap>
+	
+	<sql id="dyColumns">receive_user_id,knowledge_id,send_user_id,type,mento,createtime,column_id</sql>
+	
+    <delete id="delete" parameterClass="java.util.Map">
+    delete from tb_user_permission 
+     where  send_user_id=#send_user_id:BIGINT# 
+     and  knowledge_id in 
+      <iterate property="knowledgeids" open="(" close=")" conjunction=",">#knowledgeids[]#</iterate>
+    </delete>
+    
+     <delete id="deleteknowledgeid" parameterClass="java.util.Map">
+    delete from tb_knowledge_category 
+     where  category_id=#categoryid:BIGINT# 
+     and  knowledge_id =#knowledgeid:BIGINT# 
+    </delete>
+    
+
+	<insert id="batchInsert" parameterClass="java.util.List">
+		insert into tb_user_permission (
+			receive_user_id,
+			knowledge_id,
+			send_user_id,
+			type,
+			mento,
+			createtime,
+			column_id
+		) values 
+		 	<iterate conjunction=",">
+				(#list[].receive_user_id#,
+				 #list[].knowledge_id#,
+				 #list[].send_user_id#,
+				 #list[].type#,
+				 #list[].mento#,
+				 #list[].createtime#,
+				 #list[].column_id#
+				 
+				)
+		 	</iterate>
+	</insert>
+	
+	
+	
+	<select id="selectByreceive_user_id" resultClass="long"  parameterClass="java.util.Map">
+	select knowledge_id from tb_user_permission
+	where receive_user_id=#receive_user_id# or send_user_id=#send_user_id#
+	
+	</select>
+	
+	<select id="selectByParams" resultClass="long"  parameterClass="java.util.Map">
+		select knowledge_id from tb_user_permission
+		where 1=1
+		<isNotEmpty property="receive_user_id">
+			and receive_user_id=#receive_user_id# 
+		</isNotEmpty>
+		<isNotEmpty property="type">
+			and type=#type# 
+		</isNotEmpty>
+		<isNotEmpty property="column_id">
+			and column_id=#column_id# 
+		</isNotEmpty>
+	</select>
+ -->
+</sqlMap>

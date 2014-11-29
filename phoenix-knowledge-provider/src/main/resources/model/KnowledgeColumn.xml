@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tb_knowledge_column">
+	<typeAlias alias="knowledgeColumn" type="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn"/>
+	<resultMap class="com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn" id="knowledgeColumnMap">
+		<result column="id" property="id" jdbcType="BIGINT"/>
+		<result column="columnName" property="columnName" jdbcType="VARCHAR"/>
+		<result column="parent_id" property="parentColumnId" jdbcType="INT"/>
+		<result column="user_id" property="createUserId" jdbcType="INT"/>
+		<!-- <result column="level" property="level" jdbcType="INT"/> -->
+		<result column="column_level_path" property="columnLevelPath" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createTime" jdbcType="java.util.Date"/>
+		<result column="update_time" property="updateTime" jdbcType="java.util.Date"/>
+		<result column="del_status" property="delStatus" jdbcType="TINYINT"/>
+		<result column="subscribe_count" property="subscribeCount" jdbcType="INT"/>
+	</resultMap>
+	
+	
+	<sql id="allColumns">
+	  id,
+	  <include refid="column_name"/>,
+	  <include refid="parent_column_id"/>,
+	  <include refid="create_user_id"/>,
+	  <!-- level, -->
+	  column_level_path,
+	  path_name,
+	  <include refid="create_time"/>,
+	  update_time,
+	  del_status,
+	  subscribe_count
+	</sql>
+	<!-- 20140917，为了与新版数据库一致，表名改为tb_column ,column_name改为columnName, create_user_id改为user_id, parent_column_id改为parent_id, create_time改为createtime,去掉level 。。。 。。。 -->
+	<sql id="tb_name">tb_column</sql>
+	<sql id="column_name">columnName</sql>
+	<sql id="create_user_id">user_id</sql>
+	<sql id="parent_column_id">parent_id</sql>
+	<sql id="create_time">createtime</sql>
+	
+	<update id="update" parameterClass="knowledgeColumn">  
+        UPDATE <include refid="tb_name"/> SET  
+			<include refid="column_name"/>=#columnName:VARCHAR#,
+			<include refid="parent_column_id"/>=#parentColumnId:INT#,
+			<include refid="create_user_id"/>=#createUserId:INT#,
+			<!-- level=#level:INT#, -->
+			column_level_path=#columnLevelPath:VARCHAR#,
+			<include refid="create_time"/>=#createTime:java.util.Date#,
+			update_time=#updateTime:java.util.Date#,
+			subscribe_count=#subscribeCount:INT#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+    
+    <update id="delById" parameterClass="java.util.Map">  
+        UPDATE <include refid="tb_name"/> SET 
+        	del_status=#delStatus#,
+        	update_time=#updateTime# 
+        WHERE 
+        	id=#id# 
+    </update>
+    
+    <delete id="clearById" parameterClass="long">
+    	delete from <include refid="tb_name"/> where id=#id# and del_status=1
+    </delete>
+
+	
+	<insert id="insert" parameterClass="knowledgeColumn">
+		insert into <include refid="tb_name"/>(
+			  <include refid="column_name"/>,
+			  <include refid="parent_column_id"/>,
+			  <include refid="create_user_id"/>,
+			  <!-- level, -->
+			  column_level_path,
+			  path_name,
+			  <include refid="create_time"/>,
+			  update_time,
+			  del_status,
+			  subscribe_count
+		) values (
+			#columnName#,
+			#parentColumnId#,
+			#createUserId#,
+			<!-- #level#, -->
+			#columnLevelPath#,
+			#createTime#,
+			#updateTime#,
+			#delStatus#,
+			#subscribeCount#
+		)
+		<!-- 此字段作为返回值，插入完成后才执行 -->
+		<selectKey resultClass="long" type="post" keyProperty="id" > 
+		SELECT LAST_INSERT_ID() AS VALUE     
+		</selectKey>
+	</insert>
+    <select id="selectById" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> where id=#id# and del_status=0
+	</select>
+	
+	<select id="selectByParentId" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> where <include refid="parent_column_id"/>=#parentColumnId# and <include refid="create_user_id"/>=#createUserId# and del_status=0
+	</select>
+	
+	<select id="selectByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> where <include refid="create_user_id"/>=#createUserId# and del_status=0
+	</select>
+	
+	<select id="selectByUserIdAndSystem" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> WHERE <include refid="create_user_id"/> IN (#createUserId#,#systemId#) and del_status=0
+	</select>
+	
+	<select id="selectAll" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> where del_status=0
+	</select>
+	
+	<select id="selectAllDel" resultMap="knowledgeColumnMap" >
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> where del_status=1
+	</select> 
+	 
+	 <!-- test -->
+	<select id="selectSubByUserId" resultMap="knowledgeColumnMap" parameterClass="long">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> 
+		where del_status=0 and id IN 
+			(SELECT column_id FROM tb_knowledge_column_subscribe where user_id=#createUserId#)
+	</select>
+	
+	<!-- 和delById的语句一样 -->
+	<update id="recoverOneKC" parameterClass="java.util.Map">  
+        UPDATE <include refid="tb_name"/> SET 
+        	del_status=#delStatus:TINYINT#,
+			update_time=#updateTime:java.util.Date#
+        WHERE   
+        	id=#id:BIGINT#   
+    </update>
+    
+    <select id="countByPidAndName" resultClass="long" parameterClass="java.util.Map">
+    	select count(*)
+		from <include refid="tb_name"/> 
+		where <include refid="parent_column_id"/>=#parentColumnId# and <include refid="column_name"/>=#columnName#
+    </select>
+	<!-- 
+	UPDATE tb_knowledge_column SET subscribe_count = 0
+	UPDATE tb_knowledge_column SET del_status = 0
+	 -->
+	 <select id="selectCategoryTreeBySortId" resultMap="knowledgeColumnMap" parameterClass="java.util.Map">
+		select <include refid="allColumns"/>
+		from <include refid="tb_name"/> 
+		where del_status=0 
+		and user_id=#createUserId#
+		<isNotEmpty property="columnLevelPath">
+		column_level_path=#columnLevelPath#
+		</isNotEmpty>
+		order by column_level_path
+	</select>
+</sqlMap>

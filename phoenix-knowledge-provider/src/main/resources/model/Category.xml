@@ -66,7 +66,11 @@
 	</select>
 	
 	<select id="selectChildBySortId" resultMap="categoryMap" parameterClass="java.util.Map">
-		select <include refid="dyColumns"/> from tb_category where uid = #uid# and sortId like CONCAT(#sortId#, '%') order by sortId
+		select <include refid="dyColumns"/> from tb_category where state='0' uid = #uid# 
+		<isNotEmpty property="sortId">
+		and sortId like CONCAT(#sortId#, '%') 
+		</isNotEmpty>
+		order by sortId
 	</select>	
 	
 	<select id="selectChildCountById" resultClass="long" parameterClass="long">

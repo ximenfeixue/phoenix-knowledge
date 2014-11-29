@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper" >
+ 	<resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.UserPermission">
+ 	    <result column="receive_user_id" property="receiveUserId" jdbcType="BIGINT" />
+	    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+	    <result column="send_user_id" property="sendUserId" jdbcType="BIGINT" />
+	    <result column="type" property="type" jdbcType="SMALLINT" />
+	    <result column="mento" property="mento" jdbcType="VARCHAR" />
+	    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+	    <result column="column_id" property="columnId" jdbcType="SMALLINT" />
+	    <result column="column_type" property="columnType" jdbcType="TINYINT" />
+ 	</resultMap>
+
+ <insert id="batchInsert" parameterType="java.util.List">
+    insert into tb_user_permission (
+			receive_user_id,
+			knowledge_id,
+			send_user_id,
+			type,
+			mento,
+			createtime,
+			column_type,
+			column_id
+			
+		) values 
+		 	<foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.receiveUserId},
+				 #{item.knowledgeId},
+				 #{item.sendUserId},
+				 #{item.type}, #{item.mento}, #{item.createtime},#{item.columnType}, #{item.columnId})
+    </foreach>  
+ </insert>
+ 
+  <update id="batchUpdateColumn" >
+    	update tb_user_permission set
+				column_type=#{column_type},
+				column_id=#{new_column_id}
+		where	send_user_id=#{send_user_id}
+		  and 	column_id=#{old_column_id}
+ </update>
+
+  <select id="selectByParams" resultType="long" >
+		select knowledge_id from tb_user_permission
+		where 1=1
+		<if test="receive_user_id != null">		
+			and receive_user_id=#{receive_user_id} 
+		</if>
+		<if test="type != null">		
+			and type=#{type} 
+		</if>
+		<if test="column_id != null">		
+			and column_id=#{column_id} 
+		</if>
+	</select>
+	
+	  <select id="selectPermissionsByParams" resultMap="BaseResultMap" >
+		select receive_user_id,
+			knowledge_id,
+			send_user_id,
+			type,
+			mento,
+			createtime,
+			column_id,
+			column_type 
+		from tb_user_permission
+		where 1=1
+		<if test="send_user_id != null">		
+			and send_user_id=#{send_user_id} 
+		</if>
+		<if test="type != null">		
+			and type=#{type} 
+		</if>
+		<if test="column_id != null">		
+			and column_id=#{column_id} 
+		</if>
+	</select>
+	
+	<select id="selectKnowledgeIdsByParams" resultType="long" >
+
+		select p.knowledge_id from tb_user_permission p INNER JOIN tb_column c on p.column_id = c.id 
+		where (p.type=2 or p.type=3)
+		<if test="receive_user_id !=null">
+			and p.receive_user_id=#{receive_user_id}
+		</if> 
+		and ( c.id in 
+	    <foreach item="columnId1" collection="columnIds" open="(" separator="," close=")">
+		   #{columnId1}
+	   </foreach> or
+	   c.parent_id in 
+	    <foreach item="columnId2" collection="columnIds" open="(" separator="," close=")">
+		   #{columnId2}
+	   </foreach>)
+	</select>
+
+
+  <select id="selectByParamsSingle" resultType="long" >
+		select knowledge_id from tb_user_permission c
+		where 1=1
+		<if test="receive_user_id != null">
+		and ( (receive_user_id=#{receive_user_id} and type != 4)
+			or send_user_id=#{receive_user_id}
+			or (type !=4 and ( receive_user_id=-1 or receive_user_id=0))
+			) 
+		</if>
+		<if test="receive_user_id == null">
+			and receive_user_id=-1 and type != 4
+		</if>
+		<if test="column_type !=null">
+			and column_type=#{column_type} 
+		</if>
+			<!-- 
+			and EXISTS(SELECT
+			1
+			FROM tb_column_visible v
+			WHERE v.state = 0
+			AND v.column_id = c.column_id
+			<if test="receive_user_id != null">
+				and user_id=#{receive_user_id}
+			</if>
+			<if test="receive_user_id == null">
+				and user_id=0
+			</if>
+			
+			)
+			 -->
+	</select>
+
+
+ <delete id="delete">
+ 	 delete from tb_user_permission 
+     where  send_user_id=#{userid} 
+     and  knowledge_id in 
+    <foreach item="knowledgeids" collection="knowledgeids" open="(" separator="," close=")">
+   #{knowledgeids}
+    </foreach>
+ </delete>
+ 
+ <select id="selectByreceive_user_id" resultType="map">
+ 	select knowledge_id from tb_user_permission
+ 	where 1=1 
+ 	<if test="receive_user_id!=null and receive_user_id>0 ">
+	and receive_user_id=#{receive_user_id}
+	</if>
+	<if test="send_userid!=null and send_userid>0 ">
+	and send_user_id=#{send_userid}
+	</if>
+ </select>
+ <!-- 
+  <select id="selectByParams" resultType="map">
+ 	select knowledge_id from tb_user_permission
+	where 1=1
+	<if test="receive_user_id!=null and receive_user_id>0 ">
+	and receive_user_id=#{receive_user_id}
+	</if>
+	<if test="column_id!=null and column_id>0">
+	and column_id=#{column_id}
+	</if>
+	<if test="type!=null and type>0">
+	and type=#{type}
+	</if>
+ </select>
+  -->
+</mapper>
