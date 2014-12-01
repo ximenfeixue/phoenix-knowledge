@@ -166,7 +166,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
 		// 查询知识
 		Query query = new Query(criteria);
-		// query.sort().on("createtime", Order.DESCENDING);
+		 query.sort().on("_id", Order.DESCENDING);
 
 		query.limit(size);
 		query.skip((page - 1)*size);
@@ -207,7 +207,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Query query = new Query(criteria);
 		String str = "" + JSONObject.fromObject(criteria);
 		logger.info("MongoObject:" + ty.obj() + ",Query:" + str);
-		query.sort().on("createtime", Order.DESCENDING);
+		query.sort().on("_id", Order.DESCENDING);
 		long count;
 		try {
 			count = mongoTemplate.count(query, names[length - 1]);
