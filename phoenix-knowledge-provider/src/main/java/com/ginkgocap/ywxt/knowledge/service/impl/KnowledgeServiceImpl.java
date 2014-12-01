@@ -240,19 +240,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					knowledgeRecycleService.insertKnowledgeRecycle(
 							knowledgeid[i], title, ct + "", userid, catetoryid);
 				}
-				if (catetoryid == -1) {
-					List<KnowledgeCategory> list = knowledgeCategoryService
-							.selectKnowledgeCategory(knowledgeid[i]);
-					if (list != null && list.size() > 0) {
-						for (KnowledgeCategory knowledgeCategory : list) {
-							knowledgeCategoryService.updateKnowledgeCategory(
-									knowledgeid[i],
-									knowledgeCategory.getCategoryId());
-						}
+				List<KnowledgeCategory> list = knowledgeCategoryService
+						.selectKnowledgeCategory(knowledgeid[i]);
+				if (list != null && list.size() > 0) {
+					for (KnowledgeCategory knowledgeCategory : list) {
+						knowledgeCategoryService.updateKnowledgeCategory(
+								knowledgeid[i],
+								knowledgeCategory.getCategoryId());
 					}
-				} else {
-					knowledgeCategoryService.updateKnowledgeCategory(
-							knowledgeid[i], catetoryid);
 				}
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
