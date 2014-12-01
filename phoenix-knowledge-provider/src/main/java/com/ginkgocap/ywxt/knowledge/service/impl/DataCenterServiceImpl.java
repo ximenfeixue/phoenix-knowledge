@@ -385,6 +385,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			f.mkdirs();
 		return f;
 	}
+
 	@Override
 	public Map<String, Object> noticeDataCenterWhileKnowledgeChange(String kId,
 			String oper, String type) {
@@ -411,7 +412,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			e.printStackTrace();
 			logger.error("通知失败!知识ID:{}", kId);
 		}
-		
+
 		result.put(Constants.status, Constants.ResultType.success.v());
 		logger.error("通知成功!知识ID:{},知识类型:{}", kId, type);
 
@@ -463,6 +464,76 @@ public class DataCenterServiceImpl implements DataCenterService {
 				.v()) {
 
 			logger.info("通知成功,id为：{}", paramsMap.get("id"));
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getHotDataSortByType(String type) {
+		logger.info("进入获取最热排行请求,知识type:{}", type);
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		try {
+			// 封装请求参数
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("type", type);
+			// 返回请求结果
+			String str = HTTPUtil.post(httpUrlConfig.getHotSortUrl()
+					+ "knowledge/hot/all.json", params);
+			// 为空则转换错误
+			if (StringUtils.isBlank(str)) {
+				logger.error("获取最热排行请求失败,", type);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.parseError.c());
+				return result;
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.readValue(str, Map.class);
+
+		} catch (Exception e) {
+			logger.error("最热排行请求失败{}", e.toString());
+			e.printStackTrace();
+		}
+		if ((result.get("result") + "").equals("true")) {
+
+			logger.info("获取最热排行请求成功,type为：{}", type);
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getCommentDataSortByType(String type) {
+		logger.info("进入获取评论排行请求,知识type:{}", type);
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		try {
+			// 封装请求参数
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("type", type);
+			// 返回请求结果
+			String str = HTTPUtil.post(httpUrlConfig.getCommentSortUrl()
+					+ "knowledge/hot/comment.json", params);
+			// 为空则转换错误
+			if (StringUtils.isBlank(str)) {
+				logger.error("获取评论排行请求失败,", type);
+				result.put(Constants.status, Constants.ResultType.fail.v());
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.parseError.c());
+				return result;
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.readValue(str, Map.class);
+
+		} catch (Exception e) {
+			logger.error("评论排行请求失败{}", e.toString());
+			e.printStackTrace();
+		}
+		if ((result.get("result") + "").equals("true")) {
+
+			logger.info("获取评论排行请求成功,type为：{}", type);
 		}
 		return result;
 	}

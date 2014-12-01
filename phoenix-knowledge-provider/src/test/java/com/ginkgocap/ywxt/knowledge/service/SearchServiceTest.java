@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,6 +12,9 @@ import com.ginkgocap.ywxt.user.model.User;
 public class SearchServiceTest extends TestBase {
 	@Autowired
 	private SearchService searchService;
+	
+	@Resource
+	private DataCenterService dataCenterService;
 
 	@Test
 	public void testSearchUserTags() {
@@ -39,6 +44,16 @@ public class SearchServiceTest extends TestBase {
 		User user = new User();
 		user.setId(111);
 		searchService.shareToJinTN(user.getId(), vo);
+	}
+	@Test
+	public void testGetHotData(){
+		System.out.println(dataCenterService.getHotDataSortByType("1"));
+		
+	}
+	@Test
+	public void testGetCommentData(){
+		System.out.println(dataCenterService.getCommentDataSortByType("1"));
+		
 	}
 }
 

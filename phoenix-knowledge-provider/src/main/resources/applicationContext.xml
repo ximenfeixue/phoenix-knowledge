@@ -142,5 +142,7 @@
 		<property name="searchUrl" value="${knowledge.data.searchUrl}" />
 		<property name="parseUrl" value="${knowledge.data.parseUrl}" />
 		<property name="pushUrl" value="${knowledge.data.pushUrl}" />
+		<property name="hotSortUrl" value="${konwledge.query.hot.url}" />
+		<property name="commentSortUrl" value="${konwledge.query.comment.url}" />
 	</bean>
 </beans>
