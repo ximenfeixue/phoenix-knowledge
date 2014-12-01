@@ -1000,6 +1000,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 			}
 		}
+		// 大数据通知接口
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("oper", "upd");
+		params.put("type", vo.getColumnType());
+		params.put("kId", vo.getkId());
+		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
+				params);
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
