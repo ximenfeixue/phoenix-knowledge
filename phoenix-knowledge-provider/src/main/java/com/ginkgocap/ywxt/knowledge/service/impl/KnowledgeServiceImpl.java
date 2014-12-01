@@ -27,7 +27,6 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -40,6 +39,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
@@ -139,6 +139,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private NoticeThreadPool noticeThreadPool;
+
+	@Autowired
+	private KnowledgeCommentService knowledgeCommentService;
 
 	//
 	@Override
@@ -258,6 +261,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			// 删除统计表信息
 			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
 
+			// 删除该知识评论信息
+			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i],
+					userid);
 			// 大数据通知接口
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("oper", "del");

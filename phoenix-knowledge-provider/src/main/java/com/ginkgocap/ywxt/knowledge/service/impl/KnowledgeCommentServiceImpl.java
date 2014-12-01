@@ -188,4 +188,14 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 		return result;
 	}
 
+	@Override
+	public int deleteCommentByknowledgeId(long knowledgeid, long userId) {
+		KnowledgeCommentExample example = new KnowledgeCommentExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andUserIdEqualTo(userId);
+		return knowledgeCommentMapper.deleteByExample(example);
+
+	}
+
 }
