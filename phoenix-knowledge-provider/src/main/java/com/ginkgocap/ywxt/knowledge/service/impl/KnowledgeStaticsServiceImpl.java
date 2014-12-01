@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service("knowledgeStaticsService")
 public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
@@ -44,7 +45,6 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 			statics.setCommentcount(0l);
 			statics.setKnowledgeId(vo.getkId());
 			statics.setSharecount(0l);
-			statics.setTitle(vo.getTitle());
 			statics.setSource(source);
 			statics.setType(Short.parseShort(vo.getColumnType()));
 			sV = knowledgeStaticsMapper.updateByPrimaryKeySelective(statics);
@@ -55,7 +55,6 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 			statics.setCommentcount(0l);
 			statics.setKnowledgeId(vo.getkId());
 			statics.setSharecount(0l);
-			statics.setTitle(vo.getTitle());
 			statics.setSource(source);
 			statics.setType(Short.parseShort(vo.getColumnType()));
 			sV = knowledgeStaticsMapper.insertSelective(statics);
@@ -94,8 +93,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 		statics.setCommentcount(0l);
 		statics.setKnowledgeId(knowledgeid);
 		statics.setSharecount(0l);
-		statics.setTitle(title);
-		// statics.setSource(source);
+		statics.setSource((short) Constants.KnowledgeSource.user.v());
 		statics.setType(type);
 		int sV = knowledgeStaticsMapper.insertSelective(statics);
 		if (sV > 0) {

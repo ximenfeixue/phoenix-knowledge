@@ -290,7 +290,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else {
 			knowledgeStatics.setSource((short) Constants.StaticsType.user.v());
 		}
-		knowledgeStatics.setTitle(knowledge.getTitle());
 		knowledgeStatics.setType(Short.parseShort(type));
 
 		int v = knowledgeStaticsService
@@ -350,7 +349,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("columnName", StringUtils.isBlank(columnType) ? ""
 				: Constants.getKnowledgeTypeName(columnType));
 		result.put("kid", kid);
-		result.put("type",type);
+		result.put("type", type);
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 
