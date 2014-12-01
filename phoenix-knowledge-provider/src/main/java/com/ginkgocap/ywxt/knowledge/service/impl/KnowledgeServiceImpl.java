@@ -301,6 +301,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
 
 		}
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
+			vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
+			columnPath = Constants.KnowledgeType.Article.c();
+			vo.setColumnPath(Constants.KnowledgeType.Article.c());
+
+		}
 		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		}
@@ -594,6 +600,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
 			columnPath = Constants.KnowledgeType.Opinion.c();
 			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
+
+		}
+
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
+			vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
+			columnPath = Constants.KnowledgeType.Article.c();
+			vo.setColumnPath(Constants.KnowledgeType.Article.c());
 
 		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
