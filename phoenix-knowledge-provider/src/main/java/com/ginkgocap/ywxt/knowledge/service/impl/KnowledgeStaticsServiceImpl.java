@@ -63,4 +63,44 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 		return sV;
 	}
 
+	@Override
+	public int deleteKnowledgeStatics(long knowledgeid) {
+
+		KnowledgeStatics KnowledgeStatics = selectByknowledgeId(knowledgeid);
+		if (KnowledgeStatics != null) {
+			int count = knowledgeStaticsMapper.deleteByPrimaryKey(knowledgeid);
+			if (count > 0) {
+				return 1;
+			} else {
+				return 0;
+			}
+
+		} else {
+
+			return 0;
+		}
+	}
+
+	@Override
+	public int initKnowledgeStatics(long knowledgeid, String title, Short type) {
+
+		KnowledgeStatics KnowledgeStatics = selectByknowledgeId(knowledgeid);
+		if (KnowledgeStatics != null) {
+			knowledgeStaticsMapper.deleteByPrimaryKey(knowledgeid);
+		}
+		KnowledgeStatics statics = new KnowledgeStatics();
+		statics.setClickcount(0l);
+		statics.setCollectioncount(0l);
+		statics.setCommentcount(0l);
+		statics.setKnowledgeId(knowledgeid);
+		statics.setSharecount(0l);
+		statics.setTitle(title);
+		// statics.setSource(source);
+		statics.setType(type);
+		int sV = knowledgeStaticsMapper.insertSelective(statics);
+		if (sV > 0) {
+			return 1;
+		}
+		return 0;
+	}
 }

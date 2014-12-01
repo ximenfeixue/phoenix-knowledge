@@ -39,4 +39,16 @@ public interface KnowledgeStaticsService {
 	 */
 	int initKnowledgeStatics(KnowledgeNewsVO vo, Short source);
 
+	// 删除统计表信息
+	int deleteKnowledgeStatics(long knowledgeid);
+
+	/**
+	 * 初始化知识统计信息
+	 * 
+	 * @param vo
+	 * @param source
+	 * @return
+	 */
+	int initKnowledgeStatics(long knowledgeid, String title, Short type);
+
 }

@@ -27,6 +27,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -253,6 +254,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
+
+			// 删除统计表信息
+			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
+
 			// 大数据通知接口
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("oper", "del");
@@ -923,6 +928,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					}
 				}
 			}
+			// 知识恢复的同时，将统计信息也恢复
+			knowledgeStaticsService.initKnowledgeStatics(knowledgeid,
+					knowledgerecycle.getTitle(),
+					Short.parseShort(knowledgerecycle.getType()));
 			// 大数据通知接口
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("oper", "add");
