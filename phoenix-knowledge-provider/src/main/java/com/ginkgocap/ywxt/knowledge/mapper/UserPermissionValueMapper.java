@@ -30,7 +30,7 @@ public interface UserPermissionValueMapper {
 	 * @param columnIds
 	 * @return
 	 */
-	List<Long> selectKnowledgeIdsByParams(@Param("receive_user_id") long receive_user_id, @Param("columnIds") List<String> columnIds);
+	List<Long> selectKnowledgeIdsByParams(@Param("receive_user_id") Long receive_user_id,@Param("send_user_id") Long send_user_id, @Param("columnIds") List<String> columnIds);
 	
 	/**
 	 * 通过发送者id和栏目id获取相应权限

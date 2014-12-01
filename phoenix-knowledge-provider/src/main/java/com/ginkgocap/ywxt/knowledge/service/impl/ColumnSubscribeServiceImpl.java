@@ -326,20 +326,24 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 					.where("columnid").in(columnList).and("uid")
 					.is(Ids.jinTN.v());
 		} else if (source == Constants.Relation.self.v()) {
+			logger.info("进入查询我的订阅自己的知识Id列表,类型:{},栏目列表{}", source, columnList);
+			// 订阅下自己的知识ID，knowledgeIds
+			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(null,uid,columnList);
+			logger.info("结束查询我的订阅自己的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("columnid").in(columnList).and("uid").is(uid);
+					.where("_id").in(knowledgeIds);
 
 		} else if (source == Constants.Relation.friends.v()) {
 			logger.info("进入查询我的订阅分享给我的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source, columnList);
 			// 获取所有大乐，中乐分享到全平台的knowledgeId
-			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(uid,columnList);
+			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(uid,null,columnList);
 			logger.info("结束查询我的订阅分享到我的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria
 					.where("_id").in(knowledgeIds);
 		} else if (source == Constants.Relation.platform.v()) {
 			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source, columnList);
 			// 获取所有大乐，中乐分享到全平台的knowledgeId
-			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(-1l,columnList);
+			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(-1l,null,columnList);
 			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria
 					.where("_id").in(knowledgeIds);
