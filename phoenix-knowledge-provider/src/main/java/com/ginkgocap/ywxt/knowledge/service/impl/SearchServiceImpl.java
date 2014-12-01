@@ -35,12 +35,10 @@ public class SearchServiceImpl implements SearchService {
 		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "user/tags/search.json", params);
 
-		String tags = null;
+		String tags = "";
 		try {
 			if (!StringUtils.isBlank(str)) {
-				String restr = str.replace("[", "").replace("]", "");
-				result.put("tags", restr);
-
+				tags = str.replace("[", "").replace("]", "");
 			}
 		} catch (Exception e) {
 			logger.error("搜索首页热门标签请求查询失败,{}", e.toString());
@@ -48,7 +46,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-		// result.put("tags", tags);
+		 result.put("tags", tags);
 		logger.info("搜索首页热门标签请求查询成功,返回值:{}", tags);
 		return result;
 	}
