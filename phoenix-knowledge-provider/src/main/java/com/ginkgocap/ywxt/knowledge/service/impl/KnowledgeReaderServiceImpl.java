@@ -290,10 +290,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else {
 			knowledgeStatics.setSource((short) Constants.StaticsType.user.v());
 		}
-<<<<<<< HEAD
-//		knowledgeStatics.setTitle(knowledge.getTitle());
-=======
->>>>>>> refs/remotes/origin/release
 		knowledgeStatics.setType(Short.parseShort(type));
 
 		int v = knowledgeStaticsService
