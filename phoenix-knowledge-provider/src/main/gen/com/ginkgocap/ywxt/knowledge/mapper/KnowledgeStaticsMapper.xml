@@ -7,7 +7,6 @@
     <result column="shareCount" property="sharecount" jdbcType="BIGINT" />
     <result column="collectionCount" property="collectioncount" jdbcType="BIGINT" />
     <result column="clickCount" property="clickcount" jdbcType="BIGINT" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="source" property="source" jdbcType="SMALLINT" />
     <result column="type" property="type" jdbcType="SMALLINT" />
   </resultMap>
@@ -70,8 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    knowledge_id, commentCount, shareCount, collectionCount, clickCount, title, source, 
-    type
+    knowledge_id, commentCount, shareCount, collectionCount, clickCount, source, type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample" >
     select
@@ -108,11 +106,11 @@
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics" >
     insert into tb_knowledge_statics (knowledge_id, commentCount, shareCount, 
-      collectionCount, clickCount, title, 
-      source, type)
+      collectionCount, clickCount, source, 
+      type)
     values (#{knowledgeId,jdbcType=BIGINT}, #{commentcount,jdbcType=BIGINT}, #{sharecount,jdbcType=BIGINT}, 
-      #{collectioncount,jdbcType=BIGINT}, #{clickcount,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{source,jdbcType=SMALLINT}, #{type,jdbcType=SMALLINT})
+      #{collectioncount,jdbcType=BIGINT}, #{clickcount,jdbcType=BIGINT}, #{source,jdbcType=SMALLINT}, 
+      #{type,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics" >
     insert into tb_knowledge_statics
@@ -131,9 +129,6 @@
       </if>
       <if test="clickcount != null" >
         clickCount,
-      </if>
-      <if test="title != null" >
-        title,
       </if>
       <if test="source != null" >
         source,
@@ -157,9 +152,6 @@
       </if>
       <if test="clickcount != null" >
         #{clickcount,jdbcType=BIGINT},
-      </if>
-      <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
       </if>
       <if test="source != null" >
         #{source,jdbcType=SMALLINT},
@@ -193,9 +185,6 @@
       <if test="record.clickcount != null" >
         clickCount = #{record.clickcount,jdbcType=BIGINT},
       </if>
-      <if test="record.title != null" >
-        title = #{record.title,jdbcType=VARCHAR},
-      </if>
       <if test="record.source != null" >
         source = #{record.source,jdbcType=SMALLINT},
       </if>
@@ -214,7 +203,6 @@
       shareCount = #{record.sharecount,jdbcType=BIGINT},
       collectionCount = #{record.collectioncount,jdbcType=BIGINT},
       clickCount = #{record.clickcount,jdbcType=BIGINT},
-      title = #{record.title,jdbcType=VARCHAR},
       source = #{record.source,jdbcType=SMALLINT},
       type = #{record.type,jdbcType=SMALLINT}
     <if test="_parameter != null" >
@@ -236,9 +224,6 @@
       <if test="clickcount != null" >
         clickCount = #{clickcount,jdbcType=BIGINT},
       </if>
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
       <if test="source != null" >
         source = #{source,jdbcType=SMALLINT},
       </if>
@@ -254,7 +239,6 @@
       shareCount = #{sharecount,jdbcType=BIGINT},
       collectionCount = #{collectioncount,jdbcType=BIGINT},
       clickCount = #{clickcount,jdbcType=BIGINT},
-      title = #{title,jdbcType=VARCHAR},
       source = #{source,jdbcType=SMALLINT},
       type = #{type,jdbcType=SMALLINT}
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}

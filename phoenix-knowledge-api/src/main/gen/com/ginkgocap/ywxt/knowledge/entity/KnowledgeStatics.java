@@ -13,8 +13,6 @@ public class KnowledgeStatics implements Serializable {
 
     private Long clickcount;
 
-    private String title;
-
     private Short source;
 
     private Short type;
@@ -59,14 +57,6 @@ public class KnowledgeStatics implements Serializable {
 
     public void setClickcount(Long clickcount) {
         this.clickcount = clickcount;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public Short getSource() {

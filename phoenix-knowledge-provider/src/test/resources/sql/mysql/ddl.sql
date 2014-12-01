@@ -295,18 +295,17 @@ alter table tb_knowledge_report comment '知识举报表';
 /*==============================================================*/
 /* Table: tb_knowledge_statics                                  */
 /*==============================================================*/
-create table tb_knowledge_statics
-(
-   knowledge_id         bigint(20) not null comment '知识id',
-   commentCount         bigint(20) default 0 comment '评论数',
-   shareCount           bigint(20) default 0 comment '分享数',
-   collectionCount      bigint(20) default 0 comment '收藏数',
-   clickCount           bigint(20) default 0 comment '点击数',
-   title                varchar(255) comment '标题',
-   source               smallint comment '知识来源(0-系统 1-用户)',
-   type                 smallint,
-   primary key (knowledge_id)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+create table tb_knowledge_statics 
+( 
+knowledge_id bigint(20) not null comment '知识id', 
+commentCount bigint(20) default 0 comment '评论数', 
+shareCount bigint(20) default 0 comment '分享数', 
+collectionCount bigint(20) default 0 comment '收藏数', 
+clickCount bigint(20) default 0 comment '点击数', 
+source smallint comment '知识来源(0-系统 1-用户)', 
+type smallint, 
+primary key (knowledge_id)
+); 
 
 alter table tb_knowledge_statics comment '知识统计表';
 
@@ -2694,11 +2693,11 @@ update tb_role r set r.permissionString = CONCAT(permissionString,';cloud:delete
 r.remark = CONCAT(remark,'删除云知识、审核云知识、修改云知识、栏目管理、举报管理') 
 where r.id = '1';
 
-USE `pheonix-metadata`;
-CREATE TABLE 'tb_user_tags' (
-   'tagId' bigint(20) NOT NULL AUTO_INCREMENT COMMENT '标签ID',
-   'userId' bigint(20) DEFAULT NULL COMMENT '用户ID',
-   'tagname' varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '标签名称',
-   PRIMARY KEY ('tagId')
- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户标签表';
+CREATE TABLE `tb_user_tags` ( 
+`tagId` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '标签ID', 
+`userId` BIGINT(20) DEFAULT NULL COMMENT '用户ID', 
+`tagname` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '标签名称', 
+PRIMARY KEY (`tagId`) 
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户标签表';
+
  
