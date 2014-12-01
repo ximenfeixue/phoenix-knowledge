@@ -290,7 +290,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		} else {
 			knowledgeStatics.setSource((short) Constants.StaticsType.user.v());
 		}
-		knowledgeStatics.setTitle(knowledge.getTitle());
+//		knowledgeStatics.setTitle(knowledge.getTitle());
 		knowledgeStatics.setType(Short.parseShort(type));
 
 		int v = knowledgeStaticsService

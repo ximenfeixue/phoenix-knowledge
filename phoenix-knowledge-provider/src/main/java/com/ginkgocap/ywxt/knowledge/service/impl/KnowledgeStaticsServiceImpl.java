@@ -44,7 +44,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 			statics.setCommentcount(0l);
 			statics.setKnowledgeId(vo.getkId());
 			statics.setSharecount(0l);
-			statics.setTitle(vo.getTitle());
+//			statics.setTitle(vo.getTitle());
 			statics.setSource(source);
 			statics.setType(Short.parseShort(vo.getColumnType()));
 			sV = knowledgeStaticsMapper.updateByPrimaryKeySelective(statics);
@@ -55,7 +55,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 			statics.setCommentcount(0l);
 			statics.setKnowledgeId(vo.getkId());
 			statics.setSharecount(0l);
-			statics.setTitle(vo.getTitle());
+//			statics.setTitle(vo.getTitle());
 			statics.setSource(source);
 			statics.setType(Short.parseShort(vo.getColumnType()));
 			sV = knowledgeStaticsMapper.insertSelective(statics);
@@ -94,7 +94,7 @@ public class KnowledgeStaticsServiceImpl implements KnowledgeStaticsService {
 		statics.setCommentcount(0l);
 		statics.setKnowledgeId(knowledgeid);
 		statics.setSharecount(0l);
-		statics.setTitle(title);
+//		statics.setTitle(title);
 		// statics.setSource(source);
 		statics.setType(type);
 		int sV = knowledgeStaticsMapper.insertSelective(statics);
