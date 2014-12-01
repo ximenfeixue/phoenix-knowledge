@@ -570,6 +570,8 @@
 				<knowledge.data.parseUrl>http://192.168.130.120:8000/async_data/</knowledge.data.parseUrl>
 				<!-- 大数据推送请求地址 -->
 				<knowledge.data.pushUrl>http://192.168.130.120:8000/</knowledge.data.pushUrl>
+				<konwledge.query.hot.url>http://192.168.130.120:8000/</konwledge.query.hot.url>
+				<konwledge.query.comment.url>http://192.168.130.120:8000/</konwledge.query.comment.url>
 
 				<!-- redis地址 -->
 				<redis.host>192.168.101.131</redis.host>
