@@ -6,6 +6,8 @@ USE `phoenix_knowledge`;
 /*==============================================================*/
 
 
+drop table if exists tb_attachment;
+
 drop table if exists tb_column;
 
 drop table if exists tb_column_knowledge;
@@ -39,6 +41,24 @@ drop table if exists tb_user_category;
 drop table if exists tb_user_permission;
 
 drop table if exists tb_user_tags;
+
+/*==============================================================*/
+/* Table: tb_attachment                                         */
+/*==============================================================*/
+create table tb_attachment
+(
+   id                   bigint(20) not null auto_increment comment 'ID',
+   taskId               varchar(255) comment 'taskID',
+   file_name            varchar(500) comment '文件名称',
+   file_size            bigint(20) comment '文件大小',
+   file_type            varchar(30) comment '文件类型',
+   download_url         varchar(500) comment '下载地址',
+   userId               bigint(20) comment '创建人id',
+   createtime           timestamp,
+   primary key (id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+
+alter table tb_attachment comment '附件表';
 
 /*==============================================================*/
 /* Table: tb_column                                             */
@@ -129,7 +149,7 @@ create table tb_knowledge_base
    pic_path             varchar(255) comment '封面图片地址',
    column_type          smallint comment '11种栏目类型',
    essence              smallint comment 'essence 是否加精（0-不加 1-加）',
-   taskid varchar(255) DEFAULT '',
+   taskid               varchar(255) comment '附件taskid',
    primary key (knowledge_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -228,7 +248,7 @@ create table tb_knowledge_draft
    drafttype            varchar(10) comment '草稿类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
    createtime           timestamp comment '保存时间',
    userid               bigint(20) comment '用户ID',
-   type                 char(1) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
+   type                 char(2) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
    primary key (knowledge_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -261,6 +281,12 @@ create table tb_knowledge_report
    rep_desc             varchar(500) comment '描述',
    createtime           timestamp comment '创建时间',
    user_id              bigint(20) comment '举报人id',
+   userName             varchar(50) comment '举报人名',
+   knowledgeTitle       varchar(255) comment '知识标题',
+   updateTime           timestamp comment '修改时间',
+   results              varchar(500) comment '处理结果',
+   status               int(1) comment '处理状态( 0 -未处理 1-已处理  )',
+   columnType           smallint comment '栏目类型',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -332,21 +358,12 @@ create table tb_user_tags
 
 alter table tb_user_tags comment '用户标签表';
 
-DROP TABLE IF EXISTS tb_attachment;
 
-/*==============================================================*/
-/* Table: tb_attachment                                         */
-/*==============================================================*/
-CREATE TABLE tb_attachment
-(
-   id                   BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-   taskId               VARCHAR(255) COMMENT 'taskID',
-   file_name            VARCHAR(500) COMMENT '文件名称',
-   file_size            BIGINT(20) COMMENT '文件大小',
-   file_type            VARCHAR(30) COMMENT '文件类型',
-   download_url         VARCHAR(500) COMMENT '下载地址',
-   userId               BIGINT(20) COMMENT '创建人id',
-   PRIMARY KEY (id)
-)  ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
-ALTER TABLE tb_attachment COMMENT '附件表';
+CREATE INDEX idx_col_colLevPath ON tb_column (column_level_path); 
+CREATE INDEX idx_per_typeRidSid ON tb_user_permission (column_type,send_user_id,receive_user_id); 
+CREATE INDEX idx_cvis_cidUid ON tb_column_visible (column_id,user_id); 
+CREATE INDEX idx_kc_kidCateid ON tb_knowledge_category (knowledge_id,category_id); 
+CREATE INDEX idx_uc_uidPidSoidType ON tb_user_category (user_id,parent_id,sortid,category_type); 
+CREATE INDEX idx_ks_type ON tb_knowledge_statics (TYPE); 
+CREATE INDEX idx_ct_cidUid ON tb_column_tag(column_id,user_id);

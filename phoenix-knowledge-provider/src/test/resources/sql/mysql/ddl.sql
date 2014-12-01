@@ -2682,3 +2682,23 @@ CREATE TABLE IF NOT EXISTS `tb_ecosphere_correct` (
 PRIMARY KEY (`id`), 
 KEY `userId` (`joinKey`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='生态纠正表'; 
+
+
+use phoenix_admin; 
+INSERT INTO `tb_permission`(id,`name`,`number`,`remark`,`parentId`) VALUES ('96', '删除云知识','cloud:delete','删除云知识','57'); 
+INSERT INTO `tb_permission`(id,`name`,`number`,`remark`,`parentId`) VALUES ('97', '修改云知识','cloud:update','修改云知识','57'); 
+INSERT INTO `tb_permission`(id,`name`,`number`,`remark`,`parentId`) VALUES ('98', '审核云知识','cloud:approve','审核云知识','57'); 
+INSERT INTO `tb_permission`(id,`name`,`number`,`remark`,`parentId`) VALUES ('99', '栏目管理','cloud:column','栏目管理','57'); 
+INSERT INTO `tb_permission`(id,`name`,`number`,`remark`,`parentId`) VALUES ('961', '举报管理','cloud:report','举报管理','57'); 
+update tb_role r set r.permissionString = CONCAT(permissionString,';cloud:delete;cloud:approve;cloud:update;cloud:column;cloud:report'), 
+r.remark = CONCAT(remark,'删除云知识、审核云知识、修改云知识、栏目管理、举报管理') 
+where r.id = '1';
+
+USE `pheonix-metadata`;
+CREATE TABLE 'tb_user_tags' (
+   'tagId' bigint(20) NOT NULL AUTO_INCREMENT COMMENT '标签ID',
+   'userId' bigint(20) DEFAULT NULL COMMENT '用户ID',
+   'tagname' varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '标签名称',
+   PRIMARY KEY ('tagId')
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户标签表';
+ 
