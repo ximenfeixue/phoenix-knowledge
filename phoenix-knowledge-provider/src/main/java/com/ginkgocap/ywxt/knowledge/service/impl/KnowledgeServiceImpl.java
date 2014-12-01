@@ -572,8 +572,25 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Override
 	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
-		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
+		if(user == null ){
+			result.put(Constants.status,Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,Constants.ErrorMessage.userNotLogin.c());
+			return result;
+		}
+		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
+		// 查询知识内容敏感词
+		List<String> listword = sensitiveWordService.sensitiveWord(vo
+				.getContent());
+		if (listword != null && listword.size() > 0) {
+			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
+			result.put(Constants.status,
+					Constants.ResultType.sensitiveWords.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.sensitiveWord.c());
+			result.put("listword", listword);
+			return result;
+		}
 		// 知识来源，（0，系统，1，用户）
 		Short source = (short) Constants.KnowledgeSource.user.v();
 		// 获取Session用户值
@@ -583,7 +600,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
-		// TODO 判断用户是否选择栏目
+		//判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
 		if (Long.parseLong(columnid) != 0) {
@@ -628,18 +645,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setKnowledgestatus(Constants.Status.checked.v());
-		// 查询知识内容敏感词
-		List<String> listword = sensitiveWordService.sensitiveWord(vo
-				.getContent());
-		if (listword != null && listword.size() > 0) {
-			logger.error("发布的知识内容存在敏感词，参数为：{}", vo.getkId());
-			result.put(Constants.status,
-					Constants.ResultType.sensitiveWords.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.sensitiveWord.c());
-			result.put("listword", listword);
-			return result;
-		}
 		// 法律法规名称不可重复
 		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
 
