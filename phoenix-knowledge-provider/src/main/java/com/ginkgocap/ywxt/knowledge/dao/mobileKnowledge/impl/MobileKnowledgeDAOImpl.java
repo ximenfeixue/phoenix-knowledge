@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +48,9 @@ public class MobileKnowledgeDAOImpl extends SqlMapClientDaoSupport implements Mo
 		for(int i = 0; i < columnID.length; i++) {
 			list.add(columnID[i]);
 		}
-		return mongoTemplate.find(query(where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(offset).limit(limit), Knowledge.class, mongo_collection);
+		Query qu = query(where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(offset).limit(limit); 
+		qu.sort().on("createtime", Order.DESCENDING);
+		return mongoTemplate.find(qu, Knowledge.class, mongo_collection);
 	}
 	
 	@Override//{"uid":0,"status":4,"columnid": 1212}
