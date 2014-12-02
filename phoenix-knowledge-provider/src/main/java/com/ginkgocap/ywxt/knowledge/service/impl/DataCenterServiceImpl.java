@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -488,8 +491,10 @@ public class DataCenterServiceImpl implements DataCenterService {
 				return result;
 			}
 
-			ObjectMapper mapper = new ObjectMapper();
-			result = mapper.readValue(str, Map.class);
+			List<Map<String, Object>> list = getKnowledgeList(str);
+
+			result.put("list", list);
+			result.put(Constants.status, Constants.ResultType.success.v());
 
 		} catch (Exception e) {
 			logger.error("最热排行请求失败{}", e.toString());
@@ -523,9 +528,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 				return result;
 			}
 
-			ObjectMapper mapper = new ObjectMapper();
-			result = mapper.readValue(str, Map.class);
-
+			List<Map<String, Object>> list = getKnowledgeList(str);
+			result.put("list", list);
+			result.put(Constants.status, Constants.ResultType.success.v());
 		} catch (Exception e) {
 			logger.error("评论排行请求失败{}", e.toString());
 			e.printStackTrace();
@@ -535,6 +540,41 @@ public class DataCenterServiceImpl implements DataCenterService {
 			logger.info("获取评论排行请求成功,type为：{}", type);
 		}
 		return result;
+	}
+
+	/**
+	 * 获取知识列表
+	 * @param str
+	 * @return
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 */
+	private List<Map<String, Object>> getKnowledgeList(String str)
+			throws IOException, JsonParseException, JsonMappingException {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		ObjectMapper mapper = new ObjectMapper();
+		// 转换bsn为MAP
+		Map<String, Object> returnParams = mapper.readValue(str, Map.class);
+		String bsn = returnParams.get("bsn") + "";
+		JSONObject bsnObjects = JSONObject.fromObject(bsn);
+		Map<String, Object> bsnMaps = (Map<String, Object>) bsnObjects;
+
+		// 解析bsnMaps
+		for (int i = 1; i < bsnMaps.size() + 1; i++) {
+			String bsnStr = bsnMaps.get(i + "") + "";
+			if (StringUtils.isBlank(bsnStr)
+					|| StringUtils.equalsIgnoreCase(bsnStr, "null")) {
+				continue;
+			}
+			JSONObject bsnMap = JSONObject.fromObject(bsnStr);
+			// 将字符串生成单个MAP
+			Map<String, Object> singleMap = (Map<String, Object>) bsnMap;
+			if (singleMap != null) {
+				list.add(singleMap);
+			}
+		}
+		return list;
 	}
 
 }
