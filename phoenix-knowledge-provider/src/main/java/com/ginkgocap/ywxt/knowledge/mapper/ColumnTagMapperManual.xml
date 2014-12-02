@@ -3,11 +3,11 @@
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual">
 
 	<insert id="batchInsertColumnTag" parameterType="java.util.List">
-		INSERT INTO tb_column_tag (column_id,tag,user_id,createtime)
+		INSERT INTO tb_column_tag (column_id,tag,user_id,createtime,columnname,column_path)
 		VALUES
 		<foreach collection="list" item="item" index="index"
 			separator=",">
-			(#{item.columnId},#{item.tag},#{item.userId},#{item.createtime})
+			(#{item.columnId},#{item.tag},#{item.userId},#{item.createtime},#{item.columnname},#{item.columnPath})
 		</foreach>
 	</insert>
 
