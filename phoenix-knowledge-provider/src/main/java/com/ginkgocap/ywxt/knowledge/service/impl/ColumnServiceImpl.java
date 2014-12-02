@@ -552,9 +552,6 @@ public class ColumnServiceImpl implements ColumnService {
 		// 存储栏目标签信息
 		batchSaveColumnTags(userid, currentColumnId, tags,columnname,currentColumnLevelPath);
 
-		batchSaveColumnTags(userid, currentColumnId, tags, columnname,
-				currentColumnLevelPath);
-
 		logger.info("--结束添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		columnVisibleService.saveCid(userid, currentColumnId);
 		
