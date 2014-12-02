@@ -89,4 +89,7 @@ public interface MobileSearchService {
 	 
 	 /** 查询好友的知识 */
 	 public <T> Map<String,Object> selectAllByParam(int classType, int state, String columnid, Long userid, int page, int size);
+	 
+	 /** 查询首页知识 */
+	 public <T> Map<String, Object> selectAllByParam(T t, int state, String columnid, Long userid, int page, int size);
 }
