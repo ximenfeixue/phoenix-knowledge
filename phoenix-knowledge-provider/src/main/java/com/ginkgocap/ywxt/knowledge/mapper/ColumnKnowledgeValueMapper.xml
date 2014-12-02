@@ -40,7 +40,8 @@
 	<select id="selectMobileColumns" resultType="map">
 	 		SELECT * FROM tb_column t WHERE 
 	 		LENGTH(t.column_level_path) &lt;= #{length} 
-	 		AND t.user_id = #{userId} 
+	 		AND t.user_id = #{userId}
+	 		OR  t.user_id = 0 
 	 		AND t.del_status = 0 
 	 		ORDER BY t.column_level_path
 	</select>
