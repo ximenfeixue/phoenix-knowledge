@@ -288,7 +288,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			for (Map<String, Object> map : kcl) {
 				int haveFile = 0;
 				int fileSize = 0;
-				if (map != null) {
+				if (map != null && map.get("taskid")!=null) {
 					if (StringUtils.isNotBlank(map.get("taskid").toString())) {
 						Map<String, Object> attMap = attachmentService
 								.queryAttachmentByTaskId(map.get("taskid")
