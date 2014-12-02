@@ -6,24 +6,34 @@
 		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
 		WHERE t.user_id=#{userId} and t.pcid=#{pcid}
 		<if test="instate==0">
-			and t.column_id in
+			and 
 			<foreach collection="listl" index="index" item="tag" open="("
-				separator="," close=")">
-				#{tag}
+				separator="or" close=")">
+				 sort_id LIKE  CONCAT(#{tag}, '%')
 			</foreach>
 		</if>
 		<if test="instate==1">
-			and t.column_id not in
+			and 
 			<foreach collection="listl" index="index" item="tag" open="("
-				separator="," close=")">
-				#{tag}
+				separator="or" close=")">
+				 sort_id LIKE  CONCAT(#{tag}, '%')
 			</foreach>
+			
 		</if>
 	</update>
 	
 	<select id="selectNotinIds" resultType="long" >
 		select column_id from  tb_column_visible t where  t.user_id=#{userId} and t.pcid=#{pcid}
 		and t.column_id not in
+			<foreach collection="listl" index="index" item="tag" open="("
+				separator="," close=")">
+				#{tag}
+			</foreach>
+	</select>
+	
+	<select id="selectSortIds" resultType="string" >
+		select sort_id from  tb_column_visible t where  t.user_id=#{userId} 
+		and t.column_id  in
 			<foreach collection="listl" index="index" item="tag" open="("
 				separator="," close=")">
 				#{tag}

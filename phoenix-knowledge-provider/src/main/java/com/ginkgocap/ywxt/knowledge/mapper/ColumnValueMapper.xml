@@ -88,6 +88,28 @@
 		</if>
 	
 	</select>
+	<select id="selectByParams" resultMap="BaseResultMap">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" /> t
+		where del_status=0
+		and (1=1
+		<if test="userId != null">
+			and t.user_id=#{userId}
+			or t.user_id=#{gtnid}
+		</if>
+		<if test="userId == null">
+			and t.user_id=#{gtnid}
+		</if>
+		)
+		<if test="column !=null">
+		AND t.parent_id=#{column}
+		</if>
+		<![CDATA[ 
+		and length(t.column_level_path) <= 18
+		]]>
+	</select>
 	<select id="selectByParamVisible" resultMap="BaseResultMap">
 		select
 		<include refid="allColumns" />
