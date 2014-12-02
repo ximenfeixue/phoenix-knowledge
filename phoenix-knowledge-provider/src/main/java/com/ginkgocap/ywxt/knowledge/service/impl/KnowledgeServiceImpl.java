@@ -1049,6 +1049,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	public void updateByPrimaryKey(KnowledgeBase kb) {
-		knowledgeBaseMapper.updateByPrimaryKey(kb);
+		knowledgeBaseMapper.updateByPrimaryKeySelective(kb);
 	}
 }
