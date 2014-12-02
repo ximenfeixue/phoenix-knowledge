@@ -1,11 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 
 /**

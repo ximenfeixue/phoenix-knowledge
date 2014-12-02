@@ -52,6 +52,7 @@ import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
@@ -315,6 +316,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+		}
+
+		if (StringUtils.isBlank(vo.getDesc())) {
+			vo.setDesc(HtmlToText.htmlTotest(vo.getContent()));
 		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
@@ -614,6 +619,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			columnPath = Constants.KnowledgeType.Article.c();
 			vo.setColumnPath(Constants.KnowledgeType.Article.c());
 
+		}
+		if (StringUtils.isBlank(vo.getDesc())) {
+			vo.setDesc(HtmlToText.htmlTotest(vo.getContent()));
 		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));

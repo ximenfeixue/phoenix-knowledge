@@ -59,8 +59,8 @@ public class HtmlToText {
 		return textStr;
 	}
 
-	public static String htmlTotest(String htmlStr) {
 		// 知识内容截取存入简介
+	public static String htmlTotest(String htmlStr) {
 		String content = null;
 		if (StringUtils.isNotBlank(htmlStr)) {
 			content = htmlStr.replaceAll("(?isu)<[^>]+>", "");

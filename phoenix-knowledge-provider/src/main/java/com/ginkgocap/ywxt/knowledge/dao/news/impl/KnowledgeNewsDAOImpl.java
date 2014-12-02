@@ -106,7 +106,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("uname", user.getName());
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
-			update.set("desc", HtmlToText.htmlTotest(vo.getContent()));
+			update.set("desc", vo.getDesc());
 			update.set("content", vo.getContent());
 			update.set("essence", vo.getEssence());
 			update.set("modifytime", vo.getCreatetime());

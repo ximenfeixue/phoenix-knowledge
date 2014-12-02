@@ -1,11 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.util.Date;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 
 /**
@@ -32,7 +28,7 @@ public class KnowledgeOpinion extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		this.setDesc(vo.getDesc());
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
@@ -62,7 +58,7 @@ public class KnowledgeOpinion extends Knowledge {
 		this.setS_addr("");
 		this.setCpathid(vo.getColumnPath());
 		this.setPic(vo.getPic());
-		this.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		this.setDesc(vo.getDesc());
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
