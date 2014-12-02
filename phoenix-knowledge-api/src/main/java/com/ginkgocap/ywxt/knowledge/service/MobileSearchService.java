@@ -92,4 +92,7 @@ public interface MobileSearchService {
 	 
 	 /** 查询首页知识 */
 	 public <T> Map<String, Object> selectAll(T t, int state, String columnid, Long userid, int page, int size);
+	 
+	 /** 查询我的标签被知识所使用个数 */
+	 public int getCountForMyKnowledgeTag(long userId,String keyword);
 }
