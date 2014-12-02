@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeHomeDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
@@ -293,11 +294,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 								.queryAttachmentByTaskId(map.get("taskid")
 										.toString());
 						if (attMap != null && attMap.get("attList") != null) {
-							List<Attachment> attList = (List<Attachment>) attMap
+							List<FileIndex> attList = (List<FileIndex>) attMap
 									.get("attList");
 							if (attList != null && attList.size() > 0) {
 								haveFile = 1;
-								for (Attachment att : attList) {
+								for (FileIndex att : attList) {
 									fileSize += att.getFileSize();
 								}
 							}

@@ -18,11 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.entity.Attachment;
+import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
@@ -337,15 +336,15 @@ public class DataCenterServiceImpl implements DataCenterService {
 					Map<String, Object> attMap = attachmentService
 							.queryAttachmentByTaskId(b.getTaskid());
 					if (attMap != null && attMap.get("attList") != null) {
-						List<Attachment> attList = (List<Attachment>) attMap
+						List<FileIndex> attList = (List<FileIndex>) attMap
 								.get("attList");
 						if (attList != null && attList.size() > 0) {
-							for (Attachment att : attList) {
+							for (FileIndex att : attList) {
 								// 将挂载点的文件拷贝到包中
 								File source = new File(nfsHome
-										+ att.getDownloadUrl());
+										+ att.getFilePath());
 								File target = new File(fileDir.getPath()
-										+ File.separator + att.getFileName());
+										+ File.separator + att.getFileTitle());
 								// 将文件拷贝到目录中
 								CopyFile.copyFile(source, target);
 							}
