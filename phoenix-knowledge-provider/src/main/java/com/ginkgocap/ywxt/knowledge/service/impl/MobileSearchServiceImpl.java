@@ -568,5 +568,10 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				names[length - 1]));
 		return model;
 	}
+
+	@Override
+	public int getCountForMyKnowledgeTag(long userId, String keyword) {
+		return mobileKnowledgeMapper.selectMyKnowledgeCountByTag(userId,keyword);
+	}
 	
 }

@@ -189,4 +189,11 @@
 		AND t.send_user_id = #{userId} 
 		AND t.column_id = #{columnId} 
 	</select>
+	
+	<select id="selectMyKnowledgeCountByTag" resultType="int">
+		SELECT COUNT(*) FROM <include refid="tb_name_base" /> b WHERE 
+		1 = 1 
+		AND b.user_id = #{userId} 
+		AND b.tag like CONCAT('%',#{keyword},'%') 
+	</select>
 </mapper>
