@@ -498,4 +498,75 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	        return model;
 	}
 	
+	// 首页栏目
+	public <T> Map<String, Object> selectAllByParam(T t, int state,
+			String columnid, Long userid, int page, int size) {
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
+				state);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
+				columnid);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
+				userid);
+		Map<String, Object> model = new HashMap<String, Object>();
+		String[] names = t.getClass().getName().split("\\.");
+		int length = names.length;
+		// 栏目id
+		Long cid = Long.parseLong(columnid);
+		// 查询栏目类型
+		Column column = columnMapper.selectByPrimaryKey(cid);
+
+		String ty = column.getColumnLevelPath().substring(0, 9);
+		int leng = column.getColumnLevelPath().length();
+		long type = Long.parseLong(ty);
+		Criteria criteria = Criteria.where("status").is(4);
+		// 权限条件过滤
+		Criteria criteriaUp = new Criteria();
+		// 我的知识过滤
+		Criteria criteriaMy = new Criteria();
+		// 金桐脑过滤
+		Criteria criteriaGt = new Criteria();
+		// 路径过滤
+		Criteria criteriaPath = new Criteria();
+
+		// 定义查询条件
+		// 查询权限表，获取可见文章ID列表
+		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
+				type);
+		if (ids != null && ids.size() > 0) {
+			criteriaUp.and("_id").in(ids);
+		}
+		// 我的知识条件
+		criteriaMy.and("uid").is(userid);
+			
+		// 金桐脑知识条件
+		criteriaGt.and("uid").is(Constants.Ids.jinTN.v());
+
+		// 查询栏目目录为当前分类下的所有数据
+		String reful = column.getPathName();
+		// 该栏目路径下的所有文章条件
+		criteriaPath.and("cpathid").regex(reful + ".*$");
+		//汇总条件
+		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,
+				criteriaGt, criteriaUp).andOperator(criteriaPath);
+		
+		criteria.andOperator(criteriaAll);
+
+		// 查询知识
+		String str = "" + JSONObject.fromObject(criteria);
+		logger.info("查询首页数据,栏目ID为:{}条件{}",columnid,str);
+		Query query = new Query(criteria);
+		query.sort().on("createtime", Order.DESCENDING);
+		long count = mongoTemplate.count(query, names[length - 1]);
+		PageUtil p = new PageUtil((int) count, page, size);
+		query.limit(size);
+		query.skip(p.getPageStartRow() - 1);
+		model.put("page", p);
+		model.put("list", (List) mongoTemplate.find(query, t.getClass(),
+				names[length - 1]));
+		return model;
+	}
+	
 }
