@@ -82,17 +82,29 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         m.put("utime", new Date());
         m.put("userId", userid);
         m.put("state", 0);
-        m.put("listl", idl);
-        List<String> ls1 =columnVisibleValueMapper.selectSortIds(m);
+        List<String> ls1 = new ArrayList<String>();
+        if (idl != null && idl.size() > 0) {
+            m.put("listl", idl);
+            ls1 = columnVisibleValueMapper.selectSortIds(m);
+        }else{//全部取消
+            m.put("listl", idl.add(-1l));
+        }
         List<Long> idnl = columnVisibleValueMapper.selectNotinIds(m);
-        m.put("listl", idnl);
-        List<String> ls2 =columnVisibleValueMapper.selectSortIds(m);
-        m.put("listl", ls1);
-        columnVisibleValueMapper.update(m);
+        List<String> ls2 = new ArrayList<String>();
+        if (idnl != null && idnl.size() > 0) {
+            m.put("listl", idnl);
+            ls2 = columnVisibleValueMapper.selectSortIds(m);
+        }
+        if (ls1 != null && ls1.size() > 0) {
+            m.put("listl", ls1);
+            columnVisibleValueMapper.update(m);
+        }
         m.put("instate", 1);
         m.put("state", 1);
-        m.put("listl", ls2);
-        columnVisibleValueMapper.update(m);
+        if (ls2 != null && ls2.size() > 0) {
+            m.put("listl", ls2);
+            columnVisibleValueMapper.update(m);
+        }
     }
 
     @Override
