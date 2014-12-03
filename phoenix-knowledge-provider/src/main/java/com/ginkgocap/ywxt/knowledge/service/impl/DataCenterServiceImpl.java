@@ -544,7 +544,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 
 	/**
 	 * 获取知识列表
-	 * @param str
+	 * @param str json字符串
 	 * @return
 	 * @throws IOException
 	 * @throws JsonParseException
