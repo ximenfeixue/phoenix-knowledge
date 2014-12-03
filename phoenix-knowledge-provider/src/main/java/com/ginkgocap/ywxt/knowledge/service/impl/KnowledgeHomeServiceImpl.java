@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -131,6 +132,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Column column = columnMapper.selectByPrimaryKey(cid);
 
 		String ty = column.getColumnLevelPath().substring(0, 9);
+		String cname = column.getColumnname();
 		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
 		// 权限条件过滤
@@ -146,6 +148,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 查询权限表，获取可见文章ID列表
 		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
 				type);
+		List<String> cls = userPermissionValueMapper.selectVisble(userid,
+		        type);
 		if (ids != null && ids.size() > 0) {
 			criteriaUp.and("_id").in(ids);
 		}
@@ -163,7 +167,18 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,
 				criteriaGt, criteriaUp).andOperator(criteriaPath);
 
-		criteria.andOperator(criteriaAll);
+		Criteria criteriaVall = new Criteria();
+        if (cls != null && cls.size() > 0) {
+            for (int i = 0; i < cls.size(); i++) {
+                String n = cname + "/" + cls.get(i);
+                Pattern p = Pattern.compile("[^" + n + "].*$");
+                criteriaVall = criteriaVall.and("cpathid").regex(p);
+            }
+            criteriaVall.andOperator(criteriaVall);
+            criteria.andOperator(criteriaAll,criteriaVall);
+        }else{
+            criteria.andOperator(criteriaAll);
+        }
 
 		// 查询知识
 		Query query = new Query(criteria);

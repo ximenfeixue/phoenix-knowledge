@@ -113,7 +113,6 @@
 		<if test="column_type !=null">
 			and column_type=#{column_type} 
 		</if>
-			<!-- 
 			and EXISTS(SELECT
 			1
 			FROM tb_column_visible v
@@ -127,7 +126,20 @@
 			</if>
 			
 			)
-			 -->
+	</select>
+  <select id="selectVisble" resultType="string" >
+		 SELECT
+			distinct v.column_name
+			FROM tb_column_visible v
+			WHERE v.state =1 
+			<if test="receive_user_id != null">
+				AND v.user_id = #{receive_user_id}
+			</if>
+			<if test="receive_user_id == null">
+				AND v.user_id = 0
+			</if>
+		 
+			AND v.sort_id LIKE CONCAT('00000000',#{column_type} ,'_________%')
 	</select>
 
 
