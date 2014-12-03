@@ -174,7 +174,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                 Pattern p = Pattern.compile("[^" + n + "].*$");
                 criteriaVall = criteriaVall.and("cpathid").regex(p);
             }
-            criteriaVall.andOperator(criteriaVall);
             criteria.andOperator(criteriaAll,criteriaVall);
         }else{
             criteria.andOperator(criteriaAll);
