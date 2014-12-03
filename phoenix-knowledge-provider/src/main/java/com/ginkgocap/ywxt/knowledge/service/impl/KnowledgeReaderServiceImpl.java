@@ -352,7 +352,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("type", type);
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
-
+		// 权限设置
+		result.put("selectIds", knowledge.getSelectedIds());
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
