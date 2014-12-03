@@ -38,6 +38,8 @@ public interface ColumnVisibleService {
      * @return
      * @author haiyan
      */
-	public Map<String,Object> queryHomeColumn(User user); 
+	public Map<String,Object> queryHomeColumn(User user);
+
+	public List<ColumnVisible> queryListByPidAndUserIdAndState(long userid, long cid, short state); 
 
 }

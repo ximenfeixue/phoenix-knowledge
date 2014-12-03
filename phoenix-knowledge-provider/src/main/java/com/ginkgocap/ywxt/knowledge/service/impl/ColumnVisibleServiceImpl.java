@@ -53,6 +53,26 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         }
         return null;
     }
+    @Override
+    public List<ColumnVisible> queryListByPidAndUserIdAndState(long userid, long cid,short state) {
+        ColumnVisibleExample cm = new ColumnVisibleExample();
+        cm.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(cid).andStateEqualTo(state);
+        List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
+        if (cs != null) {
+            return cs;
+        }
+        return null;
+    }
+    
+    public ColumnVisible queryListBycidAndUserIdAndState(long userid, long cid,short state) {
+        ColumnVisibleExample cm = new ColumnVisibleExample();
+        cm.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(cid).andStateEqualTo(state);
+        List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
+        if (cs != null&&cs.size()>0) {
+            return cs.get(0);
+        }
+        return null;
+    }
 
     @Override
     public ColumnVisible queryListByCidAndUserId(long userid, long cid) {
@@ -86,9 +106,13 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         if (idl != null && idl.size() > 0) {
             m.put("listl", idl);
             ls1 = columnVisibleValueMapper.selectSortIds(m);
+            //勾选父目录
+            choiseParent(userid,pcid,0);
         }else{//全部取消
             idl.add(-1l);
             m.put("listl", idl);
+            //取消父目录
+            choiseParent(userid,pcid,1);
         }
         List<Long> idnl = columnVisibleValueMapper.selectNotinIds(m);
         List<String> ls2 = new ArrayList<String>();
@@ -108,6 +132,26 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         }
     }
 
+    @SuppressWarnings("null")
+    private void choiseParent(long userid, long pcid, int i) {
+        if (pcid == 0) {
+            return;
+        }
+        ColumnVisible l = this.queryListBycidAndUserIdAndState(userid, pcid, (short) i);
+        if (l == null) {
+            short seti;
+            if (i == 0) {
+                seti = 1;
+            } else {
+                seti = 0;
+            }
+            ColumnVisible c = this.queryListBycidAndUserIdAndState(userid, pcid, seti);
+            c.setState((short) i);
+            ColumnVisibleExample example = new ColumnVisibleExample();
+            example.createCriteria().andUserIdEqualTo(userid).andColumnIdEqualTo(pcid);
+            columnVisibleMapper.updateByExampleSelective(c, example);
+        }
+    }
     @Override
     public void del(long id) {
         columnVisibleMapper.deleteByPrimaryKey(id);
