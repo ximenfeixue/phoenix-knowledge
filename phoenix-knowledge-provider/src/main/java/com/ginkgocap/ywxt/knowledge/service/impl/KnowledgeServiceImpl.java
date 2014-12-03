@@ -377,10 +377,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						Constants.ErrorMessage.paramNotValid.c());
 				return result;
 			}
-			Boolean flag = Boolean.parseBoolean(result.get("flag") + "");
-			if (flag) {
-				source = (short) Constants.KnowledgeSource.system.v();
-			}
 		}
 
 		// 删除该知识下的所有目录
@@ -703,10 +699,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 							Constants.ErrorMessage.paramNotValid.c());
 					return result;
 				}
-				Boolean flag = Boolean.parseBoolean(result.get("flag") + "");
-				if (flag) {
-					source = (short) Constants.KnowledgeSource.system.v();
-				}
 			}
 
 			// 删除该知识下的所有目录
@@ -759,10 +751,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					result.put(Constants.errormessage,
 							Constants.ErrorMessage.paramNotValid.c());
 					return result;
-				}
-				Boolean flag = Boolean.parseBoolean(result.get("flag") + "");
-				if (flag) {
-					source = (short) Constants.KnowledgeSource.system.v();
 				}
 			}
 
