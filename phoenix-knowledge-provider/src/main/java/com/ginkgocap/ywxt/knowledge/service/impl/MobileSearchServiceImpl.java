@@ -499,6 +499,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 	
 	// 首页栏目
+	@Override
 	public <T> Map<String, Object> selectAll(T t, int state,
 			String columnid, Long userid, int page, int size) {
 		logger.info(
