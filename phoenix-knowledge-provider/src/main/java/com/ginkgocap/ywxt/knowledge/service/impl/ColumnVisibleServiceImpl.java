@@ -87,7 +87,8 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             m.put("listl", idl);
             ls1 = columnVisibleValueMapper.selectSortIds(m);
         }else{//全部取消
-            m.put("listl", idl.add(-1l));
+            idl.add(-1l);
+            m.put("listl", idl);
         }
         List<Long> idnl = columnVisibleValueMapper.selectNotinIds(m);
         List<String> ls2 = new ArrayList<String>();
