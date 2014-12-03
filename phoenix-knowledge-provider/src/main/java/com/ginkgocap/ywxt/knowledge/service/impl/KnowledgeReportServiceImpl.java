@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -137,6 +138,7 @@ public class KnowledgeReportServiceImpl implements KnowledgeReportService {
 		PageUtil p = new PageUtil(count, page, row);
 		example.setLimitStart(p.getPageStartRow() - 1);
 		example.setLimitEnd(row);
+		example.setOrderByClause("createtime desc");
 		List<KnowledgeReport> list = knowledgeReportMapper
 				.selectByExample(example);
 		result.put("rows", list);
