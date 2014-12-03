@@ -87,5 +87,5 @@ public interface KnowledgeDao {
 	 */
 	int deleteKnowledgeRCategory(long knowledgeid, long categoryid);
 
-	void updateInvestment(Long id,String pic, String content, String desc);
+	void updateInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc);
 }

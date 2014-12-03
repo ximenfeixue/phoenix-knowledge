@@ -25,7 +25,27 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 	
 	//同义词
 	private String synonyms;
+	//引用
+	private String refrenceData;
+	//图册
+	private String imageBookData;
 	
+	public String getRefrenceData() {
+		return refrenceData;
+	}
+
+	public void setRefrenceData(String refrenceData) {
+		this.refrenceData = refrenceData;
+	}
+
+	public String getImageBookData() {
+		return imageBookData;
+	}
+
+	public void setImageBookData(String imageBookData) {
+		this.imageBookData = imageBookData;
+	}
+
 	public long getOid() {
 		return oid;
 	}
@@ -66,6 +86,8 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setSynonyms(vo.getSynonyms());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setRefrenceData(vo.getRefrenceData());
+		this.setImageBookData(vo.getImageBookData());
 		return this;
 	}
 
@@ -98,6 +120,8 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setSynonyms(vo.getSynonyms());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setRefrenceData(vo.getRefrenceData());
+		this.setImageBookData(vo.getImageBookData());
 		return this;
 	}
 

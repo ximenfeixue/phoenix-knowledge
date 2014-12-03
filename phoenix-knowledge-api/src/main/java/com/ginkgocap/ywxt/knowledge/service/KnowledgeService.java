@@ -110,7 +110,7 @@ public interface KnowledgeService {
 	 * 编辑知识(投融工具)
 	 */
 
-	public void updateKnowledgeForInvestment(Long id,String pic,String content,String desc,Long userId);
+	public void updateKnowledgeForInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc, Long userId);
 	
 
 	public void updateByPrimaryKey(KnowledgeBase kb);

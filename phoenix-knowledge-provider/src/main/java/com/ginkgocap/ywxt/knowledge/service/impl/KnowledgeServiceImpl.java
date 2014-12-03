@@ -1035,9 +1035,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public void updateKnowledgeForInvestment(Long id, String pic,
-			String content, String desc, Long userId) {
-		knowledgeDao.updateInvestment(id, pic, content, desc);
+	public void updateKnowledgeForInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc, Long userId) {
+		knowledgeDao.updateInvestment(id,pic,refrenceData,imageBookData,content,desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
 		// 大数据通知接口
 		Map<String, Object> params = new HashMap<String, Object>();

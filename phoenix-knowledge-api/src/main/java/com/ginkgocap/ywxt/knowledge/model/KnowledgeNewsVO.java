@@ -63,6 +63,28 @@ public class KnowledgeNewsVO implements Serializable {
 	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站,7永久删除)
 	private int knowledgestatus;
 
+	//引用
+		private String refrenceData;
+		//图册
+		private String imageBookData;
+		
+	
+	public String getRefrenceData() {
+			return refrenceData;
+		}
+
+		public void setRefrenceData(String refrenceData) {
+			this.refrenceData = refrenceData;
+		}
+
+		public String getImageBookData() {
+			return imageBookData;
+		}
+
+		public void setImageBookData(String imageBookData) {
+			this.imageBookData = imageBookData;
+		}
+
 	public int getKnowledgestatus() {
 		return knowledgestatus;
 	}

@@ -242,12 +242,14 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 	}
 
 	@Override
-	public void updateInvestment(Long id,String pic, String content, String desc) {
+	public void updateInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc) {
 		Criteria c = Criteria.where("_id").is(id);
 		Update update = new Update();
 		update.set("desc", desc);
 		update.set("pic", pic);
 		update.set("content", content);
+		update.set("refrenceData", refrenceData);
+		update.set("imageBookData", imageBookData);
 		Query query = new Query(c);
 		mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
 	}

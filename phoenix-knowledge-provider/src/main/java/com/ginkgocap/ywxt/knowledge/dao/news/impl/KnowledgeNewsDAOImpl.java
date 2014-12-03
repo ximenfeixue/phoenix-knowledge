@@ -241,6 +241,8 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("tags", vo.getTags());
 			update.set("oid", vo.getOid());
 			update.set("synonyms", vo.getSynonyms());
+			update.set("refrenceData", vo.getRefrenceData());
+			update.set("imageBookData", vo.getImageBookData());
 			mongoTemplate.updateFirst(query, update,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
