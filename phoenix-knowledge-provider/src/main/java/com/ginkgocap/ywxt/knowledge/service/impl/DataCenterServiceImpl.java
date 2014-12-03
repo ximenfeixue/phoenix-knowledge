@@ -294,7 +294,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 				Knowledge k = knowledgeReaderService.getKnowledgeById(
 						b.getKnowledgeId(), String.valueOf(b.getColumnType()));
 				Map<String, String> params = new HashMap<String, String>();
-				params.put("path", k.getContent());
+				params.put("path", "<html><body>"+k.getContent()+"</body></html>");
 				params.put("type", "html");
 				params.put("imgPath", GetUploadPath.getNginxRoot()
 						+ "/knowledge/import");

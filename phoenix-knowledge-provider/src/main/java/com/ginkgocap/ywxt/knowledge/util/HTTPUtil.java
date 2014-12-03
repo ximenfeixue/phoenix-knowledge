@@ -20,7 +20,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +39,12 @@ public class HTTPUtil {
 	public static LinkedBlockingQueue<StandByUrl> urls;
 
 	static {
-
-		httpClient = new DefaultHttpClient();
+		HttpParams my_httpParams = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(my_httpParams, 600000);
+		HttpConnectionParams.setSoTimeout(my_httpParams, 600000);
+		httpClient = new DefaultHttpClient(my_httpParams);
 
 		httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
-		
 		urls = new LinkedBlockingQueue<StandByUrl>();
 
 	}
