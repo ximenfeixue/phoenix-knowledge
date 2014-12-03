@@ -444,11 +444,11 @@ public class DataCenterServiceImpl implements DataCenterService {
 			params.put("imgPath", GetUploadPath.getNginxRoot()
 					+ "/knowledge/import");
 			// 返回请求结果
-			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "async_data/",
 					params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
-				logger.error("转换错误,转换返回值为空!知识ID为:{}", paramsMap.get("id"));
+				logger.error("转换错误,转换返回值为空!知识ID为:{}", paramsMap.get("kid"));
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				result.put(Constants.errormessage,
 						Constants.ErrorMessage.parseError.c());
