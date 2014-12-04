@@ -520,7 +520,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		Column column = columnMapper.selectByPrimaryKey(cid);
 
 		String ty = column.getColumnLevelPath().substring(0, 9);
-		int leng = column.getColumnLevelPath().length();
+//		int leng = column.getColumnLevelPath().length();
 		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
 		// 权限条件过滤
@@ -536,6 +536,9 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		// 查询权限表，获取可见文章ID列表
 		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
 				type);
+		
+		List<Long> cls = userPermissionValueMapper.selectVisbleColumnid(userid,
+		        type);
 		if (ids != null && ids.size() > 0) {
 			criteriaUp.and("_id").in(ids);
 		}
@@ -550,16 +553,23 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		// 该栏目路径下的所有文章条件
 		criteriaPath.and("cpathid").regex(reful + ".*$");
 		//汇总条件
-		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,
-				criteriaGt, criteriaUp).andOperator(criteriaPath);
+		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,criteriaGt, criteriaUp).andOperator(criteriaPath);
+		
+		   if (cls != null && cls.size() > 0) {//判断定制
+		            List<String> clstr = fillList(cls);
+		            criteriaAll.and("columnid").nin(clstr);
+		        }
 		
 		criteria.andOperator(criteriaAll);
-
 		// 查询知识
 		String str = "" + JSONObject.fromObject(criteria);
 		logger.info("查询首页数据,栏目ID为:{}条件{}",columnid,str);
 		Query query = new Query(criteria);
-		query.sort().on("createtime", Order.DESCENDING);
+		if (type == 10) {
+			query.sort().on("createtime", Order.DESCENDING);
+		} else {
+			query.sort().on("_id", Order.DESCENDING);
+		}
 		long count = mongoTemplate.count(query, names[length - 1]);
 		PageUtil p = new PageUtil((int) count, page, size);
 		query.limit(size);
@@ -569,6 +579,14 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				names[length - 1]));
 		return model;
 	}
+	
+    private List<String> fillList(List<Long> cls) {
+        List<String> clstr = new ArrayList<String>();
+        for (Long l : cls) {
+            clstr.add(l + "");
+        }
+        return clstr;
+    }
 
 	@Override
 	public int getCountForMyKnowledgeTag(long userId, String keyword) {
