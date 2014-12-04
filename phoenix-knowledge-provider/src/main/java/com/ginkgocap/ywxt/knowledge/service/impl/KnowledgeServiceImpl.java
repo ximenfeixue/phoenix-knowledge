@@ -569,9 +569,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Override
 	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if(user == null ){
-			result.put(Constants.status,Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,Constants.ErrorMessage.userNotLogin.c());
+		if (user == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.userNotLogin.c());
 			return result;
 		}
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
@@ -596,7 +597,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
-		//判断用户是否选择栏目
+		// 判断用户是否选择栏目
 		String columnPath = null;
 		Column column = null;
 		if (Long.parseLong(columnid) != 0) {
@@ -968,7 +969,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Override
 	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo,
 			User user) {
-
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 删除知识之前的权限
 		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
@@ -1011,6 +1011,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 			}
 		}
+		if (vo.isNeedUpdate()) {
+			updateKnowledgeByPermission(vo);
+		}
 		// 大数据通知接口
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("oper", "upd");
@@ -1022,9 +1025,39 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		return result;
 	}
 
+	/**
+	 * @param getkId
+	 * @param columnType
+	 * @param selectedIds
+	 */
+	private void updateKnowledgeByPermission(KnowledgeNewsVO vo) {
+		logger.info("进入修改知识权限请求,id:{},type{}", vo.getkId(), vo.getColumnType());
+		String obj = Constants.getTableName(vo.getColumnType());
+		try {
+			Criteria criteria = Criteria.where("_id").is(vo.getkId());
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("selectedIds", vo.getSelectedIds());
+
+			mongoTemplate.updateFirst(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("修改知识权限请求失败,id:{},type{}", vo.getkId(),
+					vo.getColumnType());
+		}
+
+		logger.info("修改知识权限请求成功,id:{},type{}", vo.getkId(), vo.getColumnType());
+
+	}
+
 	@Override
-	public void updateKnowledgeForInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc, Long userId) {
-		knowledgeDao.updateInvestment(id,pic,refrenceData,imageBookData,content,desc);
+	public void updateKnowledgeForInvestment(Long id, String pic,
+			String refrenceData, String imageBookData, String content,
+			String desc, Long userId) {
+		knowledgeDao.updateInvestment(id, pic, refrenceData, imageBookData,
+				content, desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
 		// 大数据通知接口
 		Map<String, Object> params = new HashMap<String, Object>();
