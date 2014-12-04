@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,10 +187,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		}
 
 		result.put("title", knowledge.getTitle());
-		result.put(
-				"content",
-				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
-						.getContent() : knowledge.getHcontent());
+		result.put("content", StringEscapeUtils.unescapeHtml4(StringUtils
+				.isBlank(knowledge.getHcontent()) ? knowledge.getContent()
+				: knowledge.getHcontent()));
 
 		result.put(
 				"createtime",
