@@ -141,7 +141,18 @@
 		 
 			AND v.sort_id LIKE CONCAT('00000000',#{column_type} ,'_________%')
 	</select>
-
+	
+  <select id="selectVisbleColumnid" resultType="long" >
+	SELECT DISTINCT v.column_id FROM tb_column c ,tb_column_visible v
+	WHERE c.id=v.column_id
+	AND (v.user_id=0
+	<if test="receive_user_id != null">
+		OR v.user_id= #{receive_user_id}
+	</if>
+	)
+	AND v.state=1
+	AND c.column_level_path LIKE CONCAT('00000000',#{column_type} ,'%')
+	</select>
 
  <delete id="delete">
  	 delete from tb_user_permission 
