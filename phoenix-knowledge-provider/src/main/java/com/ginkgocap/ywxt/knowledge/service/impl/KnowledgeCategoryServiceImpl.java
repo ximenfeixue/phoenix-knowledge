@@ -167,10 +167,10 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 					if (desc != null && desc.length() > 0) {
 						base.setcDesc(StringUtils.substring(HtmlToText.html2Text(desc), 0, 50));
 					} else {
-						base.setcDesc(StringUtils.substring(HtmlToText.html2Text(vo.getContent()), 0, 50));
+						base.setcDesc(vo.getDesc());
 					}
 				} else {
-					base.setcDesc(StringUtils.substring(HtmlToText.html2Text(vo.getContent()), 0, 50));
+					base.setcDesc(vo.getDesc());
 				}
 				base.setColumnId(Long.parseLong(vo.getColumnid()));
 				base.setColumnType(Short.parseShort(vo.getColumnType()));
