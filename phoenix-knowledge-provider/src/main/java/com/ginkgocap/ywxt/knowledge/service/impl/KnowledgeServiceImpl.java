@@ -327,9 +327,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						.v()) {
 
 			if (StringUtils.isBlank(vo.getDesc())) {
-				vo.setDesc(StringUtils.substring(
-						HtmlToText.html2Text(vo.getContent()), 0, 50)
-						+ "...");
+				String content = HtmlToText.html2Text(vo.getContent());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
 			}
 		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
@@ -654,9 +657,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						.v()) {
 
 			if (StringUtils.isBlank(vo.getDesc())) {
-				vo.setDesc(StringUtils.substring(
-						HtmlToText.html2Text(vo.getContent()), 0, 50)
-						+ "...");
+				String content = HtmlToText.html2Text(vo.getContent());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
 			}
 		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
