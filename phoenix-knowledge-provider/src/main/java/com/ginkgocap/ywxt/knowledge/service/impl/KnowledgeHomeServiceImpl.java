@@ -364,18 +364,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.beRelation:{}",
 				cid);
 		UserPermissionExample example = new UserPermissionExample();
-		example.createCriteria().andKnowledgeIdEqualTo(cid)
+		example.createCriteria().andKnowledgeIdEqualTo(id)
 				.andSendUserIdEqualTo(userId);
 		int count = countKnowledgeByMongo(id, t, cid, userId);
 		if (count > 0) {
 			return Constants.Relation.self.v();// 自己
 		}
+		example = new UserPermissionExample();
 		example.createCriteria().andKnowledgeIdEqualTo(id)
 				.andReceiveUserIdEqualTo(-1l);
 		count = userPermissionMapper.countByExample(example);
 		if (count > 0) {
 			return Constants.Relation.platform.v();// 全平台
 		}
+		example = new UserPermissionExample();
 		example.createCriteria().andKnowledgeIdEqualTo(id)
 				.andReceiveUserIdEqualTo(0l);
 		count = userPermissionMapper.countByExample(example);
