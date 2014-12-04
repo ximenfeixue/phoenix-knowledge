@@ -2555,7 +2555,10 @@ insert into `tb_column` (`id`, `columnName`, `user_id`, `parent_id`, `createtime
 insert into `tb_column` (`id`, `columnName`, `user_id`, `parent_id`, `createtime`, `path_name`, `column_level_path`, `del_status`, `update_time`, `subscribe_count`, `type`) values('2083','案件诉讼与仲裁','0','2075','2014-11-18 17:12:14','法律法规/其他类/港澳台法规/台湾法规/案件诉讼与仲裁','000000010000000008000000002000000003000000008','0','2014-11-18 17:12:14','0','10');
 insert into `tb_column` (`id`, `columnName`, `user_id`, `parent_id`, `createtime`, `path_name`, `column_level_path`, `del_status`, `update_time`, `subscribe_count`, `type`) values('2084','世贸组织及文件','0','2043','2014-11-18 17:12:14','法律法规/其他类/世贸组织及文件','000000010000000008000000003','0','2014-11-18 17:12:14','0','10');
 
-
+UPDATE tb_column c
+SET c.del_status = 1
+WHERE c.column_level_path LIKE '000000009%'
+     OR c.column_level_path LIKE '000000005%'
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(0,0,1,'全平台'); 
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(-2,0,1,'金桐脑'); 
 UPDATE phoenix_user.tb_user SET id =0 WHERE id = -2 
