@@ -104,7 +104,7 @@
 		<if test="receive_user_id != null">
 		and ( (receive_user_id=#{receive_user_id} and type != 4)
 			or send_user_id=#{receive_user_id}
-			or (type !=4 and ( receive_user_id=-1 or receive_user_id=0))
+			or (type !=4 and receive_user_id=-1)
 			) 
 		</if>
 		<if test="receive_user_id == null">
