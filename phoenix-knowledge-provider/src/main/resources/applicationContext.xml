@@ -82,7 +82,27 @@
 	</bean>
 
 
-
+	<bean id="freeMarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="classpath:/template/" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="number_format">#</prop>
+			</props>
+		</property>
+	</bean>
+	<bean class="com.ginkgocap.ywxt.knowledge.util.TemplateUtils">
+		<property name="freeMarkerConfigurer">
+			<ref local="freeMarkerConfigurer" />
+		</property>
+		<property name="charset">
+			<value>UTF-8</value>
+		</property>
+		<property name="templateLoaderPath" value="/template/" />
+	</bean>
 <!-- jpa -->
 
 

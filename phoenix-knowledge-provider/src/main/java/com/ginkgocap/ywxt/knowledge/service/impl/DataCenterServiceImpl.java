@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -33,6 +32,7 @@ import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
+import com.ginkgocap.ywxt.knowledge.util.TemplateUtils;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
 import com.ginkgocap.ywxt.knowledge.util.zip.ZipUtil;
@@ -293,39 +293,48 @@ public class DataCenterServiceImpl implements DataCenterService {
 				// TODO
 				Knowledge k = knowledgeReaderService.getKnowledgeById(
 						b.getKnowledgeId(), String.valueOf(b.getColumnType()));
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("path", "<html><body>"+k.getContent()+"</body></html>");
-				params.put("type", "html");
-				params.put("imgPath", GetUploadPath.getNginxRoot()
-						+ "/knowledge/import");
-				String str = HTTPUtil.post(httpUrlConfig.getParseUrl()
-						+ "data/", params);
-				Map<String, Object> result = new HashMap<String, Object>();
-				if (StringUtils.isBlank(str)) {
-					logger.error("转换错误,转换返回值为空!");
-					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.parseError.c());
-				}
-				ObjectMapper mapper = new ObjectMapper();
-				result = mapper.readValue(str, Map.class);
-				System.out.println("导出附件:" + str);
-				if (result != null && result.get("responseData") != null) {
-					JSONObject json = JSONObject.fromObject(result
-							.get("responseData"));
-					String ss = "";
-					if (json.get("data") != null) {
-						ss = json.getString("data");
+				if(k!=null ){
+					String content=k.getContent();
+					if(!StringUtils.contains(content, "<html>")){
+						Map<String,Object> map = new HashMap<String, Object>();
+						map.put("content", content);
+						content = TemplateUtils.mergeTemplateContent("bigDataHtml.ftl", map);
+						
 					}
-					if (StringUtils.isBlank(ss)) {
-						ss = result.get("responseData").toString();
+					Map<String, String> params = new HashMap<String, String>();
+					params.put("path", content);
+					params.put("type", "html");
+					params.put("imgPath", GetUploadPath.getNginxRoot()
+							+ "/knowledge/import");
+					String str = HTTPUtil.post(httpUrlConfig.getParseUrl()
+							+ "data/", params);
+					Map<String, Object> result = new HashMap<String, Object>();
+					if (StringUtils.isBlank(str)) {
+						logger.error("转换错误,转换返回值为空!");
+						result.put(Constants.status, Constants.ResultType.fail.v());
+						result.put(Constants.errormessage,
+								Constants.ErrorMessage.parseError.c());
 					}
-					byte[] html = Encodes.decodeBase64(ss);
-					File file = new File(knowledgeDir.getPath()
-							+ File.separator + b.getTitle() + ".doc");
-					FileOutputStream fos = new FileOutputStream(file);
-					fos.write(html);
-					fos.close();
+					ObjectMapper mapper = new ObjectMapper();
+					result = mapper.readValue(str, Map.class);
+					System.out.println("导出附件:" + str);
+					if (result != null && result.get("responseData") != null) {
+						JSONObject json = JSONObject.fromObject(result
+								.get("responseData"));
+						String ss = "";
+						if (json.get("data") != null) {
+							ss = json.getString("data");
+						}
+						if (StringUtils.isBlank(ss)) {
+							ss = result.get("responseData").toString();
+						}
+						byte[] html = Encodes.decodeBase64(ss);
+						File file = new File(knowledgeDir.getPath()
+								+ File.separator + b.getTitle() + ".doc");
+						FileOutputStream fos = new FileOutputStream(file);
+						fos.write(html);
+						fos.close();
+					}
 				}
 			}
 			// 生成附件包及内容
