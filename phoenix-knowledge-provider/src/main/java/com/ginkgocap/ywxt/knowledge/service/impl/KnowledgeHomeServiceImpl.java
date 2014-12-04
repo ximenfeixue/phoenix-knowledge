@@ -175,14 +175,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
                 Pattern p = Pattern.compile(cname+"/(?!"+cls.get(i)+").*$");
                 criteriaArr[i] = criteriav.and("cpathid").regex(p);
             }
-<<<<<<< HEAD
             criteriaVisAll.andOperator(criteriaArr);
             criteriaAll = new Criteria().orOperator(criteriaMy,criteriaGt, criteriaUp).andOperator(criteriaPath,criteriaVisAll);
-=======
-            criteria.andOperator(criteriaAll,criteriaVall);
-        }else{
-            criteria.andOperator(criteriaAll);
->>>>>>> refs/remotes/origin/release
         }
         criteria.andOperator(criteriaAll);
 
