@@ -370,13 +370,13 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (count > 0) {
 			return Constants.Relation.self.v();// 自己
 		}
-		example.createCriteria().andKnowledgeIdEqualTo(cid)
+		example.createCriteria().andKnowledgeIdEqualTo(id)
 				.andReceiveUserIdEqualTo(-1l);
 		count = userPermissionMapper.countByExample(example);
 		if (count > 0) {
 			return Constants.Relation.platform.v();// 全平台
 		}
-		example.createCriteria().andKnowledgeIdEqualTo(cid)
+		example.createCriteria().andKnowledgeIdEqualTo(id)
 				.andReceiveUserIdEqualTo(0l);
 		count = userPermissionMapper.countByExample(example);
 		if (count > 0) {
