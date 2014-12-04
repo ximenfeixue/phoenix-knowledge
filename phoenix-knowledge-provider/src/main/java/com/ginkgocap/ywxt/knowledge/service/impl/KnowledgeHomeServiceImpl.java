@@ -167,18 +167,18 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Criteria criteriaAll = new Criteria().orOperator(criteriaMy,
 				criteriaGt, criteriaUp).andOperator(criteriaPath);
 
-		Criteria criteriaVall = new Criteria();
-        if (cls != null && cls.size() > 0) {
+		Criteria criteriaVisAll = new Criteria();
+        if (cls != null && cls.size() > 0) {//判断定制
+            Criteria[] criteriaArr= new Criteria[cls.size()];
             for (int i = 0; i < cls.size(); i++) {
-                String n = cname + "/" + cls.get(i);
-                Pattern p = Pattern.compile("[^" + n + "].*$");
-                criteriaVall = criteriaVall.and("cpathid").regex(p);
+                Criteria criteriav = new Criteria();
+                Pattern p = Pattern.compile(cname+"/(?!"+cls.get(i)+").*$");
+                criteriaArr[i] = criteriav.and("cpathid").regex(p);
             }
-            criteriaVall.andOperator(criteriaVall);
-            criteria.andOperator(criteriaAll,criteriaVall);
-        }else{
-            criteria.andOperator(criteriaAll);
+            criteriaVisAll.andOperator(criteriaArr);
+            criteriaAll = new Criteria().orOperator(criteriaMy,criteriaGt, criteriaUp).andOperator(criteriaPath,criteriaVisAll);
         }
+        criteria.andOperator(criteriaAll);
 
 		// 查询知识
 		Query query = new Query(criteria);
