@@ -180,9 +180,64 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 			// 删除总评论数
 			knowledgeStaticsMapperManual.updateStatics(kId, delV, 0, 0, 0);
 		}
-
 		result.putAll(findCommentList(kId, kc.getParentid(), pno, psize, user));
 		result.put("pno", 1);
+		result.put(Constants.status, Constants.ResultType.success.v());
+
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService#delComment
+	 * (long, long, com.ginkgocap.ywxt.user.model.User, java.lang.Integer)
+	 */
+	@Override
+	public Map<String, Object> delComment(long id, long kId, User user,
+			Integer pno) {
+		// TODO 待优化处理
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		KnowledgeComment kc = knowledgeCommentMapper.selectByPrimaryKey(id);
+		if (kc == null) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.commentNotExsit.c());
+			return result;
+		}
+		if (user.getId() != kc.getUserId()) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delCommentNotPermission.c());
+			return result;
+		}
+
+		int v = knowledgeCommentMapper.deleteByPrimaryKey(id);
+		if (v == 0) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.delCommentFail.c());
+			return result;
+		} else {
+			int delV = -1;
+			// 修改子评论数
+			if (kc.getParentid() != 0) {
+				knowledgeCommentMapperManual.updateCountByPrimaryKey(
+						kc.getParentid(), -1);
+			} else {
+				KnowledgeCommentExample example = new KnowledgeCommentExample();
+				Criteria criteria = example.createCriteria();
+				criteria.andParentidEqualTo(id);
+				delV = delV - knowledgeCommentMapper.deleteByExample(example);
+			}
+			// 删除总评论数
+			knowledgeStaticsMapperManual.updateStatics(kId, delV, 0, 0, 0);
+		}
+		result.putAll(findCommentList(kId, kc.getParentid(), pno == null ? 1
+				: pno, psize, user));
+		result.put("pno", pno == null ? 1 : pno);
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;

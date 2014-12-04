@@ -50,4 +50,14 @@ public interface KnowledgeCommentService {
 	Map<String, Object> delComment(long id, long kId, User user);
 
 	int deleteCommentByknowledgeId(long knowledgeid, long userid);
+
+	/**
+	 * @param id
+	 * @param kId
+	 * @param user
+	 * @param pno
+	 * @return
+	 */
+	Map<String, Object> delComment(long id, long kId,
+			User user, Integer pno); 
 }
