@@ -84,7 +84,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 		params.put("hlpre", hlpre);
 		params.put("hlext", hlext);
-		params.put("qf", "title,tags,content");
+		params.put("qf", "title,tags,content,desc");
 		params.put("pno", pno);
 		params.put("psize", psize);
 
