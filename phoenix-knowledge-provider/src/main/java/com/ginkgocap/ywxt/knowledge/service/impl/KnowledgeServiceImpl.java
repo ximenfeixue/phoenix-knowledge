@@ -318,8 +318,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
 		}
 
-		if (StringUtils.isBlank(vo.getDesc())) {
-			vo.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		// 如果是行业，投融工具，经典案例，不从内容取简介
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Investment
+				.v()
+				|| Integer.parseInt(vo.getColumnType()) != Constants.Type.Industry
+						.v()
+				|| Integer.parseInt(vo.getColumnType()) != Constants.Type.Case
+						.v()) {
+
+			if (StringUtils.isBlank(vo.getDesc())) {
+				vo.setDesc(StringUtils.substring(
+						HtmlToText.html2Text(vo.getContent()), 0, 50)
+						+ "...");
+			}
 		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
@@ -634,8 +645,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setColumnPath(Constants.KnowledgeType.Article.c());
 
 		}
-		if (StringUtils.isBlank(vo.getDesc())) {
-			vo.setDesc(HtmlToText.htmlTotest(vo.getContent()));
+		// 如果是行业，投融工具，经典案例，不从内容取简介
+		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Investment
+				.v()
+				|| Integer.parseInt(vo.getColumnType()) != Constants.Type.Industry
+						.v()
+				|| Integer.parseInt(vo.getColumnType()) != Constants.Type.Case
+						.v()) {
+
+			if (StringUtils.isBlank(vo.getDesc())) {
+				vo.setDesc(StringUtils.substring(
+						HtmlToText.html2Text(vo.getContent()), 0, 50)
+						+ "...");
+			}
 		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
