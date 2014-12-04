@@ -187,9 +187,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		}
 
 		result.put("title", knowledge.getTitle());
-		result.put("content", StringEscapeUtils.unescapeHtml4(StringUtils
-				.isBlank(knowledge.getHcontent()) ? knowledge.getContent()
-				: knowledge.getHcontent()));
+		result.put(
+				"content",
+				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
+						.getContent() : knowledge.getHcontent());
 
 		result.put(
 				"createtime",
