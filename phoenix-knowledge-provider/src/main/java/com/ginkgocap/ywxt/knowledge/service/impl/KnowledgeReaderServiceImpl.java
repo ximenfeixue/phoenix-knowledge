@@ -200,7 +200,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("author", knowledge.getUname());
 		result.put("source",
 				knowledge.getSource() == null ? "" : knowledge.getSource());
-		result.put("asso", StringEscapeUtils.escapeHtml4(knowledge.getAsso()));
+		result.put("asso", knowledge.getAsso());
 
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
