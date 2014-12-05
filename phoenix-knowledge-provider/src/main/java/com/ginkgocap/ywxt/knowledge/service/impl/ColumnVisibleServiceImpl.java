@@ -125,8 +125,9 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             if (pcid == 0) {
                 columnVisibleValueMapper.updateOneLevelTrue(m);
                 return;
+            }else{
+                columnVisibleValueMapper.update(m);
             }
-            columnVisibleValueMapper.update(m);
         }
         m.put("instate", 1);
         m.put("state", 1);
