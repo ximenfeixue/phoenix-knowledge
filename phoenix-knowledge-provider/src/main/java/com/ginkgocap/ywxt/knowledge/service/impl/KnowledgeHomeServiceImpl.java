@@ -36,9 +36,11 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.Branch;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
@@ -77,6 +79,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	private ColumnKnowledgeMapper columnKnowledgeMapper;
 	@Autowired
 	private UserPermissionValueMapper userPermissionValueMapper;
+	@Resource
+	private KnowledgeReaderService knowledgeReaderService;
+	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
@@ -377,11 +382,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (count > 0) {
 			return Constants.Relation.platform.v();// 全平台
 		}
-		example = new UserPermissionExample();
-		example.createCriteria().andKnowledgeIdEqualTo(id)
-				.andReceiveUserIdEqualTo(0l);
-		count = userPermissionMapper.countByExample(example);
-		if (count > 0) {
+		
+		Knowledge knowledge  = knowledgeReaderService.getKnowledgeById(id, t+"");
+		if(knowledge != null){
 			return Constants.Relation.jinTN.v();// gt
 		}
 		return Constants.Relation.friends.v();// 好友可见
