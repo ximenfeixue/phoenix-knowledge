@@ -380,7 +380,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}
 			userPermission.setDesc(content);
 		}
-		userPermission.setPicPath(vo.getPic());
+		if(vo!=null && vo.getPic()!=null && !"".equals(vo.getPic())){
+			userPermission.setPicPath(vo.getPic());
+		}else{
+			userPermission.setPicPath("");
+		}
 		userPermission.setTags(vo.getTags());
 		mongoTemplate.insert(userPermission);
 		return false;
