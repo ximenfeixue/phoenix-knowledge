@@ -349,7 +349,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
 
 				int categoryV = knowledgeCategoryService
-						.insertKnowledgeRCategory(kId, cIds, userId, username,
+						.insertKnowledgeRCategory(draftKId, cIds, userId, username,
 								columnPath, vo);
 				if (categoryV == 0) {
 					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
