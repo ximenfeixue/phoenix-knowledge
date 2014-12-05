@@ -24,7 +24,7 @@
 	
 	<update id="updateOneLevelTrue" parameterType="java.util.Map">
 		UPDATE tb_column_visible t SET t.state= #{state} ,t.utime=#{utime}
-		WHERE t.user_id=#{userId} 
+		WHERE t.user_id=#{userId} and 
 			<foreach collection="listl" index="index" item="tag" open="("
 				separator="or" close=")">
 				 sort_id = #{tag}
