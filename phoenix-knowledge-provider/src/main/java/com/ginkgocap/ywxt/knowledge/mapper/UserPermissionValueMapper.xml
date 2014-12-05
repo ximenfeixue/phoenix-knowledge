@@ -113,10 +113,10 @@
 		<if test="column_type !=null">
 			and column_type=#{column_type} 
 		</if>
-			and EXISTS(SELECT
+			and not EXISTS(SELECT
 			1
 			FROM tb_column_visible v
-			WHERE v.state = 0
+			WHERE v.state = 1
 			AND v.column_id = c.column_id
 			<if test="receive_user_id != null">
 				and user_id=#{receive_user_id}
