@@ -81,7 +81,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	private UserPermissionValueMapper userPermissionValueMapper;
 	@Resource
 	private KnowledgeReaderService knowledgeReaderService;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
@@ -137,11 +137,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Column column = columnMapper.selectByPrimaryKey(cid);
 
 		String ty = column.getColumnLevelPath().substring(0, 9);
-//		String cname = column.getColumnname();
+		// String cname = column.getColumnname();
 		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
 		// 权限条件过滤
-		Criteria criteriaUp = new Criteria();
+		Criteria criteriaUp = null;
 		// 我的知识过滤
 		Criteria criteriaMy = new Criteria();
 		// 金桐脑过滤
@@ -153,11 +153,12 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 查询权限表，获取可见文章ID列表
 		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
 				type);
-//		List<String> cls = userPermissionValueMapper.selectVisble(userid,
-//		        type);
+		// List<String> cls = userPermissionValueMapper.selectVisble(userid,
+		// type);
 		List<Long> cls = userPermissionValueMapper.selectVisbleColumnid(userid,
-		        type);
+				type);
 		if (ids != null && ids.size() > 0) {
+			criteriaUp = new Criteria();
 			criteriaUp.and("_id").in(ids);
 		}
 		// 我的知识条件
@@ -169,43 +170,53 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 该栏目路径下的所有文章条件
 		criteriaPath.and("cpathid").regex(reful + ".*$");
 		// 汇总条件
-        Criteria criteriaAll = new Criteria().orOperator(criteriaMy, criteriaGt, criteriaUp).andOperator(criteriaPath);
-        //		Criteria criteriaVisAll = new Criteria();
-        if (cls != null && cls.size() > 0) {//判断定制
-        //            Criteria[] criteriaArr= new Criteria[cls.size()];
-        //            for (int i = 0; i < cls.size(); i++) {
-        //                Criteria criteriav = new Criteria();
-        //                Pattern p = Pattern.compile(cname+"/(?!"+cls.get(i)+").*$");
-        //                criteriaArr[i] = criteriav.and("cpathid").regex(p);
-        //            }
-        //            criteriaVisAll.andOperator(criteriaArr);
-            List<String> clstr = fillList(cls);
-            criteriaAll.and("columnid").nin(clstr);
-        }
-        criteria.andOperator(criteriaAll);
-        // 查询知识
-        Query query = new Query(criteria);
-        if (type == 10) {
-            query.sort().on("createtime", Order.DESCENDING);
-        } else {
-            query.sort().on("_id", Order.DESCENDING);
-        }
-        query.limit(size);
-        query.skip((page - 1) * size);
-        model.put("list", (List) mongoTemplate.find(query, t.getClass(), names[length - 1]));
-        logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
-        return model;
+		Criteria criteriaAll = new Criteria();
+		if (criteriaUp == null) {
+
+			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
+					criteriaPath);
+		} else {
+
+			criteriaAll.orOperator(criteriaMy, criteriaGt, criteriaUp)
+					.andOperator(criteriaPath);
+		}
+		// Criteria criteriaVisAll = new Criteria();
+		if (cls != null && cls.size() > 0) {// 判断定制
+			// Criteria[] criteriaArr= new Criteria[cls.size()];
+			// for (int i = 0; i < cls.size(); i++) {
+			// Criteria criteriav = new Criteria();
+			// Pattern p = Pattern.compile(cname+"/(?!"+cls.get(i)+").*$");
+			// criteriaArr[i] = criteriav.and("cpathid").regex(p);
+			// }
+			// criteriaVisAll.andOperator(criteriaArr);
+			List<String> clstr = fillList(cls);
+			criteriaAll.and("columnid").nin(clstr);
+		}
+		criteria.andOperator(criteriaAll);
+		// 查询知识
+		Query query = new Query(criteria);
+		if (type == 10) {
+			query.sort().on("createtime", Order.DESCENDING);
+		} else {
+			query.sort().on("_id", Order.DESCENDING);
+		}
+		query.limit(size);
+		query.skip((page - 1) * size);
+		model.put("list", (List) mongoTemplate.find(query, t.getClass(),
+				names[length - 1]));
+		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
+		return model;
 	}
 
-    private List<String> fillList(List<Long> cls) {
-        List<String> clstr = new ArrayList<String>();
-        for (Long l : cls) {
-            clstr.add(l + "");
-        }
-        return clstr;
-    }
+	private List<String> fillList(List<Long> cls) {
+		List<String> clstr = new ArrayList<String>();
+		for (Long l : cls) {
+			clstr.add(l + "");
+		}
+		return clstr;
+	}
 
-    // 首页主页
+	// 首页主页
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> List<T> selectIndexByParam(Constants.Type ty, int page, int size) {
@@ -313,7 +324,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			for (Map<String, Object> map : kcl) {
 				int haveFile = 0;
 				int fileSize = 0;
-				if (map != null && map.get("taskid")!=null) {
+				if (map != null && map.get("taskid") != null) {
 					if (StringUtils.isNotBlank(map.get("taskid").toString())) {
 						Map<String, Object> attMap = attachmentService
 								.queryAttachmentByTaskId(map.get("taskid")
@@ -382,9 +393,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (count > 0) {
 			return Constants.Relation.platform.v();// 全平台
 		}
-		
-		Knowledge knowledge  = knowledgeReaderService.getKnowledgeById(id, t+"");
-		if(knowledge != null){
+
+		Knowledge knowledge = knowledgeReaderService.getKnowledgeById(id, t
+				+ "");
+		if (knowledge != null) {
 			return Constants.Relation.jinTN.v();// gt
 		}
 		return Constants.Relation.friends.v();// 好友可见
