@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -354,10 +355,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String content = vo.getContent();
 			if (content == null) {
 				content = "";
-			} else if (content.length() < 90) {
-				content = HtmlToText.html2Text(content);
 			} else {
 				content = HtmlToText.html2Text(content);
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}else{
+					content = "";
+				}
 			}
 			userPermission.setDesc(content);
 		}
