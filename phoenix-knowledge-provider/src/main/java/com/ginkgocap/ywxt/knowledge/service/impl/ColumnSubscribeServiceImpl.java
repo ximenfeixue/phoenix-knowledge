@@ -325,7 +325,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		if (source == Constants.Relation.jinTN.v()) {
 			c = org.springframework.data.mongodb.core.query.Criteria
 					.where("columnid").in(columnList).and("uid")
-					.is(Ids.jinTN.v());
+					.is(Ids.jinTN.v()).and("status").is("4");
 		} else if (source == Constants.Relation.self.v()) {
 			logger.info("进入查询我的订阅自己的知识Id列表,类型:{},栏目列表{}", source, columnList);
 			// 订阅下自己的知识ID，knowledgeIds
@@ -334,7 +334,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			logger.info("结束查询我的订阅自己的知识Id列表,类型:{},知识ID列表{}", source,
 					knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds);
+					"_id").in(knowledgeIds).and("status").is("4");
 
 		} else if (source == Constants.Relation.friends.v()) {
 			logger.info("进入查询我的订阅分享给我的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
@@ -345,7 +345,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			logger.info("结束查询我的订阅分享到我的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
 					knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds);
+					"_id").in(knowledgeIds).and("status").is("4");
 		} else if (source == Constants.Relation.platform.v()) {
 			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
 					columnList);
@@ -355,7 +355,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
 					knowledgeIds);
 			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds);
+					"_id").in(knowledgeIds).and("status").is("4");
 		}
 		if (StringUtils.isNotBlank(keywords)) {
 			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$",
