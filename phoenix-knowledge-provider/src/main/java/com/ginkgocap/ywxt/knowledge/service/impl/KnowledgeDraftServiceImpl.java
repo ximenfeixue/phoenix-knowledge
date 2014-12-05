@@ -162,6 +162,15 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 					return result;
 				}
 			}
+
+			if (StringUtils.isNotBlank(vo.getSubmitTime())) {
+				vo.setSubmitTime(StringUtils.substring(vo.getSubmitTime(), 0,
+						10));
+			}
+			if (StringUtils.isNotBlank(vo.getPerformTime())) {
+				vo.setSubmitTime(StringUtils.substring(vo.getPerformTime(), 0,
+						10));
+			}
 		}
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
@@ -349,8 +358,8 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
 
 				int categoryV = knowledgeCategoryService
-						.insertKnowledgeRCategory(draftKId, cIds, userId, username,
-								columnPath, vo);
+						.insertKnowledgeRCategory(draftKId, cIds, userId,
+								username, columnPath, vo);
 				if (categoryV == 0) {
 					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
 							kId, cIds);
