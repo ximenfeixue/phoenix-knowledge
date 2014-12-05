@@ -95,7 +95,9 @@
 <div class="main warp">
     <div class="m_left">
         <div class="newsinfo">
-           ${content} 
+        	 <div id="JS_aContent" class="a_content" data-layer="true">
+           		${content} 
+           	</div>
         </div>
     </div>
 </div>
