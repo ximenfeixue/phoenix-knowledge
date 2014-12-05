@@ -382,11 +382,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (count > 0) {
 			return Constants.Relation.platform.v();// 全平台
 		}
-		
 		Knowledge knowledge  = knowledgeReaderService.getKnowledgeById(id, t+"");
-		if(knowledge != null){
-			return Constants.Relation.jinTN.v();// gt
-		}
+        if (knowledge != null && knowledge.getUid() == 0) {
+            return Constants.Relation.jinTN.v();// gt
+        }
 		return Constants.Relation.friends.v();// 好友可见
 	}
 
