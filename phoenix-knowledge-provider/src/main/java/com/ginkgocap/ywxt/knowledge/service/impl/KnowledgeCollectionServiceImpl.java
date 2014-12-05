@@ -302,9 +302,11 @@ public class KnowledgeCollectionServiceImpl implements
 			knowledgeBase.setKnowledgeId(vo.getKnowledge().getId());
 			knowledgeBase.setAuthor(user.getName());
 			knowledgeBase
-					.setcDesc(vo.getKnowledge().getContent().length() > 50 ? vo
+					.setcDesc(StringUtils.isBlank(vo.getKnowledge().getDesc()) ? vo
+							.getKnowledge().getContent().length() > 50 ? vo
 							.getKnowledge().getContent().substring(0, 50) : vo
-							.getKnowledge().getContent());
+							.getKnowledge().getContent() : vo.getKnowledge()
+							.getDesc());
 			knowledgeBase.setColumnId(Long.parseLong(vo.getKnowledge()
 					.getColumnid()));
 			knowledgeBase.setColumnType(Short.parseShort(vo.getColumType()));

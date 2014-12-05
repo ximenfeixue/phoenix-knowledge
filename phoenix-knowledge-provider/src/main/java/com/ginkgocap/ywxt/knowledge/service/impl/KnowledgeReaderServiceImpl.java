@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ginkgocap.ywxt.knowledge.dao.reader.KnowledgeReaderDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
@@ -274,6 +275,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	 *            知识类型
 	 * @return
 	 */
+	@Transactional
 	private Boolean addKnowledgeStatics(long kId, long kUId, String type) {
 		Knowledge knowledge = getKnowledgeById(kId, type);
 		if (knowledge == null) {
@@ -317,9 +319,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		logger.info("--进入查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		Map<String, Object> result = new HashMap<String, Object>();
-		// 添加点击数
-		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
-				Constants.StaticsValue.clickCount.v());
 
 		Knowledge knowledge = getKnowledgeById(kid, type);
 		// 查询知识信息
@@ -338,6 +337,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		// 存储阅读器头部信息
 		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
+		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
+		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
+				Constants.StaticsValue.clickCount.v());
 		// 存储正文内容
 		result.putAll(getKnowledgeContent(knowledge, type));
 		// 查询附件
