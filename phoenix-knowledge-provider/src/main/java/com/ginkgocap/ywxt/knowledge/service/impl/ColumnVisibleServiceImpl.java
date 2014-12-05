@@ -124,7 +124,6 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             m.put("listl", ls1);
             if (pcid == 0) {
                 columnVisibleValueMapper.updateOneLevelTrue(m);
-                return;
             }else{
                 columnVisibleValueMapper.update(m);
             }
