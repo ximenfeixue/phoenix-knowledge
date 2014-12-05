@@ -275,7 +275,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 知识来源，（0，系统，1，用户）
-		Short source = (short) Constants.KnowledgeSource.user.v();
+//		Short source = (short) Constants.KnowledgeSource.user.v();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
 				.getColumnid();
 		// TODO 判断用户是否选择栏目
@@ -463,16 +463,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 初始化知识统计信息
-		int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
-
-		if (sV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
-					vo.getkId(), vo.getColumnType());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
+//		int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
+//
+//		if (sV == 0) {
+//			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
+//					vo.getkId(), vo.getColumnType());
+//			result.put(Constants.status, Constants.ResultType.fail.v());
+//			result.put(Constants.errormessage,
+//					Constants.ErrorMessage.addKnowledgeFail.c());
+//			return result;
+//		}
 		try {
 			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
 					.v()) {
@@ -603,7 +603,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return result;
 		}
 		// 知识来源，（0，系统，1，用户）
-		Short source = (short) Constants.KnowledgeSource.user.v();
+//		Short source = (short) Constants.KnowledgeSource.user.v();
 		// 获取Session用户值
 		long userId = user.getId();
 		String username = user.getName();
@@ -816,15 +816,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 初始化知识统计信息
-		int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
-		if (sV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
-					vo.getkId(), vo.getColumnType());
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
+//		int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
+//		if (sV == 0) {
+//			logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
+//					vo.getkId(), vo.getColumnType());
+//			result.put(Constants.status, Constants.ResultType.fail.v());
+//			result.put(Constants.errormessage,
+//					Constants.ErrorMessage.addKnowledgeFail.c());
+//			return result;
+//		}
 		// 动态存观点
 		try {
 			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
@@ -960,9 +960,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 			}
 			// 知识恢复的同时，将统计信息也恢复
-			knowledgeStaticsService.initKnowledgeStatics(knowledgeid,
-					knowledgerecycle.getTitle(),
-					Short.parseShort(knowledgerecycle.getType()));
+//			knowledgeStaticsService.initKnowledgeStatics(knowledgeid,
+//					knowledgerecycle.getTitle(),
+//					Short.parseShort(knowledgerecycle.getType()));
 			// 大数据通知接口
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("oper", "add");
