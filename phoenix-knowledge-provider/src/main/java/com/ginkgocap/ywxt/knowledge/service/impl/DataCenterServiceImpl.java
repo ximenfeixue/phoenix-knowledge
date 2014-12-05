@@ -293,13 +293,14 @@ public class DataCenterServiceImpl implements DataCenterService {
 				// TODO
 				Knowledge k = knowledgeReaderService.getKnowledgeById(
 						b.getKnowledgeId(), String.valueOf(b.getColumnType()));
-				if(k!=null ){
-					String content=k.getContent();
-					if(!StringUtils.contains(content, "<html>")){
-						Map<String,Object> map = new HashMap<String, Object>();
+				if (k != null) {
+					String content = k.getContent();
+					if (!StringUtils.contains(content, "<html>")) {
+						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("content", content);
-						content = TemplateUtils.mergeTemplateContent("bigDataHtml.ftl", map);
-						
+						content = TemplateUtils.mergeTemplateContent(
+								"bigDataHtml.ftl", map);
+
 					}
 					Map<String, String> params = new HashMap<String, String>();
 					params.put("path", content);
@@ -311,7 +312,8 @@ public class DataCenterServiceImpl implements DataCenterService {
 					Map<String, Object> result = new HashMap<String, Object>();
 					if (StringUtils.isBlank(str)) {
 						logger.error("转换错误,转换返回值为空!");
-						result.put(Constants.status, Constants.ResultType.fail.v());
+						result.put(Constants.status,
+								Constants.ResultType.fail.v());
 						result.put(Constants.errormessage,
 								Constants.ErrorMessage.parseError.c());
 					}
@@ -453,8 +455,8 @@ public class DataCenterServiceImpl implements DataCenterService {
 			params.put("imgPath", GetUploadPath.getNginxRoot()
 					+ "/knowledge/import");
 			// 返回请求结果
-			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "async_data/",
-					params);
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl()
+					+ "async_data/", params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
 				logger.error("转换错误,转换返回值为空!知识ID为:{}", paramsMap.get("kid"));
@@ -553,7 +555,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 
 	/**
 	 * 获取知识列表
-	 * @param str json字符串
+	 * 
+	 * @param str
+	 *            json字符串
 	 * @return
 	 * @throws IOException
 	 * @throws JsonParseException
@@ -570,17 +574,19 @@ public class DataCenterServiceImpl implements DataCenterService {
 		Map<String, Object> bsnMaps = (Map<String, Object>) bsnObjects;
 
 		// 解析bsnMaps
-		for (int i = 1; i < bsnMaps.size() + 1; i++) {
-			String bsnStr = bsnMaps.get(i + "") + "";
-			if (StringUtils.isBlank(bsnStr)
-					|| StringUtils.equalsIgnoreCase(bsnStr, "null")) {
-				continue;
-			}
-			JSONObject bsnMap = JSONObject.fromObject(bsnStr);
-			// 将字符串生成单个MAP
-			Map<String, Object> singleMap = (Map<String, Object>) bsnMap;
-			if (singleMap != null) {
-				list.add(singleMap);
+		if (bsnMaps != null && bsnMaps.size() > 0) {
+			for (int i = 1; i < bsnMaps.size() + 1; i++) {
+				String bsnStr = bsnMaps.get(i + "") + "";
+				if (StringUtils.isBlank(bsnStr)
+						|| StringUtils.equalsIgnoreCase(bsnStr, "null")) {
+					continue;
+				}
+				JSONObject bsnMap = JSONObject.fromObject(bsnStr);
+				// 将字符串生成单个MAP
+				Map<String, Object> singleMap = (Map<String, Object>) bsnMap;
+				if (singleMap != null) {
+					list.add(singleMap);
+				}
 			}
 		}
 		return list;
