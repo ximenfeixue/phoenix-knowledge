@@ -54,7 +54,7 @@ create table tb_attachment
    file_type            varchar(30) comment '文件类型',
    download_url         varchar(500) comment '下载地址',
    userId               bigint(20) comment '创建人id',
-   createtime           timestamp,
+   createtime           timestamp null,
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -69,11 +69,11 @@ create table tb_column
    columnName           varchar(50) comment '栏目名称',
    user_id              bigint(20) comment '用户Id',
    parent_id            bigint(20) comment '父级id',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    path_name            varchar(255) comment '路径名称',
    column_level_path    varchar(70) comment '分类层级路径  00000000100000001',
    del_status           tinyint comment '删除状态(1：删除 0- 正常)',
-   update_time          timestamp comment '更新时间',
+   update_time          timestamp null comment '更新时间',
    subscribe_count      bigint(20) comment '订阅数',
    type                 smallint comment '栏目类型',
    primary key (id)
@@ -106,7 +106,7 @@ create table tb_column_tag
    column_path          varchar(255) comment '栏目路径',
    tag                  varchar(255) comment '标签（多个标签用逗号分隔）',
    user_id              bigint(20) comment '用户id',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -142,7 +142,7 @@ create table tb_knowledge_base
    title                varchar(255) comment '标题',
    author               varchar(50) comment '作者名称',
    path                 varchar(50) comment '栏目路径',
-   createtime           timestamp comment '发表时间',
+   createtime           timestamp null comment '发表时间',
    tag                  varchar(255) comment '标签',
    c_desc               varchar(255) comment '简介',
    column_id            bigint(20) comment '栏目id',
@@ -165,7 +165,7 @@ create table tb_knowledge_book_bookmark
    pageno               int(5) comment '书签页码',
    title                varchar(50) comment '书签标题',
    b_desc               varchar(255) comment '书签描述',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
@@ -192,7 +192,7 @@ create table tb_knowledge_collection
 (
    id                   bigint(20) not null auto_increment comment 'id',
    knowledge_id         bigint(20) comment '知识id',
-   createtime           timestamp comment '收藏时间',
+   createtime           timestamp null comment '收藏时间',
    source               int(1) comment '来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)',
    category_id          bigint(20) comment '目录id(左侧目录.id)',
    collection_tags      varchar(255) comment '收藏标签',
@@ -211,7 +211,7 @@ create table tb_knowledge_column_subscribe
    id                   bigint(20) not null auto_increment comment 'id',
    user_id              bigint(20) comment '用户id',
    column_id            bigint(20) comment '栏目id',
-   sub_date             timestamp comment '订阅时间',
+   sub_date             timestamp null comment '订阅时间',
    column_type          smallint comment '栏目类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
    primary key (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
@@ -226,7 +226,7 @@ create table tb_knowledge_comment
    id                   bigint(20) not null auto_increment comment '评论id',
    knowledge_id         bigint(20) comment '知识id',
    content              varchar(500) comment '评论内容',
-   createtime           timestamp comment '评论时间',
+   createtime           timestamp null comment '评论时间',
    status               boolean comment '评论状态(0：已删除，1：正常)',
    parentid             bigint(20) comment '上级评论id（0：根级，非0：对应评论Id）',
    user_id              bigint(20) comment '用户id',
@@ -246,7 +246,7 @@ create table tb_knowledge_draft
    knowledge_id         bigint(20) not null auto_increment comment '知识id',
    draftname            varchar(100) comment '草稿名称',
    drafttype            varchar(10) comment '草稿类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
-   createtime           timestamp comment '保存时间',
+   createtime           timestamp null comment '保存时间',
    userid               bigint(20) comment '用户ID',
    type                 char(2) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
    primary key (knowledge_id)
@@ -262,7 +262,7 @@ create table tb_knowledge_recycle
    knowledge_id         bigint(20) not null comment '知识id',
    title                varchar(100) comment '知识名称',
    type                 varchar(10) comment '类型（,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
-   createtime           timestamp comment '更新时间',
+   createtime           timestamp null comment '更新时间',
    userid               bigint(20) comment '用户ID',
    catetoryid           bigint(20) comment '目录ID',
    primary key (knowledge_id)
@@ -279,11 +279,11 @@ create table tb_knowledge_report
    knowledge_id         bigint(20) comment '知识id',
    type                 char(2) comment '类型(1-色情淫秽 2-骚扰谩骂 3- 广告欺诈 4-反动言论 5-其他)',
    rep_desc             varchar(500) comment '描述',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    user_id              bigint(20) comment '举报人id',
    userName             varchar(50) comment '举报人名',
    knowledgeTitle       varchar(255) comment '知识标题',
-   updateTime           timestamp comment '修改时间',
+   updateTime           timestamp null comment '修改时间',
    results              varchar(500) comment '处理结果',
    status               int(1) comment '处理状态( 0 -未处理 1-已处理  )',
    columnType           smallint comment '栏目类型',
@@ -318,7 +318,7 @@ create table tb_user_category
    user_id              bigint(20) comment '用户Id',
    categoryName         varchar(50) comment '目录名称',
    sortid               varchar(255) comment '路径Id，000000001000000001',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    path_name            varchar(255) comment '路径名称',
    parent_id            bigint(20) comment '父级id',
    category_type        smallint comment '0 正常目录 1 收藏夹',
@@ -337,7 +337,7 @@ create table tb_user_permission
    send_user_id         bigint(20) comment '发起者id',
    type                 int(1) comment '类型（2-大乐，3-中乐，4-小乐）',
    mento                varchar(255) comment '分享留言',
-   createtime           timestamp comment '创建时间',
+   createtime           timestamp null comment '创建时间',
    column_type          smallint comment '知识所属类目ID，共十一种顶级类目之一',
    column_id            bigint(20) comment '栏目id'
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
