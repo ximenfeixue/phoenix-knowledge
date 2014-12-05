@@ -34,6 +34,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.util.Constants.Ids;
 import com.ginkgocap.ywxt.knowledge.util.KCHelper;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -52,7 +53,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 
 	@Resource
 	private KnowledgeColumnSubscribeMapper knowledgeColumnSubscribeMapper;
-	
+
 	@Resource
 	private UserPermissionValueMapper userPermissionValueMapper;
 
@@ -328,25 +329,33 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		} else if (source == Constants.Relation.self.v()) {
 			logger.info("进入查询我的订阅自己的知识Id列表,类型:{},栏目列表{}", source, columnList);
 			// 订阅下自己的知识ID，knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(null,uid,columnList);
-			logger.info("结束查询我的订阅自己的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("_id").in(knowledgeIds);
+			List<Long> knowledgeIds = userPermissionValueMapper
+					.selectKnowledgeIdsByParams(null, uid, columnList);
+			logger.info("结束查询我的订阅自己的知识Id列表,类型:{},知识ID列表{}", source,
+					knowledgeIds);
+			c = org.springframework.data.mongodb.core.query.Criteria.where(
+					"_id").in(knowledgeIds);
 
 		} else if (source == Constants.Relation.friends.v()) {
-			logger.info("进入查询我的订阅分享给我的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source, columnList);
+			logger.info("进入查询我的订阅分享给我的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
+					columnList);
 			// 获取所有大乐，中乐分享给我的knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(uid,null,columnList);
-			logger.info("结束查询我的订阅分享到我的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("_id").in(knowledgeIds);
+			List<Long> knowledgeIds = userPermissionValueMapper
+					.selectKnowledgeIdsByParams(uid, null, columnList);
+			logger.info("结束查询我的订阅分享到我的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
+					knowledgeIds);
+			c = org.springframework.data.mongodb.core.query.Criteria.where(
+					"_id").in(knowledgeIds);
 		} else if (source == Constants.Relation.platform.v()) {
-			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source, columnList);
+			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
+					columnList);
 			// 获取所有大乐，中乐分享到全平台的knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(-1l,null,columnList);
-			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source, knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("_id").in(knowledgeIds);
+			List<Long> knowledgeIds = userPermissionValueMapper
+					.selectKnowledgeIdsByParams(-1l, null, columnList);
+			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
+					knowledgeIds);
+			c = org.springframework.data.mongodb.core.query.Criteria.where(
+					"_id").in(knowledgeIds);
 		}
 		if (StringUtils.isNotBlank(keywords)) {
 			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$",
@@ -400,8 +409,12 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				List<Knowledge> subList = mongoTemplate.find(query,
 						Knowledge.class,
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
-				
+
 				for (Knowledge k : subList) {
+					if (StringUtils.isBlank(k.getDesc())) {
+						String desc = HtmlToText.html2Text(k.getDesc());
+						k.setDesc(desc);
+					}
 					k.setColumnType(type);
 				}
 				result.put("results", subList);
