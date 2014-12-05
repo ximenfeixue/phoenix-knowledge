@@ -2558,10 +2558,10 @@ insert into `tb_column` (`id`, `columnName`, `user_id`, `parent_id`, `createtime
 UPDATE tb_column c
 SET c.del_status = 1
 WHERE c.column_level_path LIKE '000000009%'
-     OR c.column_level_path LIKE '000000005%'
+     OR c.column_level_path LIKE '000000005%';
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(0,0,1,'全平台'); 
 INSERT INTO phoenix_user.tb_user(id,test,STATUS,NAME) VALUES(-2,0,1,'金桐脑'); 
-UPDATE phoenix_user.tb_user SET id =0 WHERE id = -2 
+UPDATE phoenix_user.tb_user SET id =0 WHERE id = -2;
 
 
 USE `phoenix_cloud`;
