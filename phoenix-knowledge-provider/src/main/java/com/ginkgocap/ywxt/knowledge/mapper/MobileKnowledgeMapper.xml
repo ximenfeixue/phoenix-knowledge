@@ -24,7 +24,7 @@
 	</select>
 
 	<select id="selectCountKnowledgeByTagsAndKeyWords" resultType="int">
-		SELECT count(*)
+		SELECT COUNT(DISTINCT(b.knowledge_id))
 		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
 		WHERE b.user_id=#{userId} 
 		AND b.knowledge_id=c.knowledge_id
