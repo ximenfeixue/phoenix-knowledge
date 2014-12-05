@@ -87,7 +87,8 @@ public class SearchServiceImpl implements SearchService {
 		params.put("qf", "title,tags,content,desc");
 		params.put("pno", pno);
 		params.put("psize", psize);
-
+		
+		logger.info("搜索请求参数为:{}",params);
 		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/keyword/search.json", params);
 
