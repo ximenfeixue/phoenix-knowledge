@@ -346,37 +346,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				|| columnType.equals(Constants.Type.Industry.v() + "")
 				|| columnType.equals(Constants.Type.Case.v() + "")) {
 			if (desc != null && desc.length() > 0) {
-				userPermission.setDesc(desc.length() > 90 ? desc
-						.substring(0, 90).replaceAll("</?[^>]+>", "")
-						.replaceAll("\\s*|\t|\r|\n", "")
-						+ "..." : desc.replaceAll("</?[^>]+>", "").replaceAll(
-						"\\s*|\t|\r|\n", ""));
+				userPermission.setDesc(HtmlToText.html2Text(desc));
 			} else {
-				String content = vo.getContent();
-				if (content == null) {
-					content = "";
-				} else if (content.length() < 90) {
-					content = content.replaceAll("</?[^>]+>", "").replaceAll(
-							"\\s*|\t|\r|\n", "");
-				} else {
-					content = content.substring(0, 90)
-							.replaceAll("</?[^>]+>", "")
-							.replaceAll("\\s*|\t|\r|\n", "")
-							+ "...";
-				}
-				userPermission.setDesc(content);
+				userPermission.setDesc("");
 			}
 		} else {
 			String content = vo.getContent();
 			if (content == null) {
 				content = "";
 			} else if (content.length() < 90) {
-				content = content.replaceAll("</?[^>]+>", "").replaceAll(
-						"\\s*|\t|\r|\n", "");
+				content = HtmlToText.html2Text(content);
 			} else {
-				content = content.substring(0, 90).replaceAll("</?[^>]+>", "")
-						.replaceAll("\\s*|\t|\r|\n", "")
-						+ "...";
+				content = HtmlToText.html2Text(content);
 			}
 			userPermission.setDesc(content);
 		}
