@@ -347,7 +347,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				|| columnType.equals(Constants.Type.Industry.v() + "")
 				|| columnType.equals(Constants.Type.Case.v() + "")) {
 			if (desc != null && desc.length() > 0) {
-				userPermission.setDesc(HtmlToText.html2Text(desc));
+				desc=HtmlToText.html2Text(desc);
+				if (StringUtils.isNotBlank(desc)) {
+					desc = desc.length() > 50 ? desc.substring(0, 50)
+							+ "..." : desc;
+				}else{
+					desc = "";
+				}
+				userPermission.setDesc(desc);
 			} else {
 				userPermission.setDesc("");
 			}
