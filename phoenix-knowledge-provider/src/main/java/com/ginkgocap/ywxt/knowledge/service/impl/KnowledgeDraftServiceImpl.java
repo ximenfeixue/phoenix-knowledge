@@ -168,7 +168,7 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 						10));
 			}
 			if (StringUtils.isNotBlank(vo.getPerformTime())) {
-				vo.setSubmitTime(StringUtils.substring(vo.getPerformTime(), 0,
+				vo.setPerformTime(StringUtils.substring(vo.getPerformTime(), 0,
 						10));
 			}
 		}
