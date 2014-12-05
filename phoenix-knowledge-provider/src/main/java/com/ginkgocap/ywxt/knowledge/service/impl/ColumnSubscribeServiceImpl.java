@@ -400,7 +400,10 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				List<Knowledge> subList = mongoTemplate.find(query,
 						Knowledge.class,
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
-
+				
+				for (Knowledge k : subList) {
+					k.setColumnType(type);
+				}
 				result.put("results", subList);
 
 				PageUtil p = new PageUtil((int) v, pno, psize);
