@@ -124,7 +124,7 @@ public class KnowledgeCaseServiceImpl implements KnowledgeCaseService {
 
 	@Override
 	public List<KnowledgeCase> getUserCase(Long userId, Long id,int size, int limit) {
-		Criteria c = Criteria.where("uid").is(userId);
+		Criteria c = Criteria.where("uid").is(userId).and("status").is(4).and("tranStatus").is(1);
 		if(id>0){
 			c.and("id").ne(id);
 		}
