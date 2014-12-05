@@ -413,6 +413,10 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				for (Knowledge k : subList) {
 					if (StringUtils.isNotBlank(k.getDesc())) {
 						String desc = HtmlToText.html2Text(k.getDesc());
+						if (StringUtils.isNotBlank(desc)) {
+							desc = desc.length() > 50 ? desc.substring(0, 50)
+									+ "..." : desc;
+						}
 						k.setDesc(desc);
 					} else {
 						String content = HtmlToText.html2Text(k.getContent());
