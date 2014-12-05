@@ -411,9 +411,19 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 				for (Knowledge k : subList) {
-					if (StringUtils.isBlank(k.getDesc())) {
+					if (StringUtils.isNotBlank(k.getDesc())) {
 						String desc = HtmlToText.html2Text(k.getDesc());
 						k.setDesc(desc);
+					} else {
+						if (StringUtils.isBlank(k.getDesc())) {
+							String content = HtmlToText.html2Text(k
+									.getContent());
+							if (StringUtils.isNotBlank(content)) {
+								content = content.length() > 50 ? content
+										.substring(0, 50) + "..." : content;
+							}
+							k.setDesc(content);
+						}
 					}
 					k.setColumnType(type);
 				}
