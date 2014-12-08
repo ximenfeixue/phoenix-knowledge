@@ -236,7 +236,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         ids = userPermissionValueMapper.selectByParamsSingle(null,
                 (long) ty.v());
 		// 查询资讯
-		if (ids != null) {
+		if (ids != null && ids.size()>0) {
 			criteriaUp.and("_id").in(ids);
 			criteriaPj.orOperator(criteriaUp, criteriaGt);
 		}else{
