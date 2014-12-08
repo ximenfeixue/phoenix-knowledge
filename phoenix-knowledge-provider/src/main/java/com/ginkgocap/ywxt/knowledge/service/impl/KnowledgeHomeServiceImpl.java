@@ -231,15 +231,17 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Criteria criteriaGt = new Criteria();
 		List<Long> ids = new ArrayList<Long>();
 
+		criteriaGt.and("uid").is(Constants.gtnid);
 		// 查询栏目大类下的数据：全平台
-		ids = userPermissionValueMapper.selectByParamsSingle(null,
-				(long) ty.v());
+        ids = userPermissionValueMapper.selectByParamsSingle(null,
+                (long) ty.v());
 		// 查询资讯
 		if (ids != null) {
 			criteriaUp.and("_id").in(ids);
+			criteriaPj.orOperator(criteriaUp, criteriaGt);
+		}else{
+		    criteriaPj.andOperator(criteriaGt);
 		}
-		criteriaGt.and("cid").is(Constants.gtnid);
-		criteriaPj.orOperator(criteriaUp, criteriaGt);
 		criteria.andOperator(criteriaPj);
 		Query query = new Query(criteria);
 		String str = "" + JSONObject.fromObject(criteria);
