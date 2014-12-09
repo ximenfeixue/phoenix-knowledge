@@ -230,6 +230,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			Update update = new Update();
 			update.set("status", Constants.Status.recycle.v());
 
+			// 删除动态长观点信息
+			if (ct == Constants.KnowledgeType.Opinion.v()) {
+				deleteDynamicKnowledge(knowledgeid[i]);
+			}
 			// 删除更新关联表
 			try {
 				mongoTemplate.updateFirst(query, update, collectionName);
@@ -1116,5 +1120,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	public void updateByPrimaryKey(KnowledgeBase kb) {
 		knowledgeBaseMapper.modifyKnowledgeId(kb);
+	}
+
+	@Override
+	public void deleteDynamicKnowledge(long targetId) {
+
+		Criteria criteria = Criteria.where("targetId").is(targetId);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, "userFeed");
 	}
 }
