@@ -165,40 +165,49 @@ public class KnowledgeCollectionServiceImpl implements
 				}
 			}
 
-			long[] cIds = null;
-			if (StringUtils.isBlank(vo.getCategoryIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(user.getId());
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.collection
-						.v());
-				List<UserCategory> uclist = userCategoryMapper
-						.selectByExample(example);
-				if (uclist != null && uclist.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = uclist.get(0).getId();
-				}
-			} else {
-				// 格式化目录
-				cIds = knowledgeCategoryService.getCurrentCategoryArray(
-						vo.getCategoryIds(),
-						Constants.CategoryType.collection.v(), user.getId());
-			}
+//			long[] cIds = null;
+//			if (StringUtils.isBlank(vo.getCategoryIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+//				UserCategoryExample example = new UserCategoryExample();
+//				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+//						.createCriteria();
+//				criteria.andSortidEqualTo(Constants.unGroupSortId);
+//				criteria.andUserIdEqualTo(user.getId());
+//				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.collection
+//						.v());
+//				List<UserCategory> uclist = userCategoryMapper
+//						.selectByExample(example);
+//				if (uclist != null && uclist.size() == 1) {
+//					cIds = new long[1];
+//					cIds[0] = uclist.get(0).getId();
+//				}
+//			} else {
+//				// 格式化目录
+//				cIds = knowledgeCategoryService.getCurrentCategoryArray(
+//						vo.getCategoryIds(),
+//						Constants.CategoryType.collection.v(), user.getId());
+//			}
 			// 组装收藏目录ID集合
 			KnowledgeCollection kc = null;
-			for (long cId : cIds) {
-				kc = new KnowledgeCollection();
-				kc.setCategoryId(cId);
-				kc.setCollectionComment(vo.getComment());
-				kc.setKnowledgeId(vo.getkId());
-				kc.setCreatetime(new Date());
-				kc.setCollectionTags(vo.getTags());
-				kc.setSource(getSource(user.getId(), knowledge.getUid()));
-				kc.setUserid(user.getId());
-				list.add(kc);
-			}
+//			for (long cId : cIds) {
+//				kc = new KnowledgeCollection();
+//				kc.setCategoryId(cId);
+//				kc.setCollectionComment(vo.getComment());
+//				kc.setKnowledgeId(vo.getkId());
+//				kc.setCreatetime(new Date());
+//				kc.setCollectionTags(vo.getTags());
+//				kc.setSource(getSource(user.getId(), knowledge.getUid()));
+//				kc.setUserid(user.getId());
+//				list.add(kc);
+//			}
+			kc = new KnowledgeCollection();
+//			kc.setCategoryId(cId);
+			kc.setCollectionComment(vo.getComment());
+			kc.setKnowledgeId(vo.getkId());
+			kc.setCreatetime(new Date());
+			kc.setCollectionTags(vo.getTags());
+			kc.setSource(getSource(user.getId(), knowledge.getUid()));
+			kc.setUserid(user.getId());
+			list.add(kc);
 			// 添加到收藏表
 			int cV = knowledgeCollectionMapperManual
 					.batchInsertCollection(list);
