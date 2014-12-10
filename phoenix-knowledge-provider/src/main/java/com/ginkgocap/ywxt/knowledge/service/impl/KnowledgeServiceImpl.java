@@ -392,7 +392,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// vo.setkId(knowledge.getId());
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
-		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+//		if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 
 			// 添加知识到权限表
 			result = insertUserPermissions(vo, user);
@@ -404,7 +404,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						Constants.ErrorMessage.paramNotValid.c());
 				return result;
 			}
-		}
+//		}
 
 		// 删除该知识下的所有目录
 		int categoryCount = knowledgeCategoryService.deleteKnowledgeCategory(vo
@@ -739,7 +739,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
-			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+//			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 				// 添加知识到权限表
 				result = insertUserPermissions(vo, user);
 				Integer status = Integer.parseInt(result.get(Constants.status)
@@ -750,7 +750,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 							Constants.ErrorMessage.paramNotValid.c());
 					return result;
 				}
-			}
+//			}
 
 			// 删除该知识下的所有目录
 			int categoryCount = knowledgeCategoryService
@@ -792,7 +792,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} else {
 			knowledgeNewsDAO.insertknowledge(vo, user);
 
-			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+//			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
 				// 添加知识到权限表
 				result = insertUserPermissions(vo, user);
 				Integer status = Integer.parseInt(result.get(Constants.status)
@@ -803,7 +803,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 							Constants.ErrorMessage.paramNotValid.c());
 					return result;
 				}
-			}
+//			}
 
 			long[] cIds = null;
 			// 添加知识到知识目录表
