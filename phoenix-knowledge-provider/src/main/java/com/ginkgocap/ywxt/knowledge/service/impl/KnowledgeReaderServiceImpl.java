@@ -187,7 +187,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		}
 
-		result.put("title", knowledge.getTitle());
+		result.put("title", StringEscapeUtils.escapeHtml4(knowledge.getTitle()));
 		result.put("content", StringUtils.isBlank(knowledge.getHcontent()) ? ""
 				: StringEscapeUtils.escapeHtml4(knowledge.getHcontent()));
 
