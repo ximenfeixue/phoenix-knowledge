@@ -277,7 +277,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	 * @return
 	 */
 	@Transactional
-	private Boolean addKnowledgeStatics(long kId, long kUId, String type) {
+	@Override
+	public Boolean addKnowledgeStatics(long kId, long kUId, String type) {
 		Knowledge knowledge = getKnowledgeById(kId, type);
 		if (knowledge == null) {
 			logger.error("没有找到知识,知识ID:{},知识类型:{}", kId, type);
