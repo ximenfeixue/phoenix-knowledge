@@ -496,7 +496,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>com.ginkgocap.ywxt</groupId>
-									<artifactId>phoenix-util</artifactId>
+									<artifactId>5.2.0-SNAPSHOT</artifactId>
 									<version>${util.dependencied}</version>
 									<outputDirectory>${project.build.directory}/dubbo</outputDirectory>
 									<includes>META-INF/assembly/**</includes>
