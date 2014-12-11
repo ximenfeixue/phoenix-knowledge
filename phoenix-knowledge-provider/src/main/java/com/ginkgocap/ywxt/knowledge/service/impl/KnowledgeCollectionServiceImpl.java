@@ -21,8 +21,6 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollection;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCollectionExample.Criteria;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCollectionMapperManual;
@@ -35,6 +33,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollectionVO;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
+import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
@@ -68,6 +67,8 @@ public class KnowledgeCollectionServiceImpl implements
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
 	@Resource
 	private DataCenterService dataCenterService;
+	@Resource
+	private NoticeThreadPool noticeThreadPool;
 
 	@Override
 	@Transactional
@@ -220,11 +221,13 @@ public class KnowledgeCollectionServiceImpl implements
 				return result;
 			}
 			// 通知数据中心
-			for (int i = 0; i < cV; i++) {
-				dataCenterService.noticeDataCenterWhileKnowledgeChange(
-						vo.getkId() + "", "upd", vo.getColumType());
-
-			}
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("oper", "upd");
+			params.put("type", vo.getColumType());
+			params.put("kId", vo.getkId());
+			noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
+					params);
+			
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
 			bVo.setColumType(vo.getColumType());
