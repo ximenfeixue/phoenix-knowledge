@@ -188,10 +188,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		}
 
 		result.put("title", knowledge.getTitle());
-		result.put(
-				"content",
-				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
-						.getContent() : knowledge.getHcontent());
+		result.put("content", StringUtils.isBlank(knowledge.getHcontent()) ? ""
+				: StringEscapeUtils.escapeHtml4(knowledge.getHcontent()));
 
 		result.put(
 				"createtime",
@@ -200,7 +198,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("author", knowledge.getUname());
 		result.put("source",
 				knowledge.getSource() == null ? "" : knowledge.getSource());
-		result.put("asso", knowledge.getAsso());
+		result.put(
+				"asso",
+				knowledge.getAsso() == null ? "" : StringEscapeUtils
+						.escapeHtml4(knowledge.getAsso()));
 
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
@@ -356,7 +357,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		// 权限设置
-		result.put("selectIds", knowledge.getSelectedIds());
+		result.put("selectIds", knowledge.getSelectedIds() == null ? ""
+				: StringEscapeUtils.escapeHtml4(knowledge.getSelectedIds()));
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
