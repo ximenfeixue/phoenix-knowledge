@@ -61,7 +61,7 @@
 	<if test="keyword !=null and keyword != '' ">
 		AND b.title like CONCAT('%',#{keyword},'%')
 	</if>
-	ORDER BY b.createtime DESC
+	ORDER BY c.createtime DESC
 	LIMIT #{pageno},#{pagesize}
 	
  </select>
