@@ -115,5 +115,4 @@ public interface KnowledgeService {
 
 	public void updateByPrimaryKey(KnowledgeBase kb);
 	
-	public void deleteDynamicKnowledge(long targetId);
 }
