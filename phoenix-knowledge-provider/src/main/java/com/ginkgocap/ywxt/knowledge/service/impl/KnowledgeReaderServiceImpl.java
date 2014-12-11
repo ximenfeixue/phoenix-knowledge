@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,12 +186,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		}
 
-		result.put("title", StringEscapeUtils.escapeHtml4(knowledge.getTitle()));
+		result.put("title", knowledge.getTitle());
 		result.put(
 				"content",
-				StringUtils.isBlank(knowledge.getHcontent()) ? StringEscapeUtils
-						.escapeHtml4(knowledge.getContent())
-						: StringEscapeUtils.escapeHtml4(knowledge.getHcontent()));
+				StringUtils.isBlank(knowledge.getHcontent()) ? knowledge
+						.getContent() : knowledge.getHcontent());
 
 		result.put(
 				"createtime",
@@ -201,10 +199,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("author", knowledge.getUname());
 		result.put("source",
 				knowledge.getSource() == null ? "" : knowledge.getSource());
-		result.put(
-				"asso",
-				knowledge.getAsso() == null ? "" : StringEscapeUtils
-						.escapeHtml4(knowledge.getAsso()));
+		result.put("asso",
+				knowledge.getAsso() == null ? "" : knowledge.getAsso());
 
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
@@ -362,7 +358,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		// 权限设置
 		result.put("selectIds", knowledge.getSelectedIds() == null ? ""
-				: StringEscapeUtils.escapeHtml4(knowledge.getSelectedIds()));
+				: knowledge.getSelectedIds());
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
