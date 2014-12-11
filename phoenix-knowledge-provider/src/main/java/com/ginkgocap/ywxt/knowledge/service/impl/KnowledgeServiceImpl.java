@@ -232,7 +232,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			// 删除动态长观点信息
 			if (ct == Constants.KnowledgeType.Opinion.v()) {
-//				userFeedService.deleteDynamicKnowledge(knowledgeid[i]);
+				userFeedService.deleteDynamicKnowledge(knowledgeid[i]);
 			}
 			// 删除更新关联表
 			try {
