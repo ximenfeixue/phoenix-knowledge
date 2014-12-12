@@ -37,6 +37,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
@@ -202,7 +203,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		}
 		query.limit(size);
 		query.skip((page - 1) * size);
-		model.put("list", (List) mongoTemplate.find(query, t.getClass(),
+		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,
 				names[length - 1]));
 		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
 		return model;
@@ -253,7 +254,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			PageUtil p = new PageUtil((int) count, page, size);
 			query.limit(size);
 			query.skip(p.getPageStartRow() - 1);
-			return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()),
+			return (List<T>) mongoTemplate.find(query, KnowledgeVO.class,
 					names[length - 1]);
 		} catch (Exception e) {
 			e.printStackTrace();
