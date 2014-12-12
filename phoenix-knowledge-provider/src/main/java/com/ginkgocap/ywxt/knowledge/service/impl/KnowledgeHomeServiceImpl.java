@@ -250,10 +250,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		query.sort().on("_id", Order.DESCENDING);
 		long count;
 		try {
-			count = mongoTemplate.count(query, names[length - 1]);
-			PageUtil p = new PageUtil((int) count, page, size);
+//			count = mongoTemplate.count(query, names[length - 1]);
+//			PageUtil p = new PageUtil((int) count, page, size);
 			query.limit(size);
-			query.skip(p.getPageStartRow() - 1);
+			query.skip(0);
 			return (List<T>) mongoTemplate.find(query, KnowledgeVO.class,
 					names[length - 1]);
 		} catch (Exception e) {
