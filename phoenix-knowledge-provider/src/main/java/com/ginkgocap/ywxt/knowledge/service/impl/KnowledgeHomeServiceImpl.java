@@ -237,14 +237,16 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         ids = userPermissionValueMapper.selectByParamsSingle(null,
                 (long) ty.v());
 		// 查询资讯
+        Query query = null;
 		if (ids != null && ids.size()>0) {
 			criteriaUp.and("_id").in(ids);
 			criteriaPj.orOperator(criteriaUp, criteriaGt);
-			criteria.andOperator(criteriaPj);
+			criteriaPj.andOperator(criteria);
+			query=new Query(criteriaPj);
 		}else{
 		    criteria.andOperator(criteriaGt);
+		    query=new Query(criteria);
 		}
-		Query query = new Query(criteria);
 		String str = "" + JSONObject.fromObject(criteria);
 		logger.info("MongoObject:" + ty.obj() + ",Query:" + str);
 		query.sort().on("_id", Order.DESCENDING);
