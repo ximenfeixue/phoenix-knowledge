@@ -240,10 +240,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (ids != null && ids.size()>0) {
 			criteriaUp.and("_id").in(ids);
 			criteriaPj.orOperator(criteriaUp, criteriaGt);
+			criteria.andOperator(criteriaPj);
 		}else{
-		    criteriaPj.andOperator(criteriaGt);
+		    criteria.andOperator(criteriaGt);
 		}
-		criteria.andOperator(criteriaPj);
 		Query query = new Query(criteria);
 		String str = "" + JSONObject.fromObject(criteria);
 		logger.info("MongoObject:" + ty.obj() + ",Query:" + str);
