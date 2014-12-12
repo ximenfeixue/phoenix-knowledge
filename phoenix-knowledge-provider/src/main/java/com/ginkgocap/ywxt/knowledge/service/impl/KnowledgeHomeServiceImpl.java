@@ -193,9 +193,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			List<String> clstr = fillList(cls);
 			criteriaAll.and("columnid").nin(clstr);
 		}
-		criteria.andOperator(criteriaAll);
+		criteriaAll.andOperator(criteria);
 		// 查询知识
-		Query query = new Query(criteria);
+		Query query = new Query(criteriaAll);
 		if (type == 10) {
 			query.sort().on("createtime", Order.DESCENDING);
 		} else {
