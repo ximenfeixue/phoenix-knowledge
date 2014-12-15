@@ -27,18 +27,12 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Component("mobileKnowledgeDAO")
-public class MobileKnowledgeDAOImpl extends SqlMapClientDaoSupport implements MobileKnowledgeDAO {
+public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 	
-	@Autowired
-	SqlMapClient sqlMapClient;
-
+ 
 	@Resource
 	private MongoTemplate mongoTemplate;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+ 
 
 	@Override
 	public List<Knowledge> getKnowledge(String[] columnID,long user_id,String type,int offset,int limit) {

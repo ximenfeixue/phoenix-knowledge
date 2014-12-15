@@ -37,9 +37,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 @Component("knowledgeNewsDAO")
 public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
-	@Autowired
-	SqlMapClient sqlMapClient;
-
+ 
 	@Resource
 	private MongoTemplate mongoTemplate;
 

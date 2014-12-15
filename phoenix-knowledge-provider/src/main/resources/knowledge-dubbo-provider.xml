@@ -40,14 +40,11 @@
 		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
 	<!--     此接口上线后去掉 -->
-<!--     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.article.ArticleService" ref="articleService" version="1.0.0"/> -->
-    <!--     此接口上线后去掉 -->
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/>
+ 
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" ref="columnVisibleService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" ref="columnSubscribeService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
-	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" ref="knowledgeContentService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" ref="knowledgeMongoIncService" version="1.0.0"/>
      <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>

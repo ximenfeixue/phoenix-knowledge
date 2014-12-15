@@ -32,19 +32,13 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 
 @Component("knowledgeOpinionDAO")
-public class KnowledgeOpinionDAOImpl extends SqlMapClientDaoSupport implements
+public class KnowledgeOpinionDAOImpl  implements
 		KnowledgeOpinionDAO {
 
-	@Autowired
-	SqlMapClient sqlMapClient;
-
+ 
 	@Resource
 	private MongoTemplate mongoTemplate;
-
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+ 
 
 	@Override
 	public KnowledgeOpinion insertknowledge(String title, long userid,

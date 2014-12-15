@@ -21,7 +21,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.file.model.FileIndex;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeHomeDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
@@ -66,8 +65,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	ColumnMapper columnMapper;
 	@Autowired
 	ColumnKnowledgeValueMapper columnKnowledgeValueMapper;
-	@Autowired
-	KnowledgeHomeDao knowledgeHomeDao;
+ 
 	@Autowired
 	KnowledgeNewsDAO knowledgeNewsDao;
 	@Resource
@@ -175,11 +173,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		if (criteriaUp == null) {
 
 			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
-					criteriaPath);
+					criteriaPath,criteria);
 		} else {
 
 			criteriaAll.orOperator(criteriaMy, criteriaGt, criteriaUp)
-					.andOperator(criteriaPath);
+					.andOperator(criteriaPath,criteria);
 		}
 		// Criteria criteriaVisAll = new Criteria();
 		if (cls != null && cls.size() > 0) {// 判断定制
@@ -193,7 +191,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			List<String> clstr = fillList(cls);
 			criteriaAll.and("columnid").nin(clstr);
 		}
-		criteriaAll.andOperator(criteria);
 		// 查询知识
 		Query query = new Query(criteriaAll);
 		if (type == 10) {

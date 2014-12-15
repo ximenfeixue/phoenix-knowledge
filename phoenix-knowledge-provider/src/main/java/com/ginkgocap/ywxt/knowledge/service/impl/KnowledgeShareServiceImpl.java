@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.dao.share.KnowledgeShareDao;
-import com.ginkgocap.ywxt.knowledge.form.Friends;
-import com.ginkgocap.ywxt.knowledge.model.Article;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
-import com.ginkgocap.ywxt.knowledge.service.ArticleService;
+import com.ginkgocap.ywxt.knowledge.form.Friends; 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare; 
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
@@ -29,8 +27,7 @@ public class KnowledgeShareServiceImpl implements KnowledgeShareService {
 	private KnowledgeShareDao knowledgeShareDao;
 	@Autowired
 	private FriendsRelationService friendsRelationService;
-	@Autowired
-	private ArticleService articleService;
+ 
 	@Autowired
 	private UserService userService;
 	
@@ -38,56 +35,8 @@ public class KnowledgeShareServiceImpl implements KnowledgeShareService {
 	
 	@Override
 	public KnowledgeShare save(long userId, long knowledgeId, String receiverId, String receiverName) {
-		KnowledgeShare knowledgeShare = new KnowledgeShare();
-		knowledgeShare.setKnowledgeId(knowledgeId);
-		knowledgeShare.setUserId(userId);
-		knowledgeShare.setTitle(articleService.selectByPrimaryKey(knowledgeId).getArticleTitle());
-		List<Long> recId = new ArrayList<Long>();//接收人id 
-		List<String> recName = new ArrayList<String>();//接受人name
-		List<Friends> friendsList = new ArrayList<Friends>();
-		logger.info("[ KnowledgeShareServiceImpl ] get receiverId is " + receiverId);
-		logger.info("[ KnowledgeShareServiceImpl ] get receiverName is " + receiverName);
-		if(StringUtils.isNotBlank(receiverId) && StringUtils.isNotBlank(receiverName)){//选择出来的好友
-			String ids[] =StringUtils.split(receiverId, ",");
-			String names[] = StringUtils.split(receiverName, ",");
-			if(ids.length==names.length){
-				for(int i=0; i<ids.length;i++){
-					recId.add(Long.valueOf(ids[i]));
-					recName.add(names[i]);
-					Friends friends = new Friends();
-					friends.setUserId(Long.valueOf(ids[i]));
-					friends.setStatus(1);
-					friendsList.add(friends);
-				}
-			}else{
-				logger.debug("[ KnowledgeShareServiceImpl ] get receiverId length not equals receiverName length");
-			}
-			
-		}else{//全部好友
-			List<User> friends = friendsRelationService.findAllFriendsByUserId(userId);
-			if(friends!=null && friends.size()>0){
-				for(User friend : friends){
-					recId.add(friend.getId());
-					recName.add(friend.getName());
-					Friends f = new Friends();
-					f.setUserId(friend.getId());
-					f.setStatus(1);
-					friendsList.add(f);
-				}
-			}else{
-				logger.debug("[ KnowledgeShareServiceImpl ] get friends is null");
-			}
-		}
-		knowledgeShare.setFriends(friendsList);
-		knowledgeShare.setReceiverId(recId);
-		knowledgeShare.setReceiverName(recName);
-		knowledgeShare = knowledgeShareDao.save(knowledgeShare);
-		if(knowledgeShare == null){
-			logger.debug("[ KnowledgeShareServiceImpl ] add knowledgeShare is fail");
-			return null;
-		}else{
-			return knowledgeShare;
-		}
+        return null;
+	
 	}
 
 	@Override
@@ -119,21 +68,7 @@ public class KnowledgeShareServiceImpl implements KnowledgeShareService {
 	 * @return List<KnowledgeShare>
 	 */
 	private List<KnowledgeShare> setKnowledgeShareInfo(List<KnowledgeShare> list){
-		if(list!=null && list.size()>0){
-			for(KnowledgeShare ks : list){
-				long id = ks.getKnowledgeId();
-				Article article = articleService.selectByPrimaryKey(id);
-				User user =userService.selectByPrimaryKey(ks.getUserId());
-				if(article!=null){
-					ks.setArticle(article);
-					ks.setUserName(user.getName());
-				}
-			}
-		}else{
-			logger.debug("[ KnowledgeShareServiceImpl ] set Article is fail, because list is null");
-		}
-		return list;
-	}
+        return list;}
 
 	@Override
 	public void deleteShareInfoByKnowledgeId(long knowledgeId) {

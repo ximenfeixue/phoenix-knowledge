@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledge.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
-
-import com.ginkgocap.ywxt.knowledge.dao.category.CategoryDao;
-import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
-import com.ginkgocap.ywxt.knowledge.model.Category;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper; 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
@@ -36,68 +32,26 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 
  */
 @Component("knowledgeDao")
-public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
+public class KnowledgeDaoImpl  implements
 		KnowledgeDao {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
-
-	@Autowired
-	private CategoryDao categoryDao;
-
-	@Autowired
-	private KnowledgeContentDAO knowledgeContentDAO;
-
+ 
 	private CategoryHelper helper = new CategoryHelper();
 
 	@Resource
 	private MongoTemplate mongoTemplate;
 
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+ 
 
 	@Resource
 	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
 
 	@Override
 	public int insert(Knowledge record) {
-		long r = record.getId();
-		Long i = 0l;
-		if (r > 0) {
-			return updateByPrimaryKey(record);
-		} else {
-			i = (Long) getSqlMapClientTemplate().insert("knowledge.insert",
-					record);
-		}
-		return i.intValue();
+        return 0;
+		 
 	}
 
-	@Override
-	public int insertSelective(Knowledge record) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Knowledge selectByPrimaryKey(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int updateByPrimaryKeySelective(Knowledge record) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int updateByPrimaryKey(Knowledge record) {
-		int i = getSqlMapClientTemplate().update(
-				"knowledge.updateByPrimaryKey", record);
-		return i;
-	}
+ 
 
 	@Override
 	public int moveCategoryBatch(long[] knowledgeids, long[] categoryids) {
@@ -122,68 +76,8 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	@Override
-	public Knowledge insertknowledge(Knowledge knowledge) {
-
-		Long id = (Long) getSqlMapClientTemplate().insert(
-				"tb_knowledge.insertknowledge", knowledge);
-		if (id != null) {
-			knowledge.setId(id);
-			return knowledge;
-		} else {
-
-			return null;
-		}
-	}
-
-	@Override
-	public int deleteKnowledge(long[] ids, long categoryid) {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ids", ids);
-		int count = getSqlMapClientTemplate().delete(
-				"tb_knowledge.deleteBatch", map);
-		if (count > 0) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public int updateKnowledge(Knowledge knowledge, long categoryid[]) {
-
-		int count = getSqlMapClientTemplate().update(
-				"tb_knowledge.updateknowledge", knowledge);
-		if (count > 0) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public int updateKnowledgeRCategory(long knowledgeid, long categoryid,
-			long[] categoryids) {
-
-		return 0;
-	}
-
-	@Override
-	public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (knowledgeid > 0) {
-			map.put("knowledgeid", knowledgeid);
-		}
-		if (categoryid > 0) {
-			map.put("categoryid", categoryid);
-		}
-		int count = getSqlMapClientTemplate().delete(
-				"tb_knowledge_category.deleteknowledgeid", map);
-		return count;
-	}
+ 
+ 
 
 	@Override
 	public int checkIndustryNameRepeat(String knowledgetitle) {
@@ -253,4 +147,76 @@ public class KnowledgeDaoImpl extends SqlMapClientDaoSupport implements
 		Query query = new Query(c);
 		mongoTemplate.updateFirst(query, update, "KnowledgeInvestment");
 	}
+
+
+
+    @Override
+    public int insertSelective(Knowledge record) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public Knowledge selectByPrimaryKey(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+
+    @Override
+    public int updateByPrimaryKeySelective(Knowledge record) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public int updateByPrimaryKey(Knowledge record) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public Knowledge insertknowledge(Knowledge knowledge) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+
+    @Override
+    public int deleteKnowledge(long[] ids, long categoryid) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public int updateKnowledge(Knowledge knowledge, long[] categoryid) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public int updateKnowledgeRCategory(long knowledgeid, long categoryid, long[] categoryids) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
+    @Override
+    public int deleteKnowledgeRCategory(long knowledgeid, long categoryid) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

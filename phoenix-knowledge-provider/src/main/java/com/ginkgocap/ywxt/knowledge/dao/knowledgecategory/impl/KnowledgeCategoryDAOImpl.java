@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList;  
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +9,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.ginkgocap.ywxt.knowledge.dao.content.KnowledgeContentDAO;
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
-import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDao;
+ 
+import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO; 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
@@ -31,12 +29,7 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
  */
 @Component("knowledgeCategoryDAO")
 public class KnowledgeCategoryDAOImpl implements KnowledgeCategoryDAO {
-
-	@Autowired
-	private UserCategoryDao userCategoryDao;
-
-	@Autowired
-	private KnowledgeContentDAO knowledgeContentDAO;
+ 
 
 	@Resource
 	private KnowledgeCategoryValueMapper knowledgeCategoryValueMapper;
