@@ -48,7 +48,7 @@
  
  <!-- 分页查询收藏夹下的知识 -->
  <select id="selectKnowledgeAll" resultType="map">
- 	SELECT b.*,c.collection_comment,c.collection_tags,c.source  FROM tb_knowledge_collection c,tb_knowledge_base b
+ 	SELECT b.*,c.collection_comment,b.tag collection_tags,c.source  FROM tb_knowledge_collection c,tb_knowledge_base b
 	WHERE 1=1
 	AND c.userId=#{collectionUserId}
 	AND c.knowledge_id=b.knowledge_id
