@@ -17,7 +17,7 @@ public class Constants {
 	public static long gtnid = 0l;
 
 	public static List<Long> homeColumnIds = new ArrayList<Long>(asList(1, 2,
-			3, 4, 6, 7, 10, 11));
+			3, 4, 6, 7, 10));
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
@@ -86,7 +86,7 @@ public class Constants {
 	}
 
 	private static Collection<? extends Long> asList(int i, int j, int k,
-			int l, int m, int n, int o, int p) {
+			int l, int m, int n, int o) {
 		List<Long> list = new ArrayList<Long>();
 		list.add((long) i);
 		list.add((long) j);
@@ -95,7 +95,6 @@ public class Constants {
 		list.add((long) m);
 		list.add((long) n);
 		list.add((long) o);
-		list.add((long) p);
 		return list;
 	}
 
