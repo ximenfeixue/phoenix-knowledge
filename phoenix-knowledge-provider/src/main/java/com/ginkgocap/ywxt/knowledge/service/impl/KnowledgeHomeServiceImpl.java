@@ -167,7 +167,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 查询栏目目录为当前分类下的所有数据
 		String reful = column.getPathName();
 		// 该栏目路径下的所有文章条件
-		criteriaPath.and("cpathid").regex(reful + ".*$");
+		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
 		Criteria criteriaAll = new Criteria();
 		if (criteriaUp == null) {
