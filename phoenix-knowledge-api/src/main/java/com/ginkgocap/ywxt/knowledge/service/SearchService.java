@@ -32,7 +32,7 @@ public interface SearchService {
      * @since 20141119
      */
 	public Map<String, Object> searchByKeywords(Long userid, String keywords,
-			String scope,String sort,String hlpre,String hlext , String pno, String pszie);
+			String scope,String sort,String hlpre,String hlext ,String qf, String pno, String pszie);
 
 	/**
 	 * 标签搜索
