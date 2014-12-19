@@ -103,7 +103,19 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         m.put("userId", userid);
         m.put("state", 0);
         List<String> ls1 = new ArrayList<String>();
+        List<Long> idl3 = new ArrayList<Long>();
+        List<String> ls3 = new ArrayList<String>();
         if (idl != null && idl.size() > 0) {
+            for (long l : idl) {
+                if(l<=11){
+                    ColumnVisibleExample example = new ColumnVisibleExample();
+                    example.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(l).andStateEqualTo((short) 0);
+                    int count=columnVisibleMapper.countByExample( example);
+                    if (count == 0) {
+                        idl3.add(l);
+                    } 
+                }
+            }
             m.put("listl", idl);
             ls1 = columnVisibleValueMapper.selectSortIds(m);
             //勾选父目录
@@ -127,6 +139,12 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             }else{
                 columnVisibleValueMapper.update(m);
             }
+        }
+        if (idl3 != null && idl3.size() > 0) {
+            m.put("listl", idl3);
+            ls3 = columnVisibleValueMapper.selectSortIds(m);
+            m.put("listl", ls3);
+            columnVisibleValueMapper.update(m);
         }
         m.put("instate", 1);
         m.put("state", 1);
