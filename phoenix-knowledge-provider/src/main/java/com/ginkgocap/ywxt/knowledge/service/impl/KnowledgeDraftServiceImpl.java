@@ -162,55 +162,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 
-			// 添加知识到权限表
-//			result = knowledgeService.insertUserPermissions(vo, user);
-//			Integer status = Integer
-//					.parseInt(result.get(Constants.status) + "");
-//
-//			if (status != 1) {
-//				result.put(Constants.errormessage,
-//						Constants.ErrorMessage.paramNotValid.c());
-//				return result;
-//			}
-
-			// 删除该知识下的所有目录
-			int categoryCount = knowledgeCategoryService
-					.deleteKnowledgeCategory(vo.getkId());
-			// 删除该知识的基本信息
-			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(user.getId());
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
-
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, user.getId(), user.getName(),
-					columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-
 			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo
 					.getKnowledgeMainId());
 
@@ -235,52 +186,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-			
-			// 添加知识到权限表
-//			result = knowledgeService.insertUserPermissions(vo, user);
-//			Integer status = Integer
-//					.parseInt(result.get(Constants.status) + "");
-//
-//			if (status != 1) {
-//				result.put(Constants.errormessage,
-//						Constants.ErrorMessage.paramNotValid.c());
-//				return result;
-//			}
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(userId);
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
 
-				} else {
-					// 如果没有未分组目录,创建未分组目录.
-					// TODO
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
+		}
+		// 添加知识到目录知识表
+		result = knowledgeService.insertCatalogueIds(vo, user);
+		Integer status = Integer.parseInt(result.get(Constants.status) + "");
 
-				int categoryV = knowledgeCategoryService
-						.insertKnowledgeRCategory(draftKId, cIds, userId,
-								username, columnPath, vo);
-				if (categoryV == 0) {
-					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-							kId, cIds);
-					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addKnowledgeFail.c());
-					return result;
-				}
-			}
+		if (status != 1) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+			return result;
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getKnowledgeMainId());

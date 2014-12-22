@@ -356,40 +356,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			result.put("listword", listword);
 			return result;
 		}
-		// 法律法规名称不可重复
-//		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-//			Knowledge knowledge = selectKnowledge(vo.getkId(),
-//					vo.getColumnType());
-//
-//			if (knowledge != null) {
-//				if (!StringUtils.equals(knowledge.getTitle(), vo.getTitle())) {
-//
-//					int count = knowledgeMainService.checkLawNameRepeat(vo
-//							.getTitle());
-//					if (count == 0) {
-//						logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-//						result.put(Constants.status,
-//								Constants.ResultType.sameNameError.v());
-//						result.put(Constants.errormessage,
-//								Constants.ErrorMessage.hasName.c());
-//
-//						return result;
-//					}
-//				}
-//			}
-//
-//			if (StringUtils.isNotBlank(vo.getSubmitTime())) {
-//				vo.setSubmitTime(StringUtils.substring(vo.getSubmitTime(), 0,
-//						10));
-//			}
-//			if (StringUtils.isNotBlank(vo.getPerformTime())) {
-//				vo.setPerformTime(StringUtils.substring(vo.getPerformTime(), 0,
-//						10));
-//			}
-//		}
-		// Knowledge knowledge = knowledgeDraftService.getDraftByMainIdAndUser(
-		// vo.getkId(), vo.getColumnType(), user.getId());
-		// vo.setkId(knowledge.getId());
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		// if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v())
@@ -406,41 +372,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		// }
 
-		// 删除该知识下的所有目录
-		int categoryCount = knowledgeCategoryService.deleteKnowledgeCategory(vo
-				.getkId());
-		// 删除该知识的基本信息
-		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+		// 添加知识到目录知识表
+		result = insertCatalogueIds(vo, user);
+		status = Integer.parseInt(result.get(Constants.status) + "");
 
-		long[] cIds = null;
-		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-			UserCategoryExample example = new UserCategoryExample();
-			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-					.createCriteria();
-			criteria.andSortidEqualTo(Constants.unGroupSortId);
-			criteria.andUserIdEqualTo(user.getId());
-			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-					.v());
-			List<UserCategory> list = userCategoryMapper
-					.selectByExample(example);
-			if (list != null && list.size() == 1) {
-				cIds = new long[1];
-				cIds[0] = list.get(0).getId();
-
-			}
-		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-		}
-		int categoryV = knowledgeCategoryService
-				.insertKnowledgeRCategory(vo.getkId(), cIds, user.getId(),
-						user.getName(), columnPath, vo);
-		if (categoryV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-					vo.getkId(), cIds);
-			result.put(Constants.status, Constants.ResultType.fail.v());
+		if (status != 1) {
 			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
+					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
 			return result;
 		}
 
@@ -475,17 +413,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 		}
 
-		// 初始化知识统计信息
-		// int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
-		//
-		// if (sV == 0) {
-		// logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
-		// vo.getkId(), vo.getColumnType());
-		// result.put(Constants.status, Constants.ResultType.fail.v());
-		// result.put(Constants.errormessage,
-		// Constants.ErrorMessage.addKnowledgeFail.c());
-		// return result;
-		// }
 		try {
 			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
 					.v()) {
@@ -683,172 +610,32 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
 				vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setKnowledgestatus(Constants.Status.checked.v());
-		// 法律法规名称不可重复
-//		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-//
-//			if (StringUtils.isBlank(vo.getKnowledgeid())) {
-//
-//				int count = knowledgeMainService.checkLawNameRepeat(vo
-//						.getTitle());
-//				if (count == 0) {
-//					logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-//					result.put(Constants.status,
-//							Constants.ResultType.sameNameError.v());
-//					result.put(Constants.errormessage,
-//							Constants.ErrorMessage.hasName.c());
-//
-//					return result;
-//				}
-//			}
-//
-//			if (StringUtils.isNotBlank(vo.getSubmitTime())) {
-//				vo.setSubmitTime(StringUtils.substring(vo.getSubmitTime(), 0,
-//						10));
-//			}
-//			if (StringUtils.isNotBlank(vo.getPerformTime())) {
-//				vo.setPerformTime(StringUtils.substring(vo.getPerformTime(), 0,
-//						10));
-//			}
-//
-//		}
-
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			// 法律法规名称不可重复
-//			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-//
-//				Knowledge knowledge = selectKnowledge(vo.getkId(),
-//						vo.getColumnType());
-//
-//				if (knowledge != null) {
-//					if (!StringUtils
-//							.equals(knowledge.getTitle(), vo.getTitle())) {
-//
-//						int count = knowledgeMainService.checkLawNameRepeat(vo
-//								.getTitle());
-//						if (count == 0) {
-//							logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-//							result.put(Constants.status,
-//									Constants.ResultType.sameNameError.v());
-//							result.put(Constants.errormessage,
-//									Constants.ErrorMessage.hasName.c());
-//
-//							return result;
-//						}
-//					}
-//				}
-//			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
-			// if (Integer.parseInt(vo.getColumnType()) !=
-			// Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-			// 添加知识到权限表
-			result = insertUserPermissions(vo, user);
-			Integer status = Integer
-					.parseInt(result.get(Constants.status) + "");
-
-			if (status != 1) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			// }
-
-			// 删除该知识下的所有目录
-			int categoryCount = knowledgeCategoryService
-					.deleteKnowledgeCategory(vo.getkId());
-			// 删除该知识的基本信息
-			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(userId);
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
-
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, userId, username, columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
 
 		} else {
 			knowledgeNewsDAO.insertknowledge(vo, user);
-
-			// if (Integer.parseInt(vo.getColumnType()) !=
-			// Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-			// 添加知识到权限表
-			result = insertUserPermissions(vo, user);
-			Integer status = Integer
-					.parseInt(result.get(Constants.status) + "");
-
-			if (status != 1) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			// }
-
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(userId);
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
-
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, userId, username, columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
 		}
 
-		// 初始化知识统计信息
-		// int sV = knowledgeStaticsService.initKnowledgeStatics(vo, source);
-		// if (sV == 0) {
-		// logger.error("创建知识未全部完成,添加知识到知识统计信息失败，知识ID:{},栏目类型:{}",
-		// vo.getkId(), vo.getColumnType());
-		// result.put(Constants.status, Constants.ResultType.fail.v());
-		// result.put(Constants.errormessage,
-		// Constants.ErrorMessage.addKnowledgeFail.c());
-		// return result;
-		// }
+		// 添加知识到权限表
+		result = insertUserPermissions(vo, user);
+		Integer status = Integer.parseInt(result.get(Constants.status) + "");
+		if (status != 1) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.paramNotValid.c());
+			return result;
+		}
+
+		// 添加知识到目录知识表
+		result = insertCatalogueIds(vo, user);
+		status = Integer.parseInt(result.get(Constants.status) + "");
+
+		if (status != 1) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+			return result;
+		}
 		// 动态存观点
 		try {
 			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
@@ -1135,10 +922,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return result;
 		}
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
-		// 获取Session用户值
-		long userId = user.getId();
-		String username = user.getName();
-
 		// 保存，通过知识ID 查找需要保存的信息
 		if (vo.getkId() != 0) {
 			Knowledge knowledge = selectKnowledge(vo.getkId(),
@@ -1202,34 +985,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 			// }
 
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(userId);
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
+			// 添加知识到目录知识表
+			result = insertCatalogueIds(vo, user);
+			status = Integer.parseInt(result.get(Constants.status) + "");
 
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, userId, username, columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
+			if (status != 1) {
 				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
+						Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
 				return result;
 			}
 
@@ -1277,5 +1039,50 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		logger.info("创建知识成功,知识ID:{}", vo.getkId());
 		return result;
 
+	}
+
+	@Override
+	public Map<String, Object> insertCatalogueIds(KnowledgeNewsVO vo, User user) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// 删除该知识下的所有目录
+		knowledgeCategoryService.deleteKnowledgeCategory(vo.getkId());
+		// 删除该知识的基本信息
+		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
+
+		long[] cIds = null;
+		// 添加知识到知识目录表
+		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
+			UserCategoryExample example = new UserCategoryExample();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
+					.createCriteria();
+			criteria.andSortidEqualTo(Constants.unGroupSortId);
+			criteria.andUserIdEqualTo(user.getId());
+			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
+					.v());
+			List<UserCategory> list = userCategoryMapper
+					.selectByExample(example);
+			if (list != null && list.size() == 1) {
+				cIds = new long[1];
+				cIds[0] = list.get(0).getId();
+
+			}
+		} else {
+			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
+		}
+		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
+				vo.getkId(), cIds, user.getId(), user.getName(),
+				vo.getColumnPath(), vo);
+		if (categoryV == 0) {
+			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
+					vo.getkId(), cIds);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeFail.c());
+			return result;
+		}
+		result.put(Constants.status, Constants.ResultType.success.v());
+		return result;
 	}
 }

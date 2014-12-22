@@ -118,4 +118,12 @@ public interface KnowledgeService {
 
 	Map<String, Object> saveKnowledge(KnowledgeNewsVO vo, User user);
 
+	/**
+	 *  添加知识到知识目录表
+	 * @param vo
+	 * @param user
+	 * @return
+	 */
+	Map<String, Object> insertCatalogueIds(KnowledgeNewsVO vo, User user);
+
 }
