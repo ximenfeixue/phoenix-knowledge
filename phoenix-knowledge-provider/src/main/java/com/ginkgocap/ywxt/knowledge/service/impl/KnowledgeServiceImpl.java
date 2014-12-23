@@ -959,18 +959,18 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				for (FileIndex fileIndex : filelist) {
 					String fileId = MakePrimaryKey.getPrimaryKey();
 					FileIndex fileIndex1 = new FileIndex();
-					fileIndex.setId(fileId);
-					fileIndex.setFilePath(fileIndex1.getFilePath());
-					fileIndex.setFileTitle(fileIndex1.getFileTitle());
-					fileIndex.setTaskId(taskId);
-					fileIndex.setFileSize(fileIndex1.getFileSize());
-					fileIndex.setAuthor(user.getId());
-					fileIndex.setAuthorName(user.getName());
-					fileIndex.setMd5(fileIndex1.getMd5());
-					fileIndex.setStatus(true);
-					fileIndex.setCtime(DateUtil
+					fileIndex1.setId(fileId);
+					fileIndex1.setFilePath(fileIndex.getFilePath());
+					fileIndex1.setFileTitle(fileIndex.getFileTitle());
+					fileIndex1.setTaskId(taskId);
+					fileIndex1.setFileSize(fileIndex.getFileSize());
+					fileIndex1.setAuthor(user.getId());
+					fileIndex1.setAuthorName(user.getName());
+					fileIndex1.setMd5(fileIndex.getMd5());
+					fileIndex1.setStatus(true);
+					fileIndex1.setCtime(DateUtil
 							.formatWithYYYYMMDDHHMMSS(new Date()));
-					fileIndexService.insert(fileIndex);
+					fileIndexService.insert(fileIndex1);
 				}
 			}
 			// 知识入Mongo
