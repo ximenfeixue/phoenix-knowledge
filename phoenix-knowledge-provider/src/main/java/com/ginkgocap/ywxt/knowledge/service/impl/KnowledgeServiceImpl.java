@@ -19,6 +19,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.ginkgocap.ywxt.file.model.FileIndex;
+import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
@@ -63,6 +65,8 @@ import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
 import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
+import com.ginkgocap.ywxt.util.MakePrimaryKey;
+import com.ginkgocap.ywxt.util.MakeTaskId;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeService")
@@ -143,6 +147,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private KnowledgeCommentService knowledgeCommentService;
+
+	@Autowired
+	private FileIndexService fileIndexService;
 
 	//
 	@Override
@@ -921,9 +928,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					Constants.ErrorMessage.userNotLogin.c());
 			return result;
 		}
-		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
+		logger.info("开始保存知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
+
 		// 保存，通过知识ID 查找需要保存的信息
 		if (vo.getkId() != 0) {
+			String taskId = MakeTaskId.getTaskId();
 			Knowledge knowledge = selectKnowledge(vo.getkId(),
 					vo.getColumnType());
 
@@ -942,12 +951,34 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			if (vo.getAsso().contains("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
 				vo.setAsso("");
 			}
+			// 保存附件
+			List<FileIndex> filelist = fileIndexService.selectByTaskId(
+					knowledge.getTaskid(),
+					Constants.KnowledgeCategoryStatus.effect.v() + "");
+			if (filelist != null && filelist.size() > 0) {
+				for (FileIndex fileIndex : filelist) {
+					String fileId = MakePrimaryKey.getPrimaryKey();
+					FileIndex fileIndex1 = new FileIndex();
+					fileIndex.setId(fileId);
+					fileIndex.setFilePath(fileIndex1.getFilePath());
+					fileIndex.setFileTitle(fileIndex1.getFileTitle());
+					fileIndex.setTaskId(taskId);
+					fileIndex.setFileSize(fileIndex1.getFileSize());
+					fileIndex.setAuthor(user.getId());
+					fileIndex.setAuthorName(user.getName());
+					fileIndex.setMd5(fileIndex1.getMd5());
+					fileIndex.setStatus(true);
+					fileIndex.setCtime(DateUtil
+							.formatWithYYYYMMDDHHMMSS(new Date()));
+					fileIndexService.insert(fileIndex);
+				}
+			}
 			// 知识入Mongo
 			vo.setkId(kId);
 			vo.setColumnPath(columnPath);
 			vo.setColumnid(columnid);
 			vo.setContent(knowledge.getContent());
-			vo.setTaskId(knowledge.getTaskid());
+			vo.setTaskId(taskId);
 			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion
 					.v()) {
 				vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
