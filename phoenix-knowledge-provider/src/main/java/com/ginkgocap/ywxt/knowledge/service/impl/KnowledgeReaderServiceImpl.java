@@ -359,9 +359,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("kid", kid);
 		result.put("type", type);
 		result.put("userself",
-				user == null ? false :user.getId() != knowledge.getUid()?knowledge.getUid() == Constants.Ids.jinTN.v()?true:false:false );
+				user == null ? false :user.getId() != knowledge.getUid()?true:false );
 		
 		result.put("usershare", userPermissionService.isPublicForMe(user, kid));
+		result.put("jinTN", knowledge.getUid() == Constants.Ids.jinTN.v()?true:false);
 		result.put("userdel",
 				user == null ? false :user.getId() == knowledge.getUid()?true:false );
 		
