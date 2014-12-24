@@ -18,6 +18,7 @@ import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -94,7 +95,7 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 	}
 	
 	//{ "$or" : [ { "uid" : 13511} , { "uid" : 0}] , "$and" : [ { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
-	//{"$or":[{"_id" : { "$in" : [ 166475 , 316198]}}], "$and" : [ { "cpathid" : { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
+	//{"$or":[{"_id" : { "$in" : [ 166475 , 316198]}}], "$and" : [ { "cpathid" : { "$regex" : "^投融工具.*$" } , { "status" : 4}]}
 	@Override
 	public List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit) {
 		String class_name =Constants.getTableName(type + "");
@@ -106,19 +107,26 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 			System.out.println(String.format("column=%s,type=%d", column,type));
 			return null;
 		}
-		/*
+			
+		/*	List<Long> list = new ArrayList<Long>(kid.length);
+			for(int i = 0; i < kid.length; i++) {
+				list.add(kid[i]);
+			}
+			Criteria ctri = new Criteria("cpathid");
+			ctri.regex("^" + column + ".*$").and("status").is("4");*/
+		if(kid == null || kid.length == 0) return null;
 		List<Long> list = new ArrayList<Long>(kid.length);
 		for(int i = 0; i < kid.length; i++) {
 			list.add(kid[i]);
 		}
-		Criteria ctri = new Criteria("cpathid");
-		ctri.regex("^" + column + ".*$").and("status").is("4");
-		return mongoTemplate.find(query(where("_id").in(list).andOperator(ctri)).skip(offset).limit(limit),Knowledge.class,collection_name);*/
-		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
+		Criteria ctri = Criteria.where("_id").in(list).and("cpathid").regex("^" + column + ".*$").and("status").is(4);
+		Query query_n = new Query(ctri);
+		return mongoTemplate.find(query_n.limit(limit),Knowledge.class,collection_name);
+/*		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
 		String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
 		BasicQuery query = new BasicQuery(result);
 		List<Knowledge> kn =  mongoTemplate.find(query,Knowledge.class,collection_name);
-		return kn;
+		return kn;*/
 		
 	}
 	
