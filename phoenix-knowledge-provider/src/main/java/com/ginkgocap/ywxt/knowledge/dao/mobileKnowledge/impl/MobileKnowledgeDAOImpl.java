@@ -117,7 +117,8 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
 		String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
 		BasicQuery query = new BasicQuery(result);
-		return mongoTemplate.find(query,Knowledge.class,collection_name);
+		List<Knowledge> kn =  mongoTemplate.find(query,Knowledge.class,collection_name);
+		return kn;
 		
 	}
 	
@@ -145,7 +146,8 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
 		String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
 		BasicQuery query = new BasicQuery(result);
-		return mongoTemplate.count(query,collection_name);
+		long count = mongoTemplate.count(query,collection_name);
+		return count;
 	}
 	
 	
