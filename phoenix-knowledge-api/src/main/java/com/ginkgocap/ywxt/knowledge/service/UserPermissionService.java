@@ -142,4 +142,6 @@ public interface UserPermissionService {
 	public boolean deleteMyShare(String ids);
 
 	public boolean deleteShareMe(String ids, Long userId);
+	
+	public boolean isPublicForMe(User user,Long targetId);
 }

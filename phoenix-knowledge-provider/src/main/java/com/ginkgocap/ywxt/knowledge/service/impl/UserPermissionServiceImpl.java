@@ -447,4 +447,21 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean isPublicForMe(User user,Long targetId) {
+		if(user==null){
+			return false;
+		}else{
+			List<UserPermissionMongo> lt = null;
+			PageUtil page = null;
+			Criteria c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
+			Query query = new Query(c);
+			long count = mongoTemplate.count(query, UserPermissionMongo.class);
+			if(count>0){
+				return true;
+			}
+			return false;
+		}
+	}
 }
