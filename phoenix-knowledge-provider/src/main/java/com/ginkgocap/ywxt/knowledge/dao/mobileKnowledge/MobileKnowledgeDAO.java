@@ -36,4 +36,10 @@ public interface MobileKnowledgeDAO {
 	  * 从MySQL中查询出的knowledge_id和type  填充相应的knowledge 形成List
 	  */
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
+	 
+	 
+
+	 List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit);
+	 
+	 long fetchFriendKwCount(long[] kid,int type) ;
 }

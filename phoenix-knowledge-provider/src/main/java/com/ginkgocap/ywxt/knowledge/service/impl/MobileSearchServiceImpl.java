@@ -598,5 +598,21 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 			int columnType) {
 		return mobileKnowledgeMapper.selectKnowledgeIdByPermission(userId, columnType);
 	}
+
+	@Override
+	public List<Knowledge> fetchFriendKw(long[] kid, int type, int offset,
+			int limit) {
+		return null;
+	}
+
+	@Override
+	public long fetchFriendKwCount(long[] kid, int type) {
+		return 0;
+	}
+	
+	
+	
+	
+	
 	
 }

@@ -101,4 +101,10 @@ public interface MobileSearchService {
 	  * 查询好友的知识id
 	  * **/
 	 public List<Map<String,Object>> getKnowledgeIdByPermission(Long userId,int columnType);
+	 
+	 
+
+	 List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit);
+	 
+	 long fetchFriendKwCount(long[] kid,int type) ;
 }

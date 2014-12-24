@@ -11,20 +11,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.dao.mobileKnowledge.MobileKnowledgeDAO;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 @Component("mobileKnowledgeDAO")
 public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
@@ -91,6 +88,41 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 			
 		}
 		return result;
+	}
+	
+	
+	//{"$or":[{"_id" : { "$in" : [ 166475 , 316198]}}], "$and" : [ { "cpathid" : { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
+	@Override
+	public List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit) {
+		String class_name =Constants.getTableName(type + "");
+		String collection_name = class_name.substring(class_name.lastIndexOf(".") + 1, class_name.length());
+		
+		String column = Constants.getKnowledgeTypeName(String.valueOf(type));
+		
+		List<Long> list = new ArrayList<Long>(kid.length);
+		for(int i = 0; i < kid.length; i++) {
+			list.add(kid[i]);
+		}
+		Criteria ctri = new Criteria("cpathid");
+		ctri.regex("^" + column + ".*$").and("status").is("4");
+		return mongoTemplate.find(query(where("_id").in(list).andOperator(ctri)).skip(offset).limit(limit),Knowledge.class,collection_name);
+	}
+	
+	@Override
+	public long fetchFriendKwCount(long[] kid,int type) {
+		String class_name =Constants.getTableName(type + "");
+		String collection_name = class_name.substring(class_name.lastIndexOf(".") + 1, class_name.length());
+		
+		String column = Constants.getKnowledgeTypeName(String.valueOf(type));
+		
+		List<Long> list = new ArrayList<Long>(kid.length);
+		for(int i = 0; i < kid.length; i++) {
+			list.add(kid[i]);
+		}
+		
+		Criteria ctri = new Criteria("cpathid");
+		ctri.regex("^" + column + ".*$").and("status").is("4");
+		return mongoTemplate.count(query(where("_id").in(list).andOperator(ctri)), collection_name);
 	}
 	
 	
