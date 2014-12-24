@@ -13,8 +13,11 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -99,22 +102,38 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 		
 		String column = Constants.getKnowledgeTypeName(String.valueOf(type));
 		
+		if(StringUtils.isEmpty(column)) {
+			System.out.println(String.format("column=%s,type=%d", column,type));
+			return null;
+		}
+		/*
 		List<Long> list = new ArrayList<Long>(kid.length);
 		for(int i = 0; i < kid.length; i++) {
 			list.add(kid[i]);
 		}
 		Criteria ctri = new Criteria("cpathid");
 		ctri.regex("^" + column + ".*$").and("status").is("4");
-		return mongoTemplate.find(query(where("_id").in(list).andOperator(ctri)).skip(offset).limit(limit),Knowledge.class,collection_name);
+		return mongoTemplate.find(query(where("_id").in(list).andOperator(ctri)).skip(offset).limit(limit),Knowledge.class,collection_name);*/
+		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
+		String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
+		BasicQuery query = new BasicQuery(result);
+		return mongoTemplate.find(query,Knowledge.class,collection_name);
+		
 	}
 	
+	
+	//{"_id":{ "$in":[]},"$and":[{"cpathid":{ "$regex":"^资讯.*$"}},{"status":4}]}
 	@Override
 	public long fetchFriendKwCount(long[] kid,int type) {
 		String class_name =Constants.getTableName(type + "");
 		String collection_name = class_name.substring(class_name.lastIndexOf(".") + 1, class_name.length());
 		
 		String column = Constants.getKnowledgeTypeName(String.valueOf(type));
-		
+		if(StringUtils.isEmpty(column)) {
+			System.out.println(String.format("column=%s,type=%d", column,type));
+			return 0L;
+		}
+		/*	
 		List<Long> list = new ArrayList<Long>(kid.length);
 		for(int i = 0; i < kid.length; i++) {
 			list.add(kid[i]);
@@ -122,7 +141,11 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 		
 		Criteria ctri = new Criteria("cpathid");
 		ctri.regex("^" + column + ".*$").and("status").is("4");
-		return mongoTemplate.count(query(where("_id").in(list).andOperator(ctri)), collection_name);
+		return mongoTemplate.count(query(where("_id").in(list).andOperator(ctri)), collection_name);*/
+		String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
+		String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
+		BasicQuery query = new BasicQuery(result);
+		return mongoTemplate.count(query,collection_name);
 	}
 	
 	
