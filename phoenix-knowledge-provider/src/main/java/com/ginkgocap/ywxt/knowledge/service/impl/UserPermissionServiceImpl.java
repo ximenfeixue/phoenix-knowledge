@@ -455,13 +455,21 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}else{
 			List<UserPermissionMongo> lt = null;
 			PageUtil page = null;
-			Criteria c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
+			Criteria c = Criteria.where("receiveUserId").is(-1).and("knowledgeId").is(targetId);
 			Query query = new Query(c);
 			long count = mongoTemplate.count(query, UserPermissionMongo.class);
 			if(count>0){
 				return true;
+			}else{
+				c = new Criteria();
+				c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
+				count = mongoTemplate.count(query, UserPermissionMongo.class);
+				if(count>0){
+					return true;
+				}else{
+					return false;
+				}
 			}
-			return false;
 		}
 	}
 }
