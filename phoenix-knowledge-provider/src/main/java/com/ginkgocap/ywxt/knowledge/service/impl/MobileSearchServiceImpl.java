@@ -602,12 +602,12 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	@Override
 	public List<Knowledge> fetchFriendKw(long[] kid, int type, int offset,
 			int limit) {
-		return null;
+		return mobileKnowledgeDAO.fetchFriendKw(kid, type, offset, limit);
 	}
 
 	@Override
 	public long fetchFriendKwCount(long[] kid, int type) {
-		return 0;
+		return mobileKnowledgeDAO.fetchFriendKwCount(kid, type);
 	}
 	
 	
