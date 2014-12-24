@@ -90,7 +90,7 @@ public class MobileKnowledgeDAOImpl   implements MobileKnowledgeDAO {
 		return result;
 	}
 	
-	
+	//{ "$or" : [ { "uid" : 13511} , { "uid" : 0}] , "$and" : [ { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
 	//{"$or":[{"_id" : { "$in" : [ 166475 , 316198]}}], "$and" : [ { "cpathid" : { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
 	@Override
 	public List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit) {
