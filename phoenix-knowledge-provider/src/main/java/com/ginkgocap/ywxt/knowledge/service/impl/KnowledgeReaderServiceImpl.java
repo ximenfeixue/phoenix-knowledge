@@ -356,6 +356,10 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("type", type);
 		result.put("userself",
 				user == null ? false :user.getId() != knowledge.getUid()?true:false );
+		
+		result.put("userdel",
+				user == null ? false :user.getId() == knowledge.getUid()?true:false );
+		
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		// 权限设置
