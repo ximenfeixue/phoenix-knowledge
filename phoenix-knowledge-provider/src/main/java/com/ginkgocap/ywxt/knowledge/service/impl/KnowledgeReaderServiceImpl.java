@@ -29,6 +29,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -70,6 +71,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
+
+	@Resource
+	private UserPermissionService userPermissionService;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -357,6 +361,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("userself",
 				user == null ? false :user.getId() != knowledge.getUid()?true:false );
 		
+		result.put("usershare", userPermissionService.isPublicForMe(user, kid));
 		result.put("userdel",
 				user == null ? false :user.getId() == knowledge.getUid()?true:false );
 		
@@ -367,6 +372,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				: knowledge.getSelectedIds());
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
+		//分享权限是否有保存
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;
