@@ -21,7 +21,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.file.model.FileIndex;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeHomeDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
@@ -37,6 +36,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
@@ -65,8 +65,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	ColumnMapper columnMapper;
 	@Autowired
 	ColumnKnowledgeValueMapper columnKnowledgeValueMapper;
-	@Autowired
-	KnowledgeHomeDao knowledgeHomeDao;
+ 
 	@Autowired
 	KnowledgeNewsDAO knowledgeNewsDao;
 	@Resource
@@ -168,17 +167,17 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 查询栏目目录为当前分类下的所有数据
 		String reful = column.getPathName();
 		// 该栏目路径下的所有文章条件
-		criteriaPath.and("cpathid").regex(reful + ".*$");
+		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
 		Criteria criteriaAll = new Criteria();
 		if (criteriaUp == null) {
 
 			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
-					criteriaPath);
+					criteriaPath,criteria);
 		} else {
 
 			criteriaAll.orOperator(criteriaMy, criteriaGt, criteriaUp)
-					.andOperator(criteriaPath);
+					.andOperator(criteriaPath,criteria);
 		}
 		// Criteria criteriaVisAll = new Criteria();
 		if (cls != null && cls.size() > 0) {// 判断定制
@@ -192,9 +191,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			List<String> clstr = fillList(cls);
 			criteriaAll.and("columnid").nin(clstr);
 		}
-		criteria.andOperator(criteriaAll);
 		// 查询知识
-		Query query = new Query(criteria);
+		Query query = new Query(criteriaAll);
 		if (type == 10) {
 			query.sort().on("createtime", Order.DESCENDING);
 		} else {
@@ -202,7 +200,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		}
 		query.limit(size);
 		query.skip((page - 1) * size);
-		model.put("list", (List) mongoTemplate.find(query, t.getClass(),
+		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,
 				names[length - 1]));
 		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
 		return model;
@@ -236,24 +234,26 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
         ids = userPermissionValueMapper.selectByParamsSingle(null,
                 (long) ty.v());
 		// 查询资讯
+        Query query = null;
 		if (ids != null && ids.size()>0) {
 			criteriaUp.and("_id").in(ids);
 			criteriaPj.orOperator(criteriaUp, criteriaGt);
+			criteriaPj.andOperator(criteria);
+			query=new Query(criteriaPj);
 		}else{
-		    criteriaPj.andOperator(criteriaGt);
+		    criteria.andOperator(criteriaGt);
+		    query=new Query(criteria);
 		}
-		criteria.andOperator(criteriaPj);
-		Query query = new Query(criteria);
 		String str = "" + JSONObject.fromObject(criteria);
 		logger.info("MongoObject:" + ty.obj() + ",Query:" + str);
 		query.sort().on("_id", Order.DESCENDING);
 		long count;
 		try {
-			count = mongoTemplate.count(query, names[length - 1]);
-			PageUtil p = new PageUtil((int) count, page, size);
+//			count = mongoTemplate.count(query, names[length - 1]);
+//			PageUtil p = new PageUtil((int) count, page, size);
 			query.limit(size);
-			query.skip(p.getPageStartRow() - 1);
-			return (List<T>) mongoTemplate.find(query, Class.forName(ty.obj()),
+			query.skip(0);
+			return (List<T>) mongoTemplate.find(query, KnowledgeVO.class,
 					names[length - 1]);
 		} catch (Exception e) {
 			e.printStackTrace();

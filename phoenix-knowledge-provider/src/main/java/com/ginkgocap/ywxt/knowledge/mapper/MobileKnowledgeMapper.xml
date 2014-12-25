@@ -196,4 +196,10 @@
 		AND b.user_id = #{userId} 
 		AND b.tag like CONCAT('%',#{keyword},'%') 
 	</select>
+	
+	<select id="selectKnowledgeIdByPermission" resultType="map">
+		SELECT t.knowledge_id FROM <include refid="tb_user_permission" /> t WHERE 
+		t.receive_user_id = #{userId}   
+		AND t.column_type = #{type} 
+	</select>
 </mapper>

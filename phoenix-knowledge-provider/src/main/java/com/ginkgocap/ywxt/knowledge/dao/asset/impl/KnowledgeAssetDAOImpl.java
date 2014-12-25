@@ -31,19 +31,14 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 
 @Component("knowledgeAssetDAO")
-public class KnowledgeAssetDAOImpl extends SqlMapClientDaoSupport implements
+public class KnowledgeAssetDAOImpl  implements
 		KnowledgeAssetDAO {
-
-	@Autowired
-	SqlMapClient sqlMapClient;
+ 
 
 	@Resource
 	private MongoTemplate mongoTemplate;
 
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+	 
 
 	@Override
 	public KnowledgeAsset insertknowledge(String title, long userid,

@@ -146,54 +146,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			result.put("listword", listword);
 			return result;
 		}
-		// 法律法规名称不可重复
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Law.v()) {
-			if (StringUtils.isBlank(vo.getKnowledgeid())) {
-
-				int count = knowledgeMainService.checkLawNameRepeat(vo
-						.getTitle());
-				if (count == 0) {
-					logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-					result.put(Constants.status,
-							Constants.ResultType.sameNameError.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.hasName.c());
-
-					return result;
-				}
-			}
-
-			if (StringUtils.isNotBlank(vo.getSubmitTime())) {
-				vo.setSubmitTime(StringUtils.substring(vo.getSubmitTime(), 0,
-						10));
-			}
-			if (StringUtils.isNotBlank(vo.getPerformTime())) {
-				vo.setPerformTime(StringUtils.substring(vo.getPerformTime(), 0,
-						10));
-			}
-		}
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			Knowledge knowledge = knowledgeService.selectKnowledge(vo.getkId(),
-					vo.getColumnType());
-
-			if (knowledge != null) {
-				if (!StringUtils.equals(knowledge.getTitle(), vo.getTitle())) {
-
-					int count = knowledgeMainService.checkLawNameRepeat(vo
-							.getTitle());
-					if (count == 0) {
-						logger.error("法律法规名称重复，参数为：{}", vo.getTitle());
-						result.put(Constants.status,
-								Constants.ResultType.sameNameError.v());
-						result.put(Constants.errormessage,
-								Constants.ErrorMessage.hasName.c());
-
-						return result;
-					}
-				}
-			}
 			Knowledge k = getDraftByMainIdAndUser(vo.getkId(),
 					vo.getColumnType(), user.getId());
 			if (k != null && k.getId() > 0) {
@@ -205,84 +160,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
-			}
-
-			if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
-
-				// 删除用户权限数据
-				int userPermissionCount = userPermissionService
-						.deleteUserPermission(vo.getkId(), user.getId());
-				// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-				if (StringUtils.isNotBlank(vo.getSelectedIds())
-						&& !vo.getSelectedIds().equals(dule)) {
-					// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-					Boolean dule = JsonUtil.checkKnowledgePermission(vo
-							.getSelectedIds());
-					if (dule == null) {
-						logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-						result.put(Constants.status,
-								Constants.ResultType.fail.v());
-						result.put(Constants.errormessage,
-								Constants.ErrorMessage.paramNotValid.c());
-						return result;
-					}
-					if (!dule) {
-						// 格式化权限信息
-						List<String> permList = JsonUtil.getPermissionList(vo
-								.getSelectedIds());
-						// 大乐全平台分享
-						// userPermissionService.insertUserShare(permList,
-						// vo.getkId(), vo, user);
-						int pV = userPermissionService.insertUserPermission(
-								permList, vo.getkId(), user.getId(),
-								vo.getShareMessage(),
-								Short.parseShort(vo.getColumnType()),
-								Long.parseLong(vo.getColumnid()));
-						if (pV == 0) {
-							logger.error(
-									"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-									vo.getkId());
-						}
-					}
-				}
-			}
-
-			// 删除该知识下的所有目录
-			int categoryCount = knowledgeCategoryService
-					.deleteKnowledgeCategory(vo.getkId());
-			// 删除该知识的基本信息
-			knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(user.getId());
-				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-						.v());
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
-
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-					vo.getkId(), cIds, user.getId(), user.getName(),
-					columnPath, vo);
-			if (categoryV == 0) {
-				logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-						vo.getkId(), cIds);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
 			}
 
 			KnowledgeDraft knowledgeDraft = this.selectByKnowledgeId(vo
@@ -309,66 +186,16 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
-			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			if (!dule) {
-				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo
-						.getSelectedIds());
-				// 大乐全平台分享
-				// userPermissionService.insertUserShare(permList, kId, vo,
-				// user);
-				int pV = userPermissionService.insertUserPermission(permList,
-						kId, userId, vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()));
-				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
-				}
-			}
-			long[] cIds = null;
-			// 添加知识到知识目录表
-			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-				UserCategoryExample example = new UserCategoryExample();
-				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-						.createCriteria();
-				criteria.andSortidEqualTo(Constants.unGroupSortId);
-				criteria.andUserIdEqualTo(userId);
-				List<UserCategory> list = userCategoryMapper
-						.selectByExample(example);
-				if (list != null && list.size() == 1) {
-					cIds = new long[1];
-					cIds[0] = list.get(0).getId();
 
-				} else {
-					// 如果没有未分组目录,创建未分组目录.
-					// TODO
-				}
-			} else {
-				cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-			}
-			if (StringUtils.isNotBlank(vo.getCatalogueIds())) {
+		}
+		// 添加知识到目录知识表
+		result = knowledgeService.insertCatalogueIds(vo, user);
+		Integer status = Integer.parseInt(result.get(Constants.status) + "");
 
-				int categoryV = knowledgeCategoryService
-						.insertKnowledgeRCategory(draftKId, cIds, userId,
-								username, columnPath, vo);
-				if (categoryV == 0) {
-					logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-							kId, cIds);
-					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addKnowledgeFail.c());
-					return result;
-				}
-			}
+		if (status != 1) {
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+			return result;
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getKnowledgeMainId());

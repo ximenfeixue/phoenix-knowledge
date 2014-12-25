@@ -120,5 +120,15 @@ public interface KnowledgeReaderService {
 	 * @return
 	 */
 	Map<String, Object> getKnowledgeDetail(long kid, User sessUser, String type);
+	
+	/**
+	 * @param kid
+	 *            知识Id
+	 * @param kUId
+	 *            知识作者
+	 * @param type
+	 *            知识类型
+	 */
+	Boolean addKnowledgeStatics(long kId, long kUId, String type); 
 
 }

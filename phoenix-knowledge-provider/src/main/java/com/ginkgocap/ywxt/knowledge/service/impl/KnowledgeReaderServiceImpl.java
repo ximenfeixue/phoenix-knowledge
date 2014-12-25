@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -71,6 +71,9 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Resource
 	private KnowledgeStaticsMapperManual knowledgeStaticsMapperManual;
+
+	@Resource
+	private UserPermissionService userPermissionService;
 
 	@Override
 	public User getUserInfo(long userid) {
@@ -200,7 +203,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("author", knowledge.getUname());
 		result.put("source",
 				knowledge.getSource() == null ? "" : knowledge.getSource());
-		result.put("asso", knowledge.getAsso());
+		result.put("asso",
+				knowledge.getAsso() == null ? "" : knowledge.getAsso());
 
 		List<String> tagsList = JsonUtil.parseTags(knowledge.getTags());
 		result.put("tagsList", tagsList);
@@ -276,7 +280,8 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	 * @return
 	 */
 	@Transactional
-	private Boolean addKnowledgeStatics(long kId, long kUId, String type) {
+	@Override
+	public Boolean addKnowledgeStatics(long kId, long kUId, String type) {
 		Knowledge knowledge = getKnowledgeById(kId, type);
 		if (knowledge == null) {
 			logger.error("没有找到知识,知识ID:{},知识类型:{}", kId, type);
@@ -353,12 +358,22 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				: Constants.getKnowledgeTypeName(columnType));
 		result.put("kid", kid);
 		result.put("type", type);
+		result.put("userself",
+				user == null ? false :user.getId() != knowledge.getUid()?true:false );
+		
+		result.put("usershare", userPermissionService.isPublicForMe(user, kid));
+		result.put("jinTN", knowledge.getUid() == Constants.Ids.jinTN.v()?true:false);
+		result.put("userdel",
+				user == null ? false :user.getId() == knowledge.getUid()?true:false );
+		
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		// 权限设置
-		result.put("selectIds", knowledge.getSelectedIds());
+		result.put("selectIds", knowledge.getSelectedIds() == null ? ""
+				: knowledge.getSelectedIds());
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
+		//分享权限是否有保存
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;

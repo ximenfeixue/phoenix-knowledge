@@ -31,19 +31,15 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 
 @Component("knowledgeMacroDAO")
-public class KnowledgeMacroDAOImpl extends SqlMapClientDaoSupport implements
+public class KnowledgeMacroDAOImpl   implements
 		KnowledgeMacroDAO {
 
-	@Autowired
-	SqlMapClient sqlMapClient;
+ 
 
 	@Resource
 	private MongoTemplate mongoTemplate;
 
-	@PostConstruct
-	public void initSqlMapClient() {
-		super.setSqlMapClient(sqlMapClient);
-	}
+ 
 
 	@Override
 	public KnowledgeMacro insertknowledge(String title, long userid,

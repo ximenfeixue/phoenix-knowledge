@@ -80,4 +80,8 @@ public interface MobileKnowledgeMapper {
 	
 	int selectMyKnowledgeCountByTag(@Param("userId") long userId,
 			@Param("keyword") String keyword);
+	
+	@SuppressWarnings("rawtypes")
+	List selectKnowledgeIdByPermission(@Param("userId") long userId,
+			@Param("type") int type);
 }

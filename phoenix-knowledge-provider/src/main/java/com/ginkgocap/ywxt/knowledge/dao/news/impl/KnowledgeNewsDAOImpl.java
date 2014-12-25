@@ -37,9 +37,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 @Component("knowledgeNewsDAO")
 public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 
-	@Autowired
-	SqlMapClient sqlMapClient;
-
 	@Resource
 	private MongoTemplate mongoTemplate;
 
@@ -108,6 +105,8 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("pic", vo.getPic());
 			update.set("desc", vo.getDesc());
 			update.set("content", vo.getContent());
+			update.set("hcontent", "");
+			update.set("ish", 0);
 			update.set("essence", vo.getEssence());
 			update.set("modifytime", vo.getCreatetime());
 			update.set("taskid", vo.getTaskId());

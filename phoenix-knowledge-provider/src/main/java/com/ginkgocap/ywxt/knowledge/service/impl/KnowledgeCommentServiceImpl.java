@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,6 +122,8 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 					PropertyUtils.copyProperties(kcVO, kc);
 					kcVO.setIsSelf(user == null ? false : user.getId() == kcVO
 							.getUserId() ? true : false);
+					kcVO.setContent(StringEscapeUtils.unescapeHtml4(kc
+							.getContent()));
 					kcVOList.add(kcVO);
 				} catch (Exception e) {
 					e.printStackTrace();

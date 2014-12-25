@@ -32,19 +32,20 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
     <!-- 需要单独注释掉此service类，打成jar提供给手机端调用否则会与其他服务提供者冲突，web端则放开此方法
      -->
-<!--      <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/> -->
+<!--      <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/>
      
      <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
     <dubbo:reference id="mobileArticleService" interface="com.ginkgocap.ywxt.knowledge.service.MobileArticleService" version="1.0.0"/>
     <dubbo:reference id="mobileCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.MobileCategoryService" version="1.0.0"/>
+      -->
     <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="1.0.0"/>
-    <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/>
+    <!-- <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/> 
+ dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/> -->
     <dubbo:reference id="columnService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" version="1.0.0"/>
     <dubbo:reference id="columnVisibleService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" version="1.0.0"/>
     <dubbo:reference id="columnSubscribeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" version="1.0.0"/>
     <dubbo:reference id="knowledgeMainService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" version="1.0.0"/>
+    <!--<dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" version="1.0.0"/> -->
     <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" version="1.0.0"/>
     <dubbo:reference id="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="1.0.0"/>
     <dubbo:reference id="knowledgeAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService" version="1.0.0"/>

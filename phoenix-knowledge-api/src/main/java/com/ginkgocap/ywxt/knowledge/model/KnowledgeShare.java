@@ -25,8 +25,6 @@ public class KnowledgeShare implements Serializable {
 	private String ctime;//分享时间
 	private String title;
 	private List<Friends> friends;
-	@Transient
-	private Article article;
 	
 	public String getId() {
 		return id;
@@ -64,12 +62,7 @@ public class KnowledgeShare implements Serializable {
 	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
-	public Article getArticle() {
-		return article;
-	}
-	public void setArticle(Article article) {
-		this.article = article;
-	}
+ 
 	public String getTitle() {
 		return title;
 	}

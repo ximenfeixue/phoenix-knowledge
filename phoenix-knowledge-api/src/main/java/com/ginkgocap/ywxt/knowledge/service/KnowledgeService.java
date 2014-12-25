@@ -105,15 +105,25 @@ public interface KnowledgeService {
 	 *            登陆用户对象
 	 */
 	Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user);
-	
+
 	/**
 	 * 编辑知识(投融工具)
 	 */
 
-	public void updateKnowledgeForInvestment(Long id,String pic,String refrenceData,String imageBookData, String content, String desc, Long userId);
-	
+	public void updateKnowledgeForInvestment(Long id, String pic,
+			String refrenceData, String imageBookData, String content,
+			String desc, Long userId);
 
 	public void updateByPrimaryKey(KnowledgeBase kb);
-	
-	public void deleteDynamicKnowledge(long targetId);
+
+	Map<String, Object> saveKnowledge(KnowledgeNewsVO vo, User user);
+
+	/**
+	 *  添加知识到知识目录表
+	 * @param vo
+	 * @param user
+	 * @return
+	 */
+	Map<String, Object> insertCatalogueIds(KnowledgeNewsVO vo, User user);
+
 }

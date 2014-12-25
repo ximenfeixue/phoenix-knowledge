@@ -38,4 +38,7 @@ public interface MobileKnowledgeDAO {
 	 List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
 	 
 
+	 List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit);
+	 
+	 long fetchFriendKwCount(long[] kid,int type) ;
 }

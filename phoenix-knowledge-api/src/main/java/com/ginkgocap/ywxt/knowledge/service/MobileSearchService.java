@@ -96,5 +96,15 @@ public interface MobileSearchService {
 	 /** 查询我的标签被知识所使用个数 */
 	 public int getCountForMyKnowledgeTag(long userId,String keyword);
 	 
+	 /**
+	  * 2014-12-24
+	  * 查询好友的知识id
+	  * **/
+	 public List<Map<String,Object>> getKnowledgeIdByPermission(Long userId,int columnType);
+	 
+	 
 
+	 List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit);
+	 
+	 long fetchFriendKwCount(long[] kid,int type) ;
 }

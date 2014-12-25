@@ -592,6 +592,28 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	public int getCountForMyKnowledgeTag(long userId, String keyword) {
 		return mobileKnowledgeMapper.selectMyKnowledgeCountByTag(userId,keyword);
 	}
+
+	@Override
+	public List<Map<String,Object>> getKnowledgeIdByPermission(Long userId,
+			int columnType) {
+		return mobileKnowledgeMapper.selectKnowledgeIdByPermission(userId, columnType);
+	}
+
+	@Override
+	public List<Knowledge> fetchFriendKw(long[] kid, int type, int offset,
+			int limit) {
+		return mobileKnowledgeDAO.fetchFriendKw(kid, type, offset, limit);
+	}
+
+	@Override
+	public long fetchFriendKwCount(long[] kid, int type) {
+		return mobileKnowledgeDAO.fetchFriendKwCount(kid, type);
+	}
+	
+	
+	
+	
+	
 	
 
 	

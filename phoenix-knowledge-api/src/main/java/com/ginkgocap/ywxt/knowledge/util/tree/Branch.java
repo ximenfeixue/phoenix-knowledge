@@ -1,11 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.util.tree;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 
 import net.sf.json.JSONObject;
-
-import com.ginkgocap.ywxt.knowledge.model.Category;
+ 
 
 /**
  * 生成知识目录树
@@ -94,55 +93,7 @@ public class Branch {
     }
     
     //测试生成树方法
-    public static void main(String[] args) {
-        Category c1 = new Category();
-        Category c11 = new Category();
-        Category c111 = new Category();
-        Category c2 = new Category();
-        Category c12 = new Category();
-        Category c21 = new Category();
-        Category c22 = new Category();
-        c1.setSortId("100");
-        c1.setId(1);
-        c1.setParentId(0);
-        c1.setUid(4444);
-        c11.setId(2);
-        c11.setSortId("100100");
-        c11.setUid(44445);
-        c11.setParentId(1);
-        c12.setId(201);
-        c12.setUid(444456);
-        c12.setSortId("100200");
-        c12.setParentId(1);
-        c2.setId(30);
-        c2.setUid(444);
-        c2.setSortId("200");
-        c2.setParentId(0);
-        c21.setId(4);
-        c21.setSortId("200100");
-        c21.setUid(4447);
-        c21.setParentId(30);
-        c22.setId(300);
-        c22.setSortId("200200");
-        c22.setUid(44478);
-        c22.setParentId(30);
-        c111.setId(3);
-        c111.setSortId("100100100");
-        c111.setUid(444789);
-        c111.setParentId(2);
-        List<Category> tempList = new ArrayList<Category>();
-        tempList.add(c1);
-        tempList.add(c11);
-        tempList.add(c111);
-        tempList.add(c12);
-        tempList.add(c2);
-        tempList.add(c21);
-        tempList.add(c22);
-        List<Node> nl =ConvertUtil.convert2Node(tempList,"uid", "id", "name", "parentId", "sortId");
-//        String a=JSONObject.fromObject(Branch.build(nl)).toString();
-//        System.out.println(a);
-//        p(rootNode);//打印树
-    }
+    public static void main(String[] args) { }
 
     private static void p(Node node) {
         if(node!=null){            
