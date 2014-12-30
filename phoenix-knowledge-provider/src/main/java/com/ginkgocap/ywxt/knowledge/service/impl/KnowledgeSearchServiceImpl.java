@@ -12,15 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
-import com.ginkgocap.ywxt.knowledge.service.SearchService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 
-@Service("searchService")
-public class SearchServiceImpl implements SearchService {
+@Service("knowledgeSearchService")
+public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 	private static final Logger logger = LoggerFactory
-			.getLogger(SearchServiceImpl.class);
+			.getLogger(KnowledgeSearchServiceImpl.class);
 
 	@Resource
 	private HTTPUrlConfig httpUrlConfig;

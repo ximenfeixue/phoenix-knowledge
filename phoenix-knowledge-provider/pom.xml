@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
-			<version>5.2.2</version>
+			<version>5.2.3-SNAPSHOT</version>
 		</dependency>
 		<!-- spring begin -->
 

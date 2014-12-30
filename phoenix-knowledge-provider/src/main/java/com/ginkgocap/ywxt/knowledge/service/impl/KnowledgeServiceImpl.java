@@ -46,9 +46,9 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
-import com.ginkgocap.ywxt.knowledge.service.SearchService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
@@ -134,7 +134,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	private DiaryService diaryService;
 
 	@Autowired
-	private SearchService searchservice;
+	private KnowledgeSearchService knowledgeSearchService;
 
 	@Autowired
 	private KnowledgeStaticsService knowledgeStaticsService;

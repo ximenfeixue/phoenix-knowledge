@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
-import com.ginkgocap.ywxt.knowledge.service.SearchService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
 @Service
@@ -24,7 +24,7 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 	@Resource
 	private DataCenterService dataCenterService;
 	@Resource
-	private SearchService searchService;
+	private KnowledgeSearchService knowledgeSearchService;
 
 	private static ExecutorService executor = null;
 
@@ -71,7 +71,7 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 				} else if (type == Constants.noticeType.shareToJinTN.v()) { //分享到金桐脑通知
 					String userId = params.get("userId") + "";
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
-					searchService.shareToJinTN(Long.parseLong(userId), vo);
+					knowledgeSearchService.shareToJinTN(Long.parseLong(userId), vo);
 				}
 			}
 		});
