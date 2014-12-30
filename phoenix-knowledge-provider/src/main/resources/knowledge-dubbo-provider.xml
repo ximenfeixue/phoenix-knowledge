@@ -70,7 +70,7 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService"  ref="knowledgeCommonService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService"  ref="knowledgeRecycleService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService"  ref="userCategoryService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.SearchService"  ref="searchService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService"  ref="knowledgeSearchService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService"  ref="mobileSearchService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService"  ref="attachmentService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.DataCenterService"  ref="dataCenterService" version="1.0.0"/>
