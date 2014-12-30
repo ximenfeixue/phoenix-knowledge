@@ -104,6 +104,7 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("cpathid", vo.getColumnPath());
 			update.set("pic", vo.getPic());
 			update.set("desc", vo.getDesc());
+			update.set("hideDesc", vo.getHideDesc());
 			update.set("content", vo.getContent());
 			update.set("hcontent", "");
 			update.set("ish", 0);
@@ -243,6 +244,8 @@ public class KnowledgeNewsDAOImpl implements KnowledgeNewsDAO {
 			update.set("synonyms", vo.getSynonyms());
 			update.set("refrenceData", vo.getRefrenceData());
 			update.set("imageBookData", vo.getImageBookData());
+			update.set("hideDesc", vo.getHideDesc());
+			
 			mongoTemplate.updateFirst(query, update,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 

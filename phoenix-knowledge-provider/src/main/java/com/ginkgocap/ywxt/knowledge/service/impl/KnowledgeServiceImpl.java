@@ -345,6 +345,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				vo.setDesc(content);
 			}
+		}else{
+			if (StringUtils.isBlank(vo.getDesc())) {
+				String content = HtmlToText.html2Text(vo.getDesc());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
+			}
 		}
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
@@ -605,6 +614,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			if (StringUtils.isBlank(vo.getDesc())) {
 				String content = HtmlToText.html2Text(vo.getContent());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
+			}
+		}else{
+			if (StringUtils.isBlank(vo.getDesc())) {
+				String content = HtmlToText.html2Text(vo.getDesc());
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
 							+ "..." : content;

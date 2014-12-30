@@ -69,8 +69,17 @@ public class KnowledgeNewsVO implements Serializable {
 	private String imageBookData;
 	//是否需要更新mongo
 	private boolean needUpdate;
-
 	
+	private String hideDesc;
+	
+	public String getHideDesc() {
+		return hideDesc;
+	}
+
+	public void setHideDesc(String hideDesc) {
+		this.hideDesc = hideDesc;
+	}
+
 	public String getRefrenceData() {
 		return refrenceData;
 	}

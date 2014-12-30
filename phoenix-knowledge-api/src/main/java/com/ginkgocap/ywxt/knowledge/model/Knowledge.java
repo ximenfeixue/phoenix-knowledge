@@ -84,7 +84,17 @@ public class Knowledge implements Serializable {
 	
 	private String columnType;
 	
+	//投融工具、行业、经典案例用到的隐藏DIV，用于编辑、阅读器使用，之前的desc仅用于知识查询列表展现
+	private String hideDesc;
 	
+	public String getHideDesc() {
+		return hideDesc;
+	}
+
+	public void setHideDesc(String hideDesc) {
+		this.hideDesc = hideDesc;
+	}
+
 	// 系统时间（大数据推送带过来的数据）
 	private String sysTime;
 	
