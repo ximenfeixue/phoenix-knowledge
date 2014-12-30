@@ -29,8 +29,8 @@
 					<groupId>com.ginkgocap.ywxt</groupId>
 					<artifactId>phoenix-user-api</artifactId>
 				</exclusion> 
-			</exclusions>
-		</dependency>
+			</exclusions> 
+		</dependency> 
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
