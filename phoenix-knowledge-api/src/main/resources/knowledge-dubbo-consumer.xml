@@ -34,13 +34,16 @@
      -->
 <!--      <dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/>
      
-     <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
-    <dubbo:reference id="mobileArticleService" interface="com.ginkgocap.ywxt.knowledge.service.MobileArticleService" version="1.0.0"/>
+    <dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
+   	<dubbo:reference id="mobileArticleService" interface="com.ginkgocap.ywxt.knowledge.service.MobileArticleService" version="1.0.0"/>
     <dubbo:reference id="mobileCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.MobileCategoryService" version="1.0.0"/>
-      -->
+  	<dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/> 
+ 	<dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/> -->
+ 	<dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/>
+ 	<dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/> 
+ 	<dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
+ 	
     <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="1.0.0"/>
-    <!-- <dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/> 
- dubbo:reference id="knowledgeCatalogService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" version="1.0.0"/> -->
     <dubbo:reference id="columnService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" version="1.0.0"/>
     <dubbo:reference id="columnVisibleService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" version="1.0.0"/>
     <dubbo:reference id="columnSubscribeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" version="1.0.0"/>
