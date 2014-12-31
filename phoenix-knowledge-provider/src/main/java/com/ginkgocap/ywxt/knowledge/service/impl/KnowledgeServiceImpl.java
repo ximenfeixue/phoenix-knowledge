@@ -336,8 +336,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						.v()
 				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case
 						.v()) {
-			if (StringUtils.isBlank(vo.getDesc())) {
+			if (StringUtils.isNotBlank(vo.getDesc())) {
 				String content = HtmlToText.html2Text(vo.getDesc());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
+			}else{
+				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
 							+ "..." : content;
@@ -610,8 +617,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 						.v()
 				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case
 						.v()) {
-			if (StringUtils.isBlank(vo.getDesc())) {
+			if (StringUtils.isNotBlank(vo.getDesc())) {
 				String content = HtmlToText.html2Text(vo.getDesc());
+				if (StringUtils.isNotBlank(content)) {
+					content = content.length() > 50 ? content.substring(0, 50)
+							+ "..." : content;
+				}
+				vo.setDesc(content);
+			}else{
+				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
 							+ "..." : content;
