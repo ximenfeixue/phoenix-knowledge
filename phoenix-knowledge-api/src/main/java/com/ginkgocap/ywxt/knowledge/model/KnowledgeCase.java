@@ -72,7 +72,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setKnowledgeMainId(vo.getKnowledgeMainId());
 			this.setContent(vo.getContent());
 			this.setTranStatus(0);
-			
+			this.setHideDesc(vo.getHideDesc());
 			return this;
 		}
 
@@ -107,6 +107,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setAsso(vo.getAsso());
 			this.setKnowledgeMainId(vo.getKnowledgeMainId());
 			this.setTranStatus(0);
+			this.setHideDesc(vo.getHideDesc());
 			return this;
 		}
 
