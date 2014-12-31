@@ -463,8 +463,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}else{
 				c = new Criteria();
 				c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
-				 query = new Query(c);
-				count = mongoTemplate.count(query, UserPermissionMongo.class);
+				Query query1 = new Query(c);
+				count = mongoTemplate.count(query1, UserPermissionMongo.class);
 				if(count>0){
 					return true;
 				}else{
