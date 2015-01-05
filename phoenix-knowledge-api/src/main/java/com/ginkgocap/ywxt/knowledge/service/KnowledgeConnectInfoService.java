@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
 import java.util.Map;
+
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo;
 
 /**
  * 知识关联信息Service
@@ -13,4 +16,6 @@ public interface KnowledgeConnectInfoService {
 	Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,Long knowledgeId);
 	
 	void deleteKnowledgeConnectInfo(Long knowledgeid);
+	
+	List<KnowledgeConnectInfo> queryKnowledgeConnectInfo(Integer conntype,Long knowledgeId,int pageno,int pagesize);
 }

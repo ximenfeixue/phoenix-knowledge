@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -29,9 +30,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
 			Long knowledgeId) {
 
-		//删除该知识的关联信息
+		// 删除该知识的关联信息
 		deleteKnowledgeConnectInfo(knowledgeId);
-		
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject j = JSONObject.fromObject(knowledgeasso);
 		String jsonstr = "";
@@ -188,5 +189,21 @@ public class KnowledgeConnectInfoServiceImpl implements
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeidEqualTo(knowledgeid);
 		knowledgeConnectInfoMapper.deleteByExample(example);
+	}
+
+	@Override
+	public List<KnowledgeConnectInfo> queryKnowledgeConnectInfo(
+			Integer conntype, Long knowledgeId, int pageno, int pagesize) {
+
+		KnowledgeConnectInfoExample example = new KnowledgeConnectInfoExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeidEqualTo(knowledgeId);
+		criteria.andConntypeEqualTo(conntype);
+
+		example.setOrderByClause("connId desc");
+		example.setLimitStart(pageno);
+		example.setLimitEnd(pagesize);
+
+		return knowledgeConnectInfoMapper.selectByExample(example);
 	}
 }
