@@ -184,6 +184,66 @@ public class KnowledgeConnectInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andKnowledgeidIsNull() {
+            addCriterion("knowledgeId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidIsNotNull() {
+            addCriterion("knowledgeId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidEqualTo(Long value) {
+            addCriterion("knowledgeId =", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotEqualTo(Long value) {
+            addCriterion("knowledgeId <>", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidGreaterThan(Long value) {
+            addCriterion("knowledgeId >", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidGreaterThanOrEqualTo(Long value) {
+            addCriterion("knowledgeId >=", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidLessThan(Long value) {
+            addCriterion("knowledgeId <", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidLessThanOrEqualTo(Long value) {
+            addCriterion("knowledgeId <=", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidIn(List<Long> values) {
+            addCriterion("knowledgeId in", values, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotIn(List<Long> values) {
+            addCriterion("knowledgeId not in", values, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidBetween(Long value1, Long value2) {
+            addCriterion("knowledgeId between", value1, value2, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotBetween(Long value1, Long value2) {
+            addCriterion("knowledgeId not between", value1, value2, "knowledgeid");
+            return (Criteria) this;
+        }
+
         public Criteria andTagIsNull() {
             addCriterion("tag is null");
             return (Criteria) this;

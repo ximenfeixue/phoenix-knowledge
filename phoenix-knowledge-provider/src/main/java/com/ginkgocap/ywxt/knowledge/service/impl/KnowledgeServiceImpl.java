@@ -42,6 +42,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
@@ -150,6 +151,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private FileIndexService fileIndexService;
+
+	@Autowired
+	private KnowledgeConnectInfoService knowledgeConnectInfoService;
 
 	//
 	@Override
@@ -343,7 +347,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 							+ "..." : content;
 				}
 				vo.setDesc(content);
-			}else{
+			} else {
 				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
@@ -351,7 +355,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				vo.setDesc(content);
 			}
-		}else{
+		} else {
 			if (StringUtils.isBlank(vo.getDesc())) {
 				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
@@ -377,6 +381,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
+		}
+		// 关联信息存入mysql中
+		if (StringUtils.isNotBlank(vo.getAsso())) {
+			knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+					vo.getAsso(), vo.getkId());
 		}
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
@@ -624,7 +633,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 							+ "..." : content;
 				}
 				vo.setDesc(content);
-			}else{
+			} else {
 				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
@@ -632,7 +641,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				vo.setDesc(content);
 			}
-		}else{
+		} else {
 			if (StringUtils.isBlank(vo.getDesc())) {
 				String content = HtmlToText.html2Text(vo.getContent());
 				if (StringUtils.isNotBlank(content)) {
@@ -641,7 +650,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				}
 				vo.setDesc(content);
 			}
-			
+
 		}
 		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
@@ -650,9 +659,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		vo.setKnowledgestatus(Constants.Status.checked.v());
 		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
 			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId());
+			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		} else {
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId());
+			}
 			knowledgeNewsDAO.insertknowledge(vo, user);
 		}
 
@@ -1031,6 +1050,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setEssence(knowledge.getEssence() + "");
 			vo.setKnowledgestatus(Constants.Status.checked.v());
 
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId());
+			}
 			knowledgeNewsDAO.insertknowledge(vo, user);
 
 			// if (Integer.parseInt(vo.getColumnType()) !=

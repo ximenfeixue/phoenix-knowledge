@@ -3,6 +3,7 @@
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.KnowledgeConnectInfoMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="knowledgeId" property="knowledgeid" jdbcType="BIGINT" />
     <result column="tag" property="tag" jdbcType="VARCHAR" />
     <result column="connType" property="conntype" jdbcType="INTEGER" />
     <result column="connId" property="connid" jdbcType="BIGINT" />
@@ -77,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, tag, connType, connId, connName, ownerId, owner, requirementtype, career, company, 
-    address, hy, columnPath, columnType, url
+    id, knowledgeId, tag, connType, connId, connName, ownerId, owner, requirementtype, 
+    career, company, address, hy, columnPath, columnType, url
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfoExample" >
     select
@@ -114,24 +115,27 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo" >
-    insert into tb_connect_info (id, tag, connType, 
-      connId, connName, ownerId, 
-      owner, requirementtype, career, 
-      company, address, hy, 
-      columnPath, columnType, url
-      )
-    values (#{id,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, #{conntype,jdbcType=INTEGER}, 
-      #{connid,jdbcType=BIGINT}, #{connname,jdbcType=VARCHAR}, #{ownerid,jdbcType=BIGINT}, 
-      #{owner,jdbcType=VARCHAR}, #{requirementtype,jdbcType=VARCHAR}, #{career,jdbcType=VARCHAR}, 
-      #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{hy,jdbcType=VARCHAR}, 
-      #{columnpath,jdbcType=VARCHAR}, #{columntype,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}
-      )
+    insert into tb_connect_info (id, knowledgeId, tag, 
+      connType, connId, connName, 
+      ownerId, owner, requirementtype, 
+      career, company, address, 
+      hy, columnPath, columnType, 
+      url)
+    values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, 
+      #{conntype,jdbcType=INTEGER}, #{connid,jdbcType=BIGINT}, #{connname,jdbcType=VARCHAR}, 
+      #{ownerid,jdbcType=BIGINT}, #{owner,jdbcType=VARCHAR}, #{requirementtype,jdbcType=VARCHAR}, 
+      #{career,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{hy,jdbcType=VARCHAR}, #{columnpath,jdbcType=VARCHAR}, #{columntype,jdbcType=INTEGER}, 
+      #{url,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo" >
     insert into tb_connect_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="knowledgeid != null" >
+        knowledgeId,
       </if>
       <if test="tag != null" >
         tag,
@@ -179,6 +183,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeid != null" >
+        #{knowledgeid,jdbcType=BIGINT},
       </if>
       <if test="tag != null" >
         #{tag,jdbcType=VARCHAR},
@@ -236,6 +243,9 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.knowledgeid != null" >
+        knowledgeId = #{record.knowledgeid,jdbcType=BIGINT},
+      </if>
       <if test="record.tag != null" >
         tag = #{record.tag,jdbcType=VARCHAR},
       </if>
@@ -286,6 +296,7 @@
   <update id="updateByExample" parameterType="map" >
     update tb_connect_info
     set id = #{record.id,jdbcType=BIGINT},
+      knowledgeId = #{record.knowledgeid,jdbcType=BIGINT},
       tag = #{record.tag,jdbcType=VARCHAR},
       connType = #{record.conntype,jdbcType=INTEGER},
       connId = #{record.connid,jdbcType=BIGINT},
@@ -307,6 +318,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo" >
     update tb_connect_info
     <set >
+      <if test="knowledgeid != null" >
+        knowledgeId = #{knowledgeid,jdbcType=BIGINT},
+      </if>
       <if test="tag != null" >
         tag = #{tag,jdbcType=VARCHAR},
       </if>
@@ -354,7 +368,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo" >
     update tb_connect_info
-    set tag = #{tag,jdbcType=VARCHAR},
+    set knowledgeId = #{knowledgeid,jdbcType=BIGINT},
+      tag = #{tag,jdbcType=VARCHAR},
       connType = #{conntype,jdbcType=INTEGER},
       connId = #{connid,jdbcType=BIGINT},
       connName = #{connname,jdbcType=VARCHAR},

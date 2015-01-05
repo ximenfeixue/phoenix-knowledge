@@ -1,8 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -10,9 +8,12 @@ import javax.annotation.Resource;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfoExample;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfoExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeConnectInfoMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -25,76 +26,129 @@ public class KnowledgeConnectInfoServiceImpl implements
 	private KnowledgeConnectInfoMapper knowledgeConnectInfoMapper;
 
 	@Override
-	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso) {
+	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
+			Long knowledgeId) {
 
+		//删除该知识的关联信息
+		deleteKnowledgeConnectInfo(knowledgeId);
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		JSONObject j = JSONObject.fromObject(knowledgeasso);
-		String strr = j.get(Constants.KnowledgeConnectType.demand.c())
-				.toString();
-		String tag = getTag(strr);
-		String conn = getConn(strr);
-		int count = insertJsonAraay(conn, tag);
-		if (count < 0) {
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addasso.c());
+		String jsonstr = "";
+		String tag = "";
+		String conn = "";
+		int count = 0;
+
+		jsonstr = j.get(Constants.KnowledgeConnectType.people.c()).toString();
+		if (!StringUtils.equals(jsonstr, "[]")) {
+			tag = getTag(jsonstr);
+			conn = getConn(jsonstr);
+			count = insertJsonAraay(conn, tag, knowledgeId);
+			if (count < 0) {
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addasso.c());
+			}
+			return result;
 		}
-		result.put("", count);
+
+		jsonstr = j.get(Constants.KnowledgeConnectType.organization.c())
+				.toString();
+		if (!StringUtils.equals(jsonstr, "[]")) {
+			tag = getTag(jsonstr);
+			conn = getConn(jsonstr);
+			count = insertJsonAraay(conn, tag, knowledgeId);
+			if (count < 0) {
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addasso.c());
+			}
+			return result;
+		}
+
+		jsonstr = j.get(Constants.KnowledgeConnectType.knowledge.c())
+				.toString();
+		if (!StringUtils.equals(jsonstr, "[]")) {
+			tag = getTag(jsonstr);
+			conn = getConn(jsonstr);
+			count = insertJsonAraay(conn, tag, knowledgeId);
+			if (count < 0) {
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addasso.c());
+			}
+			return result;
+		}
+
+		jsonstr = j.get(Constants.KnowledgeConnectType.event.c()).toString();
+		if (!StringUtils.equals(jsonstr, "[]")) {
+			tag = getTag(jsonstr);
+			conn = getConn(jsonstr);
+			count = insertJsonAraay(conn, tag, knowledgeId);
+			if (count < 0) {
+				result.put(Constants.errormessage,
+						Constants.ErrorMessage.addasso.c());
+			}
+			return result;
+		}
+		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
 
-	public String jsonString(String str) {
-
-		JSONObject j = JSONObject.fromObject(str);
-		String strr = j.get("r").toString();
-		return strr;
-	}
-
-	public int insertJsonAraay(String str, String tag) {
+	public int insertJsonAraay(String str, String tag, Long knowledgeId) {
 
 		JSONArray json = JSONArray.fromObject(str); // 首先把字符串转成
 		int count = 0;
+		KnowledgeConnectInfo knowledgeconnect = null;
 		if (json.size() > 0) {
 			for (int i = 0; i < json.size(); i++) {
 				JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
-				KnowledgeConnectInfo knowledgeconnect = new KnowledgeConnectInfo();
-				knowledgeconnect.setConntype(Integer.parseInt((String) job
-						.get("type")));
-				knowledgeconnect.setConnid(Long.parseLong((String) job
-						.get("id")));
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.contacts
+				knowledgeconnect = new KnowledgeConnectInfo();
+				knowledgeconnect.setKnowledgeid(knowledgeId);
+				knowledgeconnect.setTag(tag);
+				knowledgeconnect.setConntype(Integer.parseInt(job.get("type")
+						+ ""));
+				knowledgeconnect.setConnid(Long.parseLong(job.get("id") + ""));
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.event
 						.v()
-						|| Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.demand
+						|| Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.knowledge
 								.v()) {
 
 					knowledgeconnect.setConnname(job.get("title") + "");
 				} else {
 					knowledgeconnect.setConnname(job.get("name") + "");
 				}
-				knowledgeconnect.setOwnerid(Long.parseLong(job.get("ownerid")
-						+ ""));
+				String ownerid = job.get("ownerid") + "";
+				knowledgeconnect.setOwnerid(Long.parseLong(StringUtils.equals(
+						ownerid, "null") ? "-2" : ownerid));
 				knowledgeconnect.setOwner(job.get("ownername") + "");
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.contacts
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.event
 						.v()) {
 					knowledgeconnect.setRequirementtype(job
 							.get("requirementtype") + "");
 					knowledgeconnect.setCareer(job.get("career") + "");
+					knowledgeconnect.setUrl("/requirement/detail/"
+							+ job.get("requirementtype") + "" + "/"
+							+ job.get("id"));
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.organization
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.people
 						.v()) {
 					knowledgeconnect.setCompany(job.get("company") + "");
+					knowledgeconnect.setUrl("/people/" + job.get("id"));
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.knowledge
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.organization
 						.v()) {
 					knowledgeconnect.setCompany(job.get("address") + "");
 					knowledgeconnect.setHy(job.get("hy") + "");
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.demand
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.knowledge
 						.v()) {
 					knowledgeconnect.setColumntype(Integer.parseInt(job
 							.get("columntype") + ""));
 					knowledgeconnect.setColumnpath(job.get("columnpath") + "");
+					knowledgeconnect.setUrl("/knowledge/reader?type="
+							+ job.get("columntype") + "&kid=" + job.get("id"));
+
 				}
-				count = knowledgeConnectInfoMapper.insert(knowledgeconnect);
+				count = knowledgeConnectInfoMapper
+						.insertSelective(knowledgeconnect);
 
 			}
 
@@ -109,8 +163,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 * @return
 	 */
 	public String getTag(String str) {
-		JSONObject j = JSONObject.fromObject(str);
-		j = JSONObject.fromObject(str.substring(1, str.length() - 1));
+		JSONObject j = JSONObject
+				.fromObject(str.substring(1, str.length() - 1));
 		String strr = j.get("tag").toString();
 		return strr;
 	}
@@ -122,9 +176,17 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 * @return
 	 */
 	public String getConn(String str) {
-		JSONObject j = JSONObject.fromObject(str);
-		j = JSONObject.fromObject(str);
+		JSONObject j = JSONObject
+				.fromObject(str.substring(1, str.length() - 1));
 		String strr = j.get("conn").toString();
 		return strr;
+	}
+
+	@Override
+	public void deleteKnowledgeConnectInfo(Long knowledgeid) {
+		KnowledgeConnectInfoExample example = new KnowledgeConnectInfoExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeidEqualTo(knowledgeid);
+		knowledgeConnectInfoMapper.deleteByExample(example);
 	}
 }

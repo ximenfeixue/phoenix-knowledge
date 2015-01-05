@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class KnowledgeConnectInfo implements Serializable {
     private Long id;
 
+    private Long knowledgeid;
+
     private String tag;
 
     private Integer conntype;
@@ -41,6 +43,14 @@ public class KnowledgeConnectInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getKnowledgeid() {
+        return knowledgeid;
+    }
+
+    public void setKnowledgeid(Long knowledgeid) {
+        this.knowledgeid = knowledgeid;
     }
 
     public String getTag() {

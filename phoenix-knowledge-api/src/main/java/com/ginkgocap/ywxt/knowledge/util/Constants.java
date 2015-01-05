@@ -448,8 +448,8 @@ public class Constants {
 	}
 
 	public static enum KnowledgeConnectType {
-		// 关联格式（r:人脉,p:组织,o:知识,k:需求）
-		contacts(1, "r"), organization(2, "p"), knowledge(5, "o"), demand(6,
+		// 关联格式（p:人脉,r:事件,o:组织,k:知识）
+		event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6,
 				"k");
 		private int v;
 

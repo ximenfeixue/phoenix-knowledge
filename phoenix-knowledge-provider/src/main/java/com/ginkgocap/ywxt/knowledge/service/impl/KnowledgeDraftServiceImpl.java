@@ -31,6 +31,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
@@ -94,6 +95,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Autowired
 	private KnowledgeService knowledgeService;
 
+	@Autowired
+	private KnowledgeConnectInfoService knowledgeConnectInfoService;
+
 	@Override
 	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
 			User user) {
@@ -154,11 +158,21 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (k != null && k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId());
+				}
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
 			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId());
+				}
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 
@@ -180,9 +194,19 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			long draftKId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			vo.setkId(draftKId);
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId());
+			}
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库假装当作草稿防止被查询出来
 			vo.setKnowledgeMainId(draftKId);// 草稿中存放真正知识的ID
 			vo.setkId(kId);// 插入草稿ID
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId());
+			}
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
@@ -398,11 +422,21 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (k != null && k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId());
+				}
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
 			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId());
+				}
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 			// 判断是否是投融工具更新
