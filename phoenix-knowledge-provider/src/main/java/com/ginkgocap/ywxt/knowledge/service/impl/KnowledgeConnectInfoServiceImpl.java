@@ -40,54 +40,24 @@ public class KnowledgeConnectInfoServiceImpl implements
 		String conn = "";
 		int count = 0;
 
-		jsonstr = j.get(Constants.KnowledgeConnectType.people.c()).toString();
-		if (!StringUtils.equals(jsonstr, "[]")) {
-			tag = getTag(jsonstr);
-			conn = getConn(jsonstr);
-			count = insertJsonAraay(conn, tag, knowledgeId);
-			if (count < 0) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addasso.c());
-			}
-			return result;
-		}
+		String assotype[] = { Constants.KnowledgeConnectType.event.c(),
+				Constants.KnowledgeConnectType.people.c(),
+				Constants.KnowledgeConnectType.organization.c(),
+				Constants.KnowledgeConnectType.knowledge.c() };
+		for (int i = 0; i < assotype.length; i++) {
 
-		jsonstr = j.get(Constants.KnowledgeConnectType.organization.c())
-				.toString();
-		if (!StringUtils.equals(jsonstr, "[]")) {
-			tag = getTag(jsonstr);
-			conn = getConn(jsonstr);
-			count = insertJsonAraay(conn, tag, knowledgeId);
-			if (count < 0) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addasso.c());
+			jsonstr = j.get(assotype[i]).toString();
+			
+			if (!StringUtils.equals(jsonstr, "[]")) {
+				tag = getTag(jsonstr);
+				conn = getConn(jsonstr);
+				count = insertJsonAraay(conn, tag, knowledgeId);
+				if (count < 0) {
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.addasso.c());
+				}
+				return result;
 			}
-			return result;
-		}
-
-		jsonstr = j.get(Constants.KnowledgeConnectType.knowledge.c())
-				.toString();
-		if (!StringUtils.equals(jsonstr, "[]")) {
-			tag = getTag(jsonstr);
-			conn = getConn(jsonstr);
-			count = insertJsonAraay(conn, tag, knowledgeId);
-			if (count < 0) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addasso.c());
-			}
-			return result;
-		}
-
-		jsonstr = j.get(Constants.KnowledgeConnectType.event.c()).toString();
-		if (!StringUtils.equals(jsonstr, "[]")) {
-			tag = getTag(jsonstr);
-			conn = getConn(jsonstr);
-			count = insertJsonAraay(conn, tag, knowledgeId);
-			if (count < 0) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addasso.c());
-			}
-			return result;
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
@@ -150,9 +120,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 				}
 				count = knowledgeConnectInfoMapper
 						.insertSelective(knowledgeconnect);
-
 			}
-
 		}
 		return count;
 	}
