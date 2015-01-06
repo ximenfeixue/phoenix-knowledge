@@ -41,12 +41,11 @@ public class Constants {
 	/** 小乐 **/
 	public final static String xiaoles = "xiaoles";
 
-	
-    public static Type getEnumType(Long v) {
-        Type[] type = Type.values();
-        return type[(int) (v - 1)];
-    }
-	
+	public static Type getEnumType(Long v) {
+		Type[] type = Type.values();
+		return type[(int) (v - 1)];
+	}
+
 	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
 		News(1, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNews"), Investment(
@@ -265,7 +264,8 @@ public class Constants {
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
 				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"), userNotLogin(
-				"您未登陆,请先登陆!"),addKnowledgeCatalogueIds("添加目录失败!");
+				"您未登陆,请先登陆!"), addKnowledgeCatalogueIds("添加目录失败!"), addasso(
+				"添加关联失败!");
 
 		private String c;
 
@@ -447,6 +447,28 @@ public class Constants {
 		}
 	}
 
+	public static enum KnowledgeConnectType {
+		// 关联格式（p:人脉,r:事件,o:组织,k:知识）
+		event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6,
+				"k");
+		private int v;
+
+		private String c;
+
+		private KnowledgeConnectType(int v, String c) {
+			this.v = v;
+			this.c = c;
+		}
+
+		public int v() {
+			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
+
 	public static Integer getPermissionValue(String c) {
 		if (StringUtils.isBlank(c))
 			return null;
@@ -522,7 +544,8 @@ public class Constants {
 
 	// 通知类型
 	public enum noticeType {
-		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"),shareToJinTN(4,"分享到金桐脑");
+		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"), shareToJinTN(
+				4, "分享到金桐脑");
 
 		private int v;
 		private String c;

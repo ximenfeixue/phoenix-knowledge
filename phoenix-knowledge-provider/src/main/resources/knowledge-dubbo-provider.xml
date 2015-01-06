@@ -76,6 +76,8 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService"  ref="attachmentService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.DataCenterService"  ref="dataCenterService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCloudCountService"  ref="knowledgeCloudCountService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService"  ref="knowledgeConnectInfoService" version="1.0.0"/>
+	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService"  ref="knowledgeAssoImportService" version="1.0.0"/>
 		<!-- app端使用service -->
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService" ref="appKnowledgeNewsService" version="1.0.0"/>
 </beans>
