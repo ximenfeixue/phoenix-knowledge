@@ -423,20 +423,20 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
 				// 关联信息存入mysql中
-				if (StringUtils.isNotBlank(vo.getAsso())) {
-					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-							vo.getAsso(), vo.getkId());
-				}
+//				if (StringUtils.isNotBlank(vo.getAsso())) {
+//					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+//							vo.getAsso(), vo.getkId());
+//				}
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
 			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
 				// 关联信息存入mysql中
-				if (StringUtils.isNotBlank(vo.getAsso())) {
-					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-							vo.getAsso(), vo.getkId());
-				}
+//				if (StringUtils.isNotBlank(vo.getAsso())) {
+//					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+//							vo.getAsso(), vo.getkId());
+//				}
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 			// 判断是否是投融工具更新
