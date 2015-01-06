@@ -29,7 +29,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
         Map<String, Object> m = new HashMap<String, Object>();
         int start = (page - 1) * size;
         ConnectionInfoExample example = new ConnectionInfoExample();
-        if (connType != null) {
+        if (connType != null && connType > 0) {
             example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType);
             example.setOrderByClause("connName ");
             example.setLimitStart(start);
