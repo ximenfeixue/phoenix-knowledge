@@ -48,15 +48,15 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 			jsonstr = j.get(assotype[i]).toString();
 			
-			if (!StringUtils.equals(jsonstr, "[]")) {
+			if (!StringUtils.equals(jsonstr, "[]")&&!StringUtils.equals(jsonstr,"-1")) {
 				tag = getTag(jsonstr);
 				conn = getConn(jsonstr);
 				count = insertJsonAraay(conn, tag, knowledgeId);
 				if (count < 0) {
 					result.put(Constants.errormessage,
 							Constants.ErrorMessage.addasso.c());
+					return result;
 				}
-				return result;
 			}
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
