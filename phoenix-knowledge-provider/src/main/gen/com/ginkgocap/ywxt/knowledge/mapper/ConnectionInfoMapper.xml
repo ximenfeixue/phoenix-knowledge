@@ -3,6 +3,8 @@
 <mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper" >
   <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="knowledgeId" property="knowledgeid" jdbcType="BIGINT" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
     <result column="connType" property="conntype" jdbcType="INTEGER" />
     <result column="connId" property="connid" jdbcType="BIGINT" />
     <result column="connName" property="connname" jdbcType="VARCHAR" />
@@ -16,6 +18,8 @@
     <result column="columnPath" property="columnpath" jdbcType="VARCHAR" />
     <result column="columnType" property="columntype" jdbcType="INTEGER" />
     <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="groupName" property="groupname" jdbcType="VARCHAR" />
+    <result column="picPath" property="picpath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -76,8 +80,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, connType, connId, connName, ownerId, owner, requirementtype, career, company, 
-    address, hy, columnPath, columnType, url
+    id, knowledgeId, tag, connType, connId, connName, ownerId, owner, requirementtype, 
+    career, company, address, hy, columnPath, columnType, url, groupName, picPath
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample" >
     select
@@ -113,22 +117,32 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
-    insert into tb_connect_info (id, connType, connId, 
-      connName, ownerId, owner, 
-      requirementtype, career, company, 
-      address, hy, columnPath, 
-      columnType, url)
-    values (#{id,jdbcType=BIGINT}, #{conntype,jdbcType=INTEGER}, #{connid,jdbcType=BIGINT}, 
-      #{connname,jdbcType=VARCHAR}, #{ownerid,jdbcType=BIGINT}, #{owner,jdbcType=VARCHAR}, 
-      #{requirementtype,jdbcType=VARCHAR}, #{career,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{hy,jdbcType=VARCHAR}, #{columnpath,jdbcType=VARCHAR}, 
-      #{columntype,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR})
+    insert into tb_connect_info (id, knowledgeId, tag, 
+      connType, connId, connName, 
+      ownerId, owner, requirementtype, 
+      career, company, address, 
+      hy, columnPath, columnType, 
+      url, groupName, picPath
+      )
+    values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, 
+      #{conntype,jdbcType=INTEGER}, #{connid,jdbcType=BIGINT}, #{connname,jdbcType=VARCHAR}, 
+      #{ownerid,jdbcType=BIGINT}, #{owner,jdbcType=VARCHAR}, #{requirementtype,jdbcType=VARCHAR}, 
+      #{career,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{hy,jdbcType=VARCHAR}, #{columnpath,jdbcType=VARCHAR}, #{columntype,jdbcType=INTEGER}, 
+      #{url,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, #{picpath,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     insert into tb_connect_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="knowledgeid != null" >
+        knowledgeId,
+      </if>
+      <if test="tag != null" >
+        tag,
       </if>
       <if test="conntype != null" >
         connType,
@@ -169,10 +183,22 @@
       <if test="url != null" >
         url,
       </if>
+      <if test="groupname != null" >
+        groupName,
+      </if>
+      <if test="picpath != null" >
+        picPath,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeid != null" >
+        #{knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
       </if>
       <if test="conntype != null" >
         #{conntype,jdbcType=INTEGER},
@@ -213,6 +239,12 @@
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
       </if>
+      <if test="groupname != null" >
+        #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="picpath != null" >
+        #{picpath,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample" resultType="java.lang.Integer" >
@@ -226,6 +258,12 @@
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.knowledgeid != null" >
+        knowledgeId = #{record.knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
       </if>
       <if test="record.conntype != null" >
         connType = #{record.conntype,jdbcType=INTEGER},
@@ -266,6 +304,12 @@
       <if test="record.url != null" >
         url = #{record.url,jdbcType=VARCHAR},
       </if>
+      <if test="record.groupname != null" >
+        groupName = #{record.groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picpath != null" >
+        picPath = #{record.picpath,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -274,6 +318,8 @@
   <update id="updateByExample" parameterType="map" >
     update tb_connect_info
     set id = #{record.id,jdbcType=BIGINT},
+      knowledgeId = #{record.knowledgeid,jdbcType=BIGINT},
+      tag = #{record.tag,jdbcType=VARCHAR},
       connType = #{record.conntype,jdbcType=INTEGER},
       connId = #{record.connid,jdbcType=BIGINT},
       connName = #{record.connname,jdbcType=VARCHAR},
@@ -286,7 +332,9 @@
       hy = #{record.hy,jdbcType=VARCHAR},
       columnPath = #{record.columnpath,jdbcType=VARCHAR},
       columnType = #{record.columntype,jdbcType=INTEGER},
-      url = #{record.url,jdbcType=VARCHAR}
+      url = #{record.url,jdbcType=VARCHAR},
+      groupName = #{record.groupname,jdbcType=VARCHAR},
+      picPath = #{record.picpath,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -294,6 +342,12 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     update tb_connect_info
     <set >
+      <if test="knowledgeid != null" >
+        knowledgeId = #{knowledgeid,jdbcType=BIGINT},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
       <if test="conntype != null" >
         connType = #{conntype,jdbcType=INTEGER},
       </if>
@@ -333,12 +387,20 @@
       <if test="url != null" >
         url = #{url,jdbcType=VARCHAR},
       </if>
+      <if test="groupname != null" >
+        groupName = #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="picpath != null" >
+        picPath = #{picpath,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     update tb_connect_info
-    set connType = #{conntype,jdbcType=INTEGER},
+    set knowledgeId = #{knowledgeid,jdbcType=BIGINT},
+      tag = #{tag,jdbcType=VARCHAR},
+      connType = #{conntype,jdbcType=INTEGER},
       connId = #{connid,jdbcType=BIGINT},
       connName = #{connname,jdbcType=VARCHAR},
       ownerId = #{ownerid,jdbcType=BIGINT},
@@ -350,7 +412,9 @@
       hy = #{hy,jdbcType=VARCHAR},
       columnPath = #{columnpath,jdbcType=VARCHAR},
       columnType = #{columntype,jdbcType=INTEGER},
-      url = #{url,jdbcType=VARCHAR}
+      url = #{url,jdbcType=VARCHAR},
+      groupName = #{groupname,jdbcType=VARCHAR},
+      picPath = #{picpath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

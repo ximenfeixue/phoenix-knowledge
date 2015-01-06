@@ -45,6 +45,7 @@
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" ref="favoritesService" version="1.0.0"/> 
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" ref="categoryService" version="1.0.0"/>
  
+    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ConnectInfoService" ref="connectInfoService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" ref="columnVisibleService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" ref="columnSubscribeService" version="1.0.0"/>

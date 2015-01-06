@@ -184,6 +184,136 @@ public class ConnectionInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andKnowledgeidIsNull() {
+            addCriterion("knowledgeId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidIsNotNull() {
+            addCriterion("knowledgeId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidEqualTo(Long value) {
+            addCriterion("knowledgeId =", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotEqualTo(Long value) {
+            addCriterion("knowledgeId <>", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidGreaterThan(Long value) {
+            addCriterion("knowledgeId >", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidGreaterThanOrEqualTo(Long value) {
+            addCriterion("knowledgeId >=", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidLessThan(Long value) {
+            addCriterion("knowledgeId <", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidLessThanOrEqualTo(Long value) {
+            addCriterion("knowledgeId <=", value, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidIn(List<Long> values) {
+            addCriterion("knowledgeId in", values, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotIn(List<Long> values) {
+            addCriterion("knowledgeId not in", values, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidBetween(Long value1, Long value2) {
+            addCriterion("knowledgeId between", value1, value2, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeidNotBetween(Long value1, Long value2) {
+            addCriterion("knowledgeId not between", value1, value2, "knowledgeid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIsNull() {
+            addCriterion("tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIsNotNull() {
+            addCriterion("tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagEqualTo(String value) {
+            addCriterion("tag =", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotEqualTo(String value) {
+            addCriterion("tag <>", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThan(String value) {
+            addCriterion("tag >", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThanOrEqualTo(String value) {
+            addCriterion("tag >=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThan(String value) {
+            addCriterion("tag <", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThanOrEqualTo(String value) {
+            addCriterion("tag <=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLike(String value) {
+            addCriterion("tag like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotLike(String value) {
+            addCriterion("tag not like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIn(List<String> values) {
+            addCriterion("tag in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotIn(List<String> values) {
+            addCriterion("tag not in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagBetween(String value1, String value2) {
+            addCriterion("tag between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotBetween(String value1, String value2) {
+            addCriterion("tag not between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
         public Criteria andConntypeIsNull() {
             addCriterion("connType is null");
             return (Criteria) this;
@@ -1054,6 +1184,151 @@ public class ConnectionInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andGroupnameIsNull() {
+            addCriterion("groupName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameIsNotNull() {
+            addCriterion("groupName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameEqualTo(String value) {
+            addCriterion("groupName =", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotEqualTo(String value) {
+            addCriterion("groupName <>", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameGreaterThan(String value) {
+            addCriterion("groupName >", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameGreaterThanOrEqualTo(String value) {
+            addCriterion("groupName >=", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLessThan(String value) {
+            addCriterion("groupName <", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLessThanOrEqualTo(String value) {
+            addCriterion("groupName <=", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLike(String value) {
+            addCriterion("groupName like", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotLike(String value) {
+            addCriterion("groupName not like", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameIn(List<String> values) {
+            addCriterion("groupName in", values, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotIn(List<String> values) {
+            addCriterion("groupName not in", values, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameBetween(String value1, String value2) {
+            addCriterion("groupName between", value1, value2, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotBetween(String value1, String value2) {
+            addCriterion("groupName not between", value1, value2, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathIsNull() {
+            addCriterion("picPath is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathIsNotNull() {
+            addCriterion("picPath is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathEqualTo(String value) {
+            addCriterion("picPath =", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathNotEqualTo(String value) {
+            addCriterion("picPath <>", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathGreaterThan(String value) {
+            addCriterion("picPath >", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathGreaterThanOrEqualTo(String value) {
+            addCriterion("picPath >=", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathLessThan(String value) {
+            addCriterion("picPath <", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathLessThanOrEqualTo(String value) {
+            addCriterion("picPath <=", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathLike(String value) {
+            addCriterion("picPath like", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathNotLike(String value) {
+            addCriterion("picPath not like", value, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathIn(List<String> values) {
+            addCriterion("picPath in", values, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathNotIn(List<String> values) {
+            addCriterion("picPath not in", values, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathBetween(String value1, String value2) {
+            addCriterion("picPath between", value1, value2, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathNotBetween(String value1, String value2) {
+            addCriterion("picPath not between", value1, value2, "picpath");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLikeInsensitive(String value) {
+            addCriterion("upper(tag) like", value.toUpperCase(), "tag");
+            return (Criteria) this;
+        }
+
         public Criteria andConnnameLikeInsensitive(String value) {
             addCriterion("upper(connName) like", value.toUpperCase(), "connname");
             return (Criteria) this;
@@ -1096,6 +1371,16 @@ public class ConnectionInfoExample {
 
         public Criteria andUrlLikeInsensitive(String value) {
             addCriterion("upper(url) like", value.toUpperCase(), "url");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLikeInsensitive(String value) {
+            addCriterion("upper(groupName) like", value.toUpperCase(), "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicpathLikeInsensitive(String value) {
+            addCriterion("upper(picPath) like", value.toUpperCase(), "picpath");
             return (Criteria) this;
         }
     }

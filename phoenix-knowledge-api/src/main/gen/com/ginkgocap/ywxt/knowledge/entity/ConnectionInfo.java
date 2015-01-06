@@ -5,6 +5,10 @@ import java.io.Serializable;
 public class ConnectionInfo implements Serializable {
     private Long id;
 
+    private Long knowledgeid;
+
+    private String tag;
+
     private Integer conntype;
 
     private Long connid;
@@ -31,6 +35,10 @@ public class ConnectionInfo implements Serializable {
 
     private String url;
 
+    private String groupname;
+
+    private String picpath;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -39,6 +47,22 @@ public class ConnectionInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getKnowledgeid() {
+        return knowledgeid;
+    }
+
+    public void setKnowledgeid(Long knowledgeid) {
+        this.knowledgeid = knowledgeid;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public Integer getConntype() {
@@ -143,5 +167,21 @@ public class ConnectionInfo implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
+
+    public String getPicpath() {
+        return picpath;
+    }
+
+    public void setPicpath(String picpath) {
+        this.picpath = picpath;
     }
 }
