@@ -27,18 +27,15 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", page);
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", size);
         Map<String, Object> m = new HashMap<String, Object>();
-        int start = (page - 1) * size;
         ConnectionInfoExample example = new ConnectionInfoExample();
         if (connType != null && connType > 0) {
+            int start = (page - 1) * size;
             example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType);
             example.setOrderByClause("connName ");
             example.setLimitStart(start);
             example.setLimitEnd(size);
             m = getResult(example, page, size);
         } else {
-            example.setOrderByClause("connName ");
-            example.setLimitStart(start);
-            example.setLimitEnd(size);
             List<ConnectionInfo> kcl = getList(kid, page, size);
             m.put("page", "");
             m.put("list", kcl);
