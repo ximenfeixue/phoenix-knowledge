@@ -28,9 +28,9 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
         int start = (page - 1) * size;
         ConnectionInfoExample example = new ConnectionInfoExample();
         if (connType != null) {
-            example.createCriteria().andConnidEqualTo(kid).andConntypeEqualTo(connType);
+            example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType); 
         } else {
-            example.createCriteria().andConnidEqualTo(kid);
+            example.createCriteria().andKnowledgeidEqualTo(kid);
         }
         example.setOrderByClause("connName ");
         example.setLimitStart(start);
