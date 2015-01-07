@@ -18,7 +18,6 @@
     <result column="columnPath" property="columnpath" jdbcType="VARCHAR" />
     <result column="columnType" property="columntype" jdbcType="INTEGER" />
     <result column="url" property="url" jdbcType="VARCHAR" />
-    <result column="groupName" property="groupname" jdbcType="VARCHAR" />
     <result column="picPath" property="picpath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -81,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, knowledgeId, tag, connType, connId, connName, ownerId, owner, requirementtype, 
-    career, company, address, hy, columnPath, columnType, url, groupName, picPath
+    career, company, address, hy, columnPath, columnType, url, picPath
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample" >
     select
@@ -122,15 +121,13 @@
       ownerId, owner, requirementtype, 
       career, company, address, 
       hy, columnPath, columnType, 
-      url, groupName, picPath
-      )
+      url, picPath)
     values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, 
       #{conntype,jdbcType=INTEGER}, #{connid,jdbcType=BIGINT}, #{connname,jdbcType=VARCHAR}, 
       #{ownerid,jdbcType=BIGINT}, #{owner,jdbcType=VARCHAR}, #{requirementtype,jdbcType=VARCHAR}, 
       #{career,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{hy,jdbcType=VARCHAR}, #{columnpath,jdbcType=VARCHAR}, #{columntype,jdbcType=INTEGER}, 
-      #{url,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, #{picpath,jdbcType=VARCHAR}
-      )
+      #{url,jdbcType=VARCHAR}, #{picpath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     insert into tb_connect_info
@@ -182,9 +179,6 @@
       </if>
       <if test="url != null" >
         url,
-      </if>
-      <if test="groupname != null" >
-        groupName,
       </if>
       <if test="picpath != null" >
         picPath,
@@ -238,9 +232,6 @@
       </if>
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="groupname != null" >
-        #{groupname,jdbcType=VARCHAR},
       </if>
       <if test="picpath != null" >
         #{picpath,jdbcType=VARCHAR},
@@ -304,9 +295,6 @@
       <if test="record.url != null" >
         url = #{record.url,jdbcType=VARCHAR},
       </if>
-      <if test="record.groupname != null" >
-        groupName = #{record.groupname,jdbcType=VARCHAR},
-      </if>
       <if test="record.picpath != null" >
         picPath = #{record.picpath,jdbcType=VARCHAR},
       </if>
@@ -333,7 +321,6 @@
       columnPath = #{record.columnpath,jdbcType=VARCHAR},
       columnType = #{record.columntype,jdbcType=INTEGER},
       url = #{record.url,jdbcType=VARCHAR},
-      groupName = #{record.groupname,jdbcType=VARCHAR},
       picPath = #{record.picpath,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -387,9 +374,6 @@
       <if test="url != null" >
         url = #{url,jdbcType=VARCHAR},
       </if>
-      <if test="groupname != null" >
-        groupName = #{groupname,jdbcType=VARCHAR},
-      </if>
       <if test="picpath != null" >
         picPath = #{picpath,jdbcType=VARCHAR},
       </if>
@@ -413,7 +397,6 @@
       columnPath = #{columnpath,jdbcType=VARCHAR},
       columnType = #{columntype,jdbcType=INTEGER},
       url = #{url,jdbcType=VARCHAR},
-      groupName = #{groupname,jdbcType=VARCHAR},
       picPath = #{picpath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
