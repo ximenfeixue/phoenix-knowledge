@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,32 +53,21 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
     }
 
     private List<ConnectionInfo> getList(Long kid, int page, int size) {
+        List<ConnectionInfo> k = getListByParam(kid, 1, page, size);
+        k.addAll(getListByParam(kid, 2, page, size));
+        k.addAll(getListByParam(kid, 5, page, size));
+        k.addAll(getListByParam(kid, 6, page, size));
+        return k;
+    }
+
+    private List<ConnectionInfo> getListByParam(Long kid, int connType, int page, int size) {
         int start = (page - 1) * size;
         ConnectionInfoExample example = new ConnectionInfoExample();
-        example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(1);
+        example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType);
         example.setOrderByClause("connName ");
         example.setLimitStart(start);
         example.setLimitEnd(size);
-        List<ConnectionInfo> kcl = connectInfoMapper.selectByExample(example);
-        example = new ConnectionInfoExample();
-        example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(2);
-        example.setOrderByClause("connName ");
-        example.setLimitStart(start);
-        example.setLimitEnd(size);
-        kcl.addAll(connectInfoMapper.selectByExample(example));
-        example = new ConnectionInfoExample();
-        example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(5);
-        example.setOrderByClause("connName ");
-        example.setLimitStart(start);
-        example.setLimitEnd(size);
-        kcl.addAll(connectInfoMapper.selectByExample(example));
-        example = new ConnectionInfoExample();
-        example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(6);
-        example.setOrderByClause("connName ");
-        example.setLimitStart(start);
-        example.setLimitEnd(size);
-        kcl.addAll(connectInfoMapper.selectByExample(example));
-        return kcl;
+        return connectInfoMapper.selectByExample(example);
     }
 
 }
