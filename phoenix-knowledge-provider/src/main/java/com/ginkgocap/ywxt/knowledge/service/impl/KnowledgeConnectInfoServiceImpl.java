@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -18,6 +17,8 @@ import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.people.domain.modelnew.PeopleTemp;
+import com.ginkgocap.ywxt.people.service.PeopleMongoService;
 
 @Service("knowledgeConnectInfoService")
 public class KnowledgeConnectInfoServiceImpl implements
@@ -25,6 +26,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 	@Resource
 	private ConnectionInfoMapper connectionInfoMapper;
+
+	@Resource
+	private PeopleMongoService peopleMongoService;
 
 	@Override
 	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
@@ -120,6 +124,19 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setUrl("/knowledge/reader?type="
 							+ job.get("columntype") + "&kid=" + job.get("id"));
 
+				}
+
+				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.people
+						.v()
+						|| Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.organization
+								.v()) {
+
+					PeopleTemp peolpletemp = peopleMongoService
+							.selectByPrimary(job.get("id") + "");
+					if (peolpletemp != null) {
+
+						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+					}
 				}
 				count = connectionInfoMapper.insertSelective(knowledgeconnect);
 			}
