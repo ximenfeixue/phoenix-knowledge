@@ -12,10 +12,10 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfo;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfoExample;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeConnectInfoExample.Criteria;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeConnectInfoMapper;
+import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo;
+import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample;
+import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
@@ -24,7 +24,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		KnowledgeConnectInfoService {
 
 	@Resource
-	private KnowledgeConnectInfoMapper knowledgeConnectInfoMapper;
+	private ConnectionInfoMapper connectionInfoMapper;
 
 	@Override
 	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
@@ -47,8 +47,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 		for (int i = 0; i < assotype.length; i++) {
 
 			jsonstr = j.get(assotype[i]).toString();
-			
-			if (!StringUtils.equals(jsonstr, "[]")&&!StringUtils.equals(jsonstr,"-1")) {
+
+			if (!StringUtils.equals(jsonstr, "[]")
+					&& !StringUtils.equals(jsonstr, "-1")) {
 				tag = getTag(jsonstr);
 				conn = getConn(jsonstr);
 				count = insertJsonAraay(conn, tag, knowledgeId);
@@ -57,6 +58,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 							Constants.ErrorMessage.addasso.c());
 					return result;
 				}
+			} else {
+
 			}
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -67,11 +70,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 		JSONArray json = JSONArray.fromObject(str); // 首先把字符串转成
 		int count = 0;
-		KnowledgeConnectInfo knowledgeconnect = null;
+		ConnectionInfo knowledgeconnect = null;
 		if (json.size() > 0) {
 			for (int i = 0; i < json.size(); i++) {
 				JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
-				knowledgeconnect = new KnowledgeConnectInfo();
+				knowledgeconnect = new ConnectionInfo();
 				knowledgeconnect.setKnowledgeid(knowledgeId);
 				knowledgeconnect.setTag(tag);
 				knowledgeconnect.setConntype(Integer.parseInt(job.get("type")
@@ -118,8 +121,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 							+ job.get("columntype") + "&kid=" + job.get("id"));
 
 				}
-				count = knowledgeConnectInfoMapper
-						.insertSelective(knowledgeconnect);
+				count = connectionInfoMapper.insertSelective(knowledgeconnect);
 			}
 		}
 		return count;
@@ -153,25 +155,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 	@Override
 	public void deleteKnowledgeConnectInfo(Long knowledgeid) {
-		KnowledgeConnectInfoExample example = new KnowledgeConnectInfoExample();
+		ConnectionInfoExample example = new ConnectionInfoExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeidEqualTo(knowledgeid);
-		knowledgeConnectInfoMapper.deleteByExample(example);
-	}
-
-	@Override
-	public List<KnowledgeConnectInfo> queryKnowledgeConnectInfo(
-			Integer conntype, Long knowledgeId, int pageno, int pagesize) {
-
-		KnowledgeConnectInfoExample example = new KnowledgeConnectInfoExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andKnowledgeidEqualTo(knowledgeId);
-		criteria.andConntypeEqualTo(conntype);
-
-		example.setOrderByClause("connId desc");
-		example.setLimitStart(pageno);
-		example.setLimitEnd(pagesize);
-
-		return knowledgeConnectInfoMapper.selectByExample(example);
+		connectionInfoMapper.deleteByExample(example);
 	}
 }
