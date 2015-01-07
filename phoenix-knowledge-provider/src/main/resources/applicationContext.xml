@@ -29,6 +29,7 @@
 	<import resource="classpath:cloud-dubbo-consumer.xml" />
 	<import resource="classpath:knowledge-schedule.xml" />
 	<import resource="classpath:metadata-dubbo-consumer.xml" />
+	<import resource="classpath:people-dubbo-consumer.xml" />
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
