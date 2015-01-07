@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface KnowledgeConnectInfoService {
 
-	Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,Long knowledgeId);
+	Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,Long knowledgeId,Long userid);
 	
 	void deleteKnowledgeConnectInfo(Long knowledgeid);
 	

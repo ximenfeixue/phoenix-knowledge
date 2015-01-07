@@ -49,9 +49,9 @@ public class KnowledgeAssoImportServiceImpl implements
 
 				if (knowledge2.getAsso() != null
 						&& !StringUtils.equals(knowledge2.getAsso(), "{}")) {
-					
+
 					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-							knowledge2.getAsso(), knowledge2.getId());
+							knowledge2.getAsso(), knowledge2.getId(), 0l);
 				}
 			}
 		}

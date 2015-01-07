@@ -381,7 +381,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// 关联信息存入mysql中
 		if (StringUtils.isNotBlank(vo.getAsso())) {
 			knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-					vo.getAsso(), vo.getkId());
+					vo.getAsso(), vo.getkId(), user.getId());
 		}
 		knowledgeNewsDAO.updateKnowledge(vo, user);
 
@@ -659,14 +659,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			if (StringUtils.isNotBlank(vo.getAsso())) {
 
 				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId());
+						vo.getAsso(), vo.getkId(), user.getId());
 			}
 			knowledgeNewsDAO.updateKnowledge(vo, user);
 
 		} else {
 			if (StringUtils.isNotBlank(vo.getAsso())) {
 				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId());
+						vo.getAsso(), vo.getkId(), user.getId());
 			}
 			knowledgeNewsDAO.insertknowledge(vo, user);
 		}
@@ -1049,7 +1049,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			// 关联信息存入mysql中
 			if (StringUtils.isNotBlank(vo.getAsso())) {
 				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId());
+						vo.getAsso(), vo.getkId(), user.getId());
 			}
 			knowledgeNewsDAO.insertknowledge(vo, user);
 
