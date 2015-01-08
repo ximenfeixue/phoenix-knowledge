@@ -18,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -90,23 +91,35 @@ public class KnowledgeConnectInfoServiceImpl implements
 				ConnectionInfo knowledgeconnect = null;
 				if (StringUtils.equals(assotype[i], "p")) {
 					conneclist = new ArrayList<ConnectionInfo>();
-					List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 100000,userid, 1);
+					List<PeopleSimple> peoples = peopleMongoService
+							.getPeopleSimplelist(0, null, null, 1, 100000,
+									userid, 1);
 					if (peoples != null && peoples.size() > 0) {
 						for (PeopleSimple peopleSimple : peoples) {
 							knowledgeconnect = new ConnectionInfo();
-							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
+							knowledgeconnect
+									.setConntype(Constants.KnowledgeConnectType.people
+											.v());
 							knowledgeconnect.setKnowledgeid(knowledgeId);
-							knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
-							knowledgeconnect.setUrl("/people/"+ peopleSimple.getId());
+							knowledgeconnect.setConnid(Long
+									.parseLong(peopleSimple.getId()));
+							knowledgeconnect.setUrl("/people/"
+									+ peopleSimple.getId());
 							knowledgeconnect.setOwnerid(userid);
-							PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
+							PeopleTemp peolpletemp = peopleMongoService
+									.selectByPrimary(peopleSimple.getId());
 							if (peolpletemp != null) {
-								knowledgeconnect.setPicpath(peolpletemp.getPortrait());
-								List<PeopleName> list = peolpletemp.getPeopleNameList();
+								knowledgeconnect.setPicpath(peolpletemp
+										.getPortrait());
+								List<PeopleName> list = peolpletemp
+										.getPeopleNameList();
 								if (list != null && list.size() > 0) {
 									for (PeopleName peopleName : list) {
-										if (Integer.parseInt(peopleName.getTypeTag().getCode()) == 1) {
-											knowledgeconnect.setConnname(peopleName.getName());
+										if (Integer.parseInt(peopleName
+												.getTypeTag().getCode()) == 1) {
+											knowledgeconnect
+													.setConnname(peopleName
+															.getName());
 										}
 									}
 								}
@@ -114,35 +127,46 @@ public class KnowledgeConnectInfoServiceImpl implements
 							// connectionInfoMapper.insertSelective(knowledgeconnect);
 							conneclist.add(knowledgeconnect);
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+						connectionInfoValueMapper
+								.insertConnectionInfo(conneclist);
 
 					}
 				}
 				if (StringUtils.equals(assotype[i], "r")) {
 					conneclist = new ArrayList<ConnectionInfo>();
-					Map<String, Object> map = requirementService.selectMy(userid, 0, 100000, -1, "");
-					List<Requirement> results = (List<Requirement>) map.get("results");
+					Map<String, Object> map = requirementService.selectMy(
+							userid, 0, 100000, -1, "");
+					List<Requirement> results = (List<Requirement>) map
+							.get("results");
 					if (results != null && results.size() > 0) {
 						for (Requirement requirement : results) {
 							knowledgeconnect = new ConnectionInfo();
-							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
+							knowledgeconnect
+									.setConntype(Constants.KnowledgeConnectType.event
+											.v());
 							knowledgeconnect.setKnowledgeid(knowledgeId);
 							knowledgeconnect.setConnid(requirement.getId());
-							knowledgeconnect.setConnname(requirement.getTitle());
+							knowledgeconnect
+									.setConnname(requirement.getTitle());
 							knowledgeconnect.setOwnerid(requirement.getFbrId());
 							knowledgeconnect.setOwner(requirement.getFbr());
-							knowledgeconnect.setRequirementtype(requirement.getRequirementType()+"");
-							knowledgeconnect.setUrl("/requirement/detail/"+requirement.getRequirementType()+""  + "/"+ requirement.getId());
+							knowledgeconnect.setRequirementtype(requirement
+									.getRequirementType() + "");
+							knowledgeconnect.setUrl("/requirement/detail/"
+									+ requirement.getRequirementType() + ""
+									+ "/" + requirement.getId());
 							conneclist.add(knowledgeconnect);
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+						connectionInfoValueMapper
+								.insertConnectionInfo(conneclist);
 					}
 
 				}
 				if (StringUtils.equals(assotype[i], "o")) {
 
 					conneclist = new ArrayList<ConnectionInfo>();
-					List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 0, 100000);
+					List<Map<String, Object>> lt = personalCustomerService
+							.list(userid, "", "", "", "", 0, 1, 100000);
 
 					if (lt != null && lt.size() > 0) {
 
@@ -150,25 +174,72 @@ public class KnowledgeConnectInfoServiceImpl implements
 							Map<String, Object> map = lt.get(k);
 							if (map != null) {
 								knowledgeconnect = new ConnectionInfo();
-								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.organization.v());
+								knowledgeconnect
+										.setConntype(Constants.KnowledgeConnectType.organization
+												.v());
 								knowledgeconnect.setKnowledgeid(knowledgeId);
-								knowledgeconnect.setConnid(Long.parseLong(map.get("id") + ""));
-								knowledgeconnect.setConnname(map.get("name")+ "");
+								knowledgeconnect.setConnid(Long.parseLong(map
+										.get("id") + ""));
+								knowledgeconnect.setConnname(map.get("name")
+										+ "");
 								knowledgeconnect.setOwnerid(userid);
+								PeopleTemp peolpletemp = peopleMongoService
+										.selectByPrimary(map.get("id") + "");
+								if (peolpletemp != null) {
+									knowledgeconnect.setPicpath(peolpletemp
+											.getPortrait());
+								}
 								conneclist.add(knowledgeconnect);
 								// connectionInfoMapper
 								// .insertSelective(knowledgeconnect);
 							}
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+						connectionInfoValueMapper
+								.insertConnectionInfo(conneclist);
 					}
 
 				}
 				if (StringUtils.equals(assotype[i], "k")) {
 
-					// Map<String, Object> m = knowledgeHomeService
-					// .selectAllKnowledgeCategoryByParam(tid, lid, state,
-					// sortId, userid, keyword, page, size);
+					conneclist = new ArrayList<ConnectionInfo>();
+					Map<String, Object> map = knowledgeHomeService
+							.selectAllKnowledgeCategoryByParam("", "", 0, "",
+									userid, "", 1, 100000);
+
+					List<Map<String, Object>> list = (List<Map<String, Object>>) map
+							.get("list");
+
+					if (list != null && list.size() > 0) {
+						for (int m = 0; m < list.size(); m++) {
+							Map<String, Object> mapk = list.get(m);
+							if (mapk != null) {
+								knowledgeconnect = new ConnectionInfo();
+								knowledgeconnect
+										.setConntype(Constants.KnowledgeConnectType.knowledge
+												.v());
+								knowledgeconnect.setKnowledgeid(knowledgeId);
+								knowledgeconnect.setConnid(Long.parseLong(mapk
+										.get("knowledge_id") + ""));
+								knowledgeconnect.setConnname(mapk.get("title")
+										+ "");
+								knowledgeconnect.setOwnerid(userid);
+								knowledgeconnect.setColumnpath(mapk.get("path")
+										+ "");
+								knowledgeconnect
+										.setColumntype(Integer.parseInt(mapk
+												.get("column_type") + ""));
+								knowledgeconnect
+										.setUrl("/knowledge/reader?type="
+												+ mapk.get("column_type") + ""
+												+ "&kid="
+												+ mapk.get("knowledge_id") + "");
+								conneclist.add(knowledgeconnect);
+							}
+						}
+						connectionInfoValueMapper
+								.insertConnectionInfo(conneclist);
+					}
+
 				}
 			}
 		}
