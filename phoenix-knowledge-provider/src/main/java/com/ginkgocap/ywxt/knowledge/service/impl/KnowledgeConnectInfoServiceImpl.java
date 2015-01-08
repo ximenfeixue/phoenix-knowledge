@@ -26,6 +26,8 @@ import com.ginkgocap.ywxt.people.domain.modelnew.PeopleSimple;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleTemp;
 import com.ginkgocap.ywxt.people.service.PeopleMongoService;
 import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
+import com.ginkgocap.ywxt.requirement.model.Requirement;
+import com.ginkgocap.ywxt.requirement.service.RequirementService;
 
 @Service("knowledgeConnectInfoService")
 public class KnowledgeConnectInfoServiceImpl implements
@@ -42,15 +44,19 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 	@Resource
 	private PersonalCustomerService personalCustomerService;
-	
+
 	@Resource
 	private ConnectionInfoValueMapper connectionInfoValueMapper;
+
+	@Resource
+	private RequirementService requirementService;
 
 	@Override
 	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
 			Long knowledgeId, Long userid) {
 
 		// 删除该知识的关联信息
+
 		deleteKnowledgeConnectInfo(knowledgeId);
 
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -60,7 +66,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		String conn = "";
 		int count = 0;
 
-		List<ConnectionInfo> conneclist=null;
+		List<ConnectionInfo> conneclist = null;
 		String assotype[] = { Constants.KnowledgeConnectType.event.c(),
 				Constants.KnowledgeConnectType.people.c(),
 				Constants.KnowledgeConnectType.organization.c(),
@@ -83,84 +89,79 @@ public class KnowledgeConnectInfoServiceImpl implements
 				// 选人脉全部
 				ConnectionInfo knowledgeconnect = null;
 				if (StringUtils.equals(assotype[i], "p")) {
-					conneclist=new ArrayList<ConnectionInfo>();
-					List<PeopleSimple> peoples = peopleMongoService
-							.getPeopleSimplelist(0, null, null, 1, 10, userid,
-									1);
+					conneclist = new ArrayList<ConnectionInfo>();
+					List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 100000,userid, 1);
 					if (peoples != null && peoples.size() > 0) {
 						for (PeopleSimple peopleSimple : peoples) {
 							knowledgeconnect = new ConnectionInfo();
-							knowledgeconnect
-									.setConntype(Constants.KnowledgeConnectType.people
-											.v());
+							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
 							knowledgeconnect.setKnowledgeid(knowledgeId);
-							knowledgeconnect.setConnid(Long
-									.parseLong(peopleSimple.getId()));
-							knowledgeconnect.setUrl("/people/"
-									+ peopleSimple.getId());
+							knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
+							knowledgeconnect.setUrl("/people/"+ peopleSimple.getId());
 							knowledgeconnect.setOwnerid(userid);
-							PeopleTemp peolpletemp = peopleMongoService
-									.selectByPrimary(peopleSimple.getId());
+							PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
 							if (peolpletemp != null) {
-								knowledgeconnect.setPicpath(peolpletemp
-										.getPortrait());
-								List<PeopleName> list = peolpletemp
-										.getPeopleNameList();
+								knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+								List<PeopleName> list = peolpletemp.getPeopleNameList();
 								if (list != null && list.size() > 0) {
 									for (PeopleName peopleName : list) {
-										if (Integer.parseInt(peopleName
-												.getTypeTag().getCode()) == 1) {
-											knowledgeconnect
-													.setConnname(peopleName
-															.getName());
+										if (Integer.parseInt(peopleName.getTypeTag().getCode()) == 1) {
+											knowledgeconnect.setConnname(peopleName.getName());
 										}
 									}
 								}
 							}
-//							connectionInfoMapper.insertSelective(knowledgeconnect);
+							// connectionInfoMapper.insertSelective(knowledgeconnect);
 							conneclist.add(knowledgeconnect);
 						}
 						connectionInfoValueMapper.insertConnectionInfo(conneclist);
-						
+
 					}
 				}
 				if (StringUtils.equals(assotype[i], "r")) {
+					conneclist = new ArrayList<ConnectionInfo>();
+					Map<String, Object> map = requirementService.selectMy(userid, 0, 100000, -1, "");
+					List<Requirement> results = (List<Requirement>) map.get("results");
+					if (results != null && results.size() > 0) {
+						for (Requirement requirement : results) {
+							knowledgeconnect = new ConnectionInfo();
+							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
+							knowledgeconnect.setKnowledgeid(knowledgeId);
+							knowledgeconnect.setConnid(requirement.getId());
+							knowledgeconnect.setConnname(requirement.getTitle());
+							knowledgeconnect.setOwnerid(requirement.getFbrId());
+							knowledgeconnect.setOwner(requirement.getFbr());
+							knowledgeconnect.setRequirementtype(requirement.getRequirementType()+"");
+							knowledgeconnect.setUrl("/requirement/detail/"+requirement.getRequirementType()+""  + "/"+ requirement.getId());
+							conneclist.add(knowledgeconnect);
+						}
+						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+					}
 
-					// List<PeopleSimple> peoples = peopleMongoService
-					// .getPeopleSimplelist(0, null, null, 1, 10, userid,
-					// 1);
-					// if (peoples != null && peoples.size() > 0) {
-					//
-					// }
 				}
 				if (StringUtils.equals(assotype[i], "o")) {
 
-//					conneclist=new ArrayList<ConnectionInfo>();
-//					List<Map<String, Object>> lt = personalCustomerService
-//							.list(userid, null, null, null, null, 0, 0, 10);
-//
-//					if (lt != null && lt.size() > 0) {
-//
-//						for (int k = 0; k < lt.size(); k++) {
-//							Map<String, Object> map = lt.get(k);
-//							if (map != null) {
-//								knowledgeconnect = new ConnectionInfo();
-//								knowledgeconnect
-//										.setConntype(Constants.KnowledgeConnectType.organization
-//												.v());
-//								knowledgeconnect.setKnowledgeid(knowledgeId);
-//								knowledgeconnect.setConnid(Long.parseLong(map
-//										.get("id") + ""));
-//								knowledgeconnect.setConnname(map.get("name")
-//										+ "");
-//								knowledgeconnect.setOwnerid(userid);
-//								conneclist.add(knowledgeconnect);
-////								connectionInfoMapper
-////										.insertSelective(knowledgeconnect);
-//							}
-//						}
-//						connectionInfoValueMapper.insertConnectionInfo(conneclist);
-//					}
+					conneclist = new ArrayList<ConnectionInfo>();
+					List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 0, 100000);
+
+					if (lt != null && lt.size() > 0) {
+
+						for (int k = 0; k < lt.size(); k++) {
+							Map<String, Object> map = lt.get(k);
+							if (map != null) {
+								knowledgeconnect = new ConnectionInfo();
+								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.organization.v());
+								knowledgeconnect.setKnowledgeid(knowledgeId);
+								knowledgeconnect.setConnid(Long.parseLong(map.get("id") + ""));
+								knowledgeconnect.setConnname(map.get("name")+ "");
+								knowledgeconnect.setOwnerid(userid);
+								conneclist.add(knowledgeconnect);
+								// connectionInfoMapper
+								// .insertSelective(knowledgeconnect);
+							}
+						}
+						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+					}
 
 				}
 				if (StringUtils.equals(assotype[i], "k")) {
@@ -177,7 +178,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 	public int insertJsonAraay(String str, String tag, Long knowledgeId) {
 
-		List<ConnectionInfo> conlist=new ArrayList<ConnectionInfo>();
+		List<ConnectionInfo> conlist = new ArrayList<ConnectionInfo>();
 		JSONArray json = JSONArray.fromObject(str); // 首先把字符串转成
 		int count = 0;
 		ConnectionInfo knowledgeconnect = null;
@@ -245,7 +246,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 					}
 				}
 				conlist.add(knowledgeconnect);
-//				count = connectionInfoMapper.insertSelective(knowledgeconnect);
+				// count =
+				// connectionInfoMapper.insertSelective(knowledgeconnect);
 			}
 			connectionInfoValueMapper.insertConnectionInfo(conlist);
 		}
