@@ -84,7 +84,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 					result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
 					return result;
 				}
-			} else {
+			} else if ( StringUtils.equals(jsonstr, "-1")){
 				// 选人脉全部
 				ConnectionInfo knowledgeconnect = null;
 				if (StringUtils.equals(assotype[i], "p")) {
