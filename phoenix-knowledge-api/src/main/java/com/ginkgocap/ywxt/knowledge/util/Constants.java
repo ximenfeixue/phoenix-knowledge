@@ -46,13 +46,13 @@ public class Constants {
 		return type[(int) (v - 1)];
 	}
 
-	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
+	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-新材料，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
 		News(1, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNews"), Investment(
 				2, "com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment"), Industry(
 				3, "com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry"), Case(
-				4, "com.ginkgocap.ywxt.knowledge.model.KnowledgeCase"), BookReport(
-				5, "com.ginkgocap.ywxt.knowledge.model.bookReport"), Asset(6,
+				4, "com.ginkgocap.ywxt.knowledge.model.KnowledgeCase"), NewMaterials(
+				5, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNewMaterials"), Asset(6,
 				"com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset"), Macro(7,
 				"com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro"), Opinion(
 				8, "com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion"), Example(
@@ -97,10 +97,10 @@ public class Constants {
 		return list;
 	}
 
-	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
+	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-新材料，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum KnowledgeType {
-		News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), BookReport(
-				5, "图书报告"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(
+		News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), NewMaterials(
+				5, "新材料"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(
 				9, "判例"), Law(10, "法律法规"), Article(11, "文章");
 
 		private int v;
@@ -507,7 +507,7 @@ public class Constants {
 
 	// 0-资讯，1-投融工具，2-行业，3-经典案例 4-资产管理，5-宏观，6-观点，7-判例，8-法律法规，9-文章
 	public enum TagNum {
-		News(0), Investment(1), Industry(2), Case(3), Asset(4), Macro(5), Opinion(
+		News(0), Investment(1), Industry(2), Case(3), Asset(4), NewMaterials(5), Opinion(
 				6), Example(7), Law(8), Article(9);
 
 		private int v;
