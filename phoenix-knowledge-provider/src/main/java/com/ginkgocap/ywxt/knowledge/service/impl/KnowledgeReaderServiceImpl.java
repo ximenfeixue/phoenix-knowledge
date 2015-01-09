@@ -136,10 +136,11 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		if (Integer.parseInt(type) == Constants.Type.Industry.v()) {
 			category = true;
-		} else if (Integer.parseInt(type) == Constants.Type.BookReport.v()) {
-			mark = true;
-			download = true;
-			category = true;
+		//没有图书报告 暂时注掉了
+//		} else if (Integer.parseInt(type) == Constants.Type.BookReport.v()) {
+//			mark = true;
+//			download = true;
+//			category = true;
 		} else if (Integer.parseInt(type) == Constants.Type.Example.v()) {
 			download = true;
 			category = true;
