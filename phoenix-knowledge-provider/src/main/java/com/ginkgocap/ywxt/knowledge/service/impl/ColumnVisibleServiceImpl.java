@@ -190,10 +190,48 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         long cs = columnVisibleMapper.countByExample(cm);
         return cs;
     }
+    
+    //新栏目
+    @Override
+    public long countListByCidAndUserId(long userid, Long cid) {
+        ColumnVisibleExample cm = new ColumnVisibleExample();
+        com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample.Criteria cri = cm.createCriteria();
+        cri.andUserIdEqualTo(userid);
+        if (cid != null) {
+            cri.andColumnIdEqualTo(cid);
+        }
+        long cs = columnVisibleMapper.countByExample(cm);
+        return cs;
+    }
 
     @Override
     public void init(long userid, long gtnid) {
         List<Column> l = columnValueMapper.selectByParams(null, Constants.gtnid, userid);
+        List<ColumnVisible> cvl = new ArrayList<ColumnVisible>();
+        for (Column c : l) {
+            if (!c.getColumnname().equals("未分组")) {
+                long id = c.getId();
+                long pcid = c.getParentId();
+                String cname = c.getColumnname();
+                ColumnVisible cv = new ColumnVisible();
+                cv.setColumnId(id);
+                cv.setPcid(pcid);
+                cv.setUserId(userid);
+                cv.setCtime(new Date());
+                cv.setUtime(new Date());
+                cv.setSortId(c.getColumnLevelPath());
+                cv.setColumnName(cname);
+                cv.setState((short) 0);
+                cvl.add(cv);
+            }
+        }
+        if (cvl.size() > 0) {// 批量插入
+            columnVisibleValueMapper.init(cvl);
+        }
+    }
+    @Override
+    public void initOne(long userid, long gid,Long cid) {
+        List<Column> l = columnValueMapper.selectByCid(cid,Constants.gtnid, userid);
         List<ColumnVisible> cvl = new ArrayList<ColumnVisible>();
         for (Column c : l) {
             if (!c.getColumnname().equals("未分组")) {

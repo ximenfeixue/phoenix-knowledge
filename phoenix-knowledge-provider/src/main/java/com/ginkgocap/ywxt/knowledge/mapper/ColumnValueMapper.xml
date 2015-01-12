@@ -108,7 +108,27 @@
 		</if>
 		<![CDATA[ 
 		and length(t.column_level_path) <= 18
-		and t.id not in(5,9,8,11)
+		and t.id not in(9,8,11)
+		]]>
+	</select>
+	<select id="selectByCid" resultMap="BaseResultMap">
+		select
+		<include refid="allColumns" />
+		from
+		<include refid="tb_name" /> t
+		where del_status=0
+		and (1=1
+		<if test="userId != null">
+			and t.user_id=#{userId}
+			or t.user_id=#{gtnid}
+		</if>
+		<if test="userId == null">
+			and t.user_id=#{gtnid}
+		</if>
+		)
+		<![CDATA[ 
+		and length(t.column_level_path) <= 18
+		and t.id =#{columnid}
 		]]>
 	</select>
 	<select id="selectByParamVisible" resultMap="BaseResultMap">
