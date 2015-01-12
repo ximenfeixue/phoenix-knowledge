@@ -104,7 +104,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 								List<PeopleName> list = peolpletemp.getPeopleNameList();
 								if (list != null && list.size() > 0) {
 									for (PeopleName peopleName : list) {
-										if (Integer.parseInt(peopleName.getTypeTag().getCode()) == 1) {
+										String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
+										if (Integer.parseInt(pername) == 1) {
 											knowledgeconnect.setConnname(peopleName.getName());
 										}
 									}
