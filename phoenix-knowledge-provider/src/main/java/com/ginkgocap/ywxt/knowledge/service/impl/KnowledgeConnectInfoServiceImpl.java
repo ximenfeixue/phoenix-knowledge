@@ -288,7 +288,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 */
 	public String getConn(String str) {
 		JSONObject j = JSONObject.fromObject(str.substring(1, str.length() - 1));
-		String strr = j.get("conn").toString();
+		String strr = "";
+		if( j.get("conn") != null ){
+			
+			strr = j.get("conn").toString();
+		}
 		return strr;
 	}
 
