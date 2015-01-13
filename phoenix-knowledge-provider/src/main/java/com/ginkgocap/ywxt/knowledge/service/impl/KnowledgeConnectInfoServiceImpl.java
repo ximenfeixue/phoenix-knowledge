@@ -216,10 +216,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 				knowledgeconnect = new ConnectionInfo();
 				knowledgeconnect.setKnowledgeid(knowledgeId);
 				knowledgeconnect.setTag(tag);
-				knowledgeconnect.setConntype(Integer.parseInt(job.get("type")+ ""));
+				String type = StringUtils.equals(job.get("type") + "", "null") ? "-2" : job.get("type")+ "";
+				knowledgeconnect.setConntype(Integer.parseInt(type));
 				knowledgeconnect.setConnid(Long.parseLong(job.get("id") + ""));
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.event.v()
-						|| Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.knowledge.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.event.v()
+						|| Integer.parseInt(type) == Constants.KnowledgeConnectType.knowledge.v()) {
 
 					knowledgeconnect.setConnname(job.get("title") + "");
 				} else {
@@ -228,28 +229,28 @@ public class KnowledgeConnectInfoServiceImpl implements
 				String ownerid = job.get("ownerid") + "";
 				knowledgeconnect.setOwnerid(Long.parseLong(StringUtils.equals(ownerid, "null") ? "-2" : ownerid));
 				knowledgeconnect.setOwner(job.get("ownername") + "");
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.event.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.event.v()) {
 					knowledgeconnect.setRequirementtype(job.get("requirementtype") + "");
 					knowledgeconnect.setCareer(job.get("career") + "");
 					knowledgeconnect.setUrl("/requirement/detail/"+ job.get("requirementtype") + "" + "/"+ job.get("id"));
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.people.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()) {
 					knowledgeconnect.setCompany(job.get("company") + "");
 					knowledgeconnect.setUrl("/people/" + job.get("id"));
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.organization.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 					knowledgeconnect.setCompany(job.get("address") + "");
 					knowledgeconnect.setHy(job.get("hy") + "");
 				}
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.knowledge.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.knowledge.v()) {
 					knowledgeconnect.setColumntype(Integer.parseInt(job.get("columntype") + ""));
 					knowledgeconnect.setColumnpath(job.get("columnpath") + "");
 					knowledgeconnect.setUrl("/knowledge/reader?type="+ job.get("columntype") + "&kid=" + job.get("id"));
 
 				}
 
-				if (Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.people.v()
-						|| Integer.parseInt(job.get("type") + "") == Constants.KnowledgeConnectType.organization.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()
+						|| Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 
 					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(job.get("id") + "");
 					if (peolpletemp != null) {
