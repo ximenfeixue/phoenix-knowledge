@@ -101,7 +101,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
 								knowledgeconnect.setKnowledgeid(knowledgeId);
 								knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
-								knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId());
+								knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId()+ "/");
 								knowledgeconnect.setOwnerid(userid);
 								PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
 								if (peolpletemp != null) {
@@ -137,7 +137,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 								knowledgeconnect.setOwnerid(requirement.getFbrId());
 								knowledgeconnect.setOwner(requirement.getFbr());
 								knowledgeconnect.setRequirementtype(requirement.getRequirementType() + "");
-								knowledgeconnect.setUrl("/requirement/detail/"+ requirement.getRequirementType() + ""+ "/" + requirement.getId());
+								knowledgeconnect.setUrl("/requirement/detail/"+ requirement.getRequirementType() + ""+ "/" + requirement.getId()+ "/");
 								conneclist.add(knowledgeconnect);
 							}
 							connectionInfoValueMapper.insertConnectionInfo(conneclist);
@@ -239,11 +239,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.event.v()) {
 					knowledgeconnect.setRequirementtype(job.get("requirementtype") + "");
 					knowledgeconnect.setCareer(job.get("career") + "");
-					knowledgeconnect.setUrl("/requirement/detail/"+ job.get("requirementtype") + "" + "/"+ job.get("id"));
+					knowledgeconnect.setUrl("/requirement/detail/"+ job.get("requirementtype") + "" + "/"+ job.get("id")+ "/");
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()) {
 					knowledgeconnect.setCompany(job.get("company") + "");
-					knowledgeconnect.setUrl("/people/" + job.get("id"));
+					knowledgeconnect.setUrl("/people/" + job.get("id")+ "/");
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 					knowledgeconnect.setCompany(job.get("address") + "");
