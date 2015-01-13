@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 public class KnowledgeAssoImportServiceImpl implements
 		KnowledgeAssoImportService {
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	@Resource
 	private MongoTemplate mongoTemplate;
 
@@ -46,7 +49,8 @@ public class KnowledgeAssoImportServiceImpl implements
 					Knowledge.class,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 			for (Knowledge knowledge2 : knowledgelist) {
-
+				logger.debug("---------------------------------",knowledge2.getColumnType());
+				logger.debug("---------------------------------",knowledge2.getAsso());
 				if (knowledge2.getAsso() != null
 						&& !StringUtils.equals(knowledge2.getAsso(), "{}")) {
 
