@@ -47,6 +47,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     public List<ColumnVisible> queryListByPidAndUserId(long userid, long cid) {
         ColumnVisibleExample cm = new ColumnVisibleExample();
         cm.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(cid);
+        cm.setOrderByClause("column_id ");
         List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
         if (cs != null) {
             return cs;
@@ -57,6 +58,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     public List<ColumnVisible> queryListByPidAndUserIdAndState(long userid, long cid,short state) {
         ColumnVisibleExample cm = new ColumnVisibleExample();
         cm.createCriteria().andUserIdEqualTo(userid).andPcidEqualTo(cid).andStateEqualTo(state);
+        cm.setOrderByClause("column_id ");
         List<ColumnVisible> cs = columnVisibleMapper.selectByExample(cm);
         if (cs != null) {
             return cs;
