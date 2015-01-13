@@ -47,7 +47,8 @@ public class KnowledgeAssoImportServiceImpl implements
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 			for (Knowledge knowledge2 : knowledgelist) {
 
-				if (knowledge2.getAsso() != null
+				if (!StringUtils.equals(knowledge2.getAsso(), "null")
+						&& knowledge2.getAsso() != null
 						&& !StringUtils.equals(knowledge2.getAsso(), "{}")) {
 
 					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
