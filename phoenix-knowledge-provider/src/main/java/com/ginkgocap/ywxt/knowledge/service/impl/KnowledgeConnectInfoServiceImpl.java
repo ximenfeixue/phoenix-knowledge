@@ -218,7 +218,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 				knowledgeconnect.setTag(tag);
 				String type = StringUtils.equals(job.get("type") + "", "null") ? "-2" : job.get("type")+ "";
 				knowledgeconnect.setConntype(Integer.parseInt(type));
-				knowledgeconnect.setConnid(Long.parseLong(job.get("id") + ""));
+				String id = StringUtils.equals(job.get("id") + "", "null") ? "-2" : job.get("id")+ "";
+				knowledgeconnect.setConnid(Long.parseLong(id));
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.event.v()
 						|| Integer.parseInt(type) == Constants.KnowledgeConnectType.knowledge.v()) {
 
@@ -252,7 +253,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()
 						|| Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 
-					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(job.get("id") + "");
+					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(id);
 					if (peolpletemp != null) {
 
 						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
