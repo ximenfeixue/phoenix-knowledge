@@ -49,8 +49,6 @@ public class KnowledgeAssoImportServiceImpl implements
 					Knowledge.class,
 					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 			for (Knowledge knowledge2 : knowledgelist) {
-				logger.debug("---------------------------------",knowledge2.getColumnType());
-				logger.debug("---------------------------------",knowledge2.getAsso());
 				if (knowledge2.getAsso() != null
 						&& !StringUtils.equals(knowledge2.getAsso(), "{}")) {
 

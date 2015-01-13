@@ -61,145 +61,151 @@ public class KnowledgeConnectInfoServiceImpl implements
 		deleteKnowledgeConnectInfo(knowledgeId);
 
 		Map<String, Object> result = new HashMap<String, Object>();
-		JSONObject j = JSONObject.fromObject(knowledgeasso);
-		String jsonstr = "";
-		String tag = "";
-		String conn = "";
-		int count = 0;
+		try{
+		
+			JSONObject j = JSONObject.fromObject(knowledgeasso);
+			String jsonstr = "";
+			String tag = "";
+			String conn = "";
+			int count = 0;
 
-		List<ConnectionInfo> conneclist = null;
-		String assotype[] = { Constants.KnowledgeConnectType.event.c(),
-				Constants.KnowledgeConnectType.people.c(),
-				Constants.KnowledgeConnectType.organization.c(),
-				Constants.KnowledgeConnectType.knowledge.c() };
-		for (int i = 0; i < assotype.length; i++) {
+			List<ConnectionInfo> conneclist = null;
+			String assotype[] = { Constants.KnowledgeConnectType.event.c(),
+					Constants.KnowledgeConnectType.people.c(),
+					Constants.KnowledgeConnectType.organization.c(),
+					Constants.KnowledgeConnectType.knowledge.c() };
+			for (int i = 0; i < assotype.length; i++) {
 
-			if(j.get(assotype[i])==null){
-				 continue;
-			}
-			jsonstr = j.get(assotype[i]).toString();
-
-			if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
-				tag = getTag(jsonstr);
-				conn = getConn(jsonstr);
-				count = insertJsonAraay(conn, tag, knowledgeId);
-				if (count < 0) {
-					result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
-					return result;
+				if(j.get(assotype[i])==null){
+					 continue;
 				}
-			} else if ( StringUtils.equals(jsonstr, "-1")){
-				// 选人脉全部
-				ConnectionInfo knowledgeconnect = null;
-				if (StringUtils.equals(assotype[i], "p")) {
-					conneclist = new ArrayList<ConnectionInfo>();
-					List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 100000,userid, 1);
-					if (peoples != null && peoples.size() > 0) {
-						for (PeopleSimple peopleSimple : peoples) {
-							knowledgeconnect = new ConnectionInfo();
-							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
-							knowledgeconnect.setKnowledgeid(knowledgeId);
-							knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
-							knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId());
-							knowledgeconnect.setOwnerid(userid);
-							PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
-							if (peolpletemp != null) {
-								knowledgeconnect.setPicpath(peolpletemp.getPortrait());
-								List<PeopleName> list = peolpletemp.getPeopleNameList();
-								if (list != null && list.size() > 0) {
-									for (PeopleName peopleName : list) {
-										String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
-										if (Integer.parseInt(pername) == 1) {
-											knowledgeconnect.setConnname(peopleName.getName());
+				jsonstr = j.get(assotype[i]).toString();
+
+				if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
+					tag = getTag(jsonstr);
+					conn = getConn(jsonstr);
+					count = insertJsonAraay(conn, tag, knowledgeId);
+					if (count < 0) {
+						result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
+						return result;
+					}
+				} else if ( StringUtils.equals(jsonstr, "-1")){
+					// 选人脉全部
+					ConnectionInfo knowledgeconnect = null;
+					if (StringUtils.equals(assotype[i], "p")) {
+						conneclist = new ArrayList<ConnectionInfo>();
+						List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 100000,userid, 1);
+						if (peoples != null && peoples.size() > 0) {
+							for (PeopleSimple peopleSimple : peoples) {
+								knowledgeconnect = new ConnectionInfo();
+								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
+								knowledgeconnect.setKnowledgeid(knowledgeId);
+								knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
+								knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId());
+								knowledgeconnect.setOwnerid(userid);
+								PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
+								if (peolpletemp != null) {
+									knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+									List<PeopleName> list = peolpletemp.getPeopleNameList();
+									if (list != null && list.size() > 0) {
+										for (PeopleName peopleName : list) {
+											String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
+											if (Integer.parseInt(pername) == 1) {
+												knowledgeconnect.setConnname(peopleName.getName());
+											}
 										}
 									}
 								}
+								// connectionInfoMapper.insertSelective(knowledgeconnect);
+								conneclist.add(knowledgeconnect);
 							}
-							// connectionInfoMapper.insertSelective(knowledgeconnect);
-							conneclist.add(knowledgeconnect);
+							connectionInfoValueMapper.insertConnectionInfo(conneclist);
+
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
-
 					}
-				}
-				if (StringUtils.equals(assotype[i], "r")) {
-					conneclist = new ArrayList<ConnectionInfo>();
-					Map<String, Object> map = requirementService.selectMy(userid, 0, 100000, -1, "");
-					List<Requirement> results = (List<Requirement>) map.get("results");
-					if (results != null && results.size() > 0) {
-						for (Requirement requirement : results) {
-							knowledgeconnect = new ConnectionInfo();
-							knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
-							knowledgeconnect.setKnowledgeid(knowledgeId);
-							knowledgeconnect.setConnid(requirement.getId());
-							knowledgeconnect.setConnname(requirement.getTitle());
-							knowledgeconnect.setOwnerid(requirement.getFbrId());
-							knowledgeconnect.setOwner(requirement.getFbr());
-							knowledgeconnect.setRequirementtype(requirement.getRequirementType() + "");
-							knowledgeconnect.setUrl("/requirement/detail/"+ requirement.getRequirementType() + ""+ "/" + requirement.getId());
-							conneclist.add(knowledgeconnect);
-						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
-					}
-
-				}
-				if (StringUtils.equals(assotype[i], "o")) {
-
-					conneclist = new ArrayList<ConnectionInfo>();
-					List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 1, 100000);
-
-					if (lt != null && lt.size() > 0) {
-
-						for (int k = 0; k < lt.size(); k++) {
-							Map<String, Object> map = lt.get(k);
-							if (map != null) {
+					if (StringUtils.equals(assotype[i], "r")) {
+						conneclist = new ArrayList<ConnectionInfo>();
+						Map<String, Object> map = requirementService.selectMy(userid, 0, 100000, -1, "");
+						List<Requirement> results = (List<Requirement>) map.get("results");
+						if (results != null && results.size() > 0) {
+							for (Requirement requirement : results) {
 								knowledgeconnect = new ConnectionInfo();
-								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.organization.v());
+								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
 								knowledgeconnect.setKnowledgeid(knowledgeId);
-								knowledgeconnect.setConnid(Long.parseLong(map.get("id") + ""));
-								knowledgeconnect.setConnname(map.get("name")+ "");
-								knowledgeconnect.setOwnerid(userid);
-								PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(map.get("id") + "");
-								if (peolpletemp != null) {
-									knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+								knowledgeconnect.setConnid(requirement.getId());
+								knowledgeconnect.setConnname(requirement.getTitle());
+								knowledgeconnect.setOwnerid(requirement.getFbrId());
+								knowledgeconnect.setOwner(requirement.getFbr());
+								knowledgeconnect.setRequirementtype(requirement.getRequirementType() + "");
+								knowledgeconnect.setUrl("/requirement/detail/"+ requirement.getRequirementType() + ""+ "/" + requirement.getId());
+								conneclist.add(knowledgeconnect);
+							}
+							connectionInfoValueMapper.insertConnectionInfo(conneclist);
+						}
+
+					}
+					if (StringUtils.equals(assotype[i], "o")) {
+
+						conneclist = new ArrayList<ConnectionInfo>();
+						List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 1, 100000);
+
+						if (lt != null && lt.size() > 0) {
+
+							for (int k = 0; k < lt.size(); k++) {
+								Map<String, Object> map = lt.get(k);
+								if (map != null) {
+									knowledgeconnect = new ConnectionInfo();
+									knowledgeconnect.setConntype(Constants.KnowledgeConnectType.organization.v());
+									knowledgeconnect.setKnowledgeid(knowledgeId);
+									knowledgeconnect.setConnid(Long.parseLong(map.get("id") + ""));
+									knowledgeconnect.setConnname(map.get("name")+ "");
+									knowledgeconnect.setOwnerid(userid);
+									PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(map.get("id") + "");
+									if (peolpletemp != null) {
+										knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+									}
+									conneclist.add(knowledgeconnect);
+									// connectionInfoMapper
+									// .insertSelective(knowledgeconnect);
 								}
-								conneclist.add(knowledgeconnect);
-								// connectionInfoMapper
-								// .insertSelective(knowledgeconnect);
 							}
+							connectionInfoValueMapper.insertConnectionInfo(conneclist);
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
+
 					}
+					if (StringUtils.equals(assotype[i], "k")) {
 
-				}
-				if (StringUtils.equals(assotype[i], "k")) {
+						conneclist = new ArrayList<ConnectionInfo>();
+						Map<String, Object> map = knowledgeHomeService.selectAllKnowledgeCategoryByParam("", "", 0, "",userid, "", 1, 100000);
 
-					conneclist = new ArrayList<ConnectionInfo>();
-					Map<String, Object> map = knowledgeHomeService.selectAllKnowledgeCategoryByParam("", "", 0, "",userid, "", 1, 100000);
+						List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("list");
 
-					List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("list");
-
-					if (list != null && list.size() > 0) {
-						for (int m = 0; m < list.size(); m++) {
-							Map<String, Object> mapk = list.get(m);
-							if (mapk != null) {
-								knowledgeconnect = new ConnectionInfo();
-								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.knowledge.v());
-								knowledgeconnect.setKnowledgeid(knowledgeId);
-								knowledgeconnect.setConnid(Long.parseLong(mapk.get("knowledge_id") + ""));
-								knowledgeconnect.setConnname(mapk.get("title")+ "");
-								knowledgeconnect.setOwnerid(userid);
-								knowledgeconnect.setColumnpath(mapk.get("path")+ "");
-								knowledgeconnect.setColumntype(Integer.parseInt(mapk.get("column_type") + ""));
-								knowledgeconnect.setUrl("/knowledge/reader?type="+ mapk.get("column_type") + ""+ "&kid="+ mapk.get("knowledge_id") + "");
-								conneclist.add(knowledgeconnect);
+						if (list != null && list.size() > 0) {
+							for (int m = 0; m < list.size(); m++) {
+								Map<String, Object> mapk = list.get(m);
+								if (mapk != null) {
+									knowledgeconnect = new ConnectionInfo();
+									knowledgeconnect.setConntype(Constants.KnowledgeConnectType.knowledge.v());
+									knowledgeconnect.setKnowledgeid(knowledgeId);
+									knowledgeconnect.setConnid(Long.parseLong(mapk.get("knowledge_id") + ""));
+									knowledgeconnect.setConnname(mapk.get("title")+ "");
+									knowledgeconnect.setOwnerid(userid);
+									knowledgeconnect.setColumnpath(mapk.get("path")+ "");
+									knowledgeconnect.setColumntype(Integer.parseInt(mapk.get("column_type") + ""));
+									knowledgeconnect.setUrl("/knowledge/reader?type="+ mapk.get("column_type") + ""+ "&kid="+ mapk.get("knowledge_id") + "");
+									conneclist.add(knowledgeconnect);
+								}
 							}
+							connectionInfoValueMapper.insertConnectionInfo(conneclist);
 						}
-						connectionInfoValueMapper.insertConnectionInfo(conneclist);
-					}
 
+					}
 				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+		
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
