@@ -74,10 +74,10 @@ public class KnowledgeConnectInfoServiceImpl implements
 				Constants.KnowledgeConnectType.knowledge.c() };
 		for (int i = 0; i < assotype.length; i++) {
 
-			jsonstr = j.get(assotype[i]).toString();
-			if(StringUtils.isBlank(j.get(assotype[i]).toString())){
+			if(j.get(assotype[i])==null){
 				 continue;
 			}
+			jsonstr = j.get(assotype[i]).toString();
 
 			if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
 				tag = getTag(jsonstr);
