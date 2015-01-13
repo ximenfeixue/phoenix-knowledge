@@ -75,6 +75,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 		for (int i = 0; i < assotype.length; i++) {
 
 			jsonstr = j.get(assotype[i]).toString();
+			if(StringUtils.isBlank(j.get(assotype[i]).toString())){
+				 continue;
+			}
 
 			if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
 				tag = getTag(jsonstr);
