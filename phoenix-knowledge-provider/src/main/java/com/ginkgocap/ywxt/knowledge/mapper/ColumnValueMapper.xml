@@ -111,7 +111,7 @@
 		and t.id not in(9,8,11)
 		]]>
 	</select>
-	<select id="selectByCid" resultMap="BaseResultMap">
+	<select id="selectBySortId" resultMap="BaseResultMap">
 		select
 		<include refid="allColumns" />
 		from
@@ -128,7 +128,7 @@
 		)
 		<![CDATA[ 
 		and length(t.column_level_path) <= 18
-		and t.id =#{columnid}
+		and t.column_level_path like   CONCAT(#{sortId}, '%')
 		]]>
 	</select>
 	<select id="selectByParamVisible" resultMap="BaseResultMap">

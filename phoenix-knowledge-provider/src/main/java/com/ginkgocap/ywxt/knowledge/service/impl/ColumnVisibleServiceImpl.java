@@ -233,7 +233,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     }
     @Override
     public void initOne(long userid, long gid,Long cid) {
-        List<Column> l = columnValueMapper.selectByCid(cid,Constants.gtnid, userid);
+        List<Column> l = columnValueMapper.selectBySortId("00000000"+cid,Constants.gtnid, userid);
         List<ColumnVisible> cvl = new ArrayList<ColumnVisible>();
         for (Column c : l) {
             if (!c.getColumnname().equals("未分组")) {
