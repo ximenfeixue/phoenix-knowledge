@@ -60,7 +60,6 @@ import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
-import com.ginkgocap.ywxt.user.model.DynamicNews;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
@@ -153,8 +152,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Autowired
 	private KnowledgeConnectInfoService knowledgeConnectInfoService;
 
-	@Autowired
-	private DynamicNewsService dynamicNewsService;
+//	@Autowired
+//	private DynamicNewsService dynamicNewsService;
 
 	//
 	@Override
@@ -475,21 +474,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 添加动态信息
-		try {
-			DynamicNews news = new DynamicNews();
-			news.setCreaterId(user.getId());
-			news.setCreaterName(user.getName());
-			news.setTitle(vo.getTitle());
-			news.setType(Integer.parseInt(vo.getColumnType() + ""));
-			news.setTargetId(vo.getkId());
-			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-			news.setContent(vo.getContent());
-			dynamicNewsService.insert(news);
-
-		} catch (Exception e) {
-			logger.error("动态存储失败,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
+//		try {
+//			DynamicNews news = new DynamicNews();
+//			news.setCreaterId(user.getId());
+//			news.setCreaterName(user.getName());
+//			news.setTitle(vo.getTitle());
+//			news.setType(Integer.parseInt(vo.getColumnType() + ""));
+//			news.setTargetId(vo.getkId());
+//			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
+//			news.setContent(vo.getContent());
+//			dynamicNewsService.insert(news);
+//
+//		} catch (Exception e) {
+//			logger.error("动态存储失败,知识ID{}", vo.getkId());
+//			e.printStackTrace();
+//		}
 
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
@@ -743,21 +742,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 添加动态信息
-		try {
-			DynamicNews news = new DynamicNews();
-			news.setCreaterId(user.getId());
-			news.setCreaterName(user.getName());
-			news.setTitle(vo.getTitle());
-			news.setType(Integer.parseInt(vo.getColumnType() + ""));
-			news.setTargetId(vo.getkId());
-			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-			news.setContent(vo.getContent());
-			dynamicNewsService.insert(news);
-
-		} catch (Exception e) {
-			logger.error("动态存储失败,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
+//		try {
+//			DynamicNews news = new DynamicNews();
+//			news.setCreaterId(user.getId());
+//			news.setCreaterName(user.getName());
+//			news.setTitle(vo.getTitle());
+//			news.setType(Integer.parseInt(vo.getColumnType() + ""));
+//			news.setTargetId(vo.getkId());
+//			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
+//			news.setContent(vo.getContent());
+//			dynamicNewsService.insert(news);
+//
+//		} catch (Exception e) {
+//			logger.error("动态存储失败,知识ID{}", vo.getkId());
+//			e.printStackTrace();
+//		}
 
 		// TODO 草稿箱中是否有该知识
 		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
