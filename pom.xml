@@ -9,7 +9,7 @@
 	<artifactId>phoenix-knowledge</artifactId>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
-	<version>1.3.3-SNAPSHOT</version>
+	<version>1.3.4-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
