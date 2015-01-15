@@ -25,6 +25,8 @@ import com.ginkgocap.ywxt.knowledge.entity.ColumnExample;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTag;
 import com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnVisible;
+import com.ginkgocap.ywxt.knowledge.entity.ColumnVisibleExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBaseExample;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
@@ -34,6 +36,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnTagMapperManual;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnVOValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.ColumnVO;
@@ -69,6 +72,8 @@ public class ColumnServiceImpl implements ColumnService {
 	private ColumnMapperManual columnMapperManual;
 	@Autowired
 	private ColumnTagMapper columnTagMapper;
+	@Autowired
+	private ColumnVisibleMapper columnVisibleMapper;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
@@ -877,10 +882,20 @@ public class ColumnServiceImpl implements ColumnService {
 				column.getColumnLevelPath());
 		result.put(Constants.status, Constants.ResultType.success.v());
 
+		//修改可见性
+		updateColumnVisibleName(id,userId,columnName);
 		return result;
 	}
 
-	@Override
+	private void updateColumnVisibleName(long id,long userId, String columnName) {
+	    ColumnVisibleExample example=new ColumnVisibleExample();
+	    example.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(id);
+        ColumnVisible columnVisible=new ColumnVisible();
+        columnVisible.setColumnName(columnName);
+        columnVisibleMapper.updateByExampleSelective(columnVisible, example) ;
+    }
+
+    @Override
 	public Map<String, Object> queryOne(long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(id);
