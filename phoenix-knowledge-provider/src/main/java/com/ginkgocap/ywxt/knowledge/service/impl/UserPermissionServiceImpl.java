@@ -436,9 +436,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 								.parseInt(perType) == 3)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						if (Integer.parseInt(userId.trim()) == -1
-								|| Integer.parseInt(userId.trim()) == 0) {
-							return true;
+						if(StringUtils.isNotBlank(userId)){
+							if (Integer.parseInt(userId.trim()) == -1
+									|| Integer.parseInt(userId.trim()) == 0) {
+								return true;
+							}
 						}
 					}
 

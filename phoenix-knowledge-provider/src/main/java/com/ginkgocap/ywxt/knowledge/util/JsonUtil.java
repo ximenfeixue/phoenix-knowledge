@@ -41,6 +41,7 @@ public class JsonUtil {
 		JSONObject j = JSONObject.fromObject(userPermissionStr);
 		JSONArray jsons = null;
 		List<String> perList = null;
+		JSONObject job = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			JsonNode rootNode = mapper.readTree(userPermissionStr);
@@ -52,7 +53,7 @@ public class JsonUtil {
 				perList = new ArrayList<String>();
 				jsons = JSONArray.fromObject(dales);
 				for (int i = 0; i < jsons.size(); i++) {
-					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					job = jsons.getJSONObject(i); // 遍历 jsonarray
 					perList.add(job.get("id") + "");
 				}
 				result.put(Constants.PermissionType.dales.v(), perList);
@@ -63,7 +64,7 @@ public class JsonUtil {
 				perList = new ArrayList<String>();
 				jsons = JSONArray.fromObject(zhongles);
 				for (int i = 0; i < jsons.size(); i++) {
-					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					job = jsons.getJSONObject(i); // 遍历 jsonarray
 					perList.add(job.get("id") + "");
 				}
 				result.put(Constants.PermissionType.zhongles.v(), perList);
@@ -74,7 +75,7 @@ public class JsonUtil {
 				perList = new ArrayList<String>();
 				jsons = JSONArray.fromObject(xiaoles);
 				for (int i = 0; i < jsons.size(); i++) {
-					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					job = jsons.getJSONObject(i); // 遍历 jsonarray
 					perList.add(job.get("id") + "");
 				}
 				result.put(Constants.PermissionType.xiaoles.v(), perList);
