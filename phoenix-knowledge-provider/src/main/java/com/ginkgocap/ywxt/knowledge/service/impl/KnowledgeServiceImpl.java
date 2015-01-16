@@ -906,8 +906,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
 		
-		JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1, vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
-		vo.setSelectedIds(j.toString());
+//		JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1, vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
+//		vo.setSelectedIds(j.toString());
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
