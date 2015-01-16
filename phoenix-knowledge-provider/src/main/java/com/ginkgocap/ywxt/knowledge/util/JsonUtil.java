@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -35,6 +38,8 @@ public class JsonUtil {
 	public static Map<Integer, Object> getPermissionMap(String userPermissionStr) {
 		logger.info("开始解析权限字符串,字符串:{}", userPermissionStr);
 		Map<Integer, Object> result = new HashMap<Integer, Object>();
+		JSONObject j = JSONObject.fromObject(userPermissionStr);
+		JSONArray jsons = null;
 		List<String> perList = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -42,38 +47,38 @@ public class JsonUtil {
 			boolean dule = rootNode.get(Constants.dule).asBoolean();
 			result.put(Constants.PermissionType.dule.v(), dule);
 			if (!dule) {
-				JsonNode dalesNodes = rootNode
-						.get(Constants.PermissionType.dales.c());
-				if (dalesNodes != null && dalesNodes.size() > 0) {
-					perList = new ArrayList<String>();
-					for (JsonNode daleNode : dalesNodes) {
-						perList.add(daleNode.asText());
-					}
+				String dales = j.get(Constants.PermissionType.dales.c())
+						.toString();
+				perList = new ArrayList<String>();
+				jsons = JSONArray.fromObject(dales);
+				for (int i = 0; i < jsons.size(); i++) {
+					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					perList.add(job.get("id") + "");
+				}
+				result.put(Constants.PermissionType.dales.v(), perList);
+				perList = null;
 
-					result.put(Constants.PermissionType.dales.v(), perList);
-					perList = null;
+				String zhongles = j.get(Constants.PermissionType.zhongles.c())
+						.toString();
+				perList = new ArrayList<String>();
+				jsons = JSONArray.fromObject(zhongles);
+				for (int i = 0; i < jsons.size(); i++) {
+					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					perList.add(job.get("id") + "");
 				}
-				JsonNode zhongleNodes = rootNode
-						.get(Constants.PermissionType.zhongles.c());
-				if (zhongleNodes != null && zhongleNodes.size() > 0) {
-					perList = new ArrayList<String>();
-					for (JsonNode zhongle : zhongleNodes) {
-						perList.add(zhongle.asText());
-					}
-					result.put(Constants.PermissionType.zhongles.v(), perList);
-					perList = null;
-				}
+				result.put(Constants.PermissionType.zhongles.v(), perList);
+				perList = null;
 
-				JsonNode xiaoles = rootNode
-						.get(Constants.PermissionType.xiaoles.c());
-				if (xiaoles != null && xiaoles.size() > 0) {
-					perList = new ArrayList<String>();
-					for (JsonNode xiaole : xiaoles) {
-						perList.add(xiaole.asText());
-					}
-					result.put(Constants.PermissionType.xiaoles.v(), perList);
-					perList = null;
+				String xiaoles = j.get(Constants.PermissionType.xiaoles.c())
+						.toString();
+				perList = new ArrayList<String>();
+				jsons = JSONArray.fromObject(xiaoles);
+				for (int i = 0; i < jsons.size(); i++) {
+					JSONObject job = jsons.getJSONObject(i); // 遍历 jsonarray
+					perList.add(job.get("id") + "");
 				}
+				result.put(Constants.PermissionType.xiaoles.v(), perList);
+				perList = null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
