@@ -76,17 +76,19 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				if (perInfo != null && perInfo.length > 0) {
 					String[] userList = perUser.split(",");
 					for (String userId : userList) {
-						userPermission = new UserPermission();
-						userPermission.setReceiveUserId(Long.parseLong(userId
-								.trim()));
-						userPermission.setColumnId(column_id);
-						userPermission.setColumnType(column_type);
-						userPermission.setCreatetime(new Date());
-						userPermission.setKnowledgeId(knowledgeid);
-						userPermission.setMento(shareMessage);
-						userPermission.setType(Integer.parseInt(perType));
-						userPermission.setSendUserId(send_uid);
-						list.add(userPermission);
+						if (StringUtils.isNotBlank(userId)) {
+							userPermission = new UserPermission();
+							userPermission.setReceiveUserId(Long
+									.parseLong(userId.trim()));
+							userPermission.setColumnId(column_id);
+							userPermission.setColumnType(column_type);
+							userPermission.setCreatetime(new Date());
+							userPermission.setKnowledgeId(knowledgeid);
+							userPermission.setMento(shareMessage);
+							userPermission.setType(Integer.parseInt(perType));
+							userPermission.setSendUserId(send_uid);
+							list.add(userPermission);
+						}
 					}
 				}
 			}
@@ -347,11 +349,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				|| columnType.equals(Constants.Type.Industry.v() + "")
 				|| columnType.equals(Constants.Type.Case.v() + "")) {
 			if (desc != null && desc.length() > 0) {
-				desc=HtmlToText.html2Text(desc);
+				desc = HtmlToText.html2Text(desc);
 				if (StringUtils.isNotBlank(desc)) {
-					desc = desc.length() > 50 ? desc.substring(0, 50)
-							+ "..." : desc;
-				}else{
+					desc = desc.length() > 50 ? desc.substring(0, 50) + "..."
+							: desc;
+				} else {
 					desc = "";
 				}
 				userPermission.setDesc(desc);
@@ -367,15 +369,15 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				if (StringUtils.isNotBlank(content)) {
 					content = content.length() > 50 ? content.substring(0, 50)
 							+ "..." : content;
-				}else{
+				} else {
 					content = "";
 				}
 			}
 			userPermission.setDesc(content);
 		}
-		if(vo!=null && vo.getPic()!=null && !"".equals(vo.getPic())){
+		if (vo != null && vo.getPic() != null && !"".equals(vo.getPic())) {
 			userPermission.setPicPath(vo.getPic());
-		}else{
+		} else {
 			userPermission.setPicPath("");
 		}
 		userPermission.setTags(vo.getTags());
@@ -436,7 +438,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 								.parseInt(perType) == 3)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						if(StringUtils.isNotBlank(userId)){
+						if (StringUtils.isNotBlank(userId)) {
 							if (Integer.parseInt(userId.trim()) == -1
 									|| Integer.parseInt(userId.trim()) == 0) {
 								return true;
@@ -451,25 +453,27 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean isPublicForMe(User user,Long targetId) {
-		if(user==null){
+	public boolean isPublicForMe(User user, Long targetId) {
+		if (user == null) {
 			return false;
-		}else{
+		} else {
 			List<UserPermissionMongo> lt = null;
 			PageUtil page = null;
-			Criteria c = Criteria.where("receiveUserId").is(-1).and("knowledgeId").is(targetId);
+			Criteria c = Criteria.where("receiveUserId").is(-1)
+					.and("knowledgeId").is(targetId);
 			Query query = new Query(c);
 			long count = mongoTemplate.count(query, UserPermissionMongo.class);
-			if(count>0){
+			if (count > 0) {
 				return true;
-			}else{
+			} else {
 				c = new Criteria();
-				c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
+				c = Criteria.where("receiveUserId").is(user.getId())
+						.and("knowledgeId").is(targetId);
 				Query query1 = new Query(c);
 				count = mongoTemplate.count(query1, UserPermissionMongo.class);
-				if(count>0){
+				if (count > 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
