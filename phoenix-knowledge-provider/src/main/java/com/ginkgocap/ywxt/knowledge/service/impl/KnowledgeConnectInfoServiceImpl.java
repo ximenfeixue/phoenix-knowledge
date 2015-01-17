@@ -82,12 +82,16 @@ public class KnowledgeConnectInfoServiceImpl implements
 				jsonstr = j.get(assotype[i]).toString();
 
 				if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
-					tag = getTag(jsonstr);
-					conn = getConn(jsonstr);
-					count = insertJsonAraay(conn, tag, knowledgeId);
-					if (count < 0) {
-						result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
-						return result;
+					JSONArray json = JSONArray.fromObject(jsonstr); // 首先把字符串转成
+					for (int t = 0; t < json.size(); t++) {
+						JSONObject job = json.getJSONObject(t); // 遍历 jsonarray
+						tag = getTag(job.toString());
+						conn = getConn(job.toString());
+						count = insertJsonAraay(conn, tag, knowledgeId);
+						if (count < 0) {
+							result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
+							return result;
+						}
 					}
 				} else if ( StringUtils.equals(jsonstr, "-1")){
 					// 选人脉全部
@@ -281,7 +285,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 * @return
 	 */
 	public String getTag(String str) {
-		JSONObject j = JSONObject.fromObject(str.substring(1, str.length() - 1));
+		JSONObject j = JSONObject.fromObject(str);
 		String strr = j.get("tag").toString();
 		return strr;
 	}
@@ -293,7 +297,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 * @return
 	 */
 	public String getConn(String str) {
-		JSONObject j = JSONObject.fromObject(str.substring(1, str.length() - 1));
+		JSONObject j = JSONObject.fromObject(str);
 		String strr = "";
 		if( j.get("conn") != null ){
 			
