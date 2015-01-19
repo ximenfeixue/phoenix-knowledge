@@ -300,7 +300,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 						&& Integer.parseInt(perType) == 2) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						receiveList.add(Long.parseLong(userId.trim()));
+						if(StringUtils.isNotBlank(userId)){
+							
+							receiveList.add(Long.parseLong(userId.trim()));
+						}
 					}
 					insertUserPermissionMongo(receiveList, vo, user);
 				}
