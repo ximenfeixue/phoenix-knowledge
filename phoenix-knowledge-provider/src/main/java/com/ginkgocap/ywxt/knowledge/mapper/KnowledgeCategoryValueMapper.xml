@@ -19,11 +19,11 @@
     </foreach>  
  </insert>
  <select id="selectKnowledgeIds" resultType="map" >
-	SELECT DISTINCT b.*,
+	SELECT b.*,
 	CASE
 	        WHEN b.user_id=#{userId} THEN 'me'
 	        ELSE 'other'
-	END source
+	END source, GROUP_CONCAT(uc.categoryName) `group`
 	FROM tb_knowledge_category kc,
 	tb_user_category
 	uc,tb_knowledge_base b
@@ -47,6 +47,7 @@
 	<if test="keyword !=null and keyword != '' ">
 		AND b.title like CONCAT('%',#{keyword},'%')
 	</if>
+	GROUP BY b.knowledge_id,b.user_id,b.title,b.author,b.path,b.createtime,b.tag,b.c_desc,b.column_id,b.pic_path,b.column_type,b.essence,b.taskid
 	ORDER BY b.createtime DESC
 	LIMIT #{start},#{size}
 </select>
