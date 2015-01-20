@@ -259,7 +259,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setHy(job.get("hy") + "");
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.knowledge.v()) {
-					knowledgeconnect.setColumntype(Integer.parseInt(job.get("columntype") + ""));
+					knowledgeconnect.setColumntype(Integer.parseInt(job.get("column_type") + ""));
 					knowledgeconnect.setColumnpath(job.get("columnpath") + "");
 					knowledgeconnect.setUrl("/knowledge/reader?type="+ job.get("columntype") + "&kid=" + job.get("id"));
 
