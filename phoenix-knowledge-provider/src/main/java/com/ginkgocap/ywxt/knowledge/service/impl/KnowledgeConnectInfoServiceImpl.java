@@ -76,12 +76,13 @@ public class KnowledgeConnectInfoServiceImpl implements
 					Constants.KnowledgeConnectType.knowledge.c() };
 			for (int i = 0; i < assotype.length; i++) {
 
-				if(j.get(assotype[i])==null){
+				if(StringUtils.equals(j.get(assotype[i]).toString(), "[]")){
 					 continue;
 				}
 				jsonstr = j.get(assotype[i]).toString();
-
-				if (!StringUtils.equals(jsonstr, "[]")&& !StringUtils.equals(jsonstr, "-1")) {
+				tag = getTagAll(jsonstr.toString());
+				conn = getConnAll(jsonstr.toString());
+				if (!StringUtils.equals(conn, "[]")&& !StringUtils.equals(conn, "-9")) {
 					JSONArray json = JSONArray.fromObject(jsonstr); // 首先把字符串转成
 					for (int t = 0; t < json.size(); t++) {
 						JSONObject job = json.getJSONObject(t); // 遍历 jsonarray
@@ -93,7 +94,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 							return result;
 						}
 					}
-				} else if ( StringUtils.equals(jsonstr, "-1")){
+				} else if ( StringUtils.equals(conn, "-9")){
 					// 选人脉全部
 					ConnectionInfo knowledgeconnect = null;
 					if (StringUtils.equals(assotype[i], "p")) {
@@ -104,6 +105,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 								knowledgeconnect = new ConnectionInfo();
 								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
 								knowledgeconnect.setKnowledgeid(knowledgeId);
+								knowledgeconnect.setTag(tag);
 								knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
 								knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId()+ "/");
 								knowledgeconnect.setOwnerid(userid);
@@ -137,6 +139,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 								knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
 								knowledgeconnect.setKnowledgeid(knowledgeId);
 								knowledgeconnect.setConnid(requirement.getId());
+								knowledgeconnect.setTag(tag);
 								knowledgeconnect.setConnname(requirement.getTitle());
 								knowledgeconnect.setOwnerid(requirement.getFbrId());
 								knowledgeconnect.setOwner(requirement.getFbr());
@@ -164,6 +167,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 									knowledgeconnect.setConnid(Long.parseLong(map.get("id") + ""));
 									knowledgeconnect.setConnname(map.get("name")+ "");
 									knowledgeconnect.setOwnerid(userid);
+									knowledgeconnect.setTag(tag);
 									PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(map.get("id") + "");
 									if (peolpletemp != null) {
 										knowledgeconnect.setPicpath(peolpletemp.getPortrait());
@@ -194,6 +198,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 									knowledgeconnect.setConnid(Long.parseLong(mapk.get("knowledge_id") + ""));
 									knowledgeconnect.setConnname(mapk.get("title")+ "");
 									knowledgeconnect.setOwnerid(userid);
+									knowledgeconnect.setTag(tag);
 									knowledgeconnect.setColumnpath(mapk.get("path")+ "");
 									knowledgeconnect.setColumntype(Integer.parseInt(mapk.get("column_type") + ""));
 									knowledgeconnect.setUrl("/knowledge/reader?type="+ mapk.get("column_type") + ""+ "&kid="+ mapk.get("knowledge_id") + "");
@@ -289,6 +294,12 @@ public class KnowledgeConnectInfoServiceImpl implements
 		String strr = j.get("tag").toString();
 		return strr;
 	}
+	
+	public String getTagAll(String str) {
+		JSONObject j = JSONObject.fromObject(str.substring(1, str.length()-1));
+		String strr = j.get("tag").toString();
+		return strr;
+	}
 
 	/**
 	 * 获取关联conn值
@@ -298,6 +309,16 @@ public class KnowledgeConnectInfoServiceImpl implements
 	 */
 	public String getConn(String str) {
 		JSONObject j = JSONObject.fromObject(str);
+		String strr = "";
+		if( j.get("conn") != null ){
+			
+			strr = j.get("conn").toString();
+		}
+		return strr;
+	}
+	
+	public String getConnAll(String str) {
+		JSONObject j = JSONObject.fromObject(str.substring(1, str.length()-1));
 		String strr = "";
 		if( j.get("conn") != null ){
 			
