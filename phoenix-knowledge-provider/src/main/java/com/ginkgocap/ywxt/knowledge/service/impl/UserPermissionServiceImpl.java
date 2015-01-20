@@ -3,11 +3,16 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,7 @@ import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -47,6 +53,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private MongoTemplate mongoTemplate;
 	@Resource
 	private UserService userService;
+	@Resource
+	private FriendsRelationService friendsRelationService;
 
 	private final static String split = ",";
 
@@ -300,8 +308,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 						&& Integer.parseInt(perType) == 2) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						if(StringUtils.isNotBlank(userId)){
-							
+						if (StringUtils.isNotBlank(userId)) {
+
 							receiveList.add(Long.parseLong(userId.trim()));
 						}
 					}
@@ -482,4 +490,72 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}
 		}
 	}
+
+	@Override
+	public List<String> userPermissionAll(String selectedIds, User user) {
+		Map<Integer, Object> map = new HashMap<Integer, Object>();
+		List<String> perList = null;
+		List<User> list = null;
+		JSONObject j = JSONObject.fromObject(selectedIds);
+		String dales = j.get(Constants.PermissionType.dales.c()).toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(dales, "-9")) {
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
+					"", 1l, 99999);
+			if (list != null && list.size() > 0) {
+				for (User user2 : list) {
+					perList.add(user2.getId() + "");
+				}
+			}
+		}
+		map.put(Constants.PermissionType.dales.v(), perList);
+		perList = null;
+
+		String zhongles = j.get(Constants.PermissionType.zhongles.c())
+				.toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(zhongles, "-9")) {
+			list = friendsRelationService.findAllFriends(user.getId(), 0, "",
+					"", 1, 99999);
+			if (list != null && list.size() > 0) {
+				for (User user2 : list) {
+					perList.add(user2.getId() + "");
+				}
+			}
+		}
+		map.put(Constants.PermissionType.zhongles.v(), perList);
+		perList = null;
+
+		String xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(xiaoles, "-9")) {
+			list = friendsRelationService.findAllFriends(user.getId(), 0, "",
+					"", 1l, 99999);
+			if (list != null && list.size() > 0) {
+				for (User user2 : list) {
+					perList.add(user2.getId() + "");
+				}
+			}
+		}
+		map.put(Constants.PermissionType.xiaoles.v(), perList);
+		perList = null;
+
+		List<String> permList = new ArrayList<String>();
+		Set<Integer> set = map.keySet();
+		Iterator<Integer> iterator = set.iterator();
+
+		StringBuffer sb = new StringBuffer();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+			sb = new StringBuffer();
+			sb.append(key);
+			sb.append(":");
+			sb.append(map.get(key));
+			permList.add(sb.toString());
+			sb = null;
+		}
+
+		return permList;
+	}
+
 }

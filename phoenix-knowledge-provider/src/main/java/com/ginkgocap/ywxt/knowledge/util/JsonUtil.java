@@ -125,6 +125,27 @@ public class JsonUtil {
 		return permList;
 	}
 
+	public static boolean isAllPermission(String selectedIds) {
+
+		boolean flag = true;
+		JSONObject j = JSONObject.fromObject(selectedIds);
+
+		String learray[] = { Constants.PermissionType.dales.c(),
+				Constants.PermissionType.zhongles.c(),
+				Constants.PermissionType.xiaoles.c() };
+		for (int i = 0; i < learray.length; i++) {
+			if (StringUtils.equals(j.get(learray[i]).toString(), "[]")) {
+				continue;
+			}
+			String jsonstr = j.get(learray[i]).toString();
+			if (StringUtils.equals(jsonstr, "-9")) {
+				flag = false;
+			}
+		}
+
+		return flag;
+	}
+
 	public static void main(String[] args) {
 		// String[] testStr = { "23", "33", "44" };
 		// long[] longs = KnowledgeUtil.convertionToLong(testStr);

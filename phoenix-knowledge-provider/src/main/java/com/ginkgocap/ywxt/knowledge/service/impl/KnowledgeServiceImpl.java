@@ -3,14 +3,19 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +70,7 @@ import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
+import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
@@ -153,8 +159,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Autowired
 	private KnowledgeConnectInfoService knowledgeConnectInfoService;
 
-//	@Autowired
-//	private DynamicNewsService dynamicNewsService;
+	@Autowired
+	private FriendsRelationService friendsRelationService;
 
 	//
 	@Override
@@ -475,21 +481,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 添加动态信息
-//		try {
-//			DynamicNews news = new DynamicNews();
-//			news.setCreaterId(user.getId());
-//			news.setCreaterName(user.getName());
-//			news.setTitle(vo.getTitle());
-//			news.setType(Integer.parseInt(vo.getColumnType() + ""));
-//			news.setTargetId(vo.getkId());
-//			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-//			news.setContent(vo.getContent());
-//			dynamicNewsService.insert(news);
-//
-//		} catch (Exception e) {
-//			logger.error("动态存储失败,知识ID{}", vo.getkId());
-//			e.printStackTrace();
-//		}
+		// try {
+		// DynamicNews news = new DynamicNews();
+		// news.setCreaterId(user.getId());
+		// news.setCreaterName(user.getName());
+		// news.setTitle(vo.getTitle());
+		// news.setType(Integer.parseInt(vo.getColumnType() + ""));
+		// news.setTargetId(vo.getkId());
+		// news.setClearContent(HtmlToText.html2Text(vo.getContent()));
+		// news.setContent(vo.getContent());
+		// dynamicNewsService.insert(news);
+		//
+		// } catch (Exception e) {
+		// logger.error("动态存储失败,知识ID{}", vo.getkId());
+		// e.printStackTrace();
+		// }
 
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
@@ -743,21 +749,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 
 		// 添加动态信息
-//		try {
-//			DynamicNews news = new DynamicNews();
-//			news.setCreaterId(user.getId());
-//			news.setCreaterName(user.getName());
-//			news.setTitle(vo.getTitle());
-//			news.setType(Integer.parseInt(vo.getColumnType() + ""));
-//			news.setTargetId(vo.getkId());
-//			news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-//			news.setContent(vo.getContent());
-//			dynamicNewsService.insert(news);
-//
-//		} catch (Exception e) {
-//			logger.error("动态存储失败,知识ID{}", vo.getkId());
-//			e.printStackTrace();
-//		}
+		// try {
+		// DynamicNews news = new DynamicNews();
+		// news.setCreaterId(user.getId());
+		// news.setCreaterName(user.getName());
+		// news.setTitle(vo.getTitle());
+		// news.setType(Integer.parseInt(vo.getColumnType() + ""));
+		// news.setTargetId(vo.getkId());
+		// news.setClearContent(HtmlToText.html2Text(vo.getContent()));
+		// news.setContent(vo.getContent());
+		// dynamicNewsService.insert(news);
+		//
+		// } catch (Exception e) {
+		// logger.error("动态存储失败,知识ID{}", vo.getkId());
+		// e.printStackTrace();
+		// }
 
 		// TODO 草稿箱中是否有该知识
 		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
@@ -902,12 +908,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo,
 			User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		List<String> perList = null;
+		List<String> permList = null;
 		// 删除知识之前的权限
 		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
 		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-		
-//		JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1, vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
-//		vo.setSelectedIds(j.toString());
+
+		// JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1,
+		// vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
+		// vo.setSelectedIds(j.toString());
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
@@ -921,9 +930,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				return result;
 			}
 			if (!dule) {
-				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo
-						.getSelectedIds());
+				// 判断-9
+
+				// 查询数据库 返回list 循环list取出Id和name
+
+				if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
+					permList = userPermissionService.userPermissionAll(
+							vo.getSelectedIds(), user);
+				} else {
+
+					// 格式化权限信息
+					permList = JsonUtil.getPermissionList(vo.getSelectedIds());
+				}
+
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, vo.getkId(),
 						vo, user);
@@ -958,6 +977,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				params);
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
+	}
+
+	private List<String> UserPermissionAll(String str) {
+
+		return null;
 	}
 
 	/**
