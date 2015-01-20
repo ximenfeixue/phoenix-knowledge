@@ -507,6 +507,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 					perList.add(user2.getId() + "");
 				}
 			}
+			perList.add("-1");
+			perList.add("0");
 		}
 		map.put(Constants.PermissionType.dales.v(), perList);
 		perList = null;
@@ -515,13 +517,15 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				.toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(zhongles, "-9")) {
-			list = friendsRelationService.findAllFriends(user.getId(), 0, "",
-					"", 1, 99999);
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
+					"", 1l, 99999);
 			if (list != null && list.size() > 0) {
 				for (User user2 : list) {
 					perList.add(user2.getId() + "");
 				}
 			}
+			perList.add("-1");
+			perList.add("0");
 		}
 		map.put(Constants.PermissionType.zhongles.v(), perList);
 		perList = null;
@@ -529,13 +533,15 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		String xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(xiaoles, "-9")) {
-			list = friendsRelationService.findAllFriends(user.getId(), 0, "",
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
 			if (list != null && list.size() > 0) {
 				for (User user2 : list) {
 					perList.add(user2.getId() + "");
 				}
 			}
+			perList.add("-1");
+			perList.add("0");
 		}
 		map.put(Constants.PermissionType.xiaoles.v(), perList);
 		perList = null;
