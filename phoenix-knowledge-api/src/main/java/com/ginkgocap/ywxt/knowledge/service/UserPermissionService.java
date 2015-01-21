@@ -146,4 +146,11 @@ public interface UserPermissionService {
 	public boolean isPublicForMe(User user,Long targetId);
 	
 	List<String> userPermissionAll(String selectedIds,User user);
+	
+	/**
+	 * 导数据
+	 */
+	public Map<String,Object> importUserPermission(String selectedIds);
+	
+	public void updateUserPermission(long knowledgeid,String selectedIds,String type);
 }

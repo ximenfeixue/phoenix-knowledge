@@ -1,8 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
+import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 
 @Service("knowledgeAssoImportService")
 public class KnowledgeAssoImportServiceImpl implements
@@ -27,6 +32,9 @@ public class KnowledgeAssoImportServiceImpl implements
 
 	@Resource
 	private KnowledgeConnectInfoService knowledgeConnectInfoService;
+
+	@Resource
+	private UserPermissionService userPermissionService;
 
 	@Override
 	public void importasso() {
@@ -52,8 +60,20 @@ public class KnowledgeAssoImportServiceImpl implements
 				if (knowledge2.getAsso() != null
 						&& !StringUtils.equals(knowledge2.getAsso(), "{}")) {
 
-					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-							knowledge2.getAsso(), knowledge2.getId(), 0l);
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(knowledge2.getAsso(), knowledge2.getId(), 0l);
+				}
+				if (StringUtils.isNotBlank(knowledge2.getSelectedIds())) {
+					try{
+						Boolean dule = JsonUtil.checkKnowledgePermission(knowledge2.getSelectedIds());
+						if (!dule) {
+							Map<String, Object> result = userPermissionService.importUserPermission(knowledge2.getSelectedIds());
+							JSONObject json = JSONObject.fromObject(result);
+							userPermissionService.updateUserPermission(knowledge2.getId(), json.toString(), type[i]);
+						}
+					}catch (Exception e) {
+
+						e.printStackTrace();
+					}
 				}
 			}
 		}

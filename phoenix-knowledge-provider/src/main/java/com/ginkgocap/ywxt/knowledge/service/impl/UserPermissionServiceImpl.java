@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +28,13 @@ import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
+import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
@@ -564,4 +566,68 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		return permList;
 	}
 
+	@Override
+	public Map<String, Object> importUserPermission(String selectedIds) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject j = JSONObject.fromObject(selectedIds);
+		List<Map<String, Object>> listmap = null;
+		Map<String, Object> map = null;
+		try {
+			result.put(Constants.PermissionType.dule.c(), false);
+			String permission[] = { Constants.PermissionType.dales.c(),
+					Constants.PermissionType.zhongles.c(),
+					Constants.PermissionType.xiaoles.c() };
+			for (int k = 0; k < permission.length; k++) {
+
+				String dales = j.get(permission[k]).toString();
+				if (!StringUtils.equals(dales, "[]")
+						&& !StringUtils.equals(dales.substring(1, 2), "{")) {
+					String dale[] = dales.substring(1, dales.length() - 1)
+							.split(",");
+					listmap = new ArrayList<Map<String, Object>>();
+					for (int i = 0; i < dale.length; i++) {
+						map = new HashMap<String, Object>();
+						User user = userService.selectByPrimaryKey(Long
+								.parseLong(dale[i].trim()));
+						if (user != null) {
+							map.put("id", dale[i].trim());
+							map.put("name", user.getName());
+							if (Integer.parseInt(dale[i].trim()) == -1) {
+								map.put("name", "全平台");
+							}
+							listmap.add(map);
+						}
+					}
+					result.put(permission[k], listmap);
+					listmap = null;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void updateUserPermission(long knowledgeid, String selectedIds,
+			String type) {
+		String obj = Constants.getTableName(type);
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid).and("uid")
+				.ne(0);
+
+		try {
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("selectedIds", selectedIds);
+			mongoTemplate.updateFirst(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 }
