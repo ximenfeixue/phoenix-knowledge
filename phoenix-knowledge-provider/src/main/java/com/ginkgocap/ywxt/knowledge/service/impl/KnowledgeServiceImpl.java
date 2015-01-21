@@ -1112,6 +1112,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 			vo.setEssence(knowledge.getEssence() + "");
 			vo.setKnowledgestatus(Constants.Status.checked.v());
+			vo.setPic(knowledge.getPic());
 
 			// 关联信息存入mysql中
 			if (StringUtils.isNotBlank(vo.getAsso())) {
