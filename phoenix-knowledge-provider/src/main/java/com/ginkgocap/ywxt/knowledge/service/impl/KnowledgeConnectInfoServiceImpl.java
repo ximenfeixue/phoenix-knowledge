@@ -22,6 +22,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleSimple;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleTemp;
@@ -116,8 +117,10 @@ public class KnowledgeConnectInfoServiceImpl implements
 									if (list != null && list.size() > 0) {
 										for (PeopleName peopleName : list) {
 											String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
-											if (Integer.parseInt(pername) == 1) {
-												knowledgeconnect.setConnname(peopleName.getName());
+											if(JsonUtil.isNumeric(pername)){
+												if (Integer.parseInt(pername) == 1 ) {
+													knowledgeconnect.setConnname(peopleName.getName());
+												}
 											}
 										}
 									}

@@ -145,7 +145,7 @@ public class JsonUtil {
 
 		return flag;
 	}
-	
+
 	public static boolean isDude(String selectedIds) {
 
 		boolean flag = true;
@@ -167,6 +167,15 @@ public class JsonUtil {
 		return flag;
 	}
 
+	public static boolean isNumeric(String str) {
+		for (int i = str.length(); --i >= 0;) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static void main(String[] args) {
 		// String[] testStr = { "23", "33", "44" };
 		// long[] longs = KnowledgeUtil.convertionToLong(testStr);
@@ -179,5 +188,9 @@ public class JsonUtil {
 		// String str =
 		// "{\"dule\":false,\"dales\":[1,2,3],\"xiaoles\":[34,7],\"zhongles\":[4]}";
 		// KnowledgeUtil.getPermissionList(str);
+		
+		String str="a647";
+		
+		System.out.println(isNumeric(str));
 	}
 }
