@@ -117,11 +117,13 @@ public class KnowledgeConnectInfoServiceImpl implements
 									if (list != null && list.size() > 0) {
 										for (PeopleName peopleName : list) {
 											String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
-											if(JsonUtil.isNumeric(pername)){
+											if( ! JsonUtil.isNumeric(pername)){
+												continue;
+											}
 												if (Integer.parseInt(pername) == 1 ) {
 													knowledgeconnect.setConnname(peopleName.getName());
 												}
-											}
+											
 										}
 									}
 								}
