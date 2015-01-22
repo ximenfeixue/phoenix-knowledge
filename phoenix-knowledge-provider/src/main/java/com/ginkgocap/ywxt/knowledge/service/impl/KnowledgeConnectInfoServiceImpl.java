@@ -200,8 +200,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 									knowledgeconnect.setOwnerid(userid);
 									knowledgeconnect.setTag(tag);
 									knowledgeconnect.setColumnpath(mapk.get("path")+ "");
-									knowledgeconnect.setColumntype(Integer.parseInt(mapk.get("column_type") + ""));
-									knowledgeconnect.setUrl("/knowledge/reader?type="+ mapk.get("column_type") + ""+ "&kid="+ mapk.get("knowledge_id") + "");
+									knowledgeconnect.setColumntype(Integer.parseInt(mapk.get("columntype") + ""));
+									knowledgeconnect.setUrl("/knowledge/reader?type="+ mapk.get("columntype") + ""+ "&kid="+ mapk.get("knowledge_id") + "");
 									conneclist.add(knowledgeconnect);
 								}
 							}
