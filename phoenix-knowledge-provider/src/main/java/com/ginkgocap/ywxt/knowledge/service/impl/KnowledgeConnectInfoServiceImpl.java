@@ -122,13 +122,13 @@ public class KnowledgeConnectInfoServiceImpl implements
 											}
 												if (Integer.parseInt(pername) == 1 ) {
 													knowledgeconnect.setConnname(peopleName.getName());
+													conneclist.add(knowledgeconnect);
 												}
-											
+												break;
 										}
 									}
 								}
 								// connectionInfoMapper.insertSelective(knowledgeconnect);
-								conneclist.add(knowledgeconnect);
 							}
 							connectionInfoValueMapper.insertConnectionInfo(conneclist);
 
