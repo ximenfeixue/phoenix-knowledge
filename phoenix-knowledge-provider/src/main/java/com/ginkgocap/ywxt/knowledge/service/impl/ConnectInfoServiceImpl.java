@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.ConnectInfoService;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -18,6 +19,8 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private ConnectionInfoMapper connectInfoMapper;
+    @Autowired
+    private ConnectionInfoValueMapper connectionInfoValueMapper;
 
     @Override
     public Map<String, Object> findConnectInfo(Long kid, Integer connType, String tag,int page, int size) {
@@ -43,6 +46,8 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
             List<ConnectionInfo> kcl = getList(kid, page, size);
             m.put("page", "");
             m.put("list", kcl);
+            List<String> tags=connectionInfoValueMapper.selectTags(kid, connType);
+			m.put("tags", tags);
         }
         return m;
     }

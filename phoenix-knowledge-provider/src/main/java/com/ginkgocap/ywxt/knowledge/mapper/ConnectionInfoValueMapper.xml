@@ -25,4 +25,7 @@
 		</foreach>
 	</insert>
 
+	<select id="selectTags" resultType="map" >
+		SELECT DISTINCT tag NAME FROM tb_connect_info c WHERE  c.knowledgeId=#{kid} AND c.connType=#{connType}
+	</select>
 </mapper>
