@@ -207,9 +207,11 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
 						vo.getAsso(), vo.getkId(), user.getId());
 			}
+			
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
+			vo.setkId(kId-1);
 
 		}
 		// 添加知识到目录知识表
