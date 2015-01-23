@@ -19,6 +19,6 @@ public class ConnectInfoTest extends TestBase {
 
 	@Test
 	public void findConnectInfo() throws Exception {
-	    connectInfoService.findConnectInfo(11l, null, 1, 10);
+	    connectInfoService.findConnectInfo(1460792l, null,"", 1, 10);
 	}
 }

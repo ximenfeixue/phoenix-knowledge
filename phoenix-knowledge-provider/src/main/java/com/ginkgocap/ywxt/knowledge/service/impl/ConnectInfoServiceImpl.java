@@ -42,12 +42,12 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
             example.setLimitStart(start);
             example.setLimitEnd(size);
             m = getResult(example, page, size);
+            List<String> tags=connectionInfoValueMapper.selectTags(kid, connType);
+            m.put("tags", tags);
         } else {
             List<ConnectionInfo> kcl = getList(kid, page, size);
             m.put("page", "");
             m.put("list", kcl);
-            List<String> tags=connectionInfoValueMapper.selectTags(kid, connType);
-			m.put("tags", tags);
         }
         return m;
     }
