@@ -20,16 +20,21 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
     private ConnectionInfoMapper connectInfoMapper;
 
     @Override
-    public Map<String, Object> findConnectInfo(Long kid, Integer connType, int page, int size) {
+    public Map<String, Object> findConnectInfo(Long kid, Integer connType, String tag,int page, int size) {
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", kid);
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", connType);
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", tag);
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", page);
         logger.info("com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},", size);
         Map<String, Object> m = new HashMap<String, Object>();
         ConnectionInfoExample example = new ConnectionInfoExample();
         if (connType != null && connType > 0) {
             int start = (page - 1) * size;
-            example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType);
+            if("".equals(tag)){
+            	example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType);
+            }else{
+            	example.createCriteria().andKnowledgeidEqualTo(kid).andConntypeEqualTo(connType).andTagEqualTo(tag);
+            }
             example.setOrderByClause("connName ");
             example.setLimitStart(start);
             example.setLimitEnd(size);

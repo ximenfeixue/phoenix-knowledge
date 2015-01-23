@@ -16,10 +16,11 @@ public interface ConnectInfoService {
 	 * findConnectInfo <p>(查询关联)</p>      
 	 * @param kid 知识id
 	 * @param connType 关联类型 （为null时查询所有类型）
+	 * @param tag 默认“”标识全部
 	 * @param page 当前页
 	 * @param size 每页大小
 	 * @return
 	 */
-	public Map<String,Object> findConnectInfo(Long kid,Integer connType,int page, int size);
+	public Map<String,Object> findConnectInfo(Long kid,Integer connType,String tag,int page, int size);
 
 }
