@@ -18,4 +18,8 @@ import com.ginkgocap.ywxt.user.model.User;
 public interface KnowledgeAssoImportService {
 
 	void importasso();
+	
+	void threadimpotdata();
+	
+	
 }

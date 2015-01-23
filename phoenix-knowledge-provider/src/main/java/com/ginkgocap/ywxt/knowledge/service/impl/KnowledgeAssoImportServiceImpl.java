@@ -19,6 +19,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
+import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
 
@@ -35,6 +36,9 @@ public class KnowledgeAssoImportServiceImpl implements
 
 	@Resource
 	private UserPermissionService userPermissionService;
+	
+	@Resource
+	private NoticeThreadPool noticeThreadPool;
 
 	@Override
 	public void importasso() {
@@ -78,5 +82,12 @@ public class KnowledgeAssoImportServiceImpl implements
 			}
 		}
 
+	}
+
+	@Override
+	public void threadimpotdata() {
+	
+		noticeThreadPool.importData();
+		
 	}
 }
