@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 
@@ -25,6 +26,8 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 	private DataCenterService dataCenterService;
 	@Resource
 	private KnowledgeSearchService knowledgeSearchService;
+	@Resource
+	private KnowledgeAssoImportService knowledgeAssoImportService;
 
 	private static ExecutorService executor = null;
 
@@ -73,6 +76,18 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
 					knowledgeSearchService.shareToJinTN(Long.parseLong(userId), vo);
 				}
+			}
+		});
+	}
+	
+	public void importData(){
+		logger.info("----进入导入关联和权限数据----");
+		executor.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+
+			knowledgeAssoImportService.importasso();
 			}
 		});
 	}
