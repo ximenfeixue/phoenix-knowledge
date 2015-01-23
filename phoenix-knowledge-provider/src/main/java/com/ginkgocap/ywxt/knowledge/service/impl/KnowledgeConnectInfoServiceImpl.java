@@ -264,7 +264,13 @@ public class KnowledgeConnectInfoServiceImpl implements
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()) {
 					knowledgeconnect.setCompany(job.get("company") + "");
-					knowledgeconnect.setUrl("/people/" + job.get("id")+ "/");
+					if(StringUtils.equals(job.get("ptype") + "", "rm")){
+						
+						knowledgeconnect.setUrl("/people/" + job.get("id")+ "/");
+					}
+					if(StringUtils.equals(job.get("ptype") + "", "hy")){
+						knowledgeconnect.setUrl("/member/view/?id=" + job.get("id"));
+					}
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 					knowledgeconnect.setCompany(job.get("address") + "");
