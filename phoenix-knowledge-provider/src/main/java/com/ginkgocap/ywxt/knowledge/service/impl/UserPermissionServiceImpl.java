@@ -307,7 +307,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				String perUser = perInfo[1].substring(1,
 						perInfo[1].length() - 1);
 				if (perInfo != null && perInfo.length > 0
-						&& Integer.parseInt(perType) == 2) {
+						&& Integer.parseInt(perType) == 2
+						&& StringUtils.isNotBlank(perUser)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
 						if (StringUtils.isNotBlank(userId)) {
