@@ -356,39 +356,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setMento(vo.getShareMessage());
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
-		String columnType = vo.getColumnType();
-		String desc = vo.getDesc();
-		// 判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取90个字符后插入到我的分享的简介中
-		if (columnType.equals(Constants.Type.Investment.v() + "")
-				|| columnType.equals(Constants.Type.Industry.v() + "")
-				|| columnType.equals(Constants.Type.Case.v() + "")) {
-			if (desc != null && desc.length() > 0) {
-				desc = HtmlToText.html2Text(desc);
-				if (StringUtils.isNotBlank(desc)) {
-					desc = desc.length() > 50 ? desc.substring(0, 50) + "..."
-							: desc;
-				} else {
-					desc = "";
-				}
-				userPermission.setDesc(desc);
-			} else {
-				userPermission.setDesc("");
-			}
-		} else {
-			String content = vo.getContent();
-			if (content == null) {
-				content = "";
-			} else {
-				content = HtmlToText.html2Text(content);
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				} else {
-					content = "";
-				}
-			}
-			userPermission.setDesc(content);
-		}
+		userPermission.setDesc(vo.getDesc());
 		if (vo != null && vo.getPic() != null && !"".equals(vo.getPic())) {
 			userPermission.setPicPath(vo.getPic());
 		} else {
