@@ -240,6 +240,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "p")) {
 			knowledgeconnect=new ConnectionInfo();
 			knowledgeconnect.setAllasso(-1);
+			knowledgeconnect.setTag(tag);
 			knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
 			knowledgeconnect.setKnowledgeid(knowledgeId);
 			connectionInfoMapper.insertSelective(knowledgeconnect);
@@ -248,6 +249,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "r")) {
 			knowledgeconnect=new ConnectionInfo();
 			knowledgeconnect.setAllasso(-1);
+			knowledgeconnect.setTag(tag);
 			knowledgeconnect.setConntype(Constants.KnowledgeConnectType.event.v());
 			knowledgeconnect.setKnowledgeid(knowledgeId);
 			connectionInfoMapper.insertSelective(knowledgeconnect);
@@ -255,6 +257,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "o")) {
 			knowledgeconnect=new ConnectionInfo();
 			knowledgeconnect.setAllasso(-1);
+			knowledgeconnect.setTag(tag);
 			knowledgeconnect.setConntype(Constants.KnowledgeConnectType.organization.v());
 			knowledgeconnect.setKnowledgeid(knowledgeId);
 			connectionInfoMapper.insertSelective(knowledgeconnect);
@@ -262,11 +265,10 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "k")) {
 			knowledgeconnect=new ConnectionInfo();
 			knowledgeconnect.setAllasso(-1);
+			knowledgeconnect.setTag(tag);
 			knowledgeconnect.setConntype(Constants.KnowledgeConnectType.knowledge.v());
 			knowledgeconnect.setKnowledgeid(knowledgeId);
 			connectionInfoMapper.insertSelective(knowledgeconnect);
 		}
-	
-	
 	}
 }
