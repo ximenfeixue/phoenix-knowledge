@@ -35,7 +35,11 @@ public class ConnectionInfo implements Serializable {
 
     private String url;
 
+    private String groupname;
+
     private String picpath;
+
+    private Integer allasso;
 
     private static final long serialVersionUID = 1L;
 
@@ -167,11 +171,27 @@ public class ConnectionInfo implements Serializable {
         this.url = url;
     }
 
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
+
     public String getPicpath() {
         return picpath;
     }
 
     public void setPicpath(String picpath) {
         this.picpath = picpath;
+    }
+
+    public Integer getAllasso() {
+        return allasso;
+    }
+
+    public void setAllasso(Integer allasso) {
+        this.allasso = allasso;
     }
 }

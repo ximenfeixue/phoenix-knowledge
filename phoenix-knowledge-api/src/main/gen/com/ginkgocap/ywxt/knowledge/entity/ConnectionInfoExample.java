@@ -1184,6 +1184,76 @@ public class ConnectionInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andGroupnameIsNull() {
+            addCriterion("groupName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameIsNotNull() {
+            addCriterion("groupName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameEqualTo(String value) {
+            addCriterion("groupName =", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotEqualTo(String value) {
+            addCriterion("groupName <>", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameGreaterThan(String value) {
+            addCriterion("groupName >", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameGreaterThanOrEqualTo(String value) {
+            addCriterion("groupName >=", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLessThan(String value) {
+            addCriterion("groupName <", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLessThanOrEqualTo(String value) {
+            addCriterion("groupName <=", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLike(String value) {
+            addCriterion("groupName like", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotLike(String value) {
+            addCriterion("groupName not like", value, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameIn(List<String> values) {
+            addCriterion("groupName in", values, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotIn(List<String> values) {
+            addCriterion("groupName not in", values, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameBetween(String value1, String value2) {
+            addCriterion("groupName between", value1, value2, "groupname");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameNotBetween(String value1, String value2) {
+            addCriterion("groupName not between", value1, value2, "groupname");
+            return (Criteria) this;
+        }
+
         public Criteria andPicpathIsNull() {
             addCriterion("picPath is null");
             return (Criteria) this;
@@ -1254,6 +1324,66 @@ public class ConnectionInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andAllassoIsNull() {
+            addCriterion("allasso is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoIsNotNull() {
+            addCriterion("allasso is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoEqualTo(Integer value) {
+            addCriterion("allasso =", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoNotEqualTo(Integer value) {
+            addCriterion("allasso <>", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoGreaterThan(Integer value) {
+            addCriterion("allasso >", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoGreaterThanOrEqualTo(Integer value) {
+            addCriterion("allasso >=", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoLessThan(Integer value) {
+            addCriterion("allasso <", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoLessThanOrEqualTo(Integer value) {
+            addCriterion("allasso <=", value, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoIn(List<Integer> values) {
+            addCriterion("allasso in", values, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoNotIn(List<Integer> values) {
+            addCriterion("allasso not in", values, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoBetween(Integer value1, Integer value2) {
+            addCriterion("allasso between", value1, value2, "allasso");
+            return (Criteria) this;
+        }
+
+        public Criteria andAllassoNotBetween(Integer value1, Integer value2) {
+            addCriterion("allasso not between", value1, value2, "allasso");
+            return (Criteria) this;
+        }
+
         public Criteria andTagLikeInsensitive(String value) {
             addCriterion("upper(tag) like", value.toUpperCase(), "tag");
             return (Criteria) this;
@@ -1301,6 +1431,11 @@ public class ConnectionInfoExample {
 
         public Criteria andUrlLikeInsensitive(String value) {
             addCriterion("upper(url) like", value.toUpperCase(), "url");
+            return (Criteria) this;
+        }
+
+        public Criteria andGroupnameLikeInsensitive(String value) {
+            addCriterion("upper(groupName) like", value.toUpperCase(), "groupname");
             return (Criteria) this;
         }
 

@@ -18,7 +18,9 @@
     <result column="columnPath" property="columnpath" jdbcType="VARCHAR" />
     <result column="columnType" property="columntype" jdbcType="INTEGER" />
     <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="groupName" property="groupname" jdbcType="VARCHAR" />
     <result column="picPath" property="picpath" jdbcType="VARCHAR" />
+    <result column="allasso" property="allasso" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -80,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, knowledgeId, tag, connType, connId, connName, ownerId, owner, requirementtype, 
-    career, company, address, hy, columnPath, columnType, url, picPath
+    career, company, address, hy, columnPath, columnType, url, groupName, picPath, allasso
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample" >
     select
@@ -121,13 +123,15 @@
       ownerId, owner, requirementtype, 
       career, company, address, 
       hy, columnPath, columnType, 
-      url, picPath)
+      url, groupName, picPath, 
+      allasso)
     values (#{id,jdbcType=BIGINT}, #{knowledgeid,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, 
       #{conntype,jdbcType=INTEGER}, #{connid,jdbcType=BIGINT}, #{connname,jdbcType=VARCHAR}, 
       #{ownerid,jdbcType=BIGINT}, #{owner,jdbcType=VARCHAR}, #{requirementtype,jdbcType=VARCHAR}, 
       #{career,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{hy,jdbcType=VARCHAR}, #{columnpath,jdbcType=VARCHAR}, #{columntype,jdbcType=INTEGER}, 
-      #{url,jdbcType=VARCHAR}, #{picpath,jdbcType=VARCHAR})
+      #{url,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, #{picpath,jdbcType=VARCHAR}, 
+      #{allasso,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo" >
     insert into tb_connect_info
@@ -180,8 +184,14 @@
       <if test="url != null" >
         url,
       </if>
+      <if test="groupname != null" >
+        groupName,
+      </if>
       <if test="picpath != null" >
         picPath,
+      </if>
+      <if test="allasso != null" >
+        allasso,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -233,8 +243,14 @@
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
       </if>
+      <if test="groupname != null" >
+        #{groupname,jdbcType=VARCHAR},
+      </if>
       <if test="picpath != null" >
         #{picpath,jdbcType=VARCHAR},
+      </if>
+      <if test="allasso != null" >
+        #{allasso,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -295,8 +311,14 @@
       <if test="record.url != null" >
         url = #{record.url,jdbcType=VARCHAR},
       </if>
+      <if test="record.groupname != null" >
+        groupName = #{record.groupname,jdbcType=VARCHAR},
+      </if>
       <if test="record.picpath != null" >
         picPath = #{record.picpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allasso != null" >
+        allasso = #{record.allasso,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -321,7 +343,9 @@
       columnPath = #{record.columnpath,jdbcType=VARCHAR},
       columnType = #{record.columntype,jdbcType=INTEGER},
       url = #{record.url,jdbcType=VARCHAR},
-      picPath = #{record.picpath,jdbcType=VARCHAR}
+      groupName = #{record.groupname,jdbcType=VARCHAR},
+      picPath = #{record.picpath,jdbcType=VARCHAR},
+      allasso = #{record.allasso,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -374,8 +398,14 @@
       <if test="url != null" >
         url = #{url,jdbcType=VARCHAR},
       </if>
+      <if test="groupname != null" >
+        groupName = #{groupname,jdbcType=VARCHAR},
+      </if>
       <if test="picpath != null" >
         picPath = #{picpath,jdbcType=VARCHAR},
+      </if>
+      <if test="allasso != null" >
+        allasso = #{allasso,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -397,7 +427,9 @@
       columnPath = #{columnpath,jdbcType=VARCHAR},
       columnType = #{columntype,jdbcType=INTEGER},
       url = #{url,jdbcType=VARCHAR},
-      picPath = #{picpath,jdbcType=VARCHAR}
+      groupName = #{groupname,jdbcType=VARCHAR},
+      picPath = #{picpath,jdbcType=VARCHAR},
+      allasso = #{allasso,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
