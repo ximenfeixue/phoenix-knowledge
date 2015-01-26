@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,7 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
-import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
+import com.ginkgocap.ywxt.knowledge.util.HttpConnectionManager;
 
 @Service("knowledgeSearchService")
 public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
@@ -32,7 +33,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("user_id", userid + "");
 		params.put("type", type);
-		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
 				+ "user/tags/search.json", params);
 
 		String tags = "";
@@ -89,7 +90,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("psize", psize);
 		
 		logger.info("搜索请求参数为:{}",params);
-		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -116,7 +117,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
+		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -150,7 +151,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		String str = "";
 		try {
 
-			str = HTTPUtil.post(httpUrlConfig.getPushUrl()
+			str = HttpConnectionManager.post(httpUrlConfig.getPushUrl()
 					+ "knowledge/put.json", params);
 		} catch (Exception e) {
 			logger.error("调用大数据接口失败", e.toString());
