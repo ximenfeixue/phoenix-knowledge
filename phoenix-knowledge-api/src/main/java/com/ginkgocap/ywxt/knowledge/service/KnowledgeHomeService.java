@@ -5,14 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeColumn;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
-import com.ginkgocap.ywxt.user.model.User;
 
 /** 
  * <p>知识首页操作接口</p>  
@@ -117,5 +112,17 @@ public interface KnowledgeHomeService {
      * @since 2014-11-20
      */
     public Map<String, Object> selectKnowledgeCategoryForImport(Long userid,List<Long> groupid, int page, int size);
+
+    /**
+     *  查询目录知识记录数
+     * @param tid 11种类型
+     * @param lid 6种来源
+     * @param state 状态 0：云知识目录 1：收藏夹目录
+     * @param sortid 排序id
+     * @param userid 用户id
+     * @param keyword 关键词
+     */
+    public int countKnowledgeIds(String tid,
+			String lid, int state, String sortid, Long userid, String keyword);
     
 }

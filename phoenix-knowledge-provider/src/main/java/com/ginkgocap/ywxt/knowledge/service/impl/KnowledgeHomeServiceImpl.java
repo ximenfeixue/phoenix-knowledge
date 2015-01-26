@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
-import com.ginkgocap.ywxt.knowledge.entity.Attachment;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStaticsExample;
@@ -45,7 +43,6 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.Branch;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
-import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeHomeService")
@@ -432,5 +429,13 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			return knowledgeStaticsMapper.selectByExample(ce);
 		}
 		return null;
+	}
+	
+	@Override
+	public int countKnowledgeIds(String tid,
+			String lid, int state, String sortid, Long userid, String keyword) {
+		int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid,
+				state, sortid, Constants.gtnid, tid, lid, keyword);
+		return count;
 	}
 }
