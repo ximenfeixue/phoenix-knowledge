@@ -244,7 +244,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		ConnectionInfo knowledgeconnect = null;
 		if (StringUtils.equals(assotype, "p")) {
 			conneclist = new ArrayList<ConnectionInfo>();
-			List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 100000,userid, 1);
+			List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 6,userid, 1);
 			if (peoples != null && peoples.size() > 0) {
 				for (PeopleSimple peopleSimple : peoples) {
 					knowledgeconnect = new ConnectionInfo();
@@ -254,6 +254,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setConnid(Long.parseLong(peopleSimple.getId()));
 					knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId()+ "/");
 					knowledgeconnect.setOwnerid(userid);
+					knowledgeconnect.setAllasso(-1);
 					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
 					if (peolpletemp != null) {
 						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
@@ -280,7 +281,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		}
 		if (StringUtils.equals(assotype, "r")) {
 			conneclist = new ArrayList<ConnectionInfo>();
-			Map<String, Object> map = requirementService.selectMy(userid, 0, 100000, -1, "");
+			Map<String, Object> map = requirementService.selectMy(userid, 0, 6, -1, "");
 			List<Requirement> results = (List<Requirement>) map.get("results");
 			if (results != null && results.size() > 0) {
 				for (Requirement requirement : results) {
@@ -289,9 +290,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setKnowledgeid(knowledgeId);
 					knowledgeconnect.setConnid(requirement.getId());
 					knowledgeconnect.setTag(tag);
+					knowledgeconnect.setAllasso(-1); //全部标识
 					knowledgeconnect.setConnname(requirement.getTitle());
 					knowledgeconnect.setOwnerid(requirement.getFbrId());
 					knowledgeconnect.setOwner(requirement.getFbr());
+					
 					knowledgeconnect.setRequirementtype(requirement.getRequirementType() + "");
 					knowledgeconnect.setUrl("/requirement/detail/"+ requirement.getRequirementType() + ""+ "/" + requirement.getId()+ "/");
 					conneclist.add(knowledgeconnect);
@@ -303,7 +306,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "o")) {
 
 			conneclist = new ArrayList<ConnectionInfo>();
-			List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 1, 100000);
+			List<Map<String, Object>> lt = personalCustomerService.list(userid, "", "", "", "", 0, 1, 6);
 
 			if (lt != null && lt.size() > 0) {
 
@@ -317,6 +320,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 						knowledgeconnect.setConnname(map.get("name")+ "");
 						knowledgeconnect.setOwnerid(userid);
 						knowledgeconnect.setTag(tag);
+						knowledgeconnect.setAllasso(-1); //全部标识
 						PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(map.get("id") + "");
 						if (peolpletemp != null) {
 							knowledgeconnect.setPicpath(peolpletemp.getPortrait());
@@ -333,7 +337,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "k")) {
 
 			conneclist = new ArrayList<ConnectionInfo>();
-			Map<String, Object> map = knowledgeHomeService.selectAllKnowledgeCategoryByParam("", "", 0, "",userid, "", 1, 100000);
+			Map<String, Object> map = knowledgeHomeService.selectAllKnowledgeCategoryByParam("", "", 0, "",userid, "", 1, 6);
 
 			List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("list");
 
@@ -348,6 +352,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 						knowledgeconnect.setConnname(mapk.get("title")+ "");
 						knowledgeconnect.setOwnerid(userid);
 						knowledgeconnect.setTag(tag);
+						knowledgeconnect.setAllasso(-1); //全部标识
 						knowledgeconnect.setColumnpath(mapk.get("path")+ "");
 						if( mapk.get("columntype") != null){
 							
