@@ -77,7 +77,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 				jsonstr = j.get(assotype[i]).toString();
 				tag = getTagAll(jsonstr.toString());
 				conn = getConnAll(jsonstr.toString());
-				if (!StringUtils.equals(conn, "[]")&& !StringUtils.equals(conn, "-9")) {
+				if (!StringUtils.equals(conn, "[]")) {
 					JSONArray json = JSONArray.fromObject(jsonstr); // 首先把字符串转成
 					for (int t = 0; t < json.size(); t++) {
 						JSONObject job = json.getJSONObject(t); // 遍历 jsonarray
