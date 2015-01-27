@@ -473,6 +473,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		String zhongles = "";
 		String xiaoles = "";
 		String dales = "";
+		boolean flag = true;
 		JSONObject j = JSONObject.fromObject(selectedIds);
 		dales = j.get(Constants.PermissionType.dales.c()).toString();
 		perList = new ArrayList<String>();
@@ -491,16 +492,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			}
 			if (list != null && list.size() > 0) {
 				for (User user2 : list) {
+					flag = true;
 					if (!StringUtils.equals(zhongles, "[]")) {
-
-						if (!zhongles.contains("\"id\":" + user2.getId() + ",")) {
-							perList.add(user2.getId() + "");
+						if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+							flag = false;
 						}
-					} else if (!StringUtils.equals(xiaoles, "[]")) {
-						if (!xiaoles.contains("\"id\":" + user2.getId() + ",")) {
-							perList.add(user2.getId() + "");
+					}
+					if (!StringUtils.equals(xiaoles, "[]")) {
+						if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+							flag = false;
 						}
-					} else {
+					}
+					if (flag) {
 						perList.add(user2.getId() + "");
 					}
 				}
@@ -531,19 +534,21 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
 			for (User user2 : list) {
+				flag = true;
 				if (!StringUtils.equals(dales, "[]")) {
-					if (!dales.contains("\"id\":" + user2.getId() + ",")) {
-						perList.add(user2.getId() + "");
+					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
 					}
-				} else if (!StringUtils.equals(xiaoles, "[]")) {
-					if (!xiaoles.contains("\"id\":" + user2.getId() + ",")) {
-						perList.add(user2.getId() + "");
+				}
+				if (!StringUtils.equals(xiaoles, "[]")) {
+					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
 					}
-				} else {
+				}
+				if (flag) {
 					perList.add(user2.getId() + "");
 				}
 			}
-
 		} else {
 			jsons = JSONArray.fromObject(zhongles);
 			for (int i = 0; i < jsons.size(); i++) {
@@ -571,16 +576,18 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 					"", 1l, 99999);
 
 			for (User user2 : list) {
-
+				flag = true;
 				if (!StringUtils.equals(zhongles, "[]")) {
-					if (!zhongles.contains("\"id\":" + user2.getId() + ",")) {
-						perList.add(user2.getId() + "");
+					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
 					}
-				} else if (!StringUtils.equals(dales, "[]")) {
-					if (!dales.contains("\"id\":" + user2.getId() + ",")) {
-						perList.add(user2.getId() + "");
+				}
+				if (!StringUtils.equals(dales, "[]")) {
+					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
 					}
-				} else {
+				}
+				if (flag) {
 					perList.add(user2.getId() + "");
 				}
 			}
