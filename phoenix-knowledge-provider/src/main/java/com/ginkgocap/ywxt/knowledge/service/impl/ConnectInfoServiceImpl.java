@@ -77,7 +77,10 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 		if (connType != null && connType > 0) {
 			List<String> tags = connectionInfoValueMapper.selectTags(kid,
 					connType);
-			tag = tags.get(0); 
+			if ("".equals(tag)) {//默认筛第一个标签
+				tag = tags.get(0);
+			}
+			m.put("tags", tags);
 			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
 			ConnectionInfoExample example = buildCriteria(
 					new ConnectionInfoExample(), kid, connType, tag, 0, page,
@@ -107,7 +110,6 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 						size);
 				m = getResultMap(example, page, size);
 			}
-			m.put("tags", tags);
 		} else {
 			List<ConnectionInfo> kcl = new ArrayList<ConnectionInfo>();
 			kcl = getList(kid, 0l, page, size);
