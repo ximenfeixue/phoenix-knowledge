@@ -81,7 +81,10 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			if (l != null && l.size() > 0) {// 1.按照tag筛选时，先判断是否为-1
 				c = l.get(0);
 			}
-			long userid = c.getOwnerid();
+			Long userid = 0l;
+			if(c.getOwnerid()!=null){
+				userid=c.getOwnerid();
+			}
 			int allasso = 0; 
 			if (c.getAllasso() != null && c.getAllasso() == -1) {
 				allasso = -1;
