@@ -175,7 +175,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 					lct = convertPFToConnectionInfoMap(list);
 					lc = addAll(lc, lct);
 					lc.put("pType", "hy");
-					lc.put("pOff", resize);
+					lc.put("pOff", size - resize);
 				}
 			}
 		} else if (connType == 1) {
