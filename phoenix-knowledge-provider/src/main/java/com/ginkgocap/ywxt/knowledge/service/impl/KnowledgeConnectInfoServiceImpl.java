@@ -347,10 +347,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 						knowledgeconnect.setOwnerid(userid);
 						knowledgeconnect.setTag(tag);
 						knowledgeconnect.setAllasso(-1); //全部标识
-						PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(map.get("id") + "");
-						if (peolpletemp != null) {
-							knowledgeconnect.setPicpath(peolpletemp.getPortrait());
-						}
+						knowledgeconnect.setPicpath("/corporation/avatar/user/image/?orgid=" + map.get("id"));
 						conneclist.add(knowledgeconnect);
 						// connectionInfoMapper
 						// .insertSelective(knowledgeconnect);
