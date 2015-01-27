@@ -156,6 +156,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 					if(StringUtils.equals(job.get("ptype") + "", "hy")){
 						knowledgeconnect.setUrl("/member/view/?id=" + job.get("id"));
 					}
+					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(id);
+					if (peolpletemp != null) {
+
+						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
+					}
 				}
 				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.knowledge.v()) {
 					if( job.get("columntype") != null){
@@ -172,14 +177,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setPicpath(job.get("pic_path") + "");
 				}
 
-				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.people.v()
-						|| Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
+				if (Integer.parseInt(type) == Constants.KnowledgeConnectType.organization.v()) {
 
-					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(id);
-					if (peolpletemp != null) {
-
-						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
-					}
+						knowledgeconnect.setPicpath("/corporation/avatar/user/image/?orgid=" + job.get("id"));
 				}
 				conlist.add(knowledgeconnect);
 				// count =
