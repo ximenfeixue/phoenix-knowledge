@@ -255,7 +255,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 		List<ConnectionInfo> cl = new ArrayList<ConnectionInfo>();
 		for (Map<String, Object> p : orgs) {
 			ConnectionInfo c = new ConnectionInfo();
-			c.setPicpath("");
+			c.setPicpath("/corporation/avatar/user/image/?orgid=" + p.get("id"));
 			c.setConnid((Long) p.get("id"));
 			c.setConnname((String) p.get("name"));
 			c.setUrl("");
