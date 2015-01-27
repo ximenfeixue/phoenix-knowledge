@@ -78,7 +78,9 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			List<String> tags = connectionInfoValueMapper.selectTags(kid,
 					connType);
 			if ("".equals(tag)) {//默认筛第一个标签
-				tag = tags.get(0);
+				Object tagMap= tags.get(0);
+				Map<String,Object> tm =(Map<String,Object>)tagMap;
+				tag =(String) tm.get("name");
 			}
 			m.put("tags", tags);
 			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
