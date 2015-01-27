@@ -934,14 +934,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 				// 查询数据库 返回list 循环list取出Id和name
 
-				if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
+//				if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
 					permList = userPermissionService.userPermissionAll(
 							vo.getSelectedIds(), user);
-				} else {
-
-					// 格式化权限信息
-					permList = JsonUtil.getPermissionList(vo.getSelectedIds());
-				}
+//				} else {
+//
+//					// 格式化权限信息
+//					permList = JsonUtil.getPermissionList(vo.getSelectedIds());
+//				}
 
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, vo.getkId(),

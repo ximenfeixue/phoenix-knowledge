@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -467,52 +468,128 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		Map<Integer, Object> map = new HashMap<Integer, Object>();
 		List<String> perList = null;
 		List<User> list = null;
+		JSONArray jsons = null;
+		JSONObject job = null;
+		String zhongles = "";
+		String xiaoles = "";
+		String dales = "";
 		JSONObject j = JSONObject.fromObject(selectedIds);
-		String dales = j.get(Constants.PermissionType.dales.c()).toString();
+		dales = j.get(Constants.PermissionType.dales.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(dales, "-9")) {
 			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
+			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
+			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!zhongles.contains(platform) && !xiaoles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!zhongles.contains(gintong) && !xiaoles.contains(gintong)) {
+				perList.add("0");
+			}
 			if (list != null && list.size() > 0) {
 				for (User user2 : list) {
-					perList.add(user2.getId() + "");
+					if (!StringUtils.equals(zhongles, "[]")) {
+
+						if (!zhongles.contains("\"id\":" + user2.getId() + ",")) {
+							perList.add(user2.getId() + "");
+						}
+					} else if (!StringUtils.equals(xiaoles, "[]")) {
+						if (!xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+							perList.add(user2.getId() + "");
+						}
+					} else {
+						perList.add(user2.getId() + "");
+					}
 				}
 			}
-			perList.add("-1");
-			perList.add("0");
+		} else {
+			jsons = JSONArray.fromObject(dales);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
 		}
 		map.put(Constants.PermissionType.dales.v(), perList);
 		perList = null;
 
-		String zhongles = j.get(Constants.PermissionType.zhongles.c())
-				.toString();
+		zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(zhongles, "-9")) {
+			dales = j.get(Constants.PermissionType.dales.c()).toString();
+			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!dales.contains(platform) && !xiaoles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!dales.contains(gintong) && !xiaoles.contains(gintong)) {
+				perList.add("0");
+			}
 			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
-			if (list != null && list.size() > 0) {
-				for (User user2 : list) {
+			for (User user2 : list) {
+				if (!StringUtils.equals(dales, "[]")) {
+					if (!dales.contains("\"id\":" + user2.getId() + ",")) {
+						perList.add(user2.getId() + "");
+					}
+				} else if (!StringUtils.equals(xiaoles, "[]")) {
+					if (!xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+						perList.add(user2.getId() + "");
+					}
+				} else {
 					perList.add(user2.getId() + "");
 				}
 			}
-			perList.add("-1");
-			perList.add("0");
+
+		} else {
+			jsons = JSONArray.fromObject(zhongles);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
 		}
 		map.put(Constants.PermissionType.zhongles.v(), perList);
 		perList = null;
 
-		String xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+		xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(xiaoles, "-9")) {
+			dales = j.get(Constants.PermissionType.dales.c()).toString();
+			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!dales.contains(platform) && !zhongles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!dales.contains(gintong) && !zhongles.contains(gintong)) {
+				perList.add("0");
+			}
 			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
-			if (list != null && list.size() > 0) {
-				for (User user2 : list) {
+
+			for (User user2 : list) {
+
+				if (!StringUtils.equals(zhongles, "[]")) {
+					if (!zhongles.contains("\"id\":" + user2.getId() + ",")) {
+						perList.add(user2.getId() + "");
+					}
+				} else if (!StringUtils.equals(dales, "[]")) {
+					if (!dales.contains("\"id\":" + user2.getId() + ",")) {
+						perList.add(user2.getId() + "");
+					}
+				} else {
 					perList.add(user2.getId() + "");
 				}
 			}
-			perList.add("-1");
-			perList.add("0");
+		} else {
+			jsons = JSONArray.fromObject(xiaoles);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
 		}
 		map.put(Constants.PermissionType.xiaoles.v(), perList);
 		perList = null;
@@ -597,6 +674,6 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
+
 }
