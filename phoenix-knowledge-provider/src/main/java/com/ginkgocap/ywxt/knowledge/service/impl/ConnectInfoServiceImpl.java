@@ -74,8 +74,10 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},",
 				size);
 		Map<String, Object> m = new HashMap<String, Object>();
-
 		if (connType != null && connType > 0) {
+			List<String> tags = connectionInfoValueMapper.selectTags(kid,
+					connType);
+			tag = tags.get(0); 
 			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
 			ConnectionInfoExample example = buildCriteria(
 					new ConnectionInfoExample(), kid, connType, tag, 0, page,
@@ -105,8 +107,6 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 						size);
 				m = getResultMap(example, page, size);
 			}
-			List<String> tags = connectionInfoValueMapper.selectTags(kid,
-					connType);
 			m.put("tags", tags);
 		} else {
 			List<ConnectionInfo> kcl = new ArrayList<ConnectionInfo>();
