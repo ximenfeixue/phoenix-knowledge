@@ -242,7 +242,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			c.setPicpath("");
 			c.setConnid(p.getId());
 			c.setConnname(p.getTitle());
-			c.setUrl("/requirement/detail/" + p.getType() + "/" + p.getId()
+			c.setUrl("/requirement/detail/" + p.getRequirementType() + "/" + p.getId()
 					+ "/");
 			cl.add(c);
 		}
