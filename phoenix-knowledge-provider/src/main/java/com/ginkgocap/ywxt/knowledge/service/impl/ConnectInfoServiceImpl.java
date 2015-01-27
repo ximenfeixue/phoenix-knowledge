@@ -70,22 +70,24 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},",
 				size);
 		Map<String, Object> m = new HashMap<String, Object>();
-		List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
-		ConnectionInfoExample example = buildCriteria(
-				new ConnectionInfoExample(), kid, connType, tag, 0, page, size);
-		ConnectionInfo c = new ConnectionInfo();
-		l = getResultList(example, page, size);
-		if (l != null && l.size() > 0) {// 1.按照tag筛选时，先判断是否为-1
-			c = l.get(0);
-		}
-		long userid = c.getOwnerid();
-		int allasso = 0;
-		if (c.getAllasso() == -1) {
-			allasso = -1;
-		}
-		example.clear();
 
 		if (connType != null && connType > 0) {
+			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
+			ConnectionInfoExample example = buildCriteria(
+					new ConnectionInfoExample(), kid, connType, tag, 0, page,
+					size);
+			ConnectionInfo c = new ConnectionInfo();
+			l = getResultList(example, page, size);
+			if (l != null && l.size() > 0) {// 1.按照tag筛选时，先判断是否为-1
+				c = l.get(0);
+			}
+			long userid = c.getOwnerid();
+			int allasso = 0; 
+			if (c.getAllasso() != null && c.getAllasso() == -1) {
+				allasso = -1;
+			}
+			example.clear();
+			
 			if (!tag.equals("") && allasso == -1) {// 2.按照tag筛选时，为-1，走接口
 				m = getMapForAllasso(connType, tag, userid, pType, pOff, page,
 						size);
@@ -99,9 +101,9 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			m.put("tags", tags);
 		} else {
 			List<ConnectionInfo> kcl = new ArrayList<ConnectionInfo>();
-			kcl = getList(kid, userid, page, size);
+			kcl = getList(kid, 0l, page, size);
 			m.put("page", "");
-			m.put("list", kcl);
+			m.put("list", kcl); 
 		}
 		return m;
 	}
@@ -140,7 +142,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			Long userid, String pType, int pOff, int page, int size) {
 		Map<String, Object> lc = new HashMap<String, Object>();
 		int start = (page - 1) * size;
-		if (connType == 1) {
+		if (connType == 2) {
 			if (!"".equals(pType)) {
 				List<User> list = friendsRelationService.findAllFriends(userid,
 						0, "", "", start + pOff, size); // 好友
@@ -156,14 +158,14 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				if (resize != size) {
 					Map<String, Object> lct = new HashMap<String, Object>();
 					List<User> list = friendsRelationService.findAllFriends(
-							userid, 0, "", "", resize, size); // 好友
+							userid, 0, "", "", 0, size-resize); // 好友
 					lct = convertPFToConnectionInfoMap(list);
 					lc = addAll(lc, lct);
 					lc.put("pType", "hy");
 					lc.put("pOff", resize);
 				}
 			}
-		} else if (connType == 2) {
+		} else if (connType == 1) {
 			Map<String, Object> events = requirementService.selectMy(userid,
 					start, size, -1, ""); // 事件
 			lc = convertEToConnectionInfoMap(events);
