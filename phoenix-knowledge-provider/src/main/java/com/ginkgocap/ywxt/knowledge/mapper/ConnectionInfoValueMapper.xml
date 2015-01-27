@@ -7,7 +7,7 @@
 		insert into tb_connect_info (
 	
 		knowledgeId,tag,connType,connId,connName,ownerId,owner,requirementtype,
-		career,company,address,hy,columnPath,columnType,url,picPath
+		career,company,address,hy,columnPath,columnType,url,picPath,allasso
 
 		) values
 		<foreach collection="list" item="item" index="index"
@@ -21,7 +21,7 @@
 			#{item.owner}, #{item.requirementtype}, #{item.career},
 			#{item.company},#{item.address},#{item.hy},
 			#{item.columnpath},
-			#{item.columntype},#{item.url},#{item.picpath})
+			#{item.columntype},#{item.url},#{item.picpath},#{item.allasso})
 		</foreach>
 	</insert>
 
