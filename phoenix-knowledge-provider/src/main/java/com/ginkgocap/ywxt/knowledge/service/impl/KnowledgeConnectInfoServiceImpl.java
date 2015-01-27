@@ -29,6 +29,8 @@ import com.ginkgocap.ywxt.people.service.PeopleMongoService;
 import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
 import com.ginkgocap.ywxt.requirement.model.Requirement;
 import com.ginkgocap.ywxt.requirement.service.RequirementService;
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 
 @Service("knowledgeConnectInfoService")
 public class KnowledgeConnectInfoServiceImpl implements
@@ -51,6 +53,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 
 	@Resource
 	private RequirementService requirementService;
+	
+	@Resource
+	private FriendsRelationService friendsRelationService;
 
 	@Override
 	public Map<String, Object> insertKnowledgeConnectInfo(String knowledgeasso,
@@ -276,7 +281,28 @@ public class KnowledgeConnectInfoServiceImpl implements
 					// connectionInfoMapper.insertSelective(knowledgeconnect);
 				}
 				connectionInfoValueMapper.insertConnectionInfo(conneclist);
-
+			}
+		   //如果人脉不足6条，查询好友
+			if(conneclist != null && conneclist.size() < 6){
+				//好友
+				List<User> list = friendsRelationService.findAllFriends(userid,0, "", "", 1, 6 - conneclist.size());
+				if(list != null && list.size() > 0 ){
+					conneclist = new ArrayList<ConnectionInfo>();
+					for (User user : list) {
+						knowledgeconnect = new ConnectionInfo();
+						knowledgeconnect.setConntype(Constants.KnowledgeConnectType.people.v());
+						knowledgeconnect.setKnowledgeid(knowledgeId);
+						knowledgeconnect.setTag(tag);
+						knowledgeconnect.setConnid(user.getId());
+						knowledgeconnect.setUrl("/member/view/?id=" + user.getId());
+						knowledgeconnect.setOwnerid(userid);
+						knowledgeconnect.setAllasso(-1);
+						knowledgeconnect.setConnname(user.getName());
+						knowledgeconnect.setPicpath(user.getPicPath());
+						conneclist.add(knowledgeconnect);
+					}
+					connectionInfoValueMapper.insertConnectionInfo(conneclist);
+				}
 			}
 		}
 		if (StringUtils.equals(assotype, "r")) {
