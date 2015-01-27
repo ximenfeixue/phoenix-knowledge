@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.service.ConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
@@ -32,6 +34,8 @@ import com.ginkgocap.ywxt.util.PageUtil;
 @Service("connectInfoService")
 public class ConnectInfoServiceImpl implements ConnectInfoService {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired
+	private KnowledgeBaseMapper knowledgeBaseMapper;
 	@Autowired
 	private ConnectionInfoMapper connectInfoMapper;
 	@Resource
@@ -78,19 +82,21 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 					size);
 			ConnectionInfo c = new ConnectionInfo();
 			l = getResultList(example, page, size);
+			Long userid = 0l;
 			if (l != null && l.size() > 0) {// 1.按照tag筛选时，先判断是否为-1
 				c = l.get(0);
+				KnowledgeBase kb = knowledgeBaseMapper.selectByPrimaryKey(c
+						.getKnowledgeid());
+				if (kb != null && kb.getUserId() != null) {
+					userid = kb.getUserId();
+				}
 			}
-			Long userid = 0l;
-			if(c.getOwnerid()!=null){
-				userid=c.getOwnerid();
-			}
-			int allasso = 0; 
+			int allasso = 0;
 			if (c.getAllasso() != null && c.getAllasso() == -1) {
 				allasso = -1;
 			}
 			example.clear();
-			
+
 			if (!tag.equals("") && allasso == -1) {// 2.按照tag筛选时，为-1，走接口
 				m = getMapForAllasso(connType, tag, userid, pType, pOff, page,
 						size);
@@ -106,7 +112,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			List<ConnectionInfo> kcl = new ArrayList<ConnectionInfo>();
 			kcl = getList(kid, 0l, page, size);
 			m.put("page", "");
-			m.put("list", kcl); 
+			m.put("list", kcl);
 		}
 		return m;
 	}
@@ -161,7 +167,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				if (resize != size) {
 					Map<String, Object> lct = new HashMap<String, Object>();
 					List<User> list = friendsRelationService.findAllFriends(
-							userid, 0, "", "", 0, size-resize); // 好友
+							userid, 0, "", "", 0, size - resize); // 好友
 					lct = convertPFToConnectionInfoMap(list);
 					lc = addAll(lc, lct);
 					lc.put("pType", "hy");
@@ -245,8 +251,8 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			c.setPicpath("");
 			c.setConnid(p.getId());
 			c.setConnname(p.getTitle());
-			c.setUrl("/requirement/detail/" + p.getRequirementType() + "/" + p.getId()
-					+ "/");
+			c.setUrl("/requirement/detail/" + p.getRequirementType() + "/"
+					+ p.getId() + "/");
 			cl.add(c);
 		}
 		cml.put("page", "");
