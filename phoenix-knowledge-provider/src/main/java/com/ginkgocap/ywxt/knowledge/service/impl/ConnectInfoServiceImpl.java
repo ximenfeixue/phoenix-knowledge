@@ -117,6 +117,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			kcl = getList(kid, 0l, page, size);
 			m.put("page", "");
 			m.put("list", kcl);
+			System.out.println(111);
 		}
 		return m;
 	}
@@ -291,8 +292,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			ConnectionInfo c = new ConnectionInfo();
 			c.setConnid((Long) k.get("knowledge_id"));
 			c.setConnname((String) k.get("title"));
-			c.setUrl((String) k.get("/knowledge/reader?type="
-					+ k.get("column_type") + "&kid=" + k.get("knowledge_id")));
+			c.setUrl("/knowledge/reader?type=" + k.get("column_type") + "&kid=" + k.get("knowledge_id"));
 			c.setPicpath((String) k.get("pic_path"));
 			cl.add(c);
 		}
