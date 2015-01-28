@@ -82,7 +82,6 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				Map<String,Object> tm =(Map<String,Object>)tagMap;
 				tag =(String) tm.get("name");
 			}
-			m.put("tags", tags);
 			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
 			ConnectionInfoExample example = buildCriteria(
 					new ConnectionInfoExample(), kid, connType, tag, 0, page,
@@ -112,6 +111,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 						size);
 				m = getResultMap(example, page, size);
 			}
+			m.put("tags", tags);
 		} else {
 			List<ConnectionInfo> kcl = new ArrayList<ConnectionInfo>();
 			kcl = getList(kid, 0l, page, size);
