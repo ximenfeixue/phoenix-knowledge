@@ -181,7 +181,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			}
 		} else if (connType == 1) {
 			Map<String, Object> events = requirementService.selectMy(userid,
-					start, size, -1, ""); // 事件
+					page, size, -1, ""); // 事件
 			lc = convertEToConnectionInfoMap(events);
 		} else if (connType == 5) {
 			List<Map<String, Object>> orgs = personalCustomerService.list(
