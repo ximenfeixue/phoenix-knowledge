@@ -180,7 +180,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				}
 			}
 		} else if (connType == 1) {
-			Map<String, Object> events = requirementService.selectMy(userid,
+			Map<String, Object> events = requirementService.selectMy(userid,"",
 					page, size, -1, ""); // 事件
 			lc = convertEToConnectionInfoMap(events);
 		} else if (connType == 5) {
