@@ -265,19 +265,11 @@ public class KnowledgeConnectInfoServiceImpl implements
 						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
 						List<PeopleName> list = peolpletemp.getPeopleNameList();
 						if (list != null && list.size() > 0) {
-							for (PeopleName peopleName : list) {
-								String pername = peopleName.getTypeTag().getCode() == null ? "-1" : peopleName.getTypeTag().getCode();
-								if( ! JsonUtil.isNumeric(pername)){
-									continue;
-								}
-									if (Integer.parseInt(pername) == 1 ) {
-										knowledgeconnect.setConnname(peopleName.getName());
-										conneclist.add(knowledgeconnect);
-									}
-									break;
-							}
+							PeopleName peopleName=list.get(0);
+							knowledgeconnect.setConnname(peopleName.getName());
 						}
 					}
+					conneclist.add(knowledgeconnect);
 					// connectionInfoMapper.insertSelective(knowledgeconnect);
 				}
 				connectionInfoValueMapper.insertConnectionInfo(conneclist);
