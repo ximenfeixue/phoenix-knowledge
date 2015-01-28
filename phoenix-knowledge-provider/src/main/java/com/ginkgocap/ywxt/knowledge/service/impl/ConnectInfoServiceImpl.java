@@ -162,7 +162,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 						0, "", "", start + pOff, size); // 好友
 				lc = convertPFToConnectionInfoMap(list);
 				lc.put("pType", "hy");
-				lc.put("pOff", pOff);
+				lc.put("pOff", start + pOff);
 			} else {
 				List<PeopleSimple> peoples = peopleMongoService
 						.getPeopleSimplelist(0, null, null, page, size, userid,
