@@ -106,7 +106,24 @@ public class KnowledgeConnectInfoServiceImpl implements
 					}
 				} else if ( StringUtils.equals(conn, "-9")){
 					//全部
-					allAsso(tag,assotype[i],knowledgeId,userid);
+					JSONArray json = JSONArray.fromObject(jsonstr); // 首先把字符串转成
+					for (int t = 0; t < json.size(); t++) {
+						JSONObject job = json.getJSONObject(t); // 遍历 jsonarray
+						tag = getTag(job.toString());
+						conn = getConn(job.toString());
+						if( StringUtils.equals(conn, "-9")){
+							//全部
+							allAsso(tag,assotype[i],knowledgeId,userid);
+						}else{
+							
+							count = insertJsonAraay(conn, tag, knowledgeId);
+						}
+						if (count < 0) {
+							result.put(Constants.errormessage,Constants.ErrorMessage.addasso.c());
+							return result;
+						}
+					}
+				
 				}
 			}
 		}catch(Exception e){
