@@ -260,15 +260,12 @@ public class KnowledgeConnectInfoServiceImpl implements
 					knowledgeconnect.setUrl("/people/"	+ peopleSimple.getId()+ "/");
 					knowledgeconnect.setOwnerid(userid);
 					knowledgeconnect.setAllasso(-1);
-					PeopleTemp peolpletemp = peopleMongoService.selectByPrimary(peopleSimple.getId());
-					if (peolpletemp != null) {
-						knowledgeconnect.setPicpath(peolpletemp.getPortrait());
-						List<PeopleName> list = peolpletemp.getPeopleNameList();
+					knowledgeconnect.setPicpath(peopleSimple.getPortrait());
+						List<PeopleName> list = peopleSimple.getPeopleNameList();
 						if (list != null && list.size() > 0) {
 							PeopleName peopleName=list.get(0);
 							knowledgeconnect.setConnname(peopleName.getName());
 						}
-					}
 					conneclist.add(knowledgeconnect);
 					// connectionInfoMapper.insertSelective(knowledgeconnect);
 				}
