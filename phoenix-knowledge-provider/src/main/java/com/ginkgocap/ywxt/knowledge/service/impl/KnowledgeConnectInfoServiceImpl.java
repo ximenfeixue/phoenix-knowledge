@@ -249,7 +249,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		ConnectionInfo knowledgeconnect = null;
 		if (StringUtils.equals(assotype, "p")) {
 			conneclist = new ArrayList<ConnectionInfo>();
-			List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 1, 6,userid, 1);
+			List<PeopleSimple> peoples = peopleMongoService.getPeopleSimplelist(0, null, null, 0, 6,userid, 1);
 			if (peoples != null && peoples.size() > 0) {
 				for (PeopleSimple peopleSimple : peoples) {
 					knowledgeconnect = new ConnectionInfo();
@@ -274,7 +274,7 @@ public class KnowledgeConnectInfoServiceImpl implements
 		   //如果人脉不足6条，查询好友
 			if(conneclist != null && conneclist.size() < 6){
 				//好友
-				List<User> list = friendsRelationService.findAllFriends(userid,0, "", "", 1, 6 - conneclist.size());
+				List<User> list = friendsRelationService.findAllFriends(userid,0, "", "", 0, 6 - conneclist.size());
 				if(list != null && list.size() > 0 ){
 					conneclist = new ArrayList<ConnectionInfo>();
 					for (User user : list) {
