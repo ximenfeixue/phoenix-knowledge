@@ -84,10 +84,10 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 			}
 			List<ConnectionInfo> l = new ArrayList<ConnectionInfo>();
 			ConnectionInfoExample example = buildCriteria(
-					new ConnectionInfoExample(), kid, connType, tag, 0, page,
+					new ConnectionInfoExample(), kid, connType, tag, 0, 1,
 					size);
 			ConnectionInfo c = new ConnectionInfo();
-			l = getResultList(example, page, size);
+			l = getResultList(example, 1, size);
 			Long userid = 0l;
 			if (l != null && l.size() > 0) {// 1.按照tag筛选时，先判断是否为-1
 				c = l.get(0);
