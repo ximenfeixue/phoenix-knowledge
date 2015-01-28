@@ -73,6 +73,8 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 		logger.info(
 				"com.ginkgocap.ywxt.knowledge.service.impl.ConnectInfoServiceImpl.findConnectInfo:{},",
 				size);
+		pType="hy";
+		pOff = 5; 
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (connType != null && connType > 0) {
 			List<String> tags = connectionInfoValueMapper.selectTags(kid,
@@ -161,7 +163,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				List<User> list = friendsRelationService.findAllFriends(userid,
 						0, "", "", start + pOff, size); // 好友
 				lc = convertPFToConnectionInfoMap(list);
-				lc.put("pType", "hy");
+				lc.put("pType", "my");
 				lc.put("pOff", pOff);
 			} else {
 				List<PeopleSimple> peoples = peopleMongoService
