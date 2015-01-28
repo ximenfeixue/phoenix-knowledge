@@ -510,31 +510,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
-			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			if (!dule) {
-				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo
-						.getSelectedIds());
-				// 大乐全平台分享
-				// userPermissionService.insertUserShare(permList, kId, vo,
-				// user);
-				int pV = userPermissionService.insertUserPermission(permList,
-						kId, userId, vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()));
-				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
-				}
-			}
 			long[] cIds = null;
 			// 添加知识到知识目录表
 			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
