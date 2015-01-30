@@ -934,18 +934,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
+				
 				//创建知识，生成动态
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("type", "10");
-				param.put("lowType", vo.getColumnType());
-				param.put("createrId", user.getId());
-				param.put("title", vo.getTitle());
-				param.put("content", vo.getDesc());
-				param.put("createrName", user.getName());
+				param.put("lowType", vo.getColumnType()+"");
+				param.put("createrId", user.getId() + "");
+				param.put("title", vo.getTitle()+"");
+				param.put("content", vo.getDesc()+"");
+				param.put("createrName", user.getName()+"");
 				param.put("targetId", vo.getkId() + "");
-				param.put("imgPath", vo.getPic());
-				param.put("receiverIds", permList);
-				param.put("picPath", user.getPicPath());
+				param.put("imgPath", vo.getPic()+"");
+				param.put("receiverIds", changeRelation(permList));
+				param.put("picPath", user.getPicPath()+"");
 				param.put("forwardingContent", "");
 				dynamicNewsService.insertNewsAndRelationByParam(param);
 			}
@@ -965,10 +966,36 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	private List<String> UserPermissionAll(String str) {
-
 		return null;
 	}
 
+	private Map<String, List<Long>> changeRelation(List<String> permList) {
+		
+		Map<String, List<Long>> map = new HashMap<String, List<Long>>();
+		
+		if(permList == null || permList.size() == 0) return null;
+		for( String str : permList ) {
+			String[] temp = str.split(":");
+			// 未分享给用户
+			if( temp.length < 1) continue;
+			List<Long> ids = new ArrayList<Long>();
+			String tem = temp[1];
+			if ( "[]".equals(tem) || "".equals(tem) ) continue;
+			String[] strIds = tem.substring(1, tem.length()-1).split(",");
+			for(String id : strIds) {
+				ids.add(Long.valueOf(id.trim()));
+			}
+			// 如果为大乐
+			if("2".equals(temp[0])) {
+				map.put("dale", ids);
+			}// 如果为中乐
+			else if ("3".equals(temp[0])) {
+				map.put("zhongle", ids);
+			}
+		}
+		return map;
+	}
+	
 	/**
 	 * @param getkId
 	 * @param columnType
