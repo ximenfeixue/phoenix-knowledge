@@ -534,6 +534,6 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 分享权限是否有保存
 		logger.info("--查询APP知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
-		return null;
+		return result;
 	}
 }
