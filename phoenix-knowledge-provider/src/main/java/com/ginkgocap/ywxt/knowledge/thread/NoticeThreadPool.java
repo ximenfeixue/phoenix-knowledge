@@ -81,27 +81,7 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
 					knowledgeSearchService.shareToJinTN(Long.parseLong(userId),
 							vo);
-				} else if (type == Constants.noticeType.dynamic.v()) {
-					// 创建知识，生成动态
-					String userId = params.get("userId") + "";
-					String userName = params.get("userName") + "";
-					String userPic = params.get("userPic") + "";
-					List<String> permList = (List<String>) params.get("permList");
-					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
-					Map<String, Object> param = new HashMap<String, Object>();
-					param.put("type", "10");
-					param.put("lowType", vo.getColumnType());
-					param.put("createrId", userId);
-					param.put("title", vo.getTitle());
-					param.put("content", vo.getDesc());
-					param.put("createrName", userName);
-					param.put("targetId", vo.getkId() + "");
-					param.put("imgPath", vo.getPic());
-					param.put("receiverIds", permList);
-					param.put("picPath", userPic);
-					param.put("forwardingContent", "");
-					dynamicNewsService.insertNewsAndRelationByParam(param);
-				}
+				} 
 			}
 		});
 	}

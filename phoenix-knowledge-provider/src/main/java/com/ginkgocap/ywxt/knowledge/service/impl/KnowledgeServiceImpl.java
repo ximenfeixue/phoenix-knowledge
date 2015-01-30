@@ -3,19 +3,12 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +63,7 @@ import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
+import com.ginkgocap.ywxt.user.service.DynamicNewsService;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
@@ -161,6 +155,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private FriendsRelationService friendsRelationService;
+	
+	@Autowired
+	private DynamicNewsService dynamicNewsService;
 
 	//
 	@Override
@@ -479,23 +476,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
 			e.printStackTrace();
 		}
-
-		// 添加动态信息
-		// try {
-		// DynamicNews news = new DynamicNews();
-		// news.setCreaterId(user.getId());
-		// news.setCreaterName(user.getName());
-		// news.setTitle(vo.getTitle());
-		// news.setType(Integer.parseInt(vo.getColumnType() + ""));
-		// news.setTargetId(vo.getkId());
-		// news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-		// news.setContent(vo.getContent());
-		// dynamicNewsService.insert(news);
-		//
-		// } catch (Exception e) {
-		// logger.error("动态存储失败,知识ID{}", vo.getkId());
-		// e.printStackTrace();
-		// }
 
 		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
 				vo.getColumnType(), user.getId());
@@ -954,14 +934,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
-				//创建知识，生成动态
-				params = new HashMap<String, Object>();
-				params.put("userId", user.getId());
-				params.put("userName", user.getName());
-				params.put("userPic", user.getPicPath());
-				params.put("permList", permList);
-				params.put("vo", vo);
-				noticeThreadPool.noticeDataCenter(Constants.noticeType.dynamic.v(), params);
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("type", "10");
+				param.put("lowType", vo.getColumnType());
+				param.put("createrId", user.getId());
+				param.put("title", vo.getTitle());
+				param.put("content", vo.getDesc());
+				param.put("createrName", user.getName());
+				param.put("targetId", vo.getkId() + "");
+				param.put("imgPath", vo.getPic());
+				param.put("receiverIds", permList);
+				param.put("picPath", user.getPicPath());
+				param.put("forwardingContent", "");
+				dynamicNewsService.insertNewsAndRelationByParam(param);
 			}
 		}
 		if (vo.isNeedUpdate()) {
