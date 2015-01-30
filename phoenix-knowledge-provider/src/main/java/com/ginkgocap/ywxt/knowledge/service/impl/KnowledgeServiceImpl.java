@@ -931,17 +931,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			}
 			if (!dule) {
 				// 判断-9
-
-				// 查询数据库 返回list 循环list取出Id和name
-
-				// if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
 				permList = userPermissionService.userPermissionAll(
 						vo.getSelectedIds(), user);
-				// } else {
-				//
-				// // 格式化权限信息
-				// permList = JsonUtil.getPermissionList(vo.getSelectedIds());
-				// }
 
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, vo.getkId(),
@@ -968,6 +959,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				params.put("userId", user.getId());
 				params.put("userName", user.getName());
 				params.put("userPic", user.getPicPath());
+				params.put("permList", permList);
 				params.put("vo", vo);
 				noticeThreadPool.noticeDataCenter(Constants.noticeType.dynamic.v(), params);
 			}

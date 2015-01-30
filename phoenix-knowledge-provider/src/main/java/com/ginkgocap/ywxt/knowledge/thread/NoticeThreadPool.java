@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.thread;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,26 +76,28 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 
 				} else if (type == Constants.noticeType.cases.v()) { // 经典案例通知
 					dataCenterService.noticeDataCenterWhileFileChange(params);
-				} else if (type == Constants.noticeType.shareToJinTN.v()) { //分享到金桐脑通知
+				} else if (type == Constants.noticeType.shareToJinTN.v()) { // 分享到金桐脑通知
 					String userId = params.get("userId") + "";
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
-					knowledgeSearchService.shareToJinTN(Long.parseLong(userId), vo);
-				}else if(type==Constants.noticeType.dynamic.v()){
-					//创建知识，生成动态
+					knowledgeSearchService.shareToJinTN(Long.parseLong(userId),
+							vo);
+				} else if (type == Constants.noticeType.dynamic.v()) {
+					// 创建知识，生成动态
 					String userId = params.get("userId") + "";
 					String userName = params.get("userName") + "";
 					String userPic = params.get("userPic") + "";
+					List<String> permList = (List<String>) params.get("permList");
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
-					Map<String, String> param = new HashMap<String, String>();
+					Map<String, Object> param = new HashMap<String, Object>();
 					param.put("type", "10");
 					param.put("lowType", vo.getColumnType());
 					param.put("createrId", userId);
 					param.put("title", vo.getTitle());
 					param.put("content", vo.getDesc());
 					param.put("createrName", userName);
-					param.put("targetId", vo.getkId()+"");
+					param.put("targetId", vo.getkId() + "");
 					param.put("imgPath", vo.getPic());
-//					param.put("receiverIds", permList);
+					param.put("receiverIds", permList);
 					param.put("picPath", userPic);
 					param.put("forwardingContent", "");
 					dynamicNewsService.insertNewsAndRelationByParam(param);
@@ -102,15 +105,15 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 			}
 		});
 	}
-	
-	public void importData(){
+
+	public void importData() {
 		logger.info("----进入导入关联和权限数据----");
 		executor.execute(new Runnable() {
-			
+
 			@Override
 			public void run() {
 
-			knowledgeAssoImportService.importasso();
+				knowledgeAssoImportService.importasso();
 			}
 		});
 	}
