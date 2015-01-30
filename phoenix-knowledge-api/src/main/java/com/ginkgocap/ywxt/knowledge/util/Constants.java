@@ -17,7 +17,7 @@ public class Constants {
 	public static long gtnid = 0l;
 
 	public static List<Long> homeColumnIds = new ArrayList<Long>(asList(1, 2,
-			3, 4, 6, 7, 10));
+			3, 4, 5, 6, 7, 10));
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
@@ -41,21 +41,20 @@ public class Constants {
 	/** 小乐 **/
 	public final static String xiaoles = "xiaoles";
 
-	
-    public static Type getEnumType(Long v) {
-        Type[] type = Type.values();
-        return type[(int) (v - 1)];
-    }
-	
-	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
+	public static Type getEnumType(Long v) {
+		Type[] type = Type.values();
+		return type[(int) (v - 1)];
+	}
+
+	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-新材料，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum Type {
 		News(1, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNews"), Investment(
 				2, "com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment"), Industry(
 				3, "com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry"), Case(
-				4, "com.ginkgocap.ywxt.knowledge.model.KnowledgeCase"), BookReport(
-				5, "com.ginkgocap.ywxt.knowledge.model.bookReport"), Asset(6,
-				"com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset"), Macro(7,
-				"com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro"), Opinion(
+				4, "com.ginkgocap.ywxt.knowledge.model.KnowledgeCase"), NewMaterials(
+				5, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNewMaterials"), Asset(
+				6, "com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset"), Macro(
+				7, "com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro"), Opinion(
 				8, "com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion"), Example(
 				9, "com.ginkgocap.ywxt.knowledge.model.example"), Law(10,
 				"com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw"), Article(11,
@@ -86,7 +85,7 @@ public class Constants {
 	}
 
 	private static Collection<? extends Long> asList(int i, int j, int k,
-			int l, int m, int n, int o) {
+			int l, int m, int n, int o, int p) {
 		List<Long> list = new ArrayList<Long>();
 		list.add((long) i);
 		list.add((long) j);
@@ -95,13 +94,14 @@ public class Constants {
 		list.add((long) m);
 		list.add((long) n);
 		list.add((long) o);
+		list.add((long) p);
 		return list;
 	}
 
-	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
+	// 1-资讯，2-投融工具，3-行业，4-经典案例，5-新材料，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
 	public enum KnowledgeType {
-		News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), BookReport(
-				5, "图书报告"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(
+		News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), NewMaterials(
+				5, "新材料"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(
 				9, "判例"), Law(10, "法律法规"), Article(11, "文章");
 
 		private int v;
@@ -265,7 +265,8 @@ public class Constants {
 				"删除失败!"), paramNotValid("用户权限参数不合法!"), updateFail("更新失败!"), paramNotBlank(
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
 				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"), userNotLogin(
-				"您未登陆,请先登陆!"),addKnowledgeCatalogueIds("添加目录失败!");
+				"您未登陆,请先登陆!"), addKnowledgeCatalogueIds("添加目录失败!"), addasso(
+				"添加关联失败!");
 
 		private String c;
 
@@ -447,6 +448,27 @@ public class Constants {
 		}
 	}
 
+	public static enum KnowledgeConnectType {
+		// 关联格式（p:人脉,r:事件,o:组织,k:知识）
+		event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6, "k");
+		private int v;
+
+		private String c;
+
+		private KnowledgeConnectType(int v, String c) {
+			this.v = v;
+			this.c = c;
+		}
+
+		public int v() {
+			return v;
+		}
+
+		public String c() {
+			return c;
+		}
+	}
+
 	public static Integer getPermissionValue(String c) {
 		if (StringUtils.isBlank(c))
 			return null;
@@ -485,7 +507,7 @@ public class Constants {
 
 	// 0-资讯，1-投融工具，2-行业，3-经典案例 4-资产管理，5-宏观，6-观点，7-判例，8-法律法规，9-文章
 	public enum TagNum {
-		News(0), Investment(1), Industry(2), Case(3), Asset(4), Macro(5), Opinion(
+		News(0), Investment(1), Industry(2), Case(3), Asset(4), NewMaterials(5), Opinion(
 				6), Example(7), Law(8), Article(9);
 
 		private int v;
@@ -522,7 +544,8 @@ public class Constants {
 
 	// 通知类型
 	public enum noticeType {
-		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"),shareToJinTN(4,"分享到金桐脑");
+		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"), shareToJinTN(
+				4, "分享到金桐脑"), dynamic(5, "动态");
 
 		private int v;
 		private String c;
@@ -540,7 +563,26 @@ public class Constants {
 			return c;
 		}
 	}
+	// 知识详情查看来源
+		public enum knowledgeDetailSource {
+			common(0, "正常"), app(1, "app");
 
+			private int v;
+			private String c;
+
+			private knowledgeDetailSource(int v, String c) {
+				this.v = v;
+				this.c = c;
+			}
+
+			public int v() {
+				return v;
+			}
+
+			public String c() {
+				return c;
+			}
+		}
 	public static String getKnowledgeTypeName(String v) {
 		if (StringUtils.isBlank(v))
 			return null;

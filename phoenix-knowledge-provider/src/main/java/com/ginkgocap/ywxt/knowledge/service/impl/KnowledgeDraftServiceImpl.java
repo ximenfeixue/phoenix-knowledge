@@ -31,6 +31,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
@@ -94,6 +95,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 	@Autowired
 	private KnowledgeService knowledgeService;
 
+	@Autowired
+	private KnowledgeConnectInfoService knowledgeConnectInfoService;
+
 	@Override
 	public Map<String, Object> insertKnowledgeDraft(KnowledgeNewsVO vo,
 			User user) {
@@ -154,11 +158,21 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (k != null && k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId(), user.getId());
+				}
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
 			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
+				// 关联信息存入mysql中
+				if (StringUtils.isNotBlank(vo.getAsso())) {
+					knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+							vo.getAsso(), vo.getkId(), user.getId());
+				}
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 
@@ -180,12 +194,24 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			long draftKId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			vo.setkId(draftKId);
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId(), user.getId());
+			}
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库假装当作草稿防止被查询出来
 			vo.setKnowledgeMainId(draftKId);// 草稿中存放真正知识的ID
 			vo.setkId(kId);// 插入草稿ID
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+						vo.getAsso(), vo.getkId(), user.getId());
+			}
+			
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
+			vo.setkId(kId-1);
 
 		}
 		// 添加知识到目录知识表
@@ -398,11 +424,21 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			if (k != null && k.getId() > 0) {
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(k.getId());
+				// 关联信息存入mysql中
+				// if (StringUtils.isNotBlank(vo.getAsso())) {
+				// knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+				// vo.getAsso(), vo.getkId());
+				// }
 				knowledgeNewsDAO.updateKnowledgeDraft(vo, user);
 			} else {
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 				vo.setKnowledgeMainId(vo.getkId());
 				vo.setkId(kId);
+				// 关联信息存入mysql中
+				// if (StringUtils.isNotBlank(vo.getAsso())) {
+				// knowledgeConnectInfoService.insertKnowledgeConnectInfo(
+				// vo.getAsso(), vo.getkId());
+				// }
 				knowledgeNewsDAO.insertknowledgeDraft(vo, user);
 			}
 			// 判断是否是投融工具更新
@@ -410,44 +446,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 				if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law
 						.v()) {// 法律法规只有独乐，不入权限表
 
-					// 删除用户权限数据
-					int userPermissionCount = userPermissionService
-							.deleteUserPermission(vo.getkId(), user.getId());
-					// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-					if (StringUtils.isNotBlank(vo.getSelectedIds())
-							&& !vo.getSelectedIds().equals(dule)) {
-						// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-						Boolean dule = JsonUtil.checkKnowledgePermission(vo
-								.getSelectedIds());
-						if (dule == null) {
-							logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-							result.put(Constants.status,
-									Constants.ResultType.fail.v());
-							result.put(Constants.errormessage,
-									Constants.ErrorMessage.paramNotValid.c());
-							return result;
-						}
-						if (!dule) {
-							// 格式化权限信息
-							List<String> permList = JsonUtil
-									.getPermissionList(vo.getSelectedIds());
-							// 大乐全平台分享
-							// userPermissionService.insertUserShare(permList,
-							// vo.getkId(), vo, user);
-							int pV = userPermissionService
-									.insertUserPermission(permList,
-											vo.getkId(), user.getId(), vo
-													.getShareMessage(), Short
-													.parseShort(vo
-															.getColumnType()),
-											Long.parseLong(vo.getColumnid()));
-							if (pV == 0) {
-								logger.error(
-										"创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-										vo.getkId());
-							}
-						}
-					}
 				}
 
 				// 删除该知识下的所有目录
@@ -512,31 +510,6 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 			knowledgeNewsDAO.insertknowledgeDraft(vo, user); // 插入到正式库并当作真实的知识草稿
 			knowledgeDraftDAO.insertKnowledge(draftKId, vo.getTitle(),
 					vo.getColumnName(), vo.getColumnType(), userId);
-			// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
-			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			if (!dule) {
-				// 格式化权限信息
-				List<String> permList = JsonUtil.getPermissionList(vo
-						.getSelectedIds());
-				// 大乐全平台分享
-				// userPermissionService.insertUserShare(permList, kId, vo,
-				// user);
-				int pV = userPermissionService.insertUserPermission(permList,
-						kId, userId, vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()));
-				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", kId);
-				}
-			}
 			long[] cIds = null;
 			// 添加知识到知识目录表
 			if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.

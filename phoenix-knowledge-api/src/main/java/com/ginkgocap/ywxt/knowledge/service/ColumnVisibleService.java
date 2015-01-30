@@ -40,6 +40,10 @@ public interface ColumnVisibleService {
      */
 	public Map<String,Object> queryHomeColumn(User user);
 
-	public List<ColumnVisible> queryListByPidAndUserIdAndState(long userid, long cid, short state); 
+	public List<ColumnVisible> queryListByPidAndUserIdAndState(long userid, long cid, short state);
+
+    long countListByCidAndUserId(long userid, Long pid);
+
+    void initOne(long userid, long gid, Long cid); 
 
 }

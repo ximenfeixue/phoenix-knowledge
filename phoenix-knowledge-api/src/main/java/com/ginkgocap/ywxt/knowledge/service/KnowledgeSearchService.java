@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
-public interface SearchService {
+public interface KnowledgeSearchService {
 
 	/**
 	 * 标签查询

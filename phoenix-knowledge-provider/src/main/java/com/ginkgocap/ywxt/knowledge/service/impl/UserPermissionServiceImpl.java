@@ -3,11 +3,16 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +29,15 @@ import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
+import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -47,6 +56,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private MongoTemplate mongoTemplate;
 	@Resource
 	private UserService userService;
+	@Resource
+	private FriendsRelationService friendsRelationService;
 
 	private final static String split = ",";
 
@@ -76,17 +87,19 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				if (perInfo != null && perInfo.length > 0) {
 					String[] userList = perUser.split(",");
 					for (String userId : userList) {
-						userPermission = new UserPermission();
-						userPermission.setReceiveUserId(Long.parseLong(userId
-								.trim()));
-						userPermission.setColumnId(column_id);
-						userPermission.setColumnType(column_type);
-						userPermission.setCreatetime(new Date());
-						userPermission.setKnowledgeId(knowledgeid);
-						userPermission.setMento(shareMessage);
-						userPermission.setType(Integer.parseInt(perType));
-						userPermission.setSendUserId(send_uid);
-						list.add(userPermission);
+						if (StringUtils.isNotBlank(userId)) {
+							userPermission = new UserPermission();
+							userPermission.setReceiveUserId(Long
+									.parseLong(userId.trim()));
+							userPermission.setColumnId(column_id);
+							userPermission.setColumnType(column_type);
+							userPermission.setCreatetime(new Date());
+							userPermission.setKnowledgeId(knowledgeid);
+							userPermission.setMento(shareMessage);
+							userPermission.setType(Integer.parseInt(perType));
+							userPermission.setSendUserId(send_uid);
+							list.add(userPermission);
+						}
 					}
 				}
 			}
@@ -295,10 +308,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 				String perUser = perInfo[1].substring(1,
 						perInfo[1].length() - 1);
 				if (perInfo != null && perInfo.length > 0
-						&& Integer.parseInt(perType) == 2) {
+						&& Integer.parseInt(perType) == 2
+						&& StringUtils.isNotBlank(perUser)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						receiveList.add(Long.parseLong(userId.trim()));
+						if (StringUtils.isNotBlank(userId)) {
+
+							receiveList.add(Long.parseLong(userId.trim()));
+						}
 					}
 					insertUserPermissionMongo(receiveList, vo, user);
 				}
@@ -340,42 +357,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setMento(vo.getShareMessage());
 		userPermission.setSendUserId(user.getId());
 		userPermission.setTitle(vo.getTitle());
-		String columnType = vo.getColumnType();
-		String desc = vo.getDesc();
-		// 判断如果是投融工具 行业 案例 则将简介插入，否则正文中截取90个字符后插入到我的分享的简介中
-		if (columnType.equals(Constants.Type.Investment.v() + "")
-				|| columnType.equals(Constants.Type.Industry.v() + "")
-				|| columnType.equals(Constants.Type.Case.v() + "")) {
-			if (desc != null && desc.length() > 0) {
-				desc=HtmlToText.html2Text(desc);
-				if (StringUtils.isNotBlank(desc)) {
-					desc = desc.length() > 50 ? desc.substring(0, 50)
-							+ "..." : desc;
-				}else{
-					desc = "";
-				}
-				userPermission.setDesc(desc);
-			} else {
-				userPermission.setDesc("");
-			}
-		} else {
-			String content = vo.getContent();
-			if (content == null) {
-				content = "";
-			} else {
-				content = HtmlToText.html2Text(content);
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}else{
-					content = "";
-				}
-			}
-			userPermission.setDesc(content);
-		}
-		if(vo!=null && vo.getPic()!=null && !"".equals(vo.getPic())){
+		userPermission.setDesc(vo.getDesc());
+		if (vo != null && vo.getPic() != null && !"".equals(vo.getPic())) {
 			userPermission.setPicPath(vo.getPic());
-		}else{
+		} else {
 			userPermission.setPicPath("");
 		}
 		userPermission.setTags(vo.getTags());
@@ -436,9 +421,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 								.parseInt(perType) == 3)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
-						if (Integer.parseInt(userId.trim()) == -1
-								|| Integer.parseInt(userId.trim()) == 0) {
-							return true;
+						if (StringUtils.isNotBlank(userId)) {
+							if (Integer.parseInt(userId.trim()) == -1
+									|| Integer.parseInt(userId.trim()) == 0) {
+								return true;
+							}
 						}
 					}
 
@@ -449,28 +436,251 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean isPublicForMe(User user,Long targetId) {
-		if(user==null){
+	public boolean isPublicForMe(User user, Long targetId) {
+		if (user == null) {
 			return false;
-		}else{
+		} else {
 			List<UserPermissionMongo> lt = null;
 			PageUtil page = null;
-			Criteria c = Criteria.where("receiveUserId").is(-1).and("knowledgeId").is(targetId);
+			Criteria c = Criteria.where("receiveUserId").is(-1)
+					.and("knowledgeId").is(targetId);
 			Query query = new Query(c);
 			long count = mongoTemplate.count(query, UserPermissionMongo.class);
-			if(count>0){
+			if (count > 0) {
 				return true;
-			}else{
+			} else {
 				c = new Criteria();
-				c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
+				c = Criteria.where("receiveUserId").is(user.getId())
+						.and("knowledgeId").is(targetId);
 				Query query1 = new Query(c);
 				count = mongoTemplate.count(query1, UserPermissionMongo.class);
-				if(count>0){
+				if (count > 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
 		}
 	}
+
+	@Override
+	public List<String> userPermissionAll(String selectedIds, User user) {
+		Map<Integer, Object> map = new HashMap<Integer, Object>();
+		List<String> perList = null;
+		List<User> list = null;
+		JSONArray jsons = null;
+		JSONObject job = null;
+		String zhongles = "";
+		String xiaoles = "";
+		String dales = "";
+		boolean flag = true;
+		JSONObject j = JSONObject.fromObject(selectedIds);
+		dales = j.get(Constants.PermissionType.dales.c()).toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(dales, "-9")) {
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
+					"", 1l, 99999);
+			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
+			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!zhongles.contains(platform) && !xiaoles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!zhongles.contains(gintong) && !xiaoles.contains(gintong)) {
+				perList.add("0");
+			}
+			if (list != null && list.size() > 0) {
+				for (User user2 : list) {
+					flag = true;
+					if (!StringUtils.equals(zhongles, "[]")) {
+						if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+							flag = false;
+						}
+					}
+					if (!StringUtils.equals(xiaoles, "[]")) {
+						if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+							flag = false;
+						}
+					}
+					if (flag) {
+						perList.add(user2.getId() + "");
+					}
+				}
+			}
+		} else {
+			jsons = JSONArray.fromObject(dales);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
+		}
+		map.put(Constants.PermissionType.dales.v(), perList);
+		perList = null;
+
+		zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(zhongles, "-9")) {
+			dales = j.get(Constants.PermissionType.dales.c()).toString();
+			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!dales.contains(platform) && !xiaoles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!dales.contains(gintong) && !xiaoles.contains(gintong)) {
+				perList.add("0");
+			}
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
+					"", 1l, 99999);
+			for (User user2 : list) {
+				flag = true;
+				if (!StringUtils.equals(dales, "[]")) {
+					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
+					}
+				}
+				if (!StringUtils.equals(xiaoles, "[]")) {
+					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
+					}
+				}
+				if (flag) {
+					perList.add(user2.getId() + "");
+				}
+			}
+		} else {
+			jsons = JSONArray.fromObject(zhongles);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
+		}
+		map.put(Constants.PermissionType.zhongles.v(), perList);
+		perList = null;
+
+		xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
+		perList = new ArrayList<String>();
+		if (StringUtils.equals(xiaoles, "-9")) {
+			dales = j.get(Constants.PermissionType.dales.c()).toString();
+			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
+			String platform = "\"id\":-1";
+			String gintong = "\"id\":0";
+			if (!dales.contains(platform) && !zhongles.contains(platform)) {
+				perList.add("-1");
+			}
+			if (!dales.contains(gintong) && !zhongles.contains(gintong)) {
+				perList.add("0");
+			}
+			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
+					"", 1l, 99999);
+
+			for (User user2 : list) {
+				flag = true;
+				if (!StringUtils.equals(zhongles, "[]")) {
+					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
+					}
+				}
+				if (!StringUtils.equals(dales, "[]")) {
+					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
+						flag = false;
+					}
+				}
+				if (flag) {
+					perList.add(user2.getId() + "");
+				}
+			}
+		} else {
+			jsons = JSONArray.fromObject(xiaoles);
+			for (int i = 0; i < jsons.size(); i++) {
+				job = jsons.getJSONObject(i); // 遍历 jsonarray
+				perList.add(job.get("id") + "");
+			}
+		}
+		map.put(Constants.PermissionType.xiaoles.v(), perList);
+		perList = null;
+
+		List<String> permList = new ArrayList<String>();
+		Set<Integer> set = map.keySet();
+		Iterator<Integer> iterator = set.iterator();
+
+		StringBuffer sb = new StringBuffer();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+			sb = new StringBuffer();
+			sb.append(key);
+			sb.append(":");
+			sb.append(map.get(key));
+			permList.add(sb.toString());
+			sb = null;
+		}
+
+		return permList;
+	}
+
+	@Override
+	public Map<String, Object> importUserPermission(String selectedIds) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject j = JSONObject.fromObject(selectedIds);
+		List<Map<String, Object>> listmap = null;
+		Map<String, Object> map = null;
+		try {
+			result.put(Constants.PermissionType.dule.c(), false);
+			String permission[] = { Constants.PermissionType.dales.c(),
+					Constants.PermissionType.zhongles.c(),
+					Constants.PermissionType.xiaoles.c() };
+			for (int k = 0; k < permission.length; k++) {
+
+				String dales = j.get(permission[k]).toString();
+				if (!StringUtils.equals(dales, "[]")
+						&& !StringUtils.equals(dales.substring(1, 2), "{")) {
+					String dale[] = dales.substring(1, dales.length() - 1)
+							.split(",");
+					listmap = new ArrayList<Map<String, Object>>();
+					for (int i = 0; i < dale.length; i++) {
+						map = new HashMap<String, Object>();
+						User user = userService.selectByPrimaryKey(Long
+								.parseLong(dale[i].trim()));
+						if (user != null) {
+							map.put("id", dale[i].trim());
+							map.put("name", user.getName());
+							if (Integer.parseInt(dale[i].trim()) == -1) {
+								map.put("name", "全平台");
+							}
+							listmap.add(map);
+						}
+					}
+					result.put(permission[k], listmap);
+					listmap = null;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void updateUserPermission(long knowledgeid, String selectedIds,
+			String type) {
+		String obj = Constants.getTableName(type);
+
+		Criteria criteria = Criteria.where("_id").is(knowledgeid).and("uid")
+				.ne(0);
+
+		try {
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("selectedIds", selectedIds);
+			mongoTemplate.updateFirst(query, update,
+					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -374,6 +374,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(id);
 		criteria.andColumnTypeEqualTo(Short.parseShort(type));
+		criteria.andColumnIdGreaterThan(11l);
 		example.setOrderByClause("sub_date desc");
 		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
 				.selectByExample(example);

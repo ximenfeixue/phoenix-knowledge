@@ -136,10 +136,12 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 		if (Integer.parseInt(type) == Constants.Type.Industry.v()) {
 			category = true;
-		} else if (Integer.parseInt(type) == Constants.Type.BookReport.v()) {
-			mark = true;
-			download = true;
-			category = true;
+			// 没有图书报告 暂时注掉了
+			// } else if (Integer.parseInt(type) ==
+			// Constants.Type.BookReport.v()) {
+			// mark = true;
+			// download = true;
+			// category = true;
 		} else if (Integer.parseInt(type) == Constants.Type.Example.v()) {
 			download = true;
 			category = true;
@@ -155,15 +157,17 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Boolean> showHeadMenu(long kid, String type, User user,
-			long authorId) {
+			long authorId,Integer detailSource) {
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 
 		result.putAll(showHeadMenu(kid, type));
-
-		result.put("edit", user == null ? false : user.getId() == authorId);
-
+		if(detailSource == Constants.knowledgeDetailSource.common.v()){
+			result.put("edit", user == null ? false : user.getId() == authorId);
+		}else{
+			result.put("edit", false);
+		}
 		result.put("share", user == null ? false : user.getId() == authorId);
-
+		
 		result.put("sourceFile", authorId == Constants.Ids.jinTN.v());
 
 		return result;
@@ -235,7 +239,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Object> getReaderHeadMsg(long kid, long authorId,
-			User user, String type) {
+			User user, String type,Integer detailSource) {
 		logger.info("进入查询阅读器头部内容请求,知识ID:{},当前登陆用户:{}", kid,
 				user == null ? "未登陆" : user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -259,7 +263,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 存储登陆用户与知识作者关系
 		result.putAll(authorAndLoginUserRelation(user, authorId));
 		// 存储阅读器功能菜单
-		result.putAll(showHeadMenu(kid, type, user, authorId));
+		result.putAll(showHeadMenu(kid, type, user, authorId,detailSource));
 		// 查询用户基本信息并存储用户名、头像、用户ID
 		User kUser = userService.selectByPrimaryKey(authorId);
 		result.put("user", kUser);
@@ -341,7 +345,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			return perMap;
 
 		// 存储阅读器头部信息
-		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type,Constants.knowledgeDetailSource.common.v()));
 		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
 		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
 				Constants.StaticsValue.clickCount.v());
@@ -359,13 +363,16 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		result.put("kid", kid);
 		result.put("type", type);
 		result.put("userself",
-				user == null ? false :user.getId() != knowledge.getUid()?true:false );
-		
+				user == null ? false
+						: user.getId() != knowledge.getUid() ? true : false);
+
 		result.put("usershare", userPermissionService.isPublicForMe(user, kid));
-		result.put("jinTN", knowledge.getUid() == Constants.Ids.jinTN.v()?true:false);
+		result.put("jinTN",
+				knowledge.getUid() == Constants.Ids.jinTN.v() ? true : false);
 		result.put("userdel",
-				user == null ? false :user.getId() == knowledge.getUid()?true:false );
-		
+				user == null ? false
+						: user.getId() == knowledge.getUid() ? true : false);
+
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
 		// 权限设置
@@ -373,7 +380,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				: knowledge.getSelectedIds());
 		// 生态圈使用
 		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
-		//分享权限是否有保存
+		// 分享权限是否有保存
 		logger.info("--查询知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
 				user != null ? user.getId() : "未登陆");
 		return result;
@@ -463,5 +470,70 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 					Constants.ErrorMessage.artPermissionNotFound.c());
 		}
 		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService#
+	 * getKnowledgeDetailForApp(long, com.ginkgocap.ywxt.user.model.User,
+	 * java.lang.String)
+	 */
+	@Override
+	public Map<String, Object> getKnowledgeDetailForApp(long kid, User user,
+			String type) {
+		// TODO Auto-generated method stub
+
+		logger.info("--进入APP查询知识详细信息请求,知识ID:{},当前登陆用户:{}--", kid,
+				user != null ? user.getId() : "未登陆");
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		Knowledge knowledge = getKnowledgeById(kid, type);
+		// 查询知识信息
+		if (knowledge == null) {
+			logger.error("没有找到知识,知识ID:{},知识类型:{}", kid, type);
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			result.put(Constants.errormessage,
+					Constants.ErrorMessage.artNotExsit.c());
+			return result;
+		}
+
+		// 存储阅读器头部信息
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type,Constants.knowledgeDetailSource.app.v()));
+		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
+		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
+				Constants.StaticsValue.clickCount.v());
+		// 存储正文内容
+		result.putAll(getKnowledgeContent(knowledge, type));
+		// 查询附件
+		result.putAll(attachmentService.queryAttachmentByTaskId(knowledge
+				.getTaskid()));
+		// 查询面包导航
+		result.put("columnId", knowledge.getColumnid());
+		Map<String, Object> cnMap = getKnowledgePath(knowledge);
+		String columnType = cnMap.get("columnType") + "";
+		result.put("columnName", StringUtils.isBlank(columnType) ? ""
+				: Constants.getKnowledgeTypeName(columnType));
+		result.put("kid", kid);
+		result.put("type", type);
+		
+		result.put("userself",false);
+
+		result.put("usershare", false);
+		result.put("jinTN",
+				knowledge.getUid() == Constants.Ids.jinTN.v() ? true : false);
+		result.put("userdel",false);
+
+		result.put("sourceAddr",
+				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
+		// 权限设置
+		result.put("selectIds", knowledge.getSelectedIds() == null ? ""
+				: knowledge.getSelectedIds());
+		// 生态圈使用
+		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
+		// 分享权限是否有保存
+		logger.info("--查询APP知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
+				user != null ? user.getId() : "未登陆");
+		return null;
 	}
 }

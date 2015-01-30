@@ -53,6 +53,7 @@ public interface ColumnValueMapper {
      */
     public List<Column> selectByParam(@Param("column")Long column ,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
     public List<Column> selectByParams(@Param("column")Long column ,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
+    public List<Column> selectBySortId(@Param("sortId")String sortId,@Param("gtnid")Long gtnid ,@Param("userId")Long userId);
     
     /**
      * 根据属性查询可见栏目

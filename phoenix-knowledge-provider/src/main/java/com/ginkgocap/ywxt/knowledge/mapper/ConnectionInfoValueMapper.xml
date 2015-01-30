@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper">
+
+	<insert id="insertConnectionInfo" parameterType="java.util.List">
+		insert into tb_connect_info (
+	
+		knowledgeId,tag,connType,connId,connName,ownerId,owner,requirementtype,
+		career,company,address,hy,columnPath,columnType,url,picPath,allasso
+
+		) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.knowledgeid},
+			#{item.tag},
+			#{item.conntype},
+			#{item.connid},
+			#{item.connname},
+			#{item.ownerid},
+			#{item.owner}, #{item.requirementtype}, #{item.career},
+			#{item.company},#{item.address},#{item.hy},
+			#{item.columnpath},
+			#{item.columntype},#{item.url},#{item.picpath},#{item.allasso})
+		</foreach>
+	</insert>
+
+	<select id="selectTags" resultType="map" >
+		SELECT DISTINCT tag name FROM tb_connect_info c WHERE  c.knowledgeId=#{kid} AND c.connType=#{connType}
+	</select>
+</mapper>
