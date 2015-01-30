@@ -66,10 +66,13 @@ public interface KnowledgeReaderService {
 	 *            用户
 	 * @param authorId
 	 *            知识作者ID
+	 * @param detailSource
+	 *            详细信息来源
+	 * 
 	 * @return
 	 */
 	Map<String, Boolean> showHeadMenu(long kid, String type, User user,
-			long authorId);
+			long authorId, Integer detailSource);
 
 	/**
 	 * 返回文章内容，包括title content
@@ -103,10 +106,12 @@ public interface KnowledgeReaderService {
 	 *            登陆用户
 	 * @param type
 	 *            知识类型
+	 * @param detailSource
+	 *            详细信息来源
 	 * @return
 	 */
 	Map<String, Object> getReaderHeadMsg(long kid, long kUId, User uesr,
-			String type);
+			String type, Integer detailSource);
 
 	/**
 	 * 获取知识详细信息
@@ -120,7 +125,21 @@ public interface KnowledgeReaderService {
 	 * @return
 	 */
 	Map<String, Object> getKnowledgeDetail(long kid, User sessUser, String type);
-	
+
+	/**
+	 * 获取知识详细信息
+	 * 
+	 * @param kid
+	 *            知识Id
+	 * @param sessUser
+	 *            登陆用户对象
+	 * @param type
+	 *            知识类型
+	 * @return
+	 */
+	Map<String, Object> getKnowledgeDetailForApp(long kid, User sessUser,
+			String type);
+
 	/**
 	 * @param kid
 	 *            知识Id
@@ -129,6 +148,6 @@ public interface KnowledgeReaderService {
 	 * @param type
 	 *            知识类型
 	 */
-	Boolean addKnowledgeStatics(long kId, long kUId, String type); 
+	Boolean addKnowledgeStatics(long kId, long kUId, String type);
 
 }

@@ -563,7 +563,26 @@ public class Constants {
 			return c;
 		}
 	}
+	// 知识详情查看来源
+		public enum knowledgeDetailSource {
+			common(0, "正常"), app(1, "app");
 
+			private int v;
+			private String c;
+
+			private knowledgeDetailSource(int v, String c) {
+				this.v = v;
+				this.c = c;
+			}
+
+			public int v() {
+				return v;
+			}
+
+			public String c() {
+				return c;
+			}
+		}
 	public static String getKnowledgeTypeName(String v) {
 		if (StringUtils.isBlank(v))
 			return null;
