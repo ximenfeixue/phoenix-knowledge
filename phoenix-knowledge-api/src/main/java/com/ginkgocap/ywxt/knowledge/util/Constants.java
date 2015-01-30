@@ -17,7 +17,7 @@ public class Constants {
 	public static long gtnid = 0l;
 
 	public static List<Long> homeColumnIds = new ArrayList<Long>(asList(1, 2,
-			3, 4,5, 6, 7, 10));
+			3, 4, 5, 6, 7, 10));
 
 	public static String redisOrderColumn = "redisOrderColumn";
 
@@ -52,9 +52,9 @@ public class Constants {
 				2, "com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment"), Industry(
 				3, "com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry"), Case(
 				4, "com.ginkgocap.ywxt.knowledge.model.KnowledgeCase"), NewMaterials(
-				5, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNewMaterials"), Asset(6,
-				"com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset"), Macro(7,
-				"com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro"), Opinion(
+				5, "com.ginkgocap.ywxt.knowledge.model.KnowledgeNewMaterials"), Asset(
+				6, "com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset"), Macro(
+				7, "com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro"), Opinion(
 				8, "com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion"), Example(
 				9, "com.ginkgocap.ywxt.knowledge.model.example"), Law(10,
 				"com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw"), Article(11,
@@ -85,7 +85,7 @@ public class Constants {
 	}
 
 	private static Collection<? extends Long> asList(int i, int j, int k,
-			int l, int m, int n, int o,int p) {
+			int l, int m, int n, int o, int p) {
 		List<Long> list = new ArrayList<Long>();
 		list.add((long) i);
 		list.add((long) j);
@@ -450,8 +450,7 @@ public class Constants {
 
 	public static enum KnowledgeConnectType {
 		// 关联格式（p:人脉,r:事件,o:组织,k:知识）
-		event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6,
-				"k");
+		event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6, "k");
 		private int v;
 
 		private String c;
@@ -546,7 +545,7 @@ public class Constants {
 	// 通知类型
 	public enum noticeType {
 		column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"), shareToJinTN(
-				4, "分享到金桐脑");
+				4, "分享到金桐脑"), dynamic(5, "动态");
 
 		private int v;
 		private String c;

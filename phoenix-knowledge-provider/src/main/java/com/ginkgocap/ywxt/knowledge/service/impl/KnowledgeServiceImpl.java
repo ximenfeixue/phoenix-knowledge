@@ -934,14 +934,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 				// 查询数据库 返回list 循环list取出Id和name
 
-//				if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
-					permList = userPermissionService.userPermissionAll(
-							vo.getSelectedIds(), user);
-//				} else {
-//
-//					// 格式化权限信息
-//					permList = JsonUtil.getPermissionList(vo.getSelectedIds());
-//				}
+				// if (!JsonUtil.isAllPermission(vo.getSelectedIds())) {
+				permList = userPermissionService.userPermissionAll(
+						vo.getSelectedIds(), user);
+				// } else {
+				//
+				// // 格式化权限信息
+				// permList = JsonUtil.getPermissionList(vo.getSelectedIds());
+				// }
 
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, vo.getkId(),
@@ -963,6 +963,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
+				//创建知识，生成动态
+				params = new HashMap<String, Object>();
+				params.put("userId", user.getId());
+				params.put("userName", user.getName());
+				params.put("userPic", user.getPicPath());
+				params.put("vo", vo);
+				noticeThreadPool.noticeDataCenter(Constants.noticeType.dynamic.v(), params);
 			}
 		}
 		if (vo.isNeedUpdate()) {

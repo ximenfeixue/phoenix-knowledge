@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.thread;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +19,7 @@ import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.user.service.DynamicNewsService;
 
 @Service
 public class NoticeThreadPool implements InitializingBean, DisposableBean {
@@ -28,6 +30,8 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 	private KnowledgeSearchService knowledgeSearchService;
 	@Resource
 	private KnowledgeAssoImportService knowledgeAssoImportService;
+	@Resource
+	private DynamicNewsService dynamicNewsService;
 
 	private static ExecutorService executor = null;
 
@@ -75,6 +79,25 @@ public class NoticeThreadPool implements InitializingBean, DisposableBean {
 					String userId = params.get("userId") + "";
 					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
 					knowledgeSearchService.shareToJinTN(Long.parseLong(userId), vo);
+				}else if(type==Constants.noticeType.dynamic.v()){
+					//创建知识，生成动态
+					String userId = params.get("userId") + "";
+					String userName = params.get("userName") + "";
+					String userPic = params.get("userPic") + "";
+					KnowledgeNewsVO vo = (KnowledgeNewsVO) params.get("vo");
+					Map<String, String> param = new HashMap<String, String>();
+					param.put("type", "10");
+					param.put("lowType", vo.getColumnType());
+					param.put("createrId", userId);
+					param.put("title", vo.getTitle());
+					param.put("content", vo.getDesc());
+					param.put("createrName", userName);
+					param.put("targetId", vo.getkId()+"");
+					param.put("imgPath", vo.getPic());
+//					param.put("receiverIds", permList);
+					param.put("picPath", userPic);
+					param.put("forwardingContent", "");
+					dynamicNewsService.insertNewsAndRelationByParam(param);
 				}
 			}
 		});
