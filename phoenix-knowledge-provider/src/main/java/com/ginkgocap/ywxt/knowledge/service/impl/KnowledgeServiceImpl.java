@@ -934,6 +934,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
+				//创建知识，生成动态
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("type", "10");
 				param.put("lowType", vo.getColumnType());
