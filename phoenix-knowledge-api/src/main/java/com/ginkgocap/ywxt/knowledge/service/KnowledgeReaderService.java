@@ -72,7 +72,7 @@ public interface KnowledgeReaderService {
 	 * @return
 	 */
 	Map<String, Boolean> showHeadMenu(long kid, String type, User user,
-			long authorId, Integer detailSource);
+			long authorId);
 
 	/**
 	 * 返回文章内容，包括title content
@@ -111,7 +111,7 @@ public interface KnowledgeReaderService {
 	 * @return
 	 */
 	Map<String, Object> getReaderHeadMsg(long kid, long kUId, User uesr,
-			String type, Integer detailSource);
+			String type);
 
 	/**
 	 * 获取知识详细信息

@@ -157,17 +157,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Boolean> showHeadMenu(long kid, String type, User user,
-			long authorId,Integer detailSource) {
+			long authorId) {
 		Map<String, Boolean> result = new HashMap<String, Boolean>();
 
 		result.putAll(showHeadMenu(kid, type));
-		if(detailSource == Constants.knowledgeDetailSource.common.v()){
-			result.put("edit", user == null ? false : user.getId() == authorId);
-		}else{
-			result.put("edit", false);
-		}
+		result.put("edit", user == null ? false : user.getId() == authorId);
 		result.put("share", user == null ? false : user.getId() == authorId);
-		
+
 		result.put("sourceFile", authorId == Constants.Ids.jinTN.v());
 
 		return result;
@@ -239,7 +235,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 
 	@Override
 	public Map<String, Object> getReaderHeadMsg(long kid, long authorId,
-			User user, String type,Integer detailSource) {
+			User user, String type) {
 		logger.info("进入查询阅读器头部内容请求,知识ID:{},当前登陆用户:{}", kid,
 				user == null ? "未登陆" : user.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -263,7 +259,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		// 存储登陆用户与知识作者关系
 		result.putAll(authorAndLoginUserRelation(user, authorId));
 		// 存储阅读器功能菜单
-		result.putAll(showHeadMenu(kid, type, user, authorId,detailSource));
+		result.putAll(showHeadMenu(kid, type, user, authorId));
 		// 查询用户基本信息并存储用户名、头像、用户ID
 		User kUser = userService.selectByPrimaryKey(authorId);
 		result.put("user", kUser);
@@ -345,7 +341,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			return perMap;
 
 		// 存储阅读器头部信息
-		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type,Constants.knowledgeDetailSource.common.v()));
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
 		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
 		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
 				Constants.StaticsValue.clickCount.v());
@@ -499,7 +495,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		}
 
 		// 存储阅读器头部信息
-		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type,Constants.knowledgeDetailSource.app.v()));
+		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
 		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
 		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
 				Constants.StaticsValue.clickCount.v());
@@ -516,13 +512,13 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				: Constants.getKnowledgeTypeName(columnType));
 		result.put("kid", kid);
 		result.put("type", type);
-		
-		result.put("userself",false);
+
+		result.put("userself", false);
 
 		result.put("usershare", false);
 		result.put("jinTN",
 				knowledge.getUid() == Constants.Ids.jinTN.v() ? true : false);
-		result.put("userdel",false);
+		result.put("userdel", false);
 
 		result.put("sourceAddr",
 				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
