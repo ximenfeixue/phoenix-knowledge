@@ -12,6 +12,7 @@ public interface UserPermissionValueMapper {
     int batchInsert(List<UserPermission> list);
 
     List<Long> selectByParamsSingle(@Param("receive_user_id")Long receive_user_id, @Param("column_type")Long column_type);
+    List<Long> selectPlatform(@Param("receive_user_id")Long receive_user_id, @Param("column_type")Long column_type);
     List<String> selectVisble(@Param("receive_user_id")Long receive_user_id, @Param("column_type")Long column_type);
     List<Long> selectVisbleColumnid(@Param("receive_user_id")Long receive_user_id, @Param("column_type")Long column_type);
 

@@ -127,6 +127,23 @@
 			
 			)
 	</select>
+  <select id="selectPlatform" resultType="long" >
+		select knowledge_id from tb_user_permission c
+		where 1=1
+		<if test="receive_user_id != null">
+		and (   
+			type !=4 and receive_user_id=-1
+			) 
+		</if>
+			and column_type=#{column_type} 
+			and not EXISTS(SELECT
+			1
+			FROM tb_column_visible v
+			WHERE v.state = 1
+			AND v.column_id = c.column_id
+				and user_id=#{receive_user_id}
+			)
+	</select>
   <select id="selectVisble" resultType="string" >
 		 SELECT
 			distinct v.column_name

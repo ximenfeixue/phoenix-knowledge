@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeVO;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
 
@@ -124,5 +125,17 @@ public interface KnowledgeHomeService {
      */
     public int countKnowledgeIds(String tid,
 			String lid, int state, String sortid, Long userid, String keyword);
+
+    /**
+     * 登录用户查询全平台的知识
+     * @param type 类型
+     * @param columnid 栏目id 
+     * @param userid 用户id
+     * @param page 
+     * @param size
+     * @return
+     */
+	public List<KnowledgeVO> selectPlatform(long type, long columnid, long userid,
+			int page, int size);
     
 }

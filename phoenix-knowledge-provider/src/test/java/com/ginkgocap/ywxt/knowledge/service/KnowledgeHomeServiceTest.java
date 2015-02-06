@@ -60,5 +60,9 @@ public class KnowledgeHomeServiceTest extends TestBase {
         l.add(1l);
         knowledgeHomeService.selectKnowledgeCategoryForImport(10132l, l, 1, 20);
     }
+    @Test
+    public void selectPlatform() {
+    	knowledgeHomeService.selectPlatform(1l, 1, 10132l, 1, 20);
+    }
 
 }

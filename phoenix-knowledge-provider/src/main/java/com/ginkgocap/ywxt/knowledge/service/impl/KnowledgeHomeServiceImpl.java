@@ -40,6 +40,7 @@ import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.Constants.Type;
 import com.ginkgocap.ywxt.knowledge.util.tree.Branch;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
@@ -201,6 +202,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 				names[length - 1]));
 		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
 		return model;
+	}
+	
+	// 栏目下全平台数据
+	
+	
+	
+
+	private String[] getNames(long columnType) {
+		for(Type t: Type.values()){
+			if(t.v()==columnType){
+				return t.obj().split("\\.");
+			}
+		}
+		return null;
 	}
 
 	private List<String> fillList(List<Long> cls) {
@@ -437,5 +452,58 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		int count = knowledgeCategoryValueMapper.countKnowledgeIds(userid,
 				state, sortid, Constants.gtnid, tid, lid, keyword);
 		return count;
+	}
+
+	@Override
+	public List<KnowledgeVO> selectPlatform(long type, long columnid,
+			long userid, int page, int size) {
+		long start = System.currentTimeMillis();
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},",type);
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},",columnid);
+		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},",userid);
+		String[] names = getNames(type);
+		int length = names.length;
+		// 栏目id
+		Column column = columnMapper.selectByPrimaryKey(columnid);
+		Criteria criteria = Criteria.where("status").is(4);
+		// 权限条件过滤
+		Criteria criteriaUp = null;
+		// 路径过滤
+		Criteria criteriaPath = new Criteria();
+		// 定义查询条件
+		// 查询权限表，获取可见文章ID列表
+		List<Long> ids = userPermissionValueMapper.selectPlatform(userid,type);
+		List<Long> cls = userPermissionValueMapper.selectVisbleColumnid(userid,type);
+		if (ids != null && ids.size() > 0) {
+			criteriaUp = new Criteria();
+			criteriaUp.and("_id").in(ids);
+		}
+		// 查询栏目目录为当前分类下的所有数据
+		String reful = column.getPathName();
+		// 该栏目路径下的所有文章条件
+		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
+		// 汇总条件
+		Criteria criteriaAll = new Criteria();
+		if (criteriaUp == null) {
+			return null;
+		} else {
+			criteriaAll.andOperator(criteriaUp,criteriaPath,criteria);
+		}
+		if (cls != null && cls.size() > 0) {// 判断定制
+			List<String> clstr = fillList(cls);
+			criteriaAll.and("columnid").nin(clstr);
+		}
+		// 查询知识
+		Query query = new Query(criteriaAll);
+		if (type == 10) {
+			query.sort().on("createtime", Order.DESCENDING);
+		} else {
+			query.sort().on("_id", Order.DESCENDING);
+		}
+		query.limit(size);
+		query.skip((page - 1) * size);
+		List<KnowledgeVO> list=(List<KnowledgeVO>) mongoTemplate.find(query, KnowledgeVO.class,names[length - 1]);
+		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
+		return list;
 	}
 }
