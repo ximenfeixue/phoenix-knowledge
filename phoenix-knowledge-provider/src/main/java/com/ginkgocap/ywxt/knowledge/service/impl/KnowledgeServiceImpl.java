@@ -897,6 +897,18 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1,
 		// vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
 		// vo.setSelectedIds(j.toString());
+		//创建知识，生成动态
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("type", "10");
+		param.put("lowType", vo.getColumnType()+"");
+		param.put("createrId", user.getId() + "");
+		param.put("title", vo.getTitle()+"");
+		param.put("content", vo.getDesc()+"");
+		param.put("createrName", user.getName()+"");
+		param.put("targetId", vo.getkId() + "");
+		param.put("imgPath", vo.getPic()+"");
+		param.put("picPath", user.getPicPath()+"");
+		param.put("forwardingContent", "");
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
@@ -934,23 +946,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
 							vo.getkId());
 				}
-				
-				//创建知识，生成动态
-				Map<String, Object> param = new HashMap<String, Object>();
-				param.put("type", "10");
-				param.put("lowType", vo.getColumnType()+"");
-				param.put("createrId", user.getId() + "");
-				param.put("title", vo.getTitle()+"");
-				param.put("content", vo.getDesc()+"");
-				param.put("createrName", user.getName()+"");
-				param.put("targetId", vo.getkId() + "");
-				param.put("imgPath", vo.getPic()+"");
 				param.put("receiverIds", changeRelation(permList));
-				param.put("picPath", user.getPicPath()+"");
-				param.put("forwardingContent", "");
-				dynamicNewsService.insertNewsAndRelationByParam(param);
 			}
+		} else {
+			// 独乐也生成动态
+			param.put("receiverIds", null);
 		}
+		// 新建知识均生成动态
+		dynamicNewsService.insertNewsAndRelationByParam(param);
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
