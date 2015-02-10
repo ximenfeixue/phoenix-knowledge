@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ginkgocap.ywxt.cloud.service.InvestmentAuthenticationService; 
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
 import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
@@ -27,8 +26,6 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 @Service("knowledgeMainService")
 public class KnowledgeMainServiceImpl implements KnowledgeMainService {
 
-	@Autowired
-	private InvestmentAuthenticationService investmentAuthenticationService;
 	@Autowired
 	private KnowledgeDao knowledgeDao;
 

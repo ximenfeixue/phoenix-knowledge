@@ -22,17 +22,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-cloud-api</artifactId>
-			<version>1.2.7-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.ginkgocap.ywxt</groupId>
-					<artifactId>phoenix-user-api</artifactId>
-				</exclusion> 
-			</exclusions> 
-		</dependency> 
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
 			<version>5.4.0</version>
 		</dependency>
