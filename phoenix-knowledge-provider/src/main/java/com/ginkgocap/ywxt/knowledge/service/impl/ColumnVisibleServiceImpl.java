@@ -292,6 +292,33 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
     }
 
     @Override
+    public void initDiff(long userId) {
+        if (columnVisibleValueMapper.initcount(userId) >= 1) {
+            List<Column> l = columnVisibleValueMapper.initvisible(userId);
+            List<ColumnVisible> cvl = new ArrayList<ColumnVisible>();
+            for (Column c : l) {
+                if (!c.getColumnname().equals("未分组")) {
+                    long id = c.getId();
+                    long pcid = c.getParentId();
+                    String cname = c.getColumnname();
+                    ColumnVisible cv = new ColumnVisible();
+                    cv.setColumnId(id);
+                    cv.setPcid(pcid);
+                    cv.setUserId(userId);
+                    cv.setCtime(new Date());
+                    cv.setUtime(new Date());
+                    cv.setSortId(c.getColumnLevelPath());
+                    cv.setColumnName(cname);
+                    cv.setState((short) 0);
+                    cvl.add(cv);
+                }
+            }
+            if (cvl.size() > 0) {// 批量插入
+                columnVisibleValueMapper.init(cvl);
+            }
+        }
+    }
+    @Override
     public void delByUserIdAndColumnId(long userid, long cid) {
         Column c = checkExist(userid, cid);
         if (c == null) {

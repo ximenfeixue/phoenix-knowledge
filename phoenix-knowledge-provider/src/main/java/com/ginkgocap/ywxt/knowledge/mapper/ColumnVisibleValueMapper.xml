@@ -76,4 +76,46 @@
 		) 
 		</foreach>
 </insert>
+
+	<select id="initcount" resultType="long">
+		SELECT count(1)
+		FROM tb_column c
+		WHERE c.user_id = 0
+		<![CDATA[ 
+		AND LENGTH(c.column_level_path) <= 18
+		]]>
+		AND NOT EXISTS(SELECT 1
+		FROM tb_column_visible v
+		WHERE v.user_id = #{userId}
+		AND c.id = v.column_id)
+	</select>
+	
+	<resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.entity.Column">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="columnName" property="columnname" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="column_level_path" property="columnLevelPath"
+			jdbcType="VARCHAR" />
+		<result column="del_status" property="delStatus" jdbcType="TINYINT" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="subscribe_count" property="subscribeCount"
+			jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<select id="initvisible" resultMap="BaseResultMap">
+		SELECT *
+		FROM tb_column c
+		WHERE c.user_id = 0
+		<![CDATA[ 
+		AND LENGTH(c.column_level_path) <= 18
+		]]>
+		AND NOT EXISTS(SELECT 1
+		FROM tb_column_visible v
+		WHERE v.user_id = #{userId}
+		AND c.id = v.column_id)
+	</select>
+
 </mapper>

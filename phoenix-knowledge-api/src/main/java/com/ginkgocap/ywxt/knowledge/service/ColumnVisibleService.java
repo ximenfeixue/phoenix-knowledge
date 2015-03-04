@@ -44,6 +44,8 @@ public interface ColumnVisibleService {
 
     long countListByCidAndUserId(long userid, Long pid);
 
-    void initOne(long userid, long gid, Long cid); 
+    void initOne(long userid, long gid, Long cid);
+
+    void initDiff(long userId); 
 
 }

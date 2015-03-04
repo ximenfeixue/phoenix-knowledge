@@ -37,7 +37,6 @@ public class ColumnVisibleServiceTest extends TestBase {
     private ColumnVisibleService columnVisibleService;
 
     @Test
-    @Rollback(false)
     public void save() throws Exception {
         // cvs.saveCids(10132, "3", 1);
          
@@ -47,6 +46,11 @@ public class ColumnVisibleServiceTest extends TestBase {
            columnVisibleService.init(10132, gtnid);
        }
       // columnVisibleService.updateCids(10132, "4,6");
+    }
+    
+    @Test
+    public void initDiff() {
+        columnVisibleService.initDiff(10132);
     }
 
 }

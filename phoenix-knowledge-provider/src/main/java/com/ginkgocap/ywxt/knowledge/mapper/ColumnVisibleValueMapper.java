@@ -16,4 +16,6 @@ public interface ColumnVisibleValueMapper {
     public void updateChild(Map<String, Object> map);
     public List<Long> selectNotinIds(Map<String, Object> map);
     public List<String> selectSortIds(Map<String, Object> map);
+    public List<Column> initvisible(long userId);
+    public long initcount(long userId);
 }
