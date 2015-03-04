@@ -363,11 +363,6 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
             ColumnVisibleExample e = new ColumnVisibleExample();
             e.createCriteria().andUserIdEqualTo(c.getUserId()).andColumnIdEqualTo(c.getId());
             columnVisibleMapper.updateByExampleSelective(cv, e);
-            if(c.getUserId()==0){
-                e.clear();
-                e.createCriteria().andColumnIdEqualTo(c.getId());
-                columnVisibleMapper.updateByExampleSelective(cv, e);
-            }
         }
 
     }
