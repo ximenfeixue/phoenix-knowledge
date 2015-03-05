@@ -890,12 +890,12 @@ public class ColumnServiceImpl implements ColumnService {
 	private void updateColumnVisibleName(long id,long userId, String columnName) {
         ColumnVisibleExample example = new ColumnVisibleExample();
         ColumnVisible columnVisible = new ColumnVisible();
+        columnVisible.setColumnName(columnName);
         if (userId == 0) {
             example.createCriteria().andColumnIdEqualTo(id);
             columnVisibleMapper.updateByExampleSelective(columnVisible, example);
         } else {
             example.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(id);
-            columnVisible.setColumnName(columnName);
             columnVisibleMapper.updateByExampleSelective(columnVisible, example);
         }
     }
