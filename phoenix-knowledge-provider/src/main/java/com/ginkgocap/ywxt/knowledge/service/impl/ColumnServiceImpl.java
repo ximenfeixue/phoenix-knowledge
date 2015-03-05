@@ -864,6 +864,8 @@ public class ColumnServiceImpl implements ColumnService {
 					Constants.ErrorMessage.updateFail.c());
 			return result;
 		}
+		//修改可见性
+		updateColumnVisibleName(id,userId,columnName);
 		// 修改Mongod栏目路径
 
 		// 删除栏目标签信息
@@ -882,8 +884,6 @@ public class ColumnServiceImpl implements ColumnService {
 				column.getColumnLevelPath());
 		result.put(Constants.status, Constants.ResultType.success.v());
 
-		//修改可见性
-		updateColumnVisibleName(id,userId,columnName);
 		return result;
 	}
 
