@@ -478,8 +478,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		dales = j.get(Constants.PermissionType.dales.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(dales, "-9") || isPlatform(dales)) {
-			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
-					"", 1l, 99999);
+			list = friendsRelationService.findAllFriends(user.getId(), 0L, null,
+					null, 0L, 99999);
 			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
 			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 			// String platform = "\"id\":-1";
