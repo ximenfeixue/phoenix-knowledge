@@ -477,7 +477,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		JSONObject j = JSONObject.fromObject(selectedIds);
 		dales = j.get(Constants.PermissionType.dales.c()).toString();
 		perList = new ArrayList<String>();
-		if (StringUtils.equals(dales, "-9") || StringUtils.equals(dales, "-1")) {
+		if (StringUtils.equals(dales, "-9") || isPlatform(dales)) {
 			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
 					"", 1l, 99999);
 			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
@@ -517,7 +517,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 		zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
 		perList = new ArrayList<String>();
-		if (StringUtils.equals(zhongles, "-9") || StringUtils.equals(zhongles, "-1")) {
+		if (StringUtils.equals(zhongles, "-9")|| isPlatform(zhongles)) {
 			dales = j.get(Constants.PermissionType.dales.c()).toString();
 			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 			// String platform = "\"id\":-1";
@@ -558,7 +558,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 		xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 		perList = new ArrayList<String>();
-		if (StringUtils.equals(xiaoles, "-9") || StringUtils.equals(xiaoles, "-1")) {
+		if (StringUtils.equals(xiaoles, "-9")|| isPlatform(xiaoles)) {
 			dales = j.get(Constants.PermissionType.dales.c()).toString();
 			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
 			// String platform = "\"id\":-1";
@@ -677,6 +677,17 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public boolean isPlatform(String platforms) {
+
+		String platform = "\"id\":-1";
+
+		if (platforms.contains(platform)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
