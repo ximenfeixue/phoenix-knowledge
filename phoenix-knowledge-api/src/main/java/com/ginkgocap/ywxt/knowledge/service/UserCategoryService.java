@@ -114,4 +114,7 @@ public interface UserCategoryService {
    
    
    List<UserCategory> selectUserCategoryList(long userId, String sortId, Byte type);
+   
+   
+   List<UserCategory> getKnowledgeCategory(long knowledgeId);
 }
