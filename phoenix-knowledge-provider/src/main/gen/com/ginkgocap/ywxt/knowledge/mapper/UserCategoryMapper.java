@@ -27,4 +27,6 @@ public interface UserCategoryMapper {
     int updateByPrimaryKeySelective(UserCategory record);
 
     int updateByPrimaryKey(UserCategory record);
+    
+    List<UserCategory> getKnowledgeCategory(Long knowledgeId);
 }

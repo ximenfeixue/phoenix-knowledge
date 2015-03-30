@@ -79,4 +79,10 @@ public class UserCategoryServiceTest extends TestBase {
         l.add(1l);
         userCategoryService.checkNogroup(10132l,l);
     }
+
+    @Test
+    public void test() {
+    	List<UserCategory> userCategorys= userCategoryService.getKnowledgeCategory(696022);
+//    	System.out.println("ssss--------------------------------------------"+userCategorys.size());
+    }
 }

@@ -1,22 +1,22 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;  
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO; 
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
-import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper; 
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -311,5 +311,10 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         List<UserCategory> ll = userCategoryMapper.selectByExample(example);
         return ll;
     }
+
+	@Override
+	public List<UserCategory> getKnowledgeCategory(long knowledgeId) {
+		return userCategoryMapper.getKnowledgeCategory(knowledgeId);
+	}
 
 }
