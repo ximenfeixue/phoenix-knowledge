@@ -29,13 +29,10 @@ import com.ginkgocap.ywxt.knowledge.entity.UserPermission;
 import com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserService;
@@ -478,8 +475,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		dales = j.get(Constants.PermissionType.dales.c()).toString();
 		perList = new ArrayList<String>();
 		if (StringUtils.equals(dales, "-9") || isPlatform(dales)) {
-			list = friendsRelationService.findAllFriends(user.getId(), 0L, null,
-					null, 0L, 99999);
+			list = friendsRelationService.findAllFriendsByUserId(user.getId());
 			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
 			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
 			// String platform = "\"id\":-1";
@@ -528,8 +524,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			if (!dales.contains(gintong) && !xiaoles.contains(gintong)) {
 				perList.add("0");
 			}
-			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
-					"", 1l, 99999);
+			list = friendsRelationService.findAllFriendsByUserId(user.getId());
 			for (User user2 : list) {
 				flag = true;
 				if (!StringUtils.equals(dales, "[]")) {
@@ -569,8 +564,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			if (!dales.contains(gintong) && !zhongles.contains(gintong)) {
 				perList.add("0");
 			}
-			list = friendsRelationService.findAllFriends(user.getId(), 0l, "",
-					"", 1l, 99999);
+			list = friendsRelationService.findAllFriendsByUserId(user.getId());
 
 			for (User user2 : list) {
 				flag = true;
