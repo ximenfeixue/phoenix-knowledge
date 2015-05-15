@@ -7,13 +7,14 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfo;
 import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample;
-import com.ginkgocap.ywxt.knowledge.entity.ConnectionInfoExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper;
@@ -21,9 +22,9 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.service.ConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleSimple;
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleTemp;
-import com.ginkgocap.ywxt.people.service.PeopleMongoService;
+import com.ginkgocap.ywxt.person.model.Person;
+import com.ginkgocap.ywxt.person.model.PersonName;
+import com.ginkgocap.ywxt.person.service.PersonService;
 import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
 import com.ginkgocap.ywxt.requirement.model.Requirement;
 import com.ginkgocap.ywxt.requirement.service.RequirementService;
@@ -39,7 +40,7 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 	@Autowired
 	private ConnectionInfoMapper connectInfoMapper;
 	@Resource
-	private PeopleMongoService peopleMongoService;
+	private PersonService personService;
 
 	@Resource
 	private FriendsRelationService friendsRelationService;
@@ -164,9 +165,9 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 				lc.put("pType", "my");
 				lc.put("pOff", pOff);
 			} else {
-				List<PeopleSimple> peoples = peopleMongoService
-						.getPeopleSimplelist(0, null, null, page, size, userid,
-								1); // 人脉
+				List<Person> peoples = personService.selectByCreatorId(userid, page, size);
+//						.getPeopleSimplelist(0, null, null, page, size, userid,
+//								1); // 人脉
 				int resize = peoples.size();
 				lc = convertPToConnectionInfoMap(peoples);
 				if (resize != size) {
@@ -226,19 +227,22 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 	}
 
 	private Map<String, Object> convertPToConnectionInfoMap(
-			List<PeopleSimple> peoples) {
+			List<Person> peoples) {
 		Map<String, Object> cml = new HashMap<String, Object>();
 		List<ConnectionInfo> cl = new ArrayList<ConnectionInfo>();
-		for (PeopleSimple p : peoples) {
+		for (Person p : peoples) {
 			ConnectionInfo c = new ConnectionInfo();
 			c.setPicpath(p.getPortrait());
-			c.setConnid(Long.parseLong(p.getId()));
-			List<PeopleName> lpn = p.getPeopleNameList();
-			for (PeopleName pt : lpn) {
-				c.setConnname(pt.getName());
+			c.setConnid(p.getId());
+			List<PersonName> lpn = p.getPeopleNameList();
+			for (PersonName pt : lpn) {
+				c.setConnname(StringUtils
+						.trimToEmpty(pt.getLastname())
+						+ StringUtils.trimToEmpty(pt
+								.getFirstname()));
 				break;
 			}
-			c.setUrl("/people/" + Long.parseLong(p.getId()) + "/");
+			c.setUrl("/people/" + p.getId() + "/");
 			cl.add(c);
 		}
 		cml.put("page", "");
