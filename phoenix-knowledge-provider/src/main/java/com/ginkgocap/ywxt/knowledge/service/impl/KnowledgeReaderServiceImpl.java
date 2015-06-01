@@ -491,45 +491,18 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artNotExsit.c());
+			result.put("knowledge", null);
 			return result;
 		}
-
-		// 存储阅读器头部信息
-		result.putAll(getReaderHeadMsg(kid, knowledge.getUid(), user, type));
-		// 添加点击数(放到请求头部信息之后，若有不存在的知识会添加一条)
-		knowledgeStaticsMapperManual.updateStatics(kid, 0, 0, 0,
-				Constants.StaticsValue.clickCount.v());
-		// 存储正文内容
-		result.putAll(getKnowledgeContent(knowledge, type));
-		// 查询附件
-		result.putAll(attachmentService.queryAttachmentByTaskId(knowledge
-				.getTaskid()));
-		// 查询面包导航
-		result.put("columnId", knowledge.getColumnid());
-		Map<String, Object> cnMap = getKnowledgePath(knowledge);
-		String columnType = cnMap.get("columnType") + "";
-		result.put("columnName", StringUtils.isBlank(columnType) ? ""
-				: Constants.getKnowledgeTypeName(columnType));
-		result.put("kid", kid);
-		result.put("type", type);
-
-		result.put("userself", false);
-
-		result.put("usershare", false);
-		result.put("jinTN",
-				knowledge.getUid() == Constants.Ids.jinTN.v() ? true : false);
-		result.put("userdel", false);
-
-		result.put("sourceAddr",
-				knowledge.getS_addr() == null ? "" : knowledge.getS_addr());
-		// 权限设置
-		result.put("selectIds", knowledge.getSelectedIds() == null ? ""
-				: knowledge.getSelectedIds());
-		// 生态圈使用
-		result.put("ecosphereType", Constants.MATERIAL_KNOWLEDGE);
-		// 分享权限是否有保存
-		logger.info("--查询APP知识详细信息请求成功,知识ID:{},当前登陆用户:{}--", kid,
-				user != null ? user.getId() : "未登陆");
+		// 查询用户对文章的查看权限
+		Map<String, Object> perMap = getArticlePermission(knowledge, user);
+		if (Integer.parseInt(perMap.get(Constants.status) + "") != Constants.ResultType.success
+				.v()) {
+			return perMap;
+		}
+		result.put(Constants.status, Constants.ResultType.success);
+		result.put("knowledge", knowledge);
+		
 		return result;
 	}
 }
