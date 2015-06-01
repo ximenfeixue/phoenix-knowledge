@@ -500,7 +500,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 				.v()) {
 			return perMap;
 		}
-		result.put(Constants.status, Constants.ResultType.success);
+		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledge", knowledge);
 		
 		return result;
