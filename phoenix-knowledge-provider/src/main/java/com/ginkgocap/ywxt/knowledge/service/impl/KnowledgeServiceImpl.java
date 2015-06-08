@@ -619,7 +619,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
 			columnPath = Constants.KnowledgeType.Article.c();
 			vo.setColumnPath(Constants.KnowledgeType.Article.c());
-
+ 
 		}
 		// 如果是行业，投融工具，经典案例，不从内容取简介
 		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Investment
