@@ -44,7 +44,7 @@ public interface KnowledgeService {
 	/**
 	 * 编辑知识
 	 */
-
+ 
 	Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user);
 
 	/**
