@@ -33,7 +33,7 @@ public interface KnowledgeService {
 	 */
 
 	Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user);
-
+ 
 	/**
 	 * 删除资讯知识
 	 */
