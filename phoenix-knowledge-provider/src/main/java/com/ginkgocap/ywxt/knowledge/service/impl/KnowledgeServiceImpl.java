@@ -577,7 +577,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
-		}
+		}  
 		// 获取Session用户值
 		long userId = user.getId();
 
