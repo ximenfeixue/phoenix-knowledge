@@ -1063,7 +1063,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			String taskId = MakeTaskId.getTaskId();
 			Knowledge knowledge = selectKnowledge(vo.getkId(),
 					vo.getColumnType());
-
+ 
 			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 			String columnid = StringUtils.isBlank(knowledge.getColumnid()) ? "0"
 					: knowledge.getColumnid();
