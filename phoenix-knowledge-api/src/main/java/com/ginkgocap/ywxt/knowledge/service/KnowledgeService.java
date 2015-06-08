@@ -50,7 +50,7 @@ public interface KnowledgeService {
 	/**
 	 * 查询知识
 	 */
-
+ 
 	Knowledge selectKnowledge(long knowledgeid, String type);
 
 	/**

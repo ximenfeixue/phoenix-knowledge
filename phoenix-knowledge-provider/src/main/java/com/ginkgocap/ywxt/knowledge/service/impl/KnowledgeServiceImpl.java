@@ -155,7 +155,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 	@Autowired
 	private FriendsRelationService friendsRelationService;
-	
+
 	@Autowired
 	private DynamicNewsService dynamicNewsService;
 
@@ -315,7 +315,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			columnPath = Constants.unGroupSortName;
 		}
 
-		if (vo.getAsso().equals("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+		if (isAsso(vo.getAsso())) {
 			vo.setAsso("");
 		}
 
@@ -577,12 +577,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 					Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
-		}
-		// 知识来源，（0，系统，1，用户）
-		// Short source = (short) Constants.KnowledgeSource.user.v();
+		}  
 		// 获取Session用户值
 		long userId = user.getId();
-		String username = user.getName();
 
 		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
 		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
@@ -604,7 +601,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			columnPath = Constants.unGroupSortName;
 		}
-		if (vo.getAsso().contains("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+		if (this.isAsso(vo.getAsso())) {
 			vo.setAsso("");
 		}
 		// 知识入Mongo
@@ -728,22 +725,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			e.printStackTrace();
 		}
 
-		// 添加动态信息
-		// try {
-		// DynamicNews news = new DynamicNews();
-		// news.setCreaterId(user.getId());
-		// news.setCreaterName(user.getName());
-		// news.setTitle(vo.getTitle());
-		// news.setType(Integer.parseInt(vo.getColumnType() + ""));
-		// news.setTargetId(vo.getkId());
-		// news.setClearContent(HtmlToText.html2Text(vo.getContent()));
-		// news.setContent(vo.getContent());
-		// dynamicNewsService.insert(news);
-		//
-		// } catch (Exception e) {
-		// logger.error("动态存储失败,知识ID{}", vo.getkId());
-		// e.printStackTrace();
-		// }
 
 		// TODO 草稿箱中是否有该知识
 		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
@@ -888,7 +869,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo,
 			User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		List<String> perList = null;
 		List<String> permList = null;
 		// 删除知识之前的权限
 		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
@@ -897,17 +877,17 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1,
 		// vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
 		// vo.setSelectedIds(j.toString());
-		//创建知识，生成动态
+		// 创建知识，生成动态
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("type", "10");
-		param.put("lowType", vo.getColumnType()+"");
+		param.put("lowType", vo.getColumnType() + "");
 		param.put("createrId", user.getId() + "");
-		param.put("title", vo.getTitle()+"");
-		param.put("content", vo.getDesc()+"");
-		param.put("createrName", user.getName()+"");
+		param.put("title", vo.getTitle() + "");
+		param.put("content", vo.getDesc() + "");
+		param.put("createrName", user.getName() + "");
 		param.put("targetId", vo.getkId() + "");
-		param.put("imgPath", vo.getPic()+"");
-		param.put("picPath", user.getPicPath()+"");
+		param.put("imgPath", vo.getPic() + "");
+		param.put("picPath", user.getPicPath() + "");
 		param.put("forwardingContent", "");
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
@@ -968,28 +948,27 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		return result;
 	}
 
-	private List<String> UserPermissionAll(String str) {
-		return null;
-	}
-
 	private Map<String, List<Long>> changeRelation(List<String> permList) {
-		
+
 		Map<String, List<Long>> map = new HashMap<String, List<Long>>();
-		
-		if(permList == null || permList.size() == 0) return null;
-		for( String str : permList ) {
+
+		if (permList == null || permList.size() == 0)
+			return null;
+		for (String str : permList) {
 			String[] temp = str.split(":");
 			// 未分享给用户
-			if( temp.length < 1) continue;
+			if (temp.length < 1)
+				continue;
 			List<Long> ids = new ArrayList<Long>();
 			String tem = temp[1];
-			if ( "[]".equals(tem) || "".equals(tem) ) continue;
-			String[] strIds = tem.substring(1, tem.length()-1).split(",");
-			for(String id : strIds) {
+			if ("[]".equals(tem) || "".equals(tem))
+				continue;
+			String[] strIds = tem.substring(1, tem.length() - 1).split(",");
+			for (String id : strIds) {
 				ids.add(Long.valueOf(id.trim()));
 			}
 			// 如果为大乐
-			if("2".equals(temp[0])) {
+			if ("2".equals(temp[0])) {
 				map.put("dale", ids);
 			}// 如果为中乐
 			else if ("3".equals(temp[0])) {
@@ -998,7 +977,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * @param getkId
 	 * @param columnType
@@ -1076,7 +1055,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 				columnPath = "";
 			}
-			if (vo.getAsso().contains("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+			if (isAsso(vo.getAsso())) {
 				vo.setAsso("");
 			}
 			// 保存附件
@@ -1249,5 +1228,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
+	}
+
+	public boolean isAsso(String asso) {
+		if (asso.contains("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
