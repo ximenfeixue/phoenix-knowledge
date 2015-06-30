@@ -52,7 +52,7 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		Map<String ,Object> result =new HashMap<String ,Object> (); 
 		// 查询所有非金桐脑抓取数据，即cid不为1或被举报的数据
 //		Criteria criteria = new Criteria().orOperator(Criteria.where("report_status").is(1),Criteria.where("cid").ne(1));
-		Criteria criteria = Criteria.where("cid").ne(-100);//暂时先这么写
+		Criteria criteria = Criteria.where("cid").ne(0);//暂时先这么写
 		String cname = searchMap.get("cname");
 		String title = searchMap.get("title");
 		String submitBeginCTime = StringUtils.isNotBlank(searchMap.get("submitBeginCTime"))?searchMap.get("submitBeginCTime")+" 00:00:00":"";
