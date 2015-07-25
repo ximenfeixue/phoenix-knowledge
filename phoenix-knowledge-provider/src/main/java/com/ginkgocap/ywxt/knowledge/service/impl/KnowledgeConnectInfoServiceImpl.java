@@ -28,7 +28,7 @@ import com.ginkgocap.ywxt.people.service.PeopleMongoService;
 import com.ginkgocap.ywxt.person.model.Person;
 import com.ginkgocap.ywxt.person.model.PersonName;
 import com.ginkgocap.ywxt.person.service.PersonService;
-import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
+//import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
 import com.ginkgocap.ywxt.requirement.model.Requirement;
 import com.ginkgocap.ywxt.requirement.service.RequirementService;
 import com.ginkgocap.ywxt.user.model.User;
@@ -47,8 +47,8 @@ public class KnowledgeConnectInfoServiceImpl implements
 	@Resource
 	private KnowledgeHomeService knowledgeHomeService;
 
-	@Resource
-	private PersonalCustomerService personalCustomerService;
+//	@Resource
+//	private PersonalCustomerService personalCustomerService;
 
 	@Resource
 	private ConnectionInfoValueMapper connectionInfoValueMapper;
@@ -400,8 +400,9 @@ public class KnowledgeConnectInfoServiceImpl implements
 		if (StringUtils.equals(assotype, "o")) {
 
 			conneclist = new ArrayList<ConnectionInfo>();
-			List<Map<String, Object>> lt = personalCustomerService.list(userid,
-					"", "", "", "", 0, 1, 6);
+//			List<Map<String, Object>> lt = personalCustomerService.list(userid,
+//					"", "", "", "", 0, 1, 6);
+			List<Map<String, Object>> lt = null;
 
 			if (lt != null && lt.size() > 0) {
 

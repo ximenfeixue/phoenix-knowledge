@@ -21,11 +21,10 @@ import com.ginkgocap.ywxt.knowledge.mapper.ConnectionInfoValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.service.ConnectInfoService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleName;
 import com.ginkgocap.ywxt.person.model.Person;
 import com.ginkgocap.ywxt.person.model.PersonName;
 import com.ginkgocap.ywxt.person.service.PersonService;
-import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
+//import com.ginkgocap.ywxt.personalcustomer.service.PersonalCustomerService;
 import com.ginkgocap.ywxt.requirement.model.Requirement;
 import com.ginkgocap.ywxt.requirement.service.RequirementService;
 import com.ginkgocap.ywxt.user.model.User;
@@ -47,8 +46,8 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 	@Resource
 	private KnowledgeHomeService knowledgeHomeService;
 
-	@Resource
-	private PersonalCustomerService personalCustomerService;
+//	@Resource
+//	private PersonalCustomerService personalCustomerService;
 
 	@Resource
 	private ConnectionInfoValueMapper connectionInfoValueMapper;
@@ -185,9 +184,9 @@ public class ConnectInfoServiceImpl implements ConnectInfoService {
 					page, size, -1, ""); // 事件
 			lc = convertEToConnectionInfoMap(events);
 		} else if (connType == 5) {
-			List<Map<String, Object>> orgs = personalCustomerService.list(
-					userid, "", "", "", "", 0, start, size);// 组织
-			lc = convertOToConnectionInfoMap(orgs);
+//			List<Map<String, Object>> orgs = personalCustomerService.list(
+//					userid, "", "", "", "", 0, start, size);// 组织
+//			lc = convertOToConnectionInfoMap(orgs);
 		} else if (connType == 6) {
 			Map<String, Object> knowledges = knowledgeHomeService
 					.selectAllKnowledgeCategoryByParam("", "", 0, "", userid,
