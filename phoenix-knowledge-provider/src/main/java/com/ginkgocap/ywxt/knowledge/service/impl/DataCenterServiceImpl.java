@@ -428,7 +428,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 		}
 
 		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.error("通知成功!知识ID:{},知识类型:{}", kId, type);
+		logger.info("通知成功!知识ID:{},知识类型:{}", kId, type);
 
 		return result;
 	}
