@@ -1214,7 +1214,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} else {
 			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 		}
-		
 		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
 				vo.getkId(), cIds, user.getId(), user.getName(),
 				vo.getColumnPath(), vo);
