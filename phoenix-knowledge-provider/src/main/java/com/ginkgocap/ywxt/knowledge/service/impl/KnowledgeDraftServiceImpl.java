@@ -466,10 +466,9 @@ public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 							.v());
 					List<UserCategory> list = userCategoryMapper
 							.selectByExample(example);
-					if (list != null && list.size() == 1) {
+					if (list != null && list.size() > 0) {//创建空指针异常
 						cIds = new long[1];
 						cIds[0] = list.get(0).getId();
-
 					}
 				} else {
 					cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
