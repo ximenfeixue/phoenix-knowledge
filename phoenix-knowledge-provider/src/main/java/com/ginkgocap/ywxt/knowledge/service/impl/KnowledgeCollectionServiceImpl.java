@@ -297,7 +297,7 @@ public class KnowledgeCollectionServiceImpl implements
 	@Override
 	@Transactional
 	public boolean addBaseInfo(KnowledgeBaseVO vo, User user) {
-		logger.error("进入添加知识基本表!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
+		logger.info("进入添加知识基本表!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
 				user.getId());
 		if (vo.getKnowledge() == null) {
 			logger.error("知识对象为空!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
