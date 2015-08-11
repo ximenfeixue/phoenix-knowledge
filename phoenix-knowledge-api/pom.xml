@@ -22,6 +22,11 @@
 			<version>1.2.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-entire-api</artifactId>
+			<version>${entire.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.2.1</version>
