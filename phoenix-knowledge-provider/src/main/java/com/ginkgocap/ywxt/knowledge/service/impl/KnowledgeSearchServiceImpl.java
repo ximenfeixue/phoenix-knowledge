@@ -142,7 +142,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("id", vo.getkId() + "");
 		params.put("type", vo.getColumnType());
 		params.put("columnid", vo.getColumnid());
-		params.put("title", vo.getTags());
+		params.put("title", vo.getTitle());
 		params.put("pic", vo.getPic());
 		params.put("desc", vo.getDesc());
 		params.put("content", vo.getContent());
