@@ -5,9 +5,9 @@ package com.ginkgocap.ywxt.knowledge.admin.service;
 
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
-
-import net.sf.json.JSONObject;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * @author liubang
@@ -41,4 +41,12 @@ public interface KnowledgeAdminService {
 	 * @param status
 	 */
 	void checkStatusById(long id, int status,String collectionNames);
+	
+	/**
+	 * 添加资讯
+	 * @param id
+	 * @param status
+	 */
+	void addNews(KnowledgeNewsVO vo,User user);
+	
 }
