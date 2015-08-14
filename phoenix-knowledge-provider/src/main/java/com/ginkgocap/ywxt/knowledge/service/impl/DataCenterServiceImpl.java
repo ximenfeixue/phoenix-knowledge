@@ -32,7 +32,7 @@ import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.Content;
 import com.ginkgocap.ywxt.knowledge.util.CopyFile;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
-import com.ginkgocap.ywxt.knowledge.util.HttpConnectionManager;
+import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 import com.ginkgocap.ywxt.knowledge.util.TemplateUtils;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatched;
 import com.ginkgocap.ywxt.knowledge.util.process.ExportWatcher;
@@ -81,7 +81,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 				params.put("type", "pdf");// 文件类型
 			}
 			// 返回请求结果
-			String str = HttpConnectionManager.post(httpUrlConfig.getParseUrl() + "data/",
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl() + "data/",
 					params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
@@ -141,7 +141,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", columnId + "");
 
-		String str = HttpConnectionManager.post(httpUrlConfig.getPushUrl() + "column/add",
+		String str = HTTPUtil.post(httpUrlConfig.getPushUrl() + "column/add",
 				params);
 		if (StringUtils.isBlank(str)) {
 			logger.error("通知失败!栏目ID:{}", columnId);
@@ -308,7 +308,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 					params.put("type", "html");
 					params.put("imgPath", GetUploadPath.getNginxRoot()
 							+ "/knowledge/import");
-					String str = HttpConnectionManager.post(httpUrlConfig.getParseUrl()
+					String str = HTTPUtil.post(httpUrlConfig.getParseUrl()
 							+ "data/", params);
 					Map<String, Object> result = new HashMap<String, Object>();
 					if (StringUtils.isBlank(str)) {
@@ -410,7 +410,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 		params.put("oper", oper);
 		params.put("type", type);
 
-		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/operation.json", params);
 		if (StringUtils.isBlank(str)) {
 			logger.error("通知失败!知识ID:{}", kId);
@@ -456,7 +456,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			params.put("imgPath", GetUploadPath.getNginxRoot()
 					+ "/knowledge/import");
 			// 返回请求结果
-			String str = HttpConnectionManager.post(httpUrlConfig.getParseUrl()
+			String str = HTTPUtil.post(httpUrlConfig.getParseUrl()
 					+ "async_data/", params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
@@ -492,7 +492,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("type", type);
 			// 返回请求结果
-			String str = HttpConnectionManager.post(httpUrlConfig.getHotSortUrl()
+			String str = HTTPUtil.post(httpUrlConfig.getHotSortUrl()
 					+ "knowledge/hot/all.json", params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {
@@ -529,7 +529,7 @@ public class DataCenterServiceImpl implements DataCenterService {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("type", type);
 			// 返回请求结果
-			String str = HttpConnectionManager.post(httpUrlConfig.getCommentSortUrl()
+			String str = HTTPUtil.post(httpUrlConfig.getCommentSortUrl()
 					+ "knowledge/hot/comment.json", params);
 			// 为空则转换错误
 			if (StringUtils.isBlank(str)) {

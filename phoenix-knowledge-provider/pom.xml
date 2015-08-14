@@ -18,12 +18,11 @@
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-knowledge-api</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
-			<version>5.6.0</version>
+			<version>${entire.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
@@ -219,11 +218,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-		<!-- httpclient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
+		
 		<!-- java concurrency in practie -->
 		<dependency>
 			<groupId>net.jcip</groupId>
@@ -396,6 +391,36 @@
 			<!-- Latest 2.3.x (not 2.4.x), at least 2.3.18 -->
 			<version>[2.3.18,2.4)</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-util</artifactId>
+			<version>${util.dependencied}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcomponents-client</artifactId>
+			<version>4.3.1</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
