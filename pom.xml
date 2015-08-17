@@ -9,7 +9,7 @@
 	<properties>
 		<packtype>pom</packtype>
 		<!-- 主要依赖库的版本定义 -->
-		<knowledge.version>2.0.0</knowledge.version>
+		<knowledge.version>2.0.0-SNAPSHOT</knowledge.version>
 		<spring.version>3.2.1.RELEASE</spring.version>
 		<spring.integration.version>2.1.3.RELEASE</spring.integration.version>
 		<util.dependencied>5.6.0</util.dependencied>
