@@ -202,4 +202,36 @@
 		t.receive_user_id = #{userId}   
 		AND t.column_type = #{type} 
 	</select>
+	
+	<select id="selectAllKnowledge" resultType="map">
+		SELECT b.knowledge_id knowledgeId,b.title title,b.createtime createtime
+		FROM <include refid="tb_name_base" /> b ,
+		tb_knowledge_category kca,
+		tb_knowledge_collection kcl
+		WHERE b.user_id=#{userId}
+		AND kca.status=1
+		AND kca.knowledge_id=b.knowledge_id 
+		AND kcl.knowledge_id=b.knowledge_id 
+		AND <if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		GROUP BY title
+		ORDER BY b.createtime DESC  
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectAllKnowledgeCount" resultType="int">
+		SELECT count(1)
+		FROM <include refid="tb_name_base" /> b ,
+		tb_knowledge_category kca,
+		tb_knowledge_collection kcl
+		WHERE b.user_id=#{userId}
+		AND kca.status=1
+		AND kca.knowledge_id=b.knowledge_id 
+		AND kcl.knowledge_id=b.knowledge_id 
+		AND <if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+	</select>
+	
 </mapper>

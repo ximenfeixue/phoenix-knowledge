@@ -107,4 +107,7 @@ public interface MobileSearchService {
 	 List<Knowledge> fetchFriendKw(long[] kid,int type,int offset,int limit);
 	 
 	 long fetchFriendKwCount(long[] kid,int type) ;
+	 
+	 /** 查询我创建的和我收藏的知识列表 */
+	 public Map<String, Object> selectAllKnowledge(Long userid,String keywords,int page, int size);
 }

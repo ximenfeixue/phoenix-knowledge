@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.UserPermissionMongo;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.MobileSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
@@ -48,6 +50,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	private MobileKnowledgeDAO mobileKnowledgeDAO;
 	@Autowired//知识详情
 	private KnowledgeService knowledgeService;
+	@Autowired//知识详情
+	private KnowledgeCollectionService knowledgeCollectionService;
 	@Resource
 	private MongoTemplate mongoTemplate;
     @Autowired
@@ -609,12 +613,56 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	public long fetchFriendKwCount(long[] kid, int type) {
 		return mobileKnowledgeDAO.fetchFriendKwCount(kid, type);
 	}
-	
-	
-	
-	
-	
-	
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.MobileSearchService#selectKnowledge(java.lang.Long, java.lang.String, int, int)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> selectAllKnowledge(Long userid, String keywords,
+			int page, int size) {
+		
+		
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectAllKnowledge:{},",
+				userid);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectAllKnowledge:{},",
+				keywords);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectAllKnowledge:{},",
+				page);
+		logger.info(
+				"com.ginkgocap.ywxt.knowledge.service.impl.MobileSearchService.selectAllKnowledge:{},",
+				size);
+		int start = (page - 1) * size;
+		/** 判断是否传的是默认值 */
+		start = start < 0 ? 0 : start;
+		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords);
+		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectAllKnowledge(userid, keywords, start, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		if(size != 0) {
+		PageUtil p = new PageUtil(count, page, size);
+		m.put("page", p);
+		}
+		m.put("list", isKnowledgeCollectionByKnowledgeId(kcl,userid));
+		return m;
+	}
 	
+	public List<Map<String, Object>> isKnowledgeCollectionByKnowledgeId(List<Map<String, Object>> list,Long userId){
+		
+		if(list != null && list.size() > 0 ){
+			for(int i = 0, size =list.size(); i<size; i++){
+				Map<String,Object> map = list.get(i);
+				String knoeledgeid  = map.get("knowledgeId")+"";
+				boolean isCollection = knowledgeCollectionService.isCollection(userId,Long.parseLong(knoeledgeid));
+				if(isCollection){
+					map.put("knoeledgeType", 1);
+				}else{
+					map.put("knoeledgeType", 3);
+				}
+			}
+		}
+		return list;
+	}
 }
