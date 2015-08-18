@@ -212,7 +212,7 @@
 		AND kca.status=1
 		AND kca.knowledge_id=b.knowledge_id 
 		AND kcl.knowledge_id=b.knowledge_id 
-		AND <if test="keyword !=null and keyword != '' ">
+		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
 		GROUP BY title
@@ -229,7 +229,7 @@
 		AND kca.status=1
 		AND kca.knowledge_id=b.knowledge_id 
 		AND kcl.knowledge_id=b.knowledge_id 
-		AND <if test="keyword !=null and keyword != '' ">
+		<if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
 	</select>
