@@ -90,4 +90,8 @@ public interface MobileKnowledgeMapper {
 			@Param("start") int start, @Param("size") int size);
 	
 	int selectAllKnowledgeCount(@Param("userId") long userId,@Param("keyword") String keyword);
+	
+	@SuppressWarnings("rawtypes")
+	List getAggregationRead(@Param("userId") Long userId,@Param("columnids") String[] columnids,
+			@Param("page") int page, @Param("size") int size);
 }

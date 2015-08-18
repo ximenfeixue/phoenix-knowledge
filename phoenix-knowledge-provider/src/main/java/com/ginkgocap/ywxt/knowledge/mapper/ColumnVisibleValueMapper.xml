@@ -119,5 +119,17 @@
 		WHERE v.user_id = #{userId}
 		AND c.id = v.column_id)
 	</select>
-
+	
+	<select id="getAggregationRead" parameterType="java.util.Map" resultType="map">
+		SELECT b.* FROM tb_knowledge_base b,tb_knowledge_category kc 
+		WHERE b.knowledge_id=kc.knowledge_id 
+		AND user_id = #{userId}
+		AND kc.status=1 
+		AND b.column_id IN (
+		<foreach collection="columnids" item="id" index="index" separator=",">
+   			#{id}
+  		</foreach>)
+  		ORDER BY b.createtime DESC  
+		LIMIT #{page},#{size}
+	</select>
 </mapper>

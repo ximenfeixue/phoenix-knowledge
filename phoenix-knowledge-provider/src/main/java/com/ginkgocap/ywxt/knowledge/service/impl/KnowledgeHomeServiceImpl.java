@@ -29,6 +29,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnKnowledgeValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
@@ -76,6 +77,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	private ColumnKnowledgeMapper columnKnowledgeMapper;
 	@Autowired
 	private UserPermissionValueMapper userPermissionValueMapper;
+	@Autowired
+	private ColumnVisibleValueMapper columnVisibleValueMapper;
 	@Resource
 	private KnowledgeReaderService knowledgeReaderService;
 
@@ -505,5 +508,23 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		List<KnowledgeVO> list=(List<KnowledgeVO>) mongoTemplate.find(query, KnowledgeVO.class,names[length - 1]);
 		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
 		return list;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#getAggregationRead(java.lang.Long, java.lang.String[], int, int)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> getAggregationRead(Long userId,String[] columnIds, int page, int size) {
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String,Object> result = new HashMap<String,Object>();
+		map.put("userid", userId);
+		map.put("columnids", columnIds);
+		map.put("page", (page - 1) * size);
+		map.put("size", size);
+		List list = columnVisibleValueMapper.getAggregationRead(map);
+		result.put("list", list);
+		return result;
 	}
 }

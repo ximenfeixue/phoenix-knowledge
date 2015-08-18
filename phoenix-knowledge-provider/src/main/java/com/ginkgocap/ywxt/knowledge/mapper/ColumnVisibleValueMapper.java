@@ -18,4 +18,5 @@ public interface ColumnVisibleValueMapper {
     public List<String> selectSortIds(Map<String, Object> map);
     public List<Column> initvisible(long userId);
     public long initcount(long userId);
+    public List getAggregationRead(Map<String,Object> map);
 }
