@@ -17,7 +17,7 @@
 		<jdbc.groupId>mysql</jdbc.groupId>
 		<jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
 		<jdbc.version>5.1.12</jdbc.version>
-		<entire.version>5.6.0</entire.version>
+		<entire.version>5.6.2-SNAPSHOT</entire.version>
 		<skip_maven_deploy>true</skip_maven_deploy>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
@@ -46,7 +46,7 @@
 			</releases>
 		</repository>
 	</repositories>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -60,10 +60,9 @@
 				<version>${knowledge.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>3.8.1</version>
-				<scope>test</scope>
+				<groupId>org.junit</groupId>
+				<artifactId>com.springsource.org.junit</artifactId>
+				<version>4.10.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
@@ -287,40 +286,40 @@
 			</dependency>
 			<!-- database access end -->
 			<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.8.3</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mortennobel</groupId>
-			<artifactId>imagescaling</artifactId>
-			<version>0.8.5</version>
-		</dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.5</version>
+			</dependency>
+			<dependency>
+				<groupId>com.mortennobel</groupId>
+				<artifactId>imagescaling</artifactId>
+				<version>0.8.5</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

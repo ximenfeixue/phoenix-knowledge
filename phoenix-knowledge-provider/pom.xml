@@ -25,6 +25,11 @@
 			<version>${entire.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-person-api</artifactId>
 			<version>1.0.0</version>
@@ -218,7 +223,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-		
+
 		<!-- java concurrency in practie -->
 		<dependency>
 			<groupId>net.jcip</groupId>
@@ -402,7 +407,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -420,7 +425,7 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.3.1</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
