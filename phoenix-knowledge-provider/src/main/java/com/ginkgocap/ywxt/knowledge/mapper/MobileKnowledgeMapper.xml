@@ -204,7 +204,7 @@
 	</select>
 	
 	<select id="selectAllKnowledge" resultType="map">
-		SELECT b.knowledge_id knowledgeId,b.title title,b.createtime createtime
+		SELECT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
 		FROM <include refid="tb_name_base" /> b ,
 		tb_knowledge_category kca,
 		tb_knowledge_collection kcl

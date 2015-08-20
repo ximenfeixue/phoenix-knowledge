@@ -657,9 +657,9 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 				String knoeledgeid  = map.get("knowledgeId")+"";
 				boolean isCollection = knowledgeCollectionService.isCollection(userId,Long.parseLong(knoeledgeid));
 				if(isCollection){
-					map.put("knoeledgeType", 1);
+					map.put("source", 1);
 				}else{
-					map.put("knoeledgeType", 3);
+					map.put("source", 3);
 				}
 			}
 		}
