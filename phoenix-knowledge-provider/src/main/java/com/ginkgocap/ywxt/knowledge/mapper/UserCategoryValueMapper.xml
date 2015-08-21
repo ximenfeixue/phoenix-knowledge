@@ -57,4 +57,15 @@
 		    AND user_id = #{userId}
 		    AND id =kc.category_id) 
 	</update>
+	
+	<delete id="batchDeleteCategory">
+		DELETE
+		FROM tb_user_category
+		WHERE id IN 
+		 (
+		<foreach collection="ids" item="id" index="index" separator=",">
+   			#{id}
+  		</foreach>)
+		
+	</delete>
 </mapper>

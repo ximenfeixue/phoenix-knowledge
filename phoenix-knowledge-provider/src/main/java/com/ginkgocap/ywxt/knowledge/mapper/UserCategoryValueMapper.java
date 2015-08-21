@@ -62,4 +62,6 @@ public interface UserCategoryValueMapper {
     List<UserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId,@Param("type")Byte type);
     
     List<UserCategory> selectChildByParentId(@Param("parentId") long parentId);
+    
+    long batchDeleteCategory(@Param("ids") String []ids); 
 }

@@ -18,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
@@ -43,6 +44,8 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	private ColumnService columnService;
 	@Resource
 	private KnowledgeNewsDAO knowledgeNewsDAO;
+	@Resource
+	private UserCategoryValueMapper userCategoryValueMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -174,5 +177,17 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 			}
 		}
 		return content;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#deleteCategory(java.lang.String[])
+	 * Administrator
+	 */
+	@Override
+	public void batchDeleteCategory(String[] ids) {
+		
+		if(ids.length > 0){
+			userCategoryValueMapper.batchDeleteCategory(ids);
+		}
 	}
 }
