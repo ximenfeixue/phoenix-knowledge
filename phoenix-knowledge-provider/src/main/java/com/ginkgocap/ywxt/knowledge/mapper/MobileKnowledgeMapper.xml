@@ -213,11 +213,13 @@
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
-		OR  b.knowledge_id  IN 
+		 <if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
+			OR  b.knowledge_id  IN 
 		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
    		#{id}
     	</foreach>
-		GROUP BY title
+		</if>
+		GROUP BY title,createtime
 		ORDER BY b.createtime DESC  
 		LIMIT #{start},#{size}
 	</select>
@@ -232,10 +234,12 @@
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
-		OR  b.knowledge_id  IN 
+		<if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
+			OR  b.knowledge_id  IN 
 		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
-   		#{id}
+   			#{id}
     	</foreach>
+		</if>
 		
 	</select>
 	
