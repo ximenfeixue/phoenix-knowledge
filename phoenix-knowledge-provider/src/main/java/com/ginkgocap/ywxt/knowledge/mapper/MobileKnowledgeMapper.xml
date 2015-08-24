@@ -206,32 +206,37 @@
 	<select id="selectAllKnowledge" resultType="map">
 		SELECT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
 		FROM <include refid="tb_name_base" /> b ,
-		tb_knowledge_category kca,
-		tb_knowledge_collection kcl
+		tb_knowledge_category kca
 		WHERE b.user_id=#{userId}
 		AND kca.status=1
 		AND kca.knowledge_id=b.knowledge_id 
-		AND kcl.knowledge_id=b.knowledge_id 
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
+		OR  b.knowledge_id  IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   		#{id}
+    	</foreach>
 		GROUP BY title
 		ORDER BY b.createtime DESC  
 		LIMIT #{start},#{size}
 	</select>
 	
 	<select id="selectAllKnowledgeCount" resultType="int">
-		SELECT count(1)
+		SELECT count(1) total
 		FROM <include refid="tb_name_base" /> b ,
-		tb_knowledge_category kca,
-		tb_knowledge_collection kcl
+		tb_knowledge_category kca
 		WHERE b.user_id=#{userId}
 		AND kca.status=1
 		AND kca.knowledge_id=b.knowledge_id 
-		AND kcl.knowledge_id=b.knowledge_id 
-		<if test="keyword !=null and keyword != '' ">
+		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
+		OR  b.knowledge_id  IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   		#{id}
+    	</foreach>
+		
 	</select>
 	
 	<select id="getAggregationRead" resultType="map">

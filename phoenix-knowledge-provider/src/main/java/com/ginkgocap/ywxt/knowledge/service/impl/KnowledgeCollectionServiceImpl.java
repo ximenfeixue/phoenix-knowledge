@@ -414,4 +414,21 @@ public class KnowledgeCollectionServiceImpl implements
 				.selectByExample(example);
 		return l;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService#selectKnowledgeId(long, int, int)
+	 * Administrator
+	 */
+	@Override
+	public List<Long> selectKnowledgeId(long userId) {
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist =knowledgeCollectionValueMapper.selectKnowledgeId(userId);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("knowledge_id"));
+			}
+		}
+		return list;
+	}
 }

@@ -638,8 +638,9 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		int start = (page - 1) * size;
 		/** 判断是否传的是默认值 */
 		start = start < 0 ? 0 : start;
-		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords);
-		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectAllKnowledge(userid, keywords, start, size);
+		List<Long> collectionKnowledgeId=knowledgeCollectionService.selectKnowledgeId(userid);
+		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords,collectionKnowledgeId);
+		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectAllKnowledge(userid, keywords, start, size,collectionKnowledgeId);
 		Map<String, Object> m = new HashMap<String, Object>();
 		if(size != 0) {
 		PageUtil p = new PageUtil(count, page, size);

@@ -159,5 +159,15 @@ public interface KnowledgeCollectionService {
 	  * @since 2014-11-06
 	  */
 	 void move(long id, List<Long> knowledgeids, List<Long> categoryids,long cid); 
+	 
+		/**
+		 * 查询收藏夹中的知识Id
+		 * 
+		 * @param column_id
+		 * @param knowledgeType
+		 * @param category_id
+		 * @return
+		 */
+	List<Long> selectKnowledgeId( long userId);
 	
 }
