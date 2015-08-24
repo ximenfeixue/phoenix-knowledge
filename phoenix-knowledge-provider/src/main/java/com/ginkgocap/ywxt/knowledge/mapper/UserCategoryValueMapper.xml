@@ -61,11 +61,10 @@
 	<delete id="batchDeleteCategory">
 		DELETE
 		FROM tb_user_category
-		WHERE id IN 
-		 (
+		WHERE user_id = #{userId}
+		AND id IN (
 		<foreach collection="ids" item="id" index="index" separator=",">
    			#{id}
   		</foreach>)
-		
 	</delete>
 </mapper>

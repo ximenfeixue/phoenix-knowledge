@@ -178,16 +178,4 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		}
 		return content;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#deleteCategory(java.lang.String[])
-	 * Administrator
-	 */
-	@Override
-	public void batchDeleteCategory(String[] ids) {
-		
-		if(ids.length > 0){
-			userCategoryValueMapper.batchDeleteCategory(ids);
-		}
-	}
 }

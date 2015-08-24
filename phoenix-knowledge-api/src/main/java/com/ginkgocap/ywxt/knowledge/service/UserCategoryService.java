@@ -117,4 +117,11 @@ public interface UserCategoryService {
    
    
    List<UserCategory> getKnowledgeCategory(long knowledgeId);
+   
+   
+   /**
+	 * 批量删除目录
+	 * @param ids
+	 */
+	String batchDeleteCategory(long userId,List<Long> ids);
 }

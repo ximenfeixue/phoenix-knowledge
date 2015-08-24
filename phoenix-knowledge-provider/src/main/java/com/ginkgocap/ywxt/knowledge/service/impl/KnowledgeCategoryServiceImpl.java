@@ -244,4 +244,14 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		return knowledgeCategoryMapper.selectByExample(example);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService#batchUpdateKnowledgeCategory(java.util.List)
+	 * Administrator
+	 */
+	@Override
+	public int batchUpdateKnowledgeCategory(List<Long> ids,String status) {
+		
+		return knowledgeCategoryValueMapper.batchUpdateKnowledgeCategory(ids, status);
+	}
+
 }

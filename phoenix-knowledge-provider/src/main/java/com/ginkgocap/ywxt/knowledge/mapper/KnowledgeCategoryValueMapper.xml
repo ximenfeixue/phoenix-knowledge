@@ -123,4 +123,12 @@
      #{knowledgeids}
  	</foreach>
  </delete>
+ 
+ <update id="batchUpdateKnowledgeCategory">
+	UPDATE tb_knowledge_category  SET status=#{status} WHERE 
+	 category_id in
+	 <foreach item="id" collection="ids" open="(" separator="," close=")">
+  		#{id}
+   	</foreach>
+	</update>
 </mapper>

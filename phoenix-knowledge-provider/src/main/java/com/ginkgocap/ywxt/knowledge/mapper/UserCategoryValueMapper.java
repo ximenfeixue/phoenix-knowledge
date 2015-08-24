@@ -63,5 +63,5 @@ public interface UserCategoryValueMapper {
     
     List<UserCategory> selectChildByParentId(@Param("parentId") long parentId);
     
-    long batchDeleteCategory(@Param("ids") String []ids); 
+    long batchDeleteCategory(@Param("userId") long userId,@Param("ids") List<Long> ids); 
 }

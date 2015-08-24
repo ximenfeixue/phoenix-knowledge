@@ -49,10 +49,4 @@ public interface KnowledgeAdminService {
 	 */
 	void addNews(KnowledgeNewsVO vo,User user);
 	
-	/**
-	 * 批量删除目录
-	 * @param ids
-	 */
-	void batchDeleteCategory(String ids[]);
-	
 }
