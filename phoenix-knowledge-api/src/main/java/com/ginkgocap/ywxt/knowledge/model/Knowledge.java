@@ -93,6 +93,28 @@ public class Knowledge implements Serializable {
 	// 法律法规-执行日期
 	private String performTime;
 
+	// 法律法规-发文单位
+	private String postUnit;
+
+	// 法律法规-文号
+	private String titanic;
+
+	public String getPostUnit() {
+		return postUnit;
+	}
+
+	public void setPostUnit(String postUnit) {
+		this.postUnit = postUnit;
+	}
+
+	public String getTitanic() {
+		return titanic;
+	}
+
+	public void setTitanic(String titanic) {
+		this.titanic = titanic;
+	}
+
 	public String getSubmitTime() {
 		return submitTime;
 	}
