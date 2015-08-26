@@ -664,7 +664,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 					map.put("source", 3);
 				}
 				if(StringUtils.isNotBlank(createtime)){
-					map.put("createtime", createtime.substring(0, createtime.length()-2));
+					map.put("modifytime", createtime.substring(0, createtime.length()-2));
 				}
 			}
 		}
