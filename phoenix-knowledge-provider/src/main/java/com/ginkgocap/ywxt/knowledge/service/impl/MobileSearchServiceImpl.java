@@ -651,7 +651,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	}
 	
 	public List<Map<String, Object>> isKnowledgeCollectionByKnowledgeId(List<Map<String, Object>> list,Long userId){
-		
+		 
 		if(list != null && list.size() > 0 ){
 			for(int i = 0, size =list.size(); i<size; i++){
 				Map<String,Object> map = list.get(i);
