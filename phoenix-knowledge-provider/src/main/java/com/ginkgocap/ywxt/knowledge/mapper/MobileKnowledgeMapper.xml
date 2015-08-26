@@ -8,7 +8,7 @@
 	<sql id="tb_user_permission">tb_user_permission</sql>
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
-		SELECT DISTINCT b.*,3 knowledgeType
+		SELECT DISTINCT b.*,3 source
 		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
 		WHERE b.user_id=#{userId}
 		AND b.knowledge_id=c.knowledge_id
