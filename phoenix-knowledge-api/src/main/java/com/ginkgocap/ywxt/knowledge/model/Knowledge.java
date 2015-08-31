@@ -99,6 +99,16 @@ public class Knowledge implements Serializable {
 	// 法律法规-文号
 	private String titanic;
 
+	private String synonyms; // 同义词
+
+	public String getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(String synonyms) {
+		this.synonyms = synonyms;
+	}
+
 	public String getPostUnit() {
 		return postUnit;
 	}
