@@ -516,14 +516,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	 */
 	@Override
 	public Map<String, Object> getAggregationRead(Long userId,String[] columnIds, int page, int size) {
-		
-		Map<String,Object> map = new HashMap<String,Object>();
 		Map<String,Object> result = new HashMap<String,Object>();
-		map.put("userid", userId);
-		map.put("columnids", columnIds);
-		map.put("page", (page - 1) * size);
-		map.put("size", size);
-		List list = columnVisibleValueMapper.getAggregationRead(map);
+		List list = columnVisibleValueMapper.getAggregationRead( userId,columnIds, (page - 1) * size , size);
 		result.put("list", list);
 		return result;
 	}
