@@ -42,6 +42,7 @@ public class KnowledgeArticle extends Knowledge {
 		this.setAsso(vo.getAsso());
 		this.setTaskid(vo.getTaskId());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 
