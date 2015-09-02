@@ -73,6 +73,7 @@ public class KnowledgeCase extends Knowledge {
 			this.setContent(vo.getContent());
 			this.setTranStatus(0);
 			this.setHideDesc(vo.getHideDesc());
+			this.setFileType(vo.getFileType());
 			return this;
 		}
 

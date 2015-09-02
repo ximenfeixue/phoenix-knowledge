@@ -41,6 +41,7 @@ public class KnowledgeNewMaterials extends Knowledge {
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

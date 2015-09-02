@@ -56,6 +56,7 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setAsso(vo.getAsso());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		this.setHideDesc(vo.getHideDesc());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

@@ -43,6 +43,7 @@ public class KnowledgeNews extends Knowledge implements Serializable{
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

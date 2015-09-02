@@ -101,6 +101,16 @@ public class Knowledge implements Serializable {
 
 	private String synonyms; // 同义词
 
+	private String fileType;
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
 	public String getSynonyms() {
 		return synonyms;
 	}
