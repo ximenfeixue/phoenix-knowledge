@@ -6,6 +6,7 @@ package com.ginkgocap.ywxt.knowledge.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
@@ -59,5 +60,12 @@ public interface KnowledgeAdminService {
 	 * @return
 	 */
 	public String listUserCategory(long userId, String sortId,Byte type);
+	
+	/**
+	 * 添加后台运维系统目录
+	 * @param category
+	 * @return
+	 */
+	public String insert(AdminUserCategory category);
 	
 }

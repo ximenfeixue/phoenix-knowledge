@@ -20,12 +20,17 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
@@ -40,6 +45,7 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 @Service("knowledgeAdminService")
 public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
+	private CategoryHelper helper = new CategoryHelper();
 	@Resource
 	private KnowledgeAdminDao knowledgeAdminDao;
 	@Resource
@@ -52,6 +58,12 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	private KnowledgeNewsDAO knowledgeNewsDAO;
 	@Resource
 	private AdminUserCategoryValueMapper adminUserCategoryValueMapper;
+	@Resource
+	private UserCategoryService userCategoryService;
+	@Resource
+	private UserCategoryMapper userCategoryMapper;
+	@Resource
+	private UserCategoryValueMapper userCategoryValueMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -199,5 +211,45 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 							"categoryname", "parentId", "sortid","usetype","desc","createName"))).toString();
 		}
 		return "";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#insert(com.ginkgocap.ywxt.knowledge.model.AdminUserCategory)
+	 * Administrator
+	 */
+	@Override
+	public String insert(AdminUserCategory category) {
+	
+		// 得到要添加的分类的父类parentId
+				try {
+					long userid = category.getUserId();
+					long parentId = category.getParentId();
+					String cname = category.getCategoryname();
+					Short ct = category.getCategoryType();
+					List<UserCategory> lu = userCategoryService.selectUserCategoryByParams(userid,parentId, ct, cname);
+					if (lu != null && lu.size() > 0) {
+						return "false";
+					}
+					// 得到要添加的分类的父类sortId
+					String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
+					// 通过parentSortId得到子类最大已添加的sortId
+					String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId,category.getCategoryType());
+					if (StringUtils.isBlank(category.getSortid())) {
+						// 如果用户第一次添加，将childMaxSortId赋值
+						String newSortId = new String("");
+						if (childMaxSortId == null || "null".equals(childMaxSortId)|| "".equals(childMaxSortId)) {newSortId = parentSortId + "000000001";
+						} else {
+							newSortId = helper.generateSortId(childMaxSortId);
+						}
+						// 通过已添加的最大的SortId生成新的SortId
+						// 设置最新的sortId
+						category.setSortid(newSortId);
+					}
+					// 返回存入的对象
+					adminUserCategoryValueMapper.insertUserCategory(category);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return "success";
 	}
 }

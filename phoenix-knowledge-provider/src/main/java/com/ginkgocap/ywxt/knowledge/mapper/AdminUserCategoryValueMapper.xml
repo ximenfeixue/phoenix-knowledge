@@ -70,4 +70,14 @@
    			#{id}
   		</foreach>)
 	</delete>
+	
+	  <insert id="insertUserCategory" parameterType="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
+    insert into tb_user_category (id, user_id, categoryName, 
+      sortid, createtime, path_name, 
+      parent_id, category_type,createName,pathDesc)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{categoryname,jdbcType=VARCHAR}, 
+      #{sortid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{pathName,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT}, #{categoryType,jdbcType=SMALLINT},#{createName,jdbcType=VARCHAR},
+      #{desc,jdbcType=VARCHAR})
+  </insert>
 </mapper>

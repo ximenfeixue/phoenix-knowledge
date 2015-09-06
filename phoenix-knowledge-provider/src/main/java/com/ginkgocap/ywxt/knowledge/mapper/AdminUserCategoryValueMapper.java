@@ -19,4 +19,6 @@ public interface AdminUserCategoryValueMapper {
      */
     List<AdminUserCategory> selectChildBySortId(@Param("uid")long uid,@Param("sortId")String sortId,@Param("type")Byte type);
     
+    void insertUserCategory(AdminUserCategory adminUserCategory);
+    
 }
