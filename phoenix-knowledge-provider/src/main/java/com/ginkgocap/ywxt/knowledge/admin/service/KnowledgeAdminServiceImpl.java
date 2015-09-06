@@ -4,9 +4,12 @@
 package com.ginkgocap.ywxt.knowledge.admin.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import net.sf.json.JSONArray;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -17,14 +20,17 @@ import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
-import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
+import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
 import com.ginkgocap.ywxt.user.model.User;
 
@@ -45,7 +51,7 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	@Resource
 	private KnowledgeNewsDAO knowledgeNewsDAO;
 	@Resource
-	private UserCategoryValueMapper userCategoryValueMapper;
+	private AdminUserCategoryValueMapper adminUserCategoryValueMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -177,5 +183,21 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 			}
 		}
 		return content;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#listUserCategory(long, java.lang.String, java.lang.Byte)
+	 * Administrator
+	 */
+	@Override
+	public String listUserCategory(long userId, String sortId,Byte type) {
+		
+		List<AdminUserCategory> cl = adminUserCategoryValueMapper.selectChildBySortId(userId, sortId, type);
+		if (cl != null && cl.size() > 0) {
+			return JSONArray.fromObject(
+					Tree.buildAdmin(ConvertUtil.convert2AdminNode(cl, "userId", "id",
+							"categoryname", "parentId", "sortid","usetype","desc","createName"))).toString();
+		}
+		return "";
 	}
 }

@@ -3,8 +3,10 @@
  */
 package com.ginkgocap.ywxt.knowledge.admin.service;
 
+import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
 import com.ginkgocap.ywxt.user.model.User;
@@ -48,5 +50,14 @@ public interface KnowledgeAdminService {
 	 * @param status
 	 */
 	void addNews(KnowledgeNewsVO vo,User user);
+	
+	/**
+	 * 查询后台运维系统目录
+	 * @param userId
+	 * @param sortId
+	 * @param type
+	 * @return
+	 */
+	public String listUserCategory(long userId, String sortId,Byte type);
 	
 }
