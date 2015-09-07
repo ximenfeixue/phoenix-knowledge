@@ -63,4 +63,12 @@
       usetype =  #{usetype,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <update id="updateUseType">
+  update  tb_user_category
+  set usetype =  #{usetype}
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		AND category_type = #{categoryType}
+		AND user_id = #{userId}
+  </update>
 </mapper>

@@ -31,5 +31,7 @@ public interface AdminUserCategoryValueMapper {
 	public AdminUserCategory selectByPrimaryKey(long id);
 
 	void updateByPrimaryKey(AdminUserCategory adminUserCategory);
+	
+	int updateUseType(@Param("userId") long userid,@Param("categoryType") int categoryType,@Param("sortid") String sortid,@Param("usetype") int userType);
 
 }

@@ -273,4 +273,18 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		
 		return adminUserCategoryValueMapper.selectByPrimaryKey(id);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#updateUseType(long, int)
+	 * Administrator
+	 */
+	@Override
+	public void updateUseType(long id, int userType) {
+		
+		  UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
+		 if(u !=null){
+			 adminUserCategoryValueMapper.updateUseType(u.getUserId(), u.getCategoryType(),u.getSortid(),userType);
+		 }
+		
+	}
 }

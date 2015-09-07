@@ -80,4 +80,11 @@ public interface KnowledgeAdminService {
 	
 	public AdminUserCategory selectByPrimaryKey(long id);
 	
+	/**
+	 * 修改标识位
+	 * @param id
+	 * @param userType
+	 */
+	public void updateUseType(long id,int userType);
+	
 }
