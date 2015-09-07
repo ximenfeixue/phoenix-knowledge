@@ -33,43 +33,6 @@
 	<select id="selectChildCountById" resultType="long" >
 		select count(id) from tb_user_category where parent_id = #{id}
 	</select>
-	<!--<select id="selectChildByParentId" resultType="BaseResultMap">
-		select * from tb_user_category where parent_id = #{parentId}
-	</select>
-	-->
-	<delete id="del">
-		DELETE
-		FROM tb_user_category
-		WHERE sortid LIKE CONCAT(#{sortid},'%')
-		    AND category_type = #{categoryType}
-		    AND user_id = #{userId}
-	</delete>
-	<update id="delk">
-	UPDATE tb_knowledge_category kc SET category_id=#{cid} WHERE EXISTS (
-		SELECT 1 FROM tb_user_category
-		WHERE sortid LIKE CONCAT(#{sortid},'%')
-		    AND category_type = #{categoryType}
-		    AND user_id = #{userId}
-		    AND id =kc.category_id)
-	</update>
-	<update id="delc">
-	UPDATE tb_knowledge_collection kc SET category_id=#{cid} WHERE EXISTS (
-		SELECT 1 FROM tb_user_category
-		WHERE sortid LIKE CONCAT(#{sortid},'%')
-		    AND category_type = #{categoryType}
-		    AND user_id = #{userId}
-		    AND id =kc.category_id) 
-	</update>
-	
-	<delete id="batchDeleteCategory">
-		DELETE
-		FROM tb_user_category
-		WHERE user_id = #{userId}
-		AND id IN (
-		<foreach collection="ids" item="id" index="index" separator=",">
-   			#{id}
-  		</foreach>)
-	</delete>
 	
 	  <insert id="insertUserCategory" parameterType="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
     insert into tb_user_category (id, user_id, categoryName, 
@@ -80,4 +43,24 @@
       #{parentId,jdbcType=BIGINT}, #{categoryType,jdbcType=SMALLINT},#{createName,jdbcType=VARCHAR},
       #{desc,jdbcType=VARCHAR})
   </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select * from tb_user_category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
+    update tb_user_category
+    set user_id = #{userId,jdbcType=BIGINT},
+      categoryName = #{categoryname,jdbcType=VARCHAR},
+      sortid = #{sortid,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      path_name = #{pathName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      category_type = #{categoryType,jdbcType=SMALLINT},
+      createName = #{createName,jdbcType=VARCHAR},
+      pathDesc = #{desc,jdbcType=VARCHAR},
+      usetype =  #{usetype,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

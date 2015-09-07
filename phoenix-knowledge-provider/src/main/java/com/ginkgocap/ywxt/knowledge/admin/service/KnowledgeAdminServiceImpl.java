@@ -252,4 +252,25 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 				}
 				return "success";
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.AdminUserCategoryService#update(com.ginkgocap.ywxt.knowledge.model.AdminUserCategory)
+	 * Administrator
+	 */
+	@Override
+	public void update(AdminUserCategory category) {
+		
+		adminUserCategoryValueMapper.updateByPrimaryKey(category);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.AdminUserCategoryService#selectByPrimaryKey(long)
+	 * Administrator
+	 */
+	@Override
+	public AdminUserCategory selectByPrimaryKey(long id) {
+		
+		return adminUserCategoryValueMapper.selectByPrimaryKey(id);
+	}
 }

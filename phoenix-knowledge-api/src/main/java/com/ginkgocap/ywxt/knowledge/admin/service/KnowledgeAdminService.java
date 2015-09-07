@@ -68,4 +68,16 @@ public interface KnowledgeAdminService {
 	 */
 	public String insert(AdminUserCategory category);
 	
+	/**
+	 * 编辑目录
+	 * @param category
+	 */
+	public void update(AdminUserCategory category);
+	
+	/**
+	 * 主键查询
+	 */
+	
+	public AdminUserCategory selectByPrimaryKey(long id);
+	
 }
