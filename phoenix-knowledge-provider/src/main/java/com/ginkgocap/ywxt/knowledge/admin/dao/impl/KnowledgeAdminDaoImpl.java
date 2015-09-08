@@ -21,6 +21,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCase;
@@ -30,6 +33,13 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
+import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
+import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.PageUtil;
 
@@ -42,6 +52,18 @@ import com.ginkgocap.ywxt.util.PageUtil;
 public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 	@Resource
 	private MongoTemplate mongoTemplate;
+	@Resource
+	private KnowledgeBaseMapper knowledgeBaseMapper;
+	@Resource
+	private UserFeedService userFeedService;
+	@Resource
+	private KnowledgeRecycleService knowledgeRecycleService;
+	@Resource
+	private KnowledgeCategoryService knowledgeCategoryService;
+	@Resource
+	private KnowledgeStaticsService knowledgeStaticsService;
+	@Resource
+	private KnowledgeCommentService knowledgeCommentService;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -199,6 +221,76 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			update.set("desc", desc);
 		}
 		mongoTemplate.updateFirst(query, update, collectionName);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#batchDeleteKnowledge(java.lang.String)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchDeleteKnowledge(String knowledgeids) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		long[] knowledgeid = null;
+		// 检查是否为标准数据
+		try {
+			if (knowledgeids.endsWith(",")) {
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
+						.substring(0, knowledgeids.length() - 1).split(","));
+			} else {
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
+						.split(","));
+			}
+		} catch (Exception e) {
+			result.put(Constants.status, Constants.ResultType.fail.v());
+			return result;
+		}
+
+		// 批量删除
+		for (int i = 0; i < knowledgeid.length; i++) {
+			KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
+			long ct = 0;
+			if (bl != null) {
+				ct = bl.getColumnType();
+			} else {
+				continue;
+			}
+			String obj = Constants.getTableName(ct + "");
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
+					obj.length());
+			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("status", Constants.Status.recycle.v());
+
+			// 删除动态长观点信息
+			if (ct == Constants.KnowledgeType.Opinion.v()) {
+				userFeedService.deleteDynamicKnowledge(knowledgeid[i]);
+			}
+			// 删除更新关联表
+			try {
+				mongoTemplate.updateFirst(query, update, collectionName);
+				List<KnowledgeCategory> list = knowledgeCategoryService
+						.selectKnowledgeCategory(knowledgeid[i]);
+				if (list != null && list.size() > 0) {
+					for (KnowledgeCategory knowledgeCategory : list) {
+						knowledgeCategoryService.updateKnowledgeCategory(
+								knowledgeid[i],
+								knowledgeCategory.getCategoryId());
+					}
+				}
+			} catch (Exception e) {
+				result.put(Constants.status, Constants.ResultType.fail.v());
+			}
+			// 删除统计表信息
+			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
+
+			// 删除该知识评论信息
+			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i],
+					bl.getUserId());
+		}
+		result.put("result", "success");
+		return result;
 	}
 
 }

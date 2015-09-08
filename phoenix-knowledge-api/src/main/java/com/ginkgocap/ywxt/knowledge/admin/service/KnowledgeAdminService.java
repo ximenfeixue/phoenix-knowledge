@@ -87,4 +87,12 @@ public interface KnowledgeAdminService {
 	 */
 	public void updateUseType(long id,int userType);
 	
+	/**
+	 * 批量删除知识
+	 * @param ids
+	 * @param types
+	 * @return
+	 */
+	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
+	
 }

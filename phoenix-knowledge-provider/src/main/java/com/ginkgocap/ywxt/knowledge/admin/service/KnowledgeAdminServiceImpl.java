@@ -4,6 +4,7 @@
 package com.ginkgocap.ywxt.knowledge.admin.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,16 +13,24 @@ import javax.annotation.Resource;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
+import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
@@ -34,6 +43,7 @@ import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
@@ -45,6 +55,10 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 @Service("knowledgeAdminService")
 public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
+	
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(KnowledgeAdminServiceImpl.class);
 	private CategoryHelper helper = new CategoryHelper();
 	@Resource
 	private KnowledgeAdminDao knowledgeAdminDao;
@@ -64,6 +78,10 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	private UserCategoryMapper userCategoryMapper;
 	@Resource
 	private UserCategoryValueMapper userCategoryValueMapper;
+	@Resource
+	private MongoTemplate mongoTemplate;
+	@Resource
+	private KnowledgeBaseMapper knowledgeBaseMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -286,5 +304,15 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 			 adminUserCategoryValueMapper.updateUseType(u.getUserId(), u.getCategoryType(),u.getSortid(),userType);
 		 }
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#batchDeleteKnowledge(java.lang.String, java.lang.String)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchDeleteKnowledge(String knowledgeids) {
+		
+		return knowledgeAdminDao.batchDeleteKnowledge(knowledgeids);
 	}
 }

@@ -47,4 +47,12 @@ public interface KnowledgeAdminDao {
 	 */
 	void update(long id, String title, String cpathid, String content, String desc,
 			String tags, String collectionName);
+	
+	/**
+	 * 批量删除知识
+	 * @param ids
+	 * @param types
+	 * @return
+	 */
+	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
 }
