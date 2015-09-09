@@ -49,8 +49,9 @@ public interface KnowledgeAdminService {
 	 * 添加资讯
 	 * @param id
 	 * @param status
+	 * @return 
 	 */
-	void addNews(KnowledgeNewsVO vo,User user);
+	Map<String,Object> addNews(KnowledgeNewsVO vo,User user);
 	
 	/**
 	 * 查询后台运维系统目录

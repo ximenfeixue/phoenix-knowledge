@@ -16,18 +16,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
 import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategoryExample.Criteria;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
@@ -38,12 +34,12 @@ import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.impl.CategoryHelper;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
-import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
@@ -82,6 +78,8 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	private MongoTemplate mongoTemplate;
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
+	@Resource
+	private KnowledgeService knowledgeService;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -138,8 +136,9 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 	 * Administrator
 	 */
 	@Override
-	public void addNews(KnowledgeNewsVO vo,User user) {
+	public Map<String,Object> addNews(KnowledgeNewsVO vo,User user) {
 		
+		Map<String,Object> result = new HashMap<String, Object>();
 				// 获取Session用户值
 				long userId = user.getId();
 				long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
@@ -161,6 +160,16 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 				}
 				setVO(vo, kId, columnid, columnPath);
 				knowledgeNewsDAO.insertknowledge(vo, user);
+				// 添加知识到目录知识表
+				result = knowledgeService.insertCatalogueIds(vo, user);
+				Integer status = Integer.parseInt(result.get(Constants.status) + "");
+				if (status != 1) {
+					result.put(Constants.errormessage,
+							Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+					return result;
+				}
+				result.put("result", "success");
+				return result;
 	}
 
 	/**
