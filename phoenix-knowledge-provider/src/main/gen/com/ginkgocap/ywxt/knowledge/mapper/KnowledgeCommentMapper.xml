@@ -13,6 +13,22 @@
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="pic" property="pic" jdbcType="VARCHAR" />
   </resultMap>
+	<resultMap id="CommentQueryMap" type="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentQuery" >
+		<id column="id" property="id" />
+		<result column="knowledgeId" property="knowledgeId" />
+		<result column="knowledgeTitle" property="knowledgeTitle" />
+		<result column="content" property="content" />
+		<result column="createtime" property="createtime" />
+		<result column="status" property="status" />
+		<result column="parentid" property="parentid" />
+		<result column="parentContent" property="parentContent" />
+		<result column="userId" property="userId" />
+		<result column="count" property="count" />
+		<result column="username" property="username" />
+		<result column="pic" property="pic" />
+		<result column="isVisible" property="isVisible" />
+		<result column="deleteTime" property="deleteTime" />
+	</resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -291,4 +307,83 @@
       pic = #{pic,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+	<select id="getCommentByPage" resultMap="CommentQueryMap" parameterType="java.util.Map" >
+		SELECT DISTINCT c.id,
+			c.knowledge_id AS knowledgeId,
+			k.title AS knowledgeTitle,
+			c.content,
+			c.createtime,
+			c.status,
+			c.parentid,
+			(SELECT t.content FROM tb_knowledge_comment t WHERE t.id=c.parentid) AS parentContent,
+			c.user_id AS userId,
+			c.count,
+			c.username,
+			c.pic,
+			c.is_visible AS isVisible,
+			c.delete_time AS deleteTime
+		FROM tb_knowledge_comment c, tb_knowledge_base k
+		WHERE k.knowledge_id = c.knowledge_id
+		<if test="keyword != null" >
+			AND c.content LIKE '%'||#{keyword}||'%',
+		</if>
+		<if test="isVisible != null" >
+			AND c.is_visible = #{isVisible},
+		</if>
+		ORDER BY c.createtime
+		LIMIT #{start}, #{size}
+	</select>
+	<select id="getCommentCount" parameterType="java.util.Map" >
+		SELECT count(c.id)
+		FROM tb_knowledge_comment c, tb_knowledge_base k
+		WHERE k.knowledge_id = c.knowledge_id
+		<if test="keyword != null" >
+			AND c.content LIKE '%'||#{keyword}||'%',
+		</if>
+		<if test="isVisible != null" >
+			AND c.is_visible = #{isVisible},
+		</if>
+	</select>
+	<update id="deleteComment" parameterType="java.util.List" >
+		UPDATE tb_knowledge_comment
+		SET status = 0,
+			delete_time = NOW(),
+			delete_user_id = #{userId},
+			delete_user_name = #{userName}
+		WHERE id IN
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<delete id="deleteCommentCompletely" parameterType="java.util.List" >
+		DELETE FROM tb_knowledge_comment
+		WHERE id IN
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<update id="recoverDeletedComment" parameterType="java.util.List" >
+		UPDATE tb_knowledge_comment
+		SET status = 1
+		WHERE id IN
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="invisibleComment" parameterType="java.util.List" >
+		UPDATE tb_knowledge_comment
+		SET is_visible = 0
+		WHERE id IN
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="recoverInvisibleComment" parameterType="java.util.List" >
+		UPDATE tb_knowledge_comment
+		SET is_visible = 1
+		WHERE id IN
+		<foreach collection="idList" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
 </mapper>
