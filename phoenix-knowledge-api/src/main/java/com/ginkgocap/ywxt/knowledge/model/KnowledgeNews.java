@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 
+import java.io.Serializable;
+
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.user.model.User;
 
@@ -10,7 +12,7 @@ import com.ginkgocap.ywxt.user.model.User;
  * @author caihe
  * 
  */
-public class KnowledgeNews extends Knowledge {
+public class KnowledgeNews extends Knowledge implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +43,7 @@ public class KnowledgeNews extends Knowledge {
 		this.setAsso(vo.getAsso());
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

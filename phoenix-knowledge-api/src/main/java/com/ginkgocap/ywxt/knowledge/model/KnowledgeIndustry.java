@@ -51,11 +51,12 @@ public class KnowledgeIndustry extends Knowledge {
 		this.setHcontent("");
 		
 		this.setOid(vo.getOid());
-		
+		this.setTaskid(vo.getTaskId());
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setAsso(vo.getAsso());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		this.setHideDesc(vo.getHideDesc());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

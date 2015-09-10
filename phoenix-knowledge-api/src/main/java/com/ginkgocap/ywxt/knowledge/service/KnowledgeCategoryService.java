@@ -100,5 +100,13 @@ public interface KnowledgeCategoryService {
 	 * @author haiyan
 	 */
 	int insertKnowledgeCategoryNogroup(long knowledgeid, long categoryid);
+	
+	/**
+	 * 删除目录，同时将目录下的知识状态标注为0
+	 * @param knowledgeid
+	 * @param categoryid
+	 * @return
+	 */
+	int batchUpdateKnowledgeCategory(List<Long> ids,String status);
 
 }

@@ -138,4 +138,13 @@ public interface KnowledgeHomeService {
 	public List<KnowledgeVO> selectPlatform(long type, long columnid, long userid,
 			int page, int size);
     
+	/**
+	 * 根据定制的栏目读取聚合信息
+	 * @param userId
+	 * @param columnIds
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Map<String, Object> getAggregationRead(Long userId,String[] columnIds, int page, int size);
 }

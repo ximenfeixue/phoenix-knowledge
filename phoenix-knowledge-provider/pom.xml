@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>phoenix-knowledge</artifactId>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<version>2.0.0</version>
+		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge-provider</artifactId>
 	<name>${project.artifactId}</name>
@@ -18,12 +18,15 @@
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-knowledge-api</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
-			<version>5.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
@@ -219,11 +222,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-		<!-- httpclient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
+
 		<!-- java concurrency in practie -->
 		<dependency>
 			<groupId>net.jcip</groupId>
@@ -396,6 +395,36 @@
 			<!-- Latest 2.3.x (not 2.4.x), at least 2.3.18 -->
 			<version>[2.3.18,2.4)</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-util</artifactId>
+			<version>${util.dependencied}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcomponents-client</artifactId>
+			<version>4.3.1</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -569,9 +598,9 @@
 				<!-- 大数据解析请求地址 -->
 				<knowledge.data.parseUrl>http://192.168.130.120:8000/async_data/</knowledge.data.parseUrl>
 				<!-- 大数据推送请求地址 -->
-				<knowledge.data.pushUrl>http://192.168.130.120:8000/</knowledge.data.pushUrl>
-				<konwledge.query.hot.url>http://192.168.130.120:8000/</konwledge.query.hot.url>
-				<konwledge.query.comment.url>http://192.168.130.120:8000/</konwledge.query.comment.url>
+				<knowledge.data.pushUrl>http://192.168.101.14:4453/</knowledge.data.pushUrl>
+				<konwledge.query.hot.url>http://192.168.101.14:4453/</konwledge.query.hot.url>
+				<konwledge.query.comment.url>http://192.168.101.14:4453/</konwledge.query.comment.url>
 
 				<!-- redis地址 -->
 				<redis.host>192.168.101.131</redis.host>

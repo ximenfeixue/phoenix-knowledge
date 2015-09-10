@@ -89,6 +89,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setRefrenceData(vo.getRefrenceData());
 		this.setImageBookData(vo.getImageBookData());
 		this.setHideDesc(vo.getHideDesc());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 

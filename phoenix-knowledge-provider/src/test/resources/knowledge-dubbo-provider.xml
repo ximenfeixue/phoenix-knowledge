@@ -40,12 +40,12 @@
 		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ConnectInfoService" ref="connectInfoService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/>
+<!--     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCatalogService" ref="knowledgeCatalogService" version="1.0.0"/> -->
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" ref="columnVisibleService" version="1.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" ref="columnSubscribeService" version="1.0.0"/>
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
-	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" ref="knowledgeContentService" version="1.0.0"/>
+<!-- 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" ref="knowledgeContentService" version="1.0.0"/> -->
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" ref="knowledgeMongoIncService" version="1.0.0"/>
      <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
@@ -67,7 +67,7 @@
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService"  ref="knowledgeCommonService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService"  ref="knowledgeRecycleService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService"  ref="userCategoryService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.SearchService"  ref="searchService" version="1.0.0"/>
+<!-- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.SearchService"  ref="searchService" version="1.0.0"/> -->
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService"  ref="mobileSearchService" version="1.0.0"/>
 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService"  ref="attachmentService" version="1.0.0"/>
 		<!-- app端使用service -->

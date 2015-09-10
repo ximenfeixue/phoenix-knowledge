@@ -3,11 +3,14 @@
  */
 package com.ginkgocap.ywxt.knowledge.admin.service;
 
+import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
+import com.ginkgocap.ywxt.knowledge.model.AdminUserCategory;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.form.DataGridModel;
-
-import net.sf.json.JSONObject;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * @author liubang
@@ -41,4 +44,56 @@ public interface KnowledgeAdminService {
 	 * @param status
 	 */
 	void checkStatusById(long id, int status,String collectionNames);
+	
+	/**
+	 * 添加资讯
+	 * @param id
+	 * @param status
+	 * @return 
+	 */
+	Map<String,Object> addNews(KnowledgeNewsVO vo,User user);
+	
+	/**
+	 * 查询后台运维系统目录
+	 * @param userId
+	 * @param sortId
+	 * @param type
+	 * @return
+	 */
+	public String listUserCategory(long userId, String sortId,Byte type);
+	
+	/**
+	 * 添加后台运维系统目录
+	 * @param category
+	 * @return
+	 */
+	public String insert(AdminUserCategory category);
+	
+	/**
+	 * 编辑目录
+	 * @param category
+	 */
+	public void update(AdminUserCategory category);
+	
+	/**
+	 * 主键查询
+	 */
+	
+	public AdminUserCategory selectByPrimaryKey(long id);
+	
+	/**
+	 * 修改标识位
+	 * @param id
+	 * @param userType
+	 */
+	public void updateUseType(long id,int userType);
+	
+	/**
+	 * 批量删除知识
+	 * @param ids
+	 * @param types
+	 * @return
+	 */
+	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
+	
 }

@@ -44,4 +44,6 @@ public interface KnowledgeCollectionValueMapper {
      */
     long countKnowledgeAll(@Param("source") String source, @Param("knowledgeType") String knowledgeType,
             @Param("collectionUserId") long collectionUserId, @Param("sortId") String sortId,@Param("keyword")String keyword);
+    
+    List<Map<String, Object>> selectKnowledgeId( @Param("collectionUserId") long collectionUserId);
 }

@@ -16,7 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig;
-import com.ginkgocap.ywxt.knowledge.util.HttpConnectionManager;
+import com.ginkgocap.ywxt.knowledge.util.HTTPUtil;
 
 @Service("knowledgeSearchService")
 public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
@@ -33,7 +33,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("user_id", userid + "");
 		params.put("type", type);
-		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "user/tags/search.json", params);
 
 		String tags = "";
@@ -90,7 +90,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("psize", psize);
 		
 		logger.info("搜索请求参数为:{}",params);
-		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -117,7 +117,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("pno", pno);
 		params.put("psize", psize);
 
-		String str = HttpConnectionManager.post(httpUrlConfig.getSearchUrl()
+		String str = HTTPUtil.post(httpUrlConfig.getSearchUrl()
 				+ "knowledge/keyword/search.json", params);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -142,7 +142,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		params.put("id", vo.getkId() + "");
 		params.put("type", vo.getColumnType());
 		params.put("columnid", vo.getColumnid());
-		params.put("title", vo.getTags());
+		params.put("title", vo.getTitle());
 		params.put("pic", vo.getPic());
 		params.put("desc", vo.getDesc());
 		params.put("content", vo.getContent());
@@ -151,7 +151,7 @@ public class KnowledgeSearchServiceImpl implements KnowledgeSearchService {
 		String str = "";
 		try {
 
-			str = HttpConnectionManager.post(httpUrlConfig.getPushUrl()
+			str = HTTPUtil.post(httpUrlConfig.getPushUrl()
 					+ "knowledge/put.json", params);
 		} catch (Exception e) {
 			logger.error("调用大数据接口失败", e.toString());

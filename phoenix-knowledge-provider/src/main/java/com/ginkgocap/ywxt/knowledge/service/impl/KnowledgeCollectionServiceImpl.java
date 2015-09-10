@@ -281,7 +281,7 @@ public class KnowledgeCollectionServiceImpl implements
 	@Override
 	@Transactional
 	public boolean delCollection(long userId, long kId) {
-		logger.error("进入删除收藏信息请求!,用户ID:{},知识ID:{}", userId, kId);
+		logger.info("进入删除收藏信息请求!,用户ID:{},知识ID:{}", userId, kId);
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUseridEqualTo(userId);
@@ -413,5 +413,22 @@ public class KnowledgeCollectionServiceImpl implements
 		List<KnowledgeCollection> l = knowledgeCollectionMapper
 				.selectByExample(example);
 		return l;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService#selectKnowledgeId(long, int, int)
+	 * Administrator
+	 */
+	@Override
+	public List<Long> selectKnowledgeId(long userId) {
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist =knowledgeCollectionValueMapper.selectKnowledgeId(userId);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("knowledge_id"));
+			}
+		}
+		return list;
 	}
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="categoryName" property="categoryname" jdbcType="VARCHAR" />
+    <result column="sortid" property="sortid" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="path_name" property="pathName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="usetype" property="usetype" jdbcType="BIGINT" />
+    <result column="createName" property="createName" jdbcType="VARCHAR" />
+    <result column="pathDesc" property="desc" jdbcType="VARCHAR" />
+  </resultMap>
+  
+	<select id="selectChildBySortId"  resultMap="BaseResultMap" >
+		select * from tb_user_category where (user_id = #{uid} or user_id = 0) 
+		<if test="sortId != null and sortId != ''">
+		and sortId like CONCAT(#{sortId}, '%') 
+		</if>
+		and category_type=#{type}
+		order by sortId
+	</select>	
+
+
+	<select id="selectMaxSortId" resultType="string" >
+		select max(sortid) from tb_user_category where user_id=#{uid} and sortid!='111111111'  AND sortid!='000000000' and category_type=#{type} and sortId like CONCAT(#{parentSortId}, '_________') 
+	</select>
+
+
+	<select id="selectChildCountById" resultType="long" >
+		select count(id) from tb_user_category where parent_id = #{id}
+	</select>
+	
+	  <insert id="insertUserCategory" parameterType="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
+    insert into tb_user_category (id, user_id, categoryName, 
+      sortid, createtime, path_name, 
+      parent_id, category_type,createName,pathDesc)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{categoryname,jdbcType=VARCHAR}, 
+      #{sortid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{pathName,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT}, #{categoryType,jdbcType=SMALLINT},#{createName,jdbcType=VARCHAR},
+      #{desc,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select * from tb_user_category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.knowledge.model.AdminUserCategory" >
+    update tb_user_category
+    set user_id = #{userId,jdbcType=BIGINT},
+      categoryName = #{categoryname,jdbcType=VARCHAR},
+      sortid = #{sortid,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      path_name = #{pathName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      category_type = #{categoryType,jdbcType=SMALLINT},
+      createName = #{createName,jdbcType=VARCHAR},
+      pathDesc = #{desc,jdbcType=VARCHAR},
+      usetype =  #{usetype,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateUseType">
+  update  tb_user_category
+  set usetype =  #{usetype}
+		WHERE sortid LIKE CONCAT(#{sortid},'%')
+		AND category_type = #{categoryType}
+		AND user_id = #{userId}
+  </update>
+</mapper>

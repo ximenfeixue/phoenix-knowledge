@@ -44,6 +44,7 @@ public class KnowledgeAsset extends Knowledge {
 		this.setSelectedIds(vo.getSelectedIds());
 		this.setTaskid(vo.getTaskId());
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
+		this.setFileType(vo.getFileType());
 		return this;
 	}
 	

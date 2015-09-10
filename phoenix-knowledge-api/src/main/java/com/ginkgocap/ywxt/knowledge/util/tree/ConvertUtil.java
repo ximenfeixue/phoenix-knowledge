@@ -1,12 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.util.tree;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import com.ginkgocap.ywxt.utils.DateUtils;
 
 
 /**
@@ -59,6 +54,71 @@ public class ConvertUtil {
 								"get" + sortId.substring(0, 1).toUpperCase()
 										+ sortId.substring(1, sortId.length()))
 						.invoke(c));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			nl.add(n);
+		}
+		return nl;
+
+	}
+	
+	public static <T> List<AdminNode> convert2AdminNode(List<T> l, String userid,
+			String id, String name, String parentId, String sortId,String usetype,String desc,String createName) {
+		List<AdminNode> nl = new ArrayList<AdminNode>();
+		for (T c : l) {
+			AdminNode n = new AdminNode();
+			try {
+				n.setUserId((Long) c
+						.getClass()
+						.getMethod(
+								"get" + userid.substring(0, 1).toUpperCase()
+										+ userid.substring(1, userid.length()))
+						.invoke(c));
+				n.setId((Long) c
+						.getClass()
+						.getMethod(
+								"get" + id.substring(0, 1).toUpperCase()
+										+ id.substring(1, id.length()))
+						.invoke(c));
+				n.setName((String) c
+						.getClass()
+						.getMethod(
+								"get" + name.substring(0, 1).toUpperCase()
+										+ name.substring(1, name.length()))
+						.invoke(c));
+				n.setParentId((Long) c
+						.getClass()
+						.getMethod(
+								"get"
+										+ parentId.substring(0, 1)
+												.toUpperCase()
+										+ parentId.substring(1,
+												parentId.length())).invoke(c));
+				n.setSortId((String) c
+						.getClass()
+						.getMethod(
+								"get" + sortId.substring(0, 1).toUpperCase()
+										+ sortId.substring(1, sortId.length()))
+						.invoke(c));
+				n.setCreateName((String) c
+						.getClass()
+						.getMethod(
+								"get" + createName.substring(0, 1).toUpperCase()
+										+ createName.substring(1, createName.length()))
+						.invoke(c));
+				n.setUsetype((Integer) c
+						.getClass()
+						.getMethod(
+								"get" + usetype.substring(0, 1).toUpperCase()
+								+ usetype.substring(1, usetype.length()))
+								.invoke(c));
+				n.setDesc((String) c
+						.getClass()
+						.getMethod(
+								"get" + desc.substring(0, 1).toUpperCase()
+								+ desc.substring(1, desc.length()))
+								.invoke(c));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -8,7 +8,7 @@
 	<sql id="tb_user_permission">tb_user_permission</sql>
 
 	<select id="selectKnowledgeByTagsAndKeyWords" resultType="map">
-		SELECT DISTINCT b.*
+		SELECT DISTINCT b.*,3 source
 		FROM <include refid="tb_name_base" /> b ,tb_knowledge_category c
 		WHERE b.user_id=#{userId}
 		AND b.knowledge_id=c.knowledge_id
@@ -202,4 +202,58 @@
 		t.receive_user_id = #{userId}   
 		AND t.column_type = #{type} 
 	</select>
+	
+	<select id="selectAllKnowledge" resultType="map">
+		SELECT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
+		FROM <include refid="tb_name_base" /> b ,
+		tb_knowledge_category kca
+		WHERE b.user_id=#{userId}
+		AND kca.status=1
+		AND kca.knowledge_id=b.knowledge_id 
+		 <if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		 <if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
+			OR  b.knowledge_id  IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   		#{id}
+    	</foreach>
+		</if>
+		GROUP BY title,createtime
+		ORDER BY b.createtime DESC  
+		LIMIT #{start},#{size}
+	</select>
+	
+	<select id="selectAllKnowledgeCount" resultType="int">
+		SELECT count(1) total
+		FROM <include refid="tb_name_base" /> b ,
+		tb_knowledge_category kca
+		WHERE b.user_id=#{userId}
+		AND kca.status=1
+		AND kca.knowledge_id=b.knowledge_id 
+		 <if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
+			OR  b.knowledge_id  IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   			#{id}
+    	</foreach>
+		</if>
+		
+	</select>
+	
+	<select id="getAggregationRead" resultType="map">
+		SELECT b.* FROM tb_knowledge_base b,tb_knowledge_category kc 
+		WHERE b.knowledge_id=kc.knowledge_id 
+		AND user_id = #{userId}
+		AND kc.status=1 
+		AND b.column_id IN (
+		<foreach collection="columnids" item="id" index="index" separator=",">
+   			#{id}
+  		</foreach>)
+  		ORDER BY b.createtime DESC  
+		LIMIT #{page},#{size}
+	</select>
+	
 </mapper>

@@ -137,17 +137,18 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		// 批量插入知识目录表
 		List<KnowledgeCategory> list = new ArrayList<KnowledgeCategory>();
 		KnowledgeCategory knowledgeRCategory = null;
-		for (int k = 0; k < cIds.length; k++) {
-			UserCategory category = userCategoryService
-					.selectByPrimaryKey(cIds[k]);
-			if (category != null) {
-				knowledgeRCategory = new KnowledgeCategory();
-				knowledgeRCategory.setKnowledgeId(kId);
-				knowledgeRCategory.setCategoryId(cIds[k]);
-				// 1生效 0不生效
-				knowledgeRCategory.setStatus(vo.getStatus());
-
-				list.add(knowledgeRCategory);
+		if(cIds!= null){
+			for (int k = 0; k < cIds.length; k++) {
+				UserCategory category = userCategoryService
+						.selectByPrimaryKey(cIds[k]);
+				if (category != null) {
+					knowledgeRCategory = new KnowledgeCategory();
+					knowledgeRCategory.setKnowledgeId(kId);
+					knowledgeRCategory.setCategoryId(cIds[k]);
+					// 1生效 0不生效
+					knowledgeRCategory.setStatus(vo.getStatus());
+					list.add(knowledgeRCategory);
+				}
 			}
 		}
 		int v = knowledgeCategoryValueMapper.batchInsert(list);
@@ -241,6 +242,16 @@ public class KnowledgeCategoryServiceImpl implements KnowledgeCategoryService {
 		criteria.andStatusEqualTo(Constants.KnowledgeCategoryStatus.effect.v()
 				+ "");
 		return knowledgeCategoryMapper.selectByExample(example);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService#batchUpdateKnowledgeCategory(java.util.List)
+	 * Administrator
+	 */
+	@Override
+	public int batchUpdateKnowledgeCategory(List<Long> ids,String status) {
+		
+		return knowledgeCategoryValueMapper.batchUpdateKnowledgeCategory(ids, status);
 	}
 
 }

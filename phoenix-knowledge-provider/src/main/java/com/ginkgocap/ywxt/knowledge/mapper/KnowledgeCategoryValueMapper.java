@@ -25,4 +25,6 @@ public interface KnowledgeCategoryValueMapper {
     int countKnowledgeId(@Param("userId") long userId, @Param("groupid") List<Long> groupid);
 
     int deleteKnowledge(@Param("knowledgeids") long[] knowledgeids, @Param("categoryid") long categoryid);
+    
+    int batchUpdateKnowledgeCategory(@Param("ids") List<Long> ids,@Param("status") String status);
 }

@@ -81,12 +81,76 @@ public class Knowledge implements Serializable {
 	private String asso;
 
 	private String selectedIds;
-	
+
 	private String columnType;
-	
-	//投融工具、行业、经典案例用到的隐藏DIV，用于编辑、阅读器使用，之前的desc仅用于知识查询列表展现
+
+	// 投融工具、行业、经典案例用到的隐藏DIV，用于编辑、阅读器使用，之前的desc仅用于知识查询列表展现
 	private String hideDesc;
-	
+
+	// 法律法规-发布日期
+	private String submitTime;
+
+	// 法律法规-执行日期
+	private String performTime;
+
+	// 法律法规-发文单位
+	private String postUnit;
+
+	// 法律法规-文号
+	private String titanic;
+
+	private String synonyms; // 同义词
+
+	private String fileType;
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public String getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(String synonyms) {
+		this.synonyms = synonyms;
+	}
+
+	public String getPostUnit() {
+		return postUnit;
+	}
+
+	public void setPostUnit(String postUnit) {
+		this.postUnit = postUnit;
+	}
+
+	public String getTitanic() {
+		return titanic;
+	}
+
+	public void setTitanic(String titanic) {
+		this.titanic = titanic;
+	}
+
+	public String getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(String submitTime) {
+		this.submitTime = submitTime;
+	}
+
+	public String getPerformTime() {
+		return performTime;
+	}
+
+	public void setPerformTime(String performTime) {
+		this.performTime = performTime;
+	}
+
 	public String getHideDesc() {
 		return hideDesc;
 	}
@@ -97,10 +161,9 @@ public class Knowledge implements Serializable {
 
 	// 系统时间（大数据推送带过来的数据）
 	private String sysTime;
-	
-	private Long knowledgeMainId;//代表草稿箱中存储了真正知识的ID
-	
-	
+
+	private Long knowledgeMainId;// 代表草稿箱中存储了真正知识的ID
+
 	/**
 	 * @return the columnType
 	 */
@@ -109,7 +172,8 @@ public class Knowledge implements Serializable {
 	}
 
 	/**
-	 * @param columnType the columnType to set
+	 * @param columnType
+	 *            the columnType to set
 	 */
 	public void setColumnType(String columnType) {
 		this.columnType = columnType;

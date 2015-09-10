@@ -317,4 +317,18 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		return userCategoryMapper.getKnowledgeCategory(knowledgeId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#batchDeleteCategory(java.lang.String[])
+	 * Administrator
+	 */
+	@Override
+	public String batchDeleteCategory(long userId,List<Long> ids) {
+		
+		userCategoryValueMapper.batchDeleteCategory(userId,ids);
+		
+		knowledgeCategoryService.batchUpdateKnowledgeCategory(ids,Constants.ReportStatus.unreport.v()+"");
+		
+		return "success";
+	}
+
 }

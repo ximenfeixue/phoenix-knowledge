@@ -67,11 +67,21 @@ public class KnowledgeNewsVO implements Serializable {
 	private String refrenceData;
 	// 图册
 	private String imageBookData;
-	//是否需要更新mongo
+	// 是否需要更新mongo
 	private boolean needUpdate;
-	
+
 	private String hideDesc;
-	
+
+	private String fileType;
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
 	public String getHideDesc() {
 		return hideDesc;
 	}
@@ -92,7 +102,8 @@ public class KnowledgeNewsVO implements Serializable {
 	}
 
 	/**
-	 * @param needUpdate the needUpdate to set
+	 * @param needUpdate
+	 *            the needUpdate to set
 	 */
 	public void setNeedUpdate(boolean needUpdate) {
 		this.needUpdate = needUpdate;
