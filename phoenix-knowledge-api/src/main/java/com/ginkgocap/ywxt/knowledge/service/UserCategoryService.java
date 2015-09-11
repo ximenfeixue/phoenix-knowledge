@@ -124,4 +124,9 @@ public interface UserCategoryService {
 	 * @param ids
 	 */
 	String batchDeleteCategory(long userId,List<Long> ids);
+	
+	/**
+	 * 查询用户最新目录
+	 */
+	List<UserCategory> selectUserCategoryByUserId(long userid);
 }
