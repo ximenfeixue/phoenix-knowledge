@@ -331,4 +331,19 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		return "success";
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#selectUserCategoryByUser(long)
+	 * Administrator
+	 */
+	@Override
+	public List<UserCategory> selectUserCategoryByUserId(long userid) {
+		
+		 UserCategoryExample example = new UserCategoryExample();
+	     Criteria c = example.createCriteria();
+	     c.andUserIdEqualTo(userid);
+	     c.andCategoryTypeEqualTo((short)0);
+	     example.setOrderByClause("createtime desc");
+		return userCategoryMapper.selectByExample(example);
+	}
+
 }
