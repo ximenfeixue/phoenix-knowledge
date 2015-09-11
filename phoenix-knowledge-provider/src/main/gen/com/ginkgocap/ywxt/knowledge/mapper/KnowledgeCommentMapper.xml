@@ -332,7 +332,7 @@
 		ORDER BY c.createtime
 		LIMIT #{start}, #{size}
 	</select>
-	<select id="getCommentCount" parameterType="java.util.Map" >
+	<select id="getCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
 		SELECT count(c.id)
 		FROM tb_knowledge_comment c, tb_knowledge_base k
 		WHERE k.knowledge_id = c.knowledge_id
