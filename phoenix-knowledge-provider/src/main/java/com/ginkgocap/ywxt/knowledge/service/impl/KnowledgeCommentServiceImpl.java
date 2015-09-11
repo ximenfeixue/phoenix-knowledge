@@ -260,7 +260,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	 * @param param
 	 * @return
 	 */
-	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, String> param) {
+	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, Object> param) {
 		return knowledgeCommentMapper.getCommentByPage(param);
 	}
 	/**
@@ -268,7 +268,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	 * @param param
 	 * @return
 	 */
-	public int getCommentCount(Map<String, String> param) {
+	public int getCommentCount(Map<String, Object> param) {
 		return knowledgeCommentMapper.getCommentCount(param);
 	}
 	/**

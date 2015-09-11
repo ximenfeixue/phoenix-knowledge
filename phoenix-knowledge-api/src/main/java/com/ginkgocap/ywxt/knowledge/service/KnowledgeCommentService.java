@@ -67,13 +67,13 @@ public interface KnowledgeCommentService {
 	 * @param param
 	 * @return
 	 */
-	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, String> param);
+	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, Object> param);
 	/**
 	 * 查询评论数量
 	 * @param param
 	 * @return
 	 */
-	public int getCommentCount(Map<String, String> param);
+	public int getCommentCount(Map<String, Object> param);
 	/**
 	 * 删除评论 设置标志位
 	 * @param idList

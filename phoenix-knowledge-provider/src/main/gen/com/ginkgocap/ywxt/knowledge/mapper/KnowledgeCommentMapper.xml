@@ -318,7 +318,6 @@
 			(SELECT t.content FROM tb_knowledge_comment t WHERE t.id=c.parentid) AS parentContent,
 			c.user_id AS userId,
 			c.username AS userName,
-			c.count,
 			c.pic,
 			c.is_visible AS isVisible,
 			c.delete_time AS deleteTime
@@ -331,7 +330,7 @@
 			AND c.is_visible = #{isVisible},
 		</if>
 		ORDER BY c.createtime
-		<!-- LIMIT #{start}, #{size} -->
+		LIMIT #{start}, #{size}
 	</select>
 	<select id="getCommentCount" parameterType="java.util.Map" >
 		SELECT count(c.id)
