@@ -333,14 +333,14 @@
 		LIMIT #{start}, #{size}
 	</select>
 	<select id="getCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
-		SELECT count(c.id)
-		FROM tb_knowledge_comment c, tb_knowledge_base k
-		WHERE k.knowledge_id = c.knowledge_id
+		SELECT count(*)
+		FROM tb_knowledge_comment c
+		WHERE 1=1
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%',
+			AND c.content LIKE '%'||#{keyword}||'%'
 		</if>
 		<if test="isVisible != null" >
-			AND c.is_visible = #{isVisible},
+			AND c.is_visible = #{isVisible}
 		</if>
 	</select>
 	<update id="deleteComment" parameterType="java.util.List" >
