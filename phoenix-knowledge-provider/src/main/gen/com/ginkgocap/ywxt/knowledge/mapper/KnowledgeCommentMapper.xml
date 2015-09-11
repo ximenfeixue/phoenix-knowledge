@@ -332,6 +332,7 @@
 		ORDER BY c.createtime
 		LIMIT #{start}, #{size}
 	</select>
+	
 	<select id="getCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
 		SELECT count(*)
 		FROM tb_knowledge_comment c
@@ -343,6 +344,7 @@
 			AND c.is_visible = #{isVisible}
 		</if>
 	</select>
+	
 	<update id="deleteComment" parameterType="java.util.List" >
 		UPDATE tb_knowledge_comment
 		SET status = 0,
