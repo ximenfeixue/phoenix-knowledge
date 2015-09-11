@@ -14,8 +14,8 @@ public class KnowledgeCommentQuery implements Serializable {
     private String content;
     //创建时间
     private Date createTime;
-    //状态 0：已删除 1：正常
-    private int status;
+    //状态
+    private Boolean status;
     //被评论内容ID
     private Long parentId;
     //被评论内容
@@ -26,8 +26,8 @@ public class KnowledgeCommentQuery implements Serializable {
     private String userName;
     //图片
     private String pic;
-    //屏蔽状态 0：屏蔽 1：可见
-    private int isVisible;
+    //屏蔽状态
+    private Boolean isVisible;
     //删除时间
     private Date deleteTime;
 	//删除操作者ID
@@ -77,11 +77,11 @@ public class KnowledgeCommentQuery implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public int getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -125,11 +125,11 @@ public class KnowledgeCommentQuery implements Serializable {
 		this.pic = pic;
 	}
 
-	public int getIsVisible() {
+	public Boolean getIsVisible() {
 		return isVisible;
 	}
 
-	public void setIsVisible(int isVisible) {
+	public void setIsVisible(Boolean isVisible) {
 		this.isVisible = isVisible;
 	}
 

@@ -312,20 +312,20 @@
 			c.knowledge_id AS knowledgeId,
 			k.title AS knowledgeTitle,
 			c.content,
-			c.createtime,
+			c.createtime AS createTime,
 			c.status,
-			c.parentid,
+			c.parentid as parentId,
 			(SELECT t.content FROM tb_knowledge_comment t WHERE t.id=c.parentid) AS parentContent,
 			c.user_id AS userId,
+			c.username AS userName,
 			c.count,
-			c.username,
 			c.pic,
 			c.is_visible AS isVisible,
 			c.delete_time AS deleteTime
 		FROM tb_knowledge_comment c, tb_knowledge_base k
 		WHERE k.knowledge_id = c.knowledge_id
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%',
+			AND c.content LIKE '%'||#{keyword}||'%'
 		</if>
 		<if test="isVisible != null" >
 			AND c.is_visible = #{isVisible},
