@@ -18,13 +18,13 @@
 		<result column="knowledgeId" property="knowledgeId" />
 		<result column="knowledgeTitle" property="knowledgeTitle" />
 		<result column="content" property="content" />
-		<result column="createtime" property="createtime" />
+		<result column="createTime" property="createTime" />
 		<result column="status" property="status" />
-		<result column="parentid" property="parentid" />
+		<result column="parentId" property="parentId" />
 		<result column="parentContent" property="parentContent" />
 		<result column="userId" property="userId" />
 		<result column="count" property="count" />
-		<result column="username" property="username" />
+		<result column="userName" property="userName" />
 		<result column="pic" property="pic" />
 		<result column="isVisible" property="isVisible" />
 		<result column="deleteTime" property="deleteTime" />
@@ -331,7 +331,7 @@
 			AND c.is_visible = #{isVisible},
 		</if>
 		ORDER BY c.createtime
-		LIMIT #{start}, #{size}
+		<!-- LIMIT #{start}, #{size} -->
 	</select>
 	<select id="getCommentCount" parameterType="java.util.Map" >
 		SELECT count(c.id)
