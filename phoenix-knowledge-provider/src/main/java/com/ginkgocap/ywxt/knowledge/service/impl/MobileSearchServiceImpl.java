@@ -670,4 +670,15 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		}
 		return list;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.MobileSearchService#selectCountKnowledge(long)
+	 * Administrator
+	 */
+	@Override
+	public int selectCountKnowledge(long userid, String keywords) {
+		List<Long> collectionKnowledgeId=knowledgeCollectionService.selectKnowledgeId(userid);
+		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords,collectionKnowledgeId);
+		return count;
+	}
 }

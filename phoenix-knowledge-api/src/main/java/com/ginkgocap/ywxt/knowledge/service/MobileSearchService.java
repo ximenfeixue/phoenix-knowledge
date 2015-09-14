@@ -110,4 +110,6 @@ public interface MobileSearchService {
 	 
 	 /** 查询我创建的和我收藏的知识列表 */
 	 public Map<String, Object> selectAllKnowledge(Long userid,String keywords,int page, int size);
+	 
+	 public int selectCountKnowledge(long userid,String keywords);
 }
