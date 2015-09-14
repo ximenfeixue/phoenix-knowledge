@@ -284,7 +284,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 	public Boolean addKnowledgeStatics(long kId, long kUId, String type) {
 		Knowledge knowledge = getKnowledgeById(kId, type);
 		if (knowledge == null) {
-			logger.error("没有找到知识,知识ID:{},知识类型:{}", kId, type);
+			logger.warn("没有找到知识,知识ID:{},知识类型:{}", kId, type);
 			return false;
 		}
 		KnowledgeStatics knowledgeStatics = new KnowledgeStatics();
@@ -328,7 +328,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		Knowledge knowledge = getKnowledgeById(kid, type);
 		// 查询知识信息
 		if (knowledge == null) {
-			logger.error("没有找到知识,知识ID:{},知识类型:{}", kid, type);
+			logger.warn("没有找到知识,知识ID:{},知识类型:{}", kid, type);
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artNotExsit.c());
@@ -487,7 +487,7 @@ public class KnowledgeReaderServiceImpl implements KnowledgeReaderService {
 		Knowledge knowledge = getKnowledgeById(kid, type);
 		// 查询知识信息
 		if (knowledge == null) {
-			logger.error("没有找到知识,知识ID:{},知识类型:{}", kid, type);
+			logger.warn("没有找到知识,知识ID:{},知识类型:{}", kid, type);
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage,
 					Constants.ErrorMessage.artNotExsit.c());

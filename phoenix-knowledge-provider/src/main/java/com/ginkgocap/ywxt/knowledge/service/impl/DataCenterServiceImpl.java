@@ -571,6 +571,9 @@ public class DataCenterServiceImpl implements DataCenterService {
 		// 转换bsn为MAP
 		Map<String, Object> returnParams = mapper.readValue(str, Map.class);
 		String bsn = returnParams.get("bsn") + "";
+		// 判断是否返回bsn是否为空
+		if (StringUtils.isBlank(bsn) || StringUtils.equalsIgnoreCase(bsn, "null")) 	return list;
+		
 		JSONObject bsnObjects = JSONObject.fromObject(bsn);
 		Map<String, Object> bsnMaps = (Map<String, Object>) bsnObjects;
 
