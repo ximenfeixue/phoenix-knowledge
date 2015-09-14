@@ -321,7 +321,8 @@
 			c.pic,
 			c.is_visible AS isVisible,
 			c.delete_time AS deleteTime
-		FROM tb_knowledge_comment c, tb_knowledge_base k
+		FROM tb_knowledge_comment c, 
+			tb_knowledge_base k
 		WHERE k.knowledge_id = c.knowledge_id
 		<if test="keyword != null" >
 			AND c.content LIKE '%'||#{keyword}||'%'
@@ -334,8 +335,9 @@
 	</select>
 	
 	<select id="getCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
-		SELECT count(c.id)
-		FROM tb_knowledge_comment c, tb_knowledge_base k
+		SELECT count(c.id) 
+		FROM tb_knowledge_comment c, 
+			tb_knowledge_base k
 		WHERE k.knowledge_id = c.knowledge_id
 		<if test="keyword != null" >
 			AND c.content LIKE '%'||#{keyword}||'%'
