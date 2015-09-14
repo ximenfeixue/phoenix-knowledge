@@ -334,9 +334,9 @@
 	</select>
 	
 	<select id="getCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
-		SELECT count(*)
-		FROM tb_knowledge_comment c
-		WHERE 1=1
+		SELECT count(c.id)
+		FROM tb_knowledge_comment c, tb_knowledge_base k
+		WHERE k.knowledge_id = c.knowledge_id
 		<if test="keyword != null" >
 			AND c.content LIKE '%'||#{keyword}||'%'
 		</if>
