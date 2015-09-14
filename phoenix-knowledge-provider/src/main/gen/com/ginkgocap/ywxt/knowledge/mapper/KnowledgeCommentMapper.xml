@@ -330,7 +330,7 @@
 		<if test="isVisible != null" >
 			AND c.is_visible = #{isVisible},
 		</if>
-		ORDER BY c.createtime
+		ORDER BY c.createtime DESC
 		LIMIT #{start}, #{size}
 	</select>
 	
