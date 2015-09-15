@@ -356,14 +356,14 @@
 			delete_user_id = #{userId},
 			delete_user_name = #{userName}
 		WHERE id IN
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</update>
 	<delete id="deleteCommentCompletely" parameterType="java.util.List" >
 		DELETE FROM tb_knowledge_comment
 		WHERE id IN
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>
@@ -371,7 +371,7 @@
 		UPDATE tb_knowledge_comment
 		SET status = 1
 		WHERE id IN
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</update>
@@ -379,7 +379,7 @@
 		UPDATE tb_knowledge_comment
 		SET is_visible = 0
 		WHERE id IN
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</update>
@@ -387,7 +387,7 @@
 		UPDATE tb_knowledge_comment
 		SET is_visible = 1
 		WHERE id IN
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</update>
