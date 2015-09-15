@@ -103,6 +103,17 @@ public class Knowledge implements Serializable {
 
 	private String fileType;
 
+	// 转换状态
+	private int tranStatus;
+
+	public int getTranStatus() {
+		return tranStatus;
+	}
+
+	public void setTranStatus(int tranStatus) {
+		this.tranStatus = tranStatus;
+	}
+
 	public String getFileType() {
 		return fileType;
 	}
