@@ -638,9 +638,8 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		int start = (page - 1) * size;
 		/** 判断是否传的是默认值 */
 		start = start < 0 ? 0 : start;
-		List<Long> collectionKnowledgeId=knowledgeCollectionService.selectKnowledgeId(userid);
-		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords,collectionKnowledgeId);
-		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectAllKnowledge(userid, keywords, start, size,collectionKnowledgeId);
+		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords);
+		List<Map<String,Object>> kcl = mobileKnowledgeMapper.selectAllKnowledge(userid, keywords, start, size);
 		Map<String, Object> m = new HashMap<String, Object>();
 		if(size != 0) {
 		PageUtil p = new PageUtil(count, page, size);
@@ -677,8 +676,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 	 */
 	@Override
 	public int selectCountKnowledge(long userid, String keywords) {
-		List<Long> collectionKnowledgeId=knowledgeCollectionService.selectKnowledgeId(userid);
-		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords,collectionKnowledgeId);
+		int count = mobileKnowledgeMapper.selectAllKnowledgeCount(userid,keywords);
 		return count;
 	}
 }

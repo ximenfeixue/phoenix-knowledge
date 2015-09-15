@@ -204,42 +204,39 @@
 	</select>
 	
 	<select id="selectAllKnowledge" resultType="map">
-		SELECT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
-		FROM <include refid="tb_name_base" /> b ,
-		tb_knowledge_category kca
+	
+		SELECT t.knowledgeId,t.title,t.knowledgeType,t.createtime FROM 
+		(SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime 
+		FROM tb_knowledge_base b , tb_knowledge_category kca 
 		WHERE b.user_id=#{userId}
-		AND kca.status=1
+		AND kca.status=1 
 		AND kca.knowledge_id=b.knowledge_id 
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
-		 <if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
-			OR  b.knowledge_id  IN 
-		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
-   		#{id}
-    	</foreach>
-		</if>
-		GROUP BY title,createtime
-		ORDER BY b.createtime DESC  
+		UNION 
+		SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
+		 FROM tb_knowledge_base b WHERE 
+		b.knowledge_id IN (SELECT knowledge_id FROM tb_knowledge_collection
+		 WHERE 1=1 AND userId=#{userId})) t ORDER BY t.createtime DESC
 		LIMIT #{start},#{size}
 	</select>
 	
 	<select id="selectAllKnowledgeCount" resultType="int">
-		SELECT count(1) total
-		FROM <include refid="tb_name_base" /> b ,
-		tb_knowledge_category kca
+		SELECT count(*) FROM 
+		(SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime 
+		FROM tb_knowledge_base b , tb_knowledge_category kca 
 		WHERE b.user_id=#{userId}
-		AND kca.status=1
+		AND kca.status=1 
 		AND kca.knowledge_id=b.knowledge_id 
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
-		<if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
-			OR  b.knowledge_id  IN 
-		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
-   			#{id}
-    	</foreach>
-		</if>
+		UNION 
+		SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
+		 FROM tb_knowledge_base b WHERE 
+		b.knowledge_id IN (SELECT knowledge_id FROM tb_knowledge_collection
+		 WHERE 1=1 AND userId=#{userId})) t
 		
 	</select>
 	
