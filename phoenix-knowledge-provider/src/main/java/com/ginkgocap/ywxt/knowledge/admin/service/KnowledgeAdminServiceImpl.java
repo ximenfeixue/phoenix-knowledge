@@ -324,4 +324,14 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		
 		return knowledgeAdminDao.batchDeleteKnowledge(knowledgeids);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#selectUserCategory(long, java.lang.Long)
+	 * Administrator
+	 */
+	@Override
+	public List<AdminUserCategory> selectUserCategory(long userid, Long pid,int state) {
+		
+		return (List<AdminUserCategory>)adminUserCategoryValueMapper.selectUserCategory(userid,pid,state);
+	}
 }

@@ -96,4 +96,12 @@ public interface KnowledgeAdminService {
 	 */
 	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
 	
+	/**
+	 * 查询目录树
+	 * @param userid
+	 * @param pid
+	 * @return
+	 */
+	public List<AdminUserCategory> selectUserCategory(long userid,Long pid,int  type);
+	
 }

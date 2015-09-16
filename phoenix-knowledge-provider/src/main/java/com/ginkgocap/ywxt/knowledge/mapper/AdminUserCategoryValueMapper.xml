@@ -71,4 +71,13 @@
 		AND category_type = #{categoryType}
 		AND user_id = #{userId}
   </update>
+  
+  <select id="selectUserCategory" resultMap="BaseResultMap">
+  		select * from tb_user_category 
+  		where (user_id = #{uid} or user_id = 0) 
+		and parent_id=#{pid}
+		AND category_type = #{categoryType}
+		order by sortId
+  
+  </select>
 </mapper>
