@@ -38,6 +38,8 @@ public interface KnowledgeAdminService {
 	 */
 	void update(long id,String title,String cpathid,String content,String desc,String tags,String collectionName);
 	
+	void updateKnowledge(KnowledgeNewsVO vo,User user);
+	
 	/**
 	 * 审核行业
 	 * @param id
@@ -74,6 +76,7 @@ public interface KnowledgeAdminService {
 	 * @param category
 	 */
 	public void update(AdminUserCategory category);
+	
 	
 	/**
 	 * 主键查询

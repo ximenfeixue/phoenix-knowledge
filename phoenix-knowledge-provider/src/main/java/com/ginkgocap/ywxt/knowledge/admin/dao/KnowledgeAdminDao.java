@@ -5,7 +5,7 @@ package com.ginkgocap.ywxt.knowledge.admin.dao;
 
 import java.util.Map;
 
-import net.sf.json.JSONObject;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 
 /**
  * @author liubang
@@ -55,4 +55,6 @@ public interface KnowledgeAdminDao {
 	 * @return
 	 */
 	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
+	
+	public void updateKnowledge(KnowledgeNewsVO vo);
 }

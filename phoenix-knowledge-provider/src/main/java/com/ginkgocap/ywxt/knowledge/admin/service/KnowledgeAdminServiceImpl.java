@@ -334,4 +334,32 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		
 		return (List<AdminUserCategory>)adminUserCategoryValueMapper.selectUserCategory(userid,pid,state);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#updateKnowledge(com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO)
+	 * Administrator
+	 */
+	@Override
+	public void updateKnowledge(KnowledgeNewsVO vo,User user) {
+		
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo.getColumnid();
+		// 判断用户是否选择栏目
+		String columnPath = null;
+		Column column = null;
+		if (Long.parseLong(columnid) != 0) {
+			columnPath = columnService.getColumnPathById(Long.parseLong(columnid));
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(user.getId());
+			if (column == null) {
+				// 没有未没分组栏目，添加
+				columnService.checkNogroup(user.getId());
+			} else {
+				columnid = column.getId() + "";
+			}
+			columnPath = Constants.unGroupSortName;
+		}
+		vo.setColumnPath(columnPath);
+		vo.setDesc(getDesc(vo.getColumnType(),vo));
+		knowledgeAdminDao.updateKnowledge(vo);
+	}
 }

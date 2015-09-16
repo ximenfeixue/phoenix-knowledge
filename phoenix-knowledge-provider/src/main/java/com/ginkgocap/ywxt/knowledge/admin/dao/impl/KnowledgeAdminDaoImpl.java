@@ -32,6 +32,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeInvestment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeLaw;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMacro;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeOpinion;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
@@ -291,6 +292,30 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		}
 		result.put("result", "success");
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#updateKnowledge(com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO)
+	 * Administrator
+	 */
+	@Override
+	public void updateKnowledge(KnowledgeNewsVO vo) {
+		
+		String obj = Constants.getTableName(vo.getColumnType());
+		try {
+			Criteria criteria = Criteria.where("_id").is(vo.getkId());
+			Query query = new Query(criteria);
+			Update update = new Update();
+			update.set("title", vo.getTitle());
+			update.set("columnid", vo.getColumnid());
+			update.set("conent", vo.getContent());
+			update.set("columnPath", vo.getColumnPath());
+			update.set("columnPath", vo.getColumnPath());
+			update.set("desc", vo.getDesc());
+			mongoTemplate.updateFirst(query, update,obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
