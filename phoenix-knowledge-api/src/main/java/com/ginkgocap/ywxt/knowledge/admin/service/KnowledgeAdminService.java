@@ -107,4 +107,12 @@ public interface KnowledgeAdminService {
 	 */
 	public List<AdminUserCategory> selectUserCategory(long userid,Long pid,int  type);
 	
+	
+	/**
+	 * 恢复删除的知识
+	 * @param ids
+	 * @return
+	 */
+	public Map<String,Object> batchUpdate(Map<String,Object> map);
+	
 }

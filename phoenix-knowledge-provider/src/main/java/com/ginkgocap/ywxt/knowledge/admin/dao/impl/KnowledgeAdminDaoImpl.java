@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
@@ -65,6 +66,8 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 	private KnowledgeStaticsService knowledgeStaticsService;
 	@Resource
 	private KnowledgeCommentService knowledgeCommentService;
+	@Resource
+	private AdminUserCategoryValueMapper adminUserCategoryValueMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -315,6 +318,29 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#batchUpdate(java.util.List)
+	 * Administrator
+	 */
+	@Override
+	public Map<String,Object> batchUpdate(Map<String,Object> map) {
+		
+		 Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		String collectionNames = map.get("collectionName")+"";
+		int status = Integer.parseInt(map.get("status")+"");
+		Criteria criteria = new Criteria().and("_id").in(ids);
+		Query query = new Query(criteria);
+		Update update = new Update().set("status",status);
+		mongoTemplate.updateMulti(query, update, collectionNames);
+		
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids);
+		}
+		result.put("result", "success");
+		return result;
 	}
 
 }

@@ -3,6 +3,7 @@
  */
 package com.ginkgocap.ywxt.knowledge.admin.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
@@ -57,4 +58,6 @@ public interface KnowledgeAdminDao {
 	public Map<String,Object> batchDeleteKnowledge(String knowledgeids);
 	
 	public void updateKnowledge(KnowledgeNewsVO vo);
+	
+	public Map<String,Object> batchUpdate(Map<String,Object> map);
 }

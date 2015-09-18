@@ -80,4 +80,12 @@
 		order by sortId
   
   </select>
+  
+  <update id="batchUpdateKnowledgeStatus">
+   UPDATE tb_knowledge_category SET STATUS=1
+   WHERE knowledge_id IN 
+    <foreach item="id" collection="ids" open="(" separator="," close=")">
+   		#{id}
+		</foreach>
+  </update>
 </mapper>

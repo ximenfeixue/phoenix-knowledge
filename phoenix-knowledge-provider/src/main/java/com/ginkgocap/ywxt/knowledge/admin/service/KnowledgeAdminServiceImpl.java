@@ -362,4 +362,15 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		vo.setDesc(getDesc(vo.getColumnType(),vo));
 		knowledgeAdminDao.updateKnowledge(vo);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#batchUpdate(java.util.List)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchUpdate(Map<String,Object> map) {
+		
+		
+		return knowledgeAdminDao.batchUpdate(map);
+	}
 }
