@@ -86,9 +86,9 @@ public interface MobileKnowledgeMapper {
 			@Param("type") int type);
 	
 	@SuppressWarnings("rawtypes")
-	List selectAllKnowledge(@Param("userId") long userId,@Param("keyword") String keyword,@Param("start") int start, @Param("size") int size);
+	List selectAllKnowledge(@Param("userId") long userId,@Param("keyword") String keyword,@Param("start") int start, @Param("size") int size,@Param("collectionKnowledgeId") List<Long> collectionKnowledgeId);
 	
-	int selectAllKnowledgeCount(@Param("userId") long userId,@Param("keyword") String keyword);
+	int selectAllKnowledgeCount(@Param("userId") long userId,@Param("keyword") String keyword,@Param("collectionKnowledgeId") List<Long> collectionKnowledgeId);
 	
 	@SuppressWarnings("rawtypes")
 	List getAggregationRead(@Param("userId") Long userId,@Param("columnids") String[] columnids,

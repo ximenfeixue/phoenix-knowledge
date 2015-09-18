@@ -310,7 +310,6 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			update.set("columnid", vo.getColumnid());
 			update.set("conent", vo.getContent());
 			update.set("columnPath", vo.getColumnPath());
-			update.set("columnPath", vo.getColumnPath());
 			update.set("desc", vo.getDesc());
 			mongoTemplate.updateFirst(query, update,obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 		} catch (Exception e) {
