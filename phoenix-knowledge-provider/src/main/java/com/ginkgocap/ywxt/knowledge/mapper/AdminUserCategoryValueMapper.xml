@@ -88,4 +88,20 @@
    		#{id}
 		</foreach>
   </update>
+  
+  <update id="batchUpdateReport" >
+   UPDATE tb_knowledge_report SET STATUS=#{status}
+   WHERE id IN 
+    <foreach item="id" collection="ids" open="(" separator="," close=")">
+   		#{id}
+		</foreach>
+  </update>
+  
+  <delete id="deleteReportMutiRows">
+	 DELETE  FROM tb_knowledge_report 
+  	 WHERE id IN 
+    <foreach item="id" collection="ids" open="(" separator="," close=")">
+   		#{id}
+	</foreach>
+  </delete>
 </mapper>

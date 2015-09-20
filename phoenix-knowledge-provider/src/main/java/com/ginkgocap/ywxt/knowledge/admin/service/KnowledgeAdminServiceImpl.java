@@ -383,4 +383,24 @@ public class KnowledgeAdminServiceImpl implements KnowledgeAdminService {
 		
 		return knowledgeAdminDao.deleteMutiRows(map);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#batchUpdateReport(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchUpdateReport(Map<String, Object> map) {
+		
+		return knowledgeAdminDao.batchUpdateReport(map);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService#deleteReportMutiRows(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> deleteReportMutiRows(Map<String, Object> map) {
+		
+		return knowledgeAdminDao.deleteReportMutiRows(map);
+	}
 }

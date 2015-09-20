@@ -62,4 +62,8 @@ public interface KnowledgeAdminDao {
 	public Map<String,Object> batchUpdate(Map<String,Object> map);
 	
 	public Map<String,Object> deleteMutiRows(Map<String,Object> map);
+	
+	public Map<String, Object> batchUpdateReport(Map<String, Object> map);
+	
+	public Map<String, Object> deleteReportMutiRows(Map<String, Object> map);
 }

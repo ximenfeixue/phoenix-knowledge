@@ -363,4 +363,36 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#batchUpdateReport(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchUpdateReport(Map<String, Object> map) {
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		int status = Integer.parseInt(map.get("status")+"");
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateReport(ids, status);
+		}
+		result.put("result", "success");
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#deleteReportMutiRows(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> deleteReportMutiRows(Map<String, Object> map) {
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.deleteReportMutiRows(ids);
+		}
+		result.put("result", "success");
+		return result;
+	}
+
 }

@@ -122,4 +122,19 @@ public interface KnowledgeAdminService {
 	 */
 	public Map<String,Object> deleteMutiRows(Map<String,Object> map);
 	
+	/**
+	 * 批量修改举报状态
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> batchUpdateReport(Map<String,Object> map);
+	/**
+	 * 批量删除知识举报信息
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> deleteReportMutiRows(Map<String,Object> map);
+	
+	
+	
 }

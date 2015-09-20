@@ -37,5 +37,9 @@ public interface AdminUserCategoryValueMapper {
 	List<AdminUserCategory> selectUserCategory(@Param("uid") long userid,@Param("pid") long pid,@Param("categoryType") int type);
 	
 	void batchUpdateKnowledgeStatus(@Param("ids") List<Long> ids,@Param("status") int status);
+	
+	void batchUpdateReport(@Param("ids") List<Long> ids,@Param("status") int status);
+	
+	void deleteReportMutiRows(@Param("ids") List<Long> ids);
 
 }
