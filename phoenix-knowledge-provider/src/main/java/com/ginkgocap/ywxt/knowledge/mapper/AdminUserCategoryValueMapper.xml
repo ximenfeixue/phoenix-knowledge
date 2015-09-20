@@ -81,8 +81,8 @@
   
   </select>
   
-  <update id="batchUpdateKnowledgeStatus">
-   UPDATE tb_knowledge_category SET STATUS=1
+  <update id="batchUpdateKnowledgeStatus" >
+   UPDATE tb_knowledge_category SET STATUS=#{status}
    WHERE knowledge_id IN 
     <foreach item="id" collection="ids" open="(" separator="," close=")">
    		#{id}

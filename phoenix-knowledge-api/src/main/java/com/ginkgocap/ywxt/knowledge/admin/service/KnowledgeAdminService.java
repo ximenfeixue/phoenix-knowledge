@@ -115,4 +115,11 @@ public interface KnowledgeAdminService {
 	 */
 	public Map<String,Object> batchUpdate(Map<String,Object> map);
 	
+	/**
+	 * 物理删除知识
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> deleteMutiRows(Map<String,Object> map);
+	
 }

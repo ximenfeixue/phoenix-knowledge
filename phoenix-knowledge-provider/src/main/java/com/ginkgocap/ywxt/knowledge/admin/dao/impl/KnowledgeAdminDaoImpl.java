@@ -337,7 +337,27 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 		mongoTemplate.updateMulti(query, update, collectionNames);
 		
 		if(ids !=null && ids.size() >0){
-			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids);
+			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids,1);
+		}
+		result.put("result", "success");
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#deleteMutiRows(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> deleteMutiRows(Map<String, Object> map) {
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		String collectionNames = map.get("collectionName")+"";
+		Criteria criteria = new Criteria().and("_id").in(ids);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, collectionNames);
+		
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids,0);//  待修改
 		}
 		result.put("result", "success");
 		return result;

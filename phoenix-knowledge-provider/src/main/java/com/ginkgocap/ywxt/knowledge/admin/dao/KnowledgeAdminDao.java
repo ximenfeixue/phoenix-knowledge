@@ -60,4 +60,6 @@ public interface KnowledgeAdminDao {
 	public void updateKnowledge(KnowledgeNewsVO vo);
 	
 	public Map<String,Object> batchUpdate(Map<String,Object> map);
+	
+	public Map<String,Object> deleteMutiRows(Map<String,Object> map);
 }
