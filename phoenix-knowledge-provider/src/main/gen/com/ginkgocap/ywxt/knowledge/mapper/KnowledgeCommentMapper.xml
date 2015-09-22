@@ -329,7 +329,7 @@
 			AND c.content LIKE '%'||#{keyword}||'%'
 		</if>
 		<if test="isVisible != null" >
-			AND c.is_visible = #{isVisible},
+			AND c.is_visible = #{isVisible}
 		</if>
 		ORDER BY c.createtime DESC
 		LIMIT #{start}, #{size}
