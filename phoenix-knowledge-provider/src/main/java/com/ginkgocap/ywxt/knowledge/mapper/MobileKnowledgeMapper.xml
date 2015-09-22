@@ -214,11 +214,15 @@
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
+		<if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
 		UNION 
 		SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
 		 FROM tb_knowledge_base b WHERE 
-		b.knowledge_id IN (SELECT knowledge_id FROM tb_knowledge_collection
-		 WHERE 1=1 AND userId=#{userId})) t ORDER BY t.createtime DESC
+		b.knowledge_id IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   		#{id}
+		</foreach>
+		</if>) t ORDER BY t.createtime DESC
 		LIMIT #{start},#{size}
 	</select>
 	
@@ -232,11 +236,15 @@
 		 <if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
+		<if test="collectionKnowledgeId !=null and collectionKnowledgeId.size()>0 ">
 		UNION 
 		SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime
 		 FROM tb_knowledge_base b WHERE 
-		b.knowledge_id IN (SELECT knowledge_id FROM tb_knowledge_collection
-		 WHERE 1=1 AND userId=#{userId})) t
+		b.knowledge_id IN 
+		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
+   		#{id}
+		</foreach>
+		</if>) t
 		
 	</select>
 	

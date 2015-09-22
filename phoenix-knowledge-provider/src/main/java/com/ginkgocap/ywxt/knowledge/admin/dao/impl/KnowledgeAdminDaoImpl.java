@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
+import com.ginkgocap.ywxt.knowledge.mapper.AdminUserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeAsset;
@@ -65,6 +66,8 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 	private KnowledgeStaticsService knowledgeStaticsService;
 	@Resource
 	private KnowledgeCommentService knowledgeCommentService;
+	@Resource
+	private AdminUserCategoryValueMapper adminUserCategoryValueMapper;
 	/* (non-Javadoc)
 	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#selectKnowledgeNewsList(java.lang.Integer, java.lang.Integer, java.util.Map)
 	 */
@@ -310,12 +313,86 @@ public class KnowledgeAdminDaoImpl implements KnowledgeAdminDao {
 			update.set("columnid", vo.getColumnid());
 			update.set("conent", vo.getContent());
 			update.set("columnPath", vo.getColumnPath());
-			update.set("columnPath", vo.getColumnPath());
 			update.set("desc", vo.getDesc());
 			mongoTemplate.updateFirst(query, update,obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#batchUpdate(java.util.List)
+	 * Administrator
+	 */
+	@Override
+	public Map<String,Object> batchUpdate(Map<String,Object> map) {
+		
+		 Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		String collectionNames = map.get("collectionName")+"";
+		int status = Integer.parseInt(map.get("status")+"");
+		Criteria criteria = new Criteria().and("_id").in(ids);
+		Query query = new Query(criteria);
+		Update update = new Update().set("status",status);
+		mongoTemplate.updateMulti(query, update, collectionNames);
+		
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids,1);
+		}
+		result.put("result", "success");
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#deleteMutiRows(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> deleteMutiRows(Map<String, Object> map) {
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		String collectionNames = map.get("collectionName")+"";
+		Criteria criteria = new Criteria().and("_id").in(ids);
+		Query query = new Query(criteria);
+		mongoTemplate.remove(query, collectionNames);
+		
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateKnowledgeStatus(ids,0);//  待修改
+		}
+		result.put("result", "success");
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#batchUpdateReport(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> batchUpdateReport(Map<String, Object> map) {
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		int status = Integer.parseInt(map.get("status")+"");
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.batchUpdateReport(ids, status);
+		}
+		result.put("result", "success");
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.admin.dao.KnowledgeAdminDao#deleteReportMutiRows(java.util.Map)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> deleteReportMutiRows(Map<String, Object> map) {
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<Long> ids =(List<Long>) map.get("ids");
+		if(ids !=null && ids.size() >0){
+			adminUserCategoryValueMapper.deleteReportMutiRows(ids);
+		}
+		result.put("result", "success");
+		return result;
 	}
 
 }
