@@ -261,6 +261,10 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	 * @return
 	 */
 	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, Object> param) {
+		String keyword = (String)param.get("keyword");
+		if(keyword!=null && keyword.trim().length()>0) {
+			keyword = "%" + keyword + "%";
+		}
 		return knowledgeCommentMapper.getCommentByPage(param);
 	}
 	/**
@@ -269,6 +273,10 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService {
 	 * @return
 	 */
 	public int getCommentCount(Map<String, Object> param) {
+		String keyword = (String)param.get("keyword");
+		if(keyword!=null && keyword.trim().length()>0) {
+			keyword = "%" + keyword + "%";
+		}
 		return knowledgeCommentMapper.getCommentCount(param);
 	}
 	/**

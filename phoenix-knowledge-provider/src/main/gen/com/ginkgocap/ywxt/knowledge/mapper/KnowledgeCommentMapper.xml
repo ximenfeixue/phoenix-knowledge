@@ -325,7 +325,7 @@
 		WHERE k.knowledge_id = c.knowledge_id
 			AND c.is_delete != 1
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%'
+			AND c.content LIKE #{keyword}
 		</if>
 		<if test="isVisible != null" >
 			AND c.is_visible = #{isVisible}
@@ -341,7 +341,7 @@
 		WHERE k.knowledge_id = c.knowledge_id
 			AND c.is_delete != 1
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%'
+			AND c.content LIKE #{keyword}
 		</if>
 		<if test="isVisible != null" >
 			AND c.is_visible = #{isVisible}
