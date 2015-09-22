@@ -87,10 +87,9 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    id, knowledge_id, content, createtime, status, parentid, user_id, count, username, 
-    pic
-  </sql>
+	<sql id="Base_Column_List" >
+		id, knowledge_id, content, createtime, status, parentid, user_id, count, username, pic
+	</sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample" >
     select
     <if test="distinct" >
