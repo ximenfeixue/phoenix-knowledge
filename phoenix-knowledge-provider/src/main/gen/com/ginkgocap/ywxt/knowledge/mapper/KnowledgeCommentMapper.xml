@@ -87,10 +87,9 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    id, knowledge_id, content, createtime, status, parentid, user_id, count, username, 
-    pic
-  </sql>
+	<sql id="Base_Column_List" >
+		id, knowledge_id, content, createtime, status, parentid, user_id, count, username, pic
+	</sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentExample" >
     select
     <if test="distinct" >
@@ -326,10 +325,10 @@
 		WHERE k.knowledge_id = c.knowledge_id
 			AND c.is_delete != 1
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%'
+			AND c.content LIKE #{keyword}
 		</if>
 		<if test="isVisible != null" >
-			AND c.is_visible = #{isVisible},
+			AND c.is_visible = #{isVisible}
 		</if>
 		ORDER BY c.createtime DESC
 		LIMIT #{start}, #{size}
@@ -342,7 +341,7 @@
 		WHERE k.knowledge_id = c.knowledge_id
 			AND c.is_delete != 1
 		<if test="keyword != null" >
-			AND c.content LIKE '%'||#{keyword}||'%'
+			AND c.content LIKE #{keyword}
 		</if>
 		<if test="isVisible != null" >
 			AND c.is_visible = #{isVisible}
