@@ -148,7 +148,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Criteria criteriaGt = new Criteria();
 		// 路径过滤
 		Criteria criteriaPath = new Criteria();
-
+		//我分享的知识
+		Criteria criteriaM = new Criteria();
+		//金桐脑知识
+		Criteria criteriaG = new Criteria();
 		// 定义查询条件
 		// 查询权限表，获取可见文章ID列表
 		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
@@ -161,6 +164,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 			criteriaUp = new Criteria();
 			criteriaUp.and("_id").in(ids);
 		}
+		
+		
 		// 我的知识条件
 		criteriaMy.and("uid").is(userid);
 		// 金桐脑知识条件
@@ -177,18 +182,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 					criteriaPath,criteria);
 		} else {
 
-			criteriaAll.orOperator(criteriaMy, criteriaGt, criteriaUp)
-					.andOperator(criteriaPath,criteria);
+			criteriaM.and("uid").is(userid).and("_id").in(ids);
+			criteriaG.and("uid").is(Constants.Ids.jinTN.v());
+			criteriaAll.orOperator(criteriaM, criteriaG).andOperator(criteriaPath,criteria);
 		}
-		// Criteria criteriaVisAll = new Criteria();
 		if (cls != null && cls.size() > 0) {// 判断定制
-			// Criteria[] criteriaArr= new Criteria[cls.size()];
-			// for (int i = 0; i < cls.size(); i++) {
-			// Criteria criteriav = new Criteria();
-			// Pattern p = Pattern.compile(cname+"/(?!"+cls.get(i)+").*$");
-			// criteriaArr[i] = criteriav.and("cpathid").regex(p);
-			// }
-			// criteriaVisAll.andOperator(criteriaArr);
 			List<String> clstr = fillList(cls);
 			criteriaAll.and("columnid").nin(clstr);
 		}

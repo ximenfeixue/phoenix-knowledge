@@ -40,4 +40,6 @@ public interface UserPermissionDAO {
 	List<Long> selectByParams(Long receive_user_id, Long column_id, Long type);
 
 	int deleteUserPermission(long knowledgeid, long userid);
+	
+	public boolean isZhongLeForMe(Long knowledgeid, Long receiveUserId, int type);
 }

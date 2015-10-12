@@ -105,4 +105,23 @@ public class UserPermissionDAOImpl implements UserPermissionDAO {
 		criteria.andSendUserIdEqualTo(userid);
 		return userPermissionMapper.deleteByExample(example);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.dao.userpermission.UserPermissionDAO#isZhongLeForMe(java.lang.Long, java.lang.Long, int)
+	 * Administrator
+	 */
+	@Override
+	public boolean isZhongLeForMe(Long knowledgeid, Long receiveUserId, int type) {
+		UserPermissionExample example = new UserPermissionExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andKnowledgeIdEqualTo(knowledgeid);
+		criteria.andReceiveUserIdEqualTo(receiveUserId);
+		criteria.andTypeEqualTo(type);
+		int count = userPermissionMapper.countByExample(example);
+		if(count > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
