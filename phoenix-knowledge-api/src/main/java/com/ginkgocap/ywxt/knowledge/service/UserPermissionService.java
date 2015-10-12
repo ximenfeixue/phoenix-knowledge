@@ -153,4 +153,13 @@ public interface UserPermissionService {
 	public Map<String,Object> importUserPermission(String selectedIds);
 	
 	public void updateUserPermission(long knowledgeid,String selectedIds,String type);
+	
+	/**
+	 * 判断中乐权限
+	 * @param knowledgeid
+	 * @param receiveUserId
+	 * @param type
+	 * @return
+	 */
+	public boolean isZhongLeForMe(Long knowledgeid,Long receiveUserId,int type);
 }

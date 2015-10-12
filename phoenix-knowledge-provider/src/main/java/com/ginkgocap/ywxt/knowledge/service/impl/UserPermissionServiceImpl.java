@@ -685,4 +685,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.UserPermissionService#isZhongLeForMe(java.lang.Long, java.lang.Long, int)
+	 * Administrator
+	 */
+	@Override
+	public boolean isZhongLeForMe(Long knowledgeid, Long receiveUserId, int type) {
+		
+		return userPermissionDAO.isZhongLeForMe(knowledgeid, receiveUserId, type);
+	}
+
 }
