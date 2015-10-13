@@ -655,7 +655,7 @@ public class MobileSearchServiceImpl implements MobileSearchService {
 		if(list != null && list.size() > 0 ){
 			for(int i = 0, size =list.size(); i<size; i++){
 				Map<String,Object> map = list.get(i);
-				String knoeledgeid  = map.get("knowledgeId")+"";
+				String knoeledgeid  = map.get("id")+"";
 				String createtime = map.get("createtime")+"";
 				boolean isCollection = knowledgeCollectionService.isCollection(userId,Long.parseLong(knoeledgeid));
 				if(isCollection){

@@ -205,7 +205,7 @@
 	
 	<select id="selectAllKnowledge" resultType="map">
 	
-		SELECT t.knowledgeId,t.title,t.knowledgeType,t.createtime FROM 
+		SELECT t.knowledgeId id,t.title,t.knowledgeType type,t.createtime FROM 
 		(SELECT DISTINCT b.knowledge_id knowledgeId,b.title title,b.column_type knowledgeType,b.createtime createtime 
 		FROM tb_knowledge_base b , tb_knowledge_category kca 
 		WHERE b.user_id=#{userId}
