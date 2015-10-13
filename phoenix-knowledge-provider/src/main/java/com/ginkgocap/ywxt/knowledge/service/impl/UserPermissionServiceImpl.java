@@ -419,8 +419,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
 						if (StringUtils.isNotBlank(userId)) {
-							if (Integer.parseInt(userId.trim()) == -1
-									|| Integer.parseInt(userId.trim()) == 0) {
+							if (Long.parseLong(userId.trim()) == -1
+									|| Long.parseLong(userId.trim()) == 0) {
 								return true;
 							}
 						}
