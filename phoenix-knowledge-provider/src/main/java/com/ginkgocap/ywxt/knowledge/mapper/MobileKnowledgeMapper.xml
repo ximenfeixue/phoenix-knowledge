@@ -247,6 +247,9 @@
 		 <foreach item="id" collection="collectionKnowledgeId" open="(" separator="," close=")">
    		#{id}
 		</foreach>
+		 <if test="keyword !=null and keyword != '' ">
+			AND b.title like CONCAT('%',#{keyword},'%')
+		</if>
 		</if>) t
 		
 	</select>
