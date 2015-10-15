@@ -154,20 +154,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Criteria criteriaG = new Criteria();
 		// 定义查询条件
 		// 查询权限表，获取可见文章ID列表
-		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
-				type);
+//		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
+//				type);
 		// List<String> cls = userPermissionValueMapper.selectVisble(userid,
 		// type);
 		List<Long> cls = userPermissionValueMapper.selectVisbleColumnid(userid,
 				type);
-		if (ids != null && ids.size() > 0) {
-			criteriaUp = new Criteria();
-			criteriaUp.and("_id").in(ids);
-		}
+//		if (ids != null && ids.size() > 0) {
+//			criteriaUp = new Criteria();
+//			criteriaUp.and("_id").in(ids);
+//		}
 		
 		
 		// 我的知识条件
-		criteriaMy.and("uid").is(userid);
+//		criteriaMy.and("uid").is(userid);
 		// 金桐脑知识条件
 		criteriaGt.and("uid").is(Constants.Ids.jinTN.v());
 		// 查询栏目目录为当前分类下的所有数据
@@ -176,16 +176,18 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
 		Criteria criteriaAll = new Criteria();
-		if (criteriaUp == null) {
-
-			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
-					criteriaPath,criteria);
-		} else {
-
-			criteriaM.and("uid").is(userid).and("_id").in(ids);
-			criteriaG.and("uid").is(Constants.Ids.jinTN.v());
-			criteriaAll.orOperator(criteriaM, criteriaG).andOperator(criteriaPath,criteria);
-		}
+		criteriaAll.andOperator(criteriaGt,criteriaPath,criteria);
+//		if (criteriaUp == null) {
+//
+//			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
+//					criteriaPath,criteria);
+//		} else {
+//
+////			criteriaM.and("uid").is(userid).and("_id").in(ids);
+////			criteriaG.and("uid").is(Constants.Ids.jinTN.v());
+////			criteriaAll.orOperator(criteriaM, criteriaG).andOperator(criteriaPath,criteria);
+//			
+//		}
 		if (cls != null && cls.size() > 0) {// 判断定制
 			List<String> clstr = fillList(cls);
 			criteriaAll.and("columnid").nin(clstr);
