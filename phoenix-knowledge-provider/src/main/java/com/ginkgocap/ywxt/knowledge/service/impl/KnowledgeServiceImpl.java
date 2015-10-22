@@ -889,6 +889,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		param.put("imgPath", vo.getPic() + "");
 		param.put("picPath", user.getPicPath() + "");
 		param.put("forwardingContent", "");
+		param.put("gender", user.getSex());
+		param.put("createType", user.isVirtual()?"1":"2");
 		if (StringUtils.isNotBlank(vo.getSelectedIds())
 				&& !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
