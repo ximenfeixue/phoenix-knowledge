@@ -188,17 +188,17 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 ////			criteriaAll.orOperator(criteriaM, criteriaG).andOperator(criteriaPath,criteria);
 //			
 //		}
-		if (cls != null && cls.size() > 0) {// 判断定制
-			List<String> clstr = fillList(cls);
-			criteriaAll.and("columnid").nin(clstr);
-		}
+//		if (cls != null && cls.size() > 0) {// 判断定制
+//			List<String> clstr = fillList(cls);
+//			criteriaAll.and("columnid").nin(clstr);
+//		}
 		// 查询知识
 		Query query = new Query(criteriaAll);
-		if (type == 10) {
-			query.sort().on("createtime", Order.DESCENDING);
-		} else {
-			query.sort().on("_id", Order.DESCENDING);
-		}
+//		if (type == 10) {
+//			query.sort().on("createtime", Order.DESCENDING);
+//		} else {
+//			query.sort().on("_id", Order.DESCENDING);
+//		}
 		query.limit(size);
 		query.skip((page - 1) * size);
 		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,
