@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,7 @@ import com.ginkgocap.ywxt.knowledge.util.tree.Branch;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Node;
 import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.utils.DateUtils;
 
 @Service("knowledgeHomeService")
 public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
@@ -176,7 +179,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
 		Criteria criteriaAll = new Criteria();
-		criteriaAll.andOperator(criteriaGt,criteriaPath,criteria);
+		criteriaM.and("createtime").gte(getStringDate());
+		criteriaAll.andOperator(criteriaM,criteriaGt,criteriaPath,criteria);
 //		if (criteriaUp == null) {
 //
 //			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
@@ -194,11 +198,11 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 //		}
 		// 查询知识
 		Query query = new Query(criteriaAll);
-//		if (type == 10) {
-//			query.sort().on("createtime", Order.DESCENDING);
-//		} else {
-//			query.sort().on("_id", Order.DESCENDING);
-//		}
+		if (type == 10) {
+			query.sort().on("createtime", Order.DESCENDING);
+		} else {
+			query.sort().on("_id", Order.DESCENDING);
+		}
 		query.limit(size);
 		query.skip((page - 1) * size);
 		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,
@@ -207,11 +211,25 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		return model;
 	}
 	
-	// 栏目下全平台数据
+	public static void main(String[] args) {
+		Calendar calendar = java.util.Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.MONTH, -2);
+		
+		System.out.println();
+	}
 	
+	static Date getDate(){
+		Calendar calendar = java.util.Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.MONTH, -2);
+		return calendar.getTime();
+	}
 	
+	static String getStringDate(){
+		return DateUtils.dateToString(getDate(), "yyyy-MM-dd HH:mm:ss");
+	}
 	
-
 	private String[] getNames(long columnType) {
 		for(Type t: Type.values()){
 			if(t.v()==columnType){
