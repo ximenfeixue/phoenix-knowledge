@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
+import com.ginkgocap.ywxt.knowledge.model.BaseKnowledgeVo;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
@@ -131,6 +133,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 				"com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},",
 				userid);
 
+		
 		Map<String, Object> model = new HashMap<String, Object>();
 		String[] names = t.getClass().getName().split("\\.");
 		int length = names.length;
@@ -138,76 +141,40 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Long cid = Long.parseLong(columnid);
 		// 查询栏目类型
 		Column column = columnMapper.selectByPrimaryKey(cid);
-
-		String ty = column.getColumnLevelPath().substring(0, 9);
-		// String cname = column.getColumnname();
-		long type = Long.parseLong(ty);
+//		String ty = column.getColumnLevelPath().substring(0, 9);
+//		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
-		// 权限条件过滤
-		Criteria criteriaUp = null;
-		// 我的知识过滤
-		Criteria criteriaMy = new Criteria();
-		// 金桐脑过滤
-		Criteria criteriaGt = new Criteria();
-		// 路径过滤
-		Criteria criteriaPath = new Criteria();
-		//我分享的知识
-		Criteria criteriaM = new Criteria();
-		//金桐脑知识
-		Criteria criteriaG = new Criteria();
-		// 定义查询条件
-		// 查询权限表，获取可见文章ID列表
-//		List<Long> ids = userPermissionValueMapper.selectByParamsSingle(userid,
-//				type);
-		// List<String> cls = userPermissionValueMapper.selectVisble(userid,
-		// type);
-		List<Long> cls = userPermissionValueMapper.selectVisbleColumnid(userid,
-				type);
-//		if (ids != null && ids.size() > 0) {
-//			criteriaUp = new Criteria();
-//			criteriaUp.and("_id").in(ids);
-//		}
-		
-		
-		// 我的知识条件
-//		criteriaMy.and("uid").is(userid);
 		// 金桐脑知识条件
-		criteriaGt.and("uid").is(Constants.Ids.jinTN.v());
+		criteria.and("uid").is(Constants.Ids.jinTN.v());
 		// 查询栏目目录为当前分类下的所有数据
 		String reful = column.getPathName();
 		// 该栏目路径下的所有文章条件
-		criteriaPath.and("cpathid").regex("^"+reful + ".*$");
+		criteria.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
-		Criteria criteriaAll = new Criteria();
-		criteriaM.and("createtime").gte(getStringDate());
-		criteriaAll.andOperator(criteriaM,criteriaGt,criteriaPath,criteria);
-//		if (criteriaUp == null) {
-//
-//			criteriaAll.orOperator(criteriaMy, criteriaGt).andOperator(
-//					criteriaPath,criteria);
-//		} else {
-//
-////			criteriaM.and("uid").is(userid).and("_id").in(ids);
-////			criteriaG.and("uid").is(Constants.Ids.jinTN.v());
-////			criteriaAll.orOperator(criteriaM, criteriaG).andOperator(criteriaPath,criteria);
-//			
-//		}
-//		if (cls != null && cls.size() > 0) {// 判断定制
-//			List<String> clstr = fillList(cls);
-//			criteriaAll.and("columnid").nin(clstr);
-//		}
+		criteria.and("createtime").gte(getStringDate());
 		// 查询知识
-		Query query = new Query(criteriaAll);
-		if (type == 10) {
-			query.sort().on("createtime", Order.DESCENDING);
-		} else {
-			query.sort().on("_id", Order.DESCENDING);
-		}
+		Query query = new Query(criteria);
+//		if (type == 10) {
+//			query.sort().on("createtime", Order.DESCENDING);
+//		} else {
+//			query.sort().on("_id", Order.DESCENDING);
+//		}
 		query.limit(size);
 		query.skip((page - 1) * size);
-		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,
-				names[length - 1]));
-		logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
+		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,names[length - 1]));
+//		List<BaseKnowledgeVo> tempList = mongoTemplate.find(query, BaseKnowledgeVo.class,names[length - 1]);
+//		Iterator<BaseKnowledgeVo> iterator =  tempList.listIterator();
+//		while(iterator.hasNext()){
+//			BaseKnowledgeVo tempVo = iterator.next();
+//			list.add(tempVo.getId());
+//			}
+//		
+//		if(list!= null && list.size() > 0){
+//			Criteria criteriaId =Criteria.where("_id").in(list);
+//			Query queryId = new Query(criteriaId);
+//			model.put("list", (List) mongoTemplate.find(queryId, KnowledgeVO.class,names[length - 1]));
+//		}
+		
 		return model;
 	}
 	
