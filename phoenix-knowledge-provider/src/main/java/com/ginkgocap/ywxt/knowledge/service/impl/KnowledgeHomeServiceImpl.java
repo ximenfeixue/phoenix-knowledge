@@ -37,7 +37,6 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
-import com.ginkgocap.ywxt.knowledge.model.BaseKnowledgeVo;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeVO;
 import com.ginkgocap.ywxt.knowledge.service.AttachmentService;
