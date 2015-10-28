@@ -140,8 +140,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Long cid = Long.parseLong(columnid);
 		// 查询栏目类型
 		Column column = columnMapper.selectByPrimaryKey(cid);
-//		String ty = column.getColumnLevelPath().substring(0, 9);
-//		long type = Long.parseLong(ty);
+		String ty = column.getColumnLevelPath().substring(0, 9);
+		long type = Long.parseLong(ty);
 		Criteria criteria = Criteria.where("status").is(4);
 		// 金桐脑知识条件
 		criteria.and("uid").is(Constants.Ids.jinTN.v());
@@ -150,30 +150,18 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		// 该栏目路径下的所有文章条件
 		criteria.and("cpathid").regex("^"+reful + ".*$");
 		// 汇总条件
-		criteria.and("createtime").gte(getStringDate());
+//		criteria.and("createtime").gte(getStringDate());
+		
 		// 查询知识
 		Query query = new Query(criteria);
-//		if (type == 10) {
-//			query.sort().on("createtime", Order.DESCENDING);
-//		} else {
-//			query.sort().on("_id", Order.DESCENDING);
-//		}
+		if (type == 10) {
+			query.sort().on("createtime", Order.DESCENDING);
+		} else {
+			query.sort().on("_id", Order.DESCENDING);
+		}
 		query.limit(size);
 		query.skip((page - 1) * size);
 		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,names[length - 1]));
-//		List<BaseKnowledgeVo> tempList = mongoTemplate.find(query, BaseKnowledgeVo.class,names[length - 1]);
-//		Iterator<BaseKnowledgeVo> iterator =  tempList.listIterator();
-//		while(iterator.hasNext()){
-//			BaseKnowledgeVo tempVo = iterator.next();
-//			list.add(tempVo.getId());
-//			}
-//		
-//		if(list!= null && list.size() > 0){
-//			Criteria criteriaId =Criteria.where("_id").in(list);
-//			Query queryId = new Query(criteriaId);
-//			model.put("list", (List) mongoTemplate.find(queryId, KnowledgeVO.class,names[length - 1]));
-//		}
-		
 		return model;
 	}
 	
