@@ -20,6 +20,9 @@ public class Constants {
 			3, 4, 5, 6, 7, 10));
 
 	public static String redisOrderColumn = "redisOrderColumn";
+	
+    public static int success = 0;
+    public static int fail = 1;
 
 	public static String status = "result";
 
@@ -266,7 +269,7 @@ public class Constants {
 				"参数不能为空"), contentTooLong("内容过长"), sensitiveWord("您的文章存在敏感词"), artPermissionNotFound(
 				"对不起,您没有查看该文章的权限!"), hasName("名称重复!"), parseError("解析错误!"), userNotLogin(
 				"您未登陆,请先登陆!"), addKnowledgeCatalogueIds("添加目录失败!"), addasso(
-				"添加关联失败!");
+				"添加关联失败!"), tagExist("标签已存在!");
 
 		private String c;
 
