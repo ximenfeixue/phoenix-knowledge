@@ -19,6 +19,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeTagValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserTagMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.Page;
 import com.ginkgocap.ywxt.metadata.service.userTag.UserTagService;
 
 @Service("knowledgeTagService")
@@ -140,4 +141,29 @@ public class KnowledgeTagServiceImpl implements KnowledgeTagService {
         UserTag utl = userTagMapper.selectByPrimaryKey(id);
         return utl;
     }
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService#queryUserTag(long, int, int)
+	 * caihe
+	 */
+	@Override
+	public Map<String, Object> queryUserTag(long userId, int page, int size) {
+		
+	        Map<String, Object> remap = new HashMap<String, Object>();
+	        UserTagExample ute = new UserTagExample();
+	        ute.createCriteria().andUseridEqualTo(userId);
+	        if(size!=-1){//分页
+	            ute.setLimitStart((page - 1) * size);
+	            ute.setLimitEnd(size);
+	        }
+	        Object ul = userTagMapper.selectByExample(ute);
+	        int count = userTagMapper.countByExample(ute);
+	        Page returnPage = new Page();
+	        returnPage.setTotalItems(count);
+	        returnPage.setPageSize(size);
+	        returnPage.setPageNo(page);
+	        returnPage.setResult((List) ul);
+	        remap.put("page", returnPage);
+	        return remap;
+	}
 }
