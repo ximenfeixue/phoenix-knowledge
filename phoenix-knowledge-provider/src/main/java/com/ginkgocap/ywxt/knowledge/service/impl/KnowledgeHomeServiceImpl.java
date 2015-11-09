@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +92,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	
+	private static  final Map<String, List<Long>> knowledgeMap = MapUtils.synchronizedMap(new LRUMap(150)); 
+	
+	
 	@Override
 	public List<KnowledgeStatics> getRankList(Long columnid) {
 		logger.info(
@@ -136,33 +144,77 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		Map<String, Object> model = new HashMap<String, Object>();
 		String[] names = t.getClass().getName().split("\\.");
 		int length = names.length;
-		// 栏目id
-		Long cid = Long.parseLong(columnid);
-		// 查询栏目类型
-		Column column = columnMapper.selectByPrimaryKey(cid);
-		String ty = column.getColumnLevelPath().substring(0, 9);
-		long type = Long.parseLong(ty);
-		Criteria criteria = Criteria.where("status").is(4);
-		// 金桐脑知识条件
-		criteria.and("uid").is(Constants.Ids.jinTN.v());
-		// 查询栏目目录为当前分类下的所有数据
-		String reful = column.getPathName();
-		// 该栏目路径下的所有文章条件
-		criteria.and("cpathid").regex("^"+reful + ".*$");
-//		// 汇总条件
-//		criteria.and("createtime").gte(getStringDate());
-		// 查询知识
-		Query query = new Query(criteria);
-		if (type == 10) {
-			query.sort().on("createtime", Order.DESCENDING);
-		} else {
-			query.sort().on("_id", Order.DESCENDING);
-		}
-		query.limit(size);
-		query.skip((page - 1) * size);
-		model.put("list", (List) mongoTemplate.find(query, KnowledgeVO.class,names[length - 1]));
+		List<KnowledgeVO> list =getMongoIds(Long.parseLong(columnid),4,0,names[length - 1],page,size);
+		model.put("list", list);
 		return model;
 	}
+	
+	
+	
+	private List<KnowledgeVO> getMongoIds(Long keyCId, int keyStatus, int keyUId, String name, int start , int size) {
+			String key = getKey(keyCId, keyStatus, keyUId,name);
+			List<Long> knowledgeIds = knowledgeMap.get(key);
+			List<KnowledgeVO> result = new ArrayList<KnowledgeVO>();
+			int skip = 0;
+			if (CollectionUtils.isEmpty(knowledgeIds)) {
+				// 查询栏目类型
+				Column column = columnMapper.selectByPrimaryKey(keyCId);
+				Criteria criteria = Criteria.where("status").is(4);
+				// 金桐脑知识条件
+				criteria.and("uid").is(keyUId);
+				// 查询栏目目录为当前分类下的所有数据
+				String reful = column.getPathName();
+				// 该栏目路径下的所有文章条件
+				criteria.and("cpathid").regex("^"+reful + ".*$");
+				//两个月的数据
+//				criteria.and("createtime").gte(getStringDate());
+				Query query = new Query(criteria);
+				query.sort().on("_id", Order.DESCENDING);
+				query.limit(5000);
+				query.skip(0);
+
+				List<KnowledgeVO> knowledgeVOs  = mongoTemplate.find(query, KnowledgeVO.class, name);
+				List<Long> ids = new CopyOnWriteArrayList<Long>();
+				if (CollectionUtils.isNotEmpty(knowledgeVOs)) {
+					for (KnowledgeVO knowledgeVO : knowledgeVOs) {
+						if (knowledgeVO != null) {
+							ids.add(knowledgeVO.getId());
+							if (skip >= start && skip < skip + size) {
+								result.add(knowledgeVO);
+							}
+						}
+						skip++;
+					}
+				}
+				
+				knowledgeMap.put(key, ids);
+			} else {
+				List<Long> ids = knowledgeIds.subList(Math.min(start, knowledgeIds.size()), Math.min(start+size, knowledgeIds.size()));
+				for (Long id : ids) {
+					KnowledgeVO vo = mongoTemplate.findById(id, KnowledgeVO.class);
+					if (vo != null) {
+						result.add(vo);
+					}
+				}
+			}
+			return result;
+	}
+	
+	
+	
+	private String getKey(Object ...params) {
+		if (ArrayUtils.isEmpty(params)){
+			return null;
+		}
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < params.length; i++) {
+			sb.append(i > 0 ? "_":"").append(params[i]);
+		}
+		return sb.toString();
+	}
+	
+	
+	
 	
 	public static void main(String[] args) {
 		Calendar calendar = java.util.Calendar.getInstance();
