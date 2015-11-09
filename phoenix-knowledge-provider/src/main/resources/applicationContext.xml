@@ -28,6 +28,7 @@
 	<import resource="classpath:user-dubbo-consumer.xml" /><!-- 加载user注册服务 -->
 	<import resource="classpath:knowledge-schedule.xml" />
 	<import resource="classpath:metadata-dubbo-consumer.xml" />
+	<import resource="classpath:applicationContext-cache.xml" />
 <!-- 	<import resource="classpath:people-dubbo-consumer.xml" /> -->
 <!-- 	<import resource="classpath:customer-dubbo-consumer.xml" /> -->
 	<import resource="classpath:requirement-dubbo-consumer.xml" />
