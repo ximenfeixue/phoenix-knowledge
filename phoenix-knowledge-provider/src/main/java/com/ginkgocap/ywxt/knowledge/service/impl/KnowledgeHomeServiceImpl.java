@@ -170,7 +170,7 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 //				criteria.and("createtime").gte(getStringDate());
 				Query query = new Query(criteria);
 				query.sort().on("_id", Order.DESCENDING);
-				query.limit(5000);
+				query.limit(500);
 				query.skip(0);
 
 				List<KnowledgeVO> knowledgeVOs  = mongoTemplate.find(query, KnowledgeVO.class, name);
@@ -186,12 +186,13 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 						skip++;
 					}
 				}
-				
+				logger.info(key + ids.toString());
 				knowledgeMap.put(key, ids);
 			} else {
 				List<Long> ids = knowledgeIds.subList(Math.min(start, knowledgeIds.size()), Math.min(start+size, knowledgeIds.size()));
 				for (Long id : ids) {
-					KnowledgeVO vo = mongoTemplate.findById(id, KnowledgeVO.class);
+					KnowledgeVO vo = mongoTemplate.findById(id, KnowledgeVO.class,name);
+					
 					if (vo != null) {
 						result.add(vo);
 					}
