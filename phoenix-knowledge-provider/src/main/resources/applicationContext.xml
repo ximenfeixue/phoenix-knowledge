@@ -49,10 +49,10 @@
 	<!-- Datasource -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="driverClass" value="${jdbc.driverClassName}" />
-		<property name="jdbcUrl" value="${jdbc.url}" />
-		<property name="user" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+		<property name="driverClass" value="${knowledge.jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${knowledge.jdbc.url}" />
+		<property name="user" value="${knowledge.jdbc.username}" />
+		<property name="password" value="${knowledge.jdbc.password}" />
 		<property name="initialPoolSize">
 			<value>${knowledge.jdbc.initialPoolSize}</value>
 		</property>
