@@ -59,7 +59,7 @@
 		<property name="jedisPool" ref="jedisPool"></property>
 		<!-- <property name="memcachedClient" ref="memcachedClient"></property> -->
         <property name="local" value="true"></property>
-        <property name="localTTL" value="86400"></property>
+        <property name="localTTL" value="${user.cache.expiredTime}"></property>
 	</bean>
 	<bean id="sessionManager" class="com.ginkgocap.ywxt.util.sso.session.SessionManager">
 	
