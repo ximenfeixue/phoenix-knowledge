@@ -363,4 +363,18 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		return userCategoryMapper.selectByExample(example);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#selectCategoryCountByPid(long, long)
+	 * Administrator
+	 */
+	@Override
+	public int selectCategoryCountByPid(long userId, long pid) {
+		 UserCategoryExample example = new UserCategoryExample();
+	     Criteria c = example.createCriteria();
+	     c.andUserIdEqualTo(userId);
+	     c.andParentIdEqualTo(pid);
+	     c.andCategoryTypeEqualTo((short)0);
+		return userCategoryMapper.countByExample(example);
+	}
+
 }

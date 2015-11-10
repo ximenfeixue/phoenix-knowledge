@@ -82,7 +82,8 @@ public class UserCategoryServiceTest extends TestBase {
 
     @Test
     public void test() {
-    	List<UserCategory> userCategorys= userCategoryService.getKnowledgeCategory(696022);
+    	int count = userCategoryService.selectCategoryCountByPid(36, 0);
+    	System.out.println(count);
 //    	System.out.println("ssss--------------------------------------------"+userCategorys.size());
     }
 }
