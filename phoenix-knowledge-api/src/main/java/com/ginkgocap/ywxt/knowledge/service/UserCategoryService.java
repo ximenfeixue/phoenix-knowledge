@@ -129,4 +129,14 @@ public interface UserCategoryService {
 	 * 查询用户最新目录
 	 */
 	List<UserCategory> selectUserCategoryByUserId(long userid);
+	
+	/**
+	 * 通过PID分页查询用户目录
+	 * @param userId
+	 * @param pid
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	List<UserCategory> selectUserCategoryByPid(long userId,long pid,int page,int size);
 }
