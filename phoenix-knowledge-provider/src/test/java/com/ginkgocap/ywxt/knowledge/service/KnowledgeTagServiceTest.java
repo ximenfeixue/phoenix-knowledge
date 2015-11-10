@@ -20,8 +20,8 @@ public class KnowledgeTagServiceTest extends TestBase {
 //		System.out.println(123456);
 //	}
 //
-//	@Autowired
-//	private KnowledgeTagService knowledgeTagService;
+	@Autowired
+	private KnowledgeTagService knowledgeTagService;
 //
 //	@Autowired
 //	private KnowledgeCategoryService knowledgeBetweenService;
@@ -34,12 +34,9 @@ public class KnowledgeTagServiceTest extends TestBase {
 //		knowledgeTagService.insertKnowledgeTag(knowledge);
 //	}
 //
-//	@Test
-//	public void testdeleteKnowledgeR() {
-//
-//		long[] knowledgeids = { 1, 2 };
-//		long categoryid = 3;
-//		System.out.println(knowledgeBetweenService.deleteKnowledgeRCategory(
-//				knowledgeids, categoryid));
-//	}
+	@Test
+	public void testdeleteKnowledgeR() {
+
+		knowledgeTagService.saveOrUpdateUserTag(9999L,  "121dd", 36L, 1L, -1L);
+	}
 }
