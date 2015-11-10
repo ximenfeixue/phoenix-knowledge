@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
@@ -22,6 +25,7 @@ import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
+import com.ginkgocap.ywxt.util.PageUtil;
 
 /**
  * 知识目录左树实现
@@ -47,6 +51,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	private UserCategoryMapper userCategoryMapper;
 	@Autowired
 	private KnowledgeCategoryService knowledgeCategoryService;
+	@Autowired
+	private UserCategoryDAO userCategoryDAO;
 
 	@Override
 	public UserCategory selectByPrimaryKey(long id) {
@@ -327,31 +333,14 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public List<UserCategory> selectUserCategoryByPid(long userId, long pid, int page, int size) {
-		UserCategoryExample example = new UserCategoryExample();
-		Criteria c = example.createCriteria();
-		c.andUserIdEqualTo(userId);
-		c.andParentIdEqualTo(pid);
-		c.andCategoryTypeEqualTo((short) 0);
-		example.setOrderByClause("createtime desc");
-		example.setLimitStart(page);
-		example.setLimitEnd(size);
-		return userCategoryMapper.selectByExample(example);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#
-	 * selectCategoryCountByPid(long, long) Administrator
-	 */
-	@Override
-	public int selectCategoryCountByPid(long userId, long pid) {
-		UserCategoryExample example = new UserCategoryExample();
-		Criteria c = example.createCriteria();
-		c.andUserIdEqualTo(userId);
-		c.andParentIdEqualTo(pid);
-		c.andCategoryTypeEqualTo((short) 0);
-		return userCategoryMapper.countByExample(example);
+	public Map<String, Object> selectUserCategoryByPid(long userId, long pid, int page, int size) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		int start = page * size;
+		int count = userCategoryDAO.selectCategoryCountByPid(userId, pid);
+		List<UserCategory> list = userCategoryDAO.selectUserCategoryByPid(userId, pid, start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		result.put("page", p);
+		result.put("list", list);
+		return result;
 	}
 }

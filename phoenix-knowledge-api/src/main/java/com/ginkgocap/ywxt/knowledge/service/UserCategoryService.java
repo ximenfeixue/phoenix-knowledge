@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import java.util.List; 
+import java.util.List;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
  
@@ -138,15 +139,5 @@ public interface UserCategoryService {
 	 * @param size
 	 * @return
 	 */
-	List<UserCategory> selectUserCategoryByPid(long userId,long pid,int page,int size);
-	
-	/**
-	 * 通过PID分页查询用户目录
-	 * @param userId
-	 * @param pid
-	 * @param page
-	 * @param size
-	 * @return
-	 */
-	int selectCategoryCountByPid(long userId,long pid);
+	Map<String,Object> selectUserCategoryByPid(long userId,long pid,int page,int size);
 }
