@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ginkgocap.ywxt.knowledge.dao.usercategory.UserCategoryDAO;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
@@ -22,7 +25,8 @@ import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
- 
+import com.ginkgocap.ywxt.util.PageUtil;
+
 /**
  * 知识目录左树实现
  * <p>
@@ -47,6 +51,8 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	private UserCategoryMapper userCategoryMapper;
 	@Autowired
 	private KnowledgeCategoryService knowledgeCategoryService;
+	@Autowired
+	private UserCategoryDAO userCategoryDAO;
 
 	@Override
 	public UserCategory selectByPrimaryKey(long id) {
@@ -77,17 +83,16 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
 	@Transactional
 	public String deleteNew(long id) {
-        UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
-        UserCategory un = null;
-        if (u.getCategoryType() == 0) {// 删除目录知识
-            un = this.selectUserCategoryByParams(u.getUserId(), 0l, 0l, "未分组").get(0);
-            userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
-        } else if (u.getCategoryType() == 1) {// 删除收藏知识
-            un = this.selectUserCategoryByParams(u.getUserId(), 0l, 1l, "未分组").get(0);
-            userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
-        }
-		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(),
-		        u.getSortid());
+		UserCategory u = userCategoryMapper.selectByPrimaryKey(id);
+		UserCategory un = null;
+		if (u.getCategoryType() == 0) {// 删除目录知识
+			un = this.selectUserCategoryByParams(u.getUserId(), 0l, 0l, "未分组").get(0);
+			userCategoryValueMapper.delk(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
+		} else if (u.getCategoryType() == 1) {// 删除收藏知识
+			un = this.selectUserCategoryByParams(u.getUserId(), 0l, 1l, "未分组").get(0);
+			userCategoryValueMapper.delc(u.getUserId(), u.getCategoryType(), un.getId(), u.getSortid());
+		}
+		userCategoryValueMapper.del(u.getUserId(), u.getCategoryType(), u.getSortid());
 		return "success";
 	}
 
@@ -100,23 +105,18 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 			long parentId = category.getParentId();
 			String cname = category.getCategoryname();
 			Short ct = category.getCategoryType();
-			List<UserCategory> lu = this.selectUserCategoryByParams(userid,
-					parentId, ct, cname);
+			List<UserCategory> lu = this.selectUserCategoryByParams(userid, parentId, ct, cname);
 			if (lu != null && lu.size() > 0) {
 				return "false";
 			}
 			// 得到要添加的分类的父类sortId
-			String parentSortId = parentId > 0 ? userCategoryMapper
-					.selectByPrimaryKey(parentId).getSortid() : "";
+			String parentSortId = parentId > 0 ? userCategoryMapper.selectByPrimaryKey(parentId).getSortid() : "";
 			// 通过parentSortId得到子类最大已添加的sortId
-			String childMaxSortId = userCategoryValueMapper.selectMaxSortId(
-					category.getUserId(), parentSortId,
-					category.getCategoryType());
+			String childMaxSortId = userCategoryValueMapper.selectMaxSortId(category.getUserId(), parentSortId, category.getCategoryType());
 			if (StringUtils.isBlank(category.getSortid())) {
 				// 如果用户第一次添加，将childMaxSortId赋值
 				String newSortId = new String("");
-				if (childMaxSortId == null || "null".equals(childMaxSortId)
-						|| "".equals(childMaxSortId)) {
+				if (childMaxSortId == null || "null".equals(childMaxSortId) || "".equals(childMaxSortId)) {
 					newSortId = parentSortId + "000000001";
 				} else {
 					newSortId = helper.generateSortId(childMaxSortId);
@@ -140,40 +140,30 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public List<UserCategory> selectChildBySortId(long uid, String sortId,
-			Byte type) {
+	public List<UserCategory> selectChildBySortId(long uid, String sortId, Byte type) {
 		return userCategoryValueMapper.selectChildBySortId(uid, sortId, type);
 	}
 
 	@Override
-	public String selectUserCategoryTreeBySortId(long userId, String sortId,
-			Byte type) {
-		List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(
-				userId, sortId, type);
+	public String selectUserCategoryTreeBySortId(long userId, String sortId, Byte type) {
+		List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId, type);
 		if (cl != null && cl.size() > 0) {
-			return JSONArray.fromObject(
-					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
-							"categoryname", "parentId", "sortid"))).toString();
+			return JSONArray.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "categoryname", "parentId", "sortid"))).toString();
 		}
 		return "";
 	}
+
 	@Override
-	public List<UserCategory> selectUserCategoryList(long userId, String sortId,
-	        Byte type) {
-	    List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(
-	            userId, sortId, type);
-	    return cl;
+	public List<UserCategory> selectUserCategoryList(long userId, String sortId, Byte type) {
+		List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId, type);
+		return cl;
 	}
 
 	@Override
-	public String selectUserCategoryTreeByParams(long userId, String sortId,
-			Byte type, String columnType) {
-		List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(
-				userId, sortId, type);
+	public String selectUserCategoryTreeByParams(long userId, String sortId, Byte type, String columnType) {
+		List<UserCategory> cl = userCategoryValueMapper.selectChildBySortId(userId, sortId, type);
 		if (cl != null && cl.size() > 0) {
-			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
-					.convert2Node(cl, "userId", "id", "categoryname",
-							"parentId", "sortid")));
+			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "categoryname", "parentId", "sortid")));
 			JSONArray ja = jo.getJSONArray("list");
 			for (int i = 0; i < ja.size(); i++) {
 				JSONObject joi = ja.getJSONObject(i);
@@ -191,10 +181,9 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public UserCategory selectByNameAndPid(String name, long pid,long userid) {
+	public UserCategory selectByNameAndPid(String name, long pid, long userid) {
 		UserCategoryExample example = new UserCategoryExample();
-		example.createCriteria().andParentIdEqualTo(pid)
-				.andCategorynameEqualTo(name).andUserIdEqualTo(userid);
+		example.createCriteria().andParentIdEqualTo(pid).andCategorynameEqualTo(name).andUserIdEqualTo(userid);
 		List<UserCategory> l = userCategoryMapper.selectByExample(example);
 		return l.get(0);
 	}
@@ -202,8 +191,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	@Override
 	public void checkNogroup(Long uid, List<Long> idtypes) {
 		for (long type : idtypes) {
-			List<UserCategory> l = this.selectUserCategoryByParams(uid, 0l,
-					type, "未分组");
+			List<UserCategory> l = this.selectUserCategoryByParams(uid, 0l, type, "未分组");
 			// 初始化未分组
 			if (l.size() == 0) {
 				UserCategory uc = new UserCategory();
@@ -218,8 +206,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public List<UserCategory> selectUserCategoryByParams(Long uid, long pid,
-			long type, String categoryname) {
+	public List<UserCategory> selectUserCategoryByParams(Long uid, long pid, long type, String categoryname) {
 		UserCategoryExample example = new UserCategoryExample();
 		Criteria c = example.createCriteria();
 		if (uid > 0) {
@@ -240,13 +227,11 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	public String selecteidtUserCategoryTreeBySortId(long knowledgeid) {
 
 		// 知识所在的目录
-		List<KnowledgeCategory> categorylist = knowledgeCategoryService
-				.selectKnowledgeCategory(knowledgeid);
+		List<KnowledgeCategory> categorylist = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid);
 		List<UserCategory> cl = new ArrayList<UserCategory>();
 		if (categorylist != null && categorylist.size() > 0) {
 			for (KnowledgeCategory knowledgeCategory : categorylist) {
-				UserCategory usercategory = selectByPrimaryKey(knowledgeCategory
-						.getCategoryId());
+				UserCategory usercategory = selectByPrimaryKey(knowledgeCategory.getCategoryId());
 				cl.add(usercategory);
 			}
 			JSONArray jsonArray = JSONArray.fromObject(cl);
@@ -256,8 +241,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	}
 
 	@Override
-	public List<UserCategory> selectNoGroup(long userId, String sortId,
-			Byte type) {
+	public List<UserCategory> selectNoGroup(long userId, String sortId, Byte type) {
 		UserCategoryExample example = new UserCategoryExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(userId);
@@ -270,12 +254,10 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 	public String getDefaultCategoryId(long userId) {
 		long[] cIds = null;
 		UserCategoryExample example = new UserCategoryExample();
-		com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example.createCriteria();
 		criteria.andSortidEqualTo(Constants.unGroupSortId);
 		criteria.andUserIdEqualTo(userId);
-		criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-				.v());
+		criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common.v());
 		List<UserCategory> list = userCategoryMapper.selectByExample(example);
 		if (list != null && list.size() == 1) {
 			cIds = new long[1];
@@ -288,93 +270,77 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 		}
 	}
 
-    @Override
-    public List<UserCategory> selectUserCategoryByParam(Long uid, Long pid, int type, String sortid,
-            String categoryname) {
-        UserCategoryExample example = new UserCategoryExample();
-        Criteria c = example.createCriteria();
-        if (uid != null) {
-            c.andUserIdEqualTo(uid);
-        }
-        if (type >= 0) {
-            c.andCategoryTypeEqualTo((short) type);
-        }
-        if (!"".equals(sortid) || null != sortid) {
-            c.andSortidEqualTo(sortid);
-        }
-        if (pid != null) {
-            c.andParentIdEqualTo(pid);
-        }
-        if (categoryname != null && !"".equals(categoryname)) {
-            c.andCategorynameEqualTo(categoryname);
-        }
-        List<UserCategory> ll = userCategoryMapper.selectByExample(example);
-        return ll;
-    }
+	@Override
+	public List<UserCategory> selectUserCategoryByParam(Long uid, Long pid, int type, String sortid, String categoryname) {
+		UserCategoryExample example = new UserCategoryExample();
+		Criteria c = example.createCriteria();
+		if (uid != null) {
+			c.andUserIdEqualTo(uid);
+		}
+		if (type >= 0) {
+			c.andCategoryTypeEqualTo((short) type);
+		}
+		if (!"".equals(sortid) || null != sortid) {
+			c.andSortidEqualTo(sortid);
+		}
+		if (pid != null) {
+			c.andParentIdEqualTo(pid);
+		}
+		if (categoryname != null && !"".equals(categoryname)) {
+			c.andCategorynameEqualTo(categoryname);
+		}
+		List<UserCategory> ll = userCategoryMapper.selectByExample(example);
+		return ll;
+	}
 
 	@Override
 	public List<UserCategory> getKnowledgeCategory(long knowledgeId) {
 		return userCategoryMapper.getKnowledgeCategory(knowledgeId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#batchDeleteCategory(java.lang.String[])
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.UserCategoryService#batchDeleteCategory
+	 * (java.lang.String[]) Administrator
 	 */
 	@Override
-	public String batchDeleteCategory(long userId,List<Long> ids) {
-		
-		userCategoryValueMapper.batchDeleteCategory(userId,ids);
-		
-		knowledgeCategoryService.batchUpdateKnowledgeCategory(ids,Constants.ReportStatus.unreport.v()+"");
-		
+	public String batchDeleteCategory(long userId, List<Long> ids) {
+
+		userCategoryValueMapper.batchDeleteCategory(userId, ids);
+
+		knowledgeCategoryService.batchUpdateKnowledgeCategory(ids, Constants.ReportStatus.unreport.v() + "");
+
 		return "success";
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#selectUserCategoryByUser(long)
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#
+	 * selectUserCategoryByUser(long) Administrator
 	 */
 	@Override
 	public List<UserCategory> selectUserCategoryByUserId(long userid) {
-		
-		 UserCategoryExample example = new UserCategoryExample();
-	     Criteria c = example.createCriteria();
-	     c.andUserIdEqualTo(userid);
-	     c.andCategoryTypeEqualTo((short)0);
-	     example.setOrderByClause("createtime desc");
+
+		UserCategoryExample example = new UserCategoryExample();
+		Criteria c = example.createCriteria();
+		c.andUserIdEqualTo(userid);
+		c.andCategoryTypeEqualTo((short) 0);
+		example.setOrderByClause("createtime desc");
 		return userCategoryMapper.selectByExample(example);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#selectUserCategoryByPid(long, long, int, int)
-	 * Administrator
-	 */
 	@Override
-	public List<UserCategory> selectUserCategoryByPid(long userId, long pid, int page, int size) {
-		 UserCategoryExample example = new UserCategoryExample();
-	     Criteria c = example.createCriteria();
-	     c.andUserIdEqualTo(userId);
-	     c.andParentIdEqualTo(pid);
-	     c.andCategoryTypeEqualTo((short)0);
-	     example.setOrderByClause("createtime desc");
-	     example.setLimitStart(page);
-	     example.setLimitEnd(size);
-		return userCategoryMapper.selectByExample(example);
+	public Map<String, Object> selectUserCategoryByPid(long userId, long pid, int page, int size) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		int start = page * size;
+		int count = userCategoryDAO.selectCategoryCountByPid(userId, pid);
+		List<UserCategory> list = userCategoryDAO.selectUserCategoryByPid(userId, pid, start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		result.put("page", p);
+		result.put("list", list);
+		return result;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserCategoryService#selectCategoryCountByPid(long, long)
-	 * Administrator
-	 */
-	@Override
-	public int selectCategoryCountByPid(long userId, long pid) {
-		 UserCategoryExample example = new UserCategoryExample();
-	     Criteria c = example.createCriteria();
-	     c.andUserIdEqualTo(userId);
-	     c.andParentIdEqualTo(pid);
-	     c.andCategoryTypeEqualTo((short)0);
-		return userCategoryMapper.countByExample(example);
-	}
-
 }
