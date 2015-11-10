@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeIndustry;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 
 /**
  * 知识首页测试用例
@@ -52,7 +53,12 @@ public class KnowledgeHomeServiceTest extends TestBase {
 
     @Test
     public void selectAllByParam() {
-        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 13 + "", 10132l, 1, 20);
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 51 + "", 10132l, 0, 20);
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 51 + "", 10132l, 20, 20);
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 51 + "", 10132l, 40, 20);
+        knowledgeHomeService.selectAllByParam(new KnowledgeNews(), 0, 51 + "", 10132l, 60, 20);
+
+        
     }
     @Test
     public void selectKnowledgeCategoryForImport() {

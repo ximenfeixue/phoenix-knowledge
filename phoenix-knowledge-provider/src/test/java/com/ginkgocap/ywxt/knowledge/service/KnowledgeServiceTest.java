@@ -11,6 +11,8 @@ public class KnowledgeServiceTest extends TestBase {
 
 	@Test
 	public void deleteKnowledgeNew() {
-	    knowledgeService.deleteKnowledgeNew("48499", 293, 10132);
+		
+		
+	    knowledgeService.insertknowledge(vo, user);
 	}
 }
