@@ -131,4 +131,36 @@
   		#{id}
    	</foreach>
 	</update>
+	
+	<select id="selectRecommendedKnowledge" resultType="map" >
+	SELECT b.*
+	FROM tb_knowledge_category kc,
+	tb_user_category
+	uc,tb_knowledge_base b,tb_user_permission tp
+	WHERE kc.category_id = uc.id
+	AND b.knowledge_id=kc.knowledge_id
+	AND tp.knowledge_id=b.knowledge_id
+	AND tp.type = 2
+	AND kc.status=1
+	AND uc.category_type = 0
+	AND uc.user_id=#{userId}
+	GROUP BY b.knowledge_id,b.user_id,b.title,b.author,b.path,b.createtime,b.tag,b.c_desc,b.column_id,b.pic_path,b.column_type,b.essence,b.taskid
+	ORDER BY b.createtime DESC
+	LIMIT #{start},#{size}
+</select>
+
+<select id="countRecommendedKnowledge" resultType="int" >
+	SELECT COUNT(*)
+	FROM tb_knowledge_category kc,
+	tb_user_category
+	uc,tb_knowledge_base b,tb_user_permission tp
+	WHERE kc.category_id = uc.id
+	AND b.knowledge_id=kc.knowledge_id
+	AND tp.knowledge_id=b.knowledge_id
+	AND tp.type = 2
+	AND kc.status=1
+	AND uc.category_type = 0
+	AND uc.user_id=#{userId}
+</select>
+	
 </mapper>
