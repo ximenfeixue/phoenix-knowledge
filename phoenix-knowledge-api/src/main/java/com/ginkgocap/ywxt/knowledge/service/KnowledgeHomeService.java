@@ -147,4 +147,14 @@ public interface KnowledgeHomeService {
 	 * @return
 	 */
 	public Map<String, Object> getAggregationRead(Long userId,String[] columnIds, int page, int size);
+	
+    /**
+     * 查询发现推荐中的人脉知识     
+     * @param userid 用户id
+     * @param page 当前页
+     * @param size 每页大小
+     * @author caihe
+     */
+    public Map<String,Object>  selectRecommendedKnowledge(Long userid,int page, int size);
+
 }

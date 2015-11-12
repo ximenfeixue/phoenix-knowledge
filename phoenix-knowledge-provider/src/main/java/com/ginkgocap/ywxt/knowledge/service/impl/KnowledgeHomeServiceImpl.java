@@ -549,4 +549,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		result.put("list", list);
 		return result;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#selectFirstKnowledge(java.lang.String, java.lang.String, int, java.lang.String, java.lang.Long, java.lang.String, int, int)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> selectRecommendedKnowledge( Long userid,int page, int size) {
+		int start = (page - 1) * size;
+		int count = knowledgeCategoryValueMapper.countRecommendedKnowledge(userid);
+		List kcl = knowledgeCategoryValueMapper.selectRecommendedKnowledge(userid,start, size);
+		PageUtil p = new PageUtil(count, page, size);
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("page", p);
+		m.put("list", kcl);
+		return m;
+	}
 }

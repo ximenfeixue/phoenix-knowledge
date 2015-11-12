@@ -62,7 +62,7 @@ public class KnowledgeHomeServiceTest extends TestBase {
     }
     @Test
     public void selectPlatform() {
-    	knowledgeHomeService.selectPlatform(1l, 1, 10132l, 1, 20);
+    	knowledgeHomeService.selectRecommendedKnowledge(36l, 1, 20);
     }
 
 }
