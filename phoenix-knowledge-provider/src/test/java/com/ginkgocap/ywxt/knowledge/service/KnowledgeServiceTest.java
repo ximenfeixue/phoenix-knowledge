@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.user.model.User;
 
 public class KnowledgeServiceTest extends TestBase {
 	@Autowired
@@ -13,6 +15,16 @@ public class KnowledgeServiceTest extends TestBase {
 	public void deleteKnowledgeNew() {
 		
 		
+		KnowledgeNewsVO  vo =new KnowledgeNewsVO();
+		
+		vo.setSelectedIds("{\"dales\":[],\"zhongles\":[{\"id\":21,\"name\":\"a陈永梅\"},{\"id\":13247,\"name\":\"曾添dataplayer\"}],\"xiaoles\":[],\"dule\":false}");
+		vo.setTitle("111");
+		vo.setColumnid("1");
+		vo.setContent("ss");
+
+		User user =new User();
+		user.setId(36);
+		user.setName("sss");
 	    knowledgeService.insertknowledge(vo, user);
 	}
 }
