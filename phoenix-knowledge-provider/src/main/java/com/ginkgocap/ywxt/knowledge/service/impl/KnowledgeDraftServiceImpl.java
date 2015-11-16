@@ -45,6 +45,7 @@ import com.ginkgocap.ywxt.knowledge.util.Page;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.model.User;
 
+@Deprecated
 @Service("knowledgeDraftService")
 public class KnowledgeDraftServiceImpl implements KnowledgeDraftService {
 

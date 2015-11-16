@@ -18,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeRecycleMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeRecycleValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
 
+@Deprecated
 @Service("knowledgeRecycleService")
 public class KnowledgeRecycleServiceImpl implements KnowledgeRecycleService {
 

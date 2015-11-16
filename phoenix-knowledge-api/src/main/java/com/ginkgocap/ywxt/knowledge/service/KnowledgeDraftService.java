@@ -15,6 +15,7 @@ import com.ginkgocap.ywxt.user.model.User;
  * @author caihe
  * 
  */
+@Deprecated
 public interface KnowledgeDraftService {
 
 	/**
