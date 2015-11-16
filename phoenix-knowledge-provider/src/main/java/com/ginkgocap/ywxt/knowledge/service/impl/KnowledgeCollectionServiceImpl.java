@@ -42,11 +42,9 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeCollectionService")
-public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
-		KnowledgeCollectionService {
+public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements KnowledgeCollectionService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(KnowledgeCollectionServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(KnowledgeCollectionServiceImpl.class);
 	@Autowired
 	private KnowledgeCollectionDAO knowledgeCollectionDAO;
 	@Resource
@@ -74,23 +72,19 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 	@Transactional
 	public int deleteKnowledgeCollection(long[] knowledgeids, long categoryid) {
 
-		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids,
-				categoryid);
+		return knowledgeCollectionDAO.deleteKnowledgeCollection(knowledgeids, categoryid);
 	}
 
 	@Override
-	public List<Long> selectKnowledgeCollection(long column_id,
-			String knowledgeType, long category_id, int pageno, int pagesize) {
+	public List<Long> selectKnowledgeCollection(long column_id, String knowledgeType, long category_id, int pageno, int pagesize) {
 
-		return knowledgeCollectionDAO.selectKnowledgeCollection(column_id,
-				knowledgeType, category_id, pageno, pagesize);
+		return knowledgeCollectionDAO.selectKnowledgeCollection(column_id, knowledgeType, category_id, pageno, pagesize);
 	}
 
 	@Deprecated
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List selectKnowledgeAll(String source, String knowledgeType,
-			long collectionUserId, int pageno, int pagesize) {
+	public List selectKnowledgeAll(String source, String knowledgeType, long collectionUserId, int pageno, int pagesize) {
 		// return knowledgeCollectionValueMapper.selectKnowledgeAll(source,
 		// knowledgeType, collectionUserId, pageno, pagesize);
 		return null;
@@ -98,8 +92,7 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 
 	@Deprecated
 	@Override
-	public long countKnowledgeAll(String source, String knowledgeType,
-			long collectionUserId) {
+	public long countKnowledgeAll(String source, String knowledgeType, long collectionUserId) {
 		// return knowledgeCollectionValueMapper.countKnowledgeAll(source,
 		// knowledgeType, collectionUserId);
 		return 0;
@@ -107,16 +100,13 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> queryKnowledgeAll(String source,
-			String knowledgeType, long collectionUserId, String sortId,
-			String keyword, int pageno, int pagesize) {
+	public Map<String, Object> queryKnowledgeAll(String source, String knowledgeType, long collectionUserId, String sortId, String keyword,
+			int pageno, int pagesize) {
 		Integer start = (pageno - 1) * pagesize;
 		Map<String, Object> m = new HashMap<String, Object>();
-		long count = knowledgeCollectionValueMapper.countKnowledgeAll(source,
-				knowledgeType, collectionUserId, sortId, keyword);
-		List<Map<String, Object>> list = knowledgeCollectionValueMapper
-				.selectKnowledgeAll(source, knowledgeType, collectionUserId,
-						sortId, keyword, start, pagesize);
+		long count = knowledgeCollectionValueMapper.countKnowledgeAll(source, knowledgeType, collectionUserId, sortId, keyword);
+		List<Map<String, Object>> list = knowledgeCollectionValueMapper.selectKnowledgeAll(source, knowledgeType, collectionUserId, sortId, keyword,
+				start, pagesize);
 		PageUtil p = new PageUtil((int) count, pageno, pagesize);
 		m.put("page", p);
 		m.put("list", list);
@@ -125,13 +115,11 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	@Transactional
-	public Map<String, Object> insertKnowledgeCollection(
-			KnowledgeCollectionVO vo, User user) {
+	public Map<String, Object> insertKnowledgeCollection(KnowledgeCollectionVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.userNotLogin.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
 			return result;
 		}
 		logger.info("进入添加知识收藏,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
@@ -143,15 +131,12 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 			String c = util.getTableName(vo.getColumType());
 			if (StringUtils.isBlank(c))
 				return null;
-			Knowledge knowledge = (Knowledge) mongoTemplate.findById(
-					vo.getkId(), Class.forName(c), util.getCollectionName(c));
+			Knowledge knowledge = (Knowledge) mongoTemplate.findById(vo.getkId(), Class.forName(c), util.getCollectionName(c));
 
 			if (knowledge == null) {
-				logger.error("未找到知识数据!,知识ID:{},用户ID:{}", vo.getkId(),
-						user.getId());
+				logger.error("未找到知识数据!,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.artNotExsit.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.artNotExsit.c());
 				return result;
 			}
 
@@ -159,18 +144,16 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 			if (isCollection(user.getId(), vo.getkId())) {
 				// 删除
 				if (!delCollection(user.getId(), vo.getkId())) {
-					logger.error("删除已收藏数据失败[001]!,知识ID:{},用户ID:{}",
-							vo.getkId(), user.getId());
+					logger.error("删除已收藏数据失败[001]!,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage,
-							Constants.ErrorMessage.addCollFail.c());
+					result.put(Constants.errormessage, Constants.ErrorMessage.addCollFail.c());
 					return result;
 				}
 			}
 			// 组装收藏目录ID集合
 			KnowledgeCollection kc = null;
 			kc = new KnowledgeCollection();
-//			kc.setCategoryId(cId);
+			// kc.setCategoryId(cId);
 			kc.setCollectionComment(vo.getComment());
 			kc.setKnowledgeId(vo.getkId());
 			kc.setCreatetime(new Date());
@@ -179,38 +162,31 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 			kc.setUserid(user.getId());
 			list.add(kc);
 			// 添加到收藏表
-			int cV = knowledgeCollectionMapperManual
-					.batchInsertCollection(list);
+			int cV = knowledgeCollectionMapperManual.batchInsertCollection(list);
 			if (cV == 0) {
-				logger.error("添加知识收藏表失败!,知识ID:{},用户ID:{}", vo.getkId(),
-						user.getId());
+				logger.error("添加知识收藏表失败!,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.addCollFail.c());
 				return result;
 			}
 			// 通知数据中心
-			noticeDataCenter( vo.getColumType(), vo.getkId(), "upd");
+			noticeDataCenter(vo.getColumType(), vo.getkId(), "upd");
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
 			bVo.setColumType(vo.getColumType());
 			bVo.setKnowledge(knowledge);
 			if (!addBaseInfo(bVo, user)) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addCollFail.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.addCollFail.c());
 				return result;
 			}
-			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0,
-					Constants.StaticsValue.collCount.v(), 0);
+			knowledgeStaticsMapperManual.updateStatics(vo.getkId(), 0, 0, Constants.StaticsValue.collCount.v(), 0);
 			result.put(Constants.status, Constants.ResultType.success.v());
 
 		} catch (ClassNotFoundException e) {
-			logger.error("添加知识收藏异常!没有根据类型:" + vo.getColumType()
-					+ "找到对应类,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
+			logger.error("添加知识收藏异常!没有根据类型:" + vo.getColumType() + "找到对应类,知识ID:{},用户ID:{}", vo.getkId(), user.getId());
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addCollFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.addCollFail.c());
 			return result;
 		}
 		return result;
@@ -260,34 +236,25 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 	@Override
 	@Transactional
 	public boolean addBaseInfo(KnowledgeBaseVO vo, User user) {
-		logger.info("进入添加知识基本表!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
-				user.getId());
+		logger.info("进入添加知识基本表!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(), user.getId());
 		if (vo.getKnowledge() == null) {
-			logger.error("知识对象为空!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(),
-					user.getId());
+			logger.error("知识对象为空!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(), user.getId());
 			return false;
 		}
 		int bV = 1;
 		// 查询知识在base表中是否存在
-		KnowledgeBase b = knowledgeBaseMapper.selectByPrimaryKey(vo
-				.getKnowledge().getId());
+		KnowledgeBase b = knowledgeBaseMapper.selectByPrimaryKey(vo.getKnowledge().getId());
 		if (b == null) {
 			// 添加基本表
 			KnowledgeBase knowledgeBase = new KnowledgeBase();
 			knowledgeBase.setKnowledgeId(vo.getKnowledge().getId());
 			knowledgeBase.setAuthor(user.getName());
-			knowledgeBase
-					.setcDesc(StringUtils.isBlank(vo.getKnowledge().getDesc()) ? vo
-							.getKnowledge().getContent().length() > 50 ? vo
-							.getKnowledge().getContent().substring(0, 50) : vo
-							.getKnowledge().getContent() : vo.getKnowledge()
-							.getDesc());
-			knowledgeBase.setColumnId(Long.parseLong(vo.getKnowledge()
-					.getColumnid()));
+			knowledgeBase.setcDesc(StringUtils.isBlank(vo.getKnowledge().getDesc()) ? vo.getKnowledge().getContent().length() > 50 ? vo
+					.getKnowledge().getContent().substring(0, 50) : vo.getKnowledge().getContent() : vo.getKnowledge().getDesc());
+			knowledgeBase.setColumnId(Long.parseLong(vo.getKnowledge().getColumnid()));
 			knowledgeBase.setColumnType(Short.parseShort(vo.getColumType()));
 			knowledgeBase.setEssence((short) vo.getKnowledge().getEssence());
-			knowledgeBase.setCreatetime(DateUtil.parseWithYYYYMMDDHHMMSS(vo
-					.getKnowledge().getCreatetime()));
+			knowledgeBase.setCreatetime(DateUtil.parseWithYYYYMMDDHHMMSS(vo.getKnowledge().getCreatetime()));
 			knowledgeBase.setPath(vo.getKnowledge().getCpathid());
 			knowledgeBase.setPicPath(vo.getKnowledge().getPic());
 			knowledgeBase.setTag(vo.getKnowledge().getTags());
@@ -296,8 +263,7 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 
 			bV = knowledgeBaseMapper.insertSelective(knowledgeBase);
 			if (bV == 0) {
-				logger.error("添加知识基本表失败!,知识ID:{},用户ID:{}", vo.getKnowledge()
-						.getId(), user.getId());
+				logger.error("添加知识基本表失败!,知识ID:{},用户ID:{}", vo.getKnowledge().getId(), user.getId());
 			}
 		}
 		return bV > 0;
@@ -319,8 +285,7 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (StringUtils.isBlank(kIds)) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.paramNotBlank.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.paramNotBlank.c());
 		}
 		List<Long> idList = KnowledgeUtil.parseIds(kIds);
 		// 删除收藏信息表
@@ -345,8 +310,7 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	@Transactional
-	public void move(long id, List<Long> knowledgeids, List<Long> categoryids,
-			long cid) {
+	public void move(long id, List<Long> knowledgeids, List<Long> categoryids, long cid) {
 		if (knowledgeids.size() == 0) {
 			return;
 		}
@@ -368,24 +332,23 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 		}
 	}
 
-	private List<KnowledgeCollection> getListByParams(long id, long cid,
-			List<Long> knowledgeids) {
+	private List<KnowledgeCollection> getListByParams(long id, long cid, List<Long> knowledgeids) {
 		KnowledgeCollectionExample example = new KnowledgeCollectionExample();
-		example.createCriteria().andCategoryIdEqualTo(cid)
-				.andKnowledgeIdIn(knowledgeids).andUseridEqualTo(id);
-		List<KnowledgeCollection> l = knowledgeCollectionMapper
-				.selectByExample(example);
+		example.createCriteria().andCategoryIdEqualTo(cid).andKnowledgeIdIn(knowledgeids).andUseridEqualTo(id);
+		List<KnowledgeCollection> l = knowledgeCollectionMapper.selectByExample(example);
 		return l;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService#selectKnowledgeId(long, int, int)
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService#
+	 * selectKnowledgeId(long, int, int) Administrator
 	 */
 	@Override
 	public List<Long> selectKnowledgeId(long userId) {
 		List<Long> list = new ArrayList<Long>();
-		List<Map<String, Object>> maplist =knowledgeCollectionValueMapper.selectKnowledgeId(userId);
+		List<Map<String, Object>> maplist = knowledgeCollectionValueMapper.selectKnowledgeId(userId);
 		if (maplist != null && maplist.size() > 0) {
 			for (int i = 0; i < maplist.size(); i++) {
 				Map<String, Object> map = maplist.get(i);
