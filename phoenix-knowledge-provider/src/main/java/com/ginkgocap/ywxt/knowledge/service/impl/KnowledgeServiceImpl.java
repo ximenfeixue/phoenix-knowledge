@@ -481,7 +481,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 							}
 						}
 					}
-				}
+				}  
 			} else {
 				// 查询该用户下的未分组目录ID
 				List<UserCategory> list = userCategoryService.selectNoGroup(userid, Constants.unGroupSortId, (byte) 0);
