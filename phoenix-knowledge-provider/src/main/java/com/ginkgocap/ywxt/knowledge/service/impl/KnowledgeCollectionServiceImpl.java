@@ -42,7 +42,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeCollectionService")
-public class KnowledgeCollectionServiceImpl implements
+public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements
 		KnowledgeCollectionService {
 
 	private static final Logger logger = LoggerFactory
@@ -86,6 +86,7 @@ public class KnowledgeCollectionServiceImpl implements
 				knowledgeType, category_id, pageno, pagesize);
 	}
 
+	@Deprecated
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List selectKnowledgeAll(String source, String knowledgeType,
@@ -95,6 +96,7 @@ public class KnowledgeCollectionServiceImpl implements
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public long countKnowledgeAll(String source, String knowledgeType,
 			long collectionUserId) {
@@ -165,41 +167,8 @@ public class KnowledgeCollectionServiceImpl implements
 					return result;
 				}
 			}
-
-//			long[] cIds = null;
-//			if (StringUtils.isBlank(vo.getCategoryIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-//				UserCategoryExample example = new UserCategoryExample();
-//				com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-//						.createCriteria();
-//				criteria.andSortidEqualTo(Constants.unGroupSortId);
-//				criteria.andUserIdEqualTo(user.getId());
-//				criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.collection
-//						.v());
-//				List<UserCategory> uclist = userCategoryMapper
-//						.selectByExample(example);
-//				if (uclist != null && uclist.size() == 1) {
-//					cIds = new long[1];
-//					cIds[0] = uclist.get(0).getId();
-//				}
-//			} else {
-//				// 格式化目录
-//				cIds = knowledgeCategoryService.getCurrentCategoryArray(
-//						vo.getCategoryIds(),
-//						Constants.CategoryType.collection.v(), user.getId());
-//			}
 			// 组装收藏目录ID集合
 			KnowledgeCollection kc = null;
-//			for (long cId : cIds) {
-//				kc = new KnowledgeCollection();
-//				kc.setCategoryId(cId);
-//				kc.setCollectionComment(vo.getComment());
-//				kc.setKnowledgeId(vo.getkId());
-//				kc.setCreatetime(new Date());
-//				kc.setCollectionTags(vo.getTags());
-//				kc.setSource(getSource(user.getId(), knowledge.getUid()));
-//				kc.setUserid(user.getId());
-//				list.add(kc);
-//			}
 			kc = new KnowledgeCollection();
 //			kc.setCategoryId(cId);
 			kc.setCollectionComment(vo.getComment());
@@ -221,13 +190,7 @@ public class KnowledgeCollectionServiceImpl implements
 				return result;
 			}
 			// 通知数据中心
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("oper", "upd");
-			params.put("type", vo.getColumType());
-			params.put("kId", vo.getkId());
-			noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-					params);
-			
+			noticeDataCenter( vo.getColumType(), vo.getkId(), "upd");
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
 			bVo.setColumType(vo.getColumType());

@@ -69,6 +69,7 @@ public interface KnowledgeCollectionService {
 	 *            每页大小
 	 * @return
 	 */
+	@Deprecated
 	@SuppressWarnings("rawtypes")
 	List selectKnowledgeAll(String source, String knowledgeType,
 			long collectionUserId, int pageno, int pagesize);
@@ -84,6 +85,7 @@ public interface KnowledgeCollectionService {
 	 *            当前知识收藏的用户
 	 * @return
 	 */
+	@Deprecated
 	long countKnowledgeAll(String source, String knowledgeType,
 			long collectionUserId);
 
