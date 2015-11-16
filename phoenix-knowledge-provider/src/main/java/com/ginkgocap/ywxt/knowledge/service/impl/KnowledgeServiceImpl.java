@@ -505,7 +505,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			params.put("type", knowledgerecycle.getType());
 			params.put("kId", knowledgeid);
 			noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
-
+ 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
