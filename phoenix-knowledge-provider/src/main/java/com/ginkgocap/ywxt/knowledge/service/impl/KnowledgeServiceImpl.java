@@ -72,12 +72,11 @@ import com.ginkgocap.ywxt.util.MakeTaskId;
 import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeService")
-public class KnowledgeServiceImpl implements KnowledgeService {
+public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeService {
 
 	private final static String dule = "1";
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(KnowledgeServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(KnowledgeServiceImpl.class);
 
 	@Autowired
 	private KnowledgeDao knowledgeDao;
@@ -160,21 +159,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	private DynamicNewsService dynamicNewsService;
 
 	//
+	@Deprecated
 	@Override
-	public Map<String, Object> deleteKnowledge(String knowledgeids,
-			long catetoryid, String types, String titles, User user) {
+	public Map<String, Object> deleteKnowledge(String knowledgeids, long catetoryid, String types, String titles, User user) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
-		long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
-				.substring(0, knowledgeids.length() - 1).split(","));
+		long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
 		String[] type = types.split(",");
 		String[] title = titles.split(",");
 		for (int i = 0; i < knowledgeid.length; i++) {
 
 			String obj = Constants.getTableName(type[i]);
 
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
-					obj.length());
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 
 			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
 			Query query = new Query(criteria);
@@ -183,17 +180,14 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			mongoTemplate.updateFirst(query, update, collectionName);
 
 			// 知识存入回收站
-			int RecycleCount = knowledgeRecycleService
-					.insertKnowledgeRecycle(knowledgeid[i], title[i], type[i],
-							user.getId(), catetoryid);
+			int RecycleCount = knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title[i], type[i], user.getId(), catetoryid);
 			if (RecycleCount == 0) {
 				logger.error("删除知识到回收站失败，知识ID:{}", knowledgeid);
 				result.put(Constants.status, Constants.ResultType.fail.v());
 				return result;
 			}
 			// 删除知识目录中的信息
-			int categoryCount = knowledgeCategoryService
-					.updateKnowledgeCategory(knowledgeid[i], catetoryid);
+			int categoryCount = knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], catetoryid);
 			if (categoryCount == 0) {
 				logger.error("修改知识目录失败，知识ID:{}", knowledgeid);
 				result.put(Constants.status, Constants.ResultType.fail.v());
@@ -206,19 +200,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public Map<String, Object> deleteKnowledgeNew(String knowledgeids,
-			long catetoryid, long userid) {
+	public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		long[] knowledgeid = null;
 
 		// 检查是否为标准数据
 		try {
 			if (knowledgeids.endsWith(",")) {
-				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
-						.substring(0, knowledgeids.length() - 1).split(","));
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
 			} else {
-				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids
-						.split(","));
+				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.split(","));
 			}
 		} catch (Exception e) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
@@ -227,8 +218,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 		// 批量删除
 		for (int i = 0; i < knowledgeid.length; i++) {
-			KnowledgeBase bl = knowledgeBaseMapper
-					.selectByPrimaryKey(knowledgeid[i]);
+			KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
 			String title = "";
 			long ct = 0;
 			if (bl != null) {
@@ -238,8 +228,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 				continue;
 			}
 			String obj = Constants.getTableName(ct + "");
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
-					obj.length());
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
 			Query query = new Query(criteria);
 			Update update = new Update();
@@ -253,20 +242,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			try {
 				mongoTemplate.updateFirst(query, update, collectionName);
 				// 多个目录下同一知识，如果回收站里有，不插入回收站
-				KnowledgeRecycle recycle = knowledgeRecycleService
-						.selectByKnowledgeId(knowledgeid[i]);
+				KnowledgeRecycle recycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid[i]);
 				if (recycle == null) {
 
-					knowledgeRecycleService.insertKnowledgeRecycle(
-							knowledgeid[i], title, ct + "", userid, catetoryid);
+					knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title, ct + "", userid, catetoryid);
 				}
-				List<KnowledgeCategory> list = knowledgeCategoryService
-						.selectKnowledgeCategory(knowledgeid[i]);
+				List<KnowledgeCategory> list = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid[i]);
 				if (list != null && list.size() > 0) {
 					for (KnowledgeCategory knowledgeCategory : list) {
-						knowledgeCategoryService.updateKnowledgeCategory(
-								knowledgeid[i],
-								knowledgeCategory.getCategoryId());
+						knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], knowledgeCategory.getCategoryId());
 					}
 				}
 			} catch (Exception e) {
@@ -277,15 +261,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
 
 			// 删除该知识评论信息
-			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i],
-					userid);
-			// 大数据通知接口
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("oper", "del");
-			params.put("type", ct);
-			params.put("kId", knowledgeid[i]);
-			noticeThreadPool.noticeDataCenter(
-					Constants.noticeType.knowledge.v(), params);
+			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i], userid);
+			noticeDataCenter(ct + "", knowledgeid[i], "del");
 		}
 		return result;
 	}
@@ -293,199 +270,38 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Override
 	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		// 知识来源，（0，系统，1，用户）
-		// Short source = (short) Constants.KnowledgeSource.user.v();
-		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-				.getColumnid();
-		// TODO 判断用户是否选择栏目
-		String columnPath = null;
-		Column column = null;
-		if (Long.parseLong(columnid) != 0) {
-			columnPath = columnService.getColumnPathById(Long
-					.parseLong(columnid));
-		} else {
-			column = columnService.getUnGroupColumnIdBySortId(user.getId());
-			if (column == null) {
-				// 没有未没分组栏目，添加
-				columnService.checkNogroup(user.getId());
-			} else {
-				columnid = column.getId() + "";
-			}
 
-			columnPath = Constants.unGroupSortName;
-		}
-
-		if (isAsso(vo.getAsso())) {
-			vo.setAsso("");
-		}
-
-		vo.setColumnid(columnid);
-		vo.setColumnPath(columnPath);
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
-			vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
-			columnPath = Constants.KnowledgeType.Opinion.c();
-			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
-
-		}
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
-			vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
-			columnPath = Constants.KnowledgeType.Article.c();
-			vo.setColumnPath(Constants.KnowledgeType.Article.c());
-
-		}
-		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
-			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-		}
-
-		// 如果是行业，投融工具，经典案例，不从内容取简介
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Investment
-				.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Industry
-						.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case
-						.v()) {
-			if (StringUtils.isNotBlank(vo.getDesc())) {
-				String content = HtmlToText.html2Text(vo.getDesc());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			} else {
-				String content = HtmlToText.html2Text(vo.getContent());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			}
-		} else {
-			if (StringUtils.isBlank(vo.getDesc())) {
-				String content = HtmlToText.html2Text(vo.getContent());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			}
-		}
-		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
-		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
-				vo.getEssence(), "on") ? "1" : "0" : "0");
-		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
-		vo.setKnowledgestatus(Constants.Status.checked.v());
 		// 查询知识内容敏感词
-		List<String> listword = sensitiveWordService.sensitiveWord(vo
-				.getContent());
+		List<String> listword = sensitiveWordService.sensitiveWord(vo.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.warn("发布的知识内容存在敏感词，参数为：{}", listword.toString());
-			result.put(Constants.status,
-					Constants.ResultType.sensitiveWords.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.sensitiveWord.c());
+			result.put(Constants.status, Constants.ResultType.sensitiveWords.v());
+			result.put(Constants.errormessage, Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
 		}
-		// 关联信息存入mysql中
-		if (StringUtils.isNotBlank(vo.getAsso())) {
-			knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-					vo.getAsso(), vo.getkId(), user.getId());
-		}
-		knowledgeNewsDAO.updateKnowledge(vo, user);
-
-		// if (Integer.parseInt(vo.getColumnType()) != Constants.Type.Law.v())
-		// {// 法律法规只有独乐，不入权限表
-
+		setVoValues(vo, user);
+		insertOrUpdateKnowledge(vo, user);
 		// 添加知识到权限表
 		result = insertUserPermissions(vo, user);
 		Integer status = Integer.parseInt(result.get(Constants.status) + "");
-
 		if (status != 1) {
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.paramNotValid.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
 			return result;
 		}
-		// }
 
 		// 添加知识到目录知识表
 		result = insertCatalogueIds(vo, user);
 		status = Integer.parseInt(result.get(Constants.status) + "");
 
 		if (status != 1) {
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
 			return result;
 		}
 
-		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
-				.getkId());
-		if (draft != null) {
-
-			int draftV = knowledgeDraftService
-					.deleteKnowledgeDraft(vo.getkId());
-
-			if (draftV == 0) {
-				logger.error("删除该知识所在的草稿箱信息，知识ID:{}", vo.getkId());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-		}
-		KnowledgeRecycle recycle = knowledgeRecycleService
-				.selectByKnowledgeId(vo.getkId());
-		if (recycle != null) {
-
-			int recycleV = knowledgeRecycleService.deleteKnowledgeRecycle(vo
-					.getkId());
-
-			if (recycleV == 0) {
-				logger.error("删除该知识所在的回收站信息，知识ID:{}", vo.getkId());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-		}
-
-		try {
-			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
-					.v()) {
-				UserFeed feed = new UserFeed();
-				feed.setContent(vo.getContent());
-				feed.setCreatedBy(user.getName());
-				feed.setCreatedById(user.getId());
-				feed.setCtime(DateFunc.getDate());
-				feed.setGroupName("仅好友可见");
-				feed.setScope(1);// 设置可见级别
-				feed.setGroupName("");
-				feed.setTargetId(vo.getkId());
-				feed.setTitle(vo.getTitle());
-				feed.setType(1);
-				feed.setImgPath("");// 长观点地址
-				feed.setDelstatus(0);// 删除状态
-				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(
-						vo.getContent(), -1, user.getId());
-				feed.setReceivers(receivers);// 获取接收人信息
-				feed.setDiaryType(1);
-				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
-				feed.setEtInfo(etInfo);
-				userFeedService.saveOrUpdate(feed);
-			}
-		} catch (Exception e) {
-			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
-
-		knowledgeDraftService.deleteKnowledgeSingalDraft(vo.getkId(),
-				vo.getColumnType(), user.getId());
+		saveFeed(vo, user);
 		// 大数据通知接口
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", "upd");
-		params.put("type", vo.getColumnType());
-		params.put("kId", vo.getkId());
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-				params);
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -517,14 +333,13 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
 			e.printStackTrace();
 		}
-		return mongoTemplate.findOne(query, Knowledge.class,
-				obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+		return mongoTemplate.findOne(query, Knowledge.class, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 	}
 
+	@Deprecated
 	@Override
-	public List<KnowledgeNews> selectByParam(Long columnid, long source,
-			Long userid, List<Long> ids, int page, int size) {
+	public List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid, List<Long> ids, int page, int size) {
 		Criteria criteria1 = new Criteria().is(userid);
 		Criteria criteria2 = new Criteria();
 		if (ids != null) {
@@ -541,16 +356,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		return mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
 	}
 
+	@Deprecated
 	@Override
 	public void deleteKnowledgeByid(long knowledgeid) {
 
-		KnowledgeDraft knowledgeDraft = knowledgeDraftService
-				.selectByKnowledgeId(knowledgeid);
+		KnowledgeDraft knowledgeDraft = knowledgeDraftService.selectByKnowledgeId(knowledgeid);
 
 		String obj = Constants.getTableName(knowledgeDraft.getType());
 
-		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
-				obj.length());
+		String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
 		mongoTemplate.remove(query, collectionName);
@@ -561,128 +375,26 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.userNotLogin.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
 			return result;
 		}
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		// 查询知识内容敏感词
-		List<String> listword = sensitiveWordService.sensitiveWord(vo
-				.getContent());
+		List<String> listword = sensitiveWordService.sensitiveWord(vo.getContent());
 		if (listword != null && listword.size() > 0) {
 			logger.warn("发布的知识内容存在敏感词，参数为：{}", listword.toString());
-			result.put(Constants.status,
-					Constants.ResultType.sensitiveWords.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.sensitiveWord.c());
+			result.put(Constants.status, Constants.ResultType.sensitiveWords.v());
+			result.put(Constants.errormessage, Constants.ErrorMessage.sensitiveWord.c());
 			result.put("listword", listword);
 			return result;
-		}  
-		// 获取Session用户值
-		long userId = user.getId();
-
-		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo
-				.getColumnid();
-		// 判断用户是否选择栏目
-		String columnPath = null;
-		Column column = null;
-		if (Long.parseLong(columnid) != 0) {
-			columnPath = columnService.getColumnPathById(Long
-					.parseLong(columnid));
-		} else {
-			column = columnService.getUnGroupColumnIdBySortId(user.getId());
-			if (column == null) {
-				// 没有未没分组栏目，添加
-				columnService.checkNogroup(userId);
-			} else {
-				columnid = column.getId() + "";
-			}
-
-			columnPath = Constants.unGroupSortName;
 		}
-		if (this.isAsso(vo.getAsso())) {
-			vo.setAsso("");
-		}
-		// 知识入Mongo
-		vo.setkId(kId);
-		vo.setColumnPath(columnPath);
-		vo.setColumnid(columnid);
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
-			vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
-			columnPath = Constants.KnowledgeType.Opinion.c();
-			vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
-
-		}
-
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
-			vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
-			columnPath = Constants.KnowledgeType.Article.c();
-			vo.setColumnPath(Constants.KnowledgeType.Article.c());
- 
-		}
-		// 如果是行业，投融工具，经典案例，不从内容取简介
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Investment
-				.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Industry
-						.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case
-						.v()) {
-			if (StringUtils.isNotBlank(vo.getDesc())) {
-				String content = HtmlToText.html2Text(vo.getDesc());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			} else {
-				String content = HtmlToText.html2Text(vo.getContent());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			}
-		} else {
-			if (StringUtils.isBlank(vo.getDesc())) {
-				String content = HtmlToText.html2Text(vo.getContent());
-				if (StringUtils.isNotBlank(content)) {
-					content = content.length() > 50 ? content.substring(0, 50)
-							+ "..." : content;
-				}
-				vo.setDesc(content);
-			}
-
-		}
-		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
-		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
-		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(
-				vo.getEssence(), "on") ? "1" : "0" : "0");
-		vo.setKnowledgestatus(Constants.Status.checked.v());
-		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
-			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			// 关联信息存入mysql中
-			if (StringUtils.isNotBlank(vo.getAsso())) {
-
-				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId(), user.getId());
-			}
-			knowledgeNewsDAO.updateKnowledge(vo, user);
-
-		} else {
-			if (StringUtils.isNotBlank(vo.getAsso())) {
-				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId(), user.getId());
-			}
-			knowledgeNewsDAO.insertknowledge(vo, user);
-		}
-
+		setVoValues(vo, user);
+		insertOrUpdateKnowledge(vo, user); // 插入Or修改知识
 		// 添加知识到权限表
 		result = insertUserPermissions(vo, user);
 		Integer status = Integer.parseInt(result.get(Constants.status) + "");
 		if (status != 1) {
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.paramNotValid.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
 			return result;
 		}
 
@@ -691,64 +403,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		status = Integer.parseInt(result.get(Constants.status) + "");
 
 		if (status != 1) {
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
 			return result;
 		}
-		// 动态存观点
-		try {
-			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
-					.v()) {
-				UserFeed feed = new UserFeed();
-				feed.setContent(vo.getContent());
-				feed.setCreatedBy(user.getName());
-				feed.setCreatedById(user.getId());
-				feed.setCtime(DateFunc.getDate());
-				feed.setGroupName("仅好友可见");
-				feed.setScope(1);// 设置可见级别
-				feed.setGroupName("");
-				feed.setTargetId(vo.getkId());
-				feed.setTitle(vo.getTitle());
-				feed.setType(1);
-				feed.setImgPath("");// 长观点地址
-				feed.setDelstatus(0);// 删除状态
-				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(
-						vo.getContent(), -1, user.getId());
-				feed.setReceivers(receivers);// 获取接收人信息
-				feed.setDiaryType(1);
-				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
-				feed.setEtInfo(etInfo);
-				userFeedService.saveOrUpdate(feed);
-			}
-		} catch (Exception e) {
-			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
-
-
-		// TODO 草稿箱中是否有该知识
-		KnowledgeDraft draft = knowledgeDraftService.selectByKnowledgeId(vo
-				.getkId());
-		if (draft != null) {
-
-			int draftV = knowledgeDraftService
-					.deleteKnowledgeDraft(vo.getkId());
-
-			if (draftV == 0) {
-				logger.error("删除该知识所在的草稿箱信息，知识ID:{}", vo.getkId());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeFail.c());
-				return result;
-			}
-		}
-		// 大数据通知接口
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", "add");
-		params.put("type", vo.getColumnType());
-		params.put("kId", vo.getkId());
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-				params);
+		saveFeed(vo, user); // 动态存观点
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -756,17 +415,42 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		return result;
 	}
 
+	/**
+	 * @param vo
+	 * @param user
+	 */
+	private void setVoValues(KnowledgeNewsVO vo, User user) {
+		Map<String, Object> result;
+		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
+		result = getColumnidAndColumnPath(vo, user.getId()); // 获得该用户的栏目路径
+		vo.setColumnid(result.get("columnid") + "");
+		vo.setColumnPath(result.get("columnPath") + "");
+		if (this.isAsso(vo.getAsso())) {
+			vo.setAsso("");
+		}
+
+		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
+			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+		} else {
+			vo.setkId(kId);
+		}
+		vo.setDesc(getDesc(vo)); // 如果是行业，投融工具，经典案例，不从内容取简介
+		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
+		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(vo.getEssence(), "on") ? "1" : "0" : "0");
+		vo.setKnowledgestatus(Constants.Status.checked.v());
+	}
+
+	@Deprecated
 	@Override
 	public void restoreKnowledgeByid(long knowledgeid, long userid) {
 
-		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
-				.selectByKnowledgeId(knowledgeid);
+		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid);
 
 		String obj = Constants.getTableName(knowledgerecycle.getType());
 
 		try {
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
-					obj.length());
+			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 
 			Criteria criteria = Criteria.where("_id").is(knowledgeid);
 
@@ -777,56 +461,37 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			mongoTemplate.updateFirst(query, update, collectionName);
 
 			// //回收站恢复，如果是app端，回收站知识不恢复到目录
-			List<KnowledgeCategory> listcategory = knowledgeCategoryService
-					.selectKnowledgeCategory(knowledgeid);
+			List<KnowledgeCategory> listcategory = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid);
 			if (listcategory != null && listcategory.size() > 0) {
 				for (KnowledgeCategory knowledgeCategory : listcategory) {
-					UserCategory usercategory = userCategoryService
-							.selectByPrimaryKey(knowledgeCategory
-									.getCategoryId());
+					UserCategory usercategory = userCategoryService.selectByPrimaryKey(knowledgeCategory.getCategoryId());
 
 					if (usercategory != null) {
-						knowledgeCategoryService.updateKnowledgeCategorystatus(
-								knowledgeid, knowledgeCategory.getCategoryId());
+						knowledgeCategoryService.updateKnowledgeCategorystatus(knowledgeid, knowledgeCategory.getCategoryId());
 					} else {
 						// 查询该用户下的未分组目录ID
-						List<UserCategory> list = userCategoryService
-								.selectNoGroup(userid, Constants.unGroupSortId,
-										(byte) 0);
+						List<UserCategory> list = userCategoryService.selectNoGroup(userid, Constants.unGroupSortId, (byte) 0);
 						if (list != null) {
 							// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
 							UserCategory category = list.get(0);
-							List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-									.selectKnowledgeCategory(
-											knowledgeid,
-											category.getId(),
-											Constants.KnowledgeCategoryStatus.effect
-													.v() + "");
+							List<KnowledgeCategory> listnogroup = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid, category.getId(),
+									Constants.KnowledgeCategoryStatus.effect.v() + "");
 							if (listnogroup.size() == 0) {
-								knowledgeCategoryService
-										.insertKnowledgeCategoryNogroup(
-												knowledgeid, category.getId());
+								knowledgeCategoryService.insertKnowledgeCategoryNogroup(knowledgeid, category.getId());
 							}
 						}
 					}
 				}
 			} else {
 				// 查询该用户下的未分组目录ID
-				List<UserCategory> list = userCategoryService.selectNoGroup(
-						userid, Constants.unGroupSortId, (byte) 0);
+				List<UserCategory> list = userCategoryService.selectNoGroup(userid, Constants.unGroupSortId, (byte) 0);
 				if (list != null) {
 					// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
 					UserCategory category = list.get(0);
-					List<KnowledgeCategory> listnogroup = knowledgeCategoryService
-							.selectKnowledgeCategory(
-									knowledgeid,
-									category.getId(),
-									Constants.KnowledgeCategoryStatus.effect
-											.v() + "");
+					List<KnowledgeCategory> listnogroup = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid, category.getId(),
+							Constants.KnowledgeCategoryStatus.effect.v() + "");
 					if (listnogroup.size() == 0) {
-						knowledgeCategoryService
-								.insertKnowledgeCategoryNogroup(knowledgeid,
-										category.getId());
+						knowledgeCategoryService.insertKnowledgeCategoryNogroup(knowledgeid, category.getId());
 					}
 				}
 			}
@@ -839,24 +504,22 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			params.put("oper", "add");
 			params.put("type", knowledgerecycle.getType());
 			params.put("kId", knowledgeid);
-			noticeThreadPool.noticeDataCenter(
-					Constants.noticeType.knowledge.v(), params);
+			noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void deleteforeverKnowledge(long knowledgeid) {
 
-		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService
-				.selectByKnowledgeId(knowledgeid);
+		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid);
 
 		String obj = Constants.getTableName(knowledgerecycle.getType());
 
-		String collectionName = obj.substring(obj.lastIndexOf(".") + 1,
-				obj.length());
+		String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
 		Criteria criteria = Criteria.where("_id").is(knowledgeid);
 		Query query = new Query(criteria);
 		Update update = new Update();
@@ -866,17 +529,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo,
-			User user) {
+	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<String> permList = null;
 		// 删除知识之前的权限
 		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
-		// 添加知识到权限表.若是独乐（1），不入权限,直接插入到mongodb中
-
-		// JSONObject j = JSONObject.fromObject(vo.getSelectedIds().substring(1,
-		// vo.getSelectedIds().length()-1).replaceAll("\\\\",""));
-		// vo.setSelectedIds(j.toString());
 		// 创建知识，生成动态
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("type", "10");
@@ -890,43 +547,33 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		param.put("picPath", user.getPicPath() + "");
 		param.put("forwardingContent", "");
 		param.put("gender", user.getSex());
-		param.put("createType", user.isVirtual()?"2":"1");
-		if (StringUtils.isNotBlank(vo.getSelectedIds())
-				&& !vo.getSelectedIds().equals(dule)) {
+		param.put("createType", user.isVirtual() ? "2" : "1");
+		if (StringUtils.isNotBlank(vo.getSelectedIds()) && !vo.getSelectedIds().equals(dule)) {
 			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo
-					.getSelectedIds());
+			Boolean dule = JsonUtil.checkKnowledgePermission(vo.getSelectedIds());
 			if (dule == null) {
 				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
 				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
 				return result;
 			}
 			if (!dule) {
-				// 判断-9
-				permList = userPermissionService.userPermissionAll(
-						vo.getSelectedIds(), user);
-
+				// 获取用户
+				permList = userPermissionService.userPermissionAll(vo.getSelectedIds(), user);
 				// 大乐全平台分享
-				userPermissionService.insertUserShare(permList, vo.getkId(),
-						vo, user);
+				userPermissionService.insertUserShare(permList, vo.getkId(), vo, user);
 				// 分享到金桐脑
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("userId", user.getId());
 				params.put("vo", vo);
-				noticeThreadPool.noticeDataCenter(
-						Constants.noticeType.shareToJinTN.v(), params);
+				noticeThreadPool.noticeDataCenter(Constants.noticeType.shareToJinTN.v(), params);
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
-				int pV = userPermissionService.insertUserPermission(permList,
-						vo.getkId(), user.getId(), vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()),
-						Long.parseLong(vo.getColumnid()));
+				int pV = userPermissionService.insertUserPermission(permList, vo.getkId(), user.getId(), vo.getShareMessage(),
+						Short.parseShort(vo.getColumnType()), Long.parseLong(vo.getColumnid()));
 				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}",
-							vo.getkId());
+					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", vo.getkId());
 				}
 				param.put("receiverIds", changeRelation(permList));
 			}
@@ -939,13 +586,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
-		// 大数据通知接口
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", "upd");
-		params.put("type", vo.getColumnType());
-		params.put("kId", vo.getkId());
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-				params);
+		noticeDataCenter(vo.getColumnType(),vo.getkId(), "upd");
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
@@ -994,33 +635,28 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			Update update = new Update();
 			update.set("selectedIds", vo.getSelectedIds());
 
-			mongoTemplate.updateFirst(query, update,
-					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+			mongoTemplate.updateFirst(query, update, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("修改知识权限请求失败,id:{},type{}", vo.getkId(),
-					vo.getColumnType());
+			logger.info("修改知识权限请求失败,id:{},type{}", vo.getkId(), vo.getColumnType());
 		}
 
 		logger.info("修改知识权限请求成功,id:{},type{}", vo.getkId(), vo.getColumnType());
 
 	}
 
+	@Deprecated
 	@Override
-	public void updateKnowledgeForInvestment(Long id, String pic,
-			String refrenceData, String imageBookData, String content,
-			String desc, Long userId) {
-		knowledgeDao.updateInvestment(id, pic, refrenceData, imageBookData,
-				content, desc);
+	public void updateKnowledgeForInvestment(Long id, String pic, String refrenceData, String imageBookData, String content, String desc, Long userId) {
+		knowledgeDao.updateInvestment(id, pic, refrenceData, imageBookData, content, desc);
 		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
 		// 大数据通知接口
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("oper", "upd");
 		params.put("type", "2");
 		params.put("kId", id);
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-				params);
+		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
 	}
 
 	public void updateByPrimaryKey(KnowledgeBase kb) {
@@ -1033,71 +669,41 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (user == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.userNotLogin.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
 			return result;
 		}
 		logger.info("开始保存知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
-
 		// 保存，通过知识ID 查找需要保存的信息
 		if (vo.getkId() != 0) {
 			String taskId = MakeTaskId.getTaskId();
-			Knowledge knowledge = selectKnowledge(vo.getkId(),
-					vo.getColumnType());
-
+			Knowledge knowledge = selectKnowledge(vo.getkId(), vo.getColumnType());
 			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-			String columnid = StringUtils.isBlank(knowledge.getColumnid()) ? "0"
-					: knowledge.getColumnid();
+			String columnid = StringUtils.isBlank(knowledge.getColumnid()) ? "0" : knowledge.getColumnid();
 			// 判断用户是否选择栏目
 			String columnPath = null;
 			if (Long.parseLong(columnid) != 0) {
-				columnPath = columnService.getColumnPathById(Long
-						.parseLong(columnid));
+				columnPath = columnService.getColumnPathById(Long.parseLong(columnid));
 			} else {
-
 				columnPath = "";
 			}
 			if (isAsso(vo.getAsso())) {
 				vo.setAsso("");
 			}
-			// 保存附件
-			List<FileIndex> filelist = fileIndexService.selectByTaskId(
-					knowledge.getTaskid(),
-					Constants.KnowledgeCategoryStatus.effect.v() + "");
-			if (filelist != null && filelist.size() > 0) {
-				for (FileIndex fileIndex : filelist) {
-					String fileId = MakePrimaryKey.getPrimaryKey();
-					FileIndex fileIndex1 = new FileIndex();
-					fileIndex1.setId(fileId);
-					fileIndex1.setFilePath(fileIndex.getFilePath());
-					fileIndex1.setFileTitle(fileIndex.getFileTitle());
-					fileIndex1.setTaskId(taskId);
-					fileIndex1.setFileSize(fileIndex.getFileSize());
-					fileIndex1.setAuthor(user.getId());
-					fileIndex1.setAuthorName(user.getName());
-					fileIndex1.setMd5(fileIndex.getMd5());
-					fileIndex1.setStatus(true);
-					fileIndex1.setCtime(DateUtil
-							.formatWithYYYYMMDDHHMMSS(new Date()));
-					fileIndexService.insert(fileIndex1);
-				}
-			}
+			saveFileIndex(knowledge.getTaskid(), user);
 			// 知识入Mongo
 			vo.setkId(kId);
 			vo.setColumnPath(columnPath);
 			vo.setColumnid(columnid);
 			vo.setContent(knowledge.getContent());
 			vo.setTaskId(taskId);
-			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion
-					.v()) {
+			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
 				vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
 				columnPath = Constants.KnowledgeType.Opinion.c();
 				vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
 
 			}
 
-			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article
-					.v()) {
+			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
 				vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
 				columnPath = Constants.KnowledgeType.Article.c();
 				vo.setColumnPath(Constants.KnowledgeType.Article.c());
@@ -1109,80 +715,28 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			vo.setEssence(knowledge.getEssence() + "");
 			vo.setKnowledgestatus(Constants.Status.checked.v());
 			vo.setPic(knowledge.getPic());
-
-			// 关联信息存入mysql中
-			if (StringUtils.isNotBlank(vo.getAsso())) {
-				knowledgeConnectInfoService.insertKnowledgeConnectInfo(
-						vo.getAsso(), vo.getkId(), user.getId());
-			}
-			knowledgeNewsDAO.insertknowledge(vo, user);
-
-			// if (Integer.parseInt(vo.getColumnType()) !=
-			// Constants.Type.Law.v()) {// 法律法规只有独乐，不入权限表
+			insertOrUpdateKnowledge(vo, user);
 			// 添加知识到权限表
 			result = insertUserPermissions(vo, user);
-			Integer status = Integer
-					.parseInt(result.get(Constants.status) + "");
-
+			Integer status = Integer.parseInt(result.get(Constants.status) + "");
 			if (status != 1) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.paramNotValid.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
 				return result;
 			}
-			// }
-
 			// 添加知识到目录知识表
 			result = insertCatalogueIds(vo, user);
 			status = Integer.parseInt(result.get(Constants.status) + "");
-
 			if (status != 1) {
-				result.put(Constants.errormessage,
-						Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
+				result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
 				return result;
 			}
-
-			// 动态存观点
-			try {
-				if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion
-						.v()) {
-					UserFeed feed = new UserFeed();
-					feed.setContent(vo.getContent());
-					feed.setCreatedBy(user.getName());
-					feed.setCreatedById(user.getId());
-					feed.setCtime(DateFunc.getDate());
-					feed.setGroupName("仅好友可见");
-					feed.setScope(1);// 设置可见级别
-					feed.setGroupName("");
-					feed.setTargetId(vo.getkId());
-					feed.setTitle(vo.getTitle());
-					feed.setType(1);
-					feed.setImgPath("");// 长观点地址
-					feed.setDelstatus(0);// 删除状态
-					List<ReceiversInfo> receivers = diaryService
-							.getReceiversInfo(vo.getContent(), -1, user.getId());
-					feed.setReceivers(receivers);// 获取接收人信息
-					feed.setDiaryType(1);
-					List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
-					feed.setEtInfo(etInfo);
-					userFeedService.saveOrUpdate(feed);
-				}
-			} catch (Exception e) {
-				logger.error("动态观点存储失败,知识ID{}", vo.getkId());
-				e.printStackTrace();
-			}
+			saveFeed(vo, user);
 		}
-
-		// 大数据通知接口
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", "add");
-		params.put("type", vo.getColumnType());
-		params.put("kId", vo.getkId());
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(),
-				params);
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.info("创建知识成功,知识ID:{}", vo.getkId());
+		logger.info("保存知识成功,知识ID:{}", vo.getkId());
 		return result;
 
 	}
@@ -1201,31 +755,24 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		// 添加知识到知识目录表
 		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
 			UserCategoryExample example = new UserCategoryExample();
-			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example
-					.createCriteria();
+			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example.createCriteria();
 			criteria.andSortidEqualTo(Constants.unGroupSortId);
 			criteria.andUserIdEqualTo(user.getId());
-			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common
-					.v());
-			List<UserCategory> list = userCategoryMapper
-					.selectByExample(example);
-			if (list != null && list.size() > 0) {//创建空指针异常
+			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common.v());
+			List<UserCategory> list = userCategoryMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {// 创建空指针异常
 				cIds = new long[1];
 				cIds[0] = list.get(0).getId();
 			}
 		} else {
 			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
 		}
-		
-		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(
-				vo.getkId(), cIds, user.getId(), user.getName(),
-				vo.getColumnPath(), vo);
+
+		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(vo.getkId(), cIds, user.getId(), user.getName(), vo.getColumnPath(), vo);
 		if (categoryV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}",
-					vo.getkId(), cIds);
+			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", vo.getkId(), cIds);
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addKnowledgeFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeFail.c());
 			return result;
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -1238,5 +785,158 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * 根据知识knowledgeId 来判断 insert Or update
+	 * 
+	 * @param vo
+	 * @param user
+	 */
+	public void insertOrUpdateKnowledge(KnowledgeNewsVO vo, User user) {
+		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
+			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
+			// 关联信息存入mysql中
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId()); // 关联信息存入mysql中
+			}
+			knowledgeNewsDAO.updateKnowledge(vo, user);
+		} else {
+			if (StringUtils.isNotBlank(vo.getAsso())) {
+				knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId());
+			}
+			knowledgeNewsDAO.insertknowledge(vo, user);
+		}
+	}
+
+	/**
+	 * 观点添加到动态
+	 * 
+	 * @param vo
+	 * @param user
+	 */
+	public void saveFeed(KnowledgeNewsVO vo, User user) {
+		try {
+			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion.v()) {
+				UserFeed feed = new UserFeed();
+				feed.setContent(vo.getContent());
+				feed.setCreatedBy(user.getName());
+				feed.setCreatedById(user.getId());
+				feed.setCtime(DateFunc.getDate());
+				feed.setGroupName("仅好友可见");
+				feed.setScope(1);// 设置可见级别
+				feed.setGroupName("");
+				feed.setTargetId(vo.getkId());
+				feed.setTitle(vo.getTitle());
+				feed.setType(1);
+				feed.setImgPath("");// 长观点地址
+				feed.setDelstatus(0);// 删除状态
+				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(vo.getContent(), -1, user.getId());
+				feed.setReceivers(receivers);// 获取接收人信息
+				feed.setDiaryType(1);
+				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
+				feed.setEtInfo(etInfo);
+				userFeedService.saveOrUpdate(feed);
+			}
+		} catch (Exception e) {
+			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 获取知识栏目Id和栏目路径
+	 * 
+	 * @param vo
+	 * @param userId
+	 * @return
+	 */
+	public Map<String, Object> getColumnidAndColumnPath(KnowledgeNewsVO vo, long userId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo.getColumnid();
+		String columnPath = null;
+		Column column = null;
+		if (Long.parseLong(columnid) != 0) {
+			columnPath = columnService.getColumnPathById(Long.parseLong(columnid));
+		} else {
+			column = columnService.getUnGroupColumnIdBySortId(userId);
+			if (column == null) {
+				columnService.checkNogroup(userId); // 没有未没分组栏目，添加
+			} else {
+				columnid = column.getId() + "";
+			}
+			columnPath = Constants.unGroupSortName;
+		}
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
+			columnid = Constants.KnowledgeType.Opinion.v() + "";
+			columnPath = Constants.KnowledgeType.Opinion.c();
+		}
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
+			columnid = Constants.KnowledgeType.Article.v() + "";
+			columnPath = Constants.KnowledgeType.Article.c();
+		}
+		result.put("columnid", columnid);
+		result.put("columnPath", columnPath);
+		return result;
+	}
+
+	/**
+	 * 接知识类型 获取知识的desc
+	 * 
+	 * @param vo
+	 * @return
+	 */
+	public String getDesc(KnowledgeNewsVO vo) {
+		String content = "";
+		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Investment.v()
+				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Industry.v()
+				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case.v()) {
+			if (StringUtils.isNotBlank(vo.getDesc())) {
+				return getContent(vo.getDesc());
+			} else {
+				return getContent(vo.getContent());
+			}
+		} else {
+			if (StringUtils.isBlank(vo.getDesc())) {
+				return getContent(vo.getContent());
+			}
+		}
+		return content;
+	}
+
+	/**
+	 * 保存知识，通过taskId 获取原知识附件，保存到新知识内
+	 * 
+	 * @param taskId
+	 * @param user
+	 */
+	public void saveFileIndex(String taskId, User user) {
+		// 保存附件
+		List<FileIndex> filelist = fileIndexService.selectByTaskId(taskId, Constants.KnowledgeCategoryStatus.effect.v() + "");
+		if (filelist != null && filelist.size() > 0) {
+			for (FileIndex fileIndex : filelist) {
+				String fileId = MakePrimaryKey.getPrimaryKey();
+				FileIndex fileIndex1 = new FileIndex();
+				fileIndex1.setId(fileId);
+				fileIndex1.setFilePath(fileIndex.getFilePath());
+				fileIndex1.setFileTitle(fileIndex.getFileTitle());
+				fileIndex1.setTaskId(taskId);
+				fileIndex1.setFileSize(fileIndex.getFileSize());
+				fileIndex1.setAuthor(user.getId());
+				fileIndex1.setAuthorName(user.getName());
+				fileIndex1.setMd5(fileIndex.getMd5());
+				fileIndex1.setStatus(true);
+				fileIndex1.setCtime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
+				fileIndexService.insert(fileIndex1);
+			}
+		}
+	}
+
+	public String getContent(String strContent) {
+		String content = HtmlToText.html2Text(strContent);
+		if (StringUtils.isNotBlank(content)) {
+			content = content.length() > 50 ? content.substring(0, 50) + "..." : content;
+		}
+		return content;
 	}
 }

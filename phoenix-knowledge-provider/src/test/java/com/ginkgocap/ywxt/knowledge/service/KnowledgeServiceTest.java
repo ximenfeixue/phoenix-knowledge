@@ -25,6 +25,8 @@ public class KnowledgeServiceTest extends TestBase {
 		User user =new User();
 		user.setId(36);
 		user.setName("sss");
+		vo.setColumnType("1");
+		vo.setAsso("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}");
 	    knowledgeService.insertknowledge(vo, user);
 	}
 }

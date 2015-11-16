@@ -37,7 +37,7 @@ public interface KnowledgeService {
 	/**
 	 * 删除资讯知识
 	 */
-
+	@Deprecated
 	Map<String, Object> deleteKnowledge(String knowledgeids, long catetoryid,
 			String types, String titles, User user);
 
@@ -66,12 +66,14 @@ public interface KnowledgeService {
 	 *            资讯ids
 	 * @return
 	 */
+	@Deprecated
 	List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid,
 			List<Long> ids, int page, int size);
 
 	/**
 	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
 	 */
+	@Deprecated
 	void deleteKnowledgeByid(long knowledgeid);
 
 	/**
@@ -79,8 +81,10 @@ public interface KnowledgeService {
 	 * 
 	 * @param knowledgeid
 	 */
+	@Deprecated
 	void restoreKnowledgeByid(long knowledgeid, long userid);
 
+	@Deprecated
 	void deleteforeverKnowledge(long knowledgeid);
 
 	Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid,
@@ -109,7 +113,7 @@ public interface KnowledgeService {
 	/**
 	 * 编辑知识(投融工具)
 	 */
-
+	@Deprecated
 	public void updateKnowledgeForInvestment(Long id, String pic,
 			String refrenceData, String imageBookData, String content,
 			String desc, Long userId);
