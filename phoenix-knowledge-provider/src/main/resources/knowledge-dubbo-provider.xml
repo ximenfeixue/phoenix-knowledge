@@ -41,8 +41,8 @@
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
 	<!--     此接口上线后去掉 -->
  
-  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" ref="articleService" version="1.0.0"/>
- 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" ref="favoritesService" version="1.0.0"/> 
+<!--   	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" ref="articleService" version="1.0.0"/> -->
+<!--  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" ref="favoritesService" version="1.0.0"/>  -->
  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" ref="categoryService" version="1.0.0"/>
  
     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ConnectInfoService" ref="connectInfoService" version="1.0.0"/>

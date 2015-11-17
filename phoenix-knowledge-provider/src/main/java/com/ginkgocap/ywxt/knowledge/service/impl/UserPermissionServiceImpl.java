@@ -463,139 +463,42 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	@Override
 	public List<String> userPermissionAll(String selectedIds, User user) {
 		Map<Integer, Object> map = new HashMap<Integer, Object>();
-		List<String> perList = null;
-		List<User> list = null;
-		JSONArray jsons = null;
-		JSONObject job = null;
+		List<String> perList = new ArrayList<String>();
 		String zhongles = "";
 		String xiaoles = "";
 		String dales = "";
-		boolean flag = true;
 		JSONObject j = JSONObject.fromObject(selectedIds);
 		dales = j.get(Constants.PermissionType.dales.c()).toString();
-		perList = new ArrayList<String>();
-		if (StringUtils.equals(dales, "-9") || isPlatform(dales)) {
-			list = friendsRelationService.findAllFriendsByUserId(user.getId());
-			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
-			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
-			// String platform = "\"id\":-1";
-			String gintong = "\"id\":0";
-			if (!zhongles.contains(gintong) && !xiaoles.contains(gintong)) {
-				perList.add("0");
-			}
-			if (list != null && list.size() > 0) {
-				for (User user2 : list) {
-					flag = true;
-					if (!StringUtils.equals(zhongles, "[]")) {
-						if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
-							flag = false;
-						}
-					}
-					if (!StringUtils.equals(xiaoles, "[]")) {
-						if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
-							flag = false;
-						}
-					}
-					if (flag) {
-						perList.add(user2.getId() + "");
-					}
-				}
-			}
+		if (isPlatform(dales)) {
+			perList = getUserIdPlatform(user);
 		} else {
-			jsons = JSONArray.fromObject(dales);
-			for (int i = 0; i < jsons.size(); i++) {
-				job = jsons.getJSONObject(i); // 遍历 jsonarray
-				perList.add(job.get("id") + "");
-			}
+			perList = getUserIdArray(dales);
 		}
 		map.put(Constants.PermissionType.dales.v(), perList);
 		perList = null;
-
 		zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
-		perList = new ArrayList<String>();
-		if (StringUtils.equals(zhongles, "-9")|| isPlatform(zhongles)) {
-			dales = j.get(Constants.PermissionType.dales.c()).toString();
-			xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
-			// String platform = "\"id\":-1";
-			String gintong = "\"id\":0";
-			// if (!dales.contains(platform) && !xiaoles.contains(platform)) {
-			// perList.add("-1");
-			// }
-			if (!dales.contains(gintong) && !xiaoles.contains(gintong)) {
-				perList.add("0");
-			}
-			list = friendsRelationService.findAllFriendsByUserId(user.getId());
-			for (User user2 : list) {
-				flag = true;
-				if (!StringUtils.equals(dales, "[]")) {
-					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
-						flag = false;
-					}
-				}
-				if (!StringUtils.equals(xiaoles, "[]")) {
-					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
-						flag = false;
-					}
-				}
-				if (flag) {
-					perList.add(user2.getId() + "");
-				}
-			}
+		if (isPlatform(zhongles)) {
+			perList = getUserIdPlatform(user);
 		} else {
-			jsons = JSONArray.fromObject(zhongles);
-			for (int i = 0; i < jsons.size(); i++) {
-				job = jsons.getJSONObject(i); // 遍历 jsonarray
-				perList.add(job.get("id") + "");
-			}
+			perList = getUserIdArray(zhongles);
 		}
 		map.put(Constants.PermissionType.zhongles.v(), perList);
 		perList = null;
-
 		xiaoles = j.get(Constants.PermissionType.xiaoles.c()).toString();
-		perList = new ArrayList<String>();
-		if (StringUtils.equals(xiaoles, "-9")|| isPlatform(xiaoles)) {
-			dales = j.get(Constants.PermissionType.dales.c()).toString();
-			zhongles = j.get(Constants.PermissionType.zhongles.c()).toString();
-			// String platform = "\"id\":-1";
-			String gintong = "\"id\":0";
-			// if (!dales.contains(platform) && !zhongles.contains(platform)) {
-			// perList.add("-1");
-			// }
-			if (!dales.contains(gintong) && !zhongles.contains(gintong)) {
-				perList.add("0");
-			}
-			list = friendsRelationService.findAllFriendsByUserId(user.getId());
-
-			for (User user2 : list) {
-				flag = true;
-				if (!StringUtils.equals(zhongles, "[]")) {
-					if (zhongles.contains("\"id\":" + user2.getId() + ",")) {
-						flag = false;
-					}
-				}
-				if (!StringUtils.equals(dales, "[]")) {
-					if (xiaoles.contains("\"id\":" + user2.getId() + ",")) {
-						flag = false;
-					}
-				}
-				if (flag) {
-					perList.add(user2.getId() + "");
-				}
-			}
+		if (isPlatform(xiaoles)) {
+			perList = getUserIdPlatform(user);
 		} else {
-			jsons = JSONArray.fromObject(xiaoles);
-			for (int i = 0; i < jsons.size(); i++) {
-				job = jsons.getJSONObject(i); // 遍历 jsonarray
-				perList.add(job.get("id") + "");
-			}
+			perList = getUserIdArray(xiaoles);
 		}
 		map.put(Constants.PermissionType.xiaoles.v(), perList);
 		perList = null;
-
+		return getPermList(map);
+	}
+	
+	public List<String> getPermList(Map<Integer, Object> map) {
 		List<String> permList = new ArrayList<String>();
 		Set<Integer> set = map.keySet();
 		Iterator<Integer> iterator = set.iterator();
-
 		StringBuffer sb = new StringBuffer();
 		while (iterator.hasNext()) {
 			Integer key = iterator.next();
@@ -606,10 +509,43 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			permList.add(sb.toString());
 			sb = null;
 		}
-
 		return permList;
 	}
+	
+	/**
+	 * 取所有好友数据
+	 * @param user
+	 * @return
+	 */
+	public List<String> getUserIdPlatform(User user) {
+		List<User> list = null;
+		List<String> perList = new ArrayList<String>();
+		perList.add("0");
+		list = friendsRelationService.findAllFriendsByUserId(user.getId());
+		if (list != null && list.size() > 0) {
+			for (User user2 : list) {
+				perList.add(user2.getId() + "");
+			}
+		}
+		return perList;
+	}
 
+	/**
+	 * 取所选好友数据
+	 * @param user
+	 * @return
+	 */
+	public List<String> getUserIdArray(String str) {
+		JSONObject job = null;
+		List<String> perList = new ArrayList<String>();
+		JSONArray jsons = JSONArray.fromObject(str);
+		for (int i = 0; i < jsons.size(); i++) {
+			job = jsons.getJSONObject(i); // 遍历 jsonarray
+			perList.add(job.get("id") + "");
+		}
+		return perList;
+	}
+	
 	@Override
 	public Map<String, Object> importUserPermission(String selectedIds) {
 

@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.util.Page;
  * @author caihe
  * 
  */
+@Deprecated
 public interface KnowledgeRecycleService {
 
 	/**

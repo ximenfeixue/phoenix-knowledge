@@ -23,6 +23,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.ginkgocap.ywxt.knowledge.util.DateUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.ConvertUtil;
 import com.ginkgocap.ywxt.knowledge.util.tree.Tree;
 import com.ginkgocap.ywxt.util.PageUtil;
@@ -198,6 +199,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 				uc.setCategoryname("未分组");
 				uc.setSortid("111111111");
 				uc.setParentId(0l);
+				uc.setCreatetime(DateUtil.parseWithYYYYMMDDHHMMSS("2022-01-01 00:00:00"));
 				uc.setCategoryType((short) type);
 				uc.setUserId(uid);
 				this.insert(uc);
