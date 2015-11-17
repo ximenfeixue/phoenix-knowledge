@@ -17,7 +17,7 @@ public class KnowledgeServiceTest extends TestBase {
 		
 		KnowledgeNewsVO  vo =new KnowledgeNewsVO();
 		
-		vo.setSelectedIds("{\"dales\":[],\"zhongles\":[{\"id\":21,\"name\":\"a陈永梅\"},{\"id\":13247,\"name\":\"曾添dataplayer\"}],\"xiaoles\":[],\"dule\":false}");
+		vo.setSelectedIds("{\"dales\":[{\"id\":-1,\"name\":\"全平台\"}],\"zhongles\":[],\"xiaoles\":[],\"dule\":false}");
 		vo.setTitle("111");
 		vo.setColumnid("1");
 		vo.setContent("ss");
