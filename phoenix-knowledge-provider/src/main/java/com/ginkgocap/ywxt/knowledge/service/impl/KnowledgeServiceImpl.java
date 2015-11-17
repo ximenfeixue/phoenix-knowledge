@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import java.util.ArrayList;
