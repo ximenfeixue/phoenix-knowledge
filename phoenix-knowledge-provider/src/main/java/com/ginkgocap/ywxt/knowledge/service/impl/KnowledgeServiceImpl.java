@@ -377,7 +377,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			result.put(Constants.status, Constants.ResultType.fail.v());
 			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
 			return result;
-		}
+		} 
 		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
 		// 查询知识内容敏感词
 		List<String> listword = sensitiveWordService.sensitiveWord(vo.getContent());
