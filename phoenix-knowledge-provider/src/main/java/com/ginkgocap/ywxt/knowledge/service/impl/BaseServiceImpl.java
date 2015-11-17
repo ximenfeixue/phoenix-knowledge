@@ -25,8 +25,4 @@ public class BaseServiceImpl{
 		params.put("kId", knowledgeId);
 		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
 	}
-	  
-	/**
-	 * 
-	 */
 }
