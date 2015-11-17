@@ -281,7 +281,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			return result;
 		}
 		setVoValues(vo, user);
-		insertOrUpdateKnowledge(vo, user);
+		updateKnowledgeVO(vo, user);
 		// 添加知识到权限表
 		result = insertUserPermissions(vo, user);
 		Integer status = Integer.parseInt(result.get(Constants.status) + "");
@@ -389,7 +389,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			return result;
 		}
 		setVoValues(vo, user);
-		insertOrUpdateKnowledge(vo, user); // 插入Or修改知识
+		insertKnowledgeVO(vo, user); // 插入Or修改知识
 		// 添加知识到权限表
 		result = insertUserPermissions(vo, user);
 		Integer status = Integer.parseInt(result.get(Constants.status) + "");
@@ -715,7 +715,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			vo.setEssence(knowledge.getEssence() + "");
 			vo.setKnowledgestatus(Constants.Status.checked.v());
 			vo.setPic(knowledge.getPic());
-			insertOrUpdateKnowledge(vo, user);
+			insertKnowledgeVO(vo, user);
 			// 添加知识到权限表
 			result = insertUserPermissions(vo, user);
 			Integer status = Integer.parseInt(result.get(Constants.status) + "");
@@ -793,20 +793,25 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	 * @param vo
 	 * @param user
 	 */
-	public void insertOrUpdateKnowledge(KnowledgeNewsVO vo, User user) {
-		if (StringUtils.isNotBlank(vo.getKnowledgeid())) {
-			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-			// 关联信息存入mysql中
-			if (StringUtils.isNotBlank(vo.getAsso())) {
-				knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId()); // 关联信息存入mysql中
-			}
-			knowledgeNewsDAO.updateKnowledge(vo, user);
-		} else {
-			if (StringUtils.isNotBlank(vo.getAsso())) {
-				knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId());
-			}
-			knowledgeNewsDAO.insertknowledge(vo, user);
+	public void insertKnowledgeVO(KnowledgeNewsVO vo, User user) {
+		if (StringUtils.isNotBlank(vo.getAsso())) {
+			knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId());
 		}
+		knowledgeNewsDAO.insertknowledge(vo, user);
+	}
+	
+	/**
+	 * 根据知识knowledgeId 来判断 insert Or update
+	 * 
+	 * @param vo
+	 * @param user
+	 */
+	public void updateKnowledgeVO(KnowledgeNewsVO vo, User user) {
+		// 关联信息存入mysql中
+		if (StringUtils.isNotBlank(vo.getAsso())) {
+			knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId()); // 关联信息存入mysql中
+		}
+		knowledgeNewsDAO.updateKnowledge(vo, user);
 	}
 
 	/**
