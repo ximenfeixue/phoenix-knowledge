@@ -199,7 +199,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			KnowledgeNewsVO vo = new KnowledgeNewsVO();
 			vo.setkId(knowledgeid[i]);
 			vo.setColumnType(ct + "");
-			noticeDataCenter("del", vo);
+//			noticeDataCenter("del", vo);
+			noticeDataCenter(ct + "", knowledgeid[i], "del");
 		}
 		return result;
 	}
@@ -238,7 +239,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 
 		saveFeed(vo, user);
 		// 大数据通知接口
-		noticeDataCenter("upd", vo);
+//		noticeDataCenter("upd", vo);
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -311,7 +313,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			return result;
 		}
 		saveFeed(vo, user); // 动态存观点
-		noticeDataCenter("add", vo);
+//		noticeDataCenter("add", vo);
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -403,7 +406,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
-		noticeDataCenter("upd", vo);
+//		noticeDataCenter("upd", vo);
+		noticeDataCenter(vo.getColumnType(),vo.getkId(), "upd");
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
@@ -536,7 +540,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			}
 			saveFeed(vo, user);
 		}
-		noticeDataCenter("add", vo);
+//		noticeDataCenter("add", vo);
+		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
