@@ -353,5 +353,27 @@ public interface ColumnService {
 	 * @return 用户订阅的所有栏目列表
 	 */
 	public List<Column> querySubByUserIdOrderById(long createUserId);
+	
+	/**
+	 * 重命名栏目名称
+	 * 
+	 * 
+	 */
+	public Map<String,Object> updateColumnName(long columnid,String columnName);
+	
+	/**
+	 * 修改名称是否存在
+	 * <p>
+	 * (是否存在)
+	 * </p>
+	 * 
+	 * @param parentColumnId
+	 *            上级栏目id
+	 * @param columnName
+	 *            栏目名称
+	 * @return true:存在 false:不存在
+	 */
+	public boolean updateColumnisExist(long columnId, String columnName);
+
 
 }

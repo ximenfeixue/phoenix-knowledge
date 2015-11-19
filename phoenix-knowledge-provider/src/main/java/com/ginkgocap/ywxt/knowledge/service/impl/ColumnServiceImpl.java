@@ -993,4 +993,37 @@ public class ColumnServiceImpl implements ColumnService {
 		List<Column> colList = columnMapper.selectByExample(col);
 		return colList;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnName(long, java.lang.String)
+	 * Administrator
+	 */
+	@Override
+	public Map<String, Object> updateColumnName(long columnid, String columnName) {
+		
+		
+		Map<String, Object> result = new HashMap<String,Object>();
+		ColumnExample example = new ColumnExample();
+		ColumnExample.Criteria cri = example.createCriteria();
+		cri.andIdEqualTo(columnid);
+		Column column = new Column();
+		column.setId(columnid);
+		column.setColumnname(columnName);
+		columnMapper.updateByPrimaryKeySelective(column);
+		result.put("success", true);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnisExist(long, java.lang.String)
+	 * Administrator
+	 */
+	@Override
+	public boolean updateColumnisExist(long columnId, String columnName) {
+		ColumnExample example = new ColumnExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andColumnnameEqualTo(columnName);
+		criteria.andIdEqualTo(columnId);
+		return columnMapper.countByExample(example) > 0 ? true : false;
+	}
 }
