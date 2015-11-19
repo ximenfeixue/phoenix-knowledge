@@ -22,6 +22,8 @@ public class ColumnVisible implements Serializable {
 
     private String sortId;
 
+    private Integer type;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -94,5 +96,13 @@ public class ColumnVisible implements Serializable {
 
     public void setSortId(String sortId) {
         this.sortId = sortId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

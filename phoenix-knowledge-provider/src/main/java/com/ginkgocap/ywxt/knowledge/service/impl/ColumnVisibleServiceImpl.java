@@ -275,6 +275,7 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
         cv.setColumnName(cname);
         cv.setSortId(c.getColumnLevelPath());
         cv.setState((short) 0);
+        cv.setType(1);
         columnVisibleMapper.insert(cv);
     }
 
