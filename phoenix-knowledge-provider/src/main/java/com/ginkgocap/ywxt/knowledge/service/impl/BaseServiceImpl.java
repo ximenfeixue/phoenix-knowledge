@@ -1,28 +1,41 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
-import com.ginkgocap.ywxt.knowledge.util.Constants;
+import com.gintong.rocketmq.api.DefaultMessageService;
+import com.gintong.rocketmq.common.FlagTypeUtils;
+import com.gintong.rocketmq.common.RocketSendResult;
+import com.gintong.rocketmq.common.TopicType;
 
-public class BaseServiceImpl{
+@Service
+public class BaseServiceImpl {
 
-	@Autowired(required =true)
-	private NoticeThreadPool noticeThreadPool;
+	@Autowired(required = true)
+	private DefaultMessageService defaultMessageService ;
+
 	/**
 	 * 大数据通知接口
 	 * 
-	 * @param vo
-	 * @param noticeType
 	 */
-	public void noticeDataCenter(String knowledgeType,Long knowledgeId, String noticeType) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", noticeType);
-		params.put("type", knowledgeType);
-		params.put("kId", knowledgeId);
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
+	public void noticeDataCenter(String noticeType, Object bean) {
+
+		String flagType = "";
+		if (StringUtils.equals("upd", noticeType)) {
+			flagType = FlagTypeUtils.updateKnowledgeFlag();
+		} else if (StringUtils.equals("add", noticeType)) {
+			flagType = FlagTypeUtils.createKnowledgeFlag();
+		} else if (StringUtils.equals("del", noticeType)) {
+			flagType = FlagTypeUtils.deleteKnowledgeFlag();
+		}
+		defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, flagType, beanToJson(bean));
+	}
+
+	public static String beanToJson(Object bean) {
+		JSONObject json = JSONObject.fromObject(bean);
+		return json.toString();
 	}
 }
