@@ -80,10 +80,10 @@ public class ColumnServiceImpl implements ColumnService {
 	ColumnMapper columnMapper;
 	@Autowired
 	UserPermissionValueMapper userPermissionValueMapper;
-	
+
 	@Autowired
 	private NoticeThreadPool noticeThreadPool;
-	
+
 	/**
 	 * 在查询条件中增加delstatus条件，过滤掉已删除对象
 	 * 
@@ -117,7 +117,8 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public Column saveOrUpdate(Column kc) {
 
-		if (null == kc) return null;
+		if (null == kc)
+			return null;
 		// 获取栏目id
 		Long id = kc.getId();
 		// 获取当前时间
@@ -125,19 +126,19 @@ public class ColumnServiceImpl implements ColumnService {
 		// 父级id
 		Long pid = kc.getParentId();
 		// 检查上级栏目id
-		if (pid == null || pid < 0)		return null;
+		if (pid == null || pid < 0)
+			return null;
 		// 检测必要信息
-		if (!checkColumnByParam(kc.getColumnname(), pid,
-				kc.getUserId(), id)) {
+		if (!checkColumnByParam(kc.getColumnname(), pid, kc.getUserId(), id)) {
 			logger.error("新增或修改栏目时,检测重复报错！[缺少必要的参数如：userid,parentid,columnname]");
 			return null;
 		}
 		// id不存在，则表示新增栏目
 		if (null == id || id <= 0) {
 			// 添加一级目录默认为资讯type为1
-			if(pid == 0) {
-				kc.setType((short)1);
-			} // 设置type为父级type 
+			if (pid == 0) {
+				kc.setType((short) 1);
+			} // 设置type为父级type
 			else {
 				logger.info("--进入根据父级id查询栏目树请求,父级栏目id:{},当前登陆用户:{}--", pid, kc.getUserId());
 				Column column = columnMapper.selectByPrimaryKey(pid);
@@ -157,7 +158,7 @@ public class ColumnServiceImpl implements ColumnService {
 			// 新增栏目通知大数据
 			try {
 				logger.info("--进入添加栏目请求时通知大数据,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
-				Map<String,Object> params = new HashMap<String,Object>();
+				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("columnId", kc.getId());
 				noticeThreadPool.noticeDataCenter(Constants.noticeType.column.v(), params);
 			} catch (Exception e) {
@@ -165,12 +166,11 @@ public class ColumnServiceImpl implements ColumnService {
 				logger.info("--进入添加栏目请求时通知大数据异常,方法名：saveOrUpdate,栏目名称:{},当前登陆用户:{}--", kc.getColumnname(), kc.getUserId());
 			}
 			ColumnExample ce = new ColumnExample();
-			filterDel(ce.createCriteria().andUpdateTimeEqualTo(date)
-					.andCreatetimeEqualTo(date));
+			filterDel(ce.createCriteria().andUpdateTimeEqualTo(date).andCreatetimeEqualTo(date));
 			kc = columnMapper.selectByExample(ce).get(0);
 			columnVisibleService.saveCid(kc.getUserId(), kc.getId());
 			return kc;
-		}else if (id > 0) {
+		} else if (id > 0) {
 			kc.setUpdateTime(date);
 			columnMapper.updateByPrimaryKey(kc);
 			columnVisibleService.saveOrUpdate(kc);
@@ -185,14 +185,10 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public String selectColumnTreeBySortId(long userId, String sortId,
-			String status) {
-		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
-				sortId);
+	public String selectColumnTreeBySortId(long userId, String sortId, String status) {
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
 		if (cl != null && cl.size() > 0) {
-			return JSONObject.fromObject(
-					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
-							"columnname", "parentId", "columnLevelPath")))
+			return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath")))
 					.toString();
 		}
 		return "";
@@ -211,14 +207,11 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public String selectColumnTreeByParams(long userId, String sortId,
-			String status, String columnType) {
-		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
-				sortId);
+	public String selectColumnTreeByParams(long userId, String sortId, String status, String columnType) {
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
 		if (cl != null && cl.size() > 0) {
 			JSONObject jo = JSONObject.fromObject(Tree.build(ConvertUtil
-					.convert2Node(cl, "userId", "id", "columnname", "parentId",
-							"columnLevelPath")));
+					.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath")));
 			JSONArray ja = jo.getJSONArray("list");
 			for (int i = 0; i < ja.size(); i++) {
 				JSONObject joi = ja.getJSONObject(i);
@@ -233,12 +226,9 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public String selectColumnTreeByParamsCustom(long userId, String sortId) {
 
-		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId,
-				sortId);
+		List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, sortId);
 		if (cl != null && cl.size() > 0) {
-			return JSONObject.fromObject(
-					Tree.build(ConvertUtil.convert2Node(cl, "userId", "id",
-							"columnname", "parentId", "columnLevelPath")))
+			return JSONObject.fromObject(Tree.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath")))
 					.toString();
 		}
 		return "";
@@ -308,8 +298,7 @@ public class ColumnServiceImpl implements ColumnService {
 	@Override
 	public List<Column> queryByParentId(long parentId, long userId) {
 		ColumnExample ce = new ColumnExample();
-		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId)
-				.andUserIdEqualTo(userId);
+		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId).andUserIdEqualTo(userId);
 		filterDel(c);
 		ce.setOrderByClause("id ASC");
 		List<Column> list = columnMapper.selectByExample(ce);
@@ -318,8 +307,7 @@ public class ColumnServiceImpl implements ColumnService {
 
 	public int countByParentId(long parentId, long userId) {
 		ColumnExample ce = new ColumnExample();
-		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId)
-				.andUserIdEqualTo(userId);
+		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId).andUserIdEqualTo(userId);
 		filterDel(c);
 		ce.setOrderByClause("id ASC");
 		int count = columnMapper.countByExample(ce);
@@ -333,8 +321,7 @@ public class ColumnServiceImpl implements ColumnService {
 		values.add(Constants.gtnid);
 
 		ColumnExample ce = new ColumnExample();
-		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId)
-				.andUserIdIn(values);
+		Criteria c = ce.createCriteria().andParentIdEqualTo(parentId).andUserIdIn(values);
 		filterDel(c);
 
 		// 排序 column_level_path
@@ -375,8 +362,7 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Override
-	public Map<Column, List<Map<String, Object>>> querySubAndStatusAndParent(
-			long userId) {
+	public Map<Column, List<Map<String, Object>>> querySubAndStatusAndParent(long userId) {
 
 		List<Map<String, Object>> ss = this.querySubAndStatus(userId);
 
@@ -518,16 +504,14 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Transactional
 	@Override
-	public Map<String, Object> addColumn(String columnname, long pid,
-			String pathName, int type, String tags, long userid) {
-		
+	public Map<String, Object> addColumn(String columnname, long pid, String pathName, int type, String tags, long userid) {
+
 		logger.info("--进入添加栏目请求,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		Map<String, Object> result = new HashMap<String, Object>();
 		String currentColumnLevelPath = getColumnLevelPath(pid);
 		if (StringUtils.isBlank(currentColumnLevelPath)) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.notFindColumn.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.notFindColumn.c());
 			return result;
 		}
 		// 存储栏目信息
@@ -547,23 +531,22 @@ public class ColumnServiceImpl implements ColumnService {
 		long v = columnMapperManual.insertAndGetId(column);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.addColumnFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.addColumnFail.c());
 			return result;
 		}
 		long currentColumnId = column.getId();
-		
+
 		logger.info("--进入添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		// 存储栏目标签信息
-		batchSaveColumnTags(userid, currentColumnId, tags,columnname,currentColumnLevelPath);
+		batchSaveColumnTags(userid, currentColumnId, tags, columnname, currentColumnLevelPath);
 
 		logger.info("--结束添加栏目请求时存储栏目标签信息,栏目名称:{},当前登陆用户:{}--", columnname, userid);
 		columnVisibleService.saveCid(userid, currentColumnId);
-		
+
 		// 新增栏目通知大数据
 		try {
 			logger.info("--进入添加栏目请求时通知大数据,栏目名称:{},当前登陆用户:{}--", columnname, userid);
-			Map<String,Object> params = new HashMap<String,Object>();
+			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("columnId", currentColumnId);
 			noticeThreadPool.noticeDataCenter(Constants.noticeType.column.v(), params);
 		} catch (Exception e) {
@@ -576,8 +559,7 @@ public class ColumnServiceImpl implements ColumnService {
 	}
 
 	@Transactional
-	public long addColumnForNongroup(String columnname, long pid,
-			String pathName, int type, String tags, long userid) {
+	public long addColumnForNongroup(String columnname, long pid, String pathName, int type, String tags, long userid) {
 
 		// 存储栏目信息
 		Date d = new Date();
@@ -609,8 +591,7 @@ public class ColumnServiceImpl implements ColumnService {
 	 * @param columnLevelPath
 	 */
 	@Transactional
-	public void batchSaveColumnTags(long userid, long columnId, String tags,
-			String columnName, String columnLevelPath) {
+	public void batchSaveColumnTags(long userid, long columnId, String tags, String columnName, String columnLevelPath) {
 		TagUtils tagUtil = new TagUtils();
 		String[] currTags = tagUtil.getTagListByTags(tags);
 		List<ColumnTag> columnList = new ArrayList<ColumnTag>();
@@ -643,11 +624,9 @@ public class ColumnServiceImpl implements ColumnService {
 
 		String maxLevel = getMaxLevelPath(pid);
 		if (StringUtils.isBlank(maxLevel)) {
-			currentColumn = (currentColumn == null ? "" : currentColumn)
-					+ "000000001";
+			currentColumn = (currentColumn == null ? "" : currentColumn) + "000000001";
 		} else {
-			currentColumn = (currentColumn == null ? "" : currentColumn)
-					+ getCurrentSortId(maxLevel);
+			currentColumn = (currentColumn == null ? "" : currentColumn) + getCurrentSortId(maxLevel);
 		}
 
 		return currentColumn;
@@ -682,86 +661,32 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Transactional
 	@Override
-	public Map<String, Object> delColumn(long columnid, long userid,
-			boolean verify) {
+	public Map<String, Object> delColumn(long columnid, long userid, boolean verify) {
 		logger.info("--进入删除栏目请求,栏目id:{},当前登陆用户:{}--", columnid, userid);
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(columnid);
 		if (column == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.notFindColumn.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.notFindColumn.c());
 			return result;
 		}
 		if (column.getUserId() != userid) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.delColumnNotPermission.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
-
-		// 更改mongo中知识所属栏目ID为未分组
-		ColumnExample col = new ColumnExample();
-		Criteria criteria = col.createCriteria();
-		criteria.andColumnLevelPathEqualTo(Constants.unGroupSortId);
-		criteria.andUserIdEqualTo(userid);
-		logger.info("--进入删除栏目请求时获取未分组栏目,栏目id:{},当前登陆用户:{}--", columnid, userid);
-		// 获取未分组栏目
-		List<Column> colList = columnMapper.selectByExample(col);
+		List<Column> colList = getNnGroupColumn(userid); 
 		if (colList != null && colList.size() > 0) {
-			Query query = new Query(
-					org.springframework.data.mongodb.core.query.Criteria.where(
-							"columnid").is(String.valueOf(columnid)));
-			String obj = Constants.getTableName(column.getType() + "");
-			obj = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-			// 是否确认操作
-			if (!verify) {
-				long count = mongoTemplate.count(query, obj);
-				if (count > 0)
-					result.put("has", true);
-				else
-					result.put("has", false);
-				return result;
-			}
-			Update update = new Update();
-			update.set("columnid", String.valueOf(colList.get(0).getId()));
-			update.set("cpathid", Constants.unGroupSortName);
-			logger.info("--进入删除栏目请求时,Mongo数据库具体知识，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
-			mongoTemplate.updateMulti(query, update, obj);
-			logger.info("--完成删除栏目请求时,Mongo数据库具体知识，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
-			logger.info("--进入删除栏目请求时,mysql 知识基本表中，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
-			KnowledgeBaseExample example = new KnowledgeBaseExample();
-			KnowledgeBaseExample.Criteria cri = example.createCriteria();
-			cri.andColumnIdEqualTo(column.getId());
-			cri.andUserIdEqualTo(userid);
-			KnowledgeBase base = new KnowledgeBase();
-			base.setColumnId(column.getId());
-			base.setPath(Constants.unGroupSortName);
-			knowledgeBaseMapper.updateByExampleSelective(base,example);
-			logger.info("--完成删除栏目请求时,mysql 知识基本表中，将栏目分录下文章归到未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
-			
-			logger.info("--进入删除栏目请求时,分享权限信息表，将相应栏目更新为未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
-			userPermissionValueMapper.batchUpdateColumn(colList.get(0).getId(), userid, columnid, 1);
-			logger.info("--完成删除栏目请求时,分享权限信息表，将相应栏目更新为未分组目录,栏目id:{},当前登陆用户:{}--", columnid, userid);
+			updateMongoColumn(column.getType()+"", colList, columnid);
+			upKnowledgeBaseColumn(columnid, userid);
+			userPermissionValueMapper.batchUpdateColumn(colList.get(0).getId(), userid, columnid, 1);//将权限表中栏目改为未分组
 		}
-		// 删除栏目标签表
-		ColumnTagExample example = new ColumnTagExample();
-		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria critera = example
-				.createCriteria();
-		critera.andColumnIdEqualTo(columnid);
-		logger.info("--进入删除栏目请求时,删除相应栏目标签,栏目id:{},当前登陆用户:{}--", columnid, userid);
-		columnTagMapper.deleteByExample(example);
-		logger.info("--结束删除栏目请求时,删除相应栏目标签,栏目id:{},当前登陆用户:{}--", columnid, userid);
-		// 删除栏目定制表
-		columnVisibleService.delByUserIdAndColumnId(userid, columnid);
-
-		// 删除栏目表
-		int v = columnMapper.deleteByPrimaryKey(columnid);
-		logger.info("--结束删除栏目请求,栏目id:{},当前登陆用户:{}--", columnid, userid);
+		deleteColumnTag(columnid);
+		columnVisibleService.delByUserIdAndColumnId(userid, columnid); // 删除栏目定制表
+		int v = columnMapper.deleteByPrimaryKey(columnid);// 删除栏目表
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.delFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.delFail.c());
 			return result;
 		}
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -839,20 +764,17 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Transactional
 	@Override
-	public Map<String, Object> updateColumn(long id, String columnName,
-			String tags, long userId) {
+	public Map<String, Object> updateColumn(long id, String columnName, String tags, long userId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(id);
 		if (column == null) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.notFindColumn.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.notFindColumn.c());
 			return result;
 		}
 		if (column.getUserId() != userId) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.delColumnNotPermission.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
 		column.setColumnname(columnName);
@@ -860,53 +782,48 @@ public class ColumnServiceImpl implements ColumnService {
 		int v = columnMapper.updateByPrimaryKeySelective(column);
 		if (v == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.updateFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.updateFail.c());
 			return result;
 		}
-		//修改可见性
-		updateColumnVisibleName(id,userId,columnName);
+		// 修改可见性
+		updateColumnVisibleName(id, userId, columnName);
 		// 修改Mongod栏目路径
 
 		// 删除栏目标签信息
 		ColumnTagExample example = new ColumnTagExample();
-		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example.createCriteria();
 		criteria.andColumnIdEqualTo(id);
 		int ctV = columnTagMapper.deleteByExample(example);
 		if (ctV == 0) {
 			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage,
-					Constants.ErrorMessage.updateFail.c());
+			result.put(Constants.errormessage, Constants.ErrorMessage.updateFail.c());
 			return result;
 		}
-		batchSaveColumnTags(userId, id, tags, column.getColumnname(),
-				column.getColumnLevelPath());
+		batchSaveColumnTags(userId, id, tags, column.getColumnname(), column.getColumnLevelPath());
 		result.put(Constants.status, Constants.ResultType.success.v());
 
 		return result;
 	}
 
-	private void updateColumnVisibleName(long id,long userId, String columnName) {
-        ColumnVisibleExample example = new ColumnVisibleExample();
-        ColumnVisible columnVisible = new ColumnVisible();
-        columnVisible.setColumnName(columnName);
-        if (userId == 0) {
-            example.createCriteria().andColumnIdEqualTo(id);
-            columnVisibleMapper.updateByExampleSelective(columnVisible, example);
-        } else {
-            example.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(id);
-            columnVisibleMapper.updateByExampleSelective(columnVisible, example);
-        }
-    }
+	private void updateColumnVisibleName(long id, long userId, String columnName) {
+		ColumnVisibleExample example = new ColumnVisibleExample();
+		ColumnVisible columnVisible = new ColumnVisible();
+		columnVisible.setColumnName(columnName);
+		if (userId == 0) {
+			example.createCriteria().andColumnIdEqualTo(id);
+			columnVisibleMapper.updateByExampleSelective(columnVisible, example);
+		} else {
+			example.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(id);
+			columnVisibleMapper.updateByExampleSelective(columnVisible, example);
+		}
+	}
 
-    @Override
+	@Override
 	public Map<String, Object> queryOne(long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Column column = columnMapper.selectByPrimaryKey(id);
 		ColumnTagExample example = new ColumnTagExample();
-		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria criteria = example.createCriteria();
 		criteria.andColumnIdEqualTo(id);
 		List<ColumnTag> ct = columnTagMapper.selectByExample(example);
 		String tags = "";
@@ -963,8 +880,7 @@ public class ColumnServiceImpl implements ColumnService {
 					parcolumnid = column.getId() + "";
 					map.put("parcolumnid", parcolumnid);
 					if (StringUtils.isNotBlank(parcolumnid)) {
-						column = columnMapper.selectByPrimaryKey(Long
-								.parseLong(parcolumnid));
+						column = columnMapper.selectByPrimaryKey(Long.parseLong(parcolumnid));
 						map.put("parcolumnName", column.getColumnname());
 					}
 					break;
@@ -978,14 +894,12 @@ public class ColumnServiceImpl implements ColumnService {
 
 	@Override
 	public List<Column> querySubByUserIdOrderById(long createUserId) {
-		List<Column> list = columnValueMapper
-				.selectSubByUserIdOrderById(createUserId);
+		List<Column> list = columnValueMapper.selectSubByUserIdOrderById(createUserId);
 		return list;
 	}
 
 	@Override
-	public boolean checkColumnByParams(String columnName, long parentId,
-			long uid) {
+	public boolean checkColumnByParams(String columnName, long parentId, long uid) {
 		logger.info("--进入验证栏目名称请求,栏目名称:{},当前登陆用户:{}--", columnName, uid);
 		ColumnExample example = new ColumnExample();
 		Criteria c = example.createCriteria();
@@ -1002,8 +916,7 @@ public class ColumnServiceImpl implements ColumnService {
 		return count > 0 ? false : true;
 	}
 
-	private boolean checkColumnByParam(String columnName, Long parentId,
-			Long uid, Long id) {
+	private boolean checkColumnByParam(String columnName, Long parentId, Long uid, Long id) {
 		ColumnExample example = new ColumnExample();
 		Criteria c = example.createCriteria();
 		List<Long> values = new ArrayList<Long>();
@@ -1021,4 +934,63 @@ public class ColumnServiceImpl implements ColumnService {
 		return count > 0 ? false : true;
 	}
 
+	/**
+	 * 将基础表中栏目改为未分组
+	 * 
+	 * @param columnid
+	 * @param userid
+	 */
+	public void upKnowledgeBaseColumn(long columnid, long userid) {
+		KnowledgeBaseExample example = new KnowledgeBaseExample();
+		KnowledgeBaseExample.Criteria cri = example.createCriteria();
+		cri.andColumnIdEqualTo(columnid);
+		cri.andUserIdEqualTo(userid);
+		KnowledgeBase base = new KnowledgeBase();
+		base.setColumnId(columnid);
+		base.setPath(Constants.unGroupSortName);
+		knowledgeBaseMapper.updateByExampleSelective(base, example);
+	}
+
+	/**
+	 * 删除栏目标签
+	 * 
+	 * @param columnid
+	 */
+	public void deleteColumnTag(long columnid) {
+		ColumnTagExample example = new ColumnTagExample();
+		com.ginkgocap.ywxt.knowledge.entity.ColumnTagExample.Criteria critera = example.createCriteria();
+		critera.andColumnIdEqualTo(columnid);
+		columnTagMapper.deleteByExample(example);
+	}
+
+	/**
+	 * 更改mongo中知识所属栏目ID为未分组
+	 * @param columnType
+	 * @param colList
+	 * @param columnid
+	 */
+	public void updateMongoColumn(String columnType, List<Column> colList, long columnid) {
+		Query query = new Query(org.springframework.data.mongodb.core.query.Criteria.where("columnid").is(String.valueOf(columnid)));
+		String obj = Constants.getTableName(columnType);
+		obj = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
+		Update update = new Update();
+		update.set("columnid", String.valueOf(colList.get(0).getId()));
+		update.set("cpathid", Constants.unGroupSortName);
+		mongoTemplate.updateMulti(query, update, obj);
+	}
+	
+	/**
+	 * 获取未分组栏目
+	 * @param userid
+	 * @return
+	 */
+	
+	public List<Column> getNnGroupColumn(long userid){
+		ColumnExample col = new ColumnExample();
+		Criteria criteria = col.createCriteria();
+		criteria.andColumnLevelPathEqualTo(Constants.unGroupSortId);
+		criteria.andUserIdEqualTo(userid);
+		List<Column> colList = columnMapper.selectByExample(col);
+		return colList;
+	}
 }
