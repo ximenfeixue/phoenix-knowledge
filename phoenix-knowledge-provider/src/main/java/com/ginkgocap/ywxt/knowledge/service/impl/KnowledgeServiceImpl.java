@@ -5,20 +5,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
@@ -27,15 +23,12 @@ import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
 import com.ginkgocap.ywxt.knowledge.entity.Column;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeDraft;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeRecycle;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
 import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
@@ -43,10 +36,8 @@ import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
@@ -69,7 +60,6 @@ import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.MakeTaskId;
-import com.ginkgocap.ywxt.util.PageUtil;
 
 @Service("knowledgeService")
 public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeService {
@@ -111,13 +101,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	private UserCategoryMapper userCategoryMapper;
 
 	@Resource
-	private KnowledgeRecycleService knowledgeRecycleService;
-
-	@Resource
 	private UserCategoryService userCategoryService;
-
-	@Resource
-	private KnowledgeDraftService knowledgeDraftService;
 
 	@Resource
 	private KnowledgeBaseMapper knowledgeBaseMapper;
@@ -158,47 +142,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	@Autowired
 	private DynamicNewsService dynamicNewsService;
 
-	//
-	@Deprecated
-	@Override
-	public Map<String, Object> deleteKnowledge(String knowledgeids, long catetoryid, String types, String titles, User user) {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		long[] knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
-		String[] type = types.split(",");
-		String[] title = titles.split(",");
-		for (int i = 0; i < knowledgeid.length; i++) {
-
-			String obj = Constants.getTableName(type[i]);
-
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-
-			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
-			Query query = new Query(criteria);
-			Update update = new Update();
-			update.set("status", Constants.Status.recycle.v());
-			mongoTemplate.updateFirst(query, update, collectionName);
-
-			// 知识存入回收站
-			int RecycleCount = knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title[i], type[i], user.getId(), catetoryid);
-			if (RecycleCount == 0) {
-				logger.error("删除知识到回收站失败，知识ID:{}", knowledgeid);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				return result;
-			}
-			// 删除知识目录中的信息
-			int categoryCount = knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], catetoryid);
-			if (categoryCount == 0) {
-				logger.error("修改知识目录失败，知识ID:{}", knowledgeid);
-				result.put(Constants.status, Constants.ResultType.fail.v());
-			}
-		}
-		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.info("删除知识成功,知识ID:{}", knowledgeid);
-
-		return result;
-	}
-
 	@Override
 	public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -219,10 +162,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		// 批量删除
 		for (int i = 0; i < knowledgeid.length; i++) {
 			KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
-			String title = "";
 			long ct = 0;
 			if (bl != null) {
-				title = bl.getTitle();
 				ct = bl.getColumnType();
 			} else {
 				continue;
@@ -241,12 +182,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			// 删除更新关联表
 			try {
 				mongoTemplate.updateFirst(query, update, collectionName);
-				// 多个目录下同一知识，如果回收站里有，不插入回收站
-				KnowledgeRecycle recycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid[i]);
-				if (recycle == null) {
-
-					knowledgeRecycleService.insertKnowledgeRecycle(knowledgeid[i], title, ct + "", userid, catetoryid);
-				}
 				List<KnowledgeCategory> list = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid[i]);
 				if (list != null && list.size() > 0) {
 					for (KnowledgeCategory knowledgeCategory : list) {
@@ -256,13 +191,15 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			} catch (Exception e) {
 				result.put(Constants.status, Constants.ResultType.fail.v());
 			}
-
 			// 删除统计表信息
 			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
-
 			// 删除该知识评论信息
 			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i], userid);
-			noticeDataCenter(ct + "", knowledgeid[i], "del");
+
+			KnowledgeNewsVO vo = new KnowledgeNewsVO();
+			vo.setkId(knowledgeid[i]);
+			vo.setColumnType(ct + "");
+			noticeDataCenter("del", vo);
 		}
 		return result;
 	}
@@ -301,7 +238,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 
 		saveFeed(vo, user);
 		// 大数据通知接口
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
+		noticeDataCenter("upd", vo);
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -335,39 +272,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		}
 		return mongoTemplate.findOne(query, Knowledge.class, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
-	}
-
-	@Deprecated
-	@Override
-	public List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid, List<Long> ids, int page, int size) {
-		Criteria criteria1 = new Criteria().is(userid);
-		Criteria criteria2 = new Criteria();
-		if (ids != null) {
-			criteria2.and("_id").in(ids);
-		}
-		Criteria criteriaall = new Criteria();
-		criteriaall.orOperator(criteria1, criteria2);
-		Query query = new Query(criteriaall);
-		query.sort().on("createtime", Order.DESCENDING);
-		long count = mongoTemplate.count(query, KnowledgeNews.class);
-		PageUtil p = new PageUtil((int) count, page, size);
-		query.limit(p.getPageStartRow() - 1);
-		query.skip(size);
-		return mongoTemplate.find(query, KnowledgeNews.class, "KnowledgeNews");
-	}
-
-	@Deprecated
-	@Override
-	public void deleteKnowledgeByid(long knowledgeid) {
-
-		KnowledgeDraft knowledgeDraft = knowledgeDraftService.selectByKnowledgeId(knowledgeid);
-
-		String obj = Constants.getTableName(knowledgeDraft.getType());
-
-		String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		mongoTemplate.remove(query, collectionName);
 	}
 
 	@Override
@@ -407,7 +311,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			return result;
 		}
 		saveFeed(vo, user); // 动态存观点
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		noticeDataCenter("add", vo);
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -439,93 +343,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
 		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(vo.getEssence(), "on") ? "1" : "0" : "0");
 		vo.setKnowledgestatus(Constants.Status.checked.v());
-	}
-
-	@Deprecated
-	@Override
-	public void restoreKnowledgeByid(long knowledgeid, long userid) {
-
-		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid);
-
-		String obj = Constants.getTableName(knowledgerecycle.getType());
-
-		try {
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-
-			Criteria criteria = Criteria.where("_id").is(knowledgeid);
-
-			Query query = new Query(criteria);
-
-			Update update = new Update();
-			update.set("status", Constants.Status.checked.v());
-			mongoTemplate.updateFirst(query, update, collectionName);
-
-			// //回收站恢复，如果是app端，回收站知识不恢复到目录
-			List<KnowledgeCategory> listcategory = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid);
-			if (listcategory != null && listcategory.size() > 0) {
-				for (KnowledgeCategory knowledgeCategory : listcategory) {
-					UserCategory usercategory = userCategoryService.selectByPrimaryKey(knowledgeCategory.getCategoryId());
-
-					if (usercategory != null) {
-						knowledgeCategoryService.updateKnowledgeCategorystatus(knowledgeid, knowledgeCategory.getCategoryId());
-					} else {
-						// 查询该用户下的未分组目录ID
-						List<UserCategory> list = userCategoryService.selectNoGroup(userid, Constants.unGroupSortId, (byte) 0);
-						if (list != null) {
-							// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-							UserCategory category = list.get(0);
-							List<KnowledgeCategory> listnogroup = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid, category.getId(),
-									Constants.KnowledgeCategoryStatus.effect.v() + "");
-							if (listnogroup.size() == 0) {
-								knowledgeCategoryService.insertKnowledgeCategoryNogroup(knowledgeid, category.getId());
-							}
-						}
-					}
-				}
-			} else {
-				// 查询该用户下的未分组目录ID
-				List<UserCategory> list = userCategoryService.selectNoGroup(userid, Constants.unGroupSortId, (byte) 0);
-				if (list != null) {
-					// 查询未分组知识，如果未分组中有该知识，则该知识不添加到未分组
-					UserCategory category = list.get(0);
-					List<KnowledgeCategory> listnogroup = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid, category.getId(),
-							Constants.KnowledgeCategoryStatus.effect.v() + "");
-					if (listnogroup.size() == 0) {
-						knowledgeCategoryService.insertKnowledgeCategoryNogroup(knowledgeid, category.getId());
-					}
-				}
-			}
-			// 知识恢复的同时，将统计信息也恢复
-			// knowledgeStaticsService.initKnowledgeStatics(knowledgeid,
-			// knowledgerecycle.getTitle(),
-			// Short.parseShort(knowledgerecycle.getType()));
-			// 大数据通知接口
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("oper", "add");
-			params.put("type", knowledgerecycle.getType());
-			params.put("kId", knowledgeid);
-			noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
- 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Deprecated
-	@Override
-	public void deleteforeverKnowledge(long knowledgeid) {
-
-		KnowledgeRecycle knowledgerecycle = knowledgeRecycleService.selectByKnowledgeId(knowledgeid);
-
-		String obj = Constants.getTableName(knowledgerecycle.getType());
-
-		String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		Update update = new Update();
-		update.set("status", Constants.Status.foreverdelete.v());
-		mongoTemplate.updateFirst(query, update, collectionName);
-
 	}
 
 	@Override
@@ -586,7 +403,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
-		noticeDataCenter(vo.getColumnType(),vo.getkId(), "upd");
+		noticeDataCenter("upd", vo);
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
@@ -644,19 +461,6 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 
 		logger.info("修改知识权限请求成功,id:{},type{}", vo.getkId(), vo.getColumnType());
 
-	}
-
-	@Deprecated
-	@Override
-	public void updateKnowledgeForInvestment(Long id, String pic, String refrenceData, String imageBookData, String content, String desc, Long userId) {
-		knowledgeDao.updateInvestment(id, pic, refrenceData, imageBookData, content, desc);
-		knowledgeDraftService.deleteKnowledgeSingalDraft(id, "2", userId);
-		// 大数据通知接口
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("oper", "upd");
-		params.put("type", "2");
-		params.put("kId", id);
-		noticeThreadPool.noticeDataCenter(Constants.noticeType.knowledge.v(), params);
 	}
 
 	public void updateByPrimaryKey(KnowledgeBase kb) {
@@ -732,7 +536,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			}
 			saveFeed(vo, user);
 		}
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		noticeDataCenter("add", vo);
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -799,7 +603,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		}
 		knowledgeNewsDAO.insertknowledge(vo, user);
 	}
-	
+
 	/**
 	 * 根据知识knowledgeId 来判断 insert Or update
 	 * 

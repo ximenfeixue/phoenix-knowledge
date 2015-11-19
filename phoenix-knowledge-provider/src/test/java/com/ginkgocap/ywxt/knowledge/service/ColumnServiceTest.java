@@ -353,6 +353,6 @@ public class ColumnServiceTest extends TestBase{
     @Test
     @Rollback(false)
     public void checkNogroup(){
-        kcs.checkNogroup(10132l);
+        kcs.delColumn(2672, 36, true);
     }
 }

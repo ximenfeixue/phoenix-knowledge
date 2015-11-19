@@ -33,62 +33,27 @@ public interface KnowledgeService {
 	 */
 
 	Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user);
- 
-	/**
-	 * 删除资讯知识
-	 */
-	@Deprecated
-	Map<String, Object> deleteKnowledge(String knowledgeids, long catetoryid,
-			String types, String titles, User user);
 
 	/**
 	 * 编辑知识
 	 */
- 
+
 	Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user);
 
 	/**
 	 * 查询知识
 	 */
- 
+
 	Knowledge selectKnowledge(long knowledgeid, String type);
 
 	/**
-	 * 根据条件查询资讯
-	 * 
-	 * @param columnid
-	 *            栏目类型
-	 * @param source
-	 *            1首页 2其他
+	 * 删除知识
+	 * @param knowledgeids
+	 * @param groupid
 	 * @param userid
-	 *            用户id
-	 * @param ids
-	 *            资讯ids
 	 * @return
 	 */
-	@Deprecated
-	List<KnowledgeNews> selectByParam(Long columnid, long source, Long userid,
-			List<Long> ids, int page, int size);
-
-	/**
-	 * 删除草稿箱中的知识同时，将MongoDB中的知识删除
-	 */
-	@Deprecated
-	void deleteKnowledgeByid(long knowledgeid);
-
-	/**
-	 * 恢复回收站中的知识
-	 * 
-	 * @param knowledgeid
-	 */
-	@Deprecated
-	void restoreKnowledgeByid(long knowledgeid, long userid);
-
-	@Deprecated
-	void deleteforeverKnowledge(long knowledgeid);
-
-	Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid,
-			long userid);
+	Map<String, Object> deleteKnowledgeNew(String knowledgeids, long groupid, long userid);
 
 	/**
 	 * 添加用户分享
@@ -110,20 +75,19 @@ public interface KnowledgeService {
 	 */
 	Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user);
 
-	/**
-	 * 编辑知识(投融工具)
-	 */
-	@Deprecated
-	public void updateKnowledgeForInvestment(Long id, String pic,
-			String refrenceData, String imageBookData, String content,
-			String desc, Long userId);
-
 	public void updateByPrimaryKey(KnowledgeBase kb);
 
+	/**
+	 * 保存知识
+	 * @param vo
+	 * @param user
+	 * @return
+	 */
 	Map<String, Object> saveKnowledge(KnowledgeNewsVO vo, User user);
 
 	/**
-	 *  添加知识到知识目录表
+	 * 添加知识到知识目录表
+	 * 
 	 * @param vo
 	 * @param user
 	 * @return
