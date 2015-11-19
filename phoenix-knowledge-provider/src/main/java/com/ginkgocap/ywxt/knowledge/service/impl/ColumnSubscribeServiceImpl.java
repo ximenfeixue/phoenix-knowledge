@@ -109,35 +109,11 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	}
 
 	@Override
-	public Long countSubNumber(long userId, long columnId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int update(KnowledgeColumnSubscribe kcs) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public KnowledgeColumnSubscribe merge(KnowledgeColumnSubscribe kcs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void deleteByUIdAndKCId(long userId, long columnId) {
 		KnowledgeColumnSubscribeExample kcseExample = new KnowledgeColumnSubscribeExample();
 		kcseExample.createCriteria().andUserIdEqualTo(userId)
 				.andColumnIdEqualTo(columnId);
 		kcsm.deleteByExample(kcseExample);
-	}
-
-	@Override
-	public void deleteByPK(long id) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -149,34 +125,10 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	}
 
 	@Override
-	public List<Column> selectKCListByUserId(long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Long> selectUserIdListByKc(long columnId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<KnowledgeColumnSubscribe> selectByKCId(long columnId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int countByKC(long columnId) {
 		KnowledgeColumnSubscribeExample kcseExample = new KnowledgeColumnSubscribeExample();
 		kcseExample.createCriteria().andColumnIdEqualTo(columnId);
 		return kcsm.countByExample(kcseExample);
-	}
-
-	@Override
-	public List<Integer> countAllByKC(long userId) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -187,25 +139,6 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	}
 
 	@Override
-	public List<KnowledgeSimpleMerge> selectSubKnowByUserId(long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<KnowledgeSimpleMerge> selectSubKnowByUserId(long userId,
-			int type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public long updateSubscribeCount(long columnid) {
 		long count = this.countByKC(columnid);
 		Column cc = new Column();
@@ -213,36 +146,6 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		cc.setSubscribeCount(count);
 		cm.updateByPrimaryKeySelective(cc);
 		return columnService.queryById(columnid).getSubscribeCount();
-	}
-
-	// @Override
-	// public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
-	//
-	// //TODO 判断是否已存在
-	//
-	// // this.isExist(kcs.getUserId(), kcs.getColumnId());
-	//
-	// if (StringUtils.isEmpty(kcs.getColumnType())) {
-	// KnowledgeColumn kc=knowledgeColumnDao.queryById(kcs.getColumnId());
-	//
-	// //栏目类型分析，只能按照一级父id查询，根据columnlevelpath路径无法分析其类型
-	// kc=KCHelper.setKCType(kc);
-	// String columnType=KCHelper.getMysqlkcType(kc.getKcType());
-	//
-	// kcs.setColumnType(columnType);
-	// }
-	//
-	//
-	// Date date=new Date();
-	// kcs.setSubDate(date);
-	//
-	// return kcsDao.insert(kcs);
-	// }
-	@Override
-	public List<KnowledgeSimpleMerge> selectSubKnowByKCList(List<Column> list,
-			int type) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
