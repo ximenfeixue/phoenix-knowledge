@@ -355,4 +355,10 @@ public class ColumnServiceTest extends TestBase{
     public void checkNogroup(){
         kcs.delColumn(2672, 36, true);
     }
+    
+    @Test
+    @Rollback(false)
+    public void add(){
+        kcs.addColumn("我不知道，不知道", 0, "", 1, "55555", 36);
+    }
 }
