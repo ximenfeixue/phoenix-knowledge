@@ -33,6 +33,7 @@ public class KnoledgeAdminTest extends TestBase {
 		
 		KnowledgeNewsVO vo = new KnowledgeNewsVO();
 		vo.setColumnid("172");
+
 		vo.setTitle("测试");
 		vo.setContent("ssssssssssssssssssssssssssss");
 		vo.setColumnType("1");
