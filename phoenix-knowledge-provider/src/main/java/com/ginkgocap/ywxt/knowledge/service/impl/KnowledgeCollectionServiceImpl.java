@@ -170,8 +170,8 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements K
 				return result;
 			}
 			// 通知数据中心
-			noticeDataCenter("upd",vo);
-//			noticeDataCenter(vo.getColumType(), vo.getkId(), "upd");
+//			noticeDataCenter("upd",vo);
+			noticeDataCenter(vo.getColumType(), vo.getkId(), "upd");
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
 			bVo.setColumType(vo.getColumType());
