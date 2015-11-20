@@ -100,11 +100,12 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	//private static final Map<String, List<Long>> cache = MapUtils.synchronizedMap(new LRUMap(150));
-	
+	// private static final Map<String, List<Long>> cache =
+	// MapUtils.synchronizedMap(new LRUMap(150));
+
 	@Resource
-	private  Cache cache;
-	
+	private Cache cache;
+
 	private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
 
 	private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
@@ -144,8 +145,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		String[] names = t.getClass().getName().split("\\.");
 		int length = names.length;
 
-		List<KnowledgeVO> list=  getMongoIds(Long.parseLong(columnid), 4, 0, names[length - 1], page, size);  
-		model.put("list",list);
+		List<KnowledgeVO> list = getMongoIds(Long.parseLong(columnid), 4, 0, names[length - 1], (page - 1) * size, size);
+		model.put("list", list);
 		return model;
 	}
 
@@ -190,20 +191,21 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 				loadingMap.remove(key);
 			}
 		} else {
-			List<Long> ids = knowledgeIds == null? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()), Math.min(start + size, knowledgeIds.size()));
+			List<Long> ids = knowledgeIds == null ? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()),
+					Math.min(start + size, knowledgeIds.size()));
 			for (Long id : ids) {
-				KnowledgeVO vo = mongoTemplate.findById(id, KnowledgeVO.class,name);
+				KnowledgeVO vo = mongoTemplate.findById(id, KnowledgeVO.class, name);
 				if (vo != null) {
 					result.add(vo);
 				}
 			}
-			//执行更新早作
+			// 执行更新早作
 			executorService.execute(new TakeRecordTask(keyCId, keyStatus, keyUId, name));
 		}
 		return result;
 	}
 
-	private  class TakeRecordTask implements Runnable {
+	private class TakeRecordTask implements Runnable {
 		private Long keyCId;
 		private int keyStatus;
 		private int keyUId;
@@ -354,7 +356,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid, Long userid, String keyword, int page, int size) {
+	public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortid, Long userid, String keyword,
+			int page, int size) {
 		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},", tid);
 		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},", lid);
 		logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllKnowledgeCategoryByParam:{},", state);
@@ -418,7 +421,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		try {
 			List<Column> cl = columnValueMapper.selectColumnTreeBySortId(userId, c.getColumnLevelPath());
 			if (cl != null && cl.size() > 0) {
-				return Branch.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath"), cid, c.getParentId()).getList();
+				return Branch.build(ConvertUtil.convert2Node(cl, "userId", "id", "columnname", "parentId", "columnLevelPath"), cid, c.getParentId())
+						.getList();
 			}
 		} catch (Exception e) {
 			logger.error("无法获取2,3级栏目数据knowledgeHomeServiceImpl.queryColumns()");
@@ -550,15 +554,19 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#selectFirstKnowledge(java.lang.String, java.lang.String, int, java.lang.String, java.lang.Long, java.lang.String, int, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#
+	 * selectFirstKnowledge(java.lang.String, java.lang.String, int,
+	 * java.lang.String, java.lang.Long, java.lang.String, int, int)
 	 * Administrator
 	 */
 	@Override
-	public Map<String, Object> selectRecommendedKnowledge( Long userid,int page, int size) {
+	public Map<String, Object> selectRecommendedKnowledge(Long userid, int page, int size) {
 		int start = (page - 1) * size;
 		int count = knowledgeCategoryValueMapper.countRecommendedKnowledge(userid);
-		List kcl = knowledgeCategoryValueMapper.selectRecommendedKnowledge(userid,start, size);
+		List kcl = knowledgeCategoryValueMapper.selectRecommendedKnowledge(userid, start, size);
 		PageUtil p = new PageUtil(count, page, size);
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("page", p);
