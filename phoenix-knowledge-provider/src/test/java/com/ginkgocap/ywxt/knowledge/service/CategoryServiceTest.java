@@ -29,7 +29,7 @@ public class CategoryServiceTest extends TestBase{
     private CategoryService categoryService;
     
     private long uid = 10000;
-    
+      
     private Category category;
     
     private Category child;
