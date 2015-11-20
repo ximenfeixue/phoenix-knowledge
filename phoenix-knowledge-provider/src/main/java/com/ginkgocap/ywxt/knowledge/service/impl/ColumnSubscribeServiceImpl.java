@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Resource
 	private ColumnKnowledgeMapper columnKnowledgeMapper;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(KnowledgeCollectionServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(KnowledgeCollectionServiceImpl.class);
 
 	@Override
 	public KnowledgeColumnSubscribe add(KnowledgeColumnSubscribe kcs) {
@@ -95,24 +95,21 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public boolean isExist(long userId, long columnId) {
 		KnowledgeColumnSubscribeExample kcseExample = new KnowledgeColumnSubscribeExample();
-		kcseExample.createCriteria().andUserIdEqualTo(userId)
-				.andColumnIdEqualTo(columnId);
+		kcseExample.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(columnId);
 		return kcsm.countByExample(kcseExample) > 0 ? true : false;
 	}
 
 	@Override
 	public boolean isExistType(long userId, short type) {
 		KnowledgeColumnSubscribeExample kcseExample = new KnowledgeColumnSubscribeExample();
-		kcseExample.createCriteria().andUserIdEqualTo(userId)
-				.andColumnTypeEqualTo(type);
+		kcseExample.createCriteria().andUserIdEqualTo(userId).andColumnTypeEqualTo(type);
 		return kcsm.countByExample(kcseExample) > 0 ? true : false;
 	}
 
 	@Override
 	public void deleteByUIdAndKCId(long userId, long columnId) {
 		KnowledgeColumnSubscribeExample kcseExample = new KnowledgeColumnSubscribeExample();
-		kcseExample.createCriteria().andUserIdEqualTo(userId)
-				.andColumnIdEqualTo(columnId);
+		kcseExample.createCriteria().andUserIdEqualTo(userId).andColumnIdEqualTo(columnId);
 		kcsm.deleteByExample(kcseExample);
 	}
 
@@ -151,8 +148,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	@Override
 	public Map<String, Object> selectRankList(int count, long userid) {
 		ColumnExample ce = new ColumnExample();
-		ce.createCriteria().andColumnLevelPathLike("__________________")
-				.andDelStatusEqualTo((byte) 0);
+		ce.createCriteria().andColumnLevelPathLike("__________________").andDelStatusEqualTo((byte) 0);
 		ce.setLimitStart(0);
 		ce.setLimitEnd(count);
 		ce.setOrderByClause("subscribe_count desc");
@@ -186,8 +182,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 			sn.setId(c.getId());
 			sn.setName(c.getColumnname());
 			// query child
-			List<Column> ccl = columnService.queryByParentId(c.getId(),
-					Constants.gtnid);
+			List<Column> ccl = columnService.queryByParentId(c.getId(), Constants.gtnid);
 			List<SubcribeNode> ccnl = new ArrayList<SubcribeNode>();
 			for (Column xc : ccl) {
 				SubcribeNode sxn = new SubcribeNode();
@@ -217,60 +212,36 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 	}
 
 	@Override
-	public Map<String, Object> selectMySubscribe(long id, String type,
-			Integer source, Integer pno, Integer psize) {
+	public Map<String, Object> selectMySubscribe(long id, String type, Integer source, Integer pno, Integer psize) {
 		return searchKnowledgeFromSub(id, null, type, source, pno, psize);
 	}
 
-	private org.springframework.data.mongodb.core.query.Criteria createQueryCriteria(
-			long uid, List<String> columnList, Integer source, String keywords) {
+	private org.springframework.data.mongodb.core.query.Criteria createQueryCriteria(long uid, List<String> columnList, Integer source,
+			String keywords) {
 		org.springframework.data.mongodb.core.query.Criteria c = null;
+		Long receive_user_id = null;
+		Long send_user_id = null;
+		logger.info("进入查询我的订阅自己的知识Id列表,类型:{},栏目列表{}", source, columnList);
 		if (source == Constants.Relation.jinTN.v()) {
-			c = org.springframework.data.mongodb.core.query.Criteria
-					.where("columnid").in(columnList).and("uid")
-					.is(Ids.jinTN.v()).and("status").is(4);
+			c = org.springframework.data.mongodb.core.query.Criteria.where("columnid").in(columnList).and("uid").is(Ids.jinTN.v()).and("status").is(4);
 		} else if (source == Constants.Relation.self.v()) {
-			logger.info("进入查询我的订阅自己的知识Id列表,类型:{},栏目列表{}", source, columnList);
-			// 订阅下自己的知识ID，knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper
-					.selectKnowledgeIdsByParams(null, uid, columnList);
-			logger.info("结束查询我的订阅自己的知识Id列表,类型:{},知识ID列表{}", source,
-					knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds).and("status").is(4);
-
+			send_user_id = uid;
 		} else if (source == Constants.Relation.friends.v()) {
-			logger.info("进入查询我的订阅分享给我的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
-					columnList);
-			// 获取所有大乐，中乐分享给我的knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper
-					.selectKnowledgeIdsByParams(uid, null, columnList);
-			logger.info("结束查询我的订阅分享到我的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
-					knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds).and("status").is(4);
+			receive_user_id = uid;
 		} else if (source == Constants.Relation.platform.v()) {
-			logger.info("进入查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},栏目列表{}", source,
-					columnList);
-			// 获取所有大乐，中乐分享到全平台的knowledgeIds
-			List<Long> knowledgeIds = userPermissionValueMapper
-					.selectKnowledgeIdsByParams(-1l, null, columnList);
-			logger.info("结束查询我的订阅分享到全平台的中乐，大乐的知识Id列表,类型:{},知识ID列表{}", source,
-					knowledgeIds);
-			c = org.springframework.data.mongodb.core.query.Criteria.where(
-					"_id").in(knowledgeIds).and("status").is(4);
+			receive_user_id = -1L;
 		}
+		List<Long> knowledgeIds = userPermissionValueMapper.selectKnowledgeIdsByParams(receive_user_id, send_user_id, columnList);
+		c = org.springframework.data.mongodb.core.query.Criteria.where("_id").in(knowledgeIds).and("status").is(4);
 		if (StringUtils.isNotBlank(keywords)) {
-			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$",
-					Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile("^.*" + keywords + ".*$", Pattern.CASE_INSENSITIVE);
 			c.and("title").regex(pattern);
 		}
 		return c;
 	}
 
 	@Override
-	public Map<String, Object> searchKnowledgeFromSub(long id, String keywords,
-			String type, Integer source, Integer pno, Integer psize) {
+	public Map<String, Object> searchKnowledgeFromSub(long id, String keywords, String type, Integer source, Integer pno, Integer psize) {
 		logger.info("进入查询我的订阅请求,用户:{},类型{}", id, type);
 		Map<String, Object> result = new HashMap<String, Object>();
 		KnowledgeColumnSubscribeExample example = new KnowledgeColumnSubscribeExample();
@@ -279,8 +250,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 		criteria.andColumnTypeEqualTo(Short.parseShort(type));
 		criteria.andColumnIdGreaterThan(11l);
 		example.setOrderByClause("sub_date desc");
-		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper
-				.selectByExample(example);
+		List<KnowledgeColumnSubscribe> list = knowledgeColumnSubscribeMapper.selectByExample(example);
 		if (list == null || list.size() == 0) {
 			result.put("results", list);
 			result.put("count", 0);
@@ -295,38 +265,31 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 				String obj = Constants.getTableName(type + "");
 				// 根据ID集合查询Mongodb数据
 				Query query = new Query();
-				org.springframework.data.mongodb.core.query.Criteria c = createQueryCriteria(
-						id, columnList, source, keywords);
+				org.springframework.data.mongodb.core.query.Criteria c = createQueryCriteria(id, columnList, source, keywords);
 				query.addCriteria(c);
 
-				long v = mongoTemplate.count(query,
-						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+				long v = mongoTemplate.count(query, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 				query.limit(psize);
 				query.skip((pno - 1) * psize);
 				query.sort().on("createtime", Order.DESCENDING);
 				if (StringUtils.isBlank(obj)) {
 					result.put(Constants.status, Constants.ResultType.fail.v());
-					result.put(Constants.errormessage, "没有找到类型为" + type
-							+ "的对象.");
+					result.put(Constants.errormessage, "没有找到类型为" + type + "的对象.");
 					return result;
 				}
-				List<Knowledge> subList = mongoTemplate.find(query,
-						Knowledge.class,
-						obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+				List<Knowledge> subList = mongoTemplate.find(query, Knowledge.class, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 				for (Knowledge k : subList) {
 					if (StringUtils.isNotBlank(k.getDesc())) {
 						String desc = HtmlToText.html2Text(k.getDesc());
 						if (StringUtils.isNotBlank(desc)) {
-							desc = desc.length() > 50 ? desc.substring(0, 50)
-									+ "..." : desc;
+							desc = desc.length() > 50 ? desc.substring(0, 50) + "..." : desc;
 						}
 						k.setDesc(desc);
 					} else {
 						String content = HtmlToText.html2Text(k.getContent());
 						if (StringUtils.isNotBlank(content)) {
-							content = content.length() > 50 ? content
-									.substring(0, 50) + "..." : content;
+							content = content.length() > 50 ? content.substring(0, 50) + "..." : content;
 						}
 						k.setDesc(content);
 					}
@@ -338,8 +301,7 @@ public class ColumnSubscribeServiceImpl implements ColumnSubscribeService {
 
 				result.put("page", p);
 
-				result.put("totalPage", v % psize == 0 ? v / psize : v / psize
-						+ 1);
+				result.put("totalPage", v % psize == 0 ? v / psize : v / psize + 1);
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error("查询我的订阅请求异常,用户:{},类型{}", id, type);
