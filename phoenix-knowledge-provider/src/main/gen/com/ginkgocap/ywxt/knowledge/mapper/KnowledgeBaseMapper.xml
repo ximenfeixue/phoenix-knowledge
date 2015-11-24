@@ -353,4 +353,8 @@
       userStar = #{userstar,jdbcType=INTEGER}
     where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
   </update>
+  
+  <update id="modifyKnowledgeId" parameterType="com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase"> 
+	update tb_knowledge_base set tag = #{tag,jdbcType=VARCHAR} where knowledge_id = #{knowledgeId,jdbcType=BIGINT} 
+	</update>
 </mapper>
