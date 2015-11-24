@@ -266,4 +266,14 @@
   		ORDER BY b.createtime DESC  
 		LIMIT #{page},#{size}
 	</select>
+		<!-- 添加 /删除用户知识列表星标 -->
+	<update id="updateKnowledgeStar">
+	UPDATE tb_knowledge_base
+	 SET userStar = #{star}
+	 WHERE  user_id = #{userId}
+	 AND  knowledge_id IN 
+	  <foreach item="id" collection="knowledgeids" open="(" separator="," close=")">
+   		#{id}
+	  </foreach>
+	</update>
 </mapper>

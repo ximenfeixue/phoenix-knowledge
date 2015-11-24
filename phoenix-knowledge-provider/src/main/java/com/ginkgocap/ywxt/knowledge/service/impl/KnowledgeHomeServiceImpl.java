@@ -570,4 +570,19 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		m.put("list", kcl);
 		return m;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#addUserStar
+	 * (java.util.List, long, int) Administrator
+	 */
+	@Override
+	public Map<String, Object> addUserStar(List<Long> knowledgeIds, long userId, int star) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		mobileKnowledgeMapper.updateKnowledgeStar(knowledgeIds, userId, star);
+		result.put("success", true);
+		return result;
+	}
 }

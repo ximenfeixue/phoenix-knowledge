@@ -157,4 +157,13 @@ public interface KnowledgeHomeService {
      */
     public Map<String,Object>  selectRecommendedKnowledge(Long userid,int page, int size);
     
+    /**
+	 * 知识添加星标签
+	 * 
+	 * @param vo
+	 * @param user
+	 * @return
+	 */
+	Map<String, Object> addUserStar(List<Long> knowledgeIds, long userId,int star);
+    
 }
