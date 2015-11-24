@@ -975,66 +975,6 @@ public class KnowledgeBaseExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserstarIsNull() {
-            addCriterion("userStar is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarIsNotNull() {
-            addCriterion("userStar is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarEqualTo(Integer value) {
-            addCriterion("userStar =", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarNotEqualTo(Integer value) {
-            addCriterion("userStar <>", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarGreaterThan(Integer value) {
-            addCriterion("userStar >", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarGreaterThanOrEqualTo(Integer value) {
-            addCriterion("userStar >=", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarLessThan(Integer value) {
-            addCriterion("userStar <", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarLessThanOrEqualTo(Integer value) {
-            addCriterion("userStar <=", value, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarIn(List<Integer> values) {
-            addCriterion("userStar in", values, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarNotIn(List<Integer> values) {
-            addCriterion("userStar not in", values, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarBetween(Integer value1, Integer value2) {
-            addCriterion("userStar between", value1, value2, "userstar");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserstarNotBetween(Integer value1, Integer value2) {
-            addCriterion("userStar not between", value1, value2, "userstar");
-            return (Criteria) this;
-        }
-
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
             return (Criteria) this;
