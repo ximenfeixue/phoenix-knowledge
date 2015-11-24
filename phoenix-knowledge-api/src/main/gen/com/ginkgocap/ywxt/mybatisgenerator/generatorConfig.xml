@@ -35,7 +35,8 @@
 <!-- 		<table tableName="tb_user_category" domainObjectName="UserCategory" />  -->
 <!-- 		<table tableName="tb_user_permission" domainObjectName="UserPermission" /> -->
 <!-- 		<table tableName="tb_knowledge_r_tag" domainObjectName="KnowledgeTag" /> -->
-		<table tableName="tb_column_visible" domainObjectName="ColumnVisible" />
+<!-- 		<table tableName="tb_column_visible" domainObjectName="ColumnVisible" /> -->
+		<table tableName="tb_knowledge_base" domainObjectName="KnowledgeBase" />
 
   	</context>
 </generatorConfiguration>

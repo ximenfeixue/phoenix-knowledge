@@ -30,6 +30,8 @@ public class KnowledgeBase implements Serializable {
 
     private String taskid;
 
+    private Integer userstar;
+
     private static final long serialVersionUID = 1L;
 
     public Long getKnowledgeId() {
@@ -134,5 +136,13 @@ public class KnowledgeBase implements Serializable {
 
     public void setTaskid(String taskid) {
         this.taskid = taskid;
+    }
+
+    public Integer getUserstar() {
+        return userstar;
+    }
+
+    public void setUserstar(Integer userstar) {
+        this.userstar = userstar;
     }
 }

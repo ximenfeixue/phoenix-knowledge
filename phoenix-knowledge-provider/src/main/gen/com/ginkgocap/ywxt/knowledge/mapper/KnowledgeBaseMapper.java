@@ -27,6 +27,4 @@ public interface KnowledgeBaseMapper {
     int updateByPrimaryKeySelective(KnowledgeBase record);
 
     int updateByPrimaryKey(KnowledgeBase record);
-    
-    int modifyKnowledgeId(KnowledgeBase record);
 }
