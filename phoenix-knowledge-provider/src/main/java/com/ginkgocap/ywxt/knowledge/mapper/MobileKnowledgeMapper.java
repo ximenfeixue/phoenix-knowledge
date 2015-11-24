@@ -93,4 +93,6 @@ public interface MobileKnowledgeMapper {
 	@SuppressWarnings("rawtypes")
 	List getAggregationRead(@Param("userId") Long userId,@Param("columnids") String[] columnids,
 			@Param("page") int page, @Param("size") int size);
+	
+	int updateKnowledgeStar(@Param("knowledgeids") List<Long> knowledgeids,@Param("userId") long  userId,@Param("star") int star);
 }

@@ -1,12 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,14 +16,11 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskRejectedException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -47,6 +41,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.ColumnValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.ColumnVisibleValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeCategoryValueMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
+import com.ginkgocap.ywxt.knowledge.mapper.MobileKnowledgeMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserPermissionValueMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -97,6 +92,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 	private ColumnVisibleValueMapper columnVisibleValueMapper;
 	@Resource
 	private KnowledgeReaderService knowledgeReaderService;
+	@Resource
+	private MobileKnowledgeMapper mobileKnowledgeMapper;
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -572,5 +569,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService {
 		m.put("page", p);
 		m.put("list", kcl);
 		return m;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService#addUserStar
+	 * (java.util.List, long, int) Administrator
+	 */
+	@Override
+	public Map<String, Object> addUserStar(List<Long> knowledgeIds, long userId, int star) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		mobileKnowledgeMapper.updateKnowledgeStar(knowledgeIds, userId, star);
+		result.put("success", true);
+		return result;
 	}
 }

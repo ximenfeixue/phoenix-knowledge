@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -70,5 +71,12 @@ public class KnowledgeHomeServiceTest extends TestBase {
     public void selectPlatform() {
     	knowledgeHomeService.selectRecommendedKnowledge(36l, 1, 20);
     }
+    
+    @Test
+    public void updateStar() {
+    	List<Long> knowledgeIds =Arrays.asList(25229L,27001L);
+    	knowledgeHomeService.addUserStar(knowledgeIds, 36, 1);
+    }
+    
 
 }
