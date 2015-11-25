@@ -19,7 +19,7 @@
 		<if test="keyword !=null and keyword != '' ">
 			AND b.title like CONCAT('%',#{keyword},'%')
 		</if>
-		 ORDER BY b.createtime DESC  
+		 ORDER BY b.userStar DESC,b.createtime DESC  
 		LIMIT #{start},#{size}
 	</select>
 
