@@ -19,4 +19,5 @@ public interface ColumnVisibleValueMapper {
     public List<Column> initvisible(long userId);
     public long initcount(long userId);
     public List getAggregationRead(@Param("userId") Long userId,@Param("columnids")String[] columnIds,@Param("page") int page,@Param("size") int size);
+    public int countUserIdSystemColumn(@Param("columnIds") List<Long> list,@Param("userId")  long userId);
 }

@@ -81,4 +81,11 @@ public interface ColumnValueMapper {
      * @return 用户订阅的所有栏目列表
      */
     public List<Column> selectSubByUserIdOrderById(long userId);
+    
+    /**
+     * 查询系统栏目
+     * @param collectionUserId
+     * @return
+     */
+    List<Map<String, Object>> getSystemColumnIds( @Param("pid") long pid);
 }

@@ -675,11 +675,11 @@ public class ColumnServiceImpl implements ColumnService {
 			result.put(Constants.errormessage, Constants.ErrorMessage.delColumnNotPermission.c());
 			return result;
 		}
-		List<Column> colList = getNnGroupColumn(userid); 
+		List<Column> colList = getNnGroupColumn(userid);
 		if (colList != null && colList.size() > 0) {
-			updateMongoColumn(column.getType()+"", colList, columnid);
+			updateMongoColumn(column.getType() + "", colList, columnid);
 			upKnowledgeBaseColumn(columnid, userid);
-			userPermissionValueMapper.batchUpdateColumn(colList.get(0).getId(), userid, columnid, 1);//将权限表中栏目改为未分组
+			userPermissionValueMapper.batchUpdateColumn(colList.get(0).getId(), userid, columnid, 1);// 将权限表中栏目改为未分组
 		}
 		deleteColumnTag(columnid);
 		columnVisibleService.delByUserIdAndColumnId(userid, columnid); // 删除栏目定制表
@@ -965,6 +965,7 @@ public class ColumnServiceImpl implements ColumnService {
 
 	/**
 	 * 更改mongo中知识所属栏目ID为未分组
+	 * 
 	 * @param columnType
 	 * @param colList
 	 * @param columnid
@@ -978,14 +979,15 @@ public class ColumnServiceImpl implements ColumnService {
 		update.set("cpathid", Constants.unGroupSortName);
 		mongoTemplate.updateMulti(query, update, obj);
 	}
-	
+
 	/**
 	 * 获取未分组栏目
+	 * 
 	 * @param userid
 	 * @return
 	 */
-	
-	public List<Column> getNnGroupColumn(long userid){
+
+	public List<Column> getNnGroupColumn(long userid) {
 		ColumnExample col = new ColumnExample();
 		Criteria criteria = col.createCriteria();
 		criteria.andColumnLevelPathEqualTo(Constants.unGroupSortId);
@@ -994,15 +996,17 @@ public class ColumnServiceImpl implements ColumnService {
 		return colList;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnName(long, java.lang.String)
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnName(long,
+	 * java.lang.String) Administrator
 	 */
 	@Override
 	public Map<String, Object> updateColumnName(long columnid, String columnName) {
-		
-		
-		Map<String, Object> result = new HashMap<String,Object>();
+
+		Map<String, Object> result = new HashMap<String, Object>();
 		ColumnExample example = new ColumnExample();
 		ColumnExample.Criteria cri = example.createCriteria();
 		cri.andIdEqualTo(columnid);
@@ -1014,9 +1018,12 @@ public class ColumnServiceImpl implements ColumnService {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnisExist(long, java.lang.String)
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.ColumnService#updateColumnisExist
+	 * (long, java.lang.String) Administrator
 	 */
 	@Override
 	public boolean updateColumnisExist(long columnId, String columnName) {
@@ -1025,5 +1032,25 @@ public class ColumnServiceImpl implements ColumnService {
 		criteria.andColumnnameEqualTo(columnName);
 		criteria.andIdEqualTo(columnId);
 		return columnMapper.countByExample(example) > 0 ? true : false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.ColumnService#getSystemColumnIds()
+	 * Administrator
+	 */
+	@Override
+	public List<Long> getSystemColumnIds(long pid) {
+		List<Long> list = new ArrayList<Long>();
+		List<Map<String, Object>> maplist = columnValueMapper.getSystemColumnIds(pid);
+		if (maplist != null && maplist.size() > 0) {
+			for (int i = 0; i < maplist.size(); i++) {
+				Map<String, Object> map = maplist.get(i);
+				list.add((Long) map.get("id"));
+			}
+		}
+		return list;
 	}
 }

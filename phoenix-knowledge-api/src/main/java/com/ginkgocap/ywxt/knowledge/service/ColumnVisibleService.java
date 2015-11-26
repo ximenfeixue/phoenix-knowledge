@@ -47,5 +47,16 @@ public interface ColumnVisibleService {
     void initOne(long userid, long gid, Long cid);
 
     void initDiff(long userId); 
-
+    
+    /**
+     * 获取用户定制系统栏目数
+     * @param userId
+     * @return
+     */
+    int countUserVisible(long userId);
+    
+    /**
+     * 删除用户定制的栏目
+     */
+    int deleteUserVisibleColumn(long userId);
 }

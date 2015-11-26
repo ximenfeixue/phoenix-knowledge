@@ -134,4 +134,13 @@
   		ORDER BY b.createtime DESC  
 		LIMIT #{page},#{size}
 	</select>
+	<select id="countUserIdSystemColumn" resultType="int">
+	
+		SELECT count(1) FROM tb_column_visible 
+		WHERE  user_id = #{userId}  
+	 	AND   column_id IN 
+	 	 <foreach item="id" collection="columnIds" open="(" separator="," close=")">
+   			#{id}
+	 	 </foreach>
+	</select>
 </mapper>

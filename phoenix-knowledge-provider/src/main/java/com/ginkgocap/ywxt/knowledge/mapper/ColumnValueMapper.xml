@@ -192,4 +192,9 @@
 		where c.del_status = 0 order by t.id
 	</select>
 	
+	<select id="getSystemColumnIds" resultType="map">
+ 	
+		SELECT id FROM tb_column WHERE user_id =0 AND parent_id =#{pid}
+ 	</select>
+	
 </mapper>

@@ -374,6 +374,12 @@ public interface ColumnService {
 	 * @return true:存在 false:不存在
 	 */
 	public boolean updateColumnisExist(long columnId, String columnName);
+	
+	/**
+	 * 得到系统一级栏目Id
+	 * @return
+	 */
+	public List<Long> getSystemColumnIds(long pid);
 
 
 }

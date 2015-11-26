@@ -84,6 +84,7 @@
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
+      group by column_id
     <if test="orderByClause != null" >
       order by ${orderByClause}
       <if test="limitStart >= 0 and limitEnd>= 0" >
