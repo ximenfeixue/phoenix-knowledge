@@ -62,7 +62,8 @@
 	pcid,
 	state,
 	column_name,
-	sort_id
+	sort_id,
+	type
 	) values
 	<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.userId},
@@ -72,7 +73,8 @@
 		#{item.pcid},
 		#{item.state},
 		#{item.columnName},
-		#{item.sortId}
+		#{item.sortId},
+		#{item.type}
 		) 
 		</foreach>
 </insert>

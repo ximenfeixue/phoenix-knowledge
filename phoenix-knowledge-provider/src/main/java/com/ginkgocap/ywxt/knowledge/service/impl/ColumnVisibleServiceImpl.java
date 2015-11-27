@@ -226,6 +226,11 @@ public class ColumnVisibleServiceImpl implements ColumnVisibleService {
 				cv.setSortId(c.getColumnLevelPath());
 				cv.setColumnName(cname);
 				cv.setState((short) 0);
+				if (c.getUserId() == userid) {
+					cv.setType(1);
+				}else{
+					cv.setType(0);
+				}
 				cvl.add(cv);
 			}
 		}
