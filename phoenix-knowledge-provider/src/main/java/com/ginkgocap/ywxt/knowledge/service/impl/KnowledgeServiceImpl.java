@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import com.gintong.frame.util.log.ServiceLogAnnotation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +64,8 @@ import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.MakeTaskId;
 
 @Service("knowledgeService")
+@ServiceLogAnnotation
+
 public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeService {
 
 	private final static String dule = "1";
