@@ -31,13 +31,14 @@
 
 
     <appender name="interfaceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File"
-               value="${log4j.path}/phoenix-knowledge/interfaceLog.log"/>
+        <param name="File" value="${log4j.path}/phoenix-knowledge/interfaceLog.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n"/>
         </layout>
+        <param name="Threshold" value="info"></param>
     </appender>
+
     <logger name="com.gintong.frame.util" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="interfaceLog"/>
@@ -47,7 +48,5 @@
         <level value="${log4j.level}"/>
         <appender-ref ref="logconsole"/>
         <appender-ref ref="logfile"/>
-        <appender-ref ref="interfaceLog"/>
-
     </root>
 </log4j:configuration>
