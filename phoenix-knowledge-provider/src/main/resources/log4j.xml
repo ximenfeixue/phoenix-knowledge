@@ -30,7 +30,7 @@
              <onMismatch>NEUTRAL</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_knowledge_provider/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_affair/info.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
@@ -47,7 +47,7 @@
              <onMismatch>NEUTRAL</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_knowledge_provider/warn.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_affair/warn.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
@@ -64,7 +64,7 @@
              <onMismatch>DENY</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_knowledge_provider/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_affair/error.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
@@ -73,25 +73,27 @@
      </appender>
      
 	<!--输出jdbctemplate的sql -->  
+    <!-- <logger name="com.ginkgocap.ywxt.affair.mapper" level="DEBUG"/> -->
     <logger name="org.springframework.jdbc.core" additivity="true">  
-        <level value="DEBUG" />  
+        <level value="info" />  
     </logger>  
     <logger name="java.sql.Connection" additivity="true">  
-        <level value="DEBUG" />  
+        <level value="info" />  
     </logger>  
     <logger name="java.sql.Statement" additivity="true">  
-        <level value="DEBUG" />  
+        <level value="info" />  
     </logger>  
     <logger name="java.sql.PreparedStatement" additivity="true">  
-        <level value="DEBUG" />  
+        <level value="info" />  
     </logger>  
     <logger name="java.sql.ResultSet" additivity="true">  
-        <level value="DEBUG" />  
+        <level value="info" />  
     </logger>
     <logger name="com.gintong.frame.util.log" additivity="true">
         <level value="info" />
     </logger>
-     <root level="debug">
+
+    <root level="info">
          <appender-ref ref="stdout" />
          <appender-ref ref="file—info" />
          <appender-ref ref="file—error" />
