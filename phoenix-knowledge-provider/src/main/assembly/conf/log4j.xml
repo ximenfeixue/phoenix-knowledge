@@ -29,14 +29,6 @@
         </filter>
     </appender>
 
-    <appender name="httpPerformanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File"
-               value="${log4j.path}/phoenix-knowledge/httpperformanceLog.log"/>
-        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n"/>
-        </layout>
-    </appender>
 
     <appender name="interfaceLog" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File"
@@ -46,34 +38,16 @@
             <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n"/>
         </layout>
     </appender>
-    <logger name="com.gintong.frame.util"
-            additivity="false">
+    <logger name="com.gintong.frame.util" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="interfaceLog"/>
-    </logger>
-    <logger name="com.ginkgocap.ywxt.Filter.HttpInterceptor"
-            additivity="false">
-        <level value="INFO"/>
-        <appender-ref ref="httpPerformanceLog"/>
-    </logger>
-
-    <appender name="performanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${log4j.path}/phoenix-knowledge/performanceLog.log"/>
-        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n"/>
-        </layout>
-    </appender>
-    <logger
-            name="com.jt.platform.framework.log.aop.PerformanceMonitorInterceptor"
-            additivity="false">
-        <level value="INFO"/>
-        <appender-ref ref="performanceLog"/>
     </logger>
 
     <root>
         <level value="${log4j.level}"/>
         <appender-ref ref="logconsole"/>
         <appender-ref ref="logfile"/>
+        <appender-ref ref="interfaceLog"/>
+
     </root>
 </log4j:configuration>
