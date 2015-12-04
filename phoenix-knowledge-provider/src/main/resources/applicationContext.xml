@@ -34,6 +34,7 @@
 <!-- 	<import resource="classpath:customer-dubbo-consumer.xml" /> -->
 	<import resource="classpath:requirement-dubbo-consumer.xml" />
 	<import resource="classpath:person-dubbo-consumer.xml" />
+	<import resource="classpath:applicationContext_log.xml"/>
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
