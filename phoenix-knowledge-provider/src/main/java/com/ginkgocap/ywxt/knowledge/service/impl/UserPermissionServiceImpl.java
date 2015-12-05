@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import com.gintong.frame.util.log.ServiceLogAnnotation;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -41,6 +42,7 @@ import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.utils.DateUtils;
 
 @Service("userpermissionService")
+@ServiceLogAnnotation
 public class UserPermissionServiceImpl implements UserPermissionService {
 
 	@Autowired

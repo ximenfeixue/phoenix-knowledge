@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.gintong.frame.util.log.ServiceLogAnnotation;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Order;
@@ -14,6 +15,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService;
 
 @Service("appKnowledgeNewsService")
+@ServiceLogAnnotation
 public class AppKnowledgeNewsServiceImpl implements AppKnowledgeNewsService {
 
 	@Resource
