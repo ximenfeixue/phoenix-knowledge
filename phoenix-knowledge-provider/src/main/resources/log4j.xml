@@ -30,7 +30,7 @@
              <onMismatch>NEUTRAL</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_affair/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_knowledge/info.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
@@ -47,7 +47,7 @@
              <onMismatch>NEUTRAL</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_affair/warn.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_knowledge/warn.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
@@ -64,7 +64,7 @@
              <onMismatch>DENY</onMismatch>
          </filter>
          <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-             <FileNamePattern>${logback.path}/phoenix_affair/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+             <FileNamePattern>${logback.path}/phoenix_knowledge/error.%d{yyyy-MM-dd}.log</FileNamePattern>
              <MaxHistory>30</MaxHistory>
          </rollingPolicy>
          <encoder>
