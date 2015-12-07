@@ -61,18 +61,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	private final static String split = ",";
 
 	@Override
-	public List<Long> selectByreceive_user_id(long receive_user_id,
-			long send_userid) {
+	public List<Long> selectByreceive_user_id(long receive_user_id, long send_userid) {
 
-		return userPermissionDAO.selectByreceive_user_id(receive_user_id,
-				send_userid);
+		return userPermissionDAO.selectByreceive_user_id(receive_user_id, send_userid);
 	}
 
 	@Override
 	@Transactional
-	public int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, String shareMessage, short column_type,
-			long column_id) {
+	public int insertUserPermission(List<String> permList, long knowledgeid, long send_uid, String shareMessage, short column_type, long column_id) {
 
 		List<UserPermission> list = new ArrayList<UserPermission>();
 		UserPermission userPermission = null;
@@ -81,15 +77,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1].substring(1,
-						perInfo[1].length() - 1);
+				String perUser = perInfo[1].substring(1, perInfo[1].length() - 1);
 				if (perInfo != null && perInfo.length > 0) {
 					String[] userList = perUser.split(",");
 					for (String userId : userList) {
 						if (StringUtils.isNotBlank(userId)) {
 							userPermission = new UserPermission();
-							userPermission.setReceiveUserId(Long
-									.parseLong(userId.trim()));
+							userPermission.setReceiveUserId(Long.parseLong(userId.trim()));
 							userPermission.setColumnId(column_id);
 							userPermission.setColumnType(column_type);
 							userPermission.setCreatetime(new Date());
@@ -107,10 +101,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public int insertUserPermission(List<String> permList, long knowledgeid,
-			long send_uid, int type, String shareMessage, short column_type,
-			long column_id, String title, String desc, String picPath,
-			String tags) {
+	public int insertUserPermission(List<String> permList, long knowledgeid, long send_uid, int type, String shareMessage, short column_type,
+			long column_id, String title, String desc, String picPath, String tags) {
 		// 用户ID集合
 		List<Long> receiveList = new ArrayList<Long>();
 		// 用户权限集合
@@ -162,8 +154,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setColumnId(column_id);
 		userPermission.setColumnType(column_type);
 		userPermission.setColumnId(column_id);
-		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
-				"yyyy-MM-dd HH:mm:ss"));
+		userPermission.setCreatetime(DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(knowledgeid);
 		userPermission.setMento(shareMessage);
 		userPermission.setSendUserId(send_uid);
@@ -183,14 +174,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public List<Long> selectByParams(Long receive_user_id, Long column_id,
-			Long type) {
+	public List<Long> selectByParams(Long receive_user_id, Long column_id, Long type) {
 		if (type == -1) {
-			return userPermissionValueMapper.selectByParamsSingle(
-					receive_user_id, column_id);
+			return userPermissionValueMapper.selectByParamsSingle(receive_user_id, column_id);
 		} else {
-			return userPermissionDAO.selectByParams(receive_user_id, column_id,
-					type);
+			return userPermissionDAO.selectByParams(receive_user_id, column_id, type);
 		}
 	}
 
@@ -199,16 +187,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	public int deleteUserPermission(long knowledgeid, long userid) {
 
 		UserPermissionExample example = new UserPermissionExample();
-		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andSendUserIdEqualTo(userid);
 		return userPermissionMapper.deleteByExample(example);
 	}
 
 	@Override
-	public Map<String, Object> getMyShare(Long userId, String title, int start,
-			int pageSize) {
+	public Map<String, Object> getMyShare(Long userId, String title, int start, int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("sendUserId").is(userId);
@@ -239,8 +225,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public Map<String, Object> getShareme(Long userId, String title, int start,
-			int pageSize) {
+	public Map<String, Object> getShareme(Long userId, String title, int start, int pageSize) {
 		List<UserPermissionMongo> lt = null;
 		PageUtil page = null;
 		Criteria c = Criteria.where("receiveUserId").is(userId);
@@ -271,12 +256,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public List<UserPermission> selectUserPermission(long knowledgeid,
-			long userid) {
+	public List<UserPermission> selectUserPermission(long knowledgeid, long userid) {
 
 		UserPermissionExample example = new UserPermissionExample();
-		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		criteria.andSendUserIdEqualTo(userid);
 		return userPermissionMapper.selectByExample(example);
@@ -286,15 +269,13 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	public int deleteUserPermission(long knowledgeid) {
 
 		UserPermissionExample example = new UserPermissionExample();
-		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example
-				.createCriteria();
+		com.ginkgocap.ywxt.knowledge.entity.UserPermissionExample.Criteria criteria = example.createCriteria();
 		criteria.andKnowledgeIdEqualTo(knowledgeid);
 		return userPermissionMapper.deleteByExample(example);
 	}
 
 	@Override
-	public void insertUserShare(List<String> permList, long kId,
-			KnowledgeNewsVO vo, User user) {
+	public void insertUserShare(List<String> permList, long kId, KnowledgeNewsVO vo, User user) {
 
 		// 用户ID集合
 		List<Long> receiveList = new ArrayList<Long>();
@@ -304,11 +285,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1].substring(1,
-						perInfo[1].length() - 1);
-				if (perInfo != null && perInfo.length > 0
-						&& Integer.parseInt(perType) == 2
-						&& StringUtils.isNotBlank(perUser)) {
+				String perUser = perInfo[1].substring(1, perInfo[1].length() - 1);
+				if (perInfo != null && perInfo.length > 0 && Integer.parseInt(perType) == 2 && StringUtils.isNotBlank(perUser)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
 						if (StringUtils.isNotBlank(userId)) {
@@ -323,8 +301,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public boolean insertUserPermissionMongo(List<Long> receiveList,
-			KnowledgeNewsVO vo, User user) {
+	public boolean insertUserPermissionMongo(List<Long> receiveList, KnowledgeNewsVO vo, User user) {
 		Criteria c = Criteria.where("sendUserId").is(user.getId());
 		c.and("knowledgeId").is(vo.getkId());
 		Query query = new Query(c);
@@ -350,8 +327,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		userPermission.setColumnId(Long.parseLong(vo.getColumnid()));
 		userPermission.setColumnType(Short.parseShort(vo.getColumnType()));
 		userPermission.setColumnId(Long.parseLong(vo.getColumnid()));
-		userPermission.setCreatetime(DateUtils.dateToString(new Date(),
-				"yyyy-MM-dd HH:mm:ss"));
+		userPermission.setCreatetime(DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		userPermission.setKnowledgeId(vo.getkId());
 		userPermission.setMento(vo.getShareMessage());
 		userPermission.setSendUserId(user.getId());
@@ -386,8 +362,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		for (int i = 0; i < id.length; i++) {
 			Criteria c = Criteria.where("id").is(id[i]);
 			Query query = new Query(c);
-			UserPermissionMongo upm = mongoTemplate.findOne(query,
-					UserPermissionMongo.class);
+			UserPermissionMongo upm = mongoTemplate.findOne(query, UserPermissionMongo.class);
 			List<Long> recivedId = upm.getReceiveUserId();
 			recivedId.remove(userId);
 			upm.setReceiveUserId(recivedId);
@@ -412,17 +387,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 			String[] perInfo = perm.split(":");
 			if (perInfo != null && perInfo.length == 2) {
 				String perType = perInfo[0];
-				String perUser = perInfo[1].substring(1,
-						perInfo[1].length() - 1);
-				if (perInfo != null
-						&& perInfo.length > 0
-						&& (Integer.parseInt(perType) == 2 || Integer
-								.parseInt(perType) == 3)) {
+				String perUser = perInfo[1].substring(1, perInfo[1].length() - 1);
+				if (perInfo != null && perInfo.length > 0 && (Integer.parseInt(perType) == 2 || Integer.parseInt(perType) == 3)) {
 					String[] userList = perUser.split(split);
 					for (String userId : userList) {
 						if (StringUtils.isNotBlank(userId)) {
-							if (Long.parseLong(userId.trim()) == -1
-									|| Long.parseLong(userId.trim()) == 0) {
+							if (Long.parseLong(userId.trim()) == -1 || Long.parseLong(userId.trim()) == 0) {
 								return true;
 							}
 						}
@@ -441,16 +411,14 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		} else {
 			List<UserPermissionMongo> lt = null;
 			PageUtil page = null;
-			Criteria c = Criteria.where("receiveUserId").is(-1)
-					.and("knowledgeId").is(targetId);
+			Criteria c = Criteria.where("receiveUserId").is(-1).and("knowledgeId").is(targetId);
 			Query query = new Query(c);
 			long count = mongoTemplate.count(query, UserPermissionMongo.class);
 			if (count > 0) {
 				return true;
 			} else {
 				c = new Criteria();
-				c = Criteria.where("receiveUserId").is(user.getId())
-						.and("knowledgeId").is(targetId);
+				c = Criteria.where("receiveUserId").is(user.getId()).and("knowledgeId").is(targetId);
 				Query query1 = new Query(c);
 				count = mongoTemplate.count(query1, UserPermissionMongo.class);
 				if (count > 0) {
@@ -496,7 +464,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		perList = null;
 		return getPermList(map);
 	}
-	
+
 	public List<String> getPermList(Map<Integer, Object> map) {
 		List<String> permList = new ArrayList<String>();
 		Set<Integer> set = map.keySet();
@@ -513,9 +481,10 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}
 		return permList;
 	}
-	
+
 	/**
 	 * 取所有好友数据
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -534,6 +503,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 	/**
 	 * 取所选好友数据
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -547,7 +517,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		}
 		return perList;
 	}
-	
+
 	@Override
 	public Map<String, Object> importUserPermission(String selectedIds) {
 
@@ -557,21 +527,16 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 		Map<String, Object> map = null;
 		try {
 			result.put(Constants.PermissionType.dule.c(), false);
-			String permission[] = { Constants.PermissionType.dales.c(),
-					Constants.PermissionType.zhongles.c(),
-					Constants.PermissionType.xiaoles.c() };
+			String permission[] = { Constants.PermissionType.dales.c(), Constants.PermissionType.zhongles.c(), Constants.PermissionType.xiaoles.c() };
 			for (int k = 0; k < permission.length; k++) {
 
 				String dales = j.get(permission[k]).toString();
-				if (!StringUtils.equals(dales, "[]")
-						&& !StringUtils.equals(dales.substring(1, 2), "{")) {
-					String dale[] = dales.substring(1, dales.length() - 1)
-							.split(",");
+				if (!StringUtils.equals(dales, "[]") && !StringUtils.equals(dales.substring(1, 2), "{")) {
+					String dale[] = dales.substring(1, dales.length() - 1).split(",");
 					listmap = new ArrayList<Map<String, Object>>();
 					for (int i = 0; i < dale.length; i++) {
 						map = new HashMap<String, Object>();
-						User user = userService.selectByPrimaryKey(Long
-								.parseLong(dale[i].trim()));
+						User user = userService.selectByPrimaryKey(Long.parseLong(dale[i].trim()));
 						if (user != null) {
 							map.put("id", dale[i].trim());
 							map.put("name", user.getName());
@@ -593,43 +558,45 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 	}
 
 	@Override
-	public void updateUserPermission(long knowledgeid, String selectedIds,
-			String type) {
+	public void updateUserPermission(long knowledgeid, String selectedIds, String type) {
 		String obj = Constants.getTableName(type);
 
-		Criteria criteria = Criteria.where("_id").is(knowledgeid).and("uid")
-				.ne(0);
+		Criteria criteria = Criteria.where("_id").is(knowledgeid).and("uid").ne(0);
 
 		try {
 			Query query = new Query(criteria);
 			Update update = new Update();
 			update.set("selectedIds", selectedIds);
-			mongoTemplate.updateFirst(query, update,
-					obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
+			mongoTemplate.updateFirst(query, update, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public boolean isPlatform(String platforms) {
+	public static boolean isPlatform(String platforms) {
 
 		String platform = "\"id\":-1";
 
-		if (platforms.contains(platform)) {
+		String platform1 = "\"id\":\"-1\"";
+
+		if (platforms.contains(platform) || platforms.contains(platform1)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ginkgocap.ywxt.knowledge.service.UserPermissionService#isZhongLeForMe(java.lang.Long, java.lang.Long, int)
-	 * Administrator
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ginkgocap.ywxt.knowledge.service.UserPermissionService#isZhongLeForMe
+	 * (java.lang.Long, java.lang.Long, int) Administrator
 	 */
 	@Override
 	public boolean isZhongLeForMe(Long knowledgeid, Long receiveUserId, int type) {
-		
+
 		return userPermissionDAO.isZhongLeForMe(knowledgeid, receiveUserId, type);
 	}
 
