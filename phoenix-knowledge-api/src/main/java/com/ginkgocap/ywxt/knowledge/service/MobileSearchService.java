@@ -112,4 +112,6 @@ public interface MobileSearchService {
 	 public Map<String, Object> selectAllKnowledge(Long userid,String keywords,int page, int size);
 	 
 	 public int selectCountKnowledge(long userid,String keywords);
+	 
+	public int countPush(Long userid,String tag,String keywords);
 }
