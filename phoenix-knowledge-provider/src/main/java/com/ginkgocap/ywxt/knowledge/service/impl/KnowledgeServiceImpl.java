@@ -65,7 +65,6 @@ import com.ginkgocap.ywxt.util.MakeTaskId;
 
 @Service("knowledgeService")
 @ServiceLogAnnotation
-
 public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeService {
 
 	private final static String dule = "1";
@@ -203,8 +202,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			KnowledgeNewsVO vo = new KnowledgeNewsVO();
 			vo.setkId(knowledgeid[i]);
 			vo.setColumnType(ct + "");
-//			noticeDataCenter("del", vo);
-			noticeDataCenter(ct + "", knowledgeid[i], "del");
+			// noticeDataCenter(ct + "", knowledgeid[i], "del");
+			noticeDataCenter("upd", vo, userid, bl.getAuthor());
 		}
 		return result;
 	}
@@ -243,8 +242,9 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 
 		saveFeed(vo, user);
 		// 大数据通知接口
-//		noticeDataCenter("upd", vo);
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
+		// noticeDataCenter("upd", vo);
+		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
+		noticeDataCenter("upd", vo, user.getId(), user.getName());
 		result.put(Constants.status, Constants.ResultType.success.v());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
@@ -317,8 +317,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			return result;
 		}
 		saveFeed(vo, user); // 动态存观点
-//		noticeDataCenter("add", vo);
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		noticeDataCenter("add", vo, user.getId(), user.getName());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());
@@ -410,8 +410,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
-//		noticeDataCenter("upd", vo);
-		noticeDataCenter(vo.getColumnType(),vo.getkId(), "upd");
+		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
+		noticeDataCenter("upd", vo, user.getId(), user.getName());
 		result.put(Constants.status, Constants.ResultType.success.v());
 		return result;
 	}
@@ -544,8 +544,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			}
 			saveFeed(vo, user);
 		}
-//		noticeDataCenter("add", vo);
-		noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
+		noticeDataCenter("add", vo, user.getId(), user.getName());
 		result.put("knowledgeid", vo.getkId());
 		result.put("type", vo.getColumnType());
 		result.put(Constants.status, Constants.ResultType.success.v());

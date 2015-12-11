@@ -23,7 +23,7 @@
 	</context:component-scan>
 	<import resource="classpath:knowledge-dubbo-provider.xml" />
 	<import resource="classpath:file-dubbo-consumer.xml" />
-<!-- 	<import resource="classpath:rocketmq-dubbo-consumer.xml" /> -->
+	<import resource="classpath:rocketmq-dubbo-consumer.xml" />
 	<import resource="classpath:knowledge-integration.xml" />
 	<import resource="classpath:knowledge-mongo-config.xml" />
 	<import resource="classpath:user-dubbo-consumer.xml" /><!-- 加载user注册服务 -->
