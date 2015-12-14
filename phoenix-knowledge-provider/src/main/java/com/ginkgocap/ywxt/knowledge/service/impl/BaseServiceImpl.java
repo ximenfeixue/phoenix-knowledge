@@ -32,19 +32,26 @@ public class BaseServiceImpl {
 	 */
 	public void noticeDataCenter(String noticeType, Object bean, long userId, String uName) {
 
-		logger.info("通知大数据，发送请求 请求用户{}  请求参数 {}",userId,bean);
-		if (StringUtils.isNotBlank(noticeType)) {
-			String flagType = "";
-			if (StringUtils.equals("upd", noticeType)) {
-				flagType = FlagTypeUtils.updateKnowledgeFlag();
-			} else if (StringUtils.equals("add", noticeType)) {
-				flagType = FlagTypeUtils.createKnowledgeFlag();
-			} else if (StringUtils.equals("del", noticeType)) {
-				flagType = FlagTypeUtils.deleteKnowledgeFlag();
+		logger.info("通知大数据，发送请求 请求用户{}  请求参数 {}", userId, bean.toString());
+		try {
+			if (StringUtils.isNotBlank(noticeType)) {
+				String flagType = "";
+				if (StringUtils.equals("upd", noticeType)) {
+					flagType = FlagTypeUtils.updateKnowledgeFlag();
+				} else if (StringUtils.equals("add", noticeType)) {
+					flagType = FlagTypeUtils.createKnowledgeFlag();
+				} else if (StringUtils.equals("del", noticeType)) {
+					flagType = FlagTypeUtils.deleteKnowledgeFlag();
+				}
+				RocketSendResult result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, flagType,
+						beanToJson(setMapVO(bean, userId, uName)));
+				logger.info("返回参数{}", result.getSendResult());
+			} else {
+				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJson(setMapVO(bean, userId, uName)));
 			}
-			defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, flagType, beanToJson(setMapVO(bean, userId, uName)));
-		} else {
-			defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJson(setMapVO(bean, userId, uName)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("发送失败");
 		}
 	}
 
