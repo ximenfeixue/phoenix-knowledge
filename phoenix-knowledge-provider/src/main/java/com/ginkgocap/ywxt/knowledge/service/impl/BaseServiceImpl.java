@@ -32,6 +32,7 @@ public class BaseServiceImpl {
 	 */
 	public void noticeDataCenter(String noticeType, Object bean, long userId, String uName) {
 
+		logger.info("通知大数据，发送请求 请求用户{}  请求参数 {}",userId,bean);
 		if (StringUtils.isNotBlank(noticeType)) {
 			String flagType = "";
 			if (StringUtils.equals("upd", noticeType)) {
