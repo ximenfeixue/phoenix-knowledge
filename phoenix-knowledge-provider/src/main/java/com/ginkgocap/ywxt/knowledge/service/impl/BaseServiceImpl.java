@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
-import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
@@ -31,8 +30,8 @@ public class BaseServiceImpl {
 	 * 
 	 */
 	public void noticeDataCenter(String noticeType, Object bean, long userId, String uName) {
-
-		logger.info("通知大数据，发送请求 请求用户{}  请求参数 {}", userId, bean.toString());
+		logger.info("通知大数据，发送请求 请求用户{}", userId);
+		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(noticeType)) {
 				String flagType = "";
@@ -43,20 +42,23 @@ public class BaseServiceImpl {
 				} else if (StringUtils.equals("del", noticeType)) {
 					flagType = FlagTypeUtils.deleteKnowledgeFlag();
 				}
-				RocketSendResult result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, flagType,
-						beanToJson(setMapVO(bean, userId, uName)));
+				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, flagType, beanToJson(setMapVO(bean, userId, uName)));
 				logger.info("返回参数{}", result.getSendResult());
 			} else {
 				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJson(setMapVO(bean, userId, uName)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("发送失败");
+			logger.info("发送失败  返回参数{}", result.getSendResult());
 		}
 	}
 
 	public static String beanToJson(Object bean) {
 		JSONObject json = JSONObject.fromObject(bean);
+		String selectedIds = json.getString("selectedIds").replace("\\", "");
+		json.remove("selectedIds");
+		json.put("selectedIds", selectedIds);
+		logger.info(json.toString());
 		return json.toString();
 	}
 
@@ -81,19 +83,21 @@ public class BaseServiceImpl {
 	}
 
 	public static void main(String[] args) {
-		KnowledgeNewsVO vo = new KnowledgeNewsVO();
-
-		vo.setSelectedIds("{\"dales\":[{\"id\":\"-1\",\"name\":\"全平台\"}],\"dule\":false,\"xiaoles\":[],\"zhongles\":[]}");
-		vo.setTitle("111");
-		vo.setColumnid("1");
-		vo.setContent("ss");
-
-		User user = new User();
-		user.setId(36);
-		user.setName("sss");
-		vo.setColumnType("1");
-		vo.setAsso("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}");
-		System.out.println(beanToJson(setMapVO(vo, 36l, "不知道")));
+		// KnowledgeNewsVO vo = new KnowledgeNewsVO();
+		//
+		// vo.setSelectedIds("{\"dales\":[{\"id\":\"-1\",\"name\":\"全平台\"}],\"dule\":false,\"xiaoles\":[],\"zhongles\":[]}");
+		// vo.setTitle("111");
+		// vo.setColumnid("1");
+		// vo.setContent("ss");
+		//
+		// User user = new User();
+		// user.setId(36);
+		// user.setName("sss");
+		// vo.setColumnType("1");
+		// vo.setAsso("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}");
+		// System.out.println(beanToJson(setMapVO(vo, 36l, "不知道")));
+		String str = "{\"dales\":[{\"id\":\"-1\",\"name\":\"全平台\"}],\"dule\":false,\"xiaoles\":[],\"zhongles\":[]}";
+		System.out.println(str.replace("\\", ""));
 	}
 
 }

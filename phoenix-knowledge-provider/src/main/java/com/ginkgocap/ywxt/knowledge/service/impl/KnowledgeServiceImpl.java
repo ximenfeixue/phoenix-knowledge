@@ -387,10 +387,11 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 				// 大乐全平台分享
 				userPermissionService.insertUserShare(permList, vo.getkId(), vo, user);
 				// 分享到金桐脑
-				Map<String, Object> params = new HashMap<String, Object>();
-				params.put("userId", user.getId());
-				params.put("vo", vo);
-				noticeThreadPool.noticeDataCenter(Constants.noticeType.shareToJinTN.v(), params);
+//				Map<String, Object> params = new HashMap<String, Object>();
+//				params.put("userId", user.getId());
+//				params.put("vo", vo);
+//				noticeThreadPool.noticeDataCenter(Constants.noticeType.shareToJinTN.v(), params);
+				noticeDataCenter(null, vo, user.getId(), user.getName());
 				// 判断基础信息来源
 				boolean flag = userPermissionService.checkUserSource(permList);
 				result.put("flag", flag);
