@@ -7,7 +7,7 @@
         <groupId>com.ginkgocap.ywxt</groupId>
         <version>3.0.0</version>
     </parent>
-    <artifactId>phoenix-knowledge-provider</artifactId>
+    <artifactId>phoenix-knowledge-ui</artifactId>
     <name>${project.artifactId}</name>
 
     <properties>
@@ -15,11 +15,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
-            <artifactId>jersey-guava</artifactId>
-            <version>2.15</version>
-        </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-knowledge-api</artifactId>
@@ -43,7 +38,6 @@
             <artifactId>mybatis-generator-core</artifactId>
             <version>1.3.2</version>
         </dependency>
-        <!-- spring base -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -60,8 +54,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-
-        <!-- spring aop -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -82,19 +74,14 @@
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
         </dependency>
-        <!-- spring end -->
-
-        <!-- spring orm -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
-        <!-- spring integration -->
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
@@ -107,52 +94,9 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-stream</artifactId>
         </dependency>
-        <!-- web begin -->
-        <!-- spring mvc -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-        <!-- JSR-303 validator begin -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <!-- JSR-303 validator end -->
-        <!-- JSR-303 validator end -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>1.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <!-- srping JPA ,ORM, and its dependencies -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ezmorph</groupId>
-            <artifactId>ezmorph</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
         </dependency>
         <!-- json -->
         <dependency>
@@ -163,64 +107,16 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
-        <!-- logging begin -->
-
-        <!-- JSON begin -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-lgpl</artifactId>
-            <version>1.9.9</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.9</version>
-        </dependency>
-        <!-- JSON end -->
-
-        <!-- logback -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-access</artifactId>
-            <version>1.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.7</version>
-        </dependency>
-        <!-- slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.4</version>
         </dependency>
-
-        <!-- slf4j-log4j绑定 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
         </dependency>
 
-        <!-- java concurrency in practie -->
-        <dependency>
-            <groupId>net.jcip</groupId>
-            <artifactId>jcip-annotations</artifactId>
-        </dependency>
-        <!-- optional datasource pool -->
+
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
@@ -234,6 +130,8 @@
             <artifactId>c3p0</artifactId>
         </dependency>
 
+        <!-- database access end -->
+        <!-- ibatis -->
         <dependency>
             <groupId>org.apache.ibatis</groupId>
             <artifactId>ibatis-sqlmap</artifactId>
@@ -300,119 +198,10 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
         </dependency>
-        <!-- word操作 -->
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>iText</artifactId>
-            <version>2.0.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>iTextAsian</artifactId>
-            <version>5.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>itext-rtf</artifactId>
-            <version>2.1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-scratchpad</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <!-- openOffice相关jar -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.artofsolving</groupId>
-            <artifactId>jodconverter</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>juh</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>jurt</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>ridl</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>unoil</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.artofsolving.jodconverter</groupId>
-            <artifactId>jodconverter-core</artifactId>
-            <version>3.0-beta-4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        <!-- quartz start -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>1.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <!-- Latest 2.3.x (not 2.4.x), at least 2.3.18 -->
-            <version>[2.3.18,2.4)</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>phoenix-util</artifactId>
-            <version>${util.dependencied}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcomponents-client</artifactId>
-            <version>4.3.1</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.1</version>
-        </dependency>
         <dependency>
             <groupId>com.gintong.frame</groupId>
-            <artifactId>phoenix-frame-util</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>phoenix-frame</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -428,12 +217,6 @@
             </resource>
             <resource>
                 <directory>src/main/java</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/gen</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
                 </excludes>
@@ -611,10 +394,18 @@
                 <log4j.level>debug</log4j.level>
                 <!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
                 <log4j.path>d:/log</log4j.path>
+                <logback.path>d:/knowledge-provider</logback.path>
+                <qatest.schema.skip>false</qatest.schema.skip>
+                <!-- dubbo注册中心的地址 -->
                 <dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
                 <dubbo.protocol.name>dubbo</dubbo.protocol.name>
                 <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>8812</dubbo.protocol.port>
+                <!-- 应用端的挂载配置路径 -->
+                <linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
+                <webserver.path>/root/apache-tomcat-6.0.36/webapps</webserver.path>
+                <gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
+                <nginx.root>http://file.dev.gintong.com</nginx.root>
             </properties>
         </profile>
         <profile>
