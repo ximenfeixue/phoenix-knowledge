@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>phoenix-knowledge</artifactId>
-        <groupId>com.ginkgocap.ywxt</groupId>
+        <groupId>com.gintong</groupId>
         <version>3.0.0</version>
     </parent>
     <artifactId>phoenix-knowledge-ui</artifactId>
