@@ -23,16 +23,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+
         <dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
@@ -78,10 +69,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
@@ -98,33 +86,7 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
         </dependency>
-        <!-- json -->
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
 
-
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-        </dependency>
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
@@ -363,17 +325,6 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-                <!-- 大数据搜索请求地址 -->
-                <knowledge.data.searchUrl>http://192.168.130.119:8090/</knowledge.data.searchUrl>
-                <!-- 大数据解析请求地址 -->
-                <knowledge.data.parseUrl>http://192.168.130.120:8000/async_data/</knowledge.data.parseUrl>
-                <!-- 大数据推送请求地址 -->
-                <knowledge.data.pushUrl>http://192.168.101.14:4453/</knowledge.data.pushUrl>
-                <konwledge.query.hot.url>http://192.168.101.14:4453/</konwledge.query.hot.url>
-                <konwledge.query.comment.url>http://192.168.101.14:4453/</konwledge.query.comment.url>
-
                 <!-- redis地址 -->
                 <redis.host>192.168.101.131</redis.host>
                 <!-- redis端口 -->
@@ -394,18 +345,8 @@
                 <log4j.level>debug</log4j.level>
                 <!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
                 <log4j.path>d:/log</log4j.path>
-                <logback.path>d:/knowledge-provider</logback.path>
-                <qatest.schema.skip>false</qatest.schema.skip>
-                <!-- dubbo注册中心的地址 -->
-                <dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
-                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
                 <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>8812</dubbo.protocol.port>
-                <!-- 应用端的挂载配置路径 -->
-                <linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-                <webserver.path>/root/apache-tomcat-6.0.36/webapps</webserver.path>
-                <gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
-                <nginx.root>http://file.dev.gintong.com</nginx.root>
             </properties>
         </profile>
         <profile>

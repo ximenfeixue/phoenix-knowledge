@@ -9,22 +9,8 @@
 	</parent>
 	<artifactId>phoenix-knowledge-api</artifactId>
 	<name>${project.artifactId}</name>
-
+	<packaging>jar</packaging>
 	<dependencies>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<!-- mybatis -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-entire-api</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>

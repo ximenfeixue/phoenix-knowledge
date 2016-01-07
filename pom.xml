@@ -9,15 +9,9 @@
 	<properties>
 		<packtype>pom</packtype>
 		<!-- 主要依赖库的版本定义 -->
-		<knowledge.version>2.1.0</knowledge.version>
+		<knowledge.version>3.0.0</knowledge.version>
 		<spring.version>4.2.1.RELEASE</spring.version>
 		<spring.integration.version>2.1.3.RELEASE</spring.integration.version>
-		<util.dependencied>5.6.0</util.dependencied>
-		<shiro.version>1.2.0</shiro.version>
-		<skip_maven_deploy>true</skip_maven_deploy>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.useProjectReferences>false</eclipse.useProjectReferences>
-		<skip_maven_deploy>false</skip_maven_deploy>
 	</properties>
 
 	<modules>
@@ -48,24 +42,24 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.ginkgocap.ywxt</groupId>
-				<artifactId>phoenix-entire-api</artifactId>
-				<version>${entire.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.ginkgocap.ywxt</groupId>
 				<artifactId>phoenix-knowledge-api</artifactId>
 				<version>${knowledge.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.ginkgocap.parasol</groupId>
+				<artifactId>parasol-directory-api</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ginkgocap.parasol</groupId>
+				<artifactId>parasol-tags-api</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>com.springsource.org.junit</artifactId>
 				<version>4.10.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>1.9.0-rc1</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -97,7 +91,6 @@
 				<artifactId>spring-expression</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-			<!-- spring aop -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
@@ -128,9 +121,6 @@
 				<artifactId>cglib-nodep</artifactId>
 				<version>2.2.2</version>
 			</dependency>
-			<!-- spring end -->
-
-			<!-- spring orm -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
@@ -142,8 +132,6 @@
 				<artifactId>spring-jdbc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-			<!-- web begin -->
-			<!-- spring mvc -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
@@ -175,20 +163,11 @@
 				<version>2.5</version>
 				<scope>provided</scope>
 			</dependency>
-			<!-- security begin -->
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-core</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-			<!-- security end -->
-			<!-- JSR-303 validator begin -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>4.2.0.Final</version>
 			</dependency>
-			<!-- srping JPA ,ORM, and its dependencies -->
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-jpa</artifactId>
@@ -200,28 +179,15 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
 			</dependency>
-			<!-- httpclient -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>4.3.1</version>
 			</dependency>
-			<!-- java concurrency in practie -->
 			<dependency>
 				<groupId>net.jcip</groupId>
 				<artifactId>jcip-annotations</artifactId>
 				<version>1.0</version>
-			</dependency>
-			<!-- optional datasource pool -->
-			<dependency>
-				<groupId>commons-dbcp</groupId>
-				<artifactId>commons-dbcp</artifactId>
-				<version>1.4</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-pool</groupId>
-				<artifactId>commons-pool</artifactId>
-				<version>1.6</version>
 			</dependency>
 			<dependency>
 				<groupId>c3p0</groupId>
@@ -229,46 +195,11 @@
 				<version>0.9.1.2</version>
 			</dependency>
 			<dependency>
-				<groupId>${jdbc.groupId}</groupId>
-				<artifactId>${jdbc.artifactId}</artifactId>
-				<version>${jdbc.version}</version>
-			</dependency>
-			<!-- database access end -->
-			<dependency>
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
 				<version>2.6</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.1</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.1</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2.1</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>1.8.3</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.5</version>
-			</dependency>
-			<dependency>
-				<groupId>com.mortennobel</groupId>
-				<artifactId>imagescaling</artifactId>
-				<version>0.8.5</version>
-			</dependency>
+
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -279,7 +210,17 @@
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>1.6.4</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-all</artifactId>
+				<version>1.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.gintong.frame</groupId>
+				<artifactId>phoenix-frame-util</artifactId>
+				<version>1.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
