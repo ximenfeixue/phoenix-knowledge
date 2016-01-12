@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.user.model.User;
 
 /**
  * @Title: 知识基础信息表
@@ -19,30 +20,33 @@ public interface IKnowledgeBaseDao {
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:05:29
 	 * @param knowledgeBase
+	 * @param user
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception;
+	public KnowledgeBase insert(KnowledgeBase knowledgeBase,User user) throws Exception;
 	
 	/**
 	 * 更新
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:05:40
 	 * @param knowledgeBase
+	 * @param user
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase update(KnowledgeBase knowledgeBase) throws Exception;
+	public KnowledgeBase update(KnowledgeBase knowledgeBase,User user) throws Exception;
 	
 	/**
 	 * 先删除后插入（删除时根据主键删除）
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:05:47
 	 * @param knowledgeBase
+	 * @param user
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase) throws Exception;
+	public KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase,User user) throws Exception;
 	
 	/**
 	 * 根据主键删除
@@ -53,6 +57,14 @@ public interface IKnowledgeBaseDao {
 	 * @throws Exception
 	 */
 	public int deleteById(long id) throws Exception;
+	
+	/**
+	 * 根据主键list批量删除
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午9:51:21
+	 * @return
+	 */
+	public int deleteByIds(List ids)  throws Exception;
 	
 	/**
 	 * 根据创建用户ID删除
@@ -73,6 +85,16 @@ public interface IKnowledgeBaseDao {
 	 * @throws Exception
 	 */
 	public KnowledgeBase getById(long id) throws Exception;
+	
+	/**
+	 * 根据主键list批量提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午9:54:24
+	 * @param ids
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByIds(List ids) throws Exception;
 	
 	/**
 	 * 根据用户ID提取
@@ -187,4 +209,99 @@ public interface IKnowledgeBaseDao {
 	 */
 	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,long columnId,Date beginDate,Date endDate) throws Exception;
 	
+	/**
+	 * 根据状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:02:47
+	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByStatus(String status) throws Exception;
+	
+	/**
+	 * 根据审核状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:03:44
+	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByAuditStatus(String auditStatus) throws Exception;
+
+	/**
+	 * 根据举报状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:04:16
+	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByReportStatus(String reportStatus) throws Exception;
+	
+	/**
+	 * 根据用户Id、状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:02:47
+	 * @param createUserId
+	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,String status) throws Exception;
+	
+	/**
+	 * 根据用户Id、审核状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:03:44
+	 * @param createUserId
+	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,String auditStatus) throws Exception;
+
+	/**
+	 * 根据用户Id、举报状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:04:16
+	 * @param createUserId
+	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,String reportStatus) throws Exception;
+	
+	/**
+	 * 根据栏目Id、状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:02:47
+	 * @param columnId
+	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByColumnIdAndStatus(long columnId,String status) throws Exception;
+	
+	/**
+	 * 根据栏目Id、审核状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:03:44
+	 * @param createUserId
+	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByColumnIdAndAuditStatus(long columnId,String auditStatus) throws Exception;
+
+	/**
+	 * 根据栏目Id、举报状态提取
+	 * @author 周仕奇
+	 * @date 2016年1月12日 上午10:04:16
+	 * @param createUserId
+	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByColumnIdAndReportStatus(long columnId,String reportStatus) throws Exception;
 }
