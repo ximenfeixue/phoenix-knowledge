@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeBaseDao;
@@ -11,7 +11,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
 
-@Service("knowledgeDao")
+@Repository("knowledgeBaseDao")
 public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKnowledgeBaseDao {
 
 	@Override
@@ -56,7 +56,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 		
 		KnowledgeBase oldValue = null;
 		
-		if(id < 0) {
+		if(id <= 0) {
 			oldValue = this.getById(id);
 			
 			this.deleteById(id);
@@ -82,7 +82,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 	}
 
 	@Override
-	public int deleteByIds(List ids) throws Exception {
+	public int deleteByIds(List<Long> ids) throws Exception {
 		
 		boolean deleteStatus = this.deleteEntityByIds(ids);
 		
@@ -104,7 +104,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 	}
 
 	@Override
-	public List<KnowledgeBase> getByIds(List ids) throws Exception {
+	public List<KnowledgeBase> getByIds(List<Long> ids) throws Exception {
 		
 		return this.getEntityByIds(ids);
 	}

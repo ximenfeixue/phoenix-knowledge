@@ -64,7 +64,7 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午9:51:21
 	 * @return
 	 */
-	public int deleteByIds(List ids)  throws Exception;
+	public int deleteByIds(List<Long> ids)  throws Exception;
 	
 	/**
 	 * 根据创建用户ID删除
@@ -94,7 +94,7 @@ public interface IKnowledgeBaseDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByIds(List ids) throws Exception;
+	public List<KnowledgeBase> getByIds(List<Long> ids) throws Exception;
 	
 	/**
 	 * 根据用户ID提取
