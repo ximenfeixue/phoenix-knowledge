@@ -2,107 +2,23 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * @Title: ÖªÊ¶ÏêÏ¸ÐÅÏ¢£¨mongoDB±£´æ£¬±£´æÖªÊ¶µÄÈ«²¿ÐÅÏ¢£¬Ìá¹©¸ø±à¼­¡¢ÏêÏ¸ÐÅÏ¢²é¿´½çÃæ²éÑ¯£©
- * @author ÖÜÊËÆæ
- * @date 2016Äê1ÔÂ11ÈÕ ÏÂÎç3:38:53
+ * @Title: çŸ¥è¯†è¯¦ç»†ä¿¡æ¯ï¼ˆmongoDBä¿å­˜ï¼Œä¿å­˜çŸ¥è¯†çš„å…¨éƒ¨ä¿¡æ¯ï¼Œæä¾›ç»™ç¼–è¾‘ã€è¯¦ç»†ä¿¡æ¯æŸ¥çœ‹ç•Œé¢æŸ¥è¯¢ï¼‰
+ * @author å‘¨ä»•å¥‡
+ * @date 2016å¹´1æœˆ11æ—¥ ä¸‹åˆ3:38:53
  * @version V1.0.0
  */
-public class KnowledgeMongo implements Serializable {
+public class KnowledgeMongo extends KnowledgeBase implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4155861553088421781L;
 	
-	/**Ö÷¼ü*/
-	private long id;
-	
-	/**±êÌâ*/
-	private String title;
-	
-	/**ÀàÐÍ£¬0ÎªÏµÍ³´´½¨£¬1ÎªÓÃ»§´´½¨*/
-	private String type;
-	
-	/**À¸Ä¿Ö÷¼ü*/
-	private long columnId;
-	
-	/**ÃèÊö*/
+	/**æè¿°*/
 	private String content;
-	
-	/**ÃèÊö¼òÂÔ£¬Ò»°ã´æ´¢ÃèÊöµÄÇ°50¸ö×Ö*/
-	private String contentDesc;
-	
-	/**¸½¼þID*/
-	private long attachmentId;
-	
-	/**Í¼Æ¬ID*/
-	private long pictureId;
-	
-	/**×÷Õß*/
-	private String author;
-	
-	/**´´½¨ÈËID*/
-	private long createUserId;
-	
-	/**´´½¨ÈËÃû³Æ*/
-	private String createUserName;
-	
-	/**´´½¨Ê±¼ä*/
-	private String createDate;
-	
-	/**ÐÞ¸ÄÈËID*/
-	private long modifyUserId;
-	
-	/**ÐÞ¸ÄÈËÃû³Æ*/
-	private String modifyUserName;
-	
-	/**ÐÞ¸ÄÊ±¼ä*/
-	private String modifyDate;
-	
-	/**·¢²¼Ê±¼ä*/
-	private String publicDate;
-	
-	/**×´Ì¬£¨0ÎªÎÞÐ§/É¾³ý£¬1ÎªÓÐÐ§£¬2Îª²Ý¸å£¬3,£º»ØÊÕÕ¾£©*/
-	private String status;
-	
-	/**ÉóºË×´Ì¬£¨0£ºÎ´Í¨¹ý£¬1£ºÉóºËÖÐ£¬2£ºÉóºËÍ¨¹ý£©*/
-	private String auditStatus;
-	
-	/**¾Ù±¨×´Ì¬£¨3£º¾Ù±¨ÉóºËÎ´Í¨¹ý£¬¼´ÎÞ·Ç·¨ÏÖÏó£¬2£º¾Ù±¨ÉóºËÍ¨¹ý£¬1:Î´±»¾Ù±¨£¬0£ºÒÑ±»¾Ù±¨£©*/
-	private String reportStatus;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public long getColumnId() {
-		return columnId;
-	}
-
-	public void setColumnId(long columnId) {
-		this.columnId = columnId;
-	}
 
 	public String getContent() {
 		return content;
@@ -111,118 +27,12 @@ public class KnowledgeMongo implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
-	public String getContentDesc() {
-		return contentDesc;
-	}
-
-	public void setContentDesc(String contentDesc) {
-		this.contentDesc = contentDesc;
-	}
-
-	public long getAttachmentId() {
-		return attachmentId;
-	}
-
-	public void setAttachmentId(long attachmentId) {
-		this.attachmentId = attachmentId;
-	}
-
-	public long getPictureId() {
-		return pictureId;
-	}
-
-	public void setPictureId(long pictureId) {
-		this.pictureId = pictureId;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public long getCreateUserId() {
-		return createUserId;
-	}
-
-	public void setCreateUserId(long createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public String getCreateUserName() {
-		return createUserName;
-	}
-
-	public void setCreateUserName(String createUserName) {
-		this.createUserName = createUserName;
-	}
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
-	public long getModifyUserId() {
-		return modifyUserId;
-	}
-
-	public void setModifyUserId(long modifyUserId) {
-		this.modifyUserId = modifyUserId;
-	}
-
-	public String getModifyUserName() {
-		return modifyUserName;
-	}
-
-	public void setModifyUserName(String modifyUserName) {
-		this.modifyUserName = modifyUserName;
-	}
-
-	public String getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(String modifyDate) {
-		this.modifyDate = modifyDate;
-	}
-
-	public String getPublicDate() {
-		return publicDate;
-	}
-
-	public void setPublicDate(String publicDate) {
-		this.publicDate = publicDate;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getAuditStatus() {
-		return auditStatus;
-	}
-
-	public void setAuditStatus(String auditStatus) {
-		this.auditStatus = auditStatus;
-	}
-
-	public String getReportStatus() {
-		return reportStatus;
-	}
-
-	public void setReportStatus(String reportStatus) {
-		this.reportStatus = reportStatus;
-	}
 	
-	
+	public void createContendDesc() {
+		if(StringUtils.isNotBlank(this.getContent()) && this.getContent().length() > CONTENT_DESC_LENGTH )
+			this.setContentDesc(this.getContent().substring(0, CONTENT_DESC_LENGTH));
+		else 
+			this.setContentDesc(this.getContent());
+	}
+
 }

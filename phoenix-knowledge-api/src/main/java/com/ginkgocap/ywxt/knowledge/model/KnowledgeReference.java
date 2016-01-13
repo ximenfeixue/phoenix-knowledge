@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,13 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import net.sf.json.JSONObject;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.ginkgocap.ywxt.knowledge.utils.JsonKeyConstant;
+
 /**
- * @Title: ÖªÊ¶À´Ô´ĞÅÏ¢
- * @author ÖÜÊËÆæ
- * @date 2016Äê1ÔÂ11ÈÕ ÏÂÎç3:38:53
+ * @Title: çŸ¥è¯†æ¥æºä¿¡æ¯
+ * @author å‘¨ä»•å¥‡
+ * @date 2016å¹´1æœˆ11æ—¥ ä¸‹åˆ3:38:53
  * @version V1.0.0
  */
 @Entity
@@ -26,31 +33,31 @@ public class KnowledgeReference implements Serializable {
 	 */
 	private static final long serialVersionUID = 4445285733282369227L;
 	
-	/**Ö÷¼ü*/
+	/**ä¸»é”®*/
 	private long id;
 	
-	/**ÖªÊ¶Ö÷¼ü*/
+	/**çŸ¥è¯†ä¸»é”®*/
 	private long knowledgeId;
 	
-	/**ÒıÓÃ×ÊÁÏÎÄÕÂÃû³Æ*/
+	/**å¼•ç”¨èµ„æ–™æ–‡ç« åç§°*/
 	private String articleName;
 	
-	/**ÒıÓÃÍøÖ·*/
+	/**å¼•ç”¨ç½‘å€*/
 	private String url;
 	
-	/**Ó¦ÓÃÍøÖ·Ãû³Æ*/
+	/**åº”ç”¨ç½‘å€åç§°*/
 	private String websiteName;
 	
-	/**±êÊ¾±¾Ìõ×ÊÁÏÊÇ·ñÓĞĞ§£¬1£ºÎªÓĞĞ§£¬0£ºÎªÎŞĞ§*/
+	/**æ ‡ç¤ºæœ¬æ¡èµ„æ–™æ˜¯å¦æœ‰æ•ˆï¼Œ1ï¼šä¸ºæœ‰æ•ˆï¼Œ0ï¼šä¸ºæ— æ•ˆ*/
 	private String status;
 	
-	/**ÒıÓÃÊ±¼ä*/
+	/**å¼•ç”¨æ—¶é—´*/
 	private String refDate;
 	
-	/**´´½¨Ê±¼ä*/
+	/**åˆ›å»ºæ—¶é—´*/
 	private String createDate;
 	
-	/**ĞŞ¸ÄÊ±¼ä*/
+	/**ä¿®æ”¹æ—¶é—´*/
 	private String modifyDate;
 
 	@Id
@@ -137,4 +144,48 @@ public class KnowledgeReference implements Serializable {
 		this.modifyDate = modifyDate;
 	}
 	
+	
+	public static List<JSONObject> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> knowledgeReferenceList) {
+		List<JSONObject> returnList = new ArrayList<JSONObject>();
+		
+		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
+			return returnList;
+		if(knowledgeReferenceList == null)
+			knowledgeReferenceList = new ArrayList<KnowledgeReference>();
+		
+		Iterator<KnowledgeBase> baseIt = knowledgeBaseList.iterator();
+		
+		while(baseIt.hasNext()) {
+			
+			KnowledgeBase base = baseIt.next();
+			
+			Iterator<KnowledgeReference> referenceIt = knowledgeReferenceList.iterator();
+			
+			KnowledgeReference reference = null;
+			
+			while(referenceIt.hasNext()) {
+				
+				KnowledgeReference referenceTemp = referenceIt.next();
+				
+				if(base.getId() == referenceTemp.getId()) {
+					
+					reference = referenceTemp;
+					break;
+					
+				}
+				
+			}
+			
+			JSONObject returnJson = new JSONObject();
+			
+			returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE, base);
+			
+			returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE_REFERENCE, reference);
+			
+			returnList.add(returnJson);
+			
+		}
+		
+		return returnList;
+	}
 }

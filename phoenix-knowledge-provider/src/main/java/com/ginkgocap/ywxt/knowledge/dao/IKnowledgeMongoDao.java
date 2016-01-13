@@ -28,39 +28,50 @@ public interface IKnowledgeMongoDao {
 	 * 插入
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:20
-	 * @param KnowledgeMongo
-	 * @param knowledgeId 在MySQL插入知识简表之后返回的知识主键
+	 * @param knowledgeMongo
 	 * @param user
 	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeMongo insert(KnowledgeMongo KnowledgeMongo,long knowledgeId,User user,String... collectionName) throws Exception;
+	public KnowledgeMongo insert(KnowledgeMongo knowledgeMongo,User user,String... collectionName) throws Exception;
+	
+	/**
+	 * 批量插入
+	 * @author 周仕奇
+	 * @date 2016年1月13日 下午4:24:56
+	 * @param knowledgeMongoList
+	 * @param user
+	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeMongo> insertList(List<KnowledgeMongo> knowledgeMongoList,User user,String... collectionName) throws Exception;
 	
 	/**
 	 * 更新
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:29
-	 * @param KnowledgeMongo
+	 * @param knowledgeMongo
 	 * @param user
 	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeMongo update(KnowledgeMongo KnowledgeMongo,User user,String... collectionName) throws Exception;
+	public KnowledgeMongo update(KnowledgeMongo knowledgeMongo,User user,String... collectionName) throws Exception;
 	
 	/**
 	 * 先删除后插入
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:44
-	 * @param KnowledgeMongo
+	 * @param knowledgeMongo
 	 * @param knowledgeId
 	 * @param user
 	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeMongo insertAfterDelete(KnowledgeMongo KnowledgeMongo,long knowledgeId,User user,String... collectionName) throws Exception;
+	public KnowledgeMongo insertAfterDelete(KnowledgeMongo knowledgeMongo,long knowledgeId,User user,String... collectionName) throws Exception;
 	
 	/**
 	 * 根据主键及栏目删除数据

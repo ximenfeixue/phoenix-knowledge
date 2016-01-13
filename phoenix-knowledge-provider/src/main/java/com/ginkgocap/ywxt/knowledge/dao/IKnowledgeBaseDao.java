@@ -27,6 +27,17 @@ public interface IKnowledgeBaseDao {
 	public KnowledgeBase insert(KnowledgeBase knowledgeBase,User user) throws Exception;
 	
 	/**
+	 * 批量插入
+	 * @author 周仕奇
+	 * @date 2016年1月13日 下午4:36:14
+	 * @param knowledgeBaseList
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList,User user) throws Exception;
+	
+	/**
 	 * 更新
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:05:40

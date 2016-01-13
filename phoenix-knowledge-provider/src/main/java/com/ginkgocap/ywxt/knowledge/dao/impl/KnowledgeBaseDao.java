@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeBaseDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
 
 @Repository("knowledgeBaseDao")
@@ -20,16 +19,18 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 		if(knowledgeBase == null)
 			return null;
 		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
-		
-		knowledgeBase.setCreateUserId(user.getId());
-		knowledgeBase.setCreateDate(currentDate);
-		knowledgeBase.setModifyUserId(user.getId());
-		knowledgeBase.setModifyDate(currentDate);
-		
 		long id = (Long) this.saveEntity(knowledgeBase);
 		
 		return this.getById(id);
+	}
+	
+	@Override
+	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList,User user) throws Exception {
+		
+		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
+			return null;
+		
+		return this.saveEntitys(knowledgeBaseList);
 	}
 
 	@Override
@@ -37,11 +38,6 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 		
 		if(knowledgeBase == null)
 			return null;
-		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
-
-		knowledgeBase.setModifyUserId(user.getId());
-		knowledgeBase.setModifyDate(currentDate);
 		
 		this.updateEntity(knowledgeBase);
 		

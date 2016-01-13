@@ -12,9 +12,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 /**
- * @Title: ÖªÊ¶»ù´¡ĞÅÏ¢£¨MySQL±£´æ£¬Ò»°ã±£´æ»ù´¡ĞÅÏ¢£¬Ìá¹©¸øÁĞ±í²éÑ¯£©
- * @author ÖÜÊËÆæ
- * @date 2016Äê1ÔÂ11ÈÕ ÏÂÎç3:38:53
+ * @Title: çŸ¥è¯†åŸºç¡€ä¿¡æ¯ï¼ˆMySQLä¿å­˜ï¼Œä¸€èˆ¬ä¿å­˜åŸºç¡€ä¿¡æ¯ï¼Œæä¾›ç»™åˆ—è¡¨æŸ¥è¯¢ï¼‰
+ * @author å‘¨ä»•å¥‡
+ * @date 2016å¹´1æœˆ11æ—¥ ä¸‹åˆ3:38:53
  * @version V1.0.0
  */
 @Entity
@@ -26,61 +26,63 @@ public class KnowledgeBase implements Serializable {
 	 */
 	private static final long serialVersionUID = 9167004345845581253L;
 	
-	/**Ö÷¼ü*/
+	public static final int CONTENT_DESC_LENGTH = 50;
+	
+	/**ä¸»é”®*/
 	private long id;
 	
-	/**±êÌâ*/
+	/**æ ‡é¢˜*/
 	private String title;
 	
-	/**ÀàĞÍ£¬0ÎªÏµÍ³´´½¨£¬1ÎªÓÃ»§´´½¨*/
+	/**ç±»å‹ï¼Œ0ä¸ºç³»ç»Ÿåˆ›å»ºï¼Œ1ä¸ºç”¨æˆ·åˆ›å»º*/
 	private String type;
 	
-	/**À¸Ä¿Ö÷¼ü*/
+	/**æ ç›®ä¸»é”®*/
 	private long columnId;
 	
-	/**ÃèÊö*/
-	private String content;
+	/**æè¿°*/
+	//private String content;
 	
-	/**ÃèÊö¼òÂÔ£¬Ò»°ã´æ´¢ÃèÊöµÄÇ°50¸ö×Ö*/
+	/**æè¿°ç®€ç•¥ï¼Œä¸€èˆ¬å­˜å‚¨æè¿°çš„å‰50ä¸ªå­—*/
 	private String contentDesc;
 	
-	/**¸½¼şID*/
+	/**é™„ä»¶ID*/
 	private long attachmentId;
 	
-	/**Í¼Æ¬ID*/
+	/**å›¾ç‰‡ID*/
 	private long pictureId;
 	
-	/**×÷Õß*/
+	/**ä½œè€…*/
 	private String author;
 	
-	/**´´½¨ÈËID*/
+	/**åˆ›å»ºäººID*/
 	private long createUserId;
 	
-	/**´´½¨ÈËÃû³Æ*/
+	/**åˆ›å»ºäººåç§°*/
 	private String createUserName;
 	
-	/**´´½¨Ê±¼ä*/
+	/**åˆ›å»ºæ—¶é—´*/
 	private String createDate;
 	
-	/**ĞŞ¸ÄÈËID*/
+	/**ä¿®æ”¹äººID*/
 	private long modifyUserId;
 	
-	/**ĞŞ¸ÄÈËÃû³Æ*/
+	/**ä¿®æ”¹äººåç§°*/
 	private String modifyUserName;
 	
-	/**ĞŞ¸ÄÊ±¼ä*/
+	/**ä¿®æ”¹æ—¶é—´*/
 	private String modifyDate;
 	
-	/**·¢²¼Ê±¼ä*/
+	/**å‘å¸ƒæ—¶é—´*/
 	private String publicDate;
 	
-	/**×´Ì¬£¨0ÎªÎŞĞ§/É¾³ı£¬1ÎªÓĞĞ§£¬2Îª²İ¸å£¬3,£º»ØÊÕÕ¾£©*/
+	/**çŠ¶æ€ï¼ˆ0ä¸ºæ— æ•ˆ/åˆ é™¤ï¼Œ1ä¸ºæœ‰æ•ˆï¼Œ2ä¸ºè‰ç¨¿ï¼Œ3,ï¼šå›æ”¶ç«™ï¼‰*/
 	private String status;
 	
-	/**ÉóºË×´Ì¬£¨0£ºÎ´Í¨¹ı£¬1£ºÉóºËÖĞ£¬2£ºÉóºËÍ¨¹ı£©*/
+	/**å®¡æ ¸çŠ¶æ€ï¼ˆ0ï¼šæœªé€šè¿‡ï¼Œ1ï¼šå®¡æ ¸ä¸­ï¼Œ2ï¼šå®¡æ ¸é€šè¿‡ï¼‰*/
 	private String auditStatus;
 	
-	/**¾Ù±¨×´Ì¬£¨3£º¾Ù±¨ÉóºËÎ´Í¨¹ı£¬¼´ÎŞ·Ç·¨ÏÖÏó£¬2£º¾Ù±¨ÉóºËÍ¨¹ı£¬1:Î´±»¾Ù±¨£¬0£ºÒÑ±»¾Ù±¨£©*/
+	/**ä¸¾æŠ¥çŠ¶æ€ï¼ˆ3ï¼šä¸¾æŠ¥å®¡æ ¸æœªé€šè¿‡ï¼Œå³æ— éæ³•ç°è±¡ï¼Œ2ï¼šä¸¾æŠ¥å®¡æ ¸é€šè¿‡ï¼Œ1:æœªè¢«ä¸¾æŠ¥ï¼Œ0ï¼šå·²è¢«ä¸¾æŠ¥ï¼‰*/
 	private String reportStatus;
 
 	@Id
@@ -122,14 +124,14 @@ public class KnowledgeBase implements Serializable {
 		this.columnId = columnId;
 	}
 
-	@Column(name = "content")
+	/*@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}
+	}*/
 
 	@Column(name = "content_desc")
 	public String getContentDesc() {

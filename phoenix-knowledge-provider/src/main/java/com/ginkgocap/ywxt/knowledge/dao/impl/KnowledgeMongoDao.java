@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
+import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.mongodb.WriteResult;
 
@@ -27,57 +29,41 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 	@Resource
 	private MongoTemplate mongoTemplate;
 	
-	private String getCollectionName(long columnId) throws Exception {
-		
-		StringBuffer strBuf = new StringBuffer();
-		
-		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
-		
-		//从缓存中获取系统栏目
-		List columnSysList = new ArrayList();
-		
-		Iterator it = columnSysList.iterator();
-		
-		boolean columnCodeNotExistflag = true;
-		
-		while(it.hasNext()) {
-			//ColulmnSys columnSys = it.next();
-			//if(columnId == columnSys.getId()) {
-				//if(StringUtils.isEmpty(columnSys.getColumnCode())) {
-					//break;
-				//}
-				columnCodeNotExistflag = false;
-				//strBuf.append(columnSys.getColumnCode());
-				break;
-			//}
-		}
-		
-		if(columnCodeNotExistflag) {
-			strBuf.append(KNOWLEDGE_COLLECTION_USERSELF_NAME);
-		}
-		
-		return strBuf.toString();
-		
-	}
-	
-	private String getCollectionName(long columnId,String[] collectionName) throws Exception {
-		return ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
-	}
-
 	@Override
-	public KnowledgeMongo insert(KnowledgeMongo knowledgeMongo,
-			long knowledgeId, User user,String... collectionName) throws Exception {
+	public KnowledgeMongo insert(KnowledgeMongo knowledgeMongo, User user,String... collectionName) throws Exception {
 		
-		if(knowledgeMongo == null || knowledgeId <= 0)
+		if(knowledgeMongo == null || knowledgeMongo.getId() <= 0)
 			return null;
+		
+		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
+		
+		if(knowledgeMongo.getCreateUserId() <= 0)
+			knowledgeMongo.setCreateUserId(user.getId());
+		if(StringUtils.isBlank(knowledgeMongo.getCreateDate()))
+			knowledgeMongo.setCreateDate(currentDate);
+		knowledgeMongo.setModifyUserId(user.getId());
+		knowledgeMongo.setModifyDate(currentDate);
 		
 		String currCollectionName = getCollectionName(knowledgeMongo.getColumnId(),collectionName);
 		
-		knowledgeMongo.setId(knowledgeId);
-		
 		mongoTemplate.insert(knowledgeMongo,currCollectionName);
 		
-		return this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
+		return this.getByIdAndColumnId(knowledgeMongo.getId(),knowledgeMongo.getColumnId(),currCollectionName);
+	}
+	
+	@Override
+	public List<KnowledgeMongo> insertList(List<KnowledgeMongo> knowledgeMongoList, User user,String... collectionName) throws Exception {
+		
+		List<KnowledgeMongo> returnList = new ArrayList();
+		
+		if(knowledgeMongoList != null && !knowledgeMongoList.isEmpty()) {
+			Iterator<KnowledgeMongo> it = knowledgeMongoList.iterator();
+			while(it.hasNext()) {
+				returnList.add(this.insert(it.next(), user, collectionName));
+			}
+		}
+		
+		return returnList;
 	}
 
 	@Override
@@ -90,27 +76,20 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		long knowledgeId = knowledgeMongo.getId();
 		
 		if(knowledgeId <= 0) {
-			return this.insert(knowledgeMongo, knowledgeId, user);
+			return this.insert(knowledgeMongo, user);
 		}
+		
+		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
+
+		knowledgeMongo.setModifyUserId(user.getId());
+		knowledgeMongo.setModifyDate(currentDate);
 		
 		Criteria criteria = Criteria.where("_id").is(knowledgeId);
 		Query query = new Query(criteria);
 		
-		//构建更新字段，目前默认是全字段更新
-		Update update = new Update();
-		
-		JSONObject json = JSONObject.fromObject(knowledgeMongo);
-		
-		Iterator<String> it = json.keys();
-		
-		while(it.hasNext()) {
-			String key = it.next();
-			update.update(key, json.get(key));
-		}
-		
 		String currCollectionName = getCollectionName(knowledgeMongo.getColumnId(),collectionName);
 		
-		WriteResult result = mongoTemplate.updateFirst(query, update, currCollectionName);
+		WriteResult result = mongoTemplate.updateFirst(query, getUpdate(knowledgeMongo,user), currCollectionName);
 		
 		return this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
 	}
@@ -130,12 +109,12 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		
 		try {
 			
-			this.insert(knowledgeMongo, knowledgeId, user,currCollectionName);
+			this.insert(knowledgeMongo, user,currCollectionName);
 			
 		} catch (Exception e) {
 			
 			if(oldValue != null)
-				this.insert(oldValue, knowledgeId, user,currCollectionName);
+				this.insert(oldValue, user,currCollectionName);
 			
 			throw e;
 		}
@@ -197,4 +176,58 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		
 	}
 	
+	private String getCollectionName(long columnId) throws Exception {
+		
+		StringBuffer strBuf = new StringBuffer();
+		
+		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
+		
+		//从缓存中获取系统栏目
+		List columnSysList = new ArrayList();
+		
+		Iterator it = columnSysList.iterator();
+		
+		boolean columnCodeNotExistflag = true;
+		
+		while(it.hasNext()) {
+			//ColulmnSys columnSys = it.next();
+			//if(columnId == columnSys.getId()) {
+				//if(StringUtils.isEmpty(columnSys.getColumnCode())) {
+					//break;
+				//}
+				columnCodeNotExistflag = false;
+				//strBuf.append(columnSys.getColumnCode());
+				break;
+			//}
+		}
+		
+		if(columnCodeNotExistflag) {
+			strBuf.append(KNOWLEDGE_COLLECTION_USERSELF_NAME);
+		}
+		
+		return strBuf.toString();
+		
+	}
+	
+	private String getCollectionName(long columnId,String[] collectionName) throws Exception {
+		return ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
+	}
+	
+	private Update getUpdate(KnowledgeMongo knowledgeMongo, User user) {
+		
+		//构建更新字段，目前默认是全字段更新
+		Update update = new Update();
+		
+		JSONObject json = JSONObject.fromObject(knowledgeMongo);
+		
+		Iterator<String> it = json.keys();
+		
+		while(it.hasNext()) {
+			String key = it.next();
+			update.update(key, json.get(key));
+		}
+		
+		return update;
+		
+	}
 }
