@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,40 +26,80 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 	
 	@Resource
 	private MongoTemplate mongoTemplate;
-
-	@Override
-	public KnowledgeMongo insert(KnowledgeMongo KnowledgeMongo,
-			long knowledgeId, User user) throws Exception {
+	
+	private String getCollectionName(long columnId) throws Exception {
 		
-		if(KnowledgeMongo == null || knowledgeId <= 0)
-			return null;
+		StringBuffer strBuf = new StringBuffer();
 		
-		KnowledgeMongo.setId(knowledgeId);
+		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
 		
-		mongoTemplate.insert(KnowledgeMongo,KNOWLEDGE_COLLECTION_NAME);
+		//从缓存中获取系统栏目
+		List columnSysList = new ArrayList();
 		
-		return this.getById(knowledgeId);
+		Iterator it = columnSysList.iterator();
+		
+		boolean columnCodeNotExistflag = true;
+		
+		while(it.hasNext()) {
+			//ColulmnSys columnSys = it.next();
+			//if(columnId == columnSys.getId()) {
+				//if(StringUtils.isEmpty(columnSys.getColumnCode())) {
+					//break;
+				//}
+				columnCodeNotExistflag = false;
+				//strBuf.append(columnSys.getColumnCode());
+				break;
+			//}
+		}
+		
+		if(columnCodeNotExistflag) {
+			strBuf.append(KNOWLEDGE_COLLECTION_USERSELF_NAME);
+		}
+		
+		return strBuf.toString();
+		
+	}
+	
+	private String getCollectionName(long columnId,String[] collectionName) throws Exception {
+		return ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
 	}
 
 	@Override
-	public KnowledgeMongo update(KnowledgeMongo KnowledgeMongo, User user)
-			throws Exception {
-
-		if(KnowledgeMongo == null)
+	public KnowledgeMongo insert(KnowledgeMongo knowledgeMongo,
+			long knowledgeId, User user,String... collectionName) throws Exception {
+		
+		if(knowledgeMongo == null || knowledgeId <= 0)
 			return null;
 		
-		long knowledgeId = KnowledgeMongo.getId();
+		String currCollectionName = getCollectionName(knowledgeMongo.getColumnId(),collectionName);
+		
+		knowledgeMongo.setId(knowledgeId);
+		
+		mongoTemplate.insert(knowledgeMongo,currCollectionName);
+		
+		return this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
+	}
+
+	@Override
+	public KnowledgeMongo update(KnowledgeMongo knowledgeMongo, User user,String... collectionName)
+			throws Exception {
+
+		if(knowledgeMongo == null)
+			return null;
+		
+		long knowledgeId = knowledgeMongo.getId();
 		
 		if(knowledgeId <= 0) {
-			return this.insert(KnowledgeMongo, knowledgeId, user);
+			return this.insert(knowledgeMongo, knowledgeId, user);
 		}
 		
 		Criteria criteria = Criteria.where("_id").is(knowledgeId);
 		Query query = new Query(criteria);
 		
+		//构建更新字段，目前默认是全字段更新
 		Update update = new Update();
 		
-		JSONObject json = JSONObject.fromObject(KnowledgeMongo);
+		JSONObject json = JSONObject.fromObject(knowledgeMongo);
 		
 		Iterator<String> it = json.keys();
 		
@@ -65,81 +108,93 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 			update.update(key, json.get(key));
 		}
 		
-		WriteResult result = mongoTemplate.updateFirst(query, update, KNOWLEDGE_COLLECTION_NAME);
+		String currCollectionName = getCollectionName(knowledgeMongo.getColumnId(),collectionName);
 		
-		return this.getById(knowledgeId);
+		WriteResult result = mongoTemplate.updateFirst(query, update, currCollectionName);
+		
+		return this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
 	}
 
 	@Override
-	public KnowledgeMongo insertAfterDelete(KnowledgeMongo KnowledgeMongo,
-			long knowledgeId, User user) throws Exception {
+	public KnowledgeMongo insertAfterDelete(KnowledgeMongo knowledgeMongo,
+			long knowledgeId, User user,String... collectionName) throws Exception {
 		
-		if(KnowledgeMongo == null || knowledgeId <= 0)
+		String currCollectionName = getCollectionName(knowledgeMongo.getColumnId(),collectionName);
+		
+		if(knowledgeMongo == null || knowledgeId <= 0)
 			return null;
 		
-		KnowledgeMongo oldValue = this.getById(knowledgeId);
+		KnowledgeMongo oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
 		
-		this.deleteById(knowledgeId);
+		this.deleteByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId(),currCollectionName);
 		
 		try {
 			
-			this.insert(KnowledgeMongo, knowledgeId, user);
+			this.insert(knowledgeMongo, knowledgeId, user,currCollectionName);
 			
 		} catch (Exception e) {
 			
 			if(oldValue != null)
-				this.insert(oldValue, knowledgeId, user);
+				this.insert(oldValue, knowledgeId, user,currCollectionName);
 			
 			throw e;
 		}
 		
 		
-		return this.getById(knowledgeId);
+		return this.getByIdAndColumnId(knowledgeId,knowledgeMongo.getColumnId());
 	}
 
 	@Override
-	public int deleteById(long id) throws Exception {
+	public int deleteByIdAndColumnId(long id,long columnId, String...collectionName ) throws Exception {
 		
 		Criteria criteria = Criteria.where("_id").is(id);
 		Query query = new Query(criteria);
 		
-		mongoTemplate.remove(query, KNOWLEDGE_COLLECTION_NAME);
+		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
 		
 		return 0;
 	}
 
 	@Override
-	public int deleteByIds(List<Long> ids) throws Exception {
+	public int deleteByIdsAndColumnId(List<Long> ids,long columnId,String... collectionName) throws Exception {
 		
 		Criteria criteria = Criteria.where("_id").in(ids);
 		Query query = new Query(criteria);
 		
-		mongoTemplate.remove(query, KNOWLEDGE_COLLECTION_NAME);
+		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
 		
 		return 0;
 	}
 
 	@Override
-	public int deleteByCreateUserId(long createUserId) throws Exception {
+	public int deleteByCreateUserIdAndColumnId(long createUserId,long columnId,String... collectionName) throws Exception {
 		
 		Criteria criteria = Criteria.where("createUserId").is(createUserId);
 		Query query = new Query(criteria);
 		
-		mongoTemplate.remove(query, KNOWLEDGE_COLLECTION_NAME);
+		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
 		
 		return 0;
 	}
 
 	@Override
-	public KnowledgeMongo getById(long id) throws Exception {
+	public KnowledgeMongo getByIdAndColumnId(long id,long columnId,String... collectionName) throws Exception {
 		
 		Criteria criteria = Criteria.where("_id").is(id);
 		Query query = new Query(criteria);
 		
-		return mongoTemplate.findOne(query,KnowledgeMongo.class, KNOWLEDGE_COLLECTION_NAME);
+		return mongoTemplate.findOne(query,KnowledgeMongo.class, getCollectionName(columnId,collectionName));
 		
 	}
 	
-	
+	@Override
+	public List<KnowledgeMongo> getByIdsAndColumnId(List<Long> ids,long columnId,String... collectionName) throws Exception {
+		
+		Criteria criteria = Criteria.where("_id").in(ids);
+		Query query = new Query(criteria);
+		
+		return mongoTemplate.find(query,KnowledgeMongo.class, getCollectionName(columnId,collectionName));
+		
+	}
 	
 }
