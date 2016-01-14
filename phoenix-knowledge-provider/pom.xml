@@ -21,6 +21,11 @@
 	 	 	<version>2.15</version>
 		</dependency>
 		<dependency>
+     		<artifactId>phoenix-dynamic-api</artifactId> 
+     		<groupId>com.ginkgocap.ywxt</groupId> 
+     	<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.gintong</groupId>
 			<artifactId>phoenix-rocketmq-api</artifactId>
 			<version>1.0.0-SNAPSHOT</version>

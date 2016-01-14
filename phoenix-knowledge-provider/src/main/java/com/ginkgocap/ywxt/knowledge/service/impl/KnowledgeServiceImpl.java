@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
 
-import com.gintong.frame.util.log.ServiceLogAnnotation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
@@ -56,12 +58,12 @@ import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
-import com.ginkgocap.ywxt.user.service.DynamicNewsService;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.util.MakePrimaryKey;
 import com.ginkgocap.ywxt.util.MakeTaskId;
+import com.gintong.frame.util.log.ServiceLogAnnotation;
 
 @Service("knowledgeService")
 @ServiceLogAnnotation
@@ -407,7 +409,8 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			param.put("receiverIds", null);
 		}
 		// 新建知识均生成动态
-		dynamicNewsService.insertNewsAndRelationByParam(param);
+//		dynamicNewsService.insertNewsAndRelationByParam(param);
+		dynamicNewsService.insert(param);
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
