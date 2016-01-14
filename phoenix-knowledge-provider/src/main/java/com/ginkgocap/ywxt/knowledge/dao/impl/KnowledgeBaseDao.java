@@ -106,7 +106,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserId(long createUserId)
+	public List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size)
 			throws Exception {
 		
 		return this.getEntitys("get_by_createUserId", createUserId);
@@ -114,26 +114,26 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndType(long createUserId,
-			String type) throws Exception {
+			String type,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_type", new Object[]{createUserId,type});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,
-			long columnId) throws Exception {
+			long columnId,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_columnId", new Object[]{createUserId,columnId});
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnId(long columnId) throws Exception {
+	public List<KnowledgeBase> getByColumnId(long columnId,int start,int size) throws Exception {
 
 		return this.getEntitys("get_by_columnId", columnId);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByTypeAndColumnId(String type, long columnId)
+	public List<KnowledgeBase> getByTypeAndColumnId(String type, long columnId,int start,int size)
 			throws Exception {
 
 		return this.getEntitys("get_by_type_columnId", new Object[]{type,columnId});
@@ -141,7 +141,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(
-			long createUserId, String type, long columnId) throws Exception {
+			long createUserId, String type, long columnId,int start,int size) throws Exception {
 
 		return this.getEntitys("get_by_createUserId_type_columnId", new Object[]{createUserId,type,columnId});
 	}
@@ -161,48 +161,48 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 
 	@Override
 	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,
-			Date endDate) throws Exception {
+			Date endDate,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_beginDate_endDate", new Object[]{getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(String type,
-			Date beginDate, Date endDate) throws Exception {
+			Date beginDate, Date endDate,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_type_beginDate_endDate", new Object[]{type,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(
-			long createUserId, Date beginDate, Date endDate) throws Exception {
+			long createUserId, Date beginDate, Date endDate,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_beginDate_endDate", new Object[]{createUserId,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(
-			long createUserId, long columnId, Date beginDate, Date endDate)
+			long createUserId, long columnId, Date beginDate, Date endDate,int start,int size)
 			throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_columnId_beginDate_endDate", new Object[]{createUserId,columnId,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
-	public List<KnowledgeBase> getByStatus(String status) throws Exception {
+	public List<KnowledgeBase> getByStatus(String status,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_status", status);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByAuditStatus(String auditStatus)
+	public List<KnowledgeBase> getByAuditStatus(String auditStatus,int start,int size)
 			throws Exception {
 		
 		return this.getEntitys("get_by_auditStatus", auditStatus);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByReportStatus(String reportStatus)
+	public List<KnowledgeBase> getByReportStatus(String reportStatus,int start,int size)
 			throws Exception {
 		
 		return this.getEntitys("get_by_reportStatus", reportStatus);
@@ -210,42 +210,42 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,
-			String status) throws Exception {
+			String status,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_status", new Object[]{createUserId,status});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(
-			long createUserId, String auditStatus) throws Exception {
+			long createUserId, String auditStatus,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_auditStatus", new Object[]{createUserId,auditStatus});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(
-			long createUserId, String reportStatus) throws Exception {
+			long createUserId, String reportStatus,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_createUserId_reportStatus", new Object[]{createUserId,reportStatus});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndStatus(long columnId,
-			String status) throws Exception {
+			String status,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_columnId_status", new Object[]{columnId,status});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndAuditStatus(long columnId,
-			String auditStatus) throws Exception {
+			String auditStatus,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_columnId_auditStatus", new Object[]{columnId,auditStatus});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(long columnId,
-			String reportStatus) throws Exception {
+			String reportStatus,int start,int size) throws Exception {
 		
 		return this.getEntitys("get_by_columnId_reportStatus", new Object[]{columnId,reportStatus});
 	}

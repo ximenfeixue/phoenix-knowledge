@@ -25,6 +25,17 @@ public interface IKnowledgeReferenceDao {
 	public KnowledgeReference insert(KnowledgeReference knowledgeReference,long knowledgeId,User user) throws Exception;
 	
 	/**
+	 * 批量插入
+	 * @author 周仕奇
+	 * @date 2016年1月14日 下午6:05:51
+	 * @param knowledgeReference
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeReference> insertList(List<KnowledgeReference> knowledgeReference,User user) throws Exception;
+	
+	/**
 	 * 更新
 	 * @author 周仕奇
 	 * @date 2016年1月12日 下午2:06:13
@@ -113,7 +124,7 @@ public interface IKnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeReference> getByIdAndStatus(long id,String status)  throws Exception;
+	public KnowledgeReference getByIdAndStatus(long id,String status)  throws Exception;
 	
 	/**
 	 * 根据知识主键提取
@@ -123,7 +134,7 @@ public interface IKnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeReference> getByKnowledgeId(long knowledgeId)  throws Exception;
+	public KnowledgeReference getByKnowledgeId(long knowledgeId)  throws Exception;
 	
 	/**
 	 * 根据知识主键list提取
@@ -144,5 +155,5 @@ public interface IKnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeReference> getByKnowledgeIdAndStatus(long knowledgeId,String status)  throws Exception;
+	public KnowledgeReference getByKnowledgeIdAndStatus(long knowledgeId,String status)  throws Exception;
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
+
 /**
  * @Title: 知识详细信息（mongoDB保存，保存知识的全部信息，提供给编辑、详细信息查看界面查询）
  * @author 周仕奇
@@ -29,10 +31,13 @@ public class KnowledgeMongo extends KnowledgeBase implements Serializable {
 	}
 	
 	public void createContendDesc() {
-		if(StringUtils.isNotBlank(this.getContent()) && this.getContent().length() > CONTENT_DESC_LENGTH )
-			this.setContentDesc(this.getContent().substring(0, CONTENT_DESC_LENGTH));
+		
+		String testContent = HtmlToText.html2Text(this.getContent());
+		
+		if(StringUtils.isNotBlank(testContent) && testContent.length() > CONTENT_DESC_LENGTH )
+			this.setContentDesc(testContent.substring(0, CONTENT_DESC_LENGTH));
 		else 
-			this.setContentDesc(this.getContent());
+			this.setContentDesc(testContent);
 	}
 
 }

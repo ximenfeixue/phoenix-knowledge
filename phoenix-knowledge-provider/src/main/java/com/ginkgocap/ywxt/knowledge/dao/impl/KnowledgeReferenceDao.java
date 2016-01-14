@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import com.ginkgocap.parasol.common.service.impl.BaseService;
@@ -29,12 +30,36 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		
 		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
 		
-		knowledgeReference.setCreateDate(currentDate);
+		if(StringUtils.isBlank(knowledgeReference.getCreateDate()))
+			knowledgeReference.setCreateDate(currentDate);
 		knowledgeReference.setModifyDate(currentDate);
 		
 		long id = (Long) this.saveEntity(knowledgeReference);
 		
 		return this.getById(id);
+	}
+	
+	@Override
+	public List<KnowledgeReference> insertList(List<KnowledgeReference> knowledgeReferenceList,User user)
+			throws Exception {
+		
+		if(knowledgeReferenceList == null || knowledgeReferenceList.isEmpty())
+			return null;
+		
+		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
+		
+		for (KnowledgeReference date : knowledgeReferenceList) {
+			if(date.getKnowledgeId() <= 0) {
+				throw new Exception("插入知识来源表时，知识主键缺失");
+			}
+			
+			if(StringUtils.isBlank(date.getCreateDate()))
+				date.setCreateDate(currentDate);
+			date.setModifyDate(currentDate);
+		}
+		
+		return this.saveEntitys(knowledgeReferenceList);
+		
 	}
 
 	@Override
@@ -117,21 +142,36 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 	@Override
 	public List<KnowledgeReference> getByIds(List<Long> ids) throws Exception {
 		
+		if(ids == null || ids.size() < 1)
+			return null;
+		
 		return this.getEntityByIds(ids);
 	}
 
 	@Override
-	public List<KnowledgeReference> getByIdAndStatus(long id, String status)
+	public KnowledgeReference getByIdAndStatus(long id, String status)
 			throws Exception {
 		
-		return this.getEntitys("get_by_id_status", new Object[]{id,status});
+		List<KnowledgeReference> list = this.getEntitys("get_by_id_status", new Object[]{id,status});
+		
+		if(list == null || list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
+		}
 	}
 
 	@Override
-	public List<KnowledgeReference> getByKnowledgeId(long knowledgeId)
+	public KnowledgeReference getByKnowledgeId(long knowledgeId)
 			throws Exception {
 		
-		return this.getEntitys("get_by_knowledgeId", new Object[]{knowledgeId});
+		List<KnowledgeReference> list = this.getEntitys("get_by_knowledgeId", new Object[]{knowledgeId});
+		
+		if(list == null || list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
+		}
 	}
 
 	@Override
@@ -145,10 +185,16 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 	}
 
 	@Override
-	public List<KnowledgeReference> getByKnowledgeIdAndStatus(long knowledgeId,
+	public KnowledgeReference getByKnowledgeIdAndStatus(long knowledgeId,
 			String status) throws Exception {
 		
-		return this.getEntitys("get_by_knowledgeId_status", new Object[]{knowledgeId,status});
+		List<KnowledgeReference> list = this.getEntitys("get_by_knowledgeId_status", new Object[]{knowledgeId,status});
+		
+		if(list == null || list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
+		}
 	}
 	
 }

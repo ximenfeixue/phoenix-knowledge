@@ -112,10 +112,12 @@ public interface IKnowledgeBaseDao {
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:08:37
 	 * @param createUserId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserId(long createUserId) throws Exception;
+	public List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户与知识类型提取
@@ -123,10 +125,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月11日 下午6:33:07
 	 * @param createUserId
 	 * @param type 知识类型（0：系统创建，1：用户创建）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndType(long createUserId,String type) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndType(long createUserId,String type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户与栏目提取
@@ -134,20 +138,24 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月11日 下午6:34:35
 	 * @param createUserId
 	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,long columnId) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,long columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:35:03
 	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnId(long columnId) throws Exception;
+	public List<KnowledgeBase> getByColumnId(long columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型与栏目提取
@@ -155,10 +163,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月11日 下午6:35:13
 	 * @param type
 	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndColumnId(String type,long columnId) throws Exception;
+	public List<KnowledgeBase> getByTypeAndColumnId(String type,long columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户、类型、栏目提取
@@ -167,10 +177,12 @@ public interface IKnowledgeBaseDao {
 	 * @param createUserId
 	 * @param type
 	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,String type,long columnId) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,String type,long columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 获取某个时间段之间的知识
@@ -178,10 +190,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月11日 下午6:35:47
 	 * @param beginDate 起始时间，当为null时，系统默认为无限小的一个时间
 	 * @param endDate 结束时间，当为null时，系统默认为无限大的一个时间
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,Date endDate) throws Exception;
+	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据知识类型获取某个时间段之间的知识
@@ -190,10 +204,12 @@ public interface IKnowledgeBaseDao {
 	 * @param type
 	 * @param beginDate
 	 * @param endDate
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(String type,Date beginDate,Date endDate) throws Exception;
+	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(String type,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户Id获取某个时间段之间的知识
@@ -202,10 +218,12 @@ public interface IKnowledgeBaseDao {
 	 * @param createUserId
 	 * @param beginDate
 	 * @param endDate
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(long createUserId,Date beginDate,Date endDate) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(long createUserId,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、栏目获取某个时间段之间的知识
@@ -215,40 +233,48 @@ public interface IKnowledgeBaseDao {
 	 * @param columnId
 	 * @param beginDate
 	 * @param endDate
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,long columnId,Date beginDate,Date endDate) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,long columnId,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据状态提取
 	 * @author 周仕奇
 	 * @date 2016年1月12日 上午10:02:47
 	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByStatus(String status) throws Exception;
+	public List<KnowledgeBase> getByStatus(String status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据审核状态提取
 	 * @author 周仕奇
 	 * @date 2016年1月12日 上午10:03:44
 	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByAuditStatus(String auditStatus) throws Exception;
+	public List<KnowledgeBase> getByAuditStatus(String auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据举报状态提取
 	 * @author 周仕奇
 	 * @date 2016年1月12日 上午10:04:16
 	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByReportStatus(String reportStatus) throws Exception;
+	public List<KnowledgeBase> getByReportStatus(String reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、状态提取
@@ -256,10 +282,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:02:47
 	 * @param createUserId
 	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,String status) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,String status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、审核状态提取
@@ -267,10 +295,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:03:44
 	 * @param createUserId
 	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,String auditStatus) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,String auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据用户Id、举报状态提取
@@ -278,10 +308,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:04:16
 	 * @param createUserId
 	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,String reportStatus) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,String reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、状态提取
@@ -289,10 +321,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:02:47
 	 * @param columnId
 	 * @param status 状态（0为无效/删除，1为有效，2为草稿，3,：回收站）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndStatus(long columnId,String status) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndStatus(long columnId,String status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、审核状态提取
@@ -300,10 +334,12 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:03:44
 	 * @param createUserId
 	 * @param auditStatus 审核状态（0：未通过，1：审核中，2：审核通过）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndAuditStatus(long columnId,String auditStatus) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndAuditStatus(long columnId,String auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据栏目Id、举报状态提取
@@ -311,8 +347,10 @@ public interface IKnowledgeBaseDao {
 	 * @date 2016年1月12日 上午10:04:16
 	 * @param createUserId
 	 * @param reportStatus 举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）
+	 * @param start 分页起始行数
+	 * @param size 分页大小
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndReportStatus(long columnId,String reportStatus) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndReportStatus(long columnId,String reportStatus,int start,int size) throws Exception;
 }
