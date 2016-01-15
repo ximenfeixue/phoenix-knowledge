@@ -1,24 +1,27 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ginkgocap.ywxt.asso.service.annotation.AssoDeleteAnnotation;
+import com.ginkgocap.ywxt.asso.service.annotation.AssoGetAnnotation;
+import com.ginkgocap.ywxt.asso.service.annotation.AssoSaveAnnotation;
+import com.ginkgocap.ywxt.asso.service.annotation.AssoUpdateAnnotation;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeBaseDao;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeReferenceDao;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.IBigDataService;
 import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
-import com.ginkgocap.ywxt.knowledge.utils.JsonKeyConstant;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.DiaryService;
@@ -53,11 +56,12 @@ public class KnowledgeService implements IKnowledgeService {
 	@Autowired
 	private DiaryService diaryService;
 	
+	@AssoSaveAnnotation
 	@Override
-	public InterfaceResult<JSONObject> insert(JSONObject knowledgeJson, User user) throws Exception {
+	public InterfaceResult<DataCollection> insert(DataCollection dataCollection, User user) throws Exception {
 		
-		KnowledgeMongo knowledgeMongo = (KnowledgeMongo) getBeans(knowledgeJson,JsonKeyConstant.JSONKEY_KNOWLEDGE,KnowledgeMongo.class);
-		KnowledgeReference knowledgeReference = (KnowledgeReference) getBeans(knowledgeJson,JsonKeyConstant.JSONKEY_KNOWLEDGE_REFERENCE,KnowledgeReference.class);
+		KnowledgeMongo knowledgeMongo = (KnowledgeMongo) dataCollection.getKnowledge();
+		KnowledgeReference knowledgeReference = dataCollection.getReference();
 		
 		long knowledgeId = this.knowledgeCommonService.getKnowledgeSeqenceId();
 		
@@ -107,14 +111,15 @@ public class KnowledgeService implements IKnowledgeService {
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(afterSaveKnowledgeMongo,afterSaveKnowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(afterSaveKnowledgeMongo,afterSaveKnowledgeReference));
 	}
 
+	@AssoUpdateAnnotation
 	@Override
-	public InterfaceResult<JSONObject> update(JSONObject knowledgeJson, User user) throws Exception {
-		
-		KnowledgeMongo knowledgeMongo = (KnowledgeMongo) getBeans(knowledgeJson,JsonKeyConstant.JSONKEY_KNOWLEDGE,KnowledgeMongo.class);
-		KnowledgeReference knowledgeReference = (KnowledgeReference) getBeans(knowledgeJson,JsonKeyConstant.JSONKEY_KNOWLEDGE_REFERENCE,KnowledgeReference.class);
+	public InterfaceResult<DataCollection> update(DataCollection dataCollection, User user) throws Exception {
+
+		KnowledgeMongo knowledgeMongo = (KnowledgeMongo) dataCollection.getKnowledge();
+		KnowledgeReference knowledgeReference = dataCollection.getReference();
 		
 		long knowledgeId = knowledgeMongo.getId();
 		
@@ -166,11 +171,12 @@ public class KnowledgeService implements IKnowledgeService {
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(afterSaveKnowledgeMongo,afterSaveKnowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(afterSaveKnowledgeMongo,afterSaveKnowledgeReference));
 	}
 
+	@AssoDeleteAnnotation
 	@Override
-	public InterfaceResult<JSONObject> deleteByKnowledgeId(long knowledgeId, long columnId, User user) throws Exception {
+	public InterfaceResult<DataCollection> deleteByKnowledgeId(long knowledgeId, long columnId, User user) throws Exception {
 		
 		KnowledgeMongo oldKnowledgeMongo = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
 		
@@ -218,8 +224,9 @@ public class KnowledgeService implements IKnowledgeService {
 		return InterfaceResult.getSuccessInterfaceResultInstance(null);
 	}
 
+	@AssoDeleteAnnotation
 	@Override
-	public InterfaceResult<JSONObject> deleteByKnowledgeIds(List<Long> knowledgeIds, long columnId, User user) throws Exception {
+	public InterfaceResult<DataCollection> deleteByKnowledgeIds(List<Long> knowledgeIds, long columnId, User user) throws Exception {
 		
 		List<KnowledgeMongo> oldKnowledgeMongoList = this.knowledgeMongoDao.getByIdsAndColumnId(knowledgeIds, columnId);
 		
@@ -268,29 +275,30 @@ public class KnowledgeService implements IKnowledgeService {
 		return InterfaceResult.getSuccessInterfaceResultInstance(null);
 	}
 
+	@AssoGetAnnotation
 	@Override
-	public InterfaceResult<JSONObject> getDetailById(long knowledgeId,long columnId,User user) throws Exception {
+	public InterfaceResult<DataCollection> getDetailById(long knowledgeId,long columnId,User user) throws Exception {
 		
 		KnowledgeMongo knowledgeMongo = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
 		
 		KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(knowledgeMongo,knowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledgeMongo,knowledgeReference));
 		
 	}
 
 	@Override
-	public InterfaceResult<JSONObject> getBaseById(long knowledgeId,User user) throws Exception {
+	public InterfaceResult<DataCollection> getBaseById(long knowledgeId,User user) throws Exception {
 		
 		KnowledgeBase knowledgeBase = this.knowledgeBaseDao.getById(knowledgeId);
 		
 		KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(knowledgeBase,knowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledgeBase,knowledgeReference));
 	}
 
 	@Override
-	public InterfaceResult<List<JSONObject>> getBaseByIds(List<Long> knowledgeIds,User user) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds,User user) throws Exception {
 		
 		List<KnowledgeBase> knowledgeBaseList = this.knowledgeBaseDao.getByIds(knowledgeIds);
 		
@@ -300,27 +308,48 @@ public class KnowledgeService implements IKnowledgeService {
 	}
 
 	@Override
-	public InterfaceResult<JSONObject> getBaseByCreateUserId(User user,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(User user,int start,int size) throws Exception {
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(this.knowledgeBaseDao.getByCreateUserId(user.getId(), start, size)));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByCreateUserId(user.getId(), start, size)));
 	}
 
 	@Override
-	public InterfaceResult<JSONObject> getBaseByCreateUserIdAndColumnId(User user,long columnId,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnId(User user,long columnId,int start,int size) throws Exception {
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(this.knowledgeBaseDao.getByCreateUserIdAndColumnId(user.getId(), columnId, start, size)));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByCreateUserIdAndColumnId(user.getId(), columnId, start, size)));
 	}
 
 	@Override
-	public InterfaceResult<JSONObject> getBaseByCreateUserIdAndType(User user,String type,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(this.knowledgeBaseDao.getByCreateUserIdAndType(user.getId(), type, start, size)));
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndType(User user,String type,int start,int size) throws Exception {
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByCreateUserIdAndType(user.getId(), type, start, size)));
 	}
 
 	@Override
-	public InterfaceResult<JSONObject> getBaseByCreateUserIdAndColumnIdAndType(User user,long columnId,String type,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturnJson(this.knowledgeBaseDao.getByCreateUserIdAndTypeAndColumnId(user.getId(), type, columnId, start, size)));
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(User user,long columnId,String type,int start,int size) throws Exception {
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByCreateUserIdAndTypeAndColumnId(user.getId(), type, columnId, start, size)));
 	}
 	
+	@Override
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(String type,int start,int size) throws Exception {
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByType(type, start, size)));
+	}
+	
+	@Override
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,int start,int size) throws Exception {
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByColumnId(columnId, start, size)));
+	}
+	
+	@Override
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,String type,int start,int size) throws Exception {
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByTypeAndColumnId(type, columnId, start, size)));
+	}
+	
+	/**
+	 * 插入时异常手动回滚方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:30:18
+	 * @throws Exception
+	 */
 	private void insertRollBack(long knowledgeId, long columnId, User user,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		if(isBase) this.knowledgeBaseDao.deleteById(knowledgeId);
@@ -329,6 +358,12 @@ public class KnowledgeService implements IKnowledgeService {
 		if(isUserFeed) this.userFeedService.deleteDynamicKnowledge(knowledgeId);
 	}
 	
+	/**
+	 * 更新时异常手动回滚方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:30:54
+	 * @throws Exception
+	 */
 	private void updateRollBack(long knowledgeId, long columnId,
 			KnowledgeMongo oldKnowledgeMongo,KnowledgeBase oldKnowledgeBase,KnowledgeReference oldKnowledgeReference, User user,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
@@ -339,6 +374,12 @@ public class KnowledgeService implements IKnowledgeService {
 		if(isUserFeed) this.userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(oldKnowledgeMongo, user, diaryService));
 	}
 	
+	/**
+	 * 单条删除时异常手动回滚方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:31:29
+	 * @throws Exception
+	 */
 	private void deleteRollBack(long knowledgeId, long columnId,
 			KnowledgeMongo oldKnowledgeMongo,KnowledgeBase oldKnowledgeBase,KnowledgeReference oldKnowledgeReference, User user,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
@@ -349,6 +390,12 @@ public class KnowledgeService implements IKnowledgeService {
 		if(isUserFeed) this.userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(oldKnowledgeMongo, user, diaryService));
 	}
 	
+	/**
+	 * 批量删除时异常手动回滚方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:32:13
+	 * @throws Exception
+	 */
 	private void deleteListRollBack(List<KnowledgeMongo> oldKnowledgeMongoList,List<KnowledgeBase> oldKnowledgeBaseList,List<KnowledgeReference> oldKnowledgeReferenceList, User user,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.insertList(oldKnowledgeMongoList, user);
@@ -362,41 +409,40 @@ public class KnowledgeService implements IKnowledgeService {
 		
 	}
 	
-	private JSONObject getReturnJson(List<KnowledgeBase> knowledgeBaseList) {
+	/**
+	 * 返回数据包装方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:32:58
+	 * @param knowledgeBaseList
+	 * @return
+	 */
+	private List<DataCollection> getReturn(List<KnowledgeBase> knowledgeBaseList) {
 
-		JSONObject returnJson = new JSONObject();
+		List<DataCollection> returnList = new ArrayList<DataCollection>();
+		if(knowledgeBaseList != null && !knowledgeBaseList.isEmpty())
+			for (KnowledgeBase data : knowledgeBaseList)
+				returnList.add(getReturn(data,null));
 		
-		returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE, knowledgeBaseList);
-		
-		return returnJson;
+		return returnList;
 	}
 	
-	private JSONObject getReturnJson(KnowledgeBase knowledgeBase) {
+	/**
+	 * 返回数据包装方法
+	 * @author 周仕奇
+	 * @date 2016年1月15日 上午11:33:16
+	 * @param knowledgeBase
+	 * @param knowledgeReference
+	 * @return
+	 */
+	private DataCollection getReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
 
-		JSONObject returnJson = new JSONObject();
+		DataCollection dataCollection = new DataCollection();
 		
-		returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE, knowledgeBase);
+		dataCollection.setKnowledge(knowledgeBase);
 		
-		return returnJson;
-	}
-	
-	private JSONObject getReturnJson(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
-
-		JSONObject returnJson = new JSONObject();
+		dataCollection.setReference(knowledgeReference);
 		
-		returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE, knowledgeBase);
-		
-		returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE_REFERENCE, knowledgeReference);
-		
-		return returnJson;
-	}
-	
-	private Object getBeans(JSONObject json,String key,Class<?> beanClass) {
-
-		JSONObject jsonObject = json.getJSONObject(key);
-		
-		return JSONObject.toBean(jsonObject, beanClass);
-		
+		return dataCollection;
 	}
 	
 }

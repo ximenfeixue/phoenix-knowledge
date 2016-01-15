@@ -171,6 +171,19 @@ public interface IKnowledgeBaseDao {
 	public List<KnowledgeBase> getByTypeAndColumnId(String type,long columnId,int start,int size) throws Exception;
 	
 	/**
+	 * 根据类型提取
+	 * @author 周仕奇
+	 * @date 2016年1月11日 下午6:35:13
+	 * @param type
+	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getByType(String type,int start,int size) throws Exception;
+	
+	/**
 	 * 根据创建用户、类型、栏目提取
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:35:29

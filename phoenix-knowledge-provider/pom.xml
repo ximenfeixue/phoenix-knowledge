@@ -17,6 +17,12 @@
             <version>3.0.0</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-asso-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>

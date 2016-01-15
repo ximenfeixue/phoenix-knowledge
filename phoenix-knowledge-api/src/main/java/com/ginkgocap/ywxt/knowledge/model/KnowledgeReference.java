@@ -145,8 +145,8 @@ public class KnowledgeReference implements Serializable {
 	}
 	
 	
-	public static List<JSONObject> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> knowledgeReferenceList) {
-		List<JSONObject> returnList = new ArrayList<JSONObject>();
+	public static List<DataCollection> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> knowledgeReferenceList) {
+		List<DataCollection> returnList = new ArrayList<DataCollection>();
 		
 		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
 			return returnList;
@@ -176,13 +176,13 @@ public class KnowledgeReference implements Serializable {
 				
 			}
 			
-			JSONObject returnJson = new JSONObject();
+			DataCollection dataCollection = new DataCollection();
 			
-			returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE, base);
+			dataCollection.setKnowledge(base);
 			
-			returnJson.put(JsonKeyConstant.JSONKEY_KNOWLEDGE_REFERENCE, reference);
+			dataCollection.setReference(reference);
 			
-			returnList.add(returnJson);
+			returnList.add(dataCollection);
 			
 		}
 		

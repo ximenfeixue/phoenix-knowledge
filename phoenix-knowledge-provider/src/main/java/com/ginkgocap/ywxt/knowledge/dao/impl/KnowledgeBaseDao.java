@@ -138,6 +138,13 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 
 		return this.getEntitys("get_by_type_columnId", new Object[]{type,columnId});
 	}
+	
+	@Override
+	public List<KnowledgeBase> getByType(String type,int start,int size)
+			throws Exception {
+
+		return this.getEntitys("get_by_type", new Object[]{type});
+	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(
