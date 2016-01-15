@@ -35,7 +35,7 @@
 	<import resource="classpath:requirement-dubbo-consumer.xml" />
 	<import resource="classpath:person-dubbo-consumer.xml" />
 	<import resource="classpath:applicationContext_log.xml"/>
-
+    <import resource="classpath:dynamic-dubbo-consumer.xml"/>
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
