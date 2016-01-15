@@ -308,6 +308,12 @@ public class KnowledgeService implements IKnowledgeService {
 	}
 
 	@Override
+	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception {
+		
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getAll(start, size)));
+	}
+
+	@Override
 	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(User user,int start,int size) throws Exception {
 		
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByCreateUserId(user.getId(), start, size)));

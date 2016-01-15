@@ -124,6 +124,18 @@ public interface IKnowledgeService {
 	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds,User user) throws Exception;
 	
 	/**
+	 * 提取所有数据（一般用在首页数据展示中）
+	 * <p>1、知识基础表信息</P>
+	 * @author 周仕奇
+	 * @date 2016年1月15日 下午5:43:26
+	 * @param start
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception;
+	
+	/**
 	 * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
 	 * @author 周仕奇

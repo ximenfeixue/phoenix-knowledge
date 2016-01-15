@@ -108,6 +108,17 @@ public interface IKnowledgeBaseDao {
 	public List<KnowledgeBase> getByIds(List<Long> ids) throws Exception;
 	
 	/**
+	 * 提取所有数据
+	 * @author 周仕奇
+	 * @date 2016年1月15日 下午5:45:14
+	 * @param start
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getAll(int start,int size) throws Exception;
+	
+	/**
 	 * 根据用户ID提取
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:08:37

@@ -20,6 +20,12 @@
             <artifactId>phoenix-knowledge-api</artifactId>
             <version>3.0.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.gintong.frame</groupId>
+            <artifactId>phoenix-frame-util</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
