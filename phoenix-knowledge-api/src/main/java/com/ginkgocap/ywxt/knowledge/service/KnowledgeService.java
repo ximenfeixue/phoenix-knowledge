@@ -94,4 +94,12 @@ public interface KnowledgeService {
 	 */
 	Map<String, Object> insertCatalogueIds(KnowledgeNewsVO vo, User user);
 
+	/**
+	 * Method: initOldSerach <br>
+	 * Description: 初始化知识老数据到MQ <br>
+	 * Creator: xutianlong@gingtong.com <br>
+	 * Date: 2016/1/21 9:57
+	 */
+	public String initOldSerach(Long start,Long end);
+
 }

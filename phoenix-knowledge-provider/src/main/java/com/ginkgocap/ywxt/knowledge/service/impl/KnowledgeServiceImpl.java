@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.gintong.rocketmq.api.DefaultMessageService;
+import com.gintong.rocketmq.api.enums.TopicType;
+import com.gintong.rocketmq.api.model.RocketSendResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +21,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;
+/*import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;*/
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
@@ -34,6 +37,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
 import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.ColumnService;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
@@ -144,8 +148,11 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	@Autowired
 	private FriendsRelationService friendsRelationService;
 
-	@Autowired
-	private DynamicNewsService dynamicNewsService;
+	@Autowired(required = true)
+	private DefaultMessageService defaultMessageService;
+
+	/*@Autowired
+	private DynamicNewsService dynamicNewsService;*/
 
 	@Override
 	public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
@@ -410,7 +417,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		}
 		// 新建知识均生成动态
 //		dynamicNewsService.insertNewsAndRelationByParam(param);
-		dynamicNewsService.insert(param);
+		//dynamicNewsService.insert(param);
 		if (vo.isNeedUpdate()) {
 			updateKnowledgeByPermission(vo);
 		}
@@ -760,5 +767,31 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			content = content.length() > 50 ? content.substring(0, 50) + "..." : content;
 		}
 		return content;
+	}
+
+	@Override
+	public String initOldSerach(Long start,Long end){
+		logger.info("通知大数据，发送请求 开始于：{}，结束于：{}", start,end);
+		RocketSendResult result = null;
+		// 用y记录执行到哪
+		Long y = start;
+		for (Long x = start;x < end;x++) {
+			Criteria criteria = new Criteria();
+			criteria.where("_id").is(x).and("status").is(4);
+			KnowledgeNews k = null;
+			Query query = new Query(criteria);
+			try {
+				k = mongoTemplate.findOne(query,KnowledgeNews.class,"KnowledgeNews");
+				y++;
+			}catch(Exception e) {
+				logger.info("获取Konwledge失败，id:{}",x);
+			}
+			try {
+				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJsonForInit(setMapVO(k)));
+			}catch(Exception e) {
+				logger.info("发送失败  返回参数{}", result.getSendResult());
+			}
+		}
+		return "SUCCESS，NUM：" + y;
 	}
 }
