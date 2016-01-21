@@ -2,7 +2,10 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
@@ -83,6 +86,61 @@ public class PackingDataUtil {
 		} else {
 			return null;
 		}
+	}
+	
+
+	/**
+	 * 
+	 * @author 周仕奇
+	 * @date 2016年1月18日 上午10:54:14
+	 * @param str
+	 * @return
+	 */
+	public static List<JSONObject> getRecommendResult(String str) {
+		List<JSONObject> maps = new ArrayList<JSONObject>();
+		if (str != null && str.length() > 0) {
+			JSONObject jo = JSONObject.fromObject(str);
+			JSONArray jas = JSONArray.fromObject(jo.get("knos"));
+			if (jas != null) {
+				JSONObject sr = null;
+				for (int i = 0; i < jas.size(); i++) {
+					JSONObject ob = (JSONObject) jas.get(i);
+					sr = new JSONObject();
+					sr.put("title",ob.optString("name"));// 名称
+					sr.put("id",ob.getString("id"));
+					sr.put("knowledgeType",ob.optString("knoType"));
+					sr.put("tagsScores",ob.optString("tagsScores"));
+					sr.put("tags",ob.optString("tags"));
+					sr.put("desc",ob.optString("desc"));
+					maps.add(sr);
+				}
+			}
+		}
+		return maps;
+	}
+	
+	/**
+	 * 将文本包装为HTML
+	 * @author 周仕奇
+	 * @date 2016年1月18日 下午2:41:06
+	 * @param html
+	 * @return
+	 */
+	public static String getSpHtmlString(String html) {
+		Pattern pattern = Pattern.compile("(?isu)<body[^>]*>(.*)</body>");
+		Matcher matcher = pattern.matcher(html);
+		String body = null;
+		StringBuffer htmlsb = new StringBuffer(
+				"<!DOCTYPE html><html><head><meta charset='utf-8' /><style>.gtrelated img{margin-top:10px;max-width:96%;margin-left:2%;height:auto;}.gtrelated{word-break: break-all;word-wrap: break-word; overflow-x: hidden; overflow-y:auto; } body { letter-spacing: 0.1em; line-height: 1.5em;} table{ width:100%; border-top: #bbb solid 1px;border-left: #bbb solid 1px; text-align: center;}table td{ border-right: #bbb solid 1px; border-bottom: #bbb solid 1px;} </style></head><body><div class='gtrelated'>");
+		if (matcher.find()) {
+			body = matcher.group(1);
+			htmlsb.append(body);
+		} else {
+			htmlsb.append(html);
+		}
+		htmlsb.append("</div></body></html>");
+		html = htmlsb.toString();
+		return html;
 	}
 	
 }
