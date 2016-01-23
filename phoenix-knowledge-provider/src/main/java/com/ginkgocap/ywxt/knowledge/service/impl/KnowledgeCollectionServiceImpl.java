@@ -30,6 +30,7 @@ import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseVO;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollectionVO;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService;
@@ -170,8 +171,8 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements K
 				return result;
 			}
 			// 通知数据中心
-//			noticeDataCenter(vo.getColumType(), vo.getkId(), "upd");
-			noticeDataCenter("upd", vo,user.getId(), user.getName());
+			// noticeDataCenter(vo.getColumType(), vo.getkId(), "upd");
+			noticeDataCenter("upd", getVO(vo), user.getId(), user.getName());
 			// 添加基本信息表
 			KnowledgeBaseVO bVo = new KnowledgeBaseVO();
 			bVo.setColumType(vo.getColumType());
@@ -191,6 +192,23 @@ public class KnowledgeCollectionServiceImpl extends BaseServiceImpl implements K
 			return result;
 		}
 		return result;
+	}
+
+	public KnowledgeNewsVO getVO(KnowledgeCollectionVO knowledge) {
+		KnowledgeNewsVO vo = new KnowledgeNewsVO();
+		vo.setkId(knowledge.getkId());
+		vo.setTitle(knowledge.getKnowledge().getTitle());
+		vo.setColumnPath(knowledge.getKnowledge().getCpathid());
+		vo.setPic(knowledge.getKnowledge().getPic());
+		vo.setSelectedIds(knowledge.getKnowledge().getSelectedIds());
+		vo.setStatus(knowledge.getKnowledge().getStatus() + "");
+		vo.setTags(knowledge.getTags());
+		vo.setColumnid(knowledge.getKnowledge().getColumnid());
+		vo.setColumnType(knowledge.getColumType());
+		vo.setContent(knowledge.getKnowledge().getContent());
+		vo.setDesc(knowledge.getKnowledge().getDesc());
+		vo.setCreatetime(knowledge.getKnowledge().getCreatetime());
+		return vo;
 	}
 
 	private Integer getSource(long loginUserId, long uId) {
