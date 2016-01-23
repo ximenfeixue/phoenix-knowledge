@@ -71,10 +71,10 @@ public class BaseServiceImpl {
         String selectedIds = "{\"dales\":[{\"id\":\"-1\",\"name\":\"全平台\"}],\"dule\":false,\"xiaoles\":[],\"zhongles\":[]}";
         if (json.getString("selectedIds") != null) {
             logger.info("selectedIds 的值为{}",json.getString("selectedIds"));
-            selectedIds = json.getString("selectedIds").replace("\\", "");
+            selectedIds = json.getString("selectedIds");
         }
         json.remove("selectedIds");
-        json.put("selectedIds", selectedIds);
+        json.put("selectedIds", selectedIds.replace("\\", ""));
         logger.info("json的字符值为:{}",json.toString());
         return json.toString();
     }
