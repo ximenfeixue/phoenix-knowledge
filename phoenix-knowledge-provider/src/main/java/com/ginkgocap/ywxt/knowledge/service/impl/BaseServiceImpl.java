@@ -46,8 +46,8 @@ public class BaseServiceImpl {
                 defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJson(setMapVO(bean, userId, uName)));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("发送失败  返回参数{}", result.getSendResult());
+            logger.error("发送失败,错误原因:",e);
+            logger.error("发送失败  返回参数{}", result.getSendResult());
         }
     }
 
