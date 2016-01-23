@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -776,22 +777,23 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		// 用y记录执行到哪
 		Long y = start;
 		for (Long x = start;x < end;x++) {
-			Criteria criteria = new Criteria();
-			criteria.where("_id").is(x).and("status").is(4);
+			String sql = "{id:" + x + ",status:4}";
 			KnowledgeNews k = null;
-			Query query = new Query(criteria);
+			BasicQuery basicQuery = new BasicQuery(sql);
 			try {
-				k = mongoTemplate.findOne(query,KnowledgeNews.class,"KnowledgeNews");
+				k = mongoTemplate.findOne(basicQuery,KnowledgeNews.class,"KnowledgeNews");
 				y++;
 			}catch(Exception e) {
 				logger.info("获取Konwledge失败，id:{}",x);
 			}
 			try {
-				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJsonForInit(setMapVO(k)));
+				if (null != k)
+					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJsonForInit(setMapVO(k)));
 			}catch(Exception e) {
-				logger.info("发送失败  返回参数{}", result.getSendResult());
+				logger.info("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
 			}
 		}
 		return "SUCCESS，NUM：" + y;
 	}
+
 }

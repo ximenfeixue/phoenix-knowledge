@@ -112,22 +112,22 @@ public class BaseServiceImpl {
 	 */
 	public static Map<String, Object> setMapVO(Object bean) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		KnowledgeNewsVO vo = (KnowledgeNewsVO) bean;
+		//KnowledgeNewsVO vo = (KnowledgeNewsVO) bean;
 		KnowledgeNews k = (KnowledgeNews)bean;
-		map.put("kid", vo.getkId());
+		map.put("kid", k.getId());
 		map.put("cid", k.getCid());
 		map.put("cname", k.getCname());
-		map.put("title", vo.getTitle());
-		map.put("cpathid", vo.getColumnPath());
-		map.put("pic", vo.getPic());
-		map.put("selectedIds", vo.getSelectedIds());
-		map.put("status", vo.getStatus());
-		map.put("tags", vo.getTags());
-		map.put("columnid", vo.getColumnid());
-		map.put("columnType", vo.getColumnType());
-		map.put("content", vo.getContent());
-		map.put("desc", vo.getDesc());
-		map.put("createtime", vo.getCreatetime());
+		map.put("title", k.getTitle());
+		map.put("cpathid", k.getCpathid());
+		map.put("pic", k.getPic());
+		map.put("selectedIds", k.getSelectedIds());
+		map.put("status", k.getStatus());
+		map.put("tags", k.getTags());
+		map.put("columnid", k.getColumnid());
+		map.put("columnType", k.getColumnType());
+		map.put("content", k.getContent());
+		map.put("desc", k.getDesc());
+		map.put("createtime", k.getCreatetime());
 		return map;
 	}
 
