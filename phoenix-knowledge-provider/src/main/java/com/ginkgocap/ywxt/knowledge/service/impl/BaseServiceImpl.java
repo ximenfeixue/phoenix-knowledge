@@ -69,7 +69,7 @@ public class BaseServiceImpl {
     public static String beanToJsonForInit(Object bean) {
         JSONObject json = JSONObject.fromObject(bean);
         String selectedIds = "{\"dales\":[{\"id\":\"-1\",\"name\":\"全平台\"}],\"dule\":false,\"xiaoles\":[],\"zhongles\":[]}";
-        if (json.getString("selectedIds") != null) {
+        if (json.getString("selectedIds") != null && !json.getString("selectedIds").equals("null")) {
             logger.info("selectedIds 的值为{}",json.getString("selectedIds"));
             selectedIds = json.getString("selectedIds");
         }
