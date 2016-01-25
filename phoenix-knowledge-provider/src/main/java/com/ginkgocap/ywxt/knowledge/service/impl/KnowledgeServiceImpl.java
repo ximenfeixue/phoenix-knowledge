@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
+import com.gintong.rocketmq.api.utils.FlagTypeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -788,7 +789,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			}
 			try {
 				if (null != k)
-					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, beanToJsonForInit(setMapVO(k)));
+					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(setMapVO(k)));
 			}catch(Exception e) {
 				logger.info("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
 			}

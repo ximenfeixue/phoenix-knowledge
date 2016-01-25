@@ -1,19 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
 import com.ginkgocap.ywxt.user.model.User;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 public class KnowledgeServiceTest extends TestBase {
 	@Autowired
@@ -51,6 +45,7 @@ public class KnowledgeServiceTest extends TestBase {
 		//List<KnowledgeNews> list = mongoTemplate.find(basicQuery, KnowledgeNews.class,"KnowledgeNews");
 		//System.out.println("--------------" + list.size());
 		System.out.println("knowledge count:" + mongoTemplate.find(basicQuery,KnowledgeNews.class,"KnowledgeNews").size());*/
-		knowledgeService.initOldSerach(1L,100000L);
+		knowledgeService.initOldSerach(16293L,100000L);
 	}
+
 }
