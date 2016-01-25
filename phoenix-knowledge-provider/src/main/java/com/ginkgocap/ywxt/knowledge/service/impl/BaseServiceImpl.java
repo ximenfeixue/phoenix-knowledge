@@ -119,7 +119,7 @@ public class BaseServiceImpl {
         map.put("status", k.getStatus());
         map.put("tags", k.getTags());
         map.put("columnid", k.getColumnid());
-        map.put("columnType", k.getColumnType());
+        map.put("columnType", 1);
         map.put("content", k.getContent());
         map.put("desc", k.getDesc());
         map.put("createtime", k.getCreatetime());
