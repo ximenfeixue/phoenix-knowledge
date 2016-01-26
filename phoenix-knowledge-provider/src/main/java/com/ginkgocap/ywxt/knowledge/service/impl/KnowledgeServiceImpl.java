@@ -787,7 +787,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		// 循环开始页数和结束页数，每页取值10000条
 		for (int x = start;x < end;x++) {
 			// 开始于哪条数据，页码乘以页长
-			query.skip(x*10000);
+			query.skip(x*1000);
 			List<Knowledge> k = null;
 			try {
 				 k = mongoTemplate.find(query,kenum.cls(),kenum.dec());
@@ -802,7 +802,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(knowledge.setMapVO(knowledge)));
 				}
 			}catch(Exception e) {
-				logger.info("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
+				logger.error("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
 			}
 		}
 		return "SUCCESS，NUM：" + y;
