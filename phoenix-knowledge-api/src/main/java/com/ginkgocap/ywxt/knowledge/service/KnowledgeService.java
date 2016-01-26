@@ -98,8 +98,10 @@ public interface KnowledgeService {
 	 * Method: initOldSerach <br>
 	 * Description: 初始化知识老数据到MQ <br>
 	 * Creator: xutianlong@gingtong.com <br>
+	 * parrom: type 知识的栏目类型
+	 * parome: start 开始页，end 结束页
 	 * Date: 2016/1/21 9:57
 	 */
-	public String initOldSerach(Long start,Long end);
+	public String initOldSerach(int type,int start,int end);
 
 }

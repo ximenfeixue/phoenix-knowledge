@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.ginkgocap.ywxt.knowledge.util.*;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
@@ -53,11 +54,6 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
 import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
 import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
 import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
-import com.ginkgocap.ywxt.knowledge.util.Constants;
-import com.ginkgocap.ywxt.knowledge.util.DateUtil;
-import com.ginkgocap.ywxt.knowledge.util.HtmlToText;
-import com.ginkgocap.ywxt.knowledge.util.JsonUtil;
-import com.ginkgocap.ywxt.knowledge.util.KnowledgeUtil;
 import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
@@ -460,9 +456,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	}
 
 	/**
-	 * @param getkId
-	 * @param columnType
-	 * @param selectedIds
+	 * @param vo
 	 */
 	private void updateKnowledgeByPermission(KnowledgeNewsVO vo) {
 		logger.info("进入修改知识权限请求,id:{},type{}", vo.getkId(), vo.getColumnType());
@@ -772,24 +766,41 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 	}
 
 	@Override
-	public String initOldSerach(Long start,Long end){
+	public String initOldSerach(int type,int start,int end){
 		logger.info("通知大数据，发送请求 开始于：{}，结束于：{}", start,end);
+		/**
+		 传入开始的页码和结束的页码，不传总条数，因为总条数随时可能会改变，
+		 发送老数据是可以确定要发送的数据的条数的。自己人工的计算页数，利于控制。
+		**/
+		// 根据传入的知识类型，获取对应的知识枚举
+		KnowledgeEnum kenum = KnowledgeEnum.knowledgeEnumFactory(type);
+		// result 是MQ返回的数据格式
 		RocketSendResult result = null;
-		// 用y记录执行到哪
-		Long y = start;
-		for (Long x = start;x < end;x++) {
-			String sql = "{id:" + x + ",status:4}";
-			KnowledgeNews k = null;
-			BasicQuery basicQuery = new BasicQuery(sql);
+		// 用y记录执行到哪页
+		int y = start;
+		// 设置查询条件,ch
+		Criteria criteria = new Criteria();
+		// 查询status=4的对象
+		criteria.where("status").is(4);
+		// 每次查询一万条
+		Query query = new Query(criteria).limit(10000);
+		// 循环开始页数和结束页数，每页取值10000条
+		for (int x = start;x < end;x++) {
+			// 开始于哪条数据，页码乘以页长
+			query.skip(x*10000);
+			List<Knowledge> k = null;
 			try {
-				k = mongoTemplate.findOne(basicQuery,KnowledgeNews.class,"KnowledgeNews");
+				 k = mongoTemplate.find(query,kenum.cls(),kenum.dec());
 				y++;
 			}catch(Exception e) {
-				logger.info("获取Konwledge失败，id:{}",x);
+				logger.error("获取Konwledge失败：",e);
 			}
 			try {
-				if (null != k)
-					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(setMapVO(k)));
+				for(int top=0;top<k.size();top++) {
+					Knowledge knowledge = k.get(top);
+					knowledge.setColumnType(String.valueOf(kenum.code()));
+					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(knowledge.setMapVO(knowledge)));
+				}
 			}catch(Exception e) {
 				logger.info("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
 			}

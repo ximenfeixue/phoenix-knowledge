@@ -45,7 +45,7 @@ public class KnowledgeServiceTest extends TestBase {
 		//List<KnowledgeNews> list = mongoTemplate.find(basicQuery, KnowledgeNews.class,"KnowledgeNews");
 		//System.out.println("--------------" + list.size());
 		System.out.println("knowledge count:" + mongoTemplate.find(basicQuery,KnowledgeNews.class,"KnowledgeNews").size());*/
-		knowledgeService.initOldSerach(16293L,100000L);
+		knowledgeService.initOldSerach(4,0,3);
 	}
 
 }

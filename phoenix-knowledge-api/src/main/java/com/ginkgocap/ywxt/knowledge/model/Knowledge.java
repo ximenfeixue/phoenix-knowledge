@@ -2,6 +2,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ginkgocap.ywxt.user.model.User;
 
@@ -407,5 +409,25 @@ public class Knowledge implements Serializable {
 
 	public void setKnowledgeMainId(Long knowledgeMainId) {
 		this.knowledgeMainId = knowledgeMainId;
+	}
+
+	public static Map<String,Object> setMapVO(Object bean){
+		Map<String, Object> map = new HashMap<String, Object>();
+		Knowledge k = (Knowledge) bean;
+		map.put("kid", k.getId());
+		map.put("cid", k.getCid());
+		map.put("cname", k.getCname());
+		map.put("title", k.getTitle());
+		map.put("cpathid", k.getCpathid());
+		map.put("pic", k.getPic());
+		map.put("selectedIds", k.getSelectedIds());
+		map.put("status", k.getStatus());
+		map.put("tags", k.getTags());
+		map.put("columnid", k.getColumnid());
+		map.put("columnType", k.getColumnType());
+		map.put("content", k.getContent());
+		map.put("desc", k.getDesc());
+		map.put("createtime", k.getCreatetime());
+		return map;
 	}
 }
