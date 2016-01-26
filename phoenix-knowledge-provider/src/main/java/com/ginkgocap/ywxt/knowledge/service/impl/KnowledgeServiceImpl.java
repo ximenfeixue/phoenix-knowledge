@@ -783,7 +783,7 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 		// 查询status=4的对象
 		criteria.where("status").is(4);
 		// 每次查询一万条
-		Query query = new Query(criteria).limit(10000);
+		Query query = new Query(criteria).limit(1000);
 		// 循环开始页数和结束页数，每页取值10000条
 		for (int x = start;x < end;x++) {
 			// 开始于哪条数据，页码乘以页长
@@ -795,15 +795,21 @@ public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeSe
 			}catch(Exception e) {
 				logger.error("获取Konwledge失败：",e);
 			}
-			try {
-				for(int top=0;top<k.size();top++) {
-					Knowledge knowledge = k.get(top);
-					knowledge.setColumnType(String.valueOf(kenum.code()));
+			int exint = 0;
+
+
+			for(int top=0;top<k.size();top++) {
+				// 记录执行到哪条
+				exint = top;
+				Knowledge knowledge = k.get(top);
+				knowledge.setColumnType(String.valueOf(kenum.code()));
+				try {
 					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(knowledge.setMapVO(knowledge)));
+				}catch(Exception e) {
+					logger.error("发送失败  返回参数{},执行到{},错误位置{}", result.getSendResult(),x +":"+exint);
 				}
-			}catch(Exception e) {
-				logger.error("发送失败  返回参数{},执行到{}", result.getSendResult(),x);
 			}
+
 		}
 		return "SUCCESS，NUM：" + y;
 	}
