@@ -1,18 +1,156 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.math.BigInteger;
+
 
 /**
- * @Title: 系统栏目
- * @author 周仕奇
- * @date 2016年1月11日 下午3:38:53
- * @version V1.0.0
+ * The persistent class for the tb_knowledge_column_system database table.
+ * 
  */
+@Entity
+@Table(name="tb_knowledge_column_system")
+@NamedQuery(name="ColumnSystem.findAll", query="SELECT c FROM ColumnSystem c")
 public class ColumnSys implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -389083880672132490L;
-	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private String id;
+
+	@Column(name="column_name")
+	private String columnName;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="create_time")
+	private Date createTime;
+
+	@Column(name="del_status")
+	private short delStatus;
+
+	@Column(name="order_num")
+	private int orderNum;
+
+	@Column(name="path_name")
+	private String pathName;
+
+	private BigInteger pid;
+
+	@Column(name="subscribe_count")
+	private BigInteger subscribeCount;
+
+	@Column(name="top_col_type")
+	private int topColType;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="update_time")
+	private Date updateTime;
+
+	@Column(name="user_id")
+	private BigInteger userId;
+
+	@Column(name="user_or_system")
+	private short userOrSystem;
+
+	public ColumnSys() {
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getColumnName() {
+		return this.columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+
+	public Date getCreateTime() {
+		return this.createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public short getDelStatus() {
+		return this.delStatus;
+	}
+
+	public void setDelStatus(short delStatus) {
+		this.delStatus = delStatus;
+	}
+
+	public int getOrderNum() {
+		return this.orderNum;
+	}
+
+	public void setOrderNum(int orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public String getPathName() {
+		return this.pathName;
+	}
+
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
+	}
+
+	public BigInteger getPid() {
+		return this.pid;
+	}
+
+	public void setPid(BigInteger pid) {
+		this.pid = pid;
+	}
+
+	public BigInteger getSubscribeCount() {
+		return this.subscribeCount;
+	}
+
+	public void setSubscribeCount(BigInteger subscribeCount) {
+		this.subscribeCount = subscribeCount;
+	}
+
+	public int getTopColType() {
+		return this.topColType;
+	}
+
+	public void setTopColType(int topColType) {
+		this.topColType = topColType;
+	}
+
+	public Date getUpdateTime() {
+		return this.updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public BigInteger getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
+	}
+
+	public short getUserOrSystem() {
+		return this.userOrSystem;
+	}
+
+	public void setUserOrSystem(short userOrSystem) {
+		this.userOrSystem = userOrSystem;
+	}
+
 }

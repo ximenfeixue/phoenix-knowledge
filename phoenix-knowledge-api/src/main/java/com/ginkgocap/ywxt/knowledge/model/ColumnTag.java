@@ -7,13 +7,13 @@ import java.math.BigInteger;
 
 
 /**
- * The persistent class for the tb_knowledge_column_customer database table.
+ * The persistent class for the tb_knowledge_column_tag database table.
  * 
  */
 @Entity
-@Table(name="tb_knowledge_column_customer")
-@NamedQuery(name="ColumnCustomer.findAll", query="SELECT c FROM ColumnCustomer c")
-public class ColumnCustom implements Serializable {
+@Table(name="tb_knowledge_column_tag")
+@NamedQuery(name="ColumnTag.findAll", query="SELECT c FROM ColumnTag c")
+public class ColumnTag implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,16 +27,10 @@ public class ColumnCustom implements Serializable {
 	@Column(name="create_time")
 	private Date createTime;
 
-	@Column(name="order_num")
-	private int orderNum;
-
 	@Column(name="path_name")
 	private String pathName;
 
-	private BigInteger pid;
-
-	@Column(name="top_col_type")
-	private int topColType;
+	private String tag;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="update_time")
@@ -45,13 +39,7 @@ public class ColumnCustom implements Serializable {
 	@Column(name="user_id")
 	private BigInteger userId;
 
-	@Column(name="user_or_system")
-	private short userOrSystem;
-
-	@Column(name="view_status")
-	private short viewStatus;
-
-	public ColumnCustom() {
+	public ColumnTag() {
 	}
 
 	public String getId() {
@@ -78,14 +66,6 @@ public class ColumnCustom implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public int getOrderNum() {
-		return this.orderNum;
-	}
-
-	public void setOrderNum(int orderNum) {
-		this.orderNum = orderNum;
-	}
-
 	public String getPathName() {
 		return this.pathName;
 	}
@@ -94,20 +74,12 @@ public class ColumnCustom implements Serializable {
 		this.pathName = pathName;
 	}
 
-	public BigInteger getPid() {
-		return this.pid;
+	public String getTag() {
+		return this.tag;
 	}
 
-	public void setPid(BigInteger pid) {
-		this.pid = pid;
-	}
-
-	public int getTopColType() {
-		return this.topColType;
-	}
-
-	public void setTopColType(int topColType) {
-		this.topColType = topColType;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public Date getUpdateTime() {
@@ -124,22 +96,6 @@ public class ColumnCustom implements Serializable {
 
 	public void setUserId(BigInteger userId) {
 		this.userId = userId;
-	}
-
-	public short getUserOrSystem() {
-		return this.userOrSystem;
-	}
-
-	public void setUserOrSystem(short userOrSystem) {
-		this.userOrSystem = userOrSystem;
-	}
-
-	public short getViewStatus() {
-		return this.viewStatus;
-	}
-
-	public void setViewStatus(short viewStatus) {
-		this.viewStatus = viewStatus;
 	}
 
 }
