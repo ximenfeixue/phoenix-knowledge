@@ -45,9 +45,25 @@ public interface IColumnCustomService {
      * @param id
      */
     public void del(long id);
+    
+    /**
+     * 更新栏目
+     * @param id
+     * @param viewStatus 0-可见，1-不可见
+     */
+    public void updateColumnViewStatus(long id,short viewStatus);
 
 	public Map<String,Object> queryHomeColumn(User user);
 
+	/**
+	 * 根据用户id和上级栏目id及可见状态查询
+	 * @param userid
+	 * @param cid
+	 * @param state
+	 * @return
+	 */
 	public List<ColumnCustom> queryListByPidAndUserIdAndState(long userid, long cid, short state);
+	
+	void update(ColumnCustom columnCustom);
 
 }

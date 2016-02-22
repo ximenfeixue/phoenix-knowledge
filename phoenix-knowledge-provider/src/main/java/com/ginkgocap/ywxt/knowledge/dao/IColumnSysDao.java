@@ -1,5 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
+import java.util.List;
+
+import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
+
 /**
  * @Title: 知识系统栏目表
  * @Description: 存储系统栏目表，系统栏目为系统初始化栏目
@@ -9,5 +13,5 @@ package com.ginkgocap.ywxt.knowledge.dao;
  */
 public interface IColumnSysDao {
 	
-	
+	List<ColumnSys> selectByUserId(Long userId) throws Exception;
 }

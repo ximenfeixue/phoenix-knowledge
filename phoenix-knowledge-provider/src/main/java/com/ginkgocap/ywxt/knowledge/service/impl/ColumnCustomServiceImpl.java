@@ -58,4 +58,16 @@ public class ColumnCustomServiceImpl implements IColumnCustomService {
 		return null;
 	}
 
+	@Override
+	public void updateColumnViewStatus(long id, short viewStatus) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(ColumnCustom columnCustom) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
