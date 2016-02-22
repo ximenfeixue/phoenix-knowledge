@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.math.BigInteger;
 
 
 /**
@@ -33,9 +32,9 @@ public class ColumnCustom implements Serializable {
 	@Column(name="path_name")
 	private String pathName;
 	
-	private BigInteger cid;
+	private Long cid;
 
-	private BigInteger pcid;
+	private Long pcid;
 
 	@Column(name="top_col_type")
 	private int topColType;
@@ -45,7 +44,7 @@ public class ColumnCustom implements Serializable {
 	private Date updateTime;
 
 	@Column(name="user_id")
-	private BigInteger userId;
+	private Long userId;
 
 	@Column(name="user_or_system")
 	private short userOrSystem;
@@ -96,19 +95,19 @@ public class ColumnCustom implements Serializable {
 		this.pathName = pathName;
 	}
 	
-	public BigInteger getCid() {
+	public Long getCid() {
 		return this.cid;
 	}
 
-	public void setCid(BigInteger cid) {
+	public void setCid(Long cid) {
 		this.cid = cid;
 	}
 
-	public BigInteger getPcid() {
+	public Long getPcid() {
 		return this.pcid;
 	}
 
-	public void setPcid(BigInteger pid) {
+	public void setPcid(Long pid) {
 		this.pcid = pid;
 	}
 
@@ -128,11 +127,11 @@ public class ColumnCustom implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public BigInteger getUserId() {
+	public Long getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(BigInteger userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
