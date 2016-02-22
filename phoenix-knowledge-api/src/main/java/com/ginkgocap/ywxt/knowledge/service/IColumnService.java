@@ -1,5 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.List;
+import java.util.Map;
+
+import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
+
 /**
  * @Title: 栏目管理服务
  * @Description: 栏目管理服务
@@ -9,4 +14,5 @@ package com.ginkgocap.ywxt.knowledge.service;
  */
 public interface IColumnService {
 	
+
 }

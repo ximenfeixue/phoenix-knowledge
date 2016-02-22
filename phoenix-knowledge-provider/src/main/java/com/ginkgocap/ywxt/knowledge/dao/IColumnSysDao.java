@@ -9,4 +9,5 @@ package com.ginkgocap.ywxt.knowledge.dao;
  */
 public interface IColumnSysDao {
 	
+	
 }

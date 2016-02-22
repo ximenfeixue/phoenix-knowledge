@@ -32,8 +32,10 @@ public class ColumnCustom implements Serializable {
 
 	@Column(name="path_name")
 	private String pathName;
+	
+	private BigInteger cid;
 
-	private BigInteger pid;
+	private BigInteger pcid;
 
 	@Column(name="top_col_type")
 	private int topColType;
@@ -93,13 +95,21 @@ public class ColumnCustom implements Serializable {
 	public void setPathName(String pathName) {
 		this.pathName = pathName;
 	}
-
-	public BigInteger getPid() {
-		return this.pid;
+	
+	public BigInteger getCid() {
+		return this.cid;
 	}
 
-	public void setPid(BigInteger pid) {
-		this.pid = pid;
+	public void setCid(BigInteger cid) {
+		this.cid = cid;
+	}
+
+	public BigInteger getPcid() {
+		return this.pcid;
+	}
+
+	public void setPcid(BigInteger pid) {
+		this.pcid = pid;
 	}
 
 	public int getTopColType() {
