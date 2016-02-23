@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ginkgocap.ywxt.knowledge.model.common.Ids;
 import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
 
-@Service("KnowledgeCommonService")
+@Service("knowledgeCommonService")
 public class KnowledgeCommonService implements IKnowledgeCommonService {
 	
 	@Resource

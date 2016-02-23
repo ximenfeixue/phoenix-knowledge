@@ -16,7 +16,7 @@ import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
 
-@Service
+@Service("bigDataService")
 public class BigDataService implements IBigDataService{
 
 	private static final Logger logger = LoggerFactory.getLogger(BigDataService.class);

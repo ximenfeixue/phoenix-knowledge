@@ -3,10 +3,13 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
 import com.ginkgocap.ywxt.knowledge.service.IColumnCustomService;
 import com.ginkgocap.ywxt.user.model.User;
 
+@Service("columnCustomService")
 public class ColumnCustomServiceImpl implements IColumnCustomService {
 
 	@Override

@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -183,22 +184,22 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
 		
 		//从缓存中获取系统栏目
-		List columnSysList = new ArrayList();
+		List<ColumnSys> columnSysList = new ArrayList<ColumnSys>();
 		
-		Iterator it = columnSysList.iterator();
+		Iterator<ColumnSys> it = columnSysList.iterator();
 		
 		boolean columnCodeNotExistflag = true;
 		
 		while(it.hasNext()) {
-			//ColulmnSys columnSys = it.next();
-			//if(columnId == columnSys.getId()) {
-				//if(StringUtils.isEmpty(columnSys.getColumnCode())) {
-					//break;
-				//}
+			ColumnSys columnSys = it.next();
+			if(columnId == columnSys.getId()) {
+				if(StringUtils.isEmpty(columnSys.getColumnCode())) {
+					break;
+				}
 				columnCodeNotExistflag = false;
-				//strBuf.append(columnSys.getColumnCode());
+				strBuf.append(columnSys.getColumnCode());
 				break;
-			//}
+			}
 		}
 		
 		if(columnCodeNotExistflag) {
