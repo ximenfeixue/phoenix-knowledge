@@ -18,7 +18,10 @@ public class ColumnSys implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String id;
+	private Long id;
+	
+	@Column(name="column_code")
+	private String columnCode;
 
 	@Column(name="column_name")
 	private String columnName;
@@ -57,12 +60,20 @@ public class ColumnSys implements Serializable {
 	public ColumnSys() {
 	}
 
-	public String getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getColumnCode() {
+		return this.columnCode;
+	}
+
+	public void setColumnCode(String columnCode) {
+		this.columnCode = columnCode;
 	}
 
 	public String getColumnName() {
