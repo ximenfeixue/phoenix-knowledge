@@ -19,21 +19,14 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 	http://www.springframework.org/schema/data/jpa 
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
+	
 	<context:component-scan base-package="com.ginkgocap.ywxt">
 	</context:component-scan>
 	<import resource="classpath:knowledge-dubbo-provider.xml" />
-	<import resource="classpath:file-dubbo-consumer.xml" />
-<!-- 	<import resource="classpath:rocketmq-dubbo-consumer.xml" /> -->
 	<import resource="classpath:knowledge-integration.xml" />
 	<import resource="classpath:knowledge-mongo-config.xml" />
-	<import resource="classpath:user-dubbo-consumer.xml" /><!-- 加载user注册服务 -->
 	<import resource="classpath:knowledge-schedule.xml" />
-	<import resource="classpath:metadata-dubbo-consumer.xml" />
 	<import resource="classpath:applicationContext-cache.xml" />
-<!-- 	<import resource="classpath:people-dubbo-consumer.xml" /> -->
-<!-- 	<import resource="classpath:customer-dubbo-consumer.xml" /> -->
-	<import resource="classpath:requirement-dubbo-consumer.xml" />
-	<import resource="classpath:person-dubbo-consumer.xml" />
 	<import resource="classpath:applicationContext_log.xml"/>
 
 	<bean id="propertyConfigurer"
@@ -163,13 +156,5 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.ginkgocap.ywxt.knowledge.mapper" />
 		<property name="sqlSessionFactoryBeanName" value="mybatisSqlSessionFactory" />
-	</bean>
-
-	<bean id="httpUrlConfig" class="com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig">
-		<property name="searchUrl" value="${knowledge.data.searchUrl}" />
-		<property name="parseUrl" value="${knowledge.data.parseUrl}" />
-		<property name="pushUrl" value="${knowledge.data.pushUrl}" />
-		<property name="hotSortUrl" value="${konwledge.query.hot.url}" />
-		<property name="commentSortUrl" value="${konwledge.query.comment.url}" />
 	</bean>
 </beans>
