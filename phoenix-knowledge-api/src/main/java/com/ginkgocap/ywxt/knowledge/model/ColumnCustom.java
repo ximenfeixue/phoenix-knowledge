@@ -51,6 +51,9 @@ public class ColumnCustom implements Serializable {
 
 	@Column(name="view_status")
 	private short viewStatus;
+	
+	@Column(name="del_status")
+	private short delStatus;
 
 	public ColumnCustom() {
 	}
@@ -149,6 +152,14 @@ public class ColumnCustom implements Serializable {
 
 	public void setViewStatus(short viewStatus) {
 		this.viewStatus = viewStatus;
+	}
+	
+	public short getDelStatus() {
+		return this.delStatus;
+	}
+
+	public void setDelStatus(short delStatus) {
+		this.delStatus = delStatus;
 	}
 
 }
