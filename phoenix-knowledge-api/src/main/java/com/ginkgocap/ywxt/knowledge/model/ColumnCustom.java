@@ -17,7 +17,7 @@ public class ColumnCustom implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String id;
+	private Long id;
 
 	@Column(name="column_name")
 	private String columnName;
@@ -55,11 +55,11 @@ public class ColumnCustom implements Serializable {
 	public ColumnCustom() {
 	}
 
-	public String getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
