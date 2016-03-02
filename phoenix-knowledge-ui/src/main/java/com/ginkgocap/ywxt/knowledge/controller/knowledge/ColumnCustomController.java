@@ -93,5 +93,20 @@ public class ColumnCustomController extends BaseController {
 		this.columnCustomService.update(cc);
 		return result;
 	}
+	
+	@RequestMapping("deleteColumn")
+	@ResponseBody
+	public InterfaceResult<ColumnCustom> deleteColumn(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		InterfaceResult<ColumnCustom> result=InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+		User user = this.getUser(request);
+		JSONObject requestJson = this.getRequestJson(request);
+		//{"columnid":"2854"}:
+		if(!requestJson.containsKey("columnid")){
+			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+		}
+		Long columnid=requestJson.getLong("columnid");
+		this.columnCustomService.del(columnid);
+		return result;
+	}
 
 }
