@@ -169,4 +169,10 @@ public class ColumnCustomServiceImpl implements IColumnCustomService {
 		return this.columnCustomDao.insert(columnCustom);
 	}
 
+	@Override
+	public ColumnCustom queryById(Long id) throws Exception {
+		// TODO Auto-generated method stub
+		return this.columnCustomDao.queryById(id);
+	}
+
 }

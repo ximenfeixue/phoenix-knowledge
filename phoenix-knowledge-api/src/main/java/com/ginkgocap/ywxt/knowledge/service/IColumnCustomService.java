@@ -65,5 +65,7 @@ public interface IColumnCustomService {
 	void update(ColumnCustom columnCustom);
 	
 	public ColumnCustom insert(ColumnCustom columnCustom,Long uid) throws Exception;
+	
+	public ColumnCustom queryById(Long id) throws Exception;
 
 }

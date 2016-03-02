@@ -75,6 +75,23 @@ public class ColumnCustomController extends BaseController {
 		ColumnCustom newCC=this.columnCustomService.insert(cc, uid);
 		result.setResponseData(newCC);
 		return result;
-	} 
+	}
+	
+	@RequestMapping("updateColumn")
+	@ResponseBody
+	public InterfaceResult<ColumnCustom> updateColumn(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		InterfaceResult<ColumnCustom> result=InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+		User user = this.getUser(request);
+		JSONObject requestJson = this.getRequestJson(request);
+		//{"columnid":"2854","columnName":"l21","tags":"栏目标签"}:
+		if(!requestJson.containsKey("columnname")||!requestJson.containsKey("columnid")){
+			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+		}
+		Long columnid=requestJson.getLong("columnid");
+		ColumnCustom cc=this.columnCustomService.queryById(columnid);
+		cc.setColumnName(requestJson.getString("columnName"));
+		this.columnCustomService.update(cc);
+		return result;
+	}
 
 }
