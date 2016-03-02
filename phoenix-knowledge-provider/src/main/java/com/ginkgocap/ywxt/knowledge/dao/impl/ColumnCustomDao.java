@@ -3,54 +3,23 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.parasol.common.service.exception.BaseServiceException;
+import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.IColumnCustomDao;
 import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
 import com.ginkgocap.ywxt.user.model.User;
 
 
-public class ColumnCustomDao implements IColumnCustomDao {
+public class ColumnCustomDao extends BaseService<ColumnCustom> implements IColumnCustomDao {
+
 
 	@Override
-	public void init(long userid, long gtnid) {
+	public List<ColumnCustom> queryListByPidAndUserId(long userid, long pid) throws Exception {
 		// TODO Auto-generated method stub
-		
+		List<ColumnCustom> list= this.getEntitys("ColumnCustomDao_queryListByPidAndUserId", userid,pid);
+		return list;
 	}
 
-	@Override
-	public ColumnCustom queryListByCidAndUserId(long userid, long cid) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ColumnCustom> queryListByPidAndUserId(long userid, long pid) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long countListByPidAndUserId(long userid, Long pid) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void delByUserIdAndColumnId(long userid, long cid) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void del(long id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void updateColumnViewStatus(long id, short viewStatus) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public Map<String, Object> queryHomeColumn(User user) {
@@ -66,9 +35,64 @@ public class ColumnCustomDao implements IColumnCustomDao {
 	}
 
 	@Override
-	public void update(ColumnCustom columnCustom) {
+	public ColumnCustom insert(ColumnCustom columnCustom) throws Exception {
 		// TODO Auto-generated method stub
-		
+		if(columnCustom==null){
+			return null;
+		}
+		Long id=(Long)this.saveEntity(columnCustom);
+		return this.queryById(id);
 	}
-	
+
+	@Override
+	public ColumnCustom queryById(Long id) throws Exception {
+		// TODO Auto-generated method stub
+		return this.getEntity(id);
+	}
+
+	@Override
+	public ColumnCustom update(ColumnCustom columnCustom) throws Exception {
+		// TODO Auto-generated method stub
+		if(columnCustom==null){
+			return null;
+		}
+		boolean status=this.updateEntity(columnCustom);
+		if(status){
+			return this.queryById(columnCustom.getId());
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public Boolean del(long id) throws Exception {
+		// TODO Auto-generated method stub
+		return this.deleteEntity(id);
+	}
+
+	@Override
+	public ColumnCustom queryMaxCCByUid(long userid)
+			throws Exception {
+		// TODO Auto-generated method stub
+		List<ColumnCustom> list= this.getEntitys("ColumnCustomDao_queryMaxCCByUid", userid);
+		if(list!=null&&list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public List<ColumnCustom> queryListByUserId(long userid) throws Exception {
+		// TODO Auto-generated method stub
+		return this.getEntitys("ColumnCustomDao_queryListByUserId", userid);
+	}
+
+
+	@Override
+	public List<ColumnCustom> queryListByCidAndUserId(long userid, long cid)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }

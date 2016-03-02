@@ -1,9 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import java.sql.Timestamp;
 import java.util.Date;
-import java.math.BigInteger;
 
 
 /**
@@ -19,43 +21,33 @@ public class ColumnSys implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="column_code")
-	private String columnCode;
 
-	@Column(name="column_name")
+	@Column(name="column_level_path")
+	private String columnLevelPath;
+
 	private String columnName;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="create_time")
-	private Date createTime;
+	private Timestamp createtime;
 
 	@Column(name="del_status")
-	private short delStatus;
+	private byte delStatus;
 
-	@Column(name="order_num")
-	private int orderNum;
+	@Column(name="parent_id")
+	private Long parentId;
 
 	@Column(name="path_name")
 	private String pathName;
 
-	private BigInteger pid;
-
 	@Column(name="subscribe_count")
-	private BigInteger subscribeCount;
+	private Long subscribeCount;
 
-	@Column(name="top_col_type")
-	private int topColType;
+	private short type;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="update_time")
-	private Date updateTime;
+	private Timestamp updateTime;
 
 	@Column(name="user_id")
-	private BigInteger userId;
-
-	@Column(name="user_or_system")
-	private short userOrSystem;
+	private Long userId;
 
 	public ColumnSys() {
 	}
@@ -68,12 +60,12 @@ public class ColumnSys implements Serializable {
 		this.id = id;
 	}
 
-	public String getColumnCode() {
-		return this.columnCode;
+	public String getColumnLevelPath() {
+		return this.columnLevelPath;
 	}
 
-	public void setColumnCode(String columnCode) {
-		this.columnCode = columnCode;
+	public void setColumnLevelPath(String columnLevelPath) {
+		this.columnLevelPath = columnLevelPath;
 	}
 
 	public String getColumnName() {
@@ -84,28 +76,28 @@ public class ColumnSys implements Serializable {
 		this.columnName = columnName;
 	}
 
-	public Date getCreateTime() {
-		return this.createTime;
+	public Timestamp getCreatetime() {
+		return this.createtime;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setCreatetime(Timestamp createtime) {
+		this.createtime = createtime;
 	}
 
-	public short getDelStatus() {
+	public byte getDelStatus() {
 		return this.delStatus;
 	}
 
-	public void setDelStatus(short delStatus) {
+	public void setDelStatus(byte delStatus) {
 		this.delStatus = delStatus;
 	}
 
-	public int getOrderNum() {
-		return this.orderNum;
+	public Long getParentId() {
+		return this.parentId;
 	}
 
-	public void setOrderNum(int orderNum) {
-		this.orderNum = orderNum;
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getPathName() {
@@ -116,52 +108,36 @@ public class ColumnSys implements Serializable {
 		this.pathName = pathName;
 	}
 
-	public BigInteger getPid() {
-		return this.pid;
-	}
-
-	public void setPid(BigInteger pid) {
-		this.pid = pid;
-	}
-
-	public BigInteger getSubscribeCount() {
+	public Long getSubscribeCount() {
 		return this.subscribeCount;
 	}
 
-	public void setSubscribeCount(BigInteger subscribeCount) {
+	public void setSubscribeCount(Long subscribeCount) {
 		this.subscribeCount = subscribeCount;
 	}
 
-	public int getTopColType() {
-		return this.topColType;
+	public short getType() {
+		return this.type;
 	}
 
-	public void setTopColType(int topColType) {
-		this.topColType = topColType;
+	public void setType(short type) {
+		this.type = type;
 	}
 
-	public Date getUpdateTime() {
+	public Timestamp getUpdateTime() {
 		return this.updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
 
-	public BigInteger getUserId() {
+	public Long getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(BigInteger userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
-	}
-
-	public short getUserOrSystem() {
-		return this.userOrSystem;
-	}
-
-	public void setUserOrSystem(short userOrSystem) {
-		this.userOrSystem = userOrSystem;
 	}
 
 }

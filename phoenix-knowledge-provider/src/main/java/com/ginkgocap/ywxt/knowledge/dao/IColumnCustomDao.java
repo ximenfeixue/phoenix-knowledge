@@ -14,7 +14,6 @@ import com.ginkgocap.ywxt.user.model.User;
  * @version V1.0.0
  */
 public interface IColumnCustomDao {
-	public void init(long userid, long gtnid);
 
 	/**
 	 * 根据用户id和栏目id查询
@@ -22,7 +21,15 @@ public interface IColumnCustomDao {
 	 * @param cid
 	 * @return
 	 */
-    public ColumnCustom queryListByCidAndUserId(long userid, long cid);
+    public List<ColumnCustom> queryListByCidAndUserId(long userid, long cid) throws Exception;
+    
+    /**
+     * 查询用户所有栏目
+     * @param userid
+     * @return
+     * @throws Exception
+     */
+    public List<ColumnCustom> queryListByUserId(long userid) throws Exception;
 
     /**
      * 根据用户id和上级栏目id查询
@@ -30,36 +37,15 @@ public interface IColumnCustomDao {
      * @param pid
      * @return
      */
-    public List<ColumnCustom> queryListByPidAndUserId(long userid, long pid);
+    public List<ColumnCustom> queryListByPidAndUserId(long userid, long pid) throws Exception;
 
-    /**
-     * 根据用户id和上级栏目id查询栏目数量
-     * @param userid
-     * @param pid
-     * @return
-     */
-    public long countListByPidAndUserId(long userid, Long pid);
-
-    /**
-     * 根据用户id和栏目id删除
-     * @param userid
-     * @param cid
-     */
-    public void delByUserIdAndColumnId(long userid, long cid);
 
     /**
      * 根据栏目主键删除
      * @param id
      */
-    public void del(long id);
+    public Boolean del(long id) throws Exception;
     
-    /**
-     * 更新栏目
-     * @param id
-     * @param viewStatus 0-可见，1-不可见
-     */
-    public void updateColumnViewStatus(long id,short viewStatus);
-
 	public Map<String,Object> queryHomeColumn(User user);
 
 	/**
@@ -71,6 +57,12 @@ public interface IColumnCustomDao {
 	 */
 	public List<ColumnCustom> queryListByPidAndUserIdAndState(long userid, long cid, short state);
 	
-	void update(ColumnCustom columnCustom);
+	public ColumnCustom queryMaxCCByUid(long userid) throws Exception;
+	
+	ColumnCustom update(ColumnCustom columnCustom) throws Exception;
+	
+	ColumnCustom insert(ColumnCustom columnCustom) throws Exception;
+	
+	ColumnCustom queryById(Long id) throws Exception;
 	
 }

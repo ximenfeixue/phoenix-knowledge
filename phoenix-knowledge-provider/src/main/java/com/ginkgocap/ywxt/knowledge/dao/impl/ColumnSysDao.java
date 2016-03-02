@@ -11,10 +11,10 @@ import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 public class ColumnSysDao extends BaseService<ColumnSys> implements IColumnSysDao {
 
 	@Override
-	public List<ColumnSys> selectByUserId(Long userId) throws Exception {
+	public List<ColumnSys> queryListByUserId(Long userId) throws Exception {
 		// TODO Auto-generated method stub
 		if(userId!=null){
-			return this.getEntitys("ColumnSysDao_selectByUserId", userId);
+			return this.getEntitys("ColumnSysDao_queryListByUserId", userId);
 		}
 		return null;
 	}

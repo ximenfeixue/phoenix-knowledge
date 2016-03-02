@@ -65,5 +65,7 @@ public interface IColumnCustomService {
 	public List<ColumnCustom> queryListByPidAndUserIdAndState(long userid, long cid, short state);
 	
 	void update(ColumnCustom columnCustom);
+	
+	ColumnCustom insert(ColumnCustom columnCustom,Long uid) throws Exception;
 
 }

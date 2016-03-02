@@ -13,5 +13,5 @@ import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
  */
 public interface IColumnSysDao {
 	
-	List<ColumnSys> selectByUserId(Long userId) throws Exception;
+	List<ColumnSys> queryListByUserId(Long userId) throws Exception;
 }

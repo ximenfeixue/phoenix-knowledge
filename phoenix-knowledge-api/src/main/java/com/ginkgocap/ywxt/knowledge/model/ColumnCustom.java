@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
 
@@ -21,6 +23,9 @@ public class ColumnCustom implements Serializable {
 
 	@Column(name="column_name")
 	private String columnName;
+	
+	@Column(name="column_level_path")
+	private String columnLevelPath;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="create_time")
@@ -160,6 +165,14 @@ public class ColumnCustom implements Serializable {
 
 	public void setDelStatus(short delStatus) {
 		this.delStatus = delStatus;
+	}
+	
+	public String getColumnLevelPath() {
+		return this.columnLevelPath;
+	}
+
+	public void setColumnLevelPath(String columnLevelPath) {
+		this.columnLevelPath = columnLevelPath;
 	}
 
 }
