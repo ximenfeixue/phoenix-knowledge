@@ -33,7 +33,7 @@
 				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
 			
 			<list name="ColumnCustomDao_queryMaxCCByUid"
-				sqlitem="select * from tb_knowledge_column_customer where user_id=? order by cid desc limit 1"
+				sqlitem="select * from tb_knowledge_column_customer where user_id=? order by id desc limit 1"
 				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
 			
 			<list name="ColumnCustomDao_queryListByPidAndUserId"

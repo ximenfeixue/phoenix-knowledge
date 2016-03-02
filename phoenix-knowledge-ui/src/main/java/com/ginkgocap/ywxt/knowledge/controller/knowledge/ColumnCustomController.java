@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.controller.knowledge;
 
-import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,5 +47,34 @@ public class ColumnCustomController extends BaseController {
 		result.setResponseData(list);
 		return result;
 	}
+	
+	@RequestMapping("addColumn")
+	@ResponseBody
+	public InterfaceResult<ColumnCustom> addColumn(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		InterfaceResult<ColumnCustom> result=InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+		User user = this.getUser(request);
+		JSONObject requestJson = this.getRequestJson(request);
+		//{"columnname":"l2","pid":0,"type":1,"pathName":"l2","tags":"ddd,kkk"}:
+		if(!requestJson.containsKey("columnname")||!requestJson.containsKey("pid")){
+			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+		}
+		Long pid=requestJson.getLong("pid");
+		ColumnCustom cc=new ColumnCustom();
+		cc.setColumnLevelPath("1111111111");
+		cc.setColumnName(requestJson.getString("columnname"));
+		cc.setCreateTime(new Date());
+		cc.setUpdateTime(new Date());
+		cc.setOrderNum(0);
+		cc.setPathName(requestJson.getString("pathName"));
+		cc.setTopColType(0);
+		cc.setUserOrSystem((short)1);
+		long uid=0l;
+		if(user!=null){
+			uid=user.getId();
+		}
+		ColumnCustom newCC=this.columnCustomService.insert(cc, uid);
+		result.setResponseData(newCC);
+		return result;
+	} 
 
 }

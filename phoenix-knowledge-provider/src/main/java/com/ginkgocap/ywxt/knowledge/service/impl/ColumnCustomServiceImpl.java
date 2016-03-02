@@ -75,7 +75,7 @@ public class ColumnCustomServiceImpl implements IColumnCustomService {
 			if(list!=null&&list.size()>0){
 				for(ColumnSys cs:list){
 					ColumnCustom cc=this.buidCC(cs, userid);
-					this.insert(cc, userid);
+					this.columnCustomDao.insert(cc);
 				}
 			}
 		} catch (Exception e) {
@@ -122,13 +122,12 @@ public class ColumnCustomServiceImpl implements IColumnCustomService {
 	@Override
 	public void del(long id) {
 		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Map<String, Object> queryHomeColumn(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			this.columnCustomDao.del(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("数据访问层异常", e);
+		}
 	}
 
 	@Override
@@ -161,6 +160,12 @@ public class ColumnCustomServiceImpl implements IColumnCustomService {
 			throws Exception {
 		// TODO Auto-generated method stub
 		columnCustom.setUserId(uid);
+		ColumnCustom maxCC=this.columnCustomDao.queryMaxCCByUid(uid);
+		if(maxCC==null){
+			logger.error("数据访问层异常", new Exception("没用有获取到用户"+uid+"栏目"));
+			return null;
+		}
+		columnCustom.setCid(maxCC.getCid()+1);
 		return this.columnCustomDao.insert(columnCustom);
 	}
 

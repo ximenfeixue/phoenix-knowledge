@@ -53,8 +53,6 @@ public interface IColumnCustomService {
      */
     public void updateColumnViewStatus(long id,short viewStatus);
 
-	public Map<String,Object> queryHomeColumn(User user);
-
 	/**
 	 * 根据用户id和上级栏目id及可见状态查询
 	 * @param userid
@@ -66,6 +64,6 @@ public interface IColumnCustomService {
 	
 	void update(ColumnCustom columnCustom);
 	
-	ColumnCustom insert(ColumnCustom columnCustom,Long uid) throws Exception;
+	public ColumnCustom insert(ColumnCustom columnCustom,Long uid) throws Exception;
 
 }
