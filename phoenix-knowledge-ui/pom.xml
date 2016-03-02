@@ -9,10 +9,11 @@
     </parent>
     <artifactId>phoenix-knowledge-ui</artifactId>
     <name>${project.artifactId}</name>
-
-    <properties>
-        <skip_maven_deploy>true</skip_maven_deploy>
-    </properties>
+    
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skip_maven_deploy>true</skip_maven_deploy>
+	</properties>
 
     <dependencies>
         <dependency>
@@ -167,11 +168,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame</artifactId>
             <version>1.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
     <build>

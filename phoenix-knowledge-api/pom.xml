@@ -1,15 +1,20 @@
-<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>phoenix-knowledge</artifactId>
-        <groupId>com.ginkgocap.ywxt</groupId>
-        <version>3.0.0</version>
-    </parent>
+	<parent>
+		<artifactId>phoenix-knowledge</artifactId>
+		<groupId>com.ginkgocap.ywxt</groupId>
+		<version>3.0.0</version>
+	</parent>
 	<artifactId>phoenix-knowledge-api</artifactId>
 	<name>${project.artifactId}</name>
 	<packaging>jar</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skip_maven_deploy>true</skip_maven_deploy>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -21,23 +26,23 @@
 			<artifactId>mybatis-generator-core</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		
-        <dependency>
-            <groupId>com.gintong.frame</groupId>
-            <artifactId>phoenix-frame-util</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>phoenix-asso-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-		
+
+		<dependency>
+			<groupId>com.gintong.frame</groupId>
+			<artifactId>phoenix-frame-util</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-asso-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.ginkgocap.ywxt</groupId>
 			<artifactId>phoenix-entire-api</artifactId>
 		</dependency>
-		
+
 		<!-- JPA分布式存储 begin -->
 		<dependency>
 			<groupId>com.ginkgocap.parasol</groupId>
@@ -55,7 +60,7 @@
 			<artifactId>json-lib</artifactId>
 			<version>2.2.3</version>
 		</dependency>
-		
+
 		<!-- MQ begin -->
 		<dependency>
 			<groupId>com.gintong</groupId>
@@ -63,7 +68,7 @@
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<!-- MQ end -->
-		
+
 	</dependencies>
 	<profiles>
 		<profile>
@@ -121,7 +126,7 @@
 						</executions>
 
 					</plugin>
-					
+
 					<plugin>
 						<groupId>org.mybatis.generator</groupId>
 						<artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -166,6 +171,140 @@
 						</executions>
 					</plugin>
 				</plugins>
+				<pluginManagement>
+					<plugins>
+						<!-- 解决子项识别不出来execution问题 -->
+						<plugin>
+							<groupId>org.eclipse.m2e</groupId>
+							<artifactId>lifecycle-mapping</artifactId>
+							<version>1.0.0</version>
+							<configuration>
+								<lifecycleMappingMetadata>
+									<pluginExecutions>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-antrun-plugin</artifactId>
+												<versionRange>[1.7,)</versionRange>
+												<goals>
+													<goal>run</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-resources-plugin</artifactId>
+												<versionRange>[2.5,)</versionRange>
+												<goals>
+													<goal>resources</goal>
+													<goal>testResources</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>properties-maven-plugin</artifactId>
+												<versionRange>[1.0-alpha-2,)</versionRange>
+												<goals>
+													<goal>read-project-properties</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.apache.cxf</groupId>
+												<artifactId>cxf-codegen-plugin</artifactId>
+												<versionRange>[2.2,)</versionRange>
+												<goals>
+													<goal>wsdl2java</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>hibernate3-maven-plugin</artifactId>
+												<versionRange>[3.0,)</versionRange>
+												<goals>
+													<goal>hbm2ddl</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-ear-plugin</artifactId>
+												<versionRange>[2.6,)</versionRange>
+												<goals>
+													<goal>generate-application-xml</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>sql-maven-plugin</artifactId>
+												<versionRange>[1.5,)</versionRange>
+												<goals>
+													<goal>execute</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>dbunit-maven-plugin</artifactId>
+												<versionRange>[1.0-beta-3,)</versionRange>
+												<goals>
+													<goal>operation</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+										<pluginExecution>
+											<pluginExecutionFilter>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-dependency-plugin</artifactId>
+												<versionRange>[2.0,)</versionRange>
+												<goals>
+													<goal>unpack</goal>
+												</goals>
+											</pluginExecutionFilter>
+											<action>
+												<ignore />
+											</action>
+										</pluginExecution>
+									</pluginExecutions>
+								</lifecycleMappingMetadata>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 			</build>
 		</profile>
 	</profiles>

@@ -10,6 +10,12 @@
     <artifactId>phoenix-knowledge-provider</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
+    
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skip_maven_deploy>true</skip_maven_deploy>
+	</properties>
+	
     <dependencies>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
