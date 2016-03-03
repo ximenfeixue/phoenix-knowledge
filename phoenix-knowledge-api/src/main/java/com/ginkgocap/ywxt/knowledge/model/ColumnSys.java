@@ -24,6 +24,9 @@ public class ColumnSys implements Serializable {
 
 	@Column(name="column_level_path")
 	private String columnLevelPath;
+	
+	/**系统栏目编码，此编码一般使用字母进行编码，例如“新闻”，则用“new”来编码。在mongoDb中，不同类型的知识使用不同的表来存储，表名则是columnCode值*/
+	private String columnCode;
 
 	private String columnName;
 
@@ -66,6 +69,14 @@ public class ColumnSys implements Serializable {
 
 	public void setColumnLevelPath(String columnLevelPath) {
 		this.columnLevelPath = columnLevelPath;
+	}
+
+	public String getColumnCode() {
+		return this.columnCode;
+	}
+
+	public void setColumnCode(String columnCode) {
+		this.columnCode = columnCode;
 	}
 
 	public String getColumnName() {
