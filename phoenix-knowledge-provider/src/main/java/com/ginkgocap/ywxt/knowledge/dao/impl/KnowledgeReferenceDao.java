@@ -130,7 +130,7 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		if(knowledgeIds == null || knowledgeIds.size() < 1)
 			return 0;
 		
-		return this.deleteList("delete_by_knowledgeId", knowledgeIds.toArray());
+		return this.deleteList("delete_by_knowledgeIds", knowledgeIds.toArray());
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		if(knowledgeIds == null || knowledgeIds.size() < 1)
 			return null;
 		
-		return this.getEntitys("get_by_knowledgeId", knowledgeIds.toArray());
+		return this.getEntitys("get_by_knowledgeIds", knowledgeIds.toArray());
 	}
 
 	@Override

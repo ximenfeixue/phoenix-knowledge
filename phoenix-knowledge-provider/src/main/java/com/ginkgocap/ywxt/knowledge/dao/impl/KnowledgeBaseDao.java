@@ -109,7 +109,7 @@ public class KnowledgeBaseDao extends BaseService<KnowledgeBase> implements IKno
 	public List<KnowledgeBase> getAll(int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_createUserId", new Object[]{start,size});
+		return this.getEntitys("get_by_start_size", new Object[]{start,size});
 	}
 
 	@Override
