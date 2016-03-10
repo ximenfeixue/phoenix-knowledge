@@ -24,32 +24,15 @@
 	http://www.springframework.org/schema/integration/redis/spring-integration-redis-2.1.xsd
 	http://www.springframework.org/schema/integration/stream
 	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd ">
-	<int:annotation-config />
-	<!-- 设置Spring 扫描 Annotation 包路径 -->
-	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxActive" value="200" />
-		<property name="maxIdle" value="50" />
-		<property name="maxWait" value="1000" />
-		<property name="testOnBorrow" value="true" />
-	</bean>
 
-	<bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">
-		<constructor-arg index="0" value="${redis.host}" />
-		<constructor-arg index="1" value="${redis.port}" />
-	</bean>
-	<bean id="redisConnectionFactory"
-		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-		<property name="poolConfig" ref="jedisPoolConfig" />
-		<property name="shardInfo" ref="jedis.shardInfo" />
-	</bean>
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-		<property name="connectionFactory" ref="redisConnectionFactory" />
+	<mongo:mongo id="mongo" replica-set="${mongodb.address}">
+		<!-- 一些连接属性的设置 -->
+	</mongo:mongo>
+	<!-- mongo的工厂，通过它来取得mongo实例,dbname为mongodb的数据库名，没有的话会自动创建 -->
+	<mongo:db-factory dbname="${mongodb.database}" mongo-ref="mongo" />
+	<!-- mongodb的主要操作对象，所有对mongodb的增删改查的操作都是通过它完成 -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
 	</bean>
 	
-	<!-- 发送词库更新消息 -->
-
 </beans>
-
-
-
-

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<!-- 分布式缓存配置 -->
+	<cache>
+		<datasource name="default" timeout="5000"
+			server="${memcached.object_1.ip}" port="${memcached.object_1.port}"
+			maxActive="1" maxIdle="1" maxWait="-1" />
+		<datasource name="object" timeout="5000"
+			server="${memcached.object_1.ip}" port="${memcached.object_1.port}"
+			maxActive="1" maxIdle="1" maxWait="-1" />
+
+		<datasource name="object1" timeout="5000"
+			server="${memcached.object_1.ip}" port="${memcached.object_1.port}"
+			maxActive="1" maxIdle="1" maxWait="-1" />
+		<datasource name="object2" timeout="5000"
+			server="${memcached.object_1.ip}" port="${memcached.object_1.port}"
+			maxActive="1" maxIdle="1" maxWait="-1" />
+
+		<datasource name="list1" timeout="5000" server="${memcached.list_1.ip}"
+			port="${memcached.list_1.port}" maxActive="1" maxIdle="1" maxWait="-1" />
+
+
+	</cache>
+
+	<regions>
+		<region name="global"
+			listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl"
+			strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy">
+			<keyPattern value="[0-9A-Za-z]$" datasource="default" />
+		</region>
+	</regions>
+</root>
+

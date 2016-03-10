@@ -336,17 +336,17 @@ public class KnowledgeService implements IKnowledgeService {
 	}
 	
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(String type,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByType(String type,int start,int size) throws Exception {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByType(type, start, size)));
 	}
 	
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByColumnId(long columnId,int start,int size) throws Exception {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByColumnId(columnId, start, size)));
 	}
 	
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,String type,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(long columnId,String type,int start,int size) throws Exception {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeBaseDao.getByTypeAndColumnId(type, columnId, start, size)));
 	}
 	

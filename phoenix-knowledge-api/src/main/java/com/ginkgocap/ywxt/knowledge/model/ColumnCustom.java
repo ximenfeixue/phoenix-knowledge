@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_knowledge_column_customer")
-@NamedQuery(name="ColumnCustomer.findAll", query="SELECT c FROM ColumnCustomer c")
+//@NamedQuery(name="ColumnCustomer.findAll", query="SELECT c FROM ColumnCustomer c")
 public class ColumnCustom implements Serializable {
 	private static final long serialVersionUID = 1L;
 

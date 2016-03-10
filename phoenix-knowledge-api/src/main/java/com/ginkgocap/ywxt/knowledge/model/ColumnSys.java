@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_knowledge_column_system")
-@NamedQuery(name="ColumnSystem.findAll", query="SELECT c FROM ColumnSystem c")
+//@NamedQuery(name="ColumnSystem.findAll", query="SELECT c FROM ColumnSystem c")
 public class ColumnSys implements Serializable {
 	private static final long serialVersionUID = 1L;
 

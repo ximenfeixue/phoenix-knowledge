@@ -3,13 +3,15 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.ginkgocap.parasol.common.service.exception.BaseServiceException;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.IColumnCustomDao;
 import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
 import com.ginkgocap.ywxt.user.model.User;
 
-
+@Repository("columnCustomDao")
 public class ColumnCustomDao extends BaseService<ColumnCustom> implements IColumnCustomDao {
 
 

@@ -202,7 +202,7 @@ public interface IKnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByType(String type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -215,7 +215,7 @@ public interface IKnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByColumnId(long columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目、类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -229,5 +229,5 @@ public interface IKnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long columnId,String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(long columnId,String type,int start,int size) throws Exception;
 }
