@@ -19,23 +19,22 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 	http://www.springframework.org/schema/data/jpa 
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
-	<!-- 开启注解处理器 -->
-	<context:annotation-config/>
-	
-	<context:component-scan base-package="com.ginkgocap.ywxt"></context:component-scan>
-	<!-- 开启给予@Aspectj切面的注解处理器 -->
-	<aop:aspectj-autoproxy proxy-target-class="true"/>
-    <aop:config proxy-target-class="true"/>
-	
-	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
 	
 	<!-- <import resource="classpath:knowledge-dubbo-provider.xml" /> -->
 	<import resource="classpath:knowledge-mongo-config.xml" />
-	<import resource="classpath:applicationContext_asso.xml" />
-	<import resource="classpath:asso-dubbo-consumer.xml" />
 	<import resource="classpath:applicationContext_log.xml"/>
-	
-	<!-- 分布式服务dao -->
+
+    <context:component-scan base-package="com.ginkgocap.ywxt.knowledge">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <import resource="classpath:rocketmq-dubbo-consumer.xml"/>
+    <context:component-scan base-package="com.gintong.rocketmq" annotation-config="true"/>
+
+    <import resource="classpath:user-dubbo-consumer.xml"/>
+    <context:component-scan base-package="com.ginkgocap.ywxt.user" annotation-config="true"/>
+
+    <!-- 分布式服务dao -->
 	<bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
 	
 	<bean id="propertyConfigurer"

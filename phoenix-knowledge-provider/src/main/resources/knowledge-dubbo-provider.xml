@@ -41,8 +41,9 @@
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:consumer timeout="10000" check="false" />
 	
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IKnowledgeService" ref="knowledgeService" version="3.0.0"/>
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" ref="columnService" version="3.0.0"/>
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" ref="columnCustomService" version="3.0.0"/>
- 	
+ 	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.IKnowledgeService" version="3.0.0"/>
+ 	<dubbo:service ref="columnService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" version="3.0.0"/>
+ 	<dubbo:service ref="columnCustomService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" version="3.0.0"/>
+    <dubbo:service ref="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.IBigDataService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService" version="3.0.0"/>
 </beans>

@@ -11,22 +11,7 @@
     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
 	default-autowire="byName">
 
-	<context:annotation-config />
-	<mvc:annotation-driven>
-		<mvc:message-converters>
-			<!-- web端无法处理Long长整型的数值，因此输出json的时候，数值类型需要加双引号，以便JavaScript当做字符串处理
-			 拦截所有web请求。相关类：AppFilter/JsonObjectMapper
-			 -->
-			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-				<property name="objectMapper">
-					<bean class="com.ginkgocap.ywxt.utils.JsonObjectMapper"></bean>
-				</property>
-			</bean>
-		</mvc:message-converters>
-	</mvc:annotation-driven>
-
-	<context:component-scan base-package="com.ginkgocap.ywxt" >
-	</context:component-scan>
+	<context:component-scan base-package="com.ginkgocap.ywxt.knowledge" />
 
 	<!-- 请求拦截器 -->
 	<!-- <mvc:interceptors>

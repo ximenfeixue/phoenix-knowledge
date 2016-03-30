@@ -1,17 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.controller.knowledge;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONArray;
+import com.ginkgocap.ywxt.asso.service.IAssoService;
+import com.ginkgocap.ywxt.knowledge.controller.BaseController;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.util.HttpClientHelper;
+import com.gintong.frame.util.dto.CommonResultCode;
+import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
-
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ginkgocap.ywxt.knowledge.controller.BaseController;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
-import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
-import com.ginkgocap.ywxt.user.model.User;
-import com.ginkgocap.ywxt.util.HttpClientHelper;
-import com.gintong.frame.util.dto.CommonResultCode;
-import com.gintong.frame.util.dto.InterfaceResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/knowledge")
@@ -39,6 +36,9 @@ public class KnowldegeController extends BaseController {
 	
 	@Autowired
 	private IKnowledgeService knowledgeService;
+
+    @Autowired
+    private IAssoService assoService;
 	
 	/**
 	 * 插入数据
@@ -170,7 +170,7 @@ public class KnowldegeController extends BaseController {
 		
 		//数据为空则直接返回异常给前端
 		if(affterDeleteDataCollection == null) {
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.DATA_DELETE_EXCEPTION);
+			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
 		
 		

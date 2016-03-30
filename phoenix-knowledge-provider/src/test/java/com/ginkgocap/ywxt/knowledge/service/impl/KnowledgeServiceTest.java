@@ -1,17 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import javax.annotation.Resource;
-
 import org.junit.Test;
 
-import com.ginkgocap.ywxt.knowledge.base.TestBase;
-import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
 
-
-public class KnowledgeServiceTest extends TestBase {
+public class KnowledgeServiceTest { //extends TestBase {
 	
-	@Resource
-	private IKnowledgeService knowledgeService;
+	//@Resource
+	//private IKnowledgeService knowledgeService;
 	
 	public void insert() {
 		

@@ -1,11 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 
 
 /**
@@ -55,6 +54,10 @@ public class ColumnSys implements Serializable {
 	public ColumnSys() {
 	}
 
+    @Id
+    @GeneratedValue(generator = "id")
+    @GenericGenerator(name = "id", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @org.hibernate.annotations.Parameter(name = "sequence", value = "tb_knowledge_column_system") })
+    @Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
 		return this.id;
 	}
