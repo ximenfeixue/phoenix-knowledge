@@ -55,7 +55,7 @@ public class BigDataServiceImpl implements IBigDataService{
 	}
 
 	@Override
-	public void deleteMessage(long knowledgeId, long columnId, User user)
+	public void deleteMessage(long knowledgeId, short columnId, User user)
 			throws Exception {
 		
 		KnowledgeMongo data = new KnowledgeMongo();

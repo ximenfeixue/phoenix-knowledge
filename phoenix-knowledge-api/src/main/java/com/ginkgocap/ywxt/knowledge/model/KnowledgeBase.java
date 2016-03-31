@@ -1,15 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @Title: 知识基础信息（MySQL保存，一般保存基础信息，提供给列表查询）
@@ -35,10 +30,10 @@ public class KnowledgeBase implements Serializable {
 	private String title;
 	
 	/**类型，0为系统创建，1为用户创建*/
-	private String type;
+	private short type;
 	
 	/**栏目主键*/
-	private long columnId;
+	private short columnId;
 	
 	/**描述*/
 	//private String content;
@@ -62,7 +57,7 @@ public class KnowledgeBase implements Serializable {
 	private String createUserName;
 	
 	/**创建时间*/
-	private String createDate;
+	private long createDate;
 	
 	/**修改人ID*/
 	private long modifyUserId;
@@ -71,19 +66,19 @@ public class KnowledgeBase implements Serializable {
 	private String modifyUserName;
 	
 	/**修改时间*/
-	private String modifyDate;
+	private long modifyDate;
 	
 	/**发布时间*/
-	private String publicDate;
+	private long publicDate;
 	
 	/**状态（0为无效/删除，1为有效，2为草稿，3,：回收站）*/
-	private String status;
+	private short status;
 	
 	/**审核状态（0：未通过，1：审核中，2：审核通过）*/
-	private String auditStatus;
+	private short auditStatus;
 	
 	/**举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）*/
-	private String reportStatus;
+	private short reportStatus;
 
 	@Id
 	@GeneratedValue(generator = "id")
@@ -107,20 +102,20 @@ public class KnowledgeBase implements Serializable {
 	}
 
 	@Column(name = "type")
-	public String getType() {
+	public short getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name = "column_id")
-	public long getColumnId() {
+	public short getColumnId() {
 		return columnId;
 	}
 
-	public void setColumnId(long columnId) {
+	public void setColumnId(short columnId) {
 		this.columnId = columnId;
 	}
 
@@ -188,11 +183,11 @@ public class KnowledgeBase implements Serializable {
 	}
 
 	@Column(name = "create_date")
-	public String getCreateDate() {
+	public long getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(String createDate) {
+	public void setCreateDate(long createDate) {
 		this.createDate = createDate;
 	}
 
@@ -215,47 +210,47 @@ public class KnowledgeBase implements Serializable {
 	}
 
 	@Column(name = "modify_date")
-	public String getModifyDate() {
+	public long getModifyDate() {
 		return modifyDate;
 	}
 
-	public void setModifyDate(String modifyDate) {
+	public void setModifyDate(long modifyDate) {
 		this.modifyDate = modifyDate;
 	}
 
 	@Column(name = "public_date")
-	public String getPublicDate() {
+	public long getPublicDate() {
 		return publicDate;
 	}
 
-	public void setPublicDate(String publicDate) {
+	public void setPublicDate(long publicDate) {
 		this.publicDate = publicDate;
 	}
 
 	@Column(name = "status")
-	public String getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
 	@Column(name = "audit_status")
-	public String getAuditStatus() {
+	public short getAuditStatus() {
 		return auditStatus;
 	}
 
-	public void setAuditStatus(String auditStatus) {
+	public void setAuditStatus(short auditStatus) {
 		this.auditStatus = auditStatus;
 	}
 
 	@Column(name = "report_status")
-	public String getReportStatus() {
+	public short getReportStatus() {
 		return reportStatus;
 	}
 
-	public void setReportStatus(String reportStatus) {
+	public void setReportStatus(short reportStatus) {
 		this.reportStatus = reportStatus;
 	}
 	

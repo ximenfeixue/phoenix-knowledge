@@ -60,7 +60,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
 		
 		long knowledgeId = this.knowledgeCommonService.getKnowledgeSeqenceId();
 		
-		long columnId = knowledgeMongo.getColumnId();
+		short columnId = knowledgeMongo.getColumnId();
 		
 		knowledgeMongo.setId(knowledgeId);
 		
@@ -347,7 +347,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
 	 * @date 2016年1月15日 上午11:30:18
 	 * @throws Exception
 	 */
-	private void insertRollBack(long knowledgeId, long columnId, User user,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
+	private void insertRollBack(long knowledgeId, short columnId, User user,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		if(isBase) this.knowledgeBaseDao.deleteById(knowledgeId);
 		if(isReference) this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);

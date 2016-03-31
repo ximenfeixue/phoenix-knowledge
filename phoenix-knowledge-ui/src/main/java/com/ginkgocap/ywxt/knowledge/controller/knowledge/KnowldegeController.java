@@ -9,7 +9,6 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.HttpClientHelper;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
-import net.sf.json.JSONObject;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ import java.util.Map;
 @RequestMapping("/knowledge")
 public class KnowldegeController extends BaseController {
 	
-	private Logger logger = LoggerFactory.getLogger(KnowldegeController.class);
+	private final Logger logger = LoggerFactory.getLogger(KnowldegeController.class);
 	
 	@Autowired
 	private IKnowledgeService knowledgeService;
@@ -48,16 +47,17 @@ public class KnowldegeController extends BaseController {
 	 */
 	@RequestMapping(value = "",method = RequestMethod.POST)
 	@ResponseBody
-	public InterfaceResult<DataCollection> insert(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public InterfaceResult<DataCollection> create(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-		
-		JSONObject requestJson = this.getRequestJson(request);
-		
-		DataCollection dataCollection = (DataCollection) JSONObject.toBean(requestJson, DataCollection.class);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        /*
+		String requestJson = this.getBodyParam(request);
+		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);
 		
 		InterfaceResult<DataCollection> affterSaveDataCollection = null;
 		
@@ -66,9 +66,9 @@ public class KnowldegeController extends BaseController {
 		} catch (Exception e) {
 			logger.error("知识插入失败！失败原因："+affterSaveDataCollection.getNotification().getNotifInfo());
 			return affterSaveDataCollection;
-		}
-		
-		return InterfaceResult.getSuccessInterfaceResultInstance(null);
+		}*/
+        logger.info(".......create knowledge success......");
+		return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}
 	
 	/**
@@ -79,17 +79,16 @@ public class KnowldegeController extends BaseController {
 	 */
 	@RequestMapping(value = "",method = RequestMethod.PUT)
 	@ResponseBody
-	public InterfaceResult<DataCollection> update(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public InterfaceResult<DataCollection> updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-		
-		JSONObject requestJson = this.getRequestJson(request);
-		
-		DataCollection dataCollection = (DataCollection) JSONObject.toBean(requestJson, DataCollection.class);
-		
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+		/*
+		String requestJson = this.getBodyParam(request);
+		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);
 		InterfaceResult<DataCollection> affterSaveDataCollection = null;
 		
 		try {
@@ -97,9 +96,9 @@ public class KnowldegeController extends BaseController {
 		} catch (Exception e) {
 			logger.error("知识更新失败！失败原因："+affterSaveDataCollection.getNotification().getNotifInfo());
 			return affterSaveDataCollection;
-		}
-		
-		return InterfaceResult.getSuccessInterfaceResultInstance(null);
+		}*/
+        logger.info(".......update knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}
 	
 	/**
@@ -113,25 +112,28 @@ public class KnowldegeController extends BaseController {
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public InterfaceResult<DataCollection> delete(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable Long id,@PathVariable Long columnId) throws IOException {
+			@PathVariable Long id,@PathVariable Long columnId) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
 		if(id <= 0 || columnId <= 0){
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
-		
+
 		InterfaceResult<DataCollection> affterDeleteDataCollection = null;
+        /*
 		try {
 			affterDeleteDataCollection = this.knowledgeService.deleteByKnowledgeId(id, columnId, user);
 		} catch (Exception e) {
 			logger.error("知识删除失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
 			return affterDeleteDataCollection;
-		}
-		
-		return InterfaceResult.getSuccessInterfaceResultInstance(null);
+		}*/
+        logger.info(".......delete knowledge success......");
+		return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}
 	
 	/**
@@ -144,8 +146,8 @@ public class KnowldegeController extends BaseController {
 	 */
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.GET)
 	@ResponseBody
-	public InterfaceResult<DataCollection> getByIdAndColumnId(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable Long id,@PathVariable Long columnId) throws IOException {
+	public InterfaceResult<DataCollection> detail(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable Long id,@PathVariable Long columnId) throws Exception {
 		
 		//判断参数合法性
 		if(id <= 0 || columnId <= 0) {
@@ -160,7 +162,8 @@ public class KnowldegeController extends BaseController {
 			user.setId(0);// 金桐脑
 		}
 		
-		InterfaceResult<DataCollection> affterDeleteDataCollection = null;
+		InterfaceResult<DataCollection> affterDeleteDataCollection = DummyData.knowledgeDetailObject();
+        /*
 		try {
 			affterDeleteDataCollection = this.knowledgeService.getDetailById(id, columnId, user);
 		} catch (Exception e) {
@@ -171,10 +174,8 @@ public class KnowldegeController extends BaseController {
 		//数据为空则直接返回异常给前端
 		if(affterDeleteDataCollection == null) {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
-		}
-		
-		
-		
+		}*/
+        logger.info(".......get knowledge detail success......");
 		return affterDeleteDataCollection;
 	}
 	
@@ -189,21 +190,23 @@ public class KnowldegeController extends BaseController {
 	@RequestMapping(value = "/all/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getAll(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable int start,@PathVariable int size) throws IOException {
+			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
 		
-		InterfaceResult<List<DataCollection>> getDataCollection = null;
+		InterfaceResult<List<DataCollection>> getDataCollection = DummyData.resultObject(DummyData.getDataCollectionList());
+        /*
 		try {
 			getDataCollection = this.knowledgeService.getBaseAll(start, size);
 		} catch (Exception e) {
 			logger.error("知识提取失败！失败原因："+getDataCollection.getNotification().getNotifInfo());
 			return getDataCollection;
-		}
-		
+		}*/
+        logger.info(".......get all knowledge success......");
 		return getDataCollection;
 	}
 	
@@ -218,21 +221,23 @@ public class KnowldegeController extends BaseController {
 	@RequestMapping(value = "/all/{columnId}/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getAllByColumnId(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable long columnId,@PathVariable int start,@PathVariable int size) throws IOException {
+			@PathVariable long columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
 		
-		InterfaceResult<List<DataCollection>> getDataCollection = null;
+		InterfaceResult<List<DataCollection>> getDataCollection = DummyData.resultObject(DummyData.getDataCollectionList());;
+        /*
 		try {
 			getDataCollection = this.knowledgeService.getBaseByCreateUserId(user, start, size);
 		} catch (Exception e) {
 			logger.error("知识提取失败！失败原因：{}",getDataCollection.getNotification().getNotifInfo());
 			return getDataCollection;
-		}
-		
+		}*/
+        logger.info(".......get all knowledge by columnId success......");
 		return getDataCollection;
 	}
 	
@@ -247,21 +252,23 @@ public class KnowldegeController extends BaseController {
 	@RequestMapping(value = "/user/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getByCreateUserId(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable int start,@PathVariable int size) throws IOException {
+			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
 		
-		InterfaceResult<List<DataCollection>> getDataCollection = null;
+		InterfaceResult<List<DataCollection>> getDataCollection = DummyData.resultObject(DummyData.getDataCollectionList());
+        /*
 		try {
 			getDataCollection = this.knowledgeService.getBaseByCreateUserId(user, start, size);
 		} catch (Exception e) {
 			logger.error("知识提取失败！失败原因："+getDataCollection.getNotification().getNotifInfo());
 			return getDataCollection;
-		}
-		
+		}*/
+        logger.info(".......get all knowledge by create userId success......");
 		return getDataCollection;
 	}
 	
@@ -276,21 +283,23 @@ public class KnowldegeController extends BaseController {
 	@RequestMapping(value = "/user/{columnId}/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getByCreateUserIdAndColumnId(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable long columnId,@PathVariable int start,@PathVariable int size) throws IOException {
+			@PathVariable long columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
 		
-		if(user == null)
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+		if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
 		
-		InterfaceResult<List<DataCollection>> getDataCollection = null;
+		InterfaceResult<List<DataCollection>> getDataCollection = DummyData.resultObject(DummyData.getDataCollectionList());
+        /*
 		try {
 			getDataCollection = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user, columnId, start, size);
 		} catch (Exception e) {
 			logger.error("知识提取失败！失败原因："+getDataCollection.getNotification().getNotifInfo());
 			return getDataCollection;
-		}
-		
+		}*/
+        logger.info(".......get all knowledge by create userId and columnId success......");
 		return getDataCollection;
 	}
 	
@@ -307,7 +316,14 @@ public class KnowldegeController extends BaseController {
 	@ResponseBody
 	public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response, 
 			@PathVariable String type,@PathVariable int start, @PathVariable int size) throws Exception {
-		String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+
+        User user = this.getUser(request);
+
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
 		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
 		pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
 		pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
@@ -322,5 +338,4 @@ public class KnowldegeController extends BaseController {
 		}
 		return InterfaceResult.getSuccessInterfaceResultInstance(model);
 	}
-	
 }

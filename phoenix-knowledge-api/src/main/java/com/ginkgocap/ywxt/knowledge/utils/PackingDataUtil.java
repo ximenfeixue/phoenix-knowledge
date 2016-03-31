@@ -1,19 +1,19 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.model.UserFeed;
 import com.ginkgocap.ywxt.user.service.DiaryService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Title: 数据包装转换类
@@ -68,7 +68,8 @@ public class PackingDataUtil {
 			feed.setContent(knowledgeMongo.getContent());
 			feed.setCreatedBy(user.getName());
 			feed.setCreatedById(user.getId());
-			feed.setCtime(knowledgeMongo.getCreateDate());
+            String cTime = DateUtil.formatWithYYYYMMDDHHMMSS(new Date(knowledgeMongo.getCreateDate()));
+			feed.setCtime(cTime);
 			feed.setGroupName("仅好友可见");
 			feed.setScope(1);// 设置可见级别
 			feed.setGroupName("");

@@ -1,22 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import net.sf.json.JSONObject;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.ginkgocap.ywxt.knowledge.utils.JsonKeyConstant;
 
 /**
  * @Title: 知识来源信息
@@ -49,16 +40,16 @@ public class KnowledgeReference implements Serializable {
 	private String websiteName;
 	
 	/**标示本条资料是否有效，1：为有效，0：为无效*/
-	private String status;
+	private short status;
 	
 	/**引用时间*/
-	private String refDate;
+	private long refDate;
 	
 	/**创建时间*/
-	private String createDate;
+	private long createDate;
 	
 	/**修改时间*/
-	private String modifyDate;
+	private long modifyDate;
 
 	@Id
 	@GeneratedValue(generator = "id")
@@ -109,38 +100,38 @@ public class KnowledgeReference implements Serializable {
 	}
 
 	@Column(name = "status")
-	public String getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
 	@Column(name = "ref_date")
-	public String getRefDate() {
+	public long getRefDate() {
 		return refDate;
 	}
 
-	public void setRefDate(String refDate) {
+	public void setRefDate(long refDate) {
 		this.refDate = refDate;
 	}
 
 	@Column(name = "create_date")
-	public String getCreateDate() {
+	public long getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(String createDate) {
+	public void setCreateDate(long createDate) {
 		this.createDate = createDate;
 	}
 
 	@Column(name = "modify_date")
-	public String getModifyDate() {
+	public long getModifyDate() {
 		return modifyDate;
 	}
 
-	public void setModifyDate(String modifyDate) {
+	public void setModifyDate(long modifyDate) {
 		this.modifyDate = modifyDate;
 	}
 	
@@ -162,30 +153,18 @@ public class KnowledgeReference implements Serializable {
 			Iterator<KnowledgeReference> referenceIt = knowledgeReferenceList.iterator();
 			
 			KnowledgeReference reference = null;
-			
 			while(referenceIt.hasNext()) {
-				
 				KnowledgeReference referenceTemp = referenceIt.next();
-				
 				if(base.getId() == referenceTemp.getId()) {
-					
 					reference = referenceTemp;
 					break;
-					
 				}
-				
 			}
-			
 			DataCollection dataCollection = new DataCollection();
-			
 			dataCollection.setKnowledge(base);
-			
 			dataCollection.setReference(reference);
-			
 			returnList.add(dataCollection);
-			
 		}
-		
 		return returnList;
 	}
 }

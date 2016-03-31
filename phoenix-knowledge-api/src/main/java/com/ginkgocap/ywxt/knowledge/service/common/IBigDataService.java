@@ -1,10 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service.common;
 
-import java.util.List;
-
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.utils.FlagTypeUtils;
+
+import java.util.List;
 
 /**
  * @Title: 大数据MQ服务
@@ -55,7 +55,7 @@ public interface IBigDataService {
 	 * @param user
 	 * @throws Exception
 	 */
-	public void deleteMessage(long knowledgeId,long columnId, User user) throws Exception;
+	public void deleteMessage(long knowledgeId,short columnId, User user) throws Exception;
 	
 	
 }

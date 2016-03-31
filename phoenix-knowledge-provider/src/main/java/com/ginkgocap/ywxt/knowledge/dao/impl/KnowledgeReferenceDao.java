@@ -1,16 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
-import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.user.model.User;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository("KnowledgeReferenceDao")
 public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> implements IKnowledgeReferenceDao {
@@ -28,10 +25,7 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		
 		knowledgeReference.setKnowledgeId(knowledgeId);
 		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
-		
-		if(StringUtils.isBlank(knowledgeReference.getCreateDate()))
-			knowledgeReference.setCreateDate(currentDate);
+		long currentDate = new Date().getTime();
 		knowledgeReference.setModifyDate(currentDate);
 		
 		long id = (Long) this.saveEntity(knowledgeReference);
@@ -45,16 +39,12 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		
 		if(knowledgeReferenceList == null || knowledgeReferenceList.isEmpty())
 			return null;
-		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
-		
+
+        long currentDate = new Date().getTime();
 		for (KnowledgeReference date : knowledgeReferenceList) {
 			if(date.getKnowledgeId() <= 0) {
 				throw new Exception("插入知识来源表时，知识主键缺失");
 			}
-			
-			if(StringUtils.isBlank(date.getCreateDate()))
-				date.setCreateDate(currentDate);
 			date.setModifyDate(currentDate);
 		}
 		
@@ -67,11 +57,9 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 			throws Exception {
 		if(knowledgeReference == null)
 			return null;
-		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
 
+        long currentDate = new Date().getTime();
 		knowledgeReference.setModifyDate(currentDate);
-		
 		this.updateEntity(knowledgeReference);
 		
 		return this.getById(knowledgeReference.getId());
@@ -87,15 +75,15 @@ public class KnowledgeReferenceDao extends BaseService<KnowledgeReference> imple
 		
 		if(id <= 0) {
 			oldValue = this.getById(id);
-			
 			this.deleteById(id);
 		}
 		
 		try {
 			this.insert(knowledgeReference, knowledgeId, user);
 		} catch (Exception e) {
-			if(oldValue != null && oldValue.getId() > 0)
-				this.insert(oldValue, oldValue.getKnowledgeId(), user);
+			if(oldValue != null && oldValue.getId() > 0) {
+                this.insert(oldValue, oldValue.getKnowledgeId(), user);
+            }
 			throw e;
 		}
 		

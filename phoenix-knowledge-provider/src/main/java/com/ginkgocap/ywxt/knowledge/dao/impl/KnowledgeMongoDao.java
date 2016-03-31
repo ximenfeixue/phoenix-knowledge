@@ -1,14 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
+import com.ginkgocap.ywxt.user.model.User;
+import com.mongodb.WriteResult;
 import net.sf.json.JSONObject;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,12 +14,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.ginkgocap.ywxt.knowledge.dao.IKnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
-import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
-import com.ginkgocap.ywxt.user.model.User;
-import com.mongodb.WriteResult;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Repository("knowledgeMongoDao")
 public class KnowledgeMongoDao implements IKnowledgeMongoDao {
@@ -36,12 +32,12 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		if(knowledgeMongo == null || knowledgeMongo.getId() <= 0)
 			return null;
 		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
-		
-		if(knowledgeMongo.getCreateUserId() <= 0)
-			knowledgeMongo.setCreateUserId(user.getId());
-		if(StringUtils.isBlank(knowledgeMongo.getCreateDate()))
-			knowledgeMongo.setCreateDate(currentDate);
+		long currentDate = new Date().getTime();
+		if(knowledgeMongo.getCreateUserId() <= 0) {
+            knowledgeMongo.setCreateUserId(user.getId());
+        }
+
+		knowledgeMongo.setCreateDate(currentDate);
 		knowledgeMongo.setModifyUserId(user.getId());
 		knowledgeMongo.setModifyDate(currentDate);
 		
@@ -79,9 +75,8 @@ public class KnowledgeMongoDao implements IKnowledgeMongoDao {
 		if(knowledgeId <= 0) {
 			return this.insert(knowledgeMongo, user);
 		}
-		
-		String currentDate = DateUtil.formatWithYYYYMMDDHHMMSS(new Date());
 
+        long currentDate = new Date().getTime();
 		knowledgeMongo.setModifyUserId(user.getId());
 		knowledgeMongo.setModifyDate(currentDate);
 		
