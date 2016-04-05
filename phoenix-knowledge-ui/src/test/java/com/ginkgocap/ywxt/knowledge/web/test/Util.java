@@ -157,7 +157,7 @@ public final class Util {
     public static JsonNode HttpRequestResult(String httpMethod,String urlString,String jsonContent) throws Exception
     {
         JsonNode node = HttpRequestFull(httpMethod, urlString, jsonContent);
-        return node.get(RetKey.Notification);
+        return node != null ? node.get(RetKey.Notification) : null;
     }
 
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent) throws Exception

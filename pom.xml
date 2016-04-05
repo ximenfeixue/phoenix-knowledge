@@ -21,13 +21,13 @@
         <entire.version>5.6.1</entire.version>
         <aspectj.version>1.7.0</aspectj.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
-        <commons-pool.version>1.6</commons-pool.version>
         <jdbc.groupId>mysql</jdbc.groupId>
         <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
         <jdbc.version>5.1.12</jdbc.version>
         <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
         <knowledge.version>3.0.0-SNAPSHOT</knowledge.version>
         <phoenix-frame-util.version>1.0.1-SNAPSHOT</phoenix-frame-util.version>
+        <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
         <phoenix-asso-api.version>1.0.0-SNAPSHOT</phoenix-asso-api.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
@@ -49,10 +49,9 @@
         <zkclient.version>0.1</zkclient.version>
         <c3p0.version>0.9.1.2</c3p0.version>
         <mysql.version>5.1.12</mysql.version>
-
         <spring-data-mongodb.version>1.8.0.RELEASE</spring-data-mongodb.version>
-
         <rocketmq.version>1.0.0-SNAPSHOT</rocketmq.version>
+        <commons-pool2.version>2.0</commons-pool2.version>
         <skip_maven_deploy>true</skip_maven_deploy>
     </properties>
 
@@ -150,6 +149,11 @@
                 <groupId>com.gintong.frame</groupId>
                 <artifactId>phoenix-frame-util</artifactId>
                 <version>${phoenix-frame-util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gintong.frame</groupId>
+                <artifactId>phoenix-frame-cache</artifactId>
+                <version>${phoenix-frame-cache.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.ywxt</groupId>
@@ -324,9 +328,9 @@
                 <version>${commons-dbcp.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-pool</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${commons-pool.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
             </dependency>
             <dependency>
                 <groupId>c3p0</groupId>
@@ -371,12 +375,6 @@
                 <groupId>com.github.sgroschupf</groupId>
                 <artifactId>zkclient</artifactId>
                 <version>${zkclient.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>c3p0</groupId>
-                <artifactId>c3p0</artifactId>
-                <version>${c3p0.version}</version>
             </dependency>
 
             <dependency>

@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-
-
-public class BaseController {
+public abstract class BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
     @Resource
@@ -46,9 +44,9 @@ public class BaseController {
      * @throws Exception
      */
     protected User getUser(HttpServletRequest request) {
-        String key = UserUtil.getUserSessionKey(request);
-        User user = (User) redisCacheService.getRedisCacheByKey(key);
-        return user;
+        //String key = UserUtil.getUserSessionKey(request);
+        //User user = (User) redisCacheService.getRedisCacheByKey(key);
+        return getDummyUser(request);
     }
 
     protected JsonNode getJsonNode(String jsonStr, String... values)

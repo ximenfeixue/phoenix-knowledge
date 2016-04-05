@@ -1,51 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-    http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
-	default-autowire="byName">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd" default-autowire="byName">
 
-	<context:component-scan base-package="com.ginkgocap.ywxt.knowledge" />
+    <context:annotation-config/>
+    <context:component-scan base-package="com.ginkgocap.ywxt.knowledge.controller"/>
+    <mvc:annotation-driven/>
 
-	<!-- 请求拦截器 -->
-	<!-- <mvc:interceptors>
-		<bean class="com.ginkgocap.ywxt.Filter.HttpInterceptor">
-			<property name="threshold" value="200" />
-		</bean>
-	</mvc:interceptors> -->
-
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/view/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
-
-	<bean id="exceptionResolver"
-		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="java.lang.Exception">errors/500</prop>
-				<prop key="java.lang.Throwable">errors/404</prop>
-				<prop key="java.lang.RuntimeException">errors/500</prop>
-			</props>
-		</property>
-		<property name="statusCodes">
-			<props>
-				<prop key="errors/500">500</prop>
-				<prop key="errors/404">404</prop>
-			</props>
-		</property>
-		<property name="warnLogCategory" value="springExceptionResolver" />
-		<property name="defaultErrorView" value="errors/500" />
-		<property name="defaultStatusCode" value="500" />
-	</bean>
-
-	<mvc:default-servlet-handler />
-	
+    <mvc:interceptors>
+        <!-- 请求拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.ginkgocap.ywxt.knowledge.filter.HttpInterceptor">
+                <property name="threshold" value="200" />
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <mvc:default-servlet-handler/>
 </beans>

@@ -9,7 +9,6 @@
     </parent>
     <artifactId>phoenix-knowledge-ui</artifactId>
     <packaging>war</packaging>
-    <name>${project.artifactId}</name>
     
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,6 +20,12 @@
             <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-entire-api</artifactId>
             <version>${entire.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jedis</artifactId>
+                    <groupId>redis.clients</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
@@ -37,17 +42,18 @@
         <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame-util</artifactId>
+            <version>${phoenix-frame-util.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gintong.frame</groupId>
+            <artifactId>phoenix-frame-cache</artifactId>
+            <version>${phoenix-frame-cache.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>1.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -111,14 +117,7 @@
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
         </dependency>
-
         <!-- database access end -->
-        <!-- ibatis -->
-        <dependency>
-            <groupId>org.apache.ibatis</groupId>
-            <artifactId>ibatis-sqlmap</artifactId>
-            <version>2.3.4.726</version>
-        </dependency>
         <!-- spring mongodb mapper -->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -180,11 +179,10 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
         </dependency>
-        <!-- <dependency>
-            <groupId>com.gintong.frame</groupId>
-            <artifactId>phoenix-frame</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency> -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -301,43 +299,6 @@
         </plugins>
     </build>
     <profiles>
-        <!-- 生成ibatis模型和dao -->
-        <profile>
-            <id>generatemybatis</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.mybatis.generator</groupId>
-                        <artifactId>mybatis-generator-maven-plugin</artifactId>
-                        <version>1.3.2</version>
-                        <configuration>
-                            <verbose>true</verbose>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>mysql</groupId>
-                                <artifactId>mysql-connector-java</artifactId>
-                                <version>5.1.12</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.mybatis.generator</groupId>
-                                <artifactId>mybatis-generator-core</artifactId>
-                                <version>1.3.2</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.mybatis</groupId>
-                                <artifactId>mybatis</artifactId>
-                                <version>3.2.2</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <!-- 开发打包使用的profile -->
         <profile>
             <id>dev</id>

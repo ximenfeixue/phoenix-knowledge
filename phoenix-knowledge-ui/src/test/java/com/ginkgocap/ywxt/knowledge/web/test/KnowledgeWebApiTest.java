@@ -9,7 +9,7 @@ import org.junit.Test;
  */
 public class KnowledgeWebApiTest extends TestCase {
 
-    public static final String baseUrl = "http://localhost:8080/phoenix-knowledge-ui/knowledge";
+    public static final String baseUrl = "http://localhost:8080/phoenix-knowledge/knowledge";
     @Test
     public void testCreateKnowledge()
     {
@@ -41,7 +41,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                             ///{id}/{columnId}
-            String subUrl = "/123/6";
+            String subUrl = "123/6";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -55,7 +55,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                             ///{id}/{columnId}
-            String subUrl = "/123/2";
+            String subUrl = "123/2";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                             ////all/{start}/{size}
-            String subUrl = "/all/1/10";
+            String subUrl = "all/1/10";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                             ///all/{columnId}/{start}/{size}
-            String subUrl = "/all/2/10/25";
+            String subUrl = "all/2/10/25";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                             ///user/{start}/{size}
-            String subUrl = "/user/12/24";
+            String subUrl = "user/12/24";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class KnowledgeWebApiTest extends TestCase {
     {
         try {
                            //user/{columnId}/{start}/{size}
-            String subUrl = "/user/2/1/5/10";
+            String subUrl = "user/2/1/5/10";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

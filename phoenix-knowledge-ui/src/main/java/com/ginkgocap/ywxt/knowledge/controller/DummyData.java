@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.controller.knowledge;
+package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.asso.model.Asso;
 import com.ginkgocap.ywxt.knowledge.model.*;

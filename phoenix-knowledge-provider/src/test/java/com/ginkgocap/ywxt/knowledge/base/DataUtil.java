@@ -126,8 +126,8 @@ public final class DataUtil {
 	{
 		KnowledgeReference reference = new KnowledgeReference();
 		reference.setArticleName("KnowledgeTitle");
-		reference.setCreateDate(Long.toString(System.currentTimeMillis()));
-		reference.setModifyDate(Long.toString(System.currentTimeMillis()));
+		reference.setCreateDate(System.currentTimeMillis());
+		reference.setModifyDate(System.currentTimeMillis());
 		
 		return reference;
 	}
