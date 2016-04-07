@@ -1,13 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.knowledge.service.common.IBigDataService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
@@ -15,6 +8,13 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("bigDataService")
 public class BigDataServiceImpl implements IBigDataService{
@@ -58,13 +58,12 @@ public class BigDataServiceImpl implements IBigDataService{
 	public void deleteMessage(long knowledgeId, short columnId, User user)
 			throws Exception {
 		
-		KnowledgeMongo data = new KnowledgeMongo();
+		KnowledgeBase data = new KnowledgeBase();
 		
 		data.setId(knowledgeId);
 		data.setColumnId(columnId);
 		
-		this.sendMessage(KNOWLEDGE_UPDATE, data, user);
-		
+		//this.sendMessage(KNOWLEDGE_UPDATE, data, user);
 	}
 
 }

@@ -1,15 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
-import javax.annotation.Resource;
-
+import com.ginkgocap.ywxt.knowledge.model.common.Ids;
+import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.ginkgocap.ywxt.knowledge.model.common.Ids;
-import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
+import javax.annotation.Resource;
 
 @Service("knowledgeCommonService")
 public class KnowledgeCommonServiceImpl implements IKnowledgeCommonService {
@@ -23,17 +22,19 @@ public class KnowledgeCommonServiceImpl implements IKnowledgeCommonService {
 		
 		Update update =new Update();
 		Query query = new Query(c);
-		Ids hasIds=mongoTemplate.findOne(query, Ids.class);
-		Ids ids=new Ids();
-		update.inc("cid", 1);
-		if(hasIds!=null && hasIds.getCid()>0){
-			ids=mongoTemplate.findAndModify(query, update,Ids.class);
-		}else{
-			ids.setCid(1l);
-			ids.setName("kid");
-			mongoTemplate.insert(ids);
-			ids=mongoTemplate.findAndModify(query, update,Ids.class);
-		}
+        Ids ids = new Ids();
+        synchronized(mongoTemplate) {
+            Ids hasIds = mongoTemplate.findOne(query, Ids.class);
+            update.inc("cid", 1);
+            if (hasIds != null && hasIds.getCid() > 0) {
+                ids = mongoTemplate.findAndModify(query, update, Ids.class);
+            } else {
+                ids.setCid(1l);
+                ids.setName("kid");
+                mongoTemplate.insert(ids);
+                ids = mongoTemplate.findAndModify(query, update, Ids.class);
+            }
+        }
 		
 		return ids.getCid();
 	}

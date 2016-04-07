@@ -16,7 +16,7 @@ import java.util.List;
  * @version V1.0.0
  */
 @Entity
-@Table(name = "tb_knowledge_reference", catalog = "phoenix_knowledge")
+@Table(name = "tb_knowledge_reference", catalog = "phoenix_knowledge_new")
 public class KnowledgeReference implements Serializable {
 
 	/**

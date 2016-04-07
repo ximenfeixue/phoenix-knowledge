@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.HttpClientHelper;
@@ -9,6 +11,7 @@ import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +32,8 @@ public class KnowldegeController extends BaseController {
 	
 	private final Logger logger = LoggerFactory.getLogger(KnowldegeController.class);
 	
-	//@Autowired
-	//private IKnowledgeService knowledgeService;
+	@Autowired
+	private IKnowledgeService knowledgeService;
 
     //@Autowired
     //private IAssoService assoService;
@@ -51,18 +54,20 @@ public class KnowldegeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        /*
+
 		String requestJson = this.getBodyParam(request);
 		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);
 		
 		InterfaceResult<DataCollection> affterSaveDataCollection = null;
 		
 		try {
-			affterSaveDataCollection = this.knowledgeService.insert(dataCollection, user);
+            dataCollection.serUserInfo(user);
+			affterSaveDataCollection = this.knowledgeService.insert(dataCollection);
 		} catch (Exception e) {
 			logger.error("知识插入失败！失败原因："+affterSaveDataCollection.getNotification().getNotifInfo());
 			return affterSaveDataCollection;
-		}*/
+		}
+
         logger.info(".......create knowledge success......");
 		return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}
@@ -82,17 +87,19 @@ public class KnowldegeController extends BaseController {
 		if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-		/*
+
 		String requestJson = this.getBodyParam(request);
 		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);
 		InterfaceResult<DataCollection> affterSaveDataCollection = null;
 		
 		try {
-			affterSaveDataCollection = this.knowledgeService.update(dataCollection, user);
+            dataCollection.serUserInfo(user);
+			affterSaveDataCollection = this.knowledgeService.update(dataCollection);
 		} catch (Exception e) {
 			logger.error("知识更新失败！失败原因："+affterSaveDataCollection.getNotification().getNotifInfo());
 			return affterSaveDataCollection;
-		}*/
+		}
+
         logger.info(".......update knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}

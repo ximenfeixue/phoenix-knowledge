@@ -13,30 +13,30 @@ import java.io.Serializable;
  * @version V1.0.0
  */
 @Entity
-@Table(name = "tb_knowledge_base", catalog = "phoenix_knowledge")
+@Table(name = "tb_knowledge", catalog = "phoenix_knowledge_new")
 public class KnowledgeBase implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9167004345845581253L;
 	
 	public static final int CONTENT_DESC_LENGTH = 50;
 	
 	/**主键*/
 	private long id;
-	
+
+    /**类型，0为系统创建，1为用户创建*/
+    private short type;
+
+    /**栏目主键*/
+    private short columnId;
+
+    /**旧知识id*/
+    private long knowledgeId;
+
 	/**标题*/
 	private String title;
-	
-	/**类型，0为系统创建，1为用户创建*/
-	private short type;
-	
-	/**栏目主键*/
-	private short columnId;
-	
+
 	/**描述*/
-	//private String content;
+	private String content;
 	
 	/**描述简略，一般存储描述的前50个字*/
 	private String contentDesc;
@@ -92,6 +92,33 @@ public class KnowledgeBase implements Serializable {
 		this.id = id;
 	}
 
+    @Column(name = "knowledge_id")
+    public long getKnowledgeId() {
+        return knowledgeId;
+    }
+
+    public void setKnowledgeId(long knowledgeId) {
+        this.knowledgeId = knowledgeId;
+    }
+
+    @Column(name = "column_id")
+    public short getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(short columnId) {
+        this.columnId = columnId;
+    }
+
+    @Column(name = "type")
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
+
 	@Column(name = "title")
 	public String getTitle() {
 		return title;
@@ -101,32 +128,14 @@ public class KnowledgeBase implements Serializable {
 		this.title = title;
 	}
 
-	@Column(name = "type")
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
-	}
-
-	@Column(name = "column_id")
-	public short getColumnId() {
-		return columnId;
-	}
-
-	public void setColumnId(short columnId) {
-		this.columnId = columnId;
-	}
-
-	/*@Column(name = "content")
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}*/
+	}
 
 	@Column(name = "content_desc")
 	public String getContentDesc() {
@@ -253,6 +262,4 @@ public class KnowledgeBase implements Serializable {
 	public void setReportStatus(short reportStatus) {
 		this.reportStatus = reportStatus;
 	}
-	
-	
 }

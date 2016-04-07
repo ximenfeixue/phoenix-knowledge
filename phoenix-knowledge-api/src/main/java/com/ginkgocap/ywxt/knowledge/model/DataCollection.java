@@ -1,8 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
-
 import com.ginkgocap.ywxt.asso.model.Asso;
+import com.ginkgocap.ywxt.user.model.User;
+
+import java.io.Serializable;
 
 /**
  * @Title: 知识数据的大集合对象
@@ -13,11 +14,13 @@ import com.ginkgocap.ywxt.asso.model.Asso;
  */
 public class DataCollection implements Serializable {
 
-	
 	private static final long serialVersionUID = -424912985959502809L;
-	
-	/**知识信息*/
+
+	/**知识简略信息*/
 	private KnowledgeBase knowledge;
+
+    /** 知识详细信息**/
+    private KnowledgeDetail knowledgeDetail;
 
 	/**知识来源*/
 	private KnowledgeReference reference;
@@ -36,7 +39,15 @@ public class DataCollection implements Serializable {
 		this.knowledge = knowledge;
 	}
 
-	public KnowledgeReference getReference() {
+    public KnowledgeDetail getKnowledgeDetail() {
+        return knowledgeDetail;
+    }
+
+    public void setKnowledgeDetail(KnowledgeDetail knowledgeDetail) {
+        this.knowledgeDetail = knowledgeDetail;
+    }
+
+    public KnowledgeReference getReference() {
 		return reference;
 	}
 
@@ -59,6 +70,53 @@ public class DataCollection implements Serializable {
 	public void setAsso(Asso asso) {
 		this.asso = asso;
 	}
-	
-	
+
+    public void serUserId(long userId)
+    {
+        if (userId <= 0) {
+            throw new IllegalArgumentException("User is null");
+        }
+        if (this.knowledgeDetail != null) {
+            this.knowledgeDetail.setOwnerId(userId);
+        }
+    }
+
+    public void serUserInfo(User user)
+    {
+        if (user == null) {
+            throw new IllegalArgumentException("User is null");
+        }
+        if (this.knowledgeDetail != null) {
+            this.knowledgeDetail.setOwnerId(user.getId());
+            this.knowledgeDetail.setOwnerName(user.getName());
+        }
+    }
+
+    public KnowledgeBase generateKnowledge()
+    {
+        if (knowledgeDetail != null) {
+            //knowledge.setType(typeId);
+            this.knowledge.setKnowledgeId(knowledgeDetail.getId());
+            this.knowledge.setAuthor(knowledgeDetail.getOwnerName());
+            this.knowledge.setTitle(knowledgeDetail.getTitle());
+            this.knowledge.setContentDesc(knowledgeDetail.getContent());
+            if (knowledgeDetail.getMultiUrls() != null && knowledgeDetail.getMultiUrls().size()>0) {
+                this.knowledge.setPictureId(1111L);
+            }
+            if (knowledgeDetail.getAttachmentUrls() != null && knowledgeDetail.getAttachmentUrls().size()>0) {
+                this.knowledge.setAttachmentId(123456L);
+            }
+            //knowledge.setAuditStatus(auditStatus);
+            this.knowledge.setColumnId(knowledgeDetail.getColumnId());
+            this.knowledge.setCreateUserId(knowledgeDetail.getOwnerId());
+            //For reference knowledge may be different with author
+            this.knowledge.setCreateUserName(knowledgeDetail.getOwnerName());
+            this.knowledge.setCreateDate(knowledgeDetail.getCreateTime());
+            this.knowledge.setModifyDate(knowledgeDetail.getModifyTime());
+            //knowledge.setPublicDate(System.currentTimeMillis());
+            //knowledge.setReportStatus(reportStatus);
+        }
+
+        return this.knowledge;
+    }
 }

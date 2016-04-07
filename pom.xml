@@ -448,7 +448,16 @@
                 <mongodb.address>192.168.101.131:27017</mongodb.address>
                 <!-- mongo中数据库 -->
                 <mongodb.database>knowledge-test</mongodb.database>
-
+                <!-- 数据库访问帐号 -->
+                <jdbc.username>zhangwei</jdbc.username>
+                <!-- 数据库访问密码 -->
+                <jdbc.password>zhangwei</jdbc.password>
+                <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
+                <memcached.list_1.port>11211</memcached.list_1.port>
+                <memcached.object_1.ip>192.168.101.22</memcached.object_1.ip>
+                <memcached.object_1.port>11211</memcached.object_1.port>
+                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
+                <log4j.level>debug</log4j.level>
                 <log4j.path>D:/log</log4j.path>
                 <!-- 日志级别，由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
