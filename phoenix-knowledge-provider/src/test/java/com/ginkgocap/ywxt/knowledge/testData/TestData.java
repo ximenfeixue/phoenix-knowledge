@@ -73,6 +73,28 @@ public class TestData {
         return knowledge;
     }
 
+    public static KnowledgeDetail knowledgeDetail(short columnId)
+    {
+        long ownerId = 123456L;
+        long pictureId = 123456L;
+        KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
+        knowledgeDetail.setOwnerId(ownerId);
+        knowledgeDetail.setOwnerName("testUser");
+        knowledgeDetail.setTitle("TestTitle");
+        knowledgeDetail.setContent("Knowledge Description");
+        List<String> UrlIds= new ArrayList<String>();
+        UrlIds.add("11122");
+        knowledgeDetail.setMultiUrls(UrlIds);
+        knowledgeDetail.setAttachmentUrls(UrlIds);
+        knowledgeDetail.setColumnId(columnId);
+        knowledgeDetail.setModifyUserId(ownerId);
+        knowledgeDetail.setCreateTime(System.currentTimeMillis());
+        knowledgeDetail.setModifyTime(System.currentTimeMillis());
+        knowledgeDetail.setModifyUserId(ownerId);
+
+        return knowledgeDetail;
+    }
+
 
     private ColumnCollection columnObject()
     {

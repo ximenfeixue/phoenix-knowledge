@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.testData.TestData;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 public class KnowledgeServiceTest extends TestBase {
 
 	@Resource
-	private IKnowledgeService knowledgeService;
+	private KnowledgeService knowledgeService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
@@ -32,7 +32,8 @@ public class KnowledgeServiceTest extends TestBase {
 	public void insert() {
         DataCollection dataCollection = TestData.dataCollectionObject();
         try {
-            InterfaceResult<DataCollection> data = knowledgeService.insert(dataCollection, user);
+            dataCollection.serUserInfo(user);
+            InterfaceResult<DataCollection> data = knowledgeService.insert(dataCollection);
             DataCollection retDataCollection = data.getResponseData();
             columnId = retDataCollection.getKnowledge().getColumnId();
             Id = retDataCollection.getKnowledge().getId();
@@ -55,7 +56,8 @@ public class KnowledgeServiceTest extends TestBase {
             dataCollection.getReference().setKnowledgeId(knowledgeIdupdate);
             dataCollection.getReference().setArticleName("update_article_name");
             dataCollection.getReference().setModifyDate(System.currentTimeMillis());
-            knowledgeService.update(dataCollection, user);
+            dataCollection.serUserInfo(user);
+            knowledgeService.update(dataCollection);
             System.err.println("---------test done---------");
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +68,8 @@ public class KnowledgeServiceTest extends TestBase {
 	public void deleteByKnowledgeId() {
         KnowledgeBase knowledge = TestData.dataCollectionObject().getKnowledge();
         try {
-            knowledgeService.deleteByKnowledgeId(knowledgeIdDelete, columnId, user);
+            //dataCollection.serUserInfo(user);
+            knowledgeService.deleteByKnowledgeId(knowledgeIdDelete, columnId);
         } catch (Exception e) {
             e.printStackTrace();
         }

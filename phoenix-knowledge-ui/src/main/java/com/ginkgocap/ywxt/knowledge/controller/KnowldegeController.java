@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.HttpClientHelper;
@@ -33,7 +33,7 @@ public class KnowldegeController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(KnowldegeController.class);
 	
 	@Autowired
-	private IKnowledgeService knowledgeService;
+	private KnowledgeService knowledgeService;
 
     //@Autowired
     //private IAssoService assoService;

@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.mongodb.WriteResult;
@@ -18,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository("knowledgeMongoDao")
-public class KnowledgeMongoDaoImpl implements com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao {
+public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	
 	@Resource
 	private MongoTemplate mongoTemplate;

@@ -41,7 +41,7 @@
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:consumer timeout="10000" check="false" />
 	
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IKnowledgeService" ref="knowledgeService" version="3.0.0"/>
+ 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" ref="knowledgeService" version="3.0.0"/>
  	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" ref="columnService" version="3.0.0"/>
  	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" ref="columnCustomService" version="3.0.0"/>
  	

@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
-import com.ginkgocap.ywxt.knowledge.service.IKnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.IBigDataService;
 import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
 import com.ginkgocap.ywxt.user.service.DiaryService;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("knowledgeService")
-public class KnowledgeServiceImpl implements IKnowledgeService {
+public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	private Logger logger = LoggerFactory.getLogger(KnowledgeServiceImpl.class);
 	

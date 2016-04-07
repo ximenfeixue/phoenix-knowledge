@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.cache.redis.RedisCacheService;
-import com.gintong.frame.util.UserUtil;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +78,7 @@ public abstract class BaseController {
         return user;
     }
 
-    //This is just for test, need do demand test but real user not exist
+    //This is just for test, need do knowledge test but real user not exist
     protected User getDummyUser(HttpServletRequest request)
     {
         User user = (User)request.getAttribute("sessionUser");
