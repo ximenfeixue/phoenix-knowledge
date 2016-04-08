@@ -115,7 +115,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.DELETE)
 	public InterfaceResult delete(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable Long id,@PathVariable Long columnId) throws Exception {
+			@PathVariable long id,@PathVariable short columnId) throws Exception {
 		
 		User user = this.getUser(request);
 		
@@ -150,7 +150,7 @@ public class KnowledgeController extends BaseController {
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<DataCollection> detail(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable Long id,@PathVariable Long columnId) throws Exception {
+			@PathVariable long id,@PathVariable short columnId) throws Exception {
 		
 		//判断参数合法性
 		if(id <= 0 || columnId <= 0) {
@@ -166,9 +166,9 @@ public class KnowledgeController extends BaseController {
 		}
 		
 		InterfaceResult<DataCollection> affterDeleteDataCollection = DummyData.knowledgeDetailObject();
-        /*
+
 		try {
-			affterDeleteDataCollection = this.knowledgeService.getDetailById(id, columnId, user);
+            affterDeleteDataCollection = this.knowledgeService.getDetailById(id, columnId);
 		} catch (Exception e) {
 			logger.error("知识提取失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
 			return affterDeleteDataCollection;
@@ -177,7 +177,8 @@ public class KnowledgeController extends BaseController {
 		//数据为空则直接返回异常给前端
 		if(affterDeleteDataCollection == null) {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
-		}*/
+		}
+
         logger.info(".......get knowledge detail success......");
 		return affterDeleteDataCollection;
 	}
@@ -351,7 +352,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/collect/{knowledgeId/{columnId}}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> collect(HttpServletRequest request, HttpServletResponse response,
-                                                   @PathVariable long knowledgeId, @PathVariable long columnId) throws Exception {
+                                                   @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
 
         User user = this.getUser(request);
 
@@ -384,7 +385,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/collect/{knowledgeId}/{columnId}", method = RequestMethod.DELETE)
     public InterfaceResult<DataCollection> cancelCollection(HttpServletRequest request, HttpServletResponse response,
-                                                            @PathVariable long knowledgeId, @PathVariable long columnId) throws Exception {
+                                                            @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
@@ -416,7 +417,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/save/{knowledgeId}/{columnId}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> save(HttpServletRequest request, HttpServletResponse response,
-                                                @PathVariable long knowledgeId, @PathVariable long columnId) throws Exception {
+                                                @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -449,7 +450,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/report/{knowledgeId}/{columnId}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> report(HttpServletRequest request, HttpServletResponse response,
-                                                  @PathVariable long knowledgeId, @PathVariable long columnId) throws Exception {
+                                                  @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
 
         User user = this.getUser(request);
 
