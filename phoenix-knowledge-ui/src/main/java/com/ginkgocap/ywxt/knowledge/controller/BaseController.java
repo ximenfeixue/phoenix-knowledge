@@ -45,7 +45,7 @@ public abstract class BaseController {
     protected User getUser(HttpServletRequest request) {
         //String key = UserUtil.getUserSessionKey(request);
         //User user = (User) redisCacheService.getRedisCacheByKey(key);
-        return getDummyUser(request);
+        return KnowledgeUtil.getDummyUser();
     }
 
     protected JsonNode getJsonNode(String jsonStr, String... values)
@@ -74,18 +74,6 @@ public abstract class BaseController {
             user = new User();
             user.setId(0);//金桐脑
             return user;
-        }
-        return user;
-    }
-
-    //This is just for test, need do knowledge test but real user not exist
-    protected User getDummyUser(HttpServletRequest request)
-    {
-        User user = (User)request.getAttribute("sessionUser");
-        if (user == null) {
-            user = new User();
-            user.setId(1234567L);
-            user.setName("DummyUser");
         }
         return user;
     }

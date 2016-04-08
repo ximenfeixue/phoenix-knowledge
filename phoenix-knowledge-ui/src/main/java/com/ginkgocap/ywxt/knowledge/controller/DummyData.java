@@ -69,7 +69,7 @@ public final class DummyData {
         return knowledge;
     }
 
-
+    /*
     private ColumnCollection columnObject()
     {
         String columnInfo = "{\"id\":\"\",主键\"knowledgeId\":\"\",知识主键\"articleName\":\"\",引用资料文章名称\"url\":\"\",引用网址\"websiteName\":\"\",应用网址名称\"status\":\"\",标示本条资料是否有效，1：为有效，0：为无效\"refDate\":\"\",引用时间\"createDate\":\"\",创建时间\"modifyDate\":\"\",修改时间}";
@@ -81,7 +81,7 @@ public final class DummyData {
             e.printStackTrace();
         }
         return columnObject;
-    }
+    }*/
 
     private static KnowledgeReference referenceObject()
     {
@@ -89,7 +89,7 @@ public final class DummyData {
 
         KnowledgeReference kReference = null;
         try {
-            kReference = KnowledgeUtil.readValue(referenceJson, KnowledgeReference.class);
+            kReference = KnowledgeUtil.readValue(KnowledgeReference.class, referenceJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,12 +102,11 @@ public final class DummyData {
 
         Asso asso = null;
         try {
-            asso = KnowledgeUtil.readValue(assoJson, Asso.class);
+            asso = KnowledgeUtil.readValue(Asso.class, assoJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return asso;
     }
-
 }

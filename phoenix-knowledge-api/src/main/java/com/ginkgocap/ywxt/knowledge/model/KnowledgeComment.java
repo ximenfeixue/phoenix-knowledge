@@ -47,8 +47,8 @@ public class KnowledgeComment implements Serializable{
         return knowledgeId;
     }
 
-    public void setKnowledgeId(long demandId) {
-        this.knowledgeId = demandId;
+    public void setKnowledgeId(long knowledgeId) {
+        this.knowledgeId = knowledgeId;
     }
 
     public long getOwnerId() {

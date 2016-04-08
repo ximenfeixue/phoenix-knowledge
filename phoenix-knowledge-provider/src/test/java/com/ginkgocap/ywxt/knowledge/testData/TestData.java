@@ -17,33 +17,31 @@ public class TestData {
 		return knowledgeBase;
 	}
 
-    public static User getDummyUser()
+    public static List<DataCollection> getDataCollectionList(int count,User user,String title)
     {
-        User user = new User();
-        user.setId(1234567L);
-        user.setName("DummyUser");
-        return user;
-    }
-
-    public static List<DataCollection> getDataCollectionList()
-    {
-        List<DataCollection> knowledgeList = new ArrayList<DataCollection>(10);
-        for(int index = 0; index < 10; index++) {
-            knowledgeList.add(dataCollectionObject());
+        List<DataCollection> knowledgeList = new ArrayList<DataCollection>(count);
+        for(int index = 0; index < count; index++) {
+            knowledgeList.add(dataCollection(user,title));
         }
 
         return knowledgeList;
     }
 
+    public static DataCollection dataCollection(User user)
+    {
+        return dataCollection(user,null);
+    }
 
-    public static DataCollection dataCollectionObject() {
-        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2);
+    public static DataCollection dataCollection(User user, String title) {
+        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2, title);
         KnowledgeReference knowledgeReference = referenceObject();
 
         DataCollection dataCollection = new DataCollection();
         dataCollection.setKnowledgeDetail(knowledgeDetail);
         dataCollection.setReference(knowledgeReference);
         dataCollection.setAsso(assoObject());
+        //add user Info
+        dataCollection.serUserInfo(user);
 
         return dataCollection;
     }
@@ -75,12 +73,17 @@ public class TestData {
 
     public static KnowledgeDetail knowledgeDetail(short columnId)
     {
+        return knowledgeDetail(columnId<=0 ? 2 : columnId, "TestTitle");
+    }
+
+    public static KnowledgeDetail knowledgeDetail(short columnId,String title)
+    {
         long ownerId = 123456L;
         long pictureId = 123456L;
         KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
         knowledgeDetail.setOwnerId(ownerId);
         knowledgeDetail.setOwnerName("testUser");
-        knowledgeDetail.setTitle("TestTitle");
+        knowledgeDetail.setTitle(title == null ? "TestTitle" : title);
         knowledgeDetail.setContent("Knowledge Description");
         List<String> UrlIds= new ArrayList<String>();
         UrlIds.add("11122");
@@ -95,14 +98,13 @@ public class TestData {
         return knowledgeDetail;
     }
 
-
     private ColumnCollection columnObject()
     {
         String columnInfo = "{\"id\":\"\",主键\"knowledgeId\":\"\",知识主键\"articleName\":\"\",引用资料文章名称\"url\":\"\",引用网址\"websiteName\":\"\",应用网址名称\"status\":\"\",标示本条资料是否有效，1：为有效，0：为无效\"refDate\":\"\",引用时间\"createDate\":\"\",创建时间\"modifyDate\":\"\",修改时间}";
 
         ColumnCollection columnObject = null;
         try {
-            columnObject = KnowledgeUtil.readValue(columnInfo, ColumnCollection.class);
+            columnObject = KnowledgeUtil.readValue(ColumnCollection.class, columnInfo);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +117,7 @@ public class TestData {
 
         KnowledgeReference kReference = null;
         try {
-            kReference = KnowledgeUtil.readValue(referenceJson, KnowledgeReference.class);
+            kReference = KnowledgeUtil.readValue(KnowledgeReference.class, referenceJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,7 +130,7 @@ public class TestData {
 
         Asso asso = null;
         try {
-            asso = KnowledgeUtil.readValue(assoJson, Asso.class);
+            asso = KnowledgeUtil.readValue(Asso.class, assoJson);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -46,7 +46,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
             return false;
         }
 
-        Query query = updateAndDelQuery(knowledgeId, ownerId);
+        Query query = commentIdAndOwnerId(knowledgeId, ownerId);
 
         Update update = new Update();
         update.set(Constant.Content, comment);
@@ -65,7 +65,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
             return false;
         }
 
-        Query query = updateAndDelQuery(knowledgeId, ownerId);
+        Query query = commentIdAndOwnerId(knowledgeId, ownerId);
         KnowledgeComment comment = mongoTemplate.findAndRemove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
         if (comment == null) {
             logger.error("Update Knowledge Comment error, no this comment or no permission to delete: ownerId:"+ ownerId+ " knowledgeId:" + knowledgeId);
@@ -81,7 +81,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
             return null;
         }
 
-        Criteria c = Criteria.where(Constant.ID).is(knowledgeId);
+        Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
         Query query = new Query(c);
 
         return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
@@ -100,10 +100,10 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
         return mongoTemplate.count(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
     }
 
-    private Query updateAndDelQuery(Long knowledgeId,Long ownerId)
+    private Query commentIdAndOwnerId(Long knowledgeId, Long ownerId)
     {
         Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.ID).is(knowledgeId));
+        query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
         return query;
     }

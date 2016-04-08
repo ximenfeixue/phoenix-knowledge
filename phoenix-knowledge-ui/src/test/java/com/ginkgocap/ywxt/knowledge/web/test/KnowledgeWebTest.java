@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Created by Admin on 2016/3/31.
  */
-public class KnowledgeWebApiTest extends TestCase {
+public class KnowledgeWebTest extends TestCase {
 
     public static final String baseUrl = "http://localhost:8080/phoenix-knowledge/knowledge";
 

@@ -61,7 +61,6 @@ public interface KnowledgeMongoDao {
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:44
 	 * @param knowledgeDetail
-	 * @param knowledgeId
 	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception

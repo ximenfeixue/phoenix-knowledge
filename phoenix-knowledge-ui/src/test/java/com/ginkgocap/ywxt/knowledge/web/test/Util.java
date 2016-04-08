@@ -1,8 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.user.model.User;
 import junit.framework.Assert;
 
 import java.io.BufferedReader;
@@ -17,10 +21,11 @@ import java.net.URL;
 public final class Util {
 
     private static ObjectMapper mapper = null;
-
+    private static User user;
     static {
         mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true) ;
+        user = KnowledgeUtil.getDummyUser();
     }
 
     public static class HttpMethod
@@ -109,15 +114,15 @@ public final class Util {
             e.printStackTrace();
         }
         return comment;
-    }
+    }*/
 
     public static String getKnowledgeComment(Long KnowledgeId, String content)
     {
         KnowledgeComment KnowledgeComment = new KnowledgeComment();
         KnowledgeComment.setId(0);
         KnowledgeComment.setKnowledgeId(KnowledgeId);
-        KnowledgeComment.setOwnerId(12344567);
-        KnowledgeComment.setOwnerName("UnitTestUser");
+        KnowledgeComment.setOwnerId(user.getId());
+        KnowledgeComment.setOwnerName(user.getName());
         KnowledgeComment.setContent(content);
         KnowledgeComment.setCreateTime(System.currentTimeMillis());
         KnowledgeComment.setVisible(1);
@@ -129,7 +134,7 @@ public final class Util {
             e.printStackTrace();
         }
         return commentStr;
-    }*/
+    }
 
     public static void checkRequestResultSuccess(JsonNode notifNode)
     {

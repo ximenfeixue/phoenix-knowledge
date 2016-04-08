@@ -26,7 +26,7 @@ public class DataCollection implements Serializable {
 	private KnowledgeReference reference;
 
 	/**栏目*/
-	private ColumnCollection column;
+	//private ColumnCollection column;
 
 	/**关联*/
 	private Asso asso;
@@ -55,13 +55,14 @@ public class DataCollection implements Serializable {
 		this.reference = reference;
 	}
 
+    /*
 	public ColumnCollection getColumn() {
 		return column;
 	}
 
 	public void setColumn(ColumnCollection column) {
 		this.column = column;
-	}
+	}*/
 
 	public Asso getAsso() {
 		return asso;

@@ -5,8 +5,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ginkgocap.ywxt.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -81,12 +85,23 @@ public final class KnowledgeUtil {
         return knowledgeBase;
     }*/
 
-    public static <T> T readValue(Class<T> valueType, String content, String... values)
+    //This is just for test, need do knowledge test but real user not exist
+    public static User getDummyUser()
+    {
+        User user = new User();
+        user.setId(1234567L);
+        user.setUid(1234567L);
+        user.setUserName("UnitTestUser");
+        user.setName("UnitTestUser");
+        return user;
+    }
+
+    public static <T> T readValue(Class<T> valueType, final String content, String... values)
     {
         try {
             JsonNode node = getJsonNode(content, values);
             if (node != null) {
-                return readValue(node.toString(), valueType);
+                return readValue(valueType, node.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +109,7 @@ public final class KnowledgeUtil {
         return null;
     }
 
-    public static <T> T readValue(final String content, Class<T> valueType) throws IOException {
+    public static <T> T readValue(Class<T> valueType, final String content) throws IOException {
         if (StringUtils.isBlank(content)) {
             throw new IllegalArgumentException("Content is null");
         }
@@ -146,4 +161,64 @@ public final class KnowledgeUtil {
         }
         return dataCollection;
     }
+
+    //This is just for Unit Test code
+    public static String getJsonNodeContentFromObject(final String jsonContent, final String nodeName)
+    {
+        String jsonNodeContent = null;
+        try {
+            JsonNode node = objectMapper.readTree(jsonContent);
+            jsonNodeContent =  node.get(nodeName).toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonNodeContent;
+    }
+
+    public static String defaultJsonPath()
+    {
+        String defaultJsonPath = null;
+        String usrHome = System.getProperty("user.home");
+        String fileSeparator = System.getProperty("file.separator");
+        defaultJsonPath = new StringBuffer().append(usrHome)
+                .append(fileSeparator)
+                .append("Json-Knowledge")
+                .append(fileSeparator).toString();
+        File file = new File(defaultJsonPath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        return defaultJsonPath;
+    }
+
+    public static String getJsonContentFromFile(String filePath)
+    {
+        BufferedReader reader = null;
+        StringBuffer buffer = new StringBuffer();
+        try {
+            File file = new File(filePath);
+            System.out.println(filePath);
+            if (!file.exists()) {
+                System.err.println(filePath + " not exist!");
+                return null;
+            }
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                buffer.append(tempString);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+
+        return buffer.toString();
+    }
+    //For Unit Test end
 }

@@ -375,7 +375,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	private void updateRollBack(long knowledgeId, long columnId,
                                 KnowledgeDetail oldKnowledgeDetail,KnowledgeBase oldKnowledge,KnowledgeReference oldKnowledgeReference,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
-		if(isMongo) this.knowledgeMongoDao.insertAfterDelete(oldKnowledgeDetail, knowledgeId, null);
+		if(isMongo) this.knowledgeMongoDao.insertAfterDelete(oldKnowledgeDetail, null);
 		if(isBase) this.knowledgeMysqlDao.insertAfterDelete(oldKnowledge);
 		if(isReference) this.knowledgeReferenceDao.insertAfterDelete(oldKnowledgeReference, knowledgeId);
 		//if(isBigData) this.bigDataService.sendMessage(IBigDataService.KNOWLEDGE_UPDATE, oldKnowledgeMongo, user);

@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
@@ -57,7 +56,7 @@ public class KnowledgeCommentController extends BaseController
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
-            KnowledgeComment knowledgeComment  = KnowledgeUtil.readValue(requestJson, KnowledgeComment.class);
+            KnowledgeComment knowledgeComment  = KnowledgeUtil.readValue( KnowledgeComment.class, requestJson);
             if (knowledgeId == null || knowledgeComment == null || StringUtils.isBlank(knowledgeComment.getContent())) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
@@ -166,8 +165,7 @@ public class KnowledgeCommentController extends BaseController
             }
 
             List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(knowledgeId);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String commentItems = objectMapper.writeValueAsString(commentList);
+            String commentItems = KnowledgeUtil.writeObjectToJson(commentList);
             if (logger.isDebugEnabled()) {
                 logger.debug("Get Knowledge comment : size:" + commentList.size() + " Content: " + commentItems);
             }
