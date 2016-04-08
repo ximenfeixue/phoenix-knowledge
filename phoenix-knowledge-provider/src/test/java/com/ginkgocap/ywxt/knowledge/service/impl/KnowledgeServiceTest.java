@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.testData.TestData;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.InterfaceResult;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -29,7 +30,7 @@ public class KnowledgeServiceTest extends TestBase {
     }
 
     @Test
-	public void insert() {
+	public void testInsert() {
         DataCollection dataCollection = TestData.dataCollectionObject();
         try {
             dataCollection.serUserInfo(user);
@@ -39,93 +40,93 @@ public class KnowledgeServiceTest extends TestBase {
             Id = retDataCollection.getKnowledge().getId();
             knowledgeIdupdate = knowledgeIdQuery = retDataCollection.getKnowledge().getKnowledgeId();
             System.err.println(data.getResponseData());
-            System.err.println("---------test done---------");
         } catch (Exception e) {
             e.printStackTrace();
+            TestCase.fail();
         }
     }
 
     @Test
-	public void upadte() {
+	public void testUpadte() {
         DataCollection dataCollection = TestData.dataCollectionObject();
         try {
+            dataCollection.generateKnowledge();
             dataCollection.getKnowledge().setId(Id);
             dataCollection.getKnowledge().setKnowledgeId(knowledgeIdupdate);
             dataCollection.getKnowledge().setTitle("Update title");
             dataCollection.getKnowledge().setModifyDate(System.currentTimeMillis());
-            dataCollection.getReference().setKnowledgeId(knowledgeIdupdate);
-            dataCollection.getReference().setArticleName("update_article_name");
-            dataCollection.getReference().setModifyDate(System.currentTimeMillis());
+            if (dataCollection.getReference() != null) {
+                dataCollection.getReference().setKnowledgeId(knowledgeIdupdate);
+                dataCollection.getReference().setArticleName("update_article_name");
+                dataCollection.getReference().setModifyDate(System.currentTimeMillis());
+            }
             dataCollection.serUserInfo(user);
             knowledgeService.update(dataCollection);
             System.err.println("---------test done---------");
         } catch (Exception e) {
             e.printStackTrace();
+            TestCase.fail();
         }
 	}
 
     @Test
-	public void deleteByKnowledgeId() {
+	public void testDeleteByKnowledgeId() {
         KnowledgeBase knowledge = TestData.dataCollectionObject().getKnowledge();
         try {
             //dataCollection.serUserInfo(user);
             knowledgeService.deleteByKnowledgeId(knowledgeIdDelete, columnId);
         } catch (Exception e) {
             e.printStackTrace();
+            TestCase.fail();
         }
     }
 	
-	public void deleteByKnowledgeIds() {
+	public void testDeleteByKnowledgeIds() {
         //knowledgeService.getDetailById(user);
 	}
 	
-	public void getDetailById() {
+	public void testGetDetailById() {
         //knowledgeService.getDetailById(user)
 	}
 	
-	public void getBaseById() {
+	public void testGetBaseById() {
         //knowledgeService.getBaseById(user)
 	}
 	
-	public void getBaseByIds() {
+	public void testGetBaseByIds() {
 		
 	}
 	
-	public void getBaseAll() {
+	public void testGetBaseAll() {
 		
 	}
 	
-	public void getBaseByCreateUserId() {
+	public void testGetBaseByCreateUserId() {
 		
 	}
 	
-	public void getBaseByCreateUserIdAndColumnId() {
+	public void testGetBaseByCreateUserIdAndColumnId() {
 		
 	}
 	
-	public void getBaseByCreateUserIdAndType() {
+	public void testGetBaseByCreateUserIdAndType() {
 		
 	}
 	
-	public void getBaseByCreateUserIdAndColumnIdAndType() {
+	public void testGetBaseByCreateUserIdAndColumnIdAndType() {
 		
 	}
 	
-	public void getBaseByType() {
+	public void testGetBaseByType() {
 		
 	}
 	
-	public void getBaseByColumnId() {
+	public void testGetBaseByColumnId() {
 		
 	}
 	
-	public void getBaseByColumnIdAndType() {
+	public void testGetBaseByColumnIdAndType() {
 		
-	}
-	
-	@Test
-	public void test() {
-		System.out.print("11111");
 	}
 	
 }

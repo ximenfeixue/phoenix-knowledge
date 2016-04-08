@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
 import com.ginkgocap.ywxt.knowledge.model.common.Ids;
-import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service("knowledgeCommonService")
-public class KnowledgeCommonServiceImpl implements IKnowledgeCommonService {
+public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
 	
 	@Resource
     private MongoTemplate mongoTemplate;

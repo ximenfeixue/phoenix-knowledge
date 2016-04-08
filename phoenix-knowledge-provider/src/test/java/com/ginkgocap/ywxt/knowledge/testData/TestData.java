@@ -37,11 +37,11 @@ public class TestData {
 
 
     public static DataCollection dataCollectionObject() {
-        KnowledgeBase knowledgeBase = knowledgeBaseObject();
+        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2);
         KnowledgeReference knowledgeReference = referenceObject();
 
         DataCollection dataCollection = new DataCollection();
-        dataCollection.setKnowledge(knowledgeBase);
+        dataCollection.setKnowledgeDetail(knowledgeDetail);
         dataCollection.setReference(knowledgeReference);
         dataCollection.setAsso(assoObject());
 

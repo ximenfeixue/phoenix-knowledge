@@ -66,7 +66,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,long knowledgeId,String... collectionName) throws Exception;
+	public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception;
 	
 	/**
 	 * 根据主键及栏目删除数据

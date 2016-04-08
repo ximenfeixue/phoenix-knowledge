@@ -8,8 +8,8 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.common.IBigDataService;
-import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.user.service.DiaryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -37,10 +37,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	private KnowledgeReferenceDao knowledgeReferenceDao;
 	/**知识公共服务*/
 	@Autowired
-	private IKnowledgeCommonService knowledgeCommonService;
+	private KnowledgeCommonService knowledgeCommonService;
 	/**MQ大数据服务*/
 	@Autowired
-	private IBigDataService bigDataService;
+	private BigDataService bigDataService;
 	/**动态推送服务*/
 	//@Autowired
 	//private UserFeedService userFeedService;
@@ -78,14 +78,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		
 		//知识来源表插入
-		KnowledgeReference afterSaveKnowledgeReference = null;
-		try {
-			this.knowledgeReferenceDao.insert(knowledgeReference, knowledgeId);
-		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, true, true, false, false, false);
-			logger.error("知识基础表插入失败！失败原因：\n"+e.getCause().toString());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
+        KnowledgeReference savedKnowledgeReference = null;
+        if (knowledgeReference != null) {
+            try {
+                savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference, knowledgeId);
+            } catch (Exception e) {
+                this.insertRollBack(knowledgeId, columnId, true, true, false, false, false);
+                logger.error("知识基础表插入失败！失败原因：\n" + e.getCause().toString());
+                return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+            }
+        }
 		
 		//大数据MQ推送
         /*
@@ -107,7 +109,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledge,afterSaveKnowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledge,savedKnowledgeReference));
 	}
 
 	@Override
@@ -116,7 +118,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
 		KnowledgeReference knowledgeReference = dataCollection.getReference();
 		
-		long knowledgeId = knowledgeDetail.getId();
+		Long knowledgeId = knowledgeDetail.getId();
 		short columnId = knowledgeDetail.getColumnId();
 
 		//knowledgeMongo.createContendDesc();
@@ -135,20 +137,22 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			this.knowledgeMysqlDao.update(knowledge);
 		} catch (Exception e) {
 			//this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,null,null, true, false, false, false, false);
-			logger.error("知识基础表更新失败！失败原因：\n"+e.getCause().toString());
+			logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 		
 		//知识来源表更新
-		KnowledgeReference afterSaveKnowledgeReference = null;
-		KnowledgeReference oldKnowledgeReference = this.knowledgeReferenceDao.getByKnowledgeId(knowledgeId);
-		try {
-			this.knowledgeReferenceDao.update(knowledgeReference);
-		} catch (Exception e) {
-			//this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,oldKnowledgeDetail,null, true, true, false, false, false);
-			logger.error("知识来源表更新失败！失败原因：\n"+e.getCause().toString());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
+        KnowledgeReference updatedReference = null;
+        if (knowledgeReference != null) {
+            KnowledgeReference oldReference = this.knowledgeReferenceDao.getByKnowledgeId(knowledgeId);
+            try {
+                updatedReference = this.knowledgeReferenceDao.update(knowledgeReference);
+            } catch (Exception e) {
+                this.updateRollBack(knowledgeId, columnId, oldKnowledgeDetail, knowledge, null, true, true, false, false, false);
+                logger.error("知识来源表更新失败！失败原因：\n" + e.getCause().toString());
+                return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+            }
+        }
 		
 		//大数据MQ推送更新
         /*
@@ -170,7 +174,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 		
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledge,afterSaveKnowledgeReference));
+		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledge,updatedReference));
 	}
 
 	@Override

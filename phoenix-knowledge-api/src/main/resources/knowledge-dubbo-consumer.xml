@@ -31,6 +31,6 @@
     <dubbo:reference id="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
     <dubbo:reference id="columnService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" version="3.0.0"/>
     <dubbo:reference id="columnCustomService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" version="3.0.0"/>
-    <dubbo:reference id="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.IBigDataService" version="3.0.0"/>
-    <dubbo:reference id="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService" version="3.0.0"/>
+    <dubbo:reference id="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
 </beans>

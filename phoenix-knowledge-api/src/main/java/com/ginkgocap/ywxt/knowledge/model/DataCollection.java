@@ -94,25 +94,25 @@ public class DataCollection implements Serializable {
 
     public KnowledgeBase generateKnowledge()
     {
-        if (knowledgeDetail != null) {
-            //knowledge.setType(typeId);
-            this.knowledge.setKnowledgeId(knowledgeDetail.getId());
-            this.knowledge.setAuthor(knowledgeDetail.getOwnerName());
-            this.knowledge.setTitle(knowledgeDetail.getTitle());
-            this.knowledge.setContentDesc(knowledgeDetail.getContent());
-            if (knowledgeDetail.getMultiUrls() != null && knowledgeDetail.getMultiUrls().size()>0) {
+        if (this.knowledgeDetail != null) {
+            this.knowledge = new KnowledgeBase();
+            this.knowledge.setKnowledgeId(this.knowledgeDetail.getId());
+            this.knowledge.setAuthor(this.knowledgeDetail.getOwnerName());
+            this.knowledge.setTitle(this.knowledgeDetail.getTitle());
+            this.knowledge.setContentDesc(this.knowledgeDetail.getContent());
+            if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
                 this.knowledge.setPictureId(1111L);
             }
-            if (knowledgeDetail.getAttachmentUrls() != null && knowledgeDetail.getAttachmentUrls().size()>0) {
+            if (this.knowledgeDetail.getAttachmentUrls() != null && this.knowledgeDetail.getAttachmentUrls().size()>0) {
                 this.knowledge.setAttachmentId(123456L);
             }
             //knowledge.setAuditStatus(auditStatus);
-            this.knowledge.setColumnId(knowledgeDetail.getColumnId());
-            this.knowledge.setCreateUserId(knowledgeDetail.getOwnerId());
+            this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());
+            this.knowledge.setCreateUserId(this.knowledgeDetail.getOwnerId());
             //For reference knowledge may be different with author
-            this.knowledge.setCreateUserName(knowledgeDetail.getOwnerName());
-            this.knowledge.setCreateDate(knowledgeDetail.getCreateTime());
-            this.knowledge.setModifyDate(knowledgeDetail.getModifyTime());
+            this.knowledge.setCreateUserName(this.knowledgeDetail.getOwnerName());
+            this.knowledge.setCreateDate(this.knowledgeDetail.getCreateTime());
+            this.knowledge.setModifyDate(this.knowledgeDetail.getModifyTime());
             //knowledge.setPublicDate(System.currentTimeMillis());
             //knowledge.setReportStatus(reportStatus);
         }

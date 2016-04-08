@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
-import com.ginkgocap.ywxt.knowledge.service.common.IBigDataService;
+import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.DefaultMessageService;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("bigDataService")
-public class BigDataServiceImpl implements IBigDataService{
+public class BigDataServiceImpl implements BigDataService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BigDataServiceImpl.class);
 

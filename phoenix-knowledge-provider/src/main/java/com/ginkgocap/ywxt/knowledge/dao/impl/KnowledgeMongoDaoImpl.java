@@ -3,10 +3,14 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicUpdate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -23,158 +27,148 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	
 	@Resource
 	private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private KnowledgeCommonService knowledgeCommontService;
 	
 	@Override
 	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail, String... collectionName) throws Exception {
-		
-		if(knowledgeDetail == null || knowledgeDetail.getId() <= 0)
-			return null;
-		
+		if(knowledgeDetail == null) {
+            throw new IllegalArgumentException("knowledgeDetail is null");
+        }
+
+        knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
 		long currentDate = new Date().getTime();
         knowledgeDetail.setCreateTime(currentDate);
 		
 		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
-		
 		mongoTemplate.insert(knowledgeDetail,currCollectionName);
 		
-		return this.getByIdAndColumnId(knowledgeDetail.getId(),knowledgeDetail.getColumnId(),currCollectionName);
+		return knowledgeDetail;
 	}
 	
 	@Override
 	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList,  String... collectionName) throws Exception {
-		
-		List<KnowledgeDetail> returnList = new ArrayList();
-		
-		if(knowledgeDetailList != null && !knowledgeDetailList.isEmpty()) {
-			Iterator<KnowledgeDetail> it = knowledgeDetailList.iterator();
-			while(it.hasNext()) {
-				//returnList.add(this.insert(it.next(), user, collectionName));
+		if(knowledgeDetailList != null && knowledgeDetailList.size() > 0) {
+			for(KnowledgeDetail knowledgeDetail : knowledgeDetailList) {
+                knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
 			}
 		}
-		
-		return returnList;
+        mongoTemplate.insert(knowledgeDetailList, KnowledgeDetail.class);
+
+		return knowledgeDetailList;
 	}
 
 	@Override
 	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail, String... collectionName)
 			throws Exception {
 
-		if(knowledgeDetail == null)
-			return null;
-		
-		long knowledgeId = knowledgeDetail.getId();
-		
-		if(knowledgeId <= 0) {
-			return this.insert(knowledgeDetail);
-		}
+		if(knowledgeDetail == null) {
+            throw new IllegalArgumentException("knowledgel is null");
+        }
+
+        if (knowledgeDetail.getId() <= 0) {
+            throw new IllegalArgumentException("knowledge Id is invalidated, id: "+knowledgeDetail.getId());
+        }
+
+        if (knowledgeDetail.getColumnId() <= 0) {
+            throw new IllegalArgumentException("knowledge columnId is invalidated, columnId: "+knowledgeDetail.getColumnId());
+        }
 
         long currentDate = new Date().getTime();
         knowledgeDetail.setModifyTime(currentDate);
-		
-		Criteria criteria = Criteria.where("_id").is(knowledgeId);
-		Query query = new Query(criteria);
-		
-		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
-		
+        Query query = knowledgeColumnIdQuery(knowledgeDetail.getId(), knowledgeDetail.getColumnId());
+        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
 		WriteResult result = mongoTemplate.updateFirst(query, getUpdate(knowledgeDetail), currCollectionName);
+        if (result.getN()<=0) {
+            return null;
+        }
 		
-		return this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId(),currCollectionName);
+		return knowledgeDetail;
 	}
 
 
 	@Override
-	public int deleteByIdAndColumnId(long id,short columnId, String...collectionName ) throws Exception {
-		
-		Criteria criteria = Criteria.where("_id").is(id);
-		Query query = new Query(criteria);
-		
-		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
-		
+	public int deleteByIdAndColumnId(long id,short columnId, String...collectionName ) throws Exception
+    {
+		Query query = knowledgeColumnIdQuery(id, columnId);
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        if (result.getN() <=0 ) {
+            return -1;
+        }
 		return 0;
 	}
 
 	@Override
-	public int deleteByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception {
-		
-		Criteria criteria = Criteria.where("_id").in(ids);
-		Query query = new Query(criteria);
-		
-		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
-		
+	public int deleteByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception
+    {
+        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        if (result.getN() <=0 ) {
+            return -1;
+        }
 		return 0;
 	}
 
 	@Override
-	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId,String... collectionName) throws Exception {
-		
-		Criteria criteria = Criteria.where("createUserId").is(createUserId);
-		Query query = new Query(criteria);
-		
-		mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
-		
+	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId,String... collectionName) throws Exception
+    {
+		Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
+        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        if (result.getN() <=0 ) {
+            return -1;
+        }
 		return 0;
 	}
 
 	@Override
 	public KnowledgeDetail getByIdAndColumnId(long id,short columnId,String... collectionName) throws Exception {
-		
-		Criteria criteria = Criteria.where("_id").is(id);
-		Query query = new Query(criteria);
+		Query query = knowledgeColumnIdQuery(id, columnId);
 		
 		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId,collectionName));
-		
 	}
 
     @Override
-    public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,
-                                             long knowledgeId, String... collectionName) throws Exception {
-
-        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
-
-        if(knowledgeDetail == null || knowledgeId <= 0)
-            return null;
-
-        KnowledgeDetail oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId(),currCollectionName);
-
-        this.deleteByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId(),currCollectionName);
-
-        try {
-
-            this.insert(knowledgeDetail, currCollectionName);
-
-        } catch (Exception e) {
-
-            if(oldValue != null)
-                this.insert(oldValue, currCollectionName);
-
-            throw e;
+    public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception {
+        long knowledgeId = knowledgeDetail.getId();
+        if(knowledgeDetail == null || knowledgeId <= 0) {
+            throw new IllegalArgumentException("knowledgeDetail is null or invalidated!");
         }
 
+        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
+        KnowledgeDetail oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId(),currCollectionName);
+        if (oldValue == null) {
+            try {
+                this.insert(knowledgeDetail, currCollectionName);
+            } catch (Exception ex) {
+                 throw ex;
+            }
+        }
 
-        return this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId());
+        return oldValue;
     }
 
     @Override
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception {
-		
-		Criteria criteria = Criteria.where("_id").in(ids);
-		Query query = new Query(criteria);
+	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception
+    {
+		Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
 		
 		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId,collectionName));
-		
 	}
 	
 	private String getCollectionName(long columnId) throws Exception {
 		
 		StringBuffer strBuf = new StringBuffer();
-		
 		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
 		
 		//从缓存中获取系统栏目
 		List<ColumnSys> columnSysList = new ArrayList<ColumnSys>();
-		
 		Iterator<ColumnSys> it = columnSysList.iterator();
-		
 		boolean columnCodeNotExistflag = true;
 		
 		while(it.hasNext()) {
@@ -194,7 +188,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		}
 		
 		return strBuf.toString();
-		
 	}
 	
 	private String getCollectionName(long columnId,String[] collectionName) throws Exception {
@@ -202,20 +195,18 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 	
 	private Update getUpdate(KnowledgeDetail knowledgeDetail) {
-		
-		//构建更新字段，目前默认是全字段更新
-		Update update = new Update();
-		
-		JSONObject json = JSONObject.fromObject(knowledgeDetail);
-		
-		Iterator<String> it = json.keys();
-		
-		while(it.hasNext()) {
-			String key = it.next();
-			update.update(key, json.get(key));
-		}
+        BasicDBObject basicDBObject = new BasicDBObject();
+        basicDBObject.put("$set", knowledgeDetail);
+        Update update = new BasicUpdate(basicDBObject);
 		
 		return update;
-		
 	}
+
+    private Query knowledgeColumnIdQuery(long knowledgeId,short columnId)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
+        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        return query;
+    }
 }

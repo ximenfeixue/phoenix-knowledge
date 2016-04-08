@@ -9,7 +9,7 @@ import java.util.List;
 public class KnowledgeDetail implements Serializable {
 
     /** 知识id **/
-    private Long id;
+    private long id;
 
     /** 知识类型 **/
     private short columnId;
@@ -45,11 +45,11 @@ public class KnowledgeDetail implements Serializable {
     /** 存储目录 **/
     private String categoryIds;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -116,7 +116,6 @@ public class KnowledgeDetail implements Serializable {
     public void setModifyUserId(long modifyUserId) {
         this.modifyUserId = modifyUserId;
     }
-
 
     public long getModifyTime() {
         return modifyTime;

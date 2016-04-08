@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
-import com.ginkgocap.ywxt.knowledge.service.common.IKnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private IKnowledgeCommonService knowledgeCommonService;
+    private KnowledgeCommonService knowledgeCommonService;
 
     @Override
     public boolean create(KnowledgeComment knowledgeComment) {
