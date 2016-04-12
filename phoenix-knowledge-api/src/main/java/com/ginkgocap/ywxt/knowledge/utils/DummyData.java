@@ -1,6 +1,6 @@
-package com.ginkgocap.ywxt.knowledge.controller;
+package com.ginkgocap.ywxt.knowledge.utils;
 
-import com.ginkgocap.ywxt.asso.model.Asso;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.gintong.frame.util.dto.InterfaceResult;
 
@@ -69,6 +69,37 @@ public final class DummyData {
         return knowledge;
     }
 
+    public static KnowledgeDetail knowledgeDetail(short columnId,String title)
+    {
+        long ownerId = 123456L;
+        long pictureId = 123456L;
+        KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
+        knowledgeDetail.setOwnerId(ownerId);
+        knowledgeDetail.setOwnerName("testUser");
+        knowledgeDetail.setTitle(title == null ? "TestTitle" : title);
+        knowledgeDetail.setContent("Knowledge Description");
+        List<String> UrlIds= new ArrayList<String>();
+        UrlIds.add("11122");
+        knowledgeDetail.setMultiUrls(UrlIds);
+        knowledgeDetail.setAttachmentUrls(UrlIds);
+        knowledgeDetail.setColumnId(columnId);
+        knowledgeDetail.setModifyUserId(ownerId);
+        knowledgeDetail.setCreateTime(System.currentTimeMillis());
+        knowledgeDetail.setModifyTime(System.currentTimeMillis());
+        knowledgeDetail.setModifyUserId(ownerId);
+
+        return knowledgeDetail;
+    }
+
+    public static DataCollection getDataCollection(short columnId,String title)
+    {
+        DataCollection data = new DataCollection();
+        data.setKnowledgeDetail(knowledgeDetail(columnId, title));
+        data.setReference(referenceObject(title));
+
+        return data;
+    }
+
     /*
     private ColumnCollection columnObject()
     {
@@ -85,6 +116,11 @@ public final class DummyData {
 
     private static KnowledgeReference referenceObject()
     {
+        return referenceObject(null);
+    }
+
+    private static KnowledgeReference referenceObject(String title)
+    {
         String referenceJson = "{\"id\":1223,\"knowledgeId\":12344,\"articleName\":\"Test Title\",\"url\":\"http://travel.enorth.com.cn/system/2015/06/03/030277875_01.shtml\",\"websiteName\":\"transient\",\"status\":1,\"refDate\":1458901743546,\"createDate\":1458901743546,\"modifyDate\":1458901743546}";
 
         KnowledgeReference kReference = null;
@@ -93,20 +129,14 @@ public final class DummyData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (title != null) {
+            kReference.setArticleName(title);
+        }
         return kReference;
     }
 
-    private static Asso assoObject()
+    private static Associate assoObject()
     {
-        String assoJson =  "{\"assoId\":1,\"isVisable\":\"1\",\"ownerId\":\"10001\",\"type\":\"2\",\"value\":{\"r\":[{\"assoConnTagId\":5,\"assoId\":1,\"conn\":[{\"assoConnTagId\":5,\"assoId\":2,\"assoValueId\":25,\"businessId\":\"111115\",\"picPath\":\"\",\"title\":\"测试11115\",\"type\":\"r\"}],\"tag\":\"测试k1\",\"type\":\"r\"}],\"p\":[{\"assoConnTagId\":4,\"assoId\":1,\"conn\":[{\"assoConnTagId\":4,\"assoId\":2,\"assoValueId\":24,\"businessId\":\"111114\",\"picPath\":\"\",\"title\":\"测试11114\",\"type\":\"p\"}],\"tag\":\"测试k1\",\"type\":\"p\"}],\"o\":[{\"assoConnTagId\":3,\"assoId\":1,\"conn\":[{\"assoConnTagId\":3,\"assoId\":2,\"assoValueId\":23,\"businessId\":\"111113\",\"picPath\":\"\",\"title\":\"测试11113\",\"type\":\"o\"}],\"tag\":\"测试k1\",\"type\":\"o\"}],\"k\":[{\"assoConnTagId\":1,\"assoId\":1,\"conn\":[{\"assoConnTagId\":1,\"assoId\":2,\"assoValueId\":21,\"businessId\":\"111111\",\"picPath\":\"\",\"title\":\"测试11111\",\"type\":\"k\"},{\"assoConnTagId\":1,\"assoId\":2,\"assoValueId\":211,\"businessId\":\"111111\",\"picPath\":\"\",\"title\":\"测试11111\",\"type\":\"k\"}],\"tag\":\"测试k1\",\"type\":\"k\"},{\"assoConnTagId\":2,\"assoId\":1,\"conn\":[{\"assoConnTagId\":2,\"assoId\":2,\"assoValueId\":22,\"businessId\":\"111112\",\"picPath\":\"\",\"title\":\"测试11112\",\"type\":\"k\"}],\"tag\":\"测试k2\",\"type\":\"k\"}]}}}";
-
-        Asso asso = null;
-        try {
-            asso = KnowledgeUtil.readValue(Asso.class, assoJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return asso;
+        return TestData.assoObject();
     }
 }

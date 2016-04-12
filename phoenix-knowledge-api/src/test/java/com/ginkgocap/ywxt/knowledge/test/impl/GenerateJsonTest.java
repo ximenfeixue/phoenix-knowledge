@@ -1,12 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.test.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.test.base.DataUtil;
-import com.ginkgocap.ywxt.knowledge.test.base.TestData;
+import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -27,11 +26,9 @@ public class GenerateJsonTest extends TestCase {
                 System.out.println("Generate JSON Unit Test for: " + KnowledgeComment.class.getSimpleName());
             }
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonConent = objectMapper.writeValueAsString(object);
+            //FilterProvider idFilterProvider = new SimpleFilterProvider().addFilter("userFilter", SimpleBeanPropertyFilter.filterOutAllExcept(new String[]{"id"}));
+            String jsonConent = TestDataUtil.writeJsonData(object);
             assertNotNull(jsonConent);
-            //assertTrue(jsonConent.contains("area"));
-            DataUtil.writeJsonData(object);
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -40,7 +37,13 @@ public class GenerateJsonTest extends TestCase {
         }
     }
 
-    //Requirement
+    @Test
+    public void testAssoCreateJson() throws Exception
+    {
+        serviceCreateJsonCheck(TestData.assoObject() );
+    }
+
+
     @Test
     public void testKnowledgeCreateJson() throws Exception
     {
@@ -48,14 +51,14 @@ public class GenerateJsonTest extends TestCase {
     }
 
     @Test
-    public void testServiceMedicalConsultCreateJson() throws Exception
+    public void testKnowledgeCommentCreateJson() throws Exception
     {
         serviceCreateJsonCheck( TestData.knowledgeComment(123456L) );
     }
 
     //KnowledgeComment
-    @Test
-    public void testKnowledgeCommentCreateJson() throws Exception
+
+    private void knowledgeCommentCreateJson() throws Exception
     {
         KnowledgeComment knowledgeComment = TestData.knowledgeComment(12345679L);
         System.out.println("Generate JSON Unit Test for: " + KnowledgeComment.class.getSimpleName());

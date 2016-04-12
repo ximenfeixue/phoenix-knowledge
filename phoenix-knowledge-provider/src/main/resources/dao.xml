@@ -22,92 +22,92 @@
 
 			<list name="delete_by_createUserId"
 				sqlitem="select id from tb_knowledge_base where create_user_id=?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
 			
 			<list name="get_by_start_size"
 				sqlitem="select id from tb_knowledge_base order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />
 			
 			<list name="get_by_createUserId"
 				sqlitem="select id from tb_knowledge_base where create_user_id=? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,start,size" update="true" />
 			
 			<list name="get_by_createUserId_columnId"
 				sqlitem="select id from tb_knowledge_base where create_user_id=? and type = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,type,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,start,size" update="true" />
 			
 			<list name="get_by_createUserId_type"
 				sqlitem="select id from tb_knowledge_base where create_user_id=? and column_id = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,columnId,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,start,size" update="true" />
 			
 			<list name="get_by_columnId"
 				sqlitem="select id from tb_knowledge_base where column_id=? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="columnId,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="columnId,start,size" update="true" />
 			
 			<list name="get_by_type_columnId"
 				sqlitem="select id from tb_knowledge_base where type=? and column_id = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="type,columnId,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="type,columnId,start,size" update="true" />
 			
 			<list name="get_by_type"
 				sqlitem="select id from tb_knowledge_base where type = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="type,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="type,start,size" update="true" />
 			
 			<list name="get_by_createUserId_type_columnId"
 				sqlitem="select id from tb_knowledge_base where create_user_id= ? and type = ? and column_id = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,type,columnId,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId,start,size" update="true" />
 			
 			<!-- "<"使用"&lt;"替换，">"使用"&gt;"替代，"&"使用"&amp;"替代 -->
 			<list name="get_by_beginDate_endDate"
 				sqlitem="select id from tb_knowledge_base where create_date &gt; ? and create_date &lt; ? limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="beginDate,endDate,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="beginDate,endDate,start,size" update="true" />
 			
 			<list name="get_by_type_beginDate_endDate"
 				sqlitem="select id from tb_knowledge_base where type = ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="type,beginDate,endDate,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="type,beginDate,endDate,start,size" update="true" />
 			
 			<list name="get_by_createUserId_beginDate_endDate"
 				sqlitem="select id from tb_knowledge_base where create_user_id= ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,beginDate,endDate,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,beginDate,endDate,start,size" update="true" />
 			
 			<list name="get_by_createUserId_columnId_beginDate_endDate"
 				sqlitem="select id from tb_knowledge_base where create_user_id= ? and column_id = ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,columnId,beginDate,endDate,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate,start,size" update="true" />
 			
 			<list name="get_by_status"
 				sqlitem="select id from tb_knowledge_base where status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="status,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="status,start,size" update="true" />
 			
 			<list name="get_by_auditStatus"
 				sqlitem="select id from tb_knowledge_base where audit_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="auditStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="auditStatus,start,size" update="true" />
 			
 			<list name="get_by_reportStatus"
 				sqlitem="select id from tb_knowledge_base where report_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="reportStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="reportStatus,start,size" update="true" />
 			
 			<list name="get_by_createUserId_status"
 				sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,status,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,status,start,size" update="true" />
 			
 			<list name="get_by_createUserId_auditStatus"
 				sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,auditStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus,start,size" update="true" />
 			
 			<list name="get_by_createUserId_reportStatus"
 				sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="createUserId,reportStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus,start,size" update="true" />
 			
 			<list name="get_by_columnId_status"
 				sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="columnId,status,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="columnId,status,start,size" update="true" />
 			
 			<list name="get_by_columnId_auditStatus"
 				sqlitem="select id from tb_knowledge_base where column_id = ? and audit_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="columnId,auditStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus,start,size" update="true" />
 			
 			<list name="get_by_columnId_reportStatus"
 				sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date limit ?,?"
-				sqlType="hsql" keyProperty="id" valueProperty="columnId,reportStatus,start,size" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus,start,size" update="true" />
 			
 		</object>
 		
@@ -123,27 +123,27 @@
 			
 			<list name="delete_by_knowledgeId"
 				sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
-				sqlType="hsql" keyProperty="id" valueProperty="knowledgeId" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 			
 			<list name="delete_by_knowledgeIds"
 				sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
-				sqlType="hsql" keyProperty="id" valueProperty="knowledgeIds" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 			
 			<list name="get_by_id_status"
 				sqlitem="select id from tb_knowledge_reference where id = ? and status = ?"
-				sqlType="hsql" keyProperty="id" valueProperty="id,status" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="id,status" update="true" />
 			
 			<list name="get_by_knowledgeId"
 				sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
-				sqlType="hsql" keyProperty="id" valueProperty="knowledgeId" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 			
 			<list name="get_by_knowledgeIds"
 				sqlitem="select id from tb_knowledge_reference where knowledge_id in(?) "
-				sqlType="hsql" keyProperty="id" valueProperty="knowledgeId" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 			
 			<list name="get_by_knowledgeId_status"
 				sqlitem="select id from tb_knowledge_reference where knowledge_id = ? and status = ?"
-				sqlType="hsql" keyProperty="id" valueProperty="knowledgeId,status" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" />
 		</object>
 		
 		<object name="com.ginkgocap.ywxt.knowledge.model.ColumnSys"
@@ -158,7 +158,7 @@
 			
 			<list name="ColumnSysDao_queryListByUserId"
 				sqlitem="select id from tb_knowledge_column_system where user_id=?"
-				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
 		</object>
 		
 		<object name="com.ginkgocap.ywxt.knowledge.model.ColumnCustom"
@@ -173,15 +173,15 @@
 			
 			<list name="ColumnCustomDao_queryListByUserId"
 				sqlitem="select id from tb_knowledge_column_customer where user_id=?"
-				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
 			
 			<list name="ColumnCustomDao_queryMaxCCByUid"
 				sqlitem="select id from tb_knowledge_column_customer where user_id=? order by id desc limit 1"
-				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
 			
 			<list name="ColumnCustomDao_queryListByPidAndUserId"
 				sqlitem="select id from tb_knowledge_column_customer where user_id=? and pcid=?"
-				sqlType="hsql" keyProperty="id" valueProperty="id" update="true" />
+				sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
 		</object>
 	</route>
 </dal>

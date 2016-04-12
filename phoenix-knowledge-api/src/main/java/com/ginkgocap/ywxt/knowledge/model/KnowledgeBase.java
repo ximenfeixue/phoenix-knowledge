@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @version V1.0.0
  */
 @Entity
-@Table(name = "tb_knowledge", catalog = "phoenix_knowledge_new")
+@Table(name = "tb_knowledge_base", catalog = "phoenix_knowledge_new")
 public class KnowledgeBase implements Serializable {
 
 	private static final long serialVersionUID = 9167004345845581253L;
@@ -84,7 +84,7 @@ public class KnowledgeBase implements Serializable {
 	@GeneratedValue(generator = "id")
 	@GenericGenerator(name = "id", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "t_knowledge_label") })
 	@Column(name = "id", unique = true, nullable = false)
-	public long getId() {
+    public long getId() {
 		return id;
 	}
 

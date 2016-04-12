@@ -136,6 +136,12 @@ public final class Util {
         return commentStr;
     }
 
+    public static void checkResponse(JsonNode notifNode)
+    {
+        JsonNode result = notifNode != null ? notifNode.get(RetKey.Notification) : notifNode;
+        checkRequestResultSuccess(result);
+    }
+
     public static void checkRequestResultSuccess(JsonNode notifNode)
     {
         Assert.assertNotNull(notifNode);
@@ -153,8 +159,8 @@ public final class Util {
     public static String getResponseData(JsonNode notifNode)
     {
         String retData = null;
-        if (notifNode != null && notifNode.get(RetKey.Notification) != null) {
-            retData = notifNode.get(RetKey.Notification).get(RetKey.RespData).textValue();
+        if (notifNode != null && notifNode.get(RetKey.RespData) != null) {
+            retData = notifNode.get(RetKey.RespData).toString();
         }
         return retData;
     }

@@ -1,10 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Admin on 2016/3/24.
@@ -23,7 +27,8 @@ public final class KnowledgeUtil {
     static {
         objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
+        objectMapper.setFilters(assoSimpleFilterProvider(null));
+        //objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
     }
 
     /*
@@ -160,6 +165,32 @@ public final class KnowledgeUtil {
             System.out.println(e);
         }
         return dataCollection;
+    }
+
+    public static SimpleFilterProvider assoSimpleFilterProvider(String fileds) {
+        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+        // 请求指定字段
+        String[] filedNames = StringUtils.split(fileds, ",");
+        Set<String> filter = new HashSet<String>();
+        if (filedNames != null && filedNames.length > 0) {
+            for (int i = 0; i < filedNames.length; i++) {
+                String filedName = filedNames[i];
+                if (!StringUtils.isEmpty(filedName)) {
+                    filter.add(filedName);
+                }
+            }
+        } else {
+            filter.add("id"); // id',
+            filter.add("assocDesc"); // '关联描述，比如文章的作者，或者编辑等；关联标签描述',
+            filter.add("assocTypeId"); // '被关联的类型可以参考AssociateType对象，如：知识, 人脉,组织，需求，事件等',
+            filter.add("assocId"); // '被关联数据ID',
+            filter.add("assocTitle"); // '被关联数据标题',
+            filter.add("assocMetadata"); // '被关联数据的的摘要用Json存放，如图片，连接URL定义等',
+
+        }
+
+        filterProvider.addFilter(Associate.class.getName(), SimpleBeanPropertyFilter.filterOutAllExcept(filter));
+        return filterProvider;
     }
 
     //This is just for Unit Test code

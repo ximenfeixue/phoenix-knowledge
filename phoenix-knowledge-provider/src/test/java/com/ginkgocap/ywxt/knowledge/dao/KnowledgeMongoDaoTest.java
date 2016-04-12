@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import com.ginkgocap.ywxt.knowledge.testData.TestData;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class KnowledgeMongoDaoTest extends TestBase {
     @Test
     public void testInsert()
     {
-        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail((short)2);
+        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail((short)2, "KnowledgeMongoDaoTest");
         try {
             knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
             updateKnowledgeDetail = knowledgeMongoDao.insert(knowledgeDetail);
@@ -40,8 +40,8 @@ public class KnowledgeMongoDaoTest extends TestBase {
     @Test
     public void testInsertList() {
         List<KnowledgeDetail> knowledgeDetailList = new ArrayList<KnowledgeDetail>(2);
-        knowledgeDetailList.add(TestData.knowledgeDetail((short)3));
-        knowledgeDetailList.add(TestData.knowledgeDetail((short)4));
+        knowledgeDetailList.add(TestData.knowledgeDetail((short)3, "KnowledgeMongoDaoTest"));
+        knowledgeDetailList.add(TestData.knowledgeDetail((short)4, "KnowledgeMongoDaoTest"));
         try {
             List<KnowledgeDetail> knowledgeList = knowledgeMongoDao.insertList(knowledgeDetailList);
             TestCase.assertNotNull(knowledgeList);
@@ -156,7 +156,7 @@ public class KnowledgeMongoDaoTest extends TestBase {
     {
         KnowledgeDetail createdKnowledge = null;
         try {
-            KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(columnId);
+            KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(columnId, "KnowledgeMongoDaoTest");
             createdKnowledge = knowledgeMongoDao.insert(knowledgeDetail);
             TestCase.assertNotNull(createdKnowledge);
         } catch (Exception e) {

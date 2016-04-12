@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.test.base.DataUtil;
-import com.ginkgocap.ywxt.knowledge.test.base.TestData;
+import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.mongodb.Mongo;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -83,7 +83,7 @@ public class ParserJsonTest extends TestCase {
     }
 
 	private void checkJsonPaser(Class classz) throws IOException {
-        String jsonPath = DataUtil.getJsonFile(classz.getSimpleName());
+        String jsonPath = TestDataUtil.getJsonFile(classz.getSimpleName());
         String jsonContent = KnowledgeUtil.getJsonContentFromFile(jsonPath);
         assertNotNull(jsonContent);
 

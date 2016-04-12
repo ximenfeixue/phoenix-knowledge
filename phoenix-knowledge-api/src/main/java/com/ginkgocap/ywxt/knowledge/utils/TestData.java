@@ -1,7 +1,9 @@
-package com.ginkgocap.ywxt.knowledge.test.base;
+package com.ginkgocap.ywxt.knowledge.utils;
 
-import com.ginkgocap.ywxt.asso.model.Asso;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.user.model.User;
+import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,15 +13,33 @@ import java.util.List;
  * Created by Chen Peifeng on 2016/1/23.
  */
 public class TestData {
-	
+
+    private static User user = KnowledgeUtil.getDummyUser();
 	public static void main(String[] args) throws Exception {
 
 	}
 
+    public static <T> InterfaceResult<T> resultObject(T responseData) throws Exception {
+        return InterfaceResult.getSuccessInterfaceResultInstance(responseData);
+    }
 
-    public static DataCollection dataCollection() {
-        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2, null);
-        KnowledgeReference knowledgeReference = referenceObject();
+    public static InterfaceResult<DataCollection> knowledgeDetailObject() throws Exception {
+        return InterfaceResult.getSuccessInterfaceResultInstance(dataCollection());
+    }
+
+    public static List<DataCollection> getDataCollectionList()
+    {
+        List<DataCollection> knowledgeList = new ArrayList<DataCollection>(10);
+        for(int index = 0; index < 10; index++) {
+            knowledgeList.add(dataCollection());
+        }
+
+        return knowledgeList;
+    }
+
+    public static DataCollection dataCollection(long userId,String title) {
+        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2, title);
+        KnowledgeReference knowledgeReference = referenceObject(title);
 
         DataCollection dataCollection = new DataCollection();
         dataCollection.setKnowledgeDetail(knowledgeDetail);
@@ -29,7 +49,21 @@ public class TestData {
         return dataCollection;
     }
 
-    public static KnowledgeBase knowledgeBaseObject()
+    public static DataCollection getDataCollection(short columnId,String title)
+    {
+        DataCollection data = new DataCollection();
+        data.setKnowledgeDetail(knowledgeDetail(columnId, title));
+        data.setReference(referenceObject(title));
+
+        return data;
+    }
+
+    public static DataCollection dataCollection() {
+
+        return dataCollection(1234567L, null);
+    }
+
+    public static KnowledgeBase knowledgeBase()
     {
         short columnId = (short)1;
         short typeId = (short)1;
@@ -76,7 +110,7 @@ public class TestData {
         return knowledgeDetail;
     }
 
-    private static KnowledgeReference referenceObject()
+    private static KnowledgeReference referenceObject(String title)
     {
         String referenceJson = "{\"id\":1223,\"knowledgeId\":12344,\"articleName\":\"Test Title\",\"url\":\"http://travel.enorth.com.cn/system/2015/06/03/030277875_01.shtml\",\"websiteName\":\"transient\",\"status\":1,\"refDate\":1458901743546,\"createDate\":1458901743546,\"modifyDate\":1458901743546}";
 
@@ -86,21 +120,33 @@ public class TestData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        kReference.setArticleName(title);
         return kReference;
     }
 
-    private static Asso assoObject()
+    public static Associate assoObject()
     {
-        String assoJson =  "{\"assoId\":1,\"isVisable\":\"1\",\"ownerId\":\"10001\",\"type\":\"2\",\"value\":{\"r\":[{\"assoConnTagId\":5,\"assoId\":1,\"conn\":[{\"assoConnTagId\":5,\"assoId\":2,\"assoValueId\":25,\"businessId\":\"111115\",\"picPath\":\"\",\"title\":\"测试11115\",\"type\":\"r\"}],\"tag\":\"测试k1\",\"type\":\"r\"}],\"p\":[{\"assoConnTagId\":4,\"assoId\":1,\"conn\":[{\"assoConnTagId\":4,\"assoId\":2,\"assoValueId\":24,\"businessId\":\"111114\",\"picPath\":\"\",\"title\":\"测试11114\",\"type\":\"p\"}],\"tag\":\"测试k1\",\"type\":\"p\"}],\"o\":[{\"assoConnTagId\":3,\"assoId\":1,\"conn\":[{\"assoConnTagId\":3,\"assoId\":2,\"assoValueId\":23,\"businessId\":\"111113\",\"picPath\":\"\",\"title\":\"测试11113\",\"type\":\"o\"}],\"tag\":\"测试k1\",\"type\":\"o\"}],\"k\":[{\"assoConnTagId\":1,\"assoId\":1,\"conn\":[{\"assoConnTagId\":1,\"assoId\":2,\"assoValueId\":21,\"businessId\":\"111111\",\"picPath\":\"\",\"title\":\"测试11111\",\"type\":\"k\"},{\"assoConnTagId\":1,\"assoId\":2,\"assoValueId\":211,\"businessId\":\"111111\",\"picPath\":\"\",\"title\":\"测试11111\",\"type\":\"k\"}],\"tag\":\"测试k1\",\"type\":\"k\"},{\"assoConnTagId\":2,\"assoId\":1,\"conn\":[{\"assoConnTagId\":2,\"assoId\":2,\"assoValueId\":22,\"businessId\":\"111112\",\"picPath\":\"\",\"title\":\"测试11112\",\"type\":\"k\"}],\"tag\":\"测试k2\",\"type\":\"k\"}]}}}";
+        long System_AppId = 0L;
+        long assocId = 2L; //,
+        long sourceTypeId = 2L;
+        long typeId = 3;
 
-        Asso asso = null;
-        try {
-            asso = KnowledgeUtil.readValue( Asso.class, assoJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Associate associate = new Associate();
+        associate.setId(0);
+        associate.setAppId(System_AppId);
+        associate.setUserId(user.getId());
 
-        return asso;
+        associate.setSourceId(1l);
+        associate.setSourceTypeId(sourceTypeId);
+
+        associate.setAssocDesc("Asso Desction");
+        associate.setAssocId(assocId);
+        associate.setAssocMetadata("Asso meta Data");
+        associate.setAssocTitle("Asso Title");
+        associate.setAssocTypeId(1112L);
+        associate.setCreateAt(System.currentTimeMillis());
+
+        return associate;
     }
 
     //For Knowledge Comment

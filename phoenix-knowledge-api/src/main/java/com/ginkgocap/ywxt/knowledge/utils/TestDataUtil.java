@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.test.base;
+package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -17,12 +17,12 @@ import java.util.Map;
 /**
  * Created by Chen Peifeng on 2016/1/23.
  */
-public class DataUtil {
+public class TestDataUtil {
     public static String jsonPath = null;
     private static ObjectMapper objectMapper = null;
     static {
-        if (DataUtil.jsonPath == null) {
-            DataUtil.jsonPath = KnowledgeUtil.defaultJsonPath();
+        if (TestDataUtil.jsonPath == null) {
+            TestDataUtil.jsonPath = KnowledgeUtil.defaultJsonPath();
         }
         objectMapper = new ObjectMapper();
     }
@@ -32,12 +32,14 @@ public class DataUtil {
         return jsonPath + fileName + ".json";
     }
 	
-    public static void writeJsonData(Object jsonObject) throws IOException
+    public static String writeJsonData(Object jsonObject) throws IOException
     {
-        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonContent = null;
+
         try {
         	String jsonFile = getJsonFile(jsonObject.getClass().getSimpleName());
-            String jsonContent = objectMapper.writeValueAsString(jsonObject);
+            objectMapper.setFilters(KnowledgeUtil.assoSimpleFilterProvider(null));
+            jsonContent = objectMapper.writeValueAsString(jsonObject);
             System.out.print(jsonContent);
             //objectMapper.writeValue(new File(jsonFile), jsonContent);
             writeToFile(jsonFile, jsonContent);
@@ -54,6 +56,8 @@ public class DataUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        return jsonContent;
     }
 
     private static String jsonNode(String jsonNode)

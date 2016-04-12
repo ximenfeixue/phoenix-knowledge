@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<DataCollection> insert(DataCollection dataCollection) throws Exception;
+	public InterfaceResult insert(DataCollection dataCollection) throws Exception;
 	
 	/**
 	 * 更新，承担以下任务：
@@ -42,7 +43,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<DataCollection> update(DataCollection dataCollection) throws Exception;
+	public InterfaceResult update(DataCollection dataCollection) throws Exception;
 	
 	/**
 	 * 删除，承担以下任务：
@@ -58,7 +59,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<DataCollection> deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception;
+	public InterfaceResult deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception;
 	
 	/**
 	 * 批量删除，承担以下任务：
@@ -74,7 +75,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<DataCollection> deleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception;
+	public InterfaceResult deleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception;
 	
 	/**
 	 * 提取详细信息（一般用在知识详细信息查看界面、知识编辑界面的数据提取中），具体提取以下信息：
@@ -87,7 +88,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<DataCollection> getDetailById(long knowledgeId,short columnId) throws Exception;
+	public InterfaceResult<KnowledgeDetail> getDetailById(long knowledgeId,short columnId) throws Exception;
 	
 	/**
 	 * 提取简要信息（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
@@ -162,7 +163,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndType(long userId,String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户ID与类型提取简要信息列表（一般用在个人中心根据类型、栏目区分的知识信息列表查询的数据提取中），具体提取以下信息：
@@ -177,7 +178,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long userId,short columnId,String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long userId,short columnId,short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -190,7 +191,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByType(String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByType(short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -217,5 +218,5 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,String type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception;
 }

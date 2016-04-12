@@ -1,45 +1,31 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import junit.framework.TestCase;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
 
 /**
  * Created by Admin on 2016/3/31.
  */
-public class KnowledgeWebTest extends TestCase {
+public class KnowledgeWebTest extends BaseTestCase {
 
     public static final String baseUrl = "http://localhost:8080/phoenix-knowledge/knowledge";
-
-
-    protected static boolean skipTestCase = true;
-
-    @Override
-    protected void runTest() throws Throwable
-    {
-        if (!skipTestCase) {
-            super.runTest();
-        }
-    }
 
     @Test
     public void testCreateKnowledge()
     {
-        String knowledgeJson = TestData.createKnowlegeJson();
-        try {
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl, knowledgeJson);
-            Util.checkRequestResultSuccess(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+        createKnowledge();
     }
 
     @Test
     public void testUpdateKnowledge()
     {
-        String knowledgeJson = TestData.updateKnowlegeJson();
         try {
+            DataCollection data = createKnowledge();
+            data.getKnowledgeDetail().setTitle("Update_KnowledgeWebTest");
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(data);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl, knowledgeJson);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -53,7 +39,7 @@ public class KnowledgeWebTest extends TestCase {
     {
         try {
                             ///{id}/{columnId}
-            String subUrl = "123/6";
+            String subUrl = "/123/6";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -66,8 +52,10 @@ public class KnowledgeWebTest extends TestCase {
     public void testKnowledgeDetail()
     {
         try {
-                            ///{id}/{columnId}
-            String subUrl = "123/2";
+            DataCollection data = createKnowledge();
+            long knowledgeId = data.getKnowledgeDetail().getId();
+            short columnId = data.getKnowledgeDetail().getColumnId();
+            String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -81,7 +69,7 @@ public class KnowledgeWebTest extends TestCase {
     {
         try {
                             ////all/{start}/{size}
-            String subUrl = "all/1/10";
+            String subUrl = "/all/1/10";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -95,7 +83,7 @@ public class KnowledgeWebTest extends TestCase {
     {
         try {
                             ///all/{columnId}/{start}/{size}
-            String subUrl = "all/2/10/25";
+            String subUrl = "/all/2/1/2";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -109,7 +97,7 @@ public class KnowledgeWebTest extends TestCase {
     {
         try {
                             ///user/{start}/{size}
-            String subUrl = "user/12/24";
+            String subUrl = "/user/1/2";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -123,12 +111,29 @@ public class KnowledgeWebTest extends TestCase {
     {
         try {
                            //user/{columnId}/{start}/{size}
-            String subUrl = "user/2/1/5/10";
+            String subUrl = "/user/2/1/1/2";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
+    }
+
+    private DataCollection createKnowledge()
+    {
+        DataCollection data = TestData.getDataCollection((short) 2, "KnowledgeWebTest");
+        try {
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(data);
+            JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
+            Util.checkResponse(response);
+            long knowledgeId = Long.parseLong(Util.getResponseData(response));
+            data.getKnowledgeDetail().setId(knowledgeId);
+            data.getReference().setKnowledgeId(knowledgeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        return data;
     }
 }

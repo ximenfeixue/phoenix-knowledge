@@ -136,7 +136,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndType(long UserId,String type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndType(long UserId,short type,int start,int size) throws Exception;
 
 	/**
 	 * 根据创建用户与栏目提取
@@ -149,7 +149,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,long columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,short columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取
@@ -161,7 +161,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnId(long columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByColumnId(short columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型与栏目提取
@@ -174,7 +174,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndColumnId(String type,long columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByTypeAndColumnId(short type,short columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型提取
@@ -186,7 +186,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByType(String type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByType(short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户、类型、栏目提取
@@ -200,7 +200,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,String type,long columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,short type,short columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 获取某个时间段之间的知识
@@ -227,7 +227,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(String type,Date beginDate,Date endDate,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户Id获取某个时间段之间的知识
@@ -256,7 +256,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,long columnId,Date beginDate,Date endDate,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,short columnId,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据状态提取
@@ -268,7 +268,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByStatus(String status,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByStatus(short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据审核状态提取
@@ -280,7 +280,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByAuditStatus(String auditStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByAuditStatus(short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据举报状态提取
@@ -292,7 +292,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByReportStatus(String reportStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByReportStatus(short reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、状态提取
@@ -305,7 +305,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,String status,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、审核状态提取
@@ -318,7 +318,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,String auditStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据用户Id、举报状态提取
@@ -331,7 +331,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,String reportStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,short reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、状态提取
@@ -344,7 +344,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndStatus(long columnId,String status,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndStatus(short columnId,short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、审核状态提取
@@ -356,7 +356,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndAuditStatus(long columnId,String auditStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndAuditStatus(short columnId,short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据栏目Id、举报状态提取
@@ -368,5 +368,5 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndReportStatus(long columnId,String reportStatus,int start,int size) throws Exception;
+	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,short reportStatus,int start,int size) throws Exception;
 }
