@@ -64,6 +64,14 @@ public class DataCollection implements Serializable {
 		this.column = column;
 	}*/
 
+    public DataCollection(){}
+
+    public DataCollection(KnowledgeBase knowledgeBase,KnowledgeReference reference)
+    {
+        this.knowledge = knowledgeBase;
+        this.reference = reference;
+    }
+
 	public Associate getAsso() {
 		return asso;
 	}

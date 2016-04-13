@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import junit.framework.TestCase;
 
 /**
@@ -10,7 +11,11 @@ public abstract class BaseTestCase extends TestCase
 {
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
-    protected static boolean skipTestCase = false;
+    protected static boolean skipTestCase = true;
+    protected static long userId;
+    static {
+        userId = KnowledgeUtil.getDummyUser().getId();
+    }
 
     @Override
     protected void runTest() throws Throwable

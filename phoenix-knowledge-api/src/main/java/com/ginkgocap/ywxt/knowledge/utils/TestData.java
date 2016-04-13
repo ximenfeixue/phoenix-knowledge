@@ -38,7 +38,7 @@ public class TestData {
     }
 
     public static DataCollection dataCollection(long userId,String title) {
-        KnowledgeDetail knowledgeDetail = knowledgeDetail((short)2, title);
+        KnowledgeDetail knowledgeDetail = knowledgeDetail(userId, (short)2, title);
         KnowledgeReference knowledgeReference = referenceObject(title);
 
         DataCollection dataCollection = new DataCollection();
@@ -49,10 +49,10 @@ public class TestData {
         return dataCollection;
     }
 
-    public static DataCollection getDataCollection(short columnId,String title)
+    public static DataCollection getDataCollection(long userId, short columnId,String title)
     {
         DataCollection data = new DataCollection();
-        data.setKnowledgeDetail(knowledgeDetail(columnId, title));
+        data.setKnowledgeDetail(knowledgeDetail(userId,columnId, title));
         data.setReference(referenceObject(title));
 
         return data;
@@ -88,12 +88,11 @@ public class TestData {
         return knowledge;
     }
 
-    public static KnowledgeDetail knowledgeDetail(short columnId,String title)
+    public static KnowledgeDetail knowledgeDetail(long userId,short columnId,String title)
     {
-        long ownerId = 123456L;
         long pictureId = 123456L;
         KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
-        knowledgeDetail.setOwnerId(ownerId);
+        knowledgeDetail.setOwnerId(userId);
         knowledgeDetail.setOwnerName("testUser");
         knowledgeDetail.setTitle(title == null ? "TestTitle" : title);
         knowledgeDetail.setContent("Knowledge Description");
@@ -102,10 +101,9 @@ public class TestData {
         knowledgeDetail.setMultiUrls(UrlIds);
         knowledgeDetail.setAttachmentUrls(UrlIds);
         knowledgeDetail.setColumnId(columnId);
-        knowledgeDetail.setModifyUserId(ownerId);
+        knowledgeDetail.setModifyUserId(userId);
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         knowledgeDetail.setModifyTime(System.currentTimeMillis());
-        knowledgeDetail.setModifyUserId(ownerId);
 
         return knowledgeDetail;
     }

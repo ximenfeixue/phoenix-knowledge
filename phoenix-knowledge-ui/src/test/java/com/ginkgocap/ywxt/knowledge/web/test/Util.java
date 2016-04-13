@@ -142,6 +142,12 @@ public final class Util {
         checkRequestResultSuccess(result);
     }
 
+    public static void checkResponseWithData(JsonNode notifNode)
+    {
+        checkRequestResultSuccess(notifNode);
+        Assert.assertNotNull(notifNode.get(RetKey.RespData));
+    }
+
     public static void checkRequestResultSuccess(JsonNode notifNode)
     {
         Assert.assertNotNull(notifNode);

@@ -5,9 +5,6 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @Title: 知识来源信息
@@ -133,38 +130,5 @@ public class KnowledgeReference implements Serializable {
 
 	public void setModifyDate(long modifyDate) {
 		this.modifyDate = modifyDate;
-	}
-	
-	
-	public static List<DataCollection> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> knowledgeReferenceList) {
-		List<DataCollection> returnList = new ArrayList<DataCollection>();
-		
-		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
-			return returnList;
-		if(knowledgeReferenceList == null)
-			knowledgeReferenceList = new ArrayList<KnowledgeReference>();
-		
-		Iterator<KnowledgeBase> baseIt = knowledgeBaseList.iterator();
-		
-		while(baseIt.hasNext()) {
-			
-			KnowledgeBase base = baseIt.next();
-			
-			Iterator<KnowledgeReference> referenceIt = knowledgeReferenceList.iterator();
-			
-			KnowledgeReference reference = null;
-			while(referenceIt.hasNext()) {
-				KnowledgeReference referenceTemp = referenceIt.next();
-				if(base.getId() == referenceTemp.getId()) {
-					reference = referenceTemp;
-					break;
-				}
-			}
-			DataCollection dataCollection = new DataCollection();
-			dataCollection.setKnowledge(base);
-			dataCollection.setReference(reference);
-			returnList.add(dataCollection);
-		}
-		return returnList;
 	}
 }

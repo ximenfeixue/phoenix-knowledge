@@ -35,7 +35,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
                 ids = mongoTemplate.findAndModify(query, update, Ids.class);
             }
         }
-		
+
 		return ids.getCid();
 	}
 

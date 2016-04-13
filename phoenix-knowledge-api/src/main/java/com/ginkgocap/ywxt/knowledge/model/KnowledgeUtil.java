@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -121,12 +122,17 @@ public final class KnowledgeUtil {
         return objectMapper.readValue(content, valueType);
     }
 
-    public static String writeObjectToJson(Object content) throws IOException {
+    public static String writeObjectToJson(Object content) {
         if (content == null) {
             throw new IllegalArgumentException("Content is null");
         }
 
-        return objectMapper.writeValueAsString(content);
+        try {
+            return objectMapper.writeValueAsString(content);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static JsonNode getJsonNode(final String jsonStr, final String... values) {

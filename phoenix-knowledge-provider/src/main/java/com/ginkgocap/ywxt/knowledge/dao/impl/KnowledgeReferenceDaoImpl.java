@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.parasol.common.service.impl.BaseService;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import org.springframework.stereotype.Repository;
 
@@ -8,24 +9,22 @@ import java.util.Date;
 import java.util.List;
 
 @Repository("KnowledgeReferenceDao")
-public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> implements com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao {
+public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> implements KnowledgeReferenceDao {
 
 	@Override
-	public KnowledgeReference insert(KnowledgeReference knowledgeReference,long knowledgeId)
+	public KnowledgeReference insert(KnowledgeReference knowledgeReference)
 			throws Exception {
 		
-		if(knowledgeReference == null)
-			return null;
+		if(knowledgeReference == null) {
+            throw new IllegalArgumentException("knowledgeReference is null");
+        }
 		
-		if(knowledgeId <= 0) {
+		if(knowledgeReference.getKnowledgeId() <= 0) {
 			throw new Exception("插入知识来源表时，知识主键缺失");
 		}
 		
-		knowledgeReference.setKnowledgeId(knowledgeId);
-		
 		long currentDate = new Date().getTime();
 		knowledgeReference.setModifyDate(currentDate);
-		
 		long id = (Long) this.saveEntity(knowledgeReference);
 		
 		return this.getById(id);
@@ -65,7 +64,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 
 	@Override
 	public KnowledgeReference insertAfterDelete(
-			KnowledgeReference knowledgeReference,long knowledgeId) throws Exception {
+			KnowledgeReference knowledgeReference) throws Exception {
 		
 		long id = knowledgeReference.getId();
 		
@@ -77,10 +76,10 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 		}
 		
 		try {
-			this.insert(knowledgeReference, knowledgeId);
+			this.insert(knowledgeReference);
 		} catch (Exception e) {
 			if(oldValue != null && oldValue.getId() > 0) {
-                this.insert(oldValue, oldValue.getKnowledgeId());
+                this.insert(oldValue);
             }
 			throw e;
 		}
@@ -120,18 +119,16 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	}
 
 	@Override
-	public KnowledgeReference getById(long id) throws Exception {
-		
-		return this.getEntity(id);
+	public KnowledgeReference getById(long knowledgeId) throws Exception {
+
+        List<KnowledgeReference> referenceItems = this.getEntitys("get_reference_by_Id", new Object[]{knowledgeId});
+        return (referenceItems != null && referenceItems.size() > 0) ? referenceItems.get(0) : null;
 	}
 
 	@Override
-	public List<KnowledgeReference> getByIds(List<Long> ids) throws Exception {
-		
-		if(ids == null || ids.size() < 1)
-			return null;
-		
-		return this.getEntityByIds(ids);
+	public List<KnowledgeReference> getByIds(List<Long> knowledgeIds) throws Exception {
+
+        return this.getEntitys("get_reference_by_Ids", knowledgeIds.toArray());
 	}
 
 	@Override

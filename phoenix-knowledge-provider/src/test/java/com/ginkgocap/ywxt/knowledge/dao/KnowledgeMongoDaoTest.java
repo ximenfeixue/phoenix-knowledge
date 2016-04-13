@@ -26,9 +26,8 @@ public class KnowledgeMongoDaoTest extends TestBase {
     @Test
     public void testInsert()
     {
-        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail((short)2, "KnowledgeMongoDaoTest");
+        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(userId, (short)2, "KnowledgeMongoDaoTest");
         try {
-            knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
             updateKnowledgeDetail = knowledgeMongoDao.insert(knowledgeDetail);
             TestCase.assertNotNull(updateKnowledgeDetail);
         } catch (Exception e) {
@@ -40,8 +39,8 @@ public class KnowledgeMongoDaoTest extends TestBase {
     @Test
     public void testInsertList() {
         List<KnowledgeDetail> knowledgeDetailList = new ArrayList<KnowledgeDetail>(2);
-        knowledgeDetailList.add(TestData.knowledgeDetail((short)3, "KnowledgeMongoDaoTest"));
-        knowledgeDetailList.add(TestData.knowledgeDetail((short)4, "KnowledgeMongoDaoTest"));
+        knowledgeDetailList.add(TestData.knowledgeDetail(userId, (short)3, "KnowledgeMongoDaoTest"));
+        knowledgeDetailList.add(TestData.knowledgeDetail(userId, (short)4, "KnowledgeMongoDaoTest"));
         try {
             List<KnowledgeDetail> knowledgeList = knowledgeMongoDao.insertList(knowledgeDetailList);
             TestCase.assertNotNull(knowledgeList);
@@ -156,7 +155,7 @@ public class KnowledgeMongoDaoTest extends TestBase {
     {
         KnowledgeDetail createdKnowledge = null;
         try {
-            KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(columnId, "KnowledgeMongoDaoTest");
+            KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(userId, columnId, "KnowledgeMongoDaoTest");
             createdKnowledge = knowledgeMongoDao.insert(knowledgeDetail);
             TestCase.assertNotNull(createdKnowledge);
         } catch (Exception e) {

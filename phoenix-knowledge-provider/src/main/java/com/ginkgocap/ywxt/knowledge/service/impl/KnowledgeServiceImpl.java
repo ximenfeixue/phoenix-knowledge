@@ -56,20 +56,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
 		KnowledgeReference knowledgeReference = dataCollection.getReference();
-		
-		long knowledgeId = this.knowledgeCommonService.getKnowledgeSeqenceId();
-		short columnId = knowledgeDetail.getColumnId();
-        knowledgeDetail.setId(knowledgeId);
 
-        KnowledgeBase knowledge = dataCollection.generateKnowledge();
-		
         //knowledgeDetail.createContendDesc();
 		
 		//知识详细信息插入
-        KnowledgeDetail afterSaveKnowledgeDetail = this.knowledgeMongoDao.insert(knowledgeDetail);
-		
-		//知识基础表插入
+        KnowledgeDetail savedKnowledgeDetail = this.knowledgeMongoDao.insert(knowledgeDetail);
+        if (savedKnowledgeDetail == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        short columnId = knowledgeDetail.getColumnId();
+        long knowledgeId = savedKnowledgeDetail.getId();
+
+        //知识基础表插入
 		try {
+            KnowledgeBase knowledge = dataCollection.generateKnowledge();
+            knowledge.setKnowledgeId(knowledgeId);
 			this.knowledgeMysqlDao.insert(knowledge);
 		} catch (Exception e) {
 			this.insertRollBack(knowledgeId, columnId, true, false, false, false, false);
@@ -81,7 +82,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         KnowledgeReference savedKnowledgeReference = null;
         if (knowledgeReference != null) {
             try {
-                savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference, knowledgeId);
+                knowledgeReference.setKnowledgeId(knowledgeId);
+                savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
                 this.insertRollBack(knowledgeId, columnId, true, true, false, false, false);
                 logger.error("知识基础表插入失败！失败原因：\n" + e.getCause().toString());
@@ -219,7 +221,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 		
-		return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+		return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
 	}
 
 	@Override
@@ -297,10 +299,12 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds) throws Exception {
 		
 		List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByIds(knowledgeIds);
+        if (knowledgeList == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        }
+		List<KnowledgeReference> referenceList = this.knowledgeReferenceDao.getByIds(knowledgeIds);
 		
-		List<KnowledgeReference> knowledgeReferenceList = this.knowledgeReferenceDao.getByIds(knowledgeIds);
-		
-		return InterfaceResult.getSuccessInterfaceResultInstance(KnowledgeReference.putReferenceList2BaseList(knowledgeList,knowledgeReferenceList));
+		return InterfaceResult.getSuccessInterfaceResultInstance(putReferenceList2BaseList(knowledgeList,referenceList));
 	}
 
 	@Override
@@ -371,7 +375,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.insertAfterDelete(oldKnowledgeDetail, null);
 		if(isBase) this.knowledgeMysqlDao.insertAfterDelete(oldKnowledge);
-		if(isReference) this.knowledgeReferenceDao.insertAfterDelete(oldKnowledgeReference, knowledgeId);
+		if(isReference) {
+            oldKnowledgeReference.setKnowledgeId(knowledgeId);
+            this.knowledgeReferenceDao.insertAfterDelete(oldKnowledgeReference);
+        }
 		//if(isBigData) this.bigDataService.sendMessage(IBigDataService.KNOWLEDGE_UPDATE, oldKnowledgeMongo, user);
 		//if(isUserFeed) this.userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(oldKnowledgeMongo, diaryService));
 	}
@@ -387,7 +394,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.insert(oldKnowledgeMongo);
 		if(isBase) this.knowledgeMysqlDao.insert(knowledge);
-		if(isReference) this.knowledgeReferenceDao.insert(oldKnowledgeReference, knowledgeId);
+		if(isReference) {
+            oldKnowledgeReference.setKnowledgeId(knowledgeId);
+            this.knowledgeReferenceDao.insert(oldKnowledgeReference);
+        }
 		//if(isBigData) this.bigDataService.sendMessage(IBigDataService.KNOWLEDGE_INSERT, oldKnowledgeMongo, user);
 		//if(isUserFeed) this.userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(oldKnowledgeMongo, diaryService));
 	}
@@ -456,6 +466,23 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         dataCollection.setReference(knowledgeReference);
 
         return dataCollection;
+    }
+
+    private List<DataCollection> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> referenceList) {
+
+        if(knowledgeBaseList == null || knowledgeBaseList.size() <= 0) {
+            return null;
+        }
+
+        int knowledgeSize = knowledgeBaseList.size();
+        List<DataCollection> returnList = new ArrayList<DataCollection>(knowledgeSize);
+        for (int index = 0; index < knowledgeSize; index++) {
+            KnowledgeReference reference = (referenceList != null && referenceList.size() < knowledgeSize) ? referenceList.get(index) : null;
+            DataCollection dataCollection = new DataCollection(knowledgeBaseList.get(index), reference);
+            returnList.add(dataCollection);
+        }
+
+        return returnList;
     }
 	
 }

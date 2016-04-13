@@ -37,11 +37,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             throw new IllegalArgumentException("knowledgeDetail is null");
         }
 
-        knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
 		long currentDate = new Date().getTime();
         knowledgeDetail.setCreateTime(currentDate);
 		
 		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
+        knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
 		mongoTemplate.insert(knowledgeDetail,currCollectionName);
 		
 		return knowledgeDetail;

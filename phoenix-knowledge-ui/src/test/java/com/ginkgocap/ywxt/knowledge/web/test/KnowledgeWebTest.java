@@ -122,7 +122,7 @@ public class KnowledgeWebTest extends BaseTestCase {
 
     private DataCollection createKnowledge()
     {
-        DataCollection data = TestData.getDataCollection((short) 2, "KnowledgeWebTest");
+        DataCollection data = TestData.getDataCollection(userId, (short) 2, "KnowledgeWebTest");
         try {
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(data);
             JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);

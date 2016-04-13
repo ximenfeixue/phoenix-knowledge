@@ -1,9 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
-import java.util.List;
-
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
-import com.ginkgocap.ywxt.user.model.User;
+
+import java.util.List;
 
 /**
  * @Title: 知识来源表
@@ -22,14 +21,13 @@ public interface KnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeReference insert(KnowledgeReference knowledgeReference,long knowledgeId) throws Exception;
+	public KnowledgeReference insert(KnowledgeReference knowledgeReference) throws Exception;
 	
 	/**
 	 * 批量插入
 	 * @author 周仕奇
 	 * @date 2016年1月14日 下午6:05:51
 	 * @param knowledgeReference
-	 * @param user
 	 * @return
 	 * @throws Exception
 	 */
@@ -53,7 +51,7 @@ public interface KnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeReference insertAfterDelete(KnowledgeReference knowledgeReference,long knowledgeId) throws Exception;
+	public KnowledgeReference insertAfterDelete(KnowledgeReference knowledgeReference) throws Exception;
 	
 	/**
 	 * 根据主键删除
