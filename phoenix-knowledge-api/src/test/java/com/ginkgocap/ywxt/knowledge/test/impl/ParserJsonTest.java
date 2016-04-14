@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import com.mongodb.Mongo;
 import junit.framework.TestCase;
-import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -61,19 +60,16 @@ public class ParserJsonTest extends TestCase {
 		}
     }
 
-    @Test
     public void testKnowledgeParserJson() throws Exception
     {
     	checkJsonPaser( DataCollection.class );
     }
 
-    @Test
     public void testServiceMedicalConsultParserJson() throws Exception
     {
     	checkJsonPaser( KnowledgeComment.class );
     }
 
-    @Test
     public void testKnowledgeCommentParserJson() throws Exception
     {
         String knowledgeCommentJson = TestData.knowledgeCommentJson(12345567L);

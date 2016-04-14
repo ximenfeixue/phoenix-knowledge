@@ -33,7 +33,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
     public void testKnowledgeCommentCreate()
     {
-    	LOG("---------testKnowledgeCommentCreate---------");
+        LogMethod();
         String comment = Util.getKnowledgeComment(KnowledgeId, CommentForCreate);
         createKnowledgeComment(comment);
 
@@ -46,7 +46,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
     public void testKnowledgeCommentUpdate()
     {
-    	LOG("---------testKnowledgeCommentUpdate---------");
+        LogMethod();
         CommentForUpdate = "testKnowledgeCommentUpdate";
         createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForUpdate));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
@@ -75,7 +75,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     
     public void testKnowledgeCommentUpdateFail()
     {
-    	LOG("---------testKnowledgeCommentUpdateFail---------");
+        LogMethod();
         Long commentId = 0L;
         String URL = baseUrl + commentId.longValue();
         JsonNode notifNode = null;
@@ -89,7 +89,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
     public void testKnowledgeCommentGetList()
     {
-    	LOG("---------testKnowledgeCommentGetList---------");
+        LogMethod();
         String URL = listUrl + KnowledgeId;
         JsonNode notifNode = null;
         try {
@@ -102,7 +102,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
     public void testKnowledgeCommentGetCount()
     {
-    	LOG("---------testKnowledgeCommentGetCount---------");
+        LogMethod();
         String URL = baseUrl + "count/" + KnowledgeId;
         JsonNode notifNode = null;
         try {
@@ -116,7 +116,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
     public void testKnowledgeCommentDelete()
     {
-    	LOG("---------testKnowledgeCommentZDelete---------");
+        LogMethod();
         createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, "testKnowledgeCommentDelete"));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
@@ -140,7 +140,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     
     public void testKnowledgeCommentDeleteFail()
     {
-    	LOG("---------testKnowledgeCommentDeleteFail---------");
+        LogMethod();
         Long commentId = 0L;
         String URL = baseUrl + commentId.longValue();
         JsonNode notifNode = null;

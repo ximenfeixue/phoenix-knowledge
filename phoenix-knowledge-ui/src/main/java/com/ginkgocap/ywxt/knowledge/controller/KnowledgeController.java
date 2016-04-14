@@ -253,7 +253,6 @@ public class KnowledgeController extends BaseController {
 			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		
 		if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
@@ -417,7 +416,7 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if (knowledgeId <= 0) {
+        if (knowledgeId <= 0 || columnId < 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 

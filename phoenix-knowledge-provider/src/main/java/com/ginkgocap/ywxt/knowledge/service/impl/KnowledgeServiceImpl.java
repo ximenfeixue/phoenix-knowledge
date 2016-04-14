@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("knowledgeService")
 public class KnowledgeServiceImpl implements KnowledgeService {
@@ -184,9 +186,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		
 		//知识简表删除
-		KnowledgeBase knowledge = this.knowledgeMysqlDao.getById(knowledgeId);
 		try {
-			this.knowledgeMysqlDao.deleteById(knowledgeId);
+			this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		} catch (Exception e) {
 			this.deleteRollBack(knowledgeId, columnId, oldKnowledgeDetail,null,null, true, false, false, false, false);
 			logger.error("知识基础表删除失败！失败原因：\n"+e.getCause().toString());
@@ -195,7 +196,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		
 		//知识来源表删除
 		try {
-			this.knowledgeReferenceDao.deleteById(knowledgeId);
+			this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
 		} catch (Exception e) {
 			//this.deleteRollBack(knowledgeId, columnId,oldKnowledgeDetail,knowledge,null, true, true, false, false, false);
 			logger.error("知识来源表删除失败！失败原因：\n"+e.getCause().toString());
@@ -234,7 +235,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		
 		//知识简表删除
 		try {
-			this.knowledgeMysqlDao.deleteByIds(knowledgeIds);
+			this.knowledgeMysqlDao.deleteByKnowledgeIds(knowledgeIds);
 		} catch (Exception e) {
 			logger.error("知识基础表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
@@ -242,7 +243,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		
 		//知识来源表删除
 		try {
-			this.knowledgeReferenceDao.deleteByIds(knowledgeIds);
+			this.knowledgeReferenceDao.deleteByKnowledgeIds(knowledgeIds);
 		} catch (Exception e) {
 			logger.error("知识来源表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
@@ -282,23 +283,21 @@ public class KnowledgeServiceImpl implements KnowledgeService {
             //TODO: should return why can't get the detail info.
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
-		
 	}
 
 	@Override
-	public InterfaceResult<DataCollection> getBaseById(long knowledgeId) throws Exception {
-		
-		KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getById(knowledgeId);
-		
+	public InterfaceResult<DataCollection> getBaseById(long knowledgeId) throws Exception
+    {
+		KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
 		KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
 		
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledgeBase,knowledgeReference));
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds) throws Exception {
-		
-		List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByIds(knowledgeIds);
+	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds) throws Exception
+    {
+		List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
         if (knowledgeList == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         }
@@ -308,20 +307,20 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception {
-		
+	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception
+    {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getAll(start, size)));
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(long userId,int start,int size) throws Exception {
-		
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(long userId,int start,int size) throws Exception
+    {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserId(userId, start, size)));
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception {
-		
+	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception
+    {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size)));
 	}
 
@@ -358,7 +357,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	 */
 	private void insertRollBack(long knowledgeId, short columnId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
-		if(isBase) this.knowledgeMysqlDao.deleteById(knowledgeId);
+		if(isBase) this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		if(isReference) this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
 		if(isBigData) this.bigDataService.deleteMessage(knowledgeId, columnId, null);
 		//if(isUserFeed) this.userFeedService.deleteDynamicKnowledge(knowledgeId);
@@ -430,7 +429,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	 */
 	private List<DataCollection> getReturn(List<KnowledgeBase> knowledgeList) {
 
-		List<DataCollection> returnList = new ArrayList<DataCollection>();
+		List<DataCollection> returnList = new ArrayList<DataCollection>(knowledgeList.size());
 		if(knowledgeList != null && !knowledgeList.isEmpty())
 			for (KnowledgeBase data : knowledgeList)
 				returnList.add(getReturn(data,null));
@@ -474,11 +473,17 @@ public class KnowledgeServiceImpl implements KnowledgeService {
             return null;
         }
 
+        int referenceSize = referenceList != null ? referenceList.size() : 0;
+        Map<Long, KnowledgeReference> referenceMap = new HashMap<Long, KnowledgeReference>(referenceSize > 0 ? referenceSize : 1);
+        for (KnowledgeReference reference : referenceList) {
+            referenceMap.put(reference.getKnowledgeId(), reference);
+        }
+
         int knowledgeSize = knowledgeBaseList.size();
         List<DataCollection> returnList = new ArrayList<DataCollection>(knowledgeSize);
-        for (int index = 0; index < knowledgeSize; index++) {
-            KnowledgeReference reference = (referenceList != null && referenceList.size() < knowledgeSize) ? referenceList.get(index) : null;
-            DataCollection dataCollection = new DataCollection(knowledgeBaseList.get(index), reference);
+        for (KnowledgeBase knowledgeBase : knowledgeBaseList) {
+            KnowledgeReference reference = referenceMap.get(knowledgeBase.getKnowledgeId());
+            DataCollection dataCollection = new DataCollection(knowledgeBase, reference);
             returnList.add(dataCollection);
         }
 

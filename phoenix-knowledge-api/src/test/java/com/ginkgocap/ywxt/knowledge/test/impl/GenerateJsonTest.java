@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.io.IOException;
 
@@ -37,20 +36,17 @@ public class GenerateJsonTest extends TestCase {
         }
     }
 
-    @Test
     public void testAssoCreateJson() throws Exception
     {
         serviceCreateJsonCheck(TestData.assoObject() );
     }
 
 
-    @Test
     public void testKnowledgeCreateJson() throws Exception
     {
         serviceCreateJsonCheck(TestData.dataCollection() );
     }
 
-    @Test
     public void testKnowledgeCommentCreateJson() throws Exception
     {
         serviceCreateJsonCheck( TestData.knowledgeComment(123456L) );

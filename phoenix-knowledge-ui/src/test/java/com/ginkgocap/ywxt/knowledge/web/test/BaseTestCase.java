@@ -11,7 +11,7 @@ public abstract class BaseTestCase extends TestCase
 {
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
-    protected static boolean skipTestCase = true;
+    protected static boolean runTestCase = false;
     protected static long userId;
     static {
         userId = KnowledgeUtil.getDummyUser().getId();
@@ -20,7 +20,7 @@ public abstract class BaseTestCase extends TestCase
     @Override
     protected void runTest() throws Throwable
     {
-        if (!skipTestCase) {
+        if (runTestCase) {
             super.runTest();
         }
     }
@@ -61,8 +61,16 @@ public abstract class BaseTestCase extends TestCase
     {
     	if (debugModel) {
 	    	//Just for show the message
-	    	System.err.println(logMesage+"\r\n");
+	    	System.err.println("======="+logMesage+"========\r\n");
     	}
+    }
+
+    protected void LogMethod()
+    {
+        if (debugModel) {
+            //Just for show the message
+            System.err.println("======="+Thread.currentThread().getStackTrace()[2].getMethodName()+"========\r\n");
+        }
     }
     //end
 }

@@ -30,6 +30,9 @@
         <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
+        <parasol-common-provider.version>1.0.0-SNAPSHOT</parasol-common-provider.version>
+        <parasol-cache.version>1.0.0-SNAPSHOT</parasol-cache.version>
+        <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
         <slf4j-api.version>1.7.2</slf4j-api.version>
         <slf4j-log4j12.version>1.7.2</slf4j-log4j12.version>
         <log4j.version>1.2.16</log4j.version>
@@ -53,78 +56,6 @@
         <commons-pool2.version>2.0</commons-pool2.version>
         <skip_maven_deploy>true</skip_maven_deploy>
     </properties>
-
-    <repositories>
-        <!-- 如有Nexus私服, 取消注释并指向正确的服务器地址. -->
-        <repository>
-            <id>nexus-release</id>
-            <name>Team Nexus Repository</name>
-            <url>http://192.168.101.89:8081/nexus/content/groups/public</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-        <repository>
-            <id>other-release</id>
-            <name>Team Nexus Repository</name>
-            <url>http://192.168.101.89:8081/nexus/content/repositories/releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>nexus-snapshort</id>
-            <name>Team Nexus Repository</name>
-            <url>http://192.168.101.89:8081/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>spring</id>
-            <name>Spring Maven SNAPSHOT Repository</name>
-            <url>http://repo.springsource.org/libs</url>
-        </repository>
-        <repository>
-            <id>springside</id>
-            <name>SpringSide Additional Repository</name>
-            <url>http://springside.googlecode.com/svn/repository</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestone</id>
-            <name>Spring Maven MILESTONE Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>Codehaus repository</id>
-            <url>http://repository.codehaus.org/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>localhost plugins</id>
-            <url>http://192.168.101.89:8081/nexus/content/groups/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <distributionManagement>
         <snapshotRepository>
@@ -160,7 +91,21 @@
                 <artifactId>parasol-metadata-api</artifactId>
                 <version>${parasol-metadata.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.ginkgocap.parasol</groupId>
+                <artifactId>parasol-common-provider</artifactId>
+                <version>${parasol-common-provider.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.parasol</groupId>
+                <artifactId>parasol-cache</artifactId>
+                <version>${parasol-cache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.parasol</groupId>
+                <artifactId>parasol-associate-api</artifactId>
+                <version>${parasol-associate-api.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.gintong.common</groupId>
@@ -388,6 +333,78 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- 如有Nexus私服, 取消注释并指向正确的服务器地址. -->
+        <repository>
+            <id>nexus-release</id>
+            <name>Team Nexus Repository</name>
+            <url>http://192.168.101.89:8081/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>other-release</id>
+            <name>Team Nexus Repository</name>
+            <url>http://192.168.101.89:8081/nexus/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>nexus-snapshort</id>
+            <name>Team Nexus Repository</name>
+            <url>http://192.168.101.89:8081/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>spring</id>
+            <name>Spring Maven SNAPSHOT Repository</name>
+            <url>http://repo.springsource.org/libs</url>
+        </repository>
+        <repository>
+            <id>springside</id>
+            <name>SpringSide Additional Repository</name>
+            <url>http://springside.googlecode.com/svn/repository</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Maven MILESTONE Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Codehaus repository</id>
+            <url>http://repository.codehaus.org/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>localhost plugins</id>
+            <url>http://192.168.101.89:8081/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<build>
 		<plugins>

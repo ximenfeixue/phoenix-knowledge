@@ -19,7 +19,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		
 		long id = (Long) this.saveEntity(knowledgeBase);
 		
-		return this.getById(id);
+		return knowledgeBase;
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		
 		this.updateEntity(knowledgeBase);
 		
-		return this.getById(knowledgeBase.getId());
+		return this.getByKnowledgeId(knowledgeBase.getId());
 	}
 
 	@Override
@@ -51,9 +51,9 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		KnowledgeBase oldValue = null;
 		
 		if(id <= 0) {
-			oldValue = this.getById(id);
+			oldValue = this.getByKnowledgeId(id);
 			
-			this.deleteById(id);
+			this.deleteByKnowledgeId(id);
 		}
 		
 		try {
@@ -64,23 +64,19 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 			throw e;
 		}
 		
-		return this.getById(id);
+		return this.getByKnowledgeId(id);
 	}
 
 	@Override
-	public int deleteById(long id) throws Exception {
-		
-		boolean deleteStatus = this.deleteEntity(id);
-		
-		return deleteStatus ? 1 : 0;
+	public int deleteByKnowledgeId(long knowledgeId) throws Exception {
+
+        return this.deleteList("delete_knowledge_by_knowledgeId", knowledgeId);
 	}
 
 	@Override
-	public int deleteByIds(List<Long> ids) throws Exception {
-		
-		boolean deleteStatus = this.deleteEntityByIds(ids);
-		
-		return deleteStatus ? 1 : 0;
+	public int deleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
+
+        return this.deleteList("delete_knowledge_by_knowledgeIds", knowledgeIds);
 	}
 
 	@Override
@@ -92,14 +88,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public KnowledgeBase getById(long knowledgeId) throws Exception
+	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception
     {
         List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id", new Object[]{knowledgeId});
         return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
 	}
 
 	@Override
-	public List<KnowledgeBase> getByIds(List<Long> knowledgeIds) throws Exception
+	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception
     {
 		return this.getEntitys("get_knowledge_by_Ids", knowledgeIds.toArray());
 	}

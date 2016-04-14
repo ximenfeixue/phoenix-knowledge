@@ -179,9 +179,9 @@ public final class Util {
 
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent) throws Exception
     {
-        if (sessionID == null) {
-            login();
-        }
+        //if (sessionID == null) {
+        //    login();
+        //}
         return HttpRequestFull(httpMethod, urlString, jsonContent, sessionID);
     }
 

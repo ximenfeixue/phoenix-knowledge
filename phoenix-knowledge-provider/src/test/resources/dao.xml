@@ -24,6 +24,14 @@
                   sqlitem="select id from tb_knowledge_base where create_user_id = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
 
+            <list name="delete_knowledge_by_knowledgeId"
+                  sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
+                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
+
+            <list name="delete_knowledge_by_knowledgeIds"
+                  sqlitem="select id from tb_knowledge_base where knowledge_id in (?) "
+                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
+
             <list name="get_knowledge_by_Id"
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
@@ -129,11 +137,11 @@
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="delete_by_knowledgeId"
+            <list name="delete_reference_by_knowledgeId"
                   sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
-            <list name="delete_by_knowledgeIds"
+            <list name="delete_reference_by_knowledgeIds"
                   sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 

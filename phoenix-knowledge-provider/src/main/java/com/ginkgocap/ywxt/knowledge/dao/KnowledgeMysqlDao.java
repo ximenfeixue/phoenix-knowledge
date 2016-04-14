@@ -62,7 +62,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteById(long id) throws Exception;
+	public int deleteByKnowledgeId(long id) throws Exception;
 	
 	/**
 	 * 根据主键list批量删除
@@ -70,7 +70,7 @@ public interface KnowledgeMysqlDao {
 	 * @date 2016年1月12日 上午9:51:21
 	 * @return
 	 */
-	public int deleteByIds(List<Long> ids)  throws Exception;
+	public int deleteByKnowledgeIds(List<Long> ids)  throws Exception;
 	
 	/**
 	 * 根据创建用户ID删除
@@ -86,21 +86,21 @@ public interface KnowledgeMysqlDao {
 	 * 根据主键提取
 	 * @author 周仕奇
 	 * @date 2016年1月11日 下午6:06:13
-	 * @param id
+	 * @param knowledgeId
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase getById(long id) throws Exception;
+	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception;
 	
 	/**
 	 * 根据主键list批量提取
 	 * @author 周仕奇
 	 * @date 2016年1月12日 上午9:54:24
-	 * @param ids
+	 * @param knowledgeIds
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByIds(List<Long> ids) throws Exception;
+	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception;
 	
 	/**
 	 * 提取所有数据

@@ -27,7 +27,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 		knowledgeReference.setModifyDate(currentDate);
 		long id = (Long) this.saveEntity(knowledgeReference);
 		
-		return this.getById(id);
+		return knowledgeReference;
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 		knowledgeReference.setModifyDate(currentDate);
 		this.updateEntity(knowledgeReference);
 		
-		return this.getById(knowledgeReference.getId());
+		return knowledgeReference;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 			throw e;
 		}
 		
-		return this.getById(id);
+		return knowledgeReference;
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	@Override
 	public int deleteByKnowledgeId(long knowledgeId) throws Exception {
 		
-		return this.deleteList("delete_by_knowledgeId", knowledgeId);
+		return this.deleteList("delete_reference_by_knowledgeId", knowledgeId);
 	}
 
 	@Override
@@ -115,20 +115,22 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 		if(knowledgeIds == null || knowledgeIds.size() < 1)
 			return 0;
 		
-		return this.deleteList("delete_by_knowledgeIds", knowledgeIds.toArray());
+		return this.deleteList("delete_reference_by_knowledgeIds", knowledgeIds.toArray());
 	}
 
 	@Override
-	public KnowledgeReference getById(long knowledgeId) throws Exception {
+	public KnowledgeReference getById(long id) throws Exception {
 
-        List<KnowledgeReference> referenceItems = this.getEntitys("get_reference_by_Id", new Object[]{knowledgeId});
-        return (referenceItems != null && referenceItems.size() > 0) ? referenceItems.get(0) : null;
+		return this.getEntity(id);
 	}
 
 	@Override
-	public List<KnowledgeReference> getByIds(List<Long> knowledgeIds) throws Exception {
+	public List<KnowledgeReference> getByIds(List<Long> ids) throws Exception {
 
-        return this.getEntitys("get_reference_by_Ids", knowledgeIds.toArray());
+		if(ids == null || ids.size() < 1)
+			return null;
+
+		return this.getEntityByIds(ids);
 	}
 
 	@Override
@@ -148,7 +150,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	public KnowledgeReference getByKnowledgeId(long knowledgeId)
 			throws Exception {
 		
-		List<KnowledgeReference> list = this.getEntitys("get_by_knowledgeId", new Object[]{knowledgeId});
+		List<KnowledgeReference> list = this.getEntitys("get_reference_by_Id", new Object[]{knowledgeId});
 		
 		if(list == null || list.isEmpty()) {
 			return null;
@@ -164,7 +166,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 		if(knowledgeIds == null || knowledgeIds.size() < 1)
 			return null;
 		
-		return this.getEntitys("get_by_knowledgeIds", knowledgeIds.toArray());
+		return this.getEntitys("get_reference_by_Ids", knowledgeIds.toArray());
 	}
 
 	@Override
