@@ -12,10 +12,11 @@ import java.util.List;
 public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements KnowledgeMysqlDao {
 
 	@Override
-	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception {
-		
-		if(knowledgeBase == null)
-			return null;
+	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception
+    {
+		if(knowledgeBase == null) {
+            throw new IllegalArgumentException("knowledgeBase is null!");
+        }
 		
 		long id = (Long) this.saveEntity(knowledgeBase);
 		
@@ -23,8 +24,8 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 	
 	@Override
-	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList) throws Exception {
-		
+	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList) throws Exception
+    {
 		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
 			return null;
 		

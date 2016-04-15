@@ -2,7 +2,9 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -36,13 +38,14 @@ public class KnowledgeController extends BaseController {
 	@Autowired
 	private KnowledgeService knowledgeService;
 
+    @Autowired
+    KnowledgeOtherService knowledgeOtherService;
+
     //@Autowired
     //private IAssoService assoService;
 	
 	/**
 	 * 插入数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:51:59
 	 * @throws IOException
 	 */
     @ResponseBody
@@ -74,8 +77,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 更新数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:52:17
 	 * @throws IOException
 	 */
     @ResponseBody
@@ -106,8 +107,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 删除数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:52:33
 	 * @param id 知识主键
 	 * @param columnId 栏目主键
 	 * @throws IOException
@@ -140,8 +139,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 提取知识详细信息，一般用在详细查看界面、编辑界面
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:53:25
 	 * @param id 知识主键
 	 * @param columnId 栏目主键
 	 * @throws IOException
@@ -181,8 +178,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 提取所有知识数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:54:27
 	 * @param start 分页起始
 	 * @param size 分页大小
 	 * @throws IOException
@@ -210,8 +205,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 根据栏目提取知识数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:54:27
 	 * @param start 分页起始
 	 * @param size 分页大小
 	 * @throws IOException
@@ -241,8 +234,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 提取当前用户的所有知识数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:54:27
 	 * @param start 分页起始
 	 * @param size 分页大小
 	 * @throws IOException
@@ -271,8 +262,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 根据栏目提取当前用户的知识数据
-	 * @author 周仕奇
-	 * @date 2016年1月15日 下午4:54:27
 	 * @param start 分页起始
 	 * @param size 分页大小
 	 * @throws IOException
@@ -302,8 +291,6 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 首页获取大数据知识热门推荐和发现热门知识
-	 * @author 周仕奇
-	 * @date 2016年1月18日 上午10:46:43
 	 * @param type 1,推荐 2,发现
 	 * @param start
 	 * @param size
@@ -338,40 +325,35 @@ public class KnowledgeController extends BaseController {
 
     /**
      * 收藏知识
-     *
      * @param knowledgeId 知识Id
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/collect/{knowledgeId/{columnId}}", method = RequestMethod.POST)
+    @RequestMapping(value = "/collect/{knowledgeId}/{columnId}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> collect(HttpServletRequest request, HttpServletResponse response,
                                                    @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
 
         User user = this.getUser(request);
-
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
+        long userId = user.getId();
 
-        if (knowledgeId <= 0) {
+        if (knowledgeId <= 0 || columnId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
-        InterfaceResult<DataCollection> affterDeleteDataCollection = null;
-        /*
         try {
-			affterDeleteDataCollection = this.knowledgeService.deleteByKnowledgeId(id, columnId, user);
+			this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, columnId);
 		} catch (Exception e) {
-			logger.error("知识删除失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
-			return affterDeleteDataCollection;
-		}*/
+			logger.error("collect knowledge failed！：" + e.getMessage());
+		}
         logger.info(".......collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     /**
      * 取消收藏的知识
-     *
      * @param knowledgeId 知识Id
      * @throws IOException
      */
@@ -384,26 +366,23 @@ public class KnowledgeController extends BaseController {
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
+        long userId = user.getId();
 
-        if (knowledgeId <= 0) {
+        if (knowledgeId <= 0 || columnId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
-        InterfaceResult<DataCollection> affterDeleteDataCollection = null;
-        /*
 		try {
-			affterDeleteDataCollection = this.knowledgeService.deleteByKnowledgeId(id, columnId, user);
+			this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, columnId);
 		} catch (Exception e) {
-			logger.error("知识删除失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
-			return affterDeleteDataCollection;
-		}*/
+			logger.error("cancel collected knowledge failed！：" + e.getMessage());
+		}
         logger.info(".......cancel collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     /**
      * 保存知识
-     *
      * @param knowledgeId 知识Id
      * @throws IOException
      */
@@ -411,58 +390,39 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/save/{knowledgeId}/{columnId}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> save(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
 
-        if (knowledgeId <= 0 || columnId < 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-        }
+        InterfaceResult result = create(request, response);
 
-        InterfaceResult<DataCollection> affterDeleteDataCollection = null;
-        /*
-		try {
-			affterDeleteDataCollection = this.knowledgeService.deleteByKnowledgeId(id, columnId, user);
-		} catch (Exception e) {
-			logger.error("知识删除失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
-			return affterDeleteDataCollection;
-		}*/
         logger.info(".......save knowledge success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return result;
     }
 
     /**
      * 举报知识
-     *
      * @param knowledgeId 知识Id
      * @throws IOException
-     * @author 周仕奇
-     * @date 2016年1月15日 下午4:52:33
      */
     @ResponseBody
     @RequestMapping(value = "/report/{knowledgeId}/{columnId}", method = RequestMethod.POST)
-    public InterfaceResult<DataCollection> report(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult report(HttpServletRequest request, HttpServletResponse response,
                                                   @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
 
         User user = this.getUser(request);
-
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if (knowledgeId <= 0) {
+        String requestJson = this.getBodyParam(request);
+        KnowledgeReport report = KnowledgeUtil.readValue(KnowledgeReport.class, requestJson);
+        if (report == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
-        InterfaceResult<DataCollection> affterDeleteDataCollection = null;
-        /*
 		try {
-			affterDeleteDataCollection = this.knowledgeService.deleteByKnowledgeId(id, columnId, user);
+			this.knowledgeOtherService.reportKnowledge(report);
 		} catch (Exception e) {
-			logger.error("知识删除失败！失败原因："+affterDeleteDataCollection.getNotification().getNotifInfo());
-			return affterDeleteDataCollection;
-		}*/
+			logger.error("知识删除失败！失败原因："+e.getMessage());
+		}
         logger.info(".......report knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }

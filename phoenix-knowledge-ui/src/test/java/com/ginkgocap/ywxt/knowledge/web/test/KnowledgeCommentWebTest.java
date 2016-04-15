@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,38 +15,31 @@ import java.util.List;
  */
 public class KnowledgeCommentWebTest extends BaseTestCase
 {
-    private static String resPath = null;
     private Long KnowledgeId = 2676L;
     List<KnowledgeComment> knowledgeCommentList = new ArrayList<KnowledgeComment>();
     private String CommentForCreate = "Comment For Update-UnitTest";
     private String CommentForUpdate = "Comment For Update-UnitTest";
     private String CommentForDelete = "Comment For Delete-UnitTest";
 
-    private String baseUrl = "http://localhost:8080/phoenix-knowledge/knowledgeComment/";
+    private String baseUrl = hostUrl + "/knowledgeComment/";
     private String listUrl = baseUrl + "list/";
-    static {
-        if (resPath == null) {
-            resPath = KnowledgeUtil.defaultJsonPath();
-        }
-    }
 
     public void testKnowledgeCommentCreate()
     {
-        LogMethod();
-        String comment = Util.getKnowledgeComment(KnowledgeId, CommentForCreate);
+        CommentForCreate = LogMethod();
+        String comment = Util.getKnowledgeComment(KnowledgeId, CommentForCreate+"_1");
         createKnowledgeComment(comment);
 
-        comment = Util.getKnowledgeComment(KnowledgeId, CommentForUpdate);
+        comment = Util.getKnowledgeComment(KnowledgeId, CommentForUpdate+"_2");
         createKnowledgeComment(comment);
 
-        comment = Util.getKnowledgeComment(KnowledgeId, CommentForDelete);
+        comment = Util.getKnowledgeComment(KnowledgeId, CommentForDelete+"_3");
         createKnowledgeComment(comment);
     }
 
     public void testKnowledgeCommentUpdate()
     {
-        LogMethod();
-        CommentForUpdate = "testKnowledgeCommentUpdate";
+        CommentForUpdate = LogMethod();
         createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForUpdate));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
@@ -75,12 +67,12 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     
     public void testKnowledgeCommentUpdateFail()
     {
-        LogMethod();
+        CommentForUpdate = LogMethod();
         Long commentId = 0L;
         String URL = baseUrl + commentId.longValue();
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.PUT, URL, CommentForUpdate+"--Update");
+            notifNode = Util.HttpRequestResult(Util.HttpMethod.PUT, URL, CommentForUpdate+"_failed");
         } catch (Exception e) {
             writeException(e);
         }
@@ -93,11 +85,11 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = listUrl + KnowledgeId;
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.GET, URL, null);
+            notifNode = Util.HttpRequestFull(Util.HttpMethod.GET, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
-        checkResult(notifNode);
+        checkResultWithData(notifNode);
     }
 
     public void testKnowledgeCommentGetCount()
@@ -106,18 +98,19 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = baseUrl + "count/" + KnowledgeId;
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.GET, URL, null);
+            notifNode = Util.HttpRequestFull(Util.HttpMethod.GET, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
         LOG("Get Knowledge Comment Count: " + Util.getResponseData(notifNode));
-        checkResult(notifNode);
+        checkResultWithData(notifNode);
     }
 
     public void testKnowledgeCommentDelete()
     {
-        LogMethod();
-        createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, "testKnowledgeCommentDelete"));
+        CommentForDelete = LogMethod();
+        long commentId = 0L;
+        createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForDelete));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
             tryFail();
@@ -125,17 +118,23 @@ public class KnowledgeCommentWebTest extends BaseTestCase
 
         LOG("Knowledge Comment for for delete size: "+comments.size());
         for (KnowledgeComment comment : comments) {
-            Long commentId = comment.getId();
-            String URL = baseUrl + commentId.longValue();
-            JsonNode notifNode = null;
-            try {
-                LOG("Knowledge Comment for delete: "+commentId);
-                notifNode = Util.HttpRequestResult(Util.HttpMethod.DELETE, URL, null);
-            } catch (Exception e) {
-                writeException(e);
+            commentId = comment.getId();
+            if ("testKnowledgeCommentDelete".equals(comment.getContent())) {
+                break;
             }
-            checkResult(notifNode);
         }
+        if (commentId == 0L) {
+            fail();
+        }
+        String URL = baseUrl + commentId;
+        JsonNode notifNode = null;
+        try {
+            LOG("Knowledge Comment for delete, commentId: " + commentId);
+            notifNode = Util.HttpRequestResult(Util.HttpMethod.DELETE, URL, null);
+        } catch (Exception e) {
+            writeException(e);
+        }
+        checkResult(notifNode);
     }
     
     public void testKnowledgeCommentDeleteFail()

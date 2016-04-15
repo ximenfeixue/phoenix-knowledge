@@ -13,8 +13,12 @@ public abstract class BaseTestCase extends TestCase
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
     protected static long userId;
+    protected static String hostUrl = null;
     static {
         userId = KnowledgeUtil.getDummyUser().getId();
+        debugModel = System.getProperty("debugModel", "false").equals("true");
+        runTestCase = System.getProperty("runTestCase", "false").equals("true");
+        hostUrl = System.getProperty("hostUrl", "http://localhost:8080/phoenix-knowledge");
     }
 
     @Override
@@ -49,6 +53,13 @@ public abstract class BaseTestCase extends TestCase
             Util.checkRequestResultSuccess(notifNode);
         }
     }
+
+    protected void checkResultWithData(JsonNode notifNode)
+    {
+        if (!noTestHost) {
+            Util.checkResponseWithData(notifNode);
+        }
+    }
     
     protected void checkResultFail(JsonNode notifNode)
     {
@@ -61,16 +72,17 @@ public abstract class BaseTestCase extends TestCase
     {
     	if (debugModel) {
 	    	//Just for show the message
-	    	System.err.println("======="+logMesage+"========\r\n");
+	    	System.err.println("======= "+logMesage+" ========");
     	}
     }
 
-    protected void LogMethod()
+    protected String LogMethod()
     {
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (debugModel) {
-            //Just for show the message
-            System.err.println("======="+Thread.currentThread().getStackTrace()[2].getMethodName()+"========\r\n");
+            System.out.println("======= "+methodName+" ========");
         }
+        return methodName;
     }
     //end
 }

@@ -21,7 +21,6 @@ public abstract class BaseController {
 
     /**
      * 从body中获得参数
-     *
      * @param request
      * @return
      * @throws Exception

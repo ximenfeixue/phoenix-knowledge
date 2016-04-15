@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:int="http://www.springframework.org/schema/integration"
-	xmlns:int-redis="http://www.springframework.org/schema/integration/redis"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" 
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xmlns:stream="http://www.springframework.org/schema/integration/stream"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="   
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-redis="http://www.springframework.org/schema/integration/redis"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:stream="http://www.springframework.org/schema/integration/stream"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
@@ -27,24 +27,25 @@
 	http://www.springframework.org/schema/integration/redis
 	http://www.springframework.org/schema/integration/redis/spring-integration-redis-2.1.xsd
 	http://www.springframework.org/schema/integration/stream
-	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd 
+	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd
 	http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
-	
-	<dubbo:monitor protocol="registry" />
+
+    <dubbo:monitor protocol="registry" />
     <dubbo:application name="${dubbo.application.name}" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
-		<!-- threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
-		queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
-		accepts="${knowledge.dubbo.protocol.accepts}" accesslog="${knowledge.dubbo.protocol.accesslog}"
-		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" --> 
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <!-- threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
+    queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
+    accepts="${knowledge.dubbo.protocol.accepts}" accesslog="${knowledge.dubbo.protocol.accesslog}"
+    payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" -->
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:consumer timeout="10000" check="false" />
-	
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" ref="knowledgeService" version="3.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" ref="knowledgeCommentService" version="3.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" ref="bigDataService" version="3.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" ref="columnService" version="3.0.0"/>
- 	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" ref="columnCustomService" version="3.0.0"/>
- 	
+
+    <dubbo:service ref="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeOtherService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" version="3.0.0"/>
+    <!-- dubbo:service ref="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
+    <dubbo:service ref="columnService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" version="3.0.0"/>
+ 	<dubbo:service ref="columnCustomService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnCustomService" version="3.0.0"/-->
 </beans>

@@ -1,23 +1,18 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.ginkgocap.ywxt.knowledge.dao.IColumnCustomDao;
 import com.ginkgocap.ywxt.knowledge.dao.IColumnSysDao;
 import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
 import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 import com.ginkgocap.ywxt.knowledge.service.IColumnCustomService;
-import com.ginkgocap.ywxt.user.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Service("columnCustomService")
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+
+//@Service("columnCustomService")
 public class ColumnCustomServiceImpl implements IColumnCustomService {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ColumnCustomServiceImpl.class);

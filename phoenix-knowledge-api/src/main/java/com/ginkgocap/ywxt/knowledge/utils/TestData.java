@@ -148,16 +148,36 @@ public class TestData {
     }
 
     //For Knowledge Comment
-    public static KnowledgeComment knowledgeComment(Long knowledgeId) throws Exception
+    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, short columnId) throws Exception
+    {
+        return knowledgeComment(userId, knowledgeId, columnId, null);
+    }
+
+    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, short columnId, String content)
     {
         KnowledgeComment comment = new KnowledgeComment();
-        comment.setOwnerId(12344567L);
+        comment.setOwnerId(userId);
         comment.setKnowledgeId(knowledgeId);
+        comment.setColumnId(columnId);
         comment.setOwnerName("DummyUserName");
         comment.setCreateTime(System.currentTimeMillis());
-        comment.setContent("很不错，很好，很赞");
+        comment.setContent(content == null ? "Very Good" : content);
         comment.setVisible(1);
         return comment;
+    }
+
+    public static KnowledgeReport knowledgeReport(long userId, long knowledgeId, short columnId) throws Exception
+    {
+        KnowledgeReport report = new KnowledgeReport();
+        report.setId(0);
+        report.setColumnId(columnId);
+        report.setKnowledgeId(knowledgeId);
+        report.setUserId(userId);
+        report.setUserName("DummyUserName");
+        report.setCreateTime(System.currentTimeMillis());
+        report.setReason("Sexy Content");
+        report.setContent("Sexy Content， Sexy Content");
+        return report;
     }
 
     public static String knowledgeCommentJson(Long knowledgeId) throws Exception

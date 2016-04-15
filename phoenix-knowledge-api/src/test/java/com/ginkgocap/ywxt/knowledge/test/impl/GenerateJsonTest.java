@@ -3,17 +3,17 @@ package com.ginkgocap.ywxt.knowledge.test.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.IOException;
 
 /**
  * Created by Chen Peifeng on 2016/1/23.
  */
-public class GenerateJsonTest extends TestCase {
+public class GenerateJsonTest extends BaseTestCase {
 
     public void serviceCreateJsonCheck(Object object)
     {
@@ -23,6 +23,9 @@ public class GenerateJsonTest extends TestCase {
             }
             else if (object instanceof KnowledgeComment) {
                 System.out.println("Generate JSON Unit Test for: " + KnowledgeComment.class.getSimpleName());
+            }
+            else if (object instanceof KnowledgeReport) {
+                System.out.println("Generate JSON Unit Test for: " + KnowledgeReport.class.getSimpleName());
             }
 
             //FilterProvider idFilterProvider = new SimpleFilterProvider().addFilter("userFilter", SimpleBeanPropertyFilter.filterOutAllExcept(new String[]{"id"}));
@@ -47,18 +50,15 @@ public class GenerateJsonTest extends TestCase {
         serviceCreateJsonCheck(TestData.dataCollection() );
     }
 
+    @Test
     public void testKnowledgeCommentCreateJson() throws Exception
     {
-        serviceCreateJsonCheck( TestData.knowledgeComment(123456L) );
+        serviceCreateJsonCheck( TestData.knowledgeComment(userId, knowledgeId(), columnId) );
     }
 
-    //KnowledgeComment
-
-    private void knowledgeCommentCreateJson() throws Exception
+    @Test
+    public void testKnowledgeReportCreateJson() throws Exception
     {
-        KnowledgeComment knowledgeComment = TestData.knowledgeComment(12345679L);
-        System.out.println("Generate JSON Unit Test for: " + KnowledgeComment.class.getSimpleName());
-        String jsonConent = KnowledgeUtil.writeObjectToJson(knowledgeComment);
-        assertNotNull(jsonConent);
+        serviceCreateJsonCheck( TestData.knowledgeReport(userId, knowledgeId(), columnId) );
     }
 }

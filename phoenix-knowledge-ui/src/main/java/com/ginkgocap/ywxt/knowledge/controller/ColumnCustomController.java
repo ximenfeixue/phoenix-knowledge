@@ -1,27 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.ginkgocap.ywxt.knowledge.model.ColumnCustom;
-import com.ginkgocap.ywxt.knowledge.service.IColumnCustomService;
-import com.ginkgocap.ywxt.user.model.User;
-import com.gintong.frame.util.dto.CommonResultCode;
-import com.gintong.frame.util.dto.InterfaceResult;
-import net.sf.json.JSONObject;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.List;
-
-@Controller
-@RequestMapping("knowledge_columncustom")
+//@Controller
+//@RequestMapping("knowledge_columncustom")
 public class ColumnCustomController extends BaseController {
-	
+
+    /*
 	@Resource
 	private IColumnCustomService columnCustomService;
 	
@@ -98,6 +81,5 @@ public class ColumnCustomController extends BaseController {
 		}
 		this.columnCustomService.del(id);
 		return result;
-	}
-
+	}*/
 }

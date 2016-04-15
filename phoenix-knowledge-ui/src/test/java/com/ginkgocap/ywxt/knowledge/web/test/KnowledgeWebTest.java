@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.web.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import org.junit.Test;
  */
 public class KnowledgeWebTest extends BaseTestCase {
 
-    public static final String baseUrl = "http://localhost:8080/phoenix-knowledge/knowledge";
+    public final String baseUrl =  hostUrl + "/knowledge";
 
     @Test
     public void testCreateKnowledge()
@@ -123,6 +124,76 @@ public class KnowledgeWebTest extends BaseTestCase {
             e.printStackTrace();
             fail();
         }
+    }
+
+    @Test
+    public void testKnowledgeCollect()
+    {
+        LogMethod();
+        collectKnowledge("KnowledgeWebTest_testKnowledgeCollect");
+    }
+
+    @Test
+    public void testCancelCollectedKnowledge()
+    {
+        LogMethod();
+        try {
+            String subUrl = collectKnowledge("KnowledgeWebTest_testCancelCollectedKnowledge");// "/collect/{knowledgeId/{columnId}"
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testReportKnowledge()
+    {
+        LogMethod();
+        DataCollection data = createKnowledge("KnowledgeWebTest_testReportKnowledge");
+        // "/report/{knowledgeId}/{columnId}"
+        try {
+            long knowledgeId = data.getKnowledgeDetail().getId();
+            short columnId = data.getKnowledgeDetail().getColumnId();
+            String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
+            KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, knowledgeJson);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    private String collectKnowledge(String title)
+    {
+        String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"
+        try {
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        return subUrl;
+    }
+
+    private String knowledAndColumnIdUrl(String testCase)
+    {
+        DataCollection data = createKnowledge(testCase);
+        long knowledgeId = data.getKnowledgeDetail().getId();
+        short columnId = data.getKnowledgeDetail().getColumnId();
+
+        return "/" + knowledgeId + "/" + columnId;
+    }
+
+    private String knowledAndColumnIdUrl(long knowledgeId, short columnId)
+    {
+        return  "/" + knowledgeId + "/" + columnId;
     }
 
     private DataCollection createKnowledge(String title)

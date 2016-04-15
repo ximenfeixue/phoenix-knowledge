@@ -7,7 +7,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import com.mongodb.Mongo;
-import junit.framework.TestCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,7 +17,7 @@ import java.io.IOException;
 /**
  * Created by Chen Peifeng on 2016/1/23.
  */
-public class ParserJsonTest extends TestCase {
+public class ParserJsonTest extends BaseTestCase {
 
     private static boolean saveToDB = false;
     private static boolean createTestData = true;
@@ -98,11 +97,4 @@ public class ParserJsonTest extends TestCase {
             assertNotNull(comment);
         }
 	}
-
-	private long getInt() {
-		long minInt = 1; long maxInt = 100000;
-		long num =(Math.round(Math.random() * (maxInt - minInt) + minInt));
-		return num;
-	}
-
 }

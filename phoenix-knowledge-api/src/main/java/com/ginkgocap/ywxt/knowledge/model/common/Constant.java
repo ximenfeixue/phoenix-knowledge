@@ -7,6 +7,8 @@ public class Constant {
     public static class Collection {
         public final static String Knowledge = "Knowledge";
         public final static String KnowledgeComment = "KnowledgeComment";
+        public final static String KnowledgeCollect = "KnowledgeCollect";
+        public final static String KnowledgeReport = "KnowledgeReport";
     }
 
     public static class JsonNode {

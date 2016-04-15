@@ -3,10 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
@@ -348,11 +345,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
 	}
-	
+
 	/**
 	 * 插入时异常手动回滚方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:30:18
 	 * @throws Exception
 	 */
 	private void insertRollBack(long knowledgeId, short columnId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
@@ -365,8 +360,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	/**
 	 * 更新时异常手动回滚方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:30:54
 	 * @throws Exception
 	 */
 	private void updateRollBack(long knowledgeId, long columnId,
@@ -384,8 +377,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	/**
 	 * 单条删除时异常手动回滚方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:31:29
 	 * @throws Exception
 	 */
 	private void deleteRollBack(long knowledgeId, short columnId,
@@ -403,8 +394,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	/**
 	 * 批量删除时异常手动回滚方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:32:13
 	 * @throws Exception
 	 */
 	private void deleteListRollBack(List<KnowledgeDetail> oldKnowledgeDetailList,List<KnowledgeBase> oldKnowledgelList,List<KnowledgeReference> oldKnowledgeReferenceList,
@@ -422,8 +411,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	/**
 	 * 返回数据包装方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:32:58
 	 * @param knowledgeList
 	 * @return
 	 */
@@ -439,8 +426,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	
 	/**
 	 * 返回数据包装方法
-	 * @author 周仕奇
-	 * @date 2016年1月15日 上午11:33:16
 	 * @param knowledgeBase
 	 * @param knowledgeReference
 	 * @return

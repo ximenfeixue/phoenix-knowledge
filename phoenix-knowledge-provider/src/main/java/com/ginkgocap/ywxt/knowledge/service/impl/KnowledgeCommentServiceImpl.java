@@ -40,35 +40,35 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     }
 
     @Override
-    public boolean update(Long knowledgeId,Long ownerId,String comment)
+    public boolean update(Long commentId,Long ownerId,String comment)
     {
-        if(knowledgeId == null || comment == null || comment.trim().length() <= 0){
+        if(commentId == null || comment == null || comment.trim().length() <= 0){
             return false;
         }
 
-        Query query = commentIdAndOwnerId(knowledgeId, ownerId);
+        Query query = commentIdAndOwnerId(commentId, ownerId);
 
         Update update = new Update();
         update.set(Constant.Content, comment);
         KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
         if (knowledgeComment == null) {
-            logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + knowledgeId);
+            logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + commentId);
             return false;
         }
         return true;
     }
 
     @Override
-    public boolean delete(Long knowledgeId,Long ownerId)
+    public boolean delete(Long commentId,Long ownerId)
     {
-        if(knowledgeId == null || ownerId == null){
+        if(commentId == null || ownerId == null){
             return false;
         }
 
-        Query query = commentIdAndOwnerId(knowledgeId, ownerId);
+        Query query = commentIdAndOwnerId(commentId, ownerId);
         KnowledgeComment comment = mongoTemplate.findAndRemove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
         if (comment == null) {
-            logger.error("Update Knowledge Comment error, no this comment or no permission to delete: ownerId:"+ ownerId+ " knowledgeId:" + knowledgeId);
+            logger.error("delete knowledge comment error, no this comment or no permission to delete: ownerId:"+ ownerId+ " knowledgeId:" + commentId);
             return false;
         }
         return true;
@@ -100,10 +100,10 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
         return mongoTemplate.count(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
     }
 
-    private Query commentIdAndOwnerId(Long knowledgeId, Long ownerId)
+    private Query commentIdAndOwnerId(Long commentId, Long ownerId)
     {
         Query query = new Query();
-        query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
+        query.addCriteria(Criteria.where(Constant._ID).is(commentId));
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
         return query;
     }

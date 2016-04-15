@@ -1,11 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
 import junit.framework.Assert;
 
@@ -116,24 +116,16 @@ public final class Util {
         return comment;
     }*/
 
-    public static String getKnowledgeComment(Long KnowledgeId, String content)
+    public static String getKnowledgeComment(long KnowledgeId, String content)
     {
-        KnowledgeComment KnowledgeComment = new KnowledgeComment();
-        KnowledgeComment.setId(0);
-        KnowledgeComment.setKnowledgeId(KnowledgeId);
-        KnowledgeComment.setOwnerId(user.getId());
-        KnowledgeComment.setOwnerName(user.getName());
-        KnowledgeComment.setContent(content);
-        KnowledgeComment.setCreateTime(System.currentTimeMillis());
-        KnowledgeComment.setVisible(1);
+        return getKnowledgeComment(KnowledgeId, (short)0, content);
+    }
 
-        String commentStr = null;
-        try {
-            commentStr = objectMapper.writeValueAsString(KnowledgeComment);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return commentStr;
+    public static String getKnowledgeComment(long KnowledgeId, short columnId, String content)
+    {
+        columnId = columnId == 0 ? 2 : columnId;
+        KnowledgeComment KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content);
+        return KnowledgeUtil.writeObjectToJson(KnowledgeComment);
     }
 
     public static void checkResponse(JsonNode notifNode)
@@ -144,7 +136,8 @@ public final class Util {
 
     public static void checkResponseWithData(JsonNode notifNode)
     {
-        checkRequestResultSuccess(notifNode);
+        Assert.assertNotNull(notifNode);
+        checkRequestResultSuccess(notifNode.get(RetKey.Notification));
         Assert.assertNotNull(notifNode.get(RetKey.RespData));
     }
 
@@ -202,7 +195,6 @@ public final class Util {
         httpConn.setRequestMethod( httpMethod );
         httpConn.setDoOutput(true);
         httpConn.setDoInput(true);
-        System.out.println("start connect ..");
         if (jsonContent != null) {
 	        OutputStream out = httpConn.getOutputStream();
 	        out.write( jsonContent.getBytes() );
@@ -217,7 +209,6 @@ public final class Util {
         }
         else {
 	        InputStreamReader isr = new InputStreamReader(httpConn.getInputStream(),"utf-8");
-	        System.out.println("start connect 2..");
 	        BufferedReader in = new BufferedReader(isr);
 
 	        while ((inputLine = in.readLine()) != null) {

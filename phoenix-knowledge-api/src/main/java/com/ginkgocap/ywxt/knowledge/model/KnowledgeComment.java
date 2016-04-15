@@ -9,8 +9,10 @@ public class KnowledgeComment implements Serializable{
 
 	/** 评论id **/
     private long id;
-    /** 需求id **/
+    /** 知识id **/
     private long knowledgeId;
+    /** 栏目id **/
+    private short columnId;
 
     /** 评论者id **/
     private long ownerId;
@@ -49,6 +51,14 @@ public class KnowledgeComment implements Serializable{
 
     public void setKnowledgeId(long knowledgeId) {
         this.knowledgeId = knowledgeId;
+    }
+
+    public short getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(short columnId) {
+        this.columnId = columnId;
     }
 
     public long getOwnerId() {
