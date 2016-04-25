@@ -241,7 +241,7 @@ public class KnowledgeController extends BaseController {
 	 */
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.GET)
 	@ResponseBody
-	public InterfaceResult<KnowledgeDetail> detail(HttpServletRequest request, HttpServletResponse response,
+	public InterfaceResult detail(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable long id,@PathVariable short columnId) throws Exception {
 		if(id <= 0 || columnId <= 0) {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
@@ -261,6 +261,7 @@ public class KnowledgeController extends BaseController {
 			logger.error("Query knowledge failed！reason：" + knowledgeDetail.getNotification().getNotifInfo());
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
+        data.setKnowledgeDetail(knowledgeDetail.getResponseData());
 
 		//数据为空则直接返回异常给前端
 		if(knowledgeDetail == null) {
@@ -268,16 +269,15 @@ public class KnowledgeController extends BaseController {
 		}
 
         InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(id, ResourceType.KNOW);
-        AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), id);
-
         Notification noti = ret.getNotification();
         if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())){
             data.setPermission(ret.getResponseData());
         }
 
+        AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
+        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), id);
         if (assomap.values() != null) {
-            List assoList = new ArrayList();
+            List assoList = new ArrayList(assomap.size());
             for (Iterator i = assomap.values().iterator(); i.hasNext();) {
                 List<Associate> associateList = (List)i.next();
                 for (int j = 0; j < associateList.size(); j++) {
@@ -288,7 +288,8 @@ public class KnowledgeController extends BaseController {
         }
 
         logger.info(".......get knowledge detail success......");
-		return knowledgeDetail;
+        String retJson = KnowledgeUtil.writeObjectToJson(data);
+		return InterfaceResult.getSuccessInterfaceResultInstance(retJson);
 	}
 	
 	/**
