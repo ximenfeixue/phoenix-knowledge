@@ -61,8 +61,8 @@ public class KnowledgeWebTest extends BaseTestCase {
             long knowledgeId = data.getId();
             short columnId = data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -75,8 +75,8 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/all/1/10"; ////all/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();

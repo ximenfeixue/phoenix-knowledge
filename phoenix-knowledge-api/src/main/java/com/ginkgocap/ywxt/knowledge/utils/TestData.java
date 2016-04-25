@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.utils;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.user.model.User;
+import com.gintong.common.phoenix.permission.ResourceType;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.io.IOException;
@@ -44,7 +46,8 @@ public class TestData {
         DataCollection dataCollection = new DataCollection();
         dataCollection.setKnowledgeDetail(knowledgeDetail);
         dataCollection.setReference(knowledgeReference);
-        dataCollection.setAsso(assoObject());
+        dataCollection.setPermission(permission(0, userId));
+        dataCollection.setAsso(assoList());
 
         return dataCollection;
     }
@@ -54,6 +57,8 @@ public class TestData {
         DataCollection data = new DataCollection();
         data.setKnowledgeDetail(knowledgeDetail(userId,columnId, title));
         data.setReference(referenceObject(title));
+        data.setPermission(permission(0, userId));
+        data.setAsso(assoList());
 
         return data;
     }
@@ -114,7 +119,7 @@ public class TestData {
 
         KnowledgeReference kReference = null;
         try {
-            kReference = KnowledgeUtil.readValue( KnowledgeReference.class, referenceJson);
+            kReference = KnowledgeUtil.readValue(KnowledgeReference.class, referenceJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,12 +127,25 @@ public class TestData {
         return kReference;
     }
 
+    public static Permission permission(long knowledgeId, long ownerId)
+    {
+        Permission permission = new Permission();
+        permission.setResId(knowledgeId);
+        permission.setResType(ResourceType.KNOW.getVal());
+        permission.setResOwnerId(ownerId);
+        permission.setPublicFlag(1);//公开-1，私密-0
+        permission.setShareFlag(1);//可分享-1,不可分享-0
+        permission.setConnectFlag(-1);//可对接-1,不可对接-0
+
+        return permission;
+    }
+
     public static Associate assoObject()
     {
-        long System_AppId = 0L;
+        long System_AppId = 1L;
         long assocId = 2L; //,
         long sourceTypeId = 2L;
-        long typeId = 3;
+        long typeId = 666L;
 
         Associate associate = new Associate();
         associate.setId(0);
@@ -141,10 +159,18 @@ public class TestData {
         associate.setAssocId(assocId);
         associate.setAssocMetadata("Asso meta Data");
         associate.setAssocTitle("Asso Title");
-        associate.setAssocTypeId(1112L);
+        associate.setAssocTypeId(typeId);
         associate.setCreateAt(System.currentTimeMillis());
 
         return associate;
+    }
+
+    public static List<Associate> assoList()
+    {
+        List<Associate> associateList = new ArrayList<Associate>(1);
+        associateList.add(assoObject());
+
+        return associateList;
     }
 
     //For Knowledge Comment

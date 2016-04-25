@@ -19,6 +19,8 @@ public abstract class BaseController {
     @Resource
     private RedisCacheService redisCacheService;
 
+    protected static final long APPID = 1l;
+
     /**
      * 从body中获得参数
      * @param request

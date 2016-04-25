@@ -55,6 +55,10 @@
             <groupId>com.ginkgocap.parasol</groupId>
             <artifactId>parasol-associate-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gintong.common</groupId>
+            <artifactId>phoenix-permission-api</artifactId>
+        </dependency>
 
 		<!-- MQ begin -->
 		<dependency>

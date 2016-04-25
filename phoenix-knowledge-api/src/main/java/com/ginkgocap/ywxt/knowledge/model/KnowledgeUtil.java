@@ -187,6 +187,8 @@ public final class KnowledgeUtil {
             }
         } else {
             filter.add("id"); // id',
+            filter.add("appId");
+            filter.add("assocTypeId");
             filter.add("assocDesc"); // '关联描述，比如文章的作者，或者编辑等；关联标签描述',
             filter.add("assocTypeId"); // '被关联的类型可以参考AssociateType对象，如：知识, 人脉,组织，需求，事件等',
             filter.add("assocId"); // '被关联数据ID',

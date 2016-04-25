@@ -39,7 +39,7 @@ public final class DummyData {
         DataCollection dataCollection = new DataCollection();
         dataCollection.setKnowledge(knowledgeBase);
         dataCollection.setReference(knowledgeReference);
-        dataCollection.setAsso(assoObject());
+        dataCollection.setAsso(assoList());
 
         return dataCollection;
     }
@@ -138,5 +138,11 @@ public final class DummyData {
     private static Associate assoObject()
     {
         return TestData.assoObject();
+    }
+
+    private static List<Associate> assoList()  {
+        List<Associate> assoList = new ArrayList(1);
+        assoList.add(TestData.assoObject());
+        return assoList;
     }
 }

@@ -2,8 +2,10 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.user.model.User;
+import com.gintong.common.phoenix.permission.entity.Permission;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Title: 知识数据的大集合对象
@@ -25,13 +27,13 @@ public class DataCollection implements Serializable {
 	/**知识来源*/
 	private KnowledgeReference reference;
 
-	/**栏目*/
-	//private ColumnCollection column;
-
 	/**关联*/
-	private Associate asso;
+	private List<Associate> asso;
 
-	public KnowledgeBase getKnowledge() {
+    /**权限*/
+    private Permission permission;
+
+    public KnowledgeBase getKnowledge() {
 		return knowledge;
 	}
 
@@ -55,15 +57,6 @@ public class DataCollection implements Serializable {
 		this.reference = reference;
 	}
 
-    /*
-	public ColumnCollection getColumn() {
-		return column;
-	}
-
-	public void setColumn(ColumnCollection column) {
-		this.column = column;
-	}*/
-
     public DataCollection(){}
 
     public DataCollection(KnowledgeBase knowledgeBase,KnowledgeReference reference)
@@ -72,13 +65,21 @@ public class DataCollection implements Serializable {
         this.reference = reference;
     }
 
-	public Associate getAsso() {
+	public List<Associate> getAsso() {
 		return asso;
 	}
 
-	public void setAsso(Associate asso) {
+	public void setAsso(List<Associate> asso) {
 		this.asso = asso;
 	}
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public void setPermission(Permission permission) {
+        this.permission = permission;
+    }
 
     public void serUserId(long userId)
     {

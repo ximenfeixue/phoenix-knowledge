@@ -32,7 +32,10 @@
             <artifactId>phoenix-knowledge-api</artifactId>
             <version>${knowledge.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.gintong.common</groupId>
+            <artifactId>phoenix-permission-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame-util</artifactId>
@@ -320,7 +323,7 @@
                 <log4j.level>debug</log4j.level>
                 <!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
                 <log4j.path>d:/log</log4j.path>
-                <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
+                <dubbo.registry.address>zookeeper://192.168.101.15:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
             </properties>
         </profile>
