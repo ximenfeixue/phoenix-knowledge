@@ -25,6 +25,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -241,12 +242,13 @@ public class KnowledgeController extends BaseController {
 	 */
 	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.GET)
 	@ResponseBody
-	public InterfaceResult detail(HttpServletRequest request, HttpServletResponse response,
+	public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable long id,@PathVariable short columnId) throws Exception {
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 		if(id <= 0 || columnId <= 0) {
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
-		
+
 		User user = this.getUser(request);
 		if (null == user) {
 			user = new User();
@@ -259,13 +261,13 @@ public class KnowledgeController extends BaseController {
             knowledgeDetail = this.knowledgeService.getDetailById(id, columnId);
 		} catch (Exception e) {
 			logger.error("Query knowledge failed！reason：" + knowledgeDetail.getNotification().getNotifInfo());
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
         data.setKnowledgeDetail(knowledgeDetail.getResponseData());
 
 		//数据为空则直接返回异常给前端
 		if(knowledgeDetail == null) {
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
 
         InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(id, ResourceType.KNOW);
@@ -288,8 +290,11 @@ public class KnowledgeController extends BaseController {
         }
 
         logger.info(".......get knowledge detail success......");
-        String retJson = KnowledgeUtil.writeObjectToJson(data);
-		return InterfaceResult.getSuccessInterfaceResultInstance(retJson);
+        result.setResponseData(data);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider(null));
+
+        return jacksonValue;
 	}
 	
 	/**

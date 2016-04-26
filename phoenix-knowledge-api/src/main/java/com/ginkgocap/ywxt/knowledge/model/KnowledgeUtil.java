@@ -177,8 +177,9 @@ public final class KnowledgeUtil {
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
         // 请求指定字段
         String[] filedNames = StringUtils.split(fileds, ",");
-        Set<String> filter = new HashSet<String>();
+        Set<String> filter = null;
         if (filedNames != null && filedNames.length > 0) {
+            filter = new HashSet<String>(filedNames.length);
             for (int i = 0; i < filedNames.length; i++) {
                 String filedName = filedNames[i];
                 if (!StringUtils.isEmpty(filedName)) {
@@ -186,6 +187,7 @@ public final class KnowledgeUtil {
                 }
             }
         } else {
+            filter = new HashSet<String>(8); //this number must be increased by fields
             filter.add("id"); // id',
             filter.add("appId");
             filter.add("assocTypeId");
