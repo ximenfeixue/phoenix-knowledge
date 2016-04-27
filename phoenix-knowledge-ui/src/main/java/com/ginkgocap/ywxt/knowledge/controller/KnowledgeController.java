@@ -350,6 +350,28 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get all knowledge by columnId success......");
 		return dataCollectionList;
 	}
+
+    @RequestMapping(value = "/all/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult<List<DataCollection>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
+                                                                            @PathVariable String keyWord,@PathVariable short columnId,
+                                                                            @PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        InterfaceResult<List<DataCollection>> dataCollectionList = null; //DummyData.resultObject(DummyData.getDataCollectionList());
+        try {
+            dataCollectionList = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return dataCollectionList;
+    }
 	
 	/**
 	 * 提取当前用户的所有知识数据

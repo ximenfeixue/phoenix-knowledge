@@ -230,6 +230,19 @@ public class KnowledgeServiceTest extends TestBase {
     }
 
     @Test
+    public void testGetBaseByColumnIdAndKeyWord()
+    {
+        System.out.println("===testGetBaseByColumnIdAndKeyWord===");
+        try {
+            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByColumnIdAndKeyWord("test", columnId, start, size);
+            checkListResult(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
 	public void testGetBaseByColumnIdAndType()
     {
         System.out.println("===testGetBaseByColumnIdAndType===");

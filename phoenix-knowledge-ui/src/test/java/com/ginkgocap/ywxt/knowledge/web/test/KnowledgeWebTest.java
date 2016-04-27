@@ -98,6 +98,20 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
+    public void testKnowledgeListByColumnIdAndKeyWord()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/all/test/2/1/12"; ///all/{keyWord}/{columnId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testKnowledgeListByColumnIdByUserId()
     {
         LogMethod();

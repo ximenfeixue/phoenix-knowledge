@@ -162,6 +162,17 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	public List<KnowledgeBase> getByColumnId(short columnId,int start,int size) throws Exception;
+
+    /**
+     * 根据栏目提取
+     * @param columnId
+     * @param keyWord
+     * @param start 分页起始行数
+     * @param size 分页大小
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型与栏目提取
