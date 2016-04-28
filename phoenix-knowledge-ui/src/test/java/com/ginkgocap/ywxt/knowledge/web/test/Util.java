@@ -181,6 +181,10 @@ public final class Util {
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent,String sessionId) throws Exception
     {
     	System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
+        if (jsonContent != null) {
+            System.err.print("request Content: " + jsonContent + "\r\n");
+        }
+
         URL url = new URL(urlString);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
 

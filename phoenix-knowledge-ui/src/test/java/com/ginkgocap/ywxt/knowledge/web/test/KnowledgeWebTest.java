@@ -18,6 +18,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     @Test
     public void testCreateKnowledge()
     {
+        LogMethod();
         createKnowledge("KnowledgeWebTest_testCreateKnowledge");
     }
 
