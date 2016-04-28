@@ -468,7 +468,7 @@
                 <memcached.object_1.port>11211</memcached.object_1.port>
                 <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
-                <log4j.path>D:/log</log4j.path>
+                <log4j.path>./logs</log4j.path>
                 <!-- 日志级别，由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
 
