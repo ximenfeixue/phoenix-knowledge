@@ -342,10 +342,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
     @Override
+    public InterfaceResult<List<DataCollection>> getBaseByKeyWord(String keyWord,int start,int size) throws Exception {
+        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByAndKeyWord(keyWord, start, size)));
+    }
+
+    @Override
     public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
         return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size)));
     }
-	
+
 	@Override
 	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));

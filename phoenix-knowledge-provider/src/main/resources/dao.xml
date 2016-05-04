@@ -64,6 +64,10 @@
                   sqlitem="select id from tb_knowledge_base where column_id = ? and title like ? order by create_date limit ?,?"
                   sqlType="hsql" valueProperty="id" keyProperty="columnId,title,start,size" update="true" />
 
+            <list name="get_by_keyWord"
+                  sqlitem="select id from tb_knowledge_base where title like ? order by create_date limit ?,?"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,title,start,size" update="true" />
+
             <list name="get_by_type_columnId"
                 sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="type,columnId,start,size" update="true" />

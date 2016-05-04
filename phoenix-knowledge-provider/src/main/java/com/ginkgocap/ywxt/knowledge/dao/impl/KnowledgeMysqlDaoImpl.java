@@ -135,10 +135,16 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		return this.getEntitys("get_by_columnId", new Object[]{columnId,start,size});
 	}
 
+
+    @Override
+    public List<KnowledgeBase> getByAndKeyWord(String keyWord,int start,int size) throws Exception {
+        return this.getEntitys("get_by_keyWord", new Object[]{"%"+keyWord+"%",start,size});
+    }
+
+    @Override
     public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
         return this.getEntitys("get_by_columnId_keyWord", new Object[]{columnId,"%"+keyWord+"%",start,size});
     }
-
 
     @Override
 	public List<KnowledgeBase> getByTypeAndColumnId(short type, short columnId,int start,int size)

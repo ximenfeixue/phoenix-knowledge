@@ -206,6 +206,18 @@ public interface KnowledgeService {
 	 */
 	public InterfaceResult<List<DataCollection>> getBaseByColumnId(short columnId,int start,int size) throws Exception;
 
+
+    /**
+     * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
+     * <p>1、知识基础表信息</P>
+     * @param keyWord
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public InterfaceResult<List<DataCollection>> getBaseByKeyWord(String keyWord,int start,int size) throws Exception;
+
     /**
      * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
@@ -217,7 +229,7 @@ public interface KnowledgeService {
      * @throws Exception
      */
     public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception;
-	
+
 	/**
 	 * 根据栏目、类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
