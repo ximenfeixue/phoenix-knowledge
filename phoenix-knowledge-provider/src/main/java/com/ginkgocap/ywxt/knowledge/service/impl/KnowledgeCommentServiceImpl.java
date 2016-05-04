@@ -30,13 +30,13 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     private KnowledgeCommonService knowledgeCommonService;
 
     @Override
-    public boolean create(KnowledgeComment knowledgeComment) {
+    public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
             knowledgeComment.setId(knowledgeCommonService.getKnowledgeSeqenceId());
             mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);
-            return true;
+            return knowledgeComment.getId();
         }
-        return false;
+        return -1L;
     }
 
     @Override

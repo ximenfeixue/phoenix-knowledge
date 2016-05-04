@@ -63,8 +63,9 @@ public class KnowledgeCommentController extends BaseController
 
             knowledgeComment.setOwnerId(user.getId());
             knowledgeComment.setOwnerName(user.getName());
-            if (knowledgeCommentService.create(knowledgeComment)) {
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            long commentId = knowledgeCommentService.create(knowledgeComment);
+            if (commentId > 0) {
+                return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
             logger.error("Save Knowledge Comment to Mongo failed : knowledgeId: " + knowledgeId + " Comment: " + knowledgeComment.getContent());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -165,11 +166,10 @@ public class KnowledgeCommentController extends BaseController
             }
 
             List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(knowledgeId);
-            String commentItems = KnowledgeUtil.writeObjectToJson(commentList);
             if (logger.isDebugEnabled()) {
-                logger.debug("Get Knowledge comment : size:" + commentList.size() + " Content: " + commentItems);
+                logger.debug("Get Knowledge comment : size:" + commentList.size() + " Content: " + commentList);
             }
-            return InterfaceResult.getSuccessInterfaceResultInstance(commentItems);
+            return InterfaceResult.getSuccessInterfaceResultInstance(commentList);
         } catch(Exception e){
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);

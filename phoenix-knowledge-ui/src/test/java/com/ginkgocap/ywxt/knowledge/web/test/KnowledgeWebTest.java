@@ -9,7 +9,7 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
 
 /**
- * Created by Admin on 2016/3/31.
+ * Created by Chen Peifeng on 2016/3/31.
  */
 public class KnowledgeWebTest extends BaseTestCase {
 
@@ -62,7 +62,7 @@ public class KnowledgeWebTest extends BaseTestCase {
             long knowledgeId = data.getId();
             short columnId = data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/all/1/10"; ////all/{start}/{size}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,8 +117,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-                            ///user/{start}/{size}
-            String subUrl = "/user/1/2";
+            String subUrl = "/user/1/2"; ///user/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

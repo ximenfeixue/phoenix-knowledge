@@ -11,9 +11,9 @@ public interface KnowledgeCommentService {
     /**
      * des:新建知识评论
      * @param knowledgeComment
-     * @return 状态（0成功，-1失败）
+     * @return 状态（大于0成功，-1失败）
      */
-    public boolean create(KnowledgeComment knowledgeComment);
+    public long create(KnowledgeComment knowledgeComment);
 
     /**
      * des: 更新评论

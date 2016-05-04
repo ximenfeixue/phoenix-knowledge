@@ -180,6 +180,12 @@ public final class Util {
 
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent,String sessionId) throws Exception
     {
+        String response = HttpRequestFullJson(httpMethod, urlString, jsonContent, sessionId);
+        return response != null ? mapper.readTree(response) : null;
+    }
+
+    public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent,String sessionId) throws Exception
+    {
     	System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         if (jsonContent != null) {
             System.err.print("request Content: " + jsonContent + "\r\n");
@@ -222,7 +228,7 @@ public final class Util {
 	        in.close();
         }
 
-        return inputLine != null ? mapper.readTree(inputLine) : null;
+        return inputLine;
     }
 
     public static JsonNode getJsonNode(String jsonStr, String... values)
