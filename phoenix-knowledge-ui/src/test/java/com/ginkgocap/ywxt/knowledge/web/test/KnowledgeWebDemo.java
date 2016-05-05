@@ -55,25 +55,25 @@ public class KnowledgeWebDemo {
 
     public static void main(String[] args) throws Exception {
         KnowledgeWebDemo demo = new KnowledgeWebDemo();
-//        demo.createKnowledge();
-//        demo.updateKnowledge();
-//        demo.deleteKnowledge();
-//        demo.knowledgeDetail();
-//        demo.allKnowledgeList();
-//        demo.knowledgeListByColumnId();
+        demo.createKnowledge();
+        demo.updateKnowledge();
+        demo.deleteKnowledge();
+        demo.knowledgeDetail();
+        demo.allKnowledgeList();
+        demo.knowledgeListByColumnId();
         demo.knowledgeListByKeyWord();
         demo.knowledgeListByColumnIdAndKeyWord();
-//        demo.knowledgeListByColumnIdByUserId();
-//        demo.knowledgeListByUserIdAndColumnId();
-//        demo.knowledgeCollect();
-//        demo.cancelCollectedKnowledge();
-//        demo.reportKnowledge();
-//
-//        //Comment
-//        demo.knowledgeCommentCreate();
-//        demo.knowledgeCommentGetList();
-//        demo.knowledgeCommentGetCount();
-//        demo.knowledgeCommentDelete();
+        demo.knowledgeListByColumnIdByUserId();
+        demo.knowledgeListByUserIdAndColumnId();
+        demo.knowledgeCollect();
+        demo.cancelCollectedKnowledge();
+        demo.reportKnowledge();
+
+        //Comment
+        demo.knowledgeCommentCreate();
+        demo.knowledgeCommentGetList();
+        demo.knowledgeCommentGetCount();
+        demo.knowledgeCommentDelete();
     }
 
 
@@ -158,7 +158,7 @@ public class KnowledgeWebDemo {
     {
         LogMethod("根据关键字提取知识", 2);
         try {
-            String subUrl = "/all/test/1/12"; ///all/{keyWord}/{start}/{size}
+            String subUrl = "/all/test/1/3"; ///all/{keyWord}/{start}/{size}
             HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null, true);
         } catch (Exception e) {
             e.printStackTrace();
