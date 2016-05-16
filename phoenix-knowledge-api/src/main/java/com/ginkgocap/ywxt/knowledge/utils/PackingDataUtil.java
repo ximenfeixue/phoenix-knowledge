@@ -28,15 +28,15 @@ public class PackingDataUtil {
 	 * @author 周仕奇
 	 * @date 2016年1月14日 下午4:33:26
 	 * @param knowledgeMongo
-	 * @param user
+	 * @param userId
 	 * @return
 	 */
-	public static String packingSendBigData(KnowledgeMongo knowledgeMongo,User user) {
+	public static String packingSendBigData(KnowledgeMongo knowledgeMongo,long userId) {
 		
 		JSONObject json = new JSONObject();
 		json.put("kid", knowledgeMongo.getId());
-		json.put("cid", user.getId());
-		json.put("cname", user.getName());
+		json.put("cid", userId);
+		json.put("cname", null);
 		json.put("title", knowledgeMongo.getTitle());
 		json.put("cpathid", /*knowledgeMongo.getColumnId()*/"");
 		json.put("pic", knowledgeMongo.getPictureId());

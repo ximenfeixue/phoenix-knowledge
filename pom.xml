@@ -32,6 +32,7 @@
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
         <parasol-common-provider.version>1.0.0-SNAPSHOT</parasol-common-provider.version>
         <parasol-cache.version>1.0.0-SNAPSHOT</parasol-cache.version>
+        <parasol-tags.version>1.0.2-SNAPSHOT</parasol-tags.version>
         <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
         <slf4j-api.version>1.7.2</slf4j-api.version>
         <slf4j-log4j12.version>1.7.2</slf4j-log4j12.version>
@@ -104,6 +105,16 @@
                 <groupId>com.ginkgocap.parasol</groupId>
                 <artifactId>parasol-associate-api</artifactId>
                 <version>${parasol-associate-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.parasol</groupId>
+                <artifactId>parasol-directory-api</artifactId>
+                <version>${parasol-metadata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.parasol</groupId>
+                <artifactId>parasol-tags-api</artifactId>
+                <version>${parasol-tags.version}</version>
             </dependency>
 
             <dependency>

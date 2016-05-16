@@ -65,7 +65,7 @@ public class TestData {
 
     public static DataCollection dataCollection() {
 
-        return dataCollection(1234567L, null);
+        return dataCollection(KnowledgeUtil.getDummyUser().getId(), null);
     }
 
     public static KnowledgeBase knowledgeBase()
@@ -77,14 +77,13 @@ public class TestData {
         long pictureId = 123456L;
         KnowledgeBase knowledge = new KnowledgeBase();
         knowledge.setType(typeId);
-        knowledge.setAuthor("testUser");
         knowledge.setTitle("TestTitle");
         knowledge.setContentDesc("Knowledge Description");
         knowledge.setPictureId(pictureId);
         knowledge.setAttachmentId(123456L);
         knowledge.setAuditStatus(auditStatus);
         knowledge.setColumnId(columnId);
-        knowledge.setCreateUserId(1234567L);
+        knowledge.setCreateUserId(KnowledgeUtil.getDummyUser().getId());
         knowledge.setCreateUserName("TestUsetName");
         knowledge.setCreateDate(System.currentTimeMillis());
         knowledge.setPublicDate(System.currentTimeMillis());
@@ -109,6 +108,14 @@ public class TestData {
         knowledgeDetail.setModifyUserId(userId);
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         knowledgeDetail.setModifyTime(System.currentTimeMillis());
+        List<String> tagIds = new ArrayList<String>(1);
+        tagIds.add("3971096034672650");
+        tagIds.add("3969557253586945");
+        knowledgeDetail.setTags(tagIds);
+        List<String> cataIds = new ArrayList<String>(1);
+        cataIds.add("3969635594797376");
+        cataIds.add("3971096089198959");
+        knowledgeDetail.setCategoryIds(cataIds);
 
         return knowledgeDetail;
     }

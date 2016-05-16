@@ -70,7 +70,7 @@ public interface KnowledgeMysqlDao {
 	 * @date 2016年1月12日 上午9:51:21
 	 * @return
 	 */
-	public int deleteByKnowledgeIds(List<Long> ids)  throws Exception;
+	public int batchDeleteByKnowledgeIds(List<Long> ids)  throws Exception;
 	
 	/**
 	 * 根据创建用户ID删除

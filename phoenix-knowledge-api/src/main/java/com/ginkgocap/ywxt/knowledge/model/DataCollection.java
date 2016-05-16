@@ -107,7 +107,6 @@ public class DataCollection implements Serializable {
         if (this.knowledgeDetail != null) {
             this.knowledge = new KnowledgeBase();
             this.knowledge.setKnowledgeId(this.knowledgeDetail.getId());
-            this.knowledge.setAuthor(this.knowledgeDetail.getOwnerName());
             this.knowledge.setTitle(this.knowledgeDetail.getTitle());
             this.knowledge.setContentDesc(this.knowledgeDetail.getContent());
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
@@ -123,6 +122,8 @@ public class DataCollection implements Serializable {
             this.knowledge.setCreateUserName(this.knowledgeDetail.getOwnerName());
             this.knowledge.setCreateDate(this.knowledgeDetail.getCreateTime());
             this.knowledge.setModifyDate(this.knowledgeDetail.getModifyTime());
+            this.knowledge.setIsOld((short)0);
+            this.knowledge.setUserStar((short)0);
             //knowledge.setPublicDate(System.currentTimeMillis());
             //knowledge.setReportStatus(reportStatus);
         }

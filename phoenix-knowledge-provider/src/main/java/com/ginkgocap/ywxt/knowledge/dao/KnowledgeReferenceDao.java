@@ -91,7 +91,7 @@ public interface KnowledgeReferenceDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception;
+	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception;
 	
 	/**
 	 * 根据主键提取

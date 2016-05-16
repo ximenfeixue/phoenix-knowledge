@@ -4,7 +4,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
-import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
@@ -25,15 +24,15 @@ public class BigDataServiceImpl implements BigDataService {
 	private DefaultMessageService defaultMessageService;
 
 	@Override
-	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo, User user) {
-		logger.info("通知大数据，发送请求 请求用户{}", user.getId());
+	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo, long userId) {
+		logger.info("通知大数据，发送请求 请求用户{}", userId);
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {
-				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(knowledgeMongo,user));
+				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(knowledgeMongo,userId));
 				logger.info("返回参数{}", result.getSendResult());
 			} else {
-				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(knowledgeMongo,user));
+				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(knowledgeMongo,userId));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,12 +41,12 @@ public class BigDataServiceImpl implements BigDataService {
 	}
 	
 	@Override
-	public void sendMessage(String optionType, List<KnowledgeMongo> knowledgeMongoList, User user) {
+	public void sendMessage(String optionType, List<KnowledgeMongo> knowledgeMongoList, long userId) {
 		if(knowledgeMongoList != null && !knowledgeMongoList.isEmpty()) {
 			
 			for (KnowledgeMongo data : knowledgeMongoList) {
 				
-				this.sendMessage(optionType, data, user);
+				this.sendMessage(optionType, data, userId);
 				
 			}
 			
@@ -55,7 +54,7 @@ public class BigDataServiceImpl implements BigDataService {
 	}
 
 	@Override
-	public void deleteMessage(long knowledgeId, short columnId, User user)
+	public void deleteMessage(long knowledgeId, short columnId, long userId)
 			throws Exception {
 		
 		KnowledgeBase data = new KnowledgeBase();
@@ -63,7 +62,7 @@ public class BigDataServiceImpl implements BigDataService {
 		data.setId(knowledgeId);
 		data.setColumnId(columnId);
 		
-		//this.sendMessage(KNOWLEDGE_UPDATE, data, user);
+		this.sendMessage(KNOWLEDGE_UPDATE, KnowledgeMongo.clone(data), userId);
 	}
 
 }

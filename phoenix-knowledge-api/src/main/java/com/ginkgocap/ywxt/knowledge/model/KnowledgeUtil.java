@@ -95,8 +95,8 @@ public final class KnowledgeUtil {
     public static User getDummyUser()
     {
         User user = new User();
-        user.setId(1234567L);
-        user.setUid(1234567L);
+        user.setId(128292L);
+        user.setUid(128292L);
         user.setUserName("UnitTestUser");
         user.setName("UnitTestUser");
         return user;

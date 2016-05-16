@@ -39,8 +39,10 @@
     </context:component-scan>
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
-
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
+
+    <import resource="classpath:metadata-directory-consumer.xml"/>
+    <import resource="classpath:tags-dubbo-consumer.xml"/>
 	
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

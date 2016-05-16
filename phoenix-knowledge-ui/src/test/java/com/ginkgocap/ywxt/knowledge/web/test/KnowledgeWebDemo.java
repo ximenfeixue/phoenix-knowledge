@@ -33,7 +33,7 @@ public class KnowledgeWebDemo {
     private static String sessionId = null;
     private static ObjectMapper mapper = null;
     static {
-        userId = 1234567L;
+        userId = KnowledgeUtil.getDummyUser().getId();
         //debugModel = System.getProperty("debugModel", "false").equals("true");
         hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/phoenix-knowledge");
         baseUrl =  hostUrl + "/knowledge";

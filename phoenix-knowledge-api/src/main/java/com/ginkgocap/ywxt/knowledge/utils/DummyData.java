@@ -53,14 +53,13 @@ public final class DummyData {
         long pictureId = 123456L;
         KnowledgeBase knowledge = new KnowledgeBase();
         knowledge.setType(typeId);
-        knowledge.setAuthor("testUser");
         knowledge.setTitle("TestTitle");
         knowledge.setContentDesc("Knowledge Description");
         knowledge.setPictureId(pictureId);
         knowledge.setAttachmentId(123456L);
         knowledge.setAuditStatus(auditStatus);
         knowledge.setColumnId(columnId);
-        knowledge.setCreateUserId(1234567L);
+        knowledge.setCreateUserId(KnowledgeUtil.getDummyUser().getId());
         knowledge.setCreateUserName("TestUsetName");
         knowledge.setCreateDate(System.currentTimeMillis());
         knowledge.setPublicDate(System.currentTimeMillis());

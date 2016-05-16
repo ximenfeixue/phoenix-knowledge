@@ -4,6 +4,8 @@ import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Title: 知识详细信息（mongoDB保存，保存知识的全部信息，提供给编辑、详细信息查看界面查询）
@@ -34,7 +36,6 @@ public class KnowledgeMongo extends KnowledgeBase implements Serializable {
         knowledgeMongo.setId(knowledgeBase.getId());
         knowledgeMongo.setColumnId(knowledgeBase.getColumnId());
         knowledgeMongo.setType(knowledgeBase.getType());
-        knowledgeMongo.setAuthor(knowledgeBase.getAuthor());
         knowledgeMongo.setTitle(knowledgeBase.getTitle());
         knowledgeMongo.setContentDesc(knowledgeBase.getContentDesc());
         knowledgeMongo.setPictureId(knowledgeBase.getPictureId());
@@ -50,6 +51,32 @@ public class KnowledgeMongo extends KnowledgeBase implements Serializable {
         knowledgeMongo.setReportStatus(knowledgeBase.getReportStatus());
 
         return knowledgeMongo;
+    }
+
+    public static KnowledgeMongo clone(KnowledgeDetail knowledgeDetail)
+    {
+        KnowledgeMongo knowledgeMongo = new KnowledgeMongo();
+        knowledgeMongo.setId(knowledgeDetail.getId());
+        knowledgeMongo.setColumnId(knowledgeDetail.getColumnId());
+        knowledgeMongo.setTitle(knowledgeDetail.getTitle());
+        knowledgeMongo.setContentDesc(knowledgeDetail.getContent());
+        knowledgeMongo.setCreateUserId(knowledgeDetail.getOwnerId());
+        knowledgeMongo.setCreateUserName(knowledgeDetail.getOwnerName());
+        knowledgeMongo.setModifyDate(knowledgeDetail.getModifyTime());
+        knowledgeMongo.setModifyUserId(knowledgeDetail.getModifyUserId());
+        knowledgeMongo.setCreateDate(knowledgeDetail.getCreateTime());
+
+        return knowledgeMongo;
+    }
+
+    public static List<KnowledgeMongo> clone(List<KnowledgeDetail> KnowledgeDetailItems)
+    {
+        List<KnowledgeMongo> knowledgeMongoItems = new ArrayList<KnowledgeMongo>();
+        for (KnowledgeDetail knowledgeDetail : KnowledgeDetailItems) {
+            knowledgeMongoItems.add(KnowledgeMongo.clone(knowledgeDetail));
+        }
+
+        return knowledgeMongoItems;
     }
 
 }

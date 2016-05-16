@@ -75,7 +75,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult deleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception;
+	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception;
 	
 	/**
 	 * 提取详细信息（一般用在知识详细信息查看界面、知识编辑界面的数据提取中），具体提取以下信息：

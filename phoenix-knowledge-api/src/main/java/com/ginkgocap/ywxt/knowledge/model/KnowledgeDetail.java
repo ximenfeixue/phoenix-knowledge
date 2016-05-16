@@ -19,7 +19,6 @@ public class KnowledgeDetail implements Serializable {
     /** 知识介绍 **/
     private String content;
 
-    private long phone;
     /** 创建者id **/
     private long ownerId;
     /** 创建人姓名 **/
@@ -40,10 +39,10 @@ public class KnowledgeDetail implements Serializable {
     /** 附件 */
     private List<String> attachmentUrls;
 
-    private String tags;
+    private List<String> tags;
 
     /** 存储目录 **/
-    private String categoryIds;
+    private List<String> categoryIds;
 
     public long getId() {
         return id;
@@ -75,14 +74,6 @@ public class KnowledgeDetail implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public long getPhone() {
-        return phone;
-    }
-
-    public void setPhone(long phone) {
-        this.phone = phone;
     }
 
     public long getOwnerId() {
@@ -141,19 +132,19 @@ public class KnowledgeDetail implements Serializable {
         this.attachmentUrls = attachmentUrls;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public String getCategoryIds() {
+    public List<String> getCategoryIds() {
         return categoryIds;
     }
 
-    public void setCategoryIds(String categoryIds) {
+    public void setCategoryIds(List<String> categoryIds) {
         this.categoryIds = categoryIds;
     }
 

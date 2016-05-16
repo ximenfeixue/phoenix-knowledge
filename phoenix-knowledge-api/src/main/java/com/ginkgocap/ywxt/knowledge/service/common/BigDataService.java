@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.common;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
-import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.rocketmq.api.utils.FlagTypeUtils;
 
 import java.util.List;
@@ -30,10 +29,10 @@ public interface BigDataService {
 	 * @date 2016年1月14日 下午3:19:04
 	 * @param optionType 操作类型，插入（KNOWLEDGE_INSERT）、更新（KNOWLEDGE_UPDATE）、删除（KNOWLEDGE_DELETE）
 	 * @param knowledgeMongo 发送的数据
-	 * @param user
+	 * @param userId
 	 * @throws Exception
 	 */
-	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo,User user) throws Exception;
+	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo,long userId) throws Exception;
 
 	/**
 	 * MQ数据发送（批量发送）
@@ -41,10 +40,10 @@ public interface BigDataService {
 	 * @date 2016年1月14日 下午6:16:07
 	 * @param optionType 操作类型，插入（KNOWLEDGE_INSERT）、更新（KNOWLEDGE_UPDATE）、删除（KNOWLEDGE_DELETE）
 	 * @param knowledgeMongoList 发送的数据
-	 * @param user
+	 * @param userId
 	 * @throws Exception
 	 */
-	public void sendMessage(String optionType,List<KnowledgeMongo> knowledgeMongoList, User user) throws Exception;
+	public void sendMessage(String optionType,List<KnowledgeMongo> knowledgeMongoList, long userId) throws Exception;
 	
 	/**
 	 * MQ数据删除
@@ -52,10 +51,10 @@ public interface BigDataService {
 	 * @date 2016年1月14日 下午6:44:34
 	 * @param knowledgeId
 	 * @param columnId
-	 * @param user
+	 * @param userId
 	 * @throws Exception
 	 */
-	public void deleteMessage(long knowledgeId,short columnId, User user) throws Exception;
+	public void deleteMessage(long knowledgeId,short columnId, long userId) throws Exception;
 	
 	
 }

@@ -132,9 +132,12 @@ public class TestDataUtil {
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         //knowledgeDetail.setDemandType(Long.valueOf(knowledgeType.getTypeId()));
         //knowledgeDetail.setContact("Jerry");
-        knowledgeDetail.setPhone(18611386868L);
-        knowledgeDetail.setTags("122,1223,345");
-        knowledgeDetail.setCategoryIds("122,1223,345");
+        List<String> Ids = new ArrayList<String>(3);
+        Ids.add("122");
+        Ids.add("1223");
+        Ids.add("345");
+        knowledgeDetail.setTags(Ids);
+        knowledgeDetail.setCategoryIds(Ids);
         knowledgeDetail.setMultiUrls(getImgVideos());
         knowledgeDetail.setAttachmentUrls(getAttachFiles());
         //demandBase.setPermisson(getPermission());

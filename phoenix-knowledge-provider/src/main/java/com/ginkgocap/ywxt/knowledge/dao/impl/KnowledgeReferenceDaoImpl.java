@@ -110,7 +110,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	}
 
 	@Override
-	public int deleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
+	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
 		
 		if(knowledgeIds == null || knowledgeIds.size() < 1)
 			return 0;

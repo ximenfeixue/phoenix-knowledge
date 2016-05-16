@@ -1,5 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
+import com.ginkgocap.parasol.directory.model.DirectorySource;
+import com.ginkgocap.parasol.directory.service.DirectorySourceService;
+import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
+import com.ginkgocap.parasol.tags.model.TagSource;
+import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
@@ -10,15 +16,13 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.user.service.DiaryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("knowledgeService")
 public class KnowledgeServiceImpl implements KnowledgeService {
@@ -47,8 +51,16 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	@Autowired
 	private DiaryService diaryService;
 
+    @Autowired
+    private DirectorySourceService directorySourceService;
+
+    @Autowired
+    private TagSourceService tagSourceService;
+
     boolean isBigData = false;
     boolean isUserFeed = false;
+    private static final long APPID = 1l;
+    private static final long sourceType = 3L;
 
 	@Override
 	public InterfaceResult insert(DataCollection dataCollection) throws Exception {
@@ -65,14 +77,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         }
         short columnId = knowledgeDetail.getColumnId();
         long knowledgeId = savedKnowledgeDetail.getId();
+        long userId = knowledgeDetail.getOwnerId();
 
         //知识基础表插入
+        KnowledgeBase knowledge = dataCollection.generateKnowledge();
 		try {
-            KnowledgeBase knowledge = dataCollection.generateKnowledge();
             knowledge.setKnowledgeId(knowledgeId);
 			this.knowledgeMysqlDao.insert(knowledge);
 		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, true, false, false, false, false);
+			this.insertRollBack(knowledgeId, columnId, userId, true, false, false, false, false);
 			logger.error("知识基础表插入失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
@@ -84,21 +97,62 @@ public class KnowledgeServiceImpl implements KnowledgeService {
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
-                this.insertRollBack(knowledgeId, columnId, true, true, false, false, false);
+                this.insertRollBack(knowledgeId, columnId, userId, true, true, false, false, false);
                 logger.error("知识基础表插入失败！失败原因：\n" + e.getCause().toString());
                 return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
             }
         }
-		
+
+        //save directory
+        List<String> categorysList = knowledgeDetail.getCategoryIds();
+        if(categorysList != null && categorysList.size() > 0){
+            try {
+                for (String directoryId : categorysList) {
+                    DirectorySource directorySource = new DirectorySource();
+                    directorySource.setUserId(userId);
+                    directorySource.setDirectoryId(Long.parseLong(directoryId));
+                    directorySource.setAppId(APPID);
+                    directorySource.setSourceId(knowledgeId);
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    directorySource.setSourceType((int) sourceType);
+                    directorySource.setCreateAt(new Date().getTime());
+                    directorySourceService.createDirectorySources(directorySource);
+                    logger.info("dircetoryId:" + directoryId);
+                }
+            } catch (DirectorySourceServiceException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+        //save tags
+        List<String> tagsList = knowledgeDetail.getTags();
+        if (tagsList != null && tagsList.size() > 0) {
+            try {
+                for (String tagId : tagsList) {
+                    TagSource tagSource = new TagSource();
+                    tagSource.setUserId(userId);
+                    tagSource.setAppId(APPID);
+                    tagSource.setSourceId(knowledgeId);
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    tagSource.setSourceType(sourceType);
+                    tagSource.setTagId(Long.parseLong(tagId));
+                    tagSource.setCreateAt(new Date().getTime());
+                    tagSourceService.createTagSource(tagSource);
+                    logger.info("tagId:" + tagId);
+                }
+            } catch (TagSourceServiceException ex) {
+                ex.printStackTrace();
+            }
+        }
+
 		//大数据MQ推送
-        /*
 		try {
-			bigDataService.sendMessage(IBigDataService.KNOWLEDGE_INSERT, afterSaveKnowledgeMongo, user);
+			bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, KnowledgeMongo.clone(knowledge), savedKnowledgeDetail.getOwnerId());
 		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, true, true, true, false, false);
+			this.insertRollBack(knowledgeId, columnId, userId, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
+		}
 		
 		//动态推送（仅推送观点）
         /*
@@ -120,6 +174,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		KnowledgeReference knowledgeReference = dataCollection.getReference();
 		
 		Long knowledgeId = knowledgeDetail.getId();
+        long userId = knowledgeDetail.getOwnerId();
 		short columnId = knowledgeDetail.getColumnId();
 
 		//knowledgeMongo.createContendDesc();
@@ -130,7 +185,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         KnowledgeBase knowledge = dataCollection.generateKnowledge();
 		
 		//知识简表更新
-		//KnowledgeDetail retKnowledgeDetail = this.knowledgeMysqlDao.getById(knowledgeId);
 		try {
 			this.knowledgeMysqlDao.update(knowledge);
 		} catch (Exception e) {
@@ -150,16 +204,69 @@ public class KnowledgeServiceImpl implements KnowledgeService {
                 return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
             }
         }
+
+        //Update directory
+        try{
+            boolean removeDdirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, 4, knowledgeId);
+            if(removeDdirectoryFlag){
+                List<String> categorysList = knowledgeDetail.getCategoryIds();
+                if(categorysList != null && categorysList.size() > 0){
+                    for(String directoryId : categorysList){
+                        DirectorySource directorySource = new DirectorySource();
+                        directorySource.setUserId(userId);
+                        directorySource.setDirectoryId(Long.parseLong(directoryId));
+                        directorySource.setAppId(1);
+                        directorySource.setSourceId(knowledgeId);
+                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                        directorySource.setSourceType(3);
+                        directorySource.setCreateAt(new Date().getTime());
+                        directorySourceService.createDirectorySources(directorySource);
+                        logger.info("dircetoryId:"+directoryId);
+                    }
+                }
+            }
+            else{
+                logger.error("update categorys remove failed...userid=" + userId+ ", knowledgeId=" + knowledgeId);
+            }
+        }catch(DirectorySourceServiceException e1){
+            logger.error("update categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+        }
+        //Update tags
+        try{
+            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
+            if(removeTagsFlag){
+                List<String> tagsList = knowledgeDetail.getTags();
+                if(tagsList != null){
+                    for(String tagId : tagsList){
+                        if(tagId != null && StringUtils.isNotBlank(tagId)){
+                            TagSource  tagSource  = new TagSource ();
+                            tagSource.setUserId(userId);
+                            tagSource.setAppId(APPID);
+                            tagSource.setSourceId(knowledgeId);
+                            //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                            tagSource.setSourceType(sourceType);
+                            tagSource.setTagId(Long.parseLong(tagId));
+                            tagSource.setCreateAt(new Date().getTime());
+                            tagSourceService.createTagSource(tagSource);
+                            logger.info("tagId:"+tagId);
+                        }
+                    }
+                }
+            }
+            else{
+                logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+            }
+        }catch(TagSourceServiceException e2){
+            logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+        }
 		
 		//大数据MQ推送更新
-        /*
 		try {
-			bigDataService.sendMessage(IBigDataService.KNOWLEDGE_UPDATE, afterSaveKnowledgeMongo, user);
+			bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, KnowledgeMongo.clone(knowledge), knowledge.getCreateUserId());
 		} catch (Exception e) {
-			this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,oldKnowledgeDetail,oldKnowledgeReference, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
+		}
 		
 		//动态推送更新（仅推送观点）
         /*
@@ -178,6 +285,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	public InterfaceResult deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception {
 		
         KnowledgeDetail oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+        long userId = oldKnowledgeDetail.getOwnerId();
 		
 		//知识详细表删除
 		this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
@@ -199,17 +307,37 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 			logger.error("知识来源表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
+
+        //delete directory
+        try{
+            boolean removeDdirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, 4, knowledgeId);
+            if(!removeDdirectoryFlag){
+                logger.error("categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            }
+        }catch(DirectorySourceServiceException e1){
+            logger.error("categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            e1.printStackTrace();
+        }
+        //delete tags
+        try{
+            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
+            if(!removeTagsFlag){
+                logger.error("tags remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            }
+        }catch(TagSourceServiceException e2){
+            logger.error("tags remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            e2.printStackTrace();
+        }
 		
 		//大数据MQ推送删除
-        /*
 		try {
-			bigDataService.sendMessage(IBigDataService.KNOWLEDGE_DELETE, oldKnowledgeMongo, user);
+			bigDataService.deleteMessage(knowledgeId, columnId, userId);
 		} catch (Exception e) {
-			this.deleteRollBack(knowledgeId, columnId,oldKnowledgeMongo,oldKnowledgeDetail,oldKnowledgeReference, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
-		
+
+        /*
 		//动态推送删除（仅推送观点）
 		try {
 			userFeedService.deleteDynamicKnowledge(knowledgeId);
@@ -223,16 +351,19 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	}
 
 	@Override
-	public InterfaceResult deleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception {
+	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception {
 		
 		List<KnowledgeDetail> oldKnowledgeMongoList = this.knowledgeMongoDao.getByIdsAndColumnId(knowledgeIds, columnId);
+        if (oldKnowledgeMongoList == null || oldKnowledgeMongoList.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
 		
 		//知识详细表删除
 		this.knowledgeMongoDao.deleteByIdsAndColumnId(knowledgeIds, columnId);
 		
 		//知识简表删除
 		try {
-			this.knowledgeMysqlDao.deleteByKnowledgeIds(knowledgeIds);
+			this.knowledgeMysqlDao.batchDeleteByKnowledgeIds(knowledgeIds);
 		} catch (Exception e) {
 			logger.error("知识基础表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
@@ -240,22 +371,22 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		
 		//知识来源表删除
 		try {
-			this.knowledgeReferenceDao.deleteByKnowledgeIds(knowledgeIds);
+			this.knowledgeReferenceDao.batchDeleteByKnowledgeIds(knowledgeIds);
 		} catch (Exception e) {
 			logger.error("知识来源表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 		
 		//大数据MQ推送删除
-        /*
 		try {
-			bigDataService.sendMessage(IBigDataService.KNOWLEDGE_DELETE, oldKnowledgeMongoList, user);
+            long userId = oldKnowledgeMongoList.get(0).getOwnerId();
+			bigDataService.sendMessage(BigDataService.KNOWLEDGE_DELETE, KnowledgeMongo.clone(oldKnowledgeMongoList), userId);
 		} catch (Exception e) {
-			this.deleteListRollBack(oldKnowledgeMongoList,oldKnowledgeDetailList,oldKnowledgeReferenceList, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
-		
+
+        /*
 		//动态推送删除（仅推送观点）
 		try {
 			for(long knowledgeId : knowledgeIds) 
@@ -360,11 +491,11 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	 * 插入时异常手动回滚方法
 	 * @throws Exception
 	 */
-	private void insertRollBack(long knowledgeId, short columnId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
+	private void insertRollBack(long knowledgeId, short columnId,long userId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		if(isBase) this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		if(isReference) this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
-		if(isBigData) this.bigDataService.deleteMessage(knowledgeId, columnId, null);
+		if(isBigData) this.bigDataService.deleteMessage(knowledgeId, columnId, userId);
 		//if(isUserFeed) this.userFeedService.deleteDynamicKnowledge(knowledgeId);
 	}
 	

@@ -75,7 +75,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public int deleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
+	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
 
         return this.deleteList("delete_knowledge_by_knowledgeIds", knowledgeIds);
 	}

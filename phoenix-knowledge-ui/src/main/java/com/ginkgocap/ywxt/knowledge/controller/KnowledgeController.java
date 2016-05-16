@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
+import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
+import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
@@ -113,6 +115,9 @@ public class KnowledgeController extends BaseController {
                 dataCollection.getPermission().setResId(knowledgeId);
                 dataCollection.getPermission().setResOwnerId(userId);
                 dataCollection.getPermission().setResType(ResourceType.KNOW.getVal());
+                if (dataCollection.getPermission().getPerTime() == null) {
+                    dataCollection.getPermission().setPerTime(new Date());
+                }
                 permissionRepositoryService.insert(dataCollection.getPermission());
             }
         } catch (Exception e) {
@@ -233,6 +238,66 @@ public class KnowledgeController extends BaseController {
         logger.info(".......delete knowledge success......");
 		return result;
 	}
+
+    /**
+     * 批量删除数据
+     * @param columnId 栏目主键
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value="/delete/{columnId}", method = RequestMethod.PUT)
+    public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response,@PathVariable short columnId) throws Exception {
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        if(columnId <= 0){
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        String[] konwledgeIds = requestJson.split(",");
+        if (konwledgeIds == null || konwledgeIds.length <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        List<Long> permDeleteIds = new ArrayList<Long>();
+        List<Long> failedIds = new ArrayList<Long>();
+        for (String Id : konwledgeIds) {
+            long knowledgeId = Long.parseLong(Id);
+            Permission per = new Permission();
+            per.setResType(ResourceType.KNOW.getVal());
+            per.setResId(knowledgeId);
+            InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
+            if (result == null || !result.getResponseData().booleanValue()) {
+                failedIds.add(knowledgeId);
+                logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
+            }
+            else {
+                permDeleteIds.add(knowledgeId);
+            }
+        }
+
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        try {
+            result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, columnId);
+        } catch (Exception e) {
+            logger.error("knowledge delete failed！reason："+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        //delete Assso info
+        for (long knowledgeId : permDeleteIds) {
+            deleteAssociate(knowledgeId, user.getId());
+        }
+
+        logger.info(".......delete knowledge success......");
+        if (failedIds.size() > 0) {
+            result.setResponseData("failedId:" + failedIds.toArray());
+        }
+        return result;
+    }
 	
 	/**
 	 * 提取知识详细信息，一般用在详细查看界面、编辑界面
@@ -364,6 +429,27 @@ public class KnowledgeController extends BaseController {
         InterfaceResult<List<DataCollection>> dataCollectionList = null;
         try {
             dataCollectionList = this.knowledgeService.getBaseByKeyWord(keyWord, start, size);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return dataCollectionList;
+    }
+
+    @RequestMapping(value = "/tag/{tagId}//{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult<List<DataCollection>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
+                                                                 @PathVariable String tagId,@PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        InterfaceResult<List<DataCollection>> dataCollectionList = null;
+        try {
+            dataCollectionList = this.knowledgeService.getBaseByKeyWord(tagId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -600,6 +686,37 @@ public class KnowledgeController extends BaseController {
         }catch (Exception e) {
             logger.error("update Asso failed！reason：" + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    private InterfaceResult deleteAssociate(long knowledgeId, long userId)
+    {
+        AssociateType assoType = null;
+        try {
+            assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
+            if (assoType == null) {
+                logger.error("can't get assoType for knowledge...");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            }
+            Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
+            if (assomap == null) {
+                logger.error("asso item null or converted failed...");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
+            }
+            //TODO: If this step failed, how to do ?
+            for (Iterator i =  assomap.values().iterator(); i.hasNext();) {
+                List<Associate> associateList = (List)i.next();
+                for (int j = 0; j < associateList.size(); j++) {
+                    associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
+                }
+            }
+        } catch (AssociateTypeServiceException ex) {
+            ex.printStackTrace();
+        }
+        catch (AssociateServiceException ex) {
+            ex.printStackTrace();
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);

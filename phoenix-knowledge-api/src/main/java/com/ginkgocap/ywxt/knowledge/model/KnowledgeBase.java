@@ -47,9 +47,6 @@ public class KnowledgeBase implements Serializable {
 	/**图片ID*/
 	private long pictureId;
 	
-	/**作者*/
-	private String author;
-	
 	/**创建人ID*/
 	private long createUserId;
 	
@@ -79,6 +76,12 @@ public class KnowledgeBase implements Serializable {
 	
 	/**举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）*/
 	private short reportStatus;
+
+    /** 是否是旧数据 1:是, 0:否**/
+    private short isOld;
+
+    /** 星标(1:是,0:否(默认)) **/
+    private short userStar;
 
 	@Id
 	@GeneratedValue(generator = "id")
@@ -162,15 +165,6 @@ public class KnowledgeBase implements Serializable {
 
 	public void setPictureId(long pictureId) {
 		this.pictureId = pictureId;
-	}
-
-	@Column(name = "author")
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 
 	@Column(name = "create_user_id")
@@ -262,4 +256,23 @@ public class KnowledgeBase implements Serializable {
 	public void setReportStatus(short reportStatus) {
 		this.reportStatus = reportStatus;
 	}
+
+    @Column(name = "isOld")
+    public short getIsOld() {
+        return isOld;
+    }
+
+    public void setIsOld(short isOld) {
+        this.isOld = isOld;
+    }
+
+    @Column(name = "userStar")
+    public short getUserStar() {
+        return userStar;
+    }
+
+    public void setUserStar(short userStar) {
+        this.userStar = userStar;
+    }
+
 }
