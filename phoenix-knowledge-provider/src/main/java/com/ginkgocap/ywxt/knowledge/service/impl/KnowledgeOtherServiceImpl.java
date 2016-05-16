@@ -1,11 +1,19 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
+import com.ginkgocap.parasol.directory.model.DirectorySource;
+import com.ginkgocap.parasol.directory.service.DirectorySourceService;
+import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
+import com.ginkgocap.parasol.tags.model.TagSource;
+import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
+import com.ginkgocap.ywxt.knowledge.model.TagItems;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -18,13 +26,15 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Chen Peifeng on 2016/4/15.
  */
 
 @Service("knowledgeOtherService")
-public class KnowledgeOtherServiceImpl implements KnowledgeOtherService
+public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
 {
     private Logger logger = LoggerFactory.getLogger(KnowledgeOtherServiceImpl.class);
     @Resource
@@ -35,6 +45,12 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService
 
     @Autowired
     KnowledgeMongoDao knowledgeMongoDao;
+
+    @Autowired
+    private DirectorySourceService directorySourceService;
+
+    @Autowired
+    private TagSourceService tagSourceService;
 
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception
@@ -73,6 +89,52 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
     {
         mongoTemplate.save(report, Constant.Collection.KnowledgeReport);
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    public InterfaceResult batchTags(List<TagItems> tagItems, long userId) throws Exception {
+        try {
+            for (TagItems tagItem : tagItems) {
+                for (Long tagId : tagItem.getTagIds()) {
+                    TagSource tagSource = new TagSource();
+                    tagSource.setUserId(userId);
+                    tagSource.setAppId(APPID);
+                    tagSource.setSourceId(tagItem.getKnowlegeId());
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    tagSource.setSourceType(sourceType);
+                    tagSource.setTagId(tagId);
+                    tagSource.setCreateAt(new Date().getTime());
+                    tagSourceService.createTagSource(tagSource);
+                    logger.info("tagId:" + tagId);
+                }
+            }
+        } catch (TagSourceServiceException ex) {
+            ex.printStackTrace();
+        }
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    public InterfaceResult batchCatalogs(List<TagItems> tagItems, long userId) throws Exception {
+        try {
+            for (TagItems tagItem : tagItems) {
+                for (long directoryId : tagItem.getTagIds()) {
+                    DirectorySource directorySource = new DirectorySource();
+                    directorySource.setUserId(userId);
+                    directorySource.setDirectoryId(directoryId);
+                    directorySource.setAppId(APPID);
+                    directorySource.setSourceId(tagItem.getKnowlegeId());
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    directorySource.setSourceType((int) sourceType);
+                    directorySource.setCreateAt(new Date().getTime());
+                    directorySourceService.createDirectorySources(directorySource);
+                    logger.info("dircetoryId:" + directoryId);
+                }
+            }
+        } catch (DirectorySourceServiceException ex) {
+            ex.printStackTrace();
+        }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }

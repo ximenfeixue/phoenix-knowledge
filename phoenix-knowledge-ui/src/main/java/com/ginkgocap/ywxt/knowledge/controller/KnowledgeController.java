@@ -6,10 +6,7 @@ import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
@@ -440,7 +437,7 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/tag/{tagId}//{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
     public InterfaceResult<List<DataCollection>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
-                                                                 @PathVariable String tagId,@PathVariable int start,@PathVariable int size) throws Exception {
+                                                               @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -449,9 +446,9 @@ public class KnowledgeController extends BaseController {
 
         InterfaceResult<List<DataCollection>> dataCollectionList = null;
         try {
-            dataCollectionList = this.knowledgeService.getBaseByKeyWord(tagId, start, size);
+            dataCollectionList = this.knowledgeService.getBaseByTagId(tagId, start, size);
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
+            logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -666,6 +663,63 @@ public class KnowledgeController extends BaseController {
 		} catch (Exception e) {
 			logger.error("Delete knowledge failed！reason："+e.getMessage());
 		}
+        logger.info(".......report knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    /**
+     * 举报知识
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/batchTags", method = RequestMethod.POST)
+    public InterfaceResult batchTags(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<TagItems> tagItems = KnowledgeUtil.readValue(new ArrayList<TagItems>().getClass(), requestJson);
+        if (tagItems == null || tagItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeOtherService.batchTags(tagItems, user.getId());
+        } catch (Exception e) {
+            logger.error("Delete knowledge failed！reason："+e.getMessage());
+        }
+        logger.info(".......report knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+
+    /**
+     * 举报知识
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/batchCatalog}", method = RequestMethod.POST)
+    public InterfaceResult batchCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<TagItems> tagItems = KnowledgeUtil.readValue(new ArrayList<TagItems>().getClass(), requestJson);
+        if (tagItems == null || tagItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeOtherService.batchCatalogs(tagItems, user.getId());
+        } catch (Exception e) {
+            logger.error("Delete knowledge failed！reason："+e.getMessage());
+        }
         logger.info(".......report knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }

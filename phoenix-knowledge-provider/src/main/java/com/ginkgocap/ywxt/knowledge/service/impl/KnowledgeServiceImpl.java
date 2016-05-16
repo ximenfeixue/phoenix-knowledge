@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.user.service.DiaryService;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service("knowledgeService")
-public class KnowledgeServiceImpl implements KnowledgeService {
+public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseService {
 	
 	private Logger logger = LoggerFactory.getLogger(KnowledgeServiceImpl.class);
 	
@@ -59,8 +60,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
     boolean isBigData = false;
     boolean isUserFeed = false;
-    private static final long APPID = 1l;
-    private static final long sourceType = 3L;
 
 	@Override
 	public InterfaceResult insert(DataCollection dataCollection) throws Exception {
@@ -475,6 +474,20 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     @Override
     public InterfaceResult<List<DataCollection>> getBaseByKeyWord(String keyWord,int start,int size) throws Exception {
         return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByAndKeyWord(keyWord, start, size)));
+    }
+
+    @Override
+    public InterfaceResult<List<DataCollection>> getBaseByTagId(long tagId,int start,int size) throws Exception
+    {
+        List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagId(APPID, tagId, start, size );
+        List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
+        if (tagSources == null || tagSources.size() <= 0) {
+            for (TagSource tag : tagSources) {
+                knowledgeIds.add(tag.getSourceId());
+            }
+        }
+
+        return getBaseByIds(knowledgeIds);
     }
 
     @Override
