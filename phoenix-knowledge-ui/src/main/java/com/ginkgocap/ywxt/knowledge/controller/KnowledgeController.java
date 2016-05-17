@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
 import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
@@ -701,7 +702,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/batchCatalog}", method = RequestMethod.POST)
+    @RequestMapping(value = "/batchCatalog", method = RequestMethod.POST)
     public InterfaceResult batchCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = this.getUser(request);
@@ -722,6 +723,145 @@ public class KnowledgeController extends BaseController {
         }
         logger.info(".......report knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    @ResponseBody
+    @RequestMapping(value = "/knowledgeRelatedResources/{keyword}/{type}/{start}/{size}", method = RequestMethod.POST)
+    public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
+                                                            @PathVariable String keyword, @PathVariable short type,
+                                                            @PathVariable int start, @PathVariable int size) throws Exception {
+
+        Map<String, Object> responseDataMap = new HashMap<String, Object>();
+
+        List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
+        List<KnowledgeMini2> listUserKnowledge = null; // 用户自己的知识
+
+        User user = getUser(request);
+
+        /**
+         * "keyword": "知识标题或关键字", "type": "1-关联需求；2-关联人脉；3-关联组织；4-关联知识"
+         * */
+        long userId = user.getId();
+
+        /** 金桐网推荐的相关“知识”数据 */
+        String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+        durl = durl + "?scope=4&title=" + keyword + "&userid=" + userId;
+
+        String djson = "";
+        JsonNode jsonNode = null;
+        try {
+            djson = HttpClientHelper.get(durl);
+        } catch (java.net.ConnectException e) {
+            logger.error("knowledge /getKnowledgeRelatedResources.json");
+        } catch (java.net.SocketTimeoutException ste) {
+            logger.error("knowledge /getKnowledgeRelatedResources.json");
+        }
+
+        int RECOMMEND_COUNT = 5;
+        if (null != djson && djson.trim().length() > 0 ) {
+            jsonNode = KnowledgeUtil.readTree(djson);
+            int status = jsonNode.get("status").intValue();
+            /** 返回状态正确 */
+            if (status != 0) {
+                /** 判断数据是否为空 */
+                if (jsonNode.get("k") != null) {
+                    List<JsonNode> tempList = jsonNode.findValues("k");
+                    if (tempList.size() > 0) {
+                        KnowledgeMini2 km2 = null;
+                        RECOMMEND_COUNT = RECOMMEND_COUNT < tempList.size() ? RECOMMEND_COUNT : tempList.size();
+                        for (int i = 0; i < RECOMMEND_COUNT; i++) {
+                            JsonNode m = tempList.get(i);
+                            Object tempId = m.get("id");
+                            Object oid = m.get("ownerid");
+                            if (null == tempId || oid == null) {
+                                continue;
+                            }
+                            String id = tempId.toString();
+                            km2 = new KnowledgeMini2();
+                            km2.setTitle(m.get("title") == null ? "" : m.get("title").toString());
+                            km2.setId(Long.parseLong(id));
+                            km2.setType(Integer.parseInt(m.get("columntype").toString()));
+                            km2.setColumntype(Integer.parseInt(m.get("columntype").toString()));
+                            Object objColumnPath = m.get("columnpath");
+                            String columnPath = objColumnPath == null ? "" : objColumnPath.toString();
+                            //km2.setColumnpath(commonService.getDisposeString(columnPath));
+
+                            List<Long> connections = new  ArrayList<Long>(1);
+                            String ownerid = oid.toString();
+                            connections.add(Long.parseLong(ownerid));
+
+                            User organizationUser = null;
+
+                            /** 推荐 用户为金桐脑 */
+                            if (0 == connections.get(0)) {
+                                organizationUser = new User();
+                                organizationUser.setType(2);// 金桐脑为机构用户
+                            } else if (-1 == connections.get(0)) {
+                                organizationUser = new User();
+                                organizationUser.setType(2);// 全平台机构用户
+                            } else {
+                                organizationUser = null; //userService.selectByPrimaryKey(Long.parseLong(m.get("ownerid").toString()));
+                            }
+
+                            km2.setConnections(connections);
+                            listPlatformKnowledge.add(km2);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        listUserKnowledge = new ArrayList<KnowledgeMini2>();
+        /** 用户自己的所有知识 */
+        List<DataCollection> result = knowledgeService.getBaseAll(start, size).getResponseData();
+
+        if (result != null || result.size() > 0) {
+            listUserKnowledge = changeKnowledgeMini2(result);
+        }
+
+        responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
+        responseDataMap.put("listUserKnowledge", listUserKnowledge);
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+    }
+
+    private List<KnowledgeMini2> changeKnowledgeMini2(List<DataCollection> data) {
+        List<KnowledgeMini2> kbds = new ArrayList<KnowledgeMini2>();
+        for (DataCollection collection : data) {
+            KnowledgeBase kbd = collection.getKnowledge();
+            if (kbd != null) {
+                chanageKnowledgeToMini2(kbd);
+            }
+        }
+        return kbds;
+    }
+
+    public KnowledgeMini2 chanageKnowledgeToMini2(KnowledgeBase knowledgeBase) {
+        KnowledgeMini2 km2 = new KnowledgeMini2();
+
+        //分享给我的知识专用
+        //km2.setShareMeId(knowledgeBase.getShareMeId());
+
+        //Connections connections = new Connections();
+        /**作者id*/
+        long userId = knowledgeBase.getCreateUserId();
+
+        km2.setUrl("");//知识链接
+        km2.setType(knowledgeBase.getType());//知识类型
+        km2.setColumntype(knowledgeBase.getColumnId());
+        km2.setId(knowledgeBase.getKnowledgeId());// 知识id
+        //km2.setTag(knowledgeBase.get);// 标签
+
+        //km2.setListTag(getMapValue(knowledgeBaseData.getTag()).split(" "));//标签
+        //km2.setSource(knowledgeBase.get);// 来源
+        km2.setTitle(knowledgeBase.getTitle());// 标题
+        km2.setPic(String.valueOf(knowledgeBase.getPictureId()));// 封面地址
+        km2.setDesc(knowledgeBase.getContentDesc());// 描述
+        km2.setModifytime(knowledgeBase.getCreateDate());// 最后修改时间
+
+        return km2;
     }
 
     private InterfaceResult createAssociate(List<Associate> as, long knowledgeId, long userId,AssociateType assoType)

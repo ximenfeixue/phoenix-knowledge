@@ -122,6 +122,13 @@ public final class KnowledgeUtil {
         return objectMapper.readValue(content, valueType);
     }
 
+    public static JsonNode readTree(final String content) throws IOException {
+        if (StringUtils.isBlank(content)) {
+            throw new IllegalArgumentException("Content is null");
+        }
+        return objectMapper.readTree(content);
+    }
+
     public static String writeObjectToJson(Object content) {
         if (content == null) {
             throw new IllegalArgumentException("Content is null");
