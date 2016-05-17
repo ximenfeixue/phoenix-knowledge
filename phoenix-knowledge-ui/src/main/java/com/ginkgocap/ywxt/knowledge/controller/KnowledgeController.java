@@ -414,7 +414,7 @@ public class KnowledgeController extends BaseController {
 		return dataCollectionList;
 	}
 
-    @RequestMapping(value = "/all/{keyWord}//{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{keyWord}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
     public InterfaceResult<List<DataCollection>> getAllByKeyWord(HttpServletRequest request, HttpServletResponse response,
                                                                  @PathVariable String keyWord,@PathVariable int start,@PathVariable int size) throws Exception {
@@ -435,7 +435,7 @@ public class KnowledgeController extends BaseController {
         return dataCollectionList;
     }
 
-    @RequestMapping(value = "/tag/{tagId}//{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tag/{tagId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
     public InterfaceResult<List<DataCollection>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
@@ -669,7 +669,7 @@ public class KnowledgeController extends BaseController {
     }
 
     /**
-     * 举报知识
+     * 批量打标签
      * @throws IOException
      */
     @ResponseBody
@@ -698,7 +698,7 @@ public class KnowledgeController extends BaseController {
 
 
     /**
-     * 举报知识
+     * 批打目录
      * @throws IOException
      */
     @ResponseBody
@@ -725,9 +725,12 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    /**
+     * 推荐获取大数据推荐及个人关联知识
+     * @throws IOException
+     */
     @ResponseBody
-    @RequestMapping(value = "/knowledgeRelatedResources/{keyword}/{type}/{start}/{size}", method = RequestMethod.POST)
+    @RequestMapping(value = "/knowledgeRelated/{keyword}/{type}/{start}/{size}", method = RequestMethod.POST)
     public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
                                                             @PathVariable String keyword, @PathVariable short type,
                                                             @PathVariable int start, @PathVariable int size) throws Exception {
