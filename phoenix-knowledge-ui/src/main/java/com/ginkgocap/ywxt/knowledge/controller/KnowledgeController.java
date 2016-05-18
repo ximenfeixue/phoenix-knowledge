@@ -702,7 +702,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/batchCatalog", method = RequestMethod.POST)
+    @RequestMapping(value = "/batchCatalogs", method = RequestMethod.POST)
     public InterfaceResult batchCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = this.getUser(request);
