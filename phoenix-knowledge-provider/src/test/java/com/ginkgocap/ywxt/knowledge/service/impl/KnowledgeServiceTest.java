@@ -86,7 +86,7 @@ public class KnowledgeServiceTest extends TestBase {
         }
         short columnId = data != null ? data.getKnowledgeDetail().getColumnId() :  2;
         try {
-            InterfaceResult result = knowledgeService.deleteByKnowledgeIds(knowledgeIds, columnId);
+            InterfaceResult result = knowledgeService.batchDeleteByKnowledgeIds(knowledgeIds, columnId);
             assertResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();

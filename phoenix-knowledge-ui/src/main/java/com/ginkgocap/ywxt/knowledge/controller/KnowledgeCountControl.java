@@ -99,7 +99,7 @@ public class KnowledgeCountControl extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value="/hotKnowledge/{limit}", method = RequestMethod.GET)
+    @RequestMapping(value="/hot/{limit}", method = RequestMethod.GET)
     public InterfaceResult commentCount(HttpServletRequest request,HttpServletResponse response,
                                         @PathVariable int limit) throws Exception {
         User user = this.getUser(request);
