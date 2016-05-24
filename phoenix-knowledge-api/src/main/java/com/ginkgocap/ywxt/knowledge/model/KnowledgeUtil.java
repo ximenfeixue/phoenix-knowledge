@@ -28,7 +28,7 @@ public final class KnowledgeUtil {
     static {
         objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.setFilters(assoSimpleFilterProvider(null));
+        objectMapper.setFilters(assoSimpleFilterProvider());
         //objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
     }
 
@@ -95,8 +95,8 @@ public final class KnowledgeUtil {
     public static User getDummyUser()
     {
         User user = new User();
-        user.setId(128292L);
-        user.setUid(128292L);
+        user.setId(14526L);
+        user.setUid(14526L);
         user.setUserName("UnitTestUser");
         user.setName("UnitTestUser");
         return user;
@@ -180,7 +180,32 @@ public final class KnowledgeUtil {
         return dataCollection;
     }
 
-    public static SimpleFilterProvider assoSimpleFilterProvider(String fileds) {
+    public static SimpleFilterProvider assoSimpleFilterProvider() {
+        Set<String> filter = new HashSet<String>(8); //this number must be increased by fields
+        filter.add("id"); // id',
+        filter.add("appId");
+        filter.add("assocTypeId");
+        filter.add("assocDesc"); // '关联描述，比如文章的作者，或者编辑等；关联标签描述',
+        filter.add("assocTypeId"); // '被关联的类型可以参考AssociateType对象，如：知识, 人脉,组织，需求，事件等',
+        filter.add("assocId"); // '被关联数据ID',
+        filter.add("assocTitle"); // '被关联数据标题',
+        filter.add("assocMetadata"); // '被关联数据的的摘要用Json存放，如图片，连接URL定义等',
+
+        return simpleFilterProvider(Associate.class.getName(), filter);
+    }
+
+    public static SimpleFilterProvider simpleFilterProvider(final String className, final Set<String> filter) {
+        if (filter != null && filter.size() > 0) {
+            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            filterProvider.addFilter(Associate.class.getName(), SimpleBeanPropertyFilter.filterOutAllExcept(filter));
+            return filterProvider;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static SimpleFilterProvider simpleFilterProvider(final String className, final String fileds) {
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
         // 请求指定字段
         String[] filedNames = StringUtils.split(fileds, ",");
@@ -193,20 +218,9 @@ public final class KnowledgeUtil {
                     filter.add(filedName);
                 }
             }
-        } else {
-            filter = new HashSet<String>(8); //this number must be increased by fields
-            filter.add("id"); // id',
-            filter.add("appId");
-            filter.add("assocTypeId");
-            filter.add("assocDesc"); // '关联描述，比如文章的作者，或者编辑等；关联标签描述',
-            filter.add("assocTypeId"); // '被关联的类型可以参考AssociateType对象，如：知识, 人脉,组织，需求，事件等',
-            filter.add("assocId"); // '被关联数据ID',
-            filter.add("assocTitle"); // '被关联数据标题',
-            filter.add("assocMetadata"); // '被关联数据的的摘要用Json存放，如图片，连接URL定义等',
-
         }
 
-        filterProvider.addFilter(Associate.class.getName(), SimpleBeanPropertyFilter.filterOutAllExcept(filter));
+        filterProvider.addFilter(className, SimpleBeanPropertyFilter.filterOutAllExcept(filter));
         return filterProvider;
     }
 

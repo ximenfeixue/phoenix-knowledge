@@ -63,6 +63,20 @@ public class TestData {
         return data;
     }
 
+    public static ResItem getResItems(String title,long resId,long [] ids)
+    {
+        ResItem resItem = new ResItem();
+        resItem.setId(resId);
+        resItem.setTitle(title);
+        List<Long> tagIds = new ArrayList<Long>(ids.length);
+        for (long id : ids) {
+            tagIds.add(id);
+        }
+        resItem.setTagIds(tagIds);
+
+        return resItem;
+    }
+
     public static DataCollection dataCollection() {
 
         return dataCollection(KnowledgeUtil.getDummyUser().getId(), null);

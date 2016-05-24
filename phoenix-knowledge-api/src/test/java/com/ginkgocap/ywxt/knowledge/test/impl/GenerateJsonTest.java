@@ -1,14 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.test.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chen Peifeng on 2016/1/23.
@@ -60,5 +60,18 @@ public class GenerateJsonTest extends BaseTestCase {
     public void testKnowledgeReportCreateJson() throws Exception
     {
         serviceCreateJsonCheck( TestData.knowledgeReport(userId, knowledgeId(), columnId) );
+    }
+
+    @Test
+    public void testBatchTags()
+    {
+        List<ResItem> resItems = new ArrayList<ResItem>(2);
+        ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
+        ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+        resItems.add(resItem1);
+        resItems.add(resItem2);
+        String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
+
+        serviceCreateJsonCheck( resItems );
     }
 }

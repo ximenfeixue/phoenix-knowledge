@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class KnowledgeReport implements Serializable {
 
+    private static final long serialVersionUID = 4496074766571779775L;
     /**
      * 主键
      */

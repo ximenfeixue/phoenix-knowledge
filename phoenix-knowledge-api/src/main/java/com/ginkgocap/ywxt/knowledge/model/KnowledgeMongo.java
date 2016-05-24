@@ -15,9 +15,6 @@ import java.util.List;
  */
 public class KnowledgeMongo extends KnowledgeBase implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4155861553088421781L;
 	
 	public void createContendDesc() {

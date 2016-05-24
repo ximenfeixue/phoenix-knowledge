@@ -16,9 +16,7 @@ import java.io.Serializable;
 @Table(name = "tb_knowledge_reference", catalog = "phoenix_knowledge_new")
 public class KnowledgeReference implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 4445285733282369227L;
 	
 	/**主键*/

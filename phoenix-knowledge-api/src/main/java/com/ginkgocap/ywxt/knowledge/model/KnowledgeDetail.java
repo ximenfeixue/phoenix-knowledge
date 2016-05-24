@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class KnowledgeDetail implements Serializable {
 
+    private static final long serialVersionUID = 1564469001269897935L;
     /** 知识id **/
     private long id;
 

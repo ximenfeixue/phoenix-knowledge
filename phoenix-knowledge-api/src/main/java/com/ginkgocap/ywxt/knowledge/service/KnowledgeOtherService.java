@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
-import com.ginkgocap.ywxt.knowledge.model.TagItems;
 import com.gintong.frame.util.dto.InterfaceResult;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public interface KnowledgeOtherService
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
-    public InterfaceResult batchTags(List<TagItems> tagItems,long userId) throws Exception;
+    public InterfaceResult batchTags(List<LinkedHashMap<String, Object>> tagItems,long userId) throws Exception;
 
-    public InterfaceResult batchCatalogs(List<TagItems> tagItems,long userId) throws Exception;
+    public InterfaceResult batchCatalogs(List<LinkedHashMap<String, Object>> tagItems,long userId) throws Exception;
 }

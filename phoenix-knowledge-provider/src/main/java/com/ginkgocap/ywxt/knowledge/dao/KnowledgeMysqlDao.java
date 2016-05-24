@@ -390,4 +390,5 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,short reportStatus,int start,int size) throws Exception;
+
 }

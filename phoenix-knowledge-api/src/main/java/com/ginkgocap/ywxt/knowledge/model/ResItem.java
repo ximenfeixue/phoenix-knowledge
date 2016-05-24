@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Admin on 2016/5/16.
+ * Created by Chen Peifeng on 2016/5/16.
  */
-public class TagItems implements Serializable {
+public class ResItem implements Serializable {
 
-    public long getKnowlegeId() {
-        return knowlegeId;
+    public long getId() {
+        return id;
     }
 
-    public void setKnowlegeId(long knowlegeId) {
-        this.knowlegeId = knowlegeId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -32,7 +32,7 @@ public class TagItems implements Serializable {
         this.tagIds = tagIds;
     }
 
-    private long knowlegeId;
-    private String title;
+    private long id; //knowledgeId
+    private String title; //knowledge title
     List<Long> tagIds;
 }

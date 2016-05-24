@@ -11,9 +11,8 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.service.DiaryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -39,9 +38,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	/**知识来源表*/
 	@Autowired
 	private KnowledgeReferenceDao knowledgeReferenceDao;
-	/**知识公共服务*/
-	@Autowired
-	private KnowledgeCommonService knowledgeCommonService;
+
 	/**MQ大数据服务*/
 	@Autowired
 	private BigDataService bigDataService;
@@ -628,5 +625,4 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         return returnList;
     }
-	
 }

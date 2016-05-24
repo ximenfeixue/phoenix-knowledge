@@ -10,7 +10,6 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
-import com.ginkgocap.ywxt.knowledge.model.TagItems;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
@@ -26,8 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Chen Peifeng on 2016/4/15.
@@ -93,14 +91,18 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult batchTags(List<TagItems> tagItems, long userId) throws Exception {
+    public InterfaceResult batchTags(List<LinkedHashMap<String, Object>> tagItems, long userId) throws Exception {
         try {
-            for (TagItems tagItem : tagItems) {
-                for (Long tagId : tagItem.getTagIds()) {
+            for (int index = 0; index < tagItems.size(); index++) {
+                Map<String, Object> map = tagItems.get(index);
+                Set<String> set = map.keySet();
+                List<Long> tagIds = (List<Long>)map.get("tagIds");
+                for (long tagId : tagIds) {
                     TagSource tagSource = new TagSource();
                     tagSource.setUserId(userId);
                     tagSource.setAppId(APPID);
-                    tagSource.setSourceId(tagItem.getKnowlegeId());
+                    //tagSource.setTitle();
+                    tagSource.setSourceId(Long.parseLong(map.get("id").toString()));
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     tagSource.setSourceType(sourceType);
                     tagSource.setTagId(tagId);
@@ -116,15 +118,18 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult batchCatalogs(List<TagItems> tagItems, long userId) throws Exception {
+    public InterfaceResult batchCatalogs(List<LinkedHashMap<String, Object>> tagItems, long userId) throws Exception {
         try {
-            for (TagItems tagItem : tagItems) {
-                for (long directoryId : tagItem.getTagIds()) {
+            for (int index = 0; index < tagItems.size(); index++) {
+                Map<String, Object> map = tagItems.get(index);
+                Set<String> set = map.keySet();
+                List<Long> tagIds = (List<Long>)map.get("tagIds");
+                for (long directoryId : tagIds) {
                     DirectorySource directorySource = new DirectorySource();
                     directorySource.setUserId(userId);
                     directorySource.setDirectoryId(directoryId);
                     directorySource.setAppId(APPID);
-                    directorySource.setSourceId(tagItem.getKnowlegeId());
+                    directorySource.setSourceId(Long.parseLong(map.get("id").toString()));
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     directorySource.setSourceType((int) sourceType);
                     directorySource.setCreateAt(new Date().getTime());

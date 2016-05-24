@@ -7,7 +7,9 @@ import java.io.Serializable;
  */
 public class KnowledgeComment implements Serializable{
 
-	/** 评论id **/
+    private static final long serialVersionUID = -6024880400982992427L;
+
+    /** 评论id **/
     private long id;
     /** 知识id **/
     private long knowledgeId;

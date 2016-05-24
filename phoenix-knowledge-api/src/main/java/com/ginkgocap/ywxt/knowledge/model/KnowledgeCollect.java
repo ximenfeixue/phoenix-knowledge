@@ -6,6 +6,8 @@ import java.io.Serializable;
  * Created by Admin on 2016/4/15.
  */
 public class KnowledgeCollect implements Serializable {
+
+    private static final long serialVersionUID = 3224229209951867532L;
     /**
      * 主键
      */

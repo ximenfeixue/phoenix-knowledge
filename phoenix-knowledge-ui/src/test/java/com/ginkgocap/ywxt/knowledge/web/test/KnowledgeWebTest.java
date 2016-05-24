@@ -1,12 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chen Peifeng on 2016/3/31.
@@ -179,7 +179,33 @@ public class KnowledgeWebTest extends BaseTestCase {
             e.printStackTrace();
             fail();
         }
+    }
 
+    @Test
+    public void testBatchTags()
+    {
+        LogMethod();
+        try {
+            List<ResItem> resItems = new ArrayList<ResItem>(2);
+            ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
+            ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+            resItems.add(resItem1);
+            resItems.add(resItem2);
+            String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testBatchCatalogs()
+    {
+        LogMethod();
+        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
     private String collectKnowledge(String title)

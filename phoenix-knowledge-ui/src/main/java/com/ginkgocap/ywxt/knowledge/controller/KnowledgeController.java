@@ -8,6 +8,7 @@ import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
@@ -48,6 +49,9 @@ public class KnowledgeController extends BaseController {
 
     @Autowired
     KnowledgeOtherService knowledgeOtherService;
+
+    @Autowired
+    KnowledgeCountService knowledgeCountService;
 
     @Autowired
     private AssociateService associateService;
@@ -355,7 +359,10 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get knowledge detail success......");
         result.setResponseData(data);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider(null));
+        jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
+
+        //Click count
+        knowledgeCountService.updateClickCount(id);
 
         return jacksonValue;
 	}
@@ -590,6 +597,9 @@ public class KnowledgeController extends BaseController {
 		} catch (Exception e) {
 			logger.error("collect knowledge failed！：" + e.getMessage());
 		}
+
+        //collect count
+        knowledgeCountService.updateCollectCount(knowledgeId);
         logger.info(".......collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
@@ -668,6 +678,18 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
+    @ResponseBody
+    @RequestMapping(value="/count/{knowledgeId}/{type}", method = RequestMethod.PUT)
+    public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response,
+                                       @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
     /**
      * 批量打标签
      * @throws IOException
@@ -682,7 +704,7 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<TagItems> tagItems = KnowledgeUtil.readValue(new ArrayList<TagItems>().getClass(), requestJson);
+        List<LinkedHashMap<String, Object>> tagItems = KnowledgeUtil.readValue(List.class, requestJson);
         if (tagItems == null || tagItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
@@ -711,7 +733,7 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<TagItems> tagItems = KnowledgeUtil.readValue(new ArrayList<TagItems>().getClass(), requestJson);
+        List<LinkedHashMap<String, Object>> tagItems = KnowledgeUtil.readValue(List.class, requestJson);
         if (tagItems == null || tagItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
