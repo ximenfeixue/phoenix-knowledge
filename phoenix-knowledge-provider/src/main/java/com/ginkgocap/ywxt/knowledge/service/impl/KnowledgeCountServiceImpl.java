@@ -36,7 +36,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService {
     @Override
     public boolean updateCollectCount(long knowledgeId)
     {
-        return knowledgeCountDao.updateClickCount(knowledgeId);
+        return knowledgeCountDao.updateCollectCount(knowledgeId);
     }
 
     @Override

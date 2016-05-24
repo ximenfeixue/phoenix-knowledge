@@ -44,6 +44,7 @@
     <dubbo:service ref="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" version="3.0.0"/>
  	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
     <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" ref="knowledgeOtherService" version="3.0.0"/>
     <!-- dubbo:service ref="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
     <dubbo:service ref="columnService" interface="com.ginkgocap.ywxt.knowledge.service.IColumnService" version="3.0.0"/>
