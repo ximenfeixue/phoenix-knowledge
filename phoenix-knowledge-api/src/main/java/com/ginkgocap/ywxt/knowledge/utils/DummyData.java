@@ -50,13 +50,12 @@ public final class DummyData {
         short typeId = (short)1;
         short auditStatus = (short)1;
         short reportStatus = (short)0;
-        long pictureId = 123456L;
+        String pictureId = "123456L";
         KnowledgeBase knowledge = new KnowledgeBase();
         knowledge.setType(typeId);
         knowledge.setTitle("TestTitle");
         knowledge.setContentDesc("Knowledge Description");
         knowledge.setPictureId(pictureId);
-        knowledge.setAttachmentId(123456L);
         knowledge.setAuditStatus(auditStatus);
         knowledge.setColumnId(columnId);
         knowledge.setCreateUserId(KnowledgeUtil.getDummyUser().getId());

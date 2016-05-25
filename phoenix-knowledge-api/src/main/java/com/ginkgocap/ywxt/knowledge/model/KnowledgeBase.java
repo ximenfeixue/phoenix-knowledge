@@ -40,12 +40,12 @@ public class KnowledgeBase implements Serializable {
 	
 	/**描述简略，一般存储描述的前50个字*/
 	private String contentDesc;
-	
-	/**附件ID*/
-	private long attachmentId;
+
+    /** 标签信息 **/
+    private String tags;
 	
 	/**图片ID*/
-	private long pictureId;
+	private String pictureId;
 	
 	/**创建人ID*/
 	private long createUserId;
@@ -149,21 +149,21 @@ public class KnowledgeBase implements Serializable {
 		this.contentDesc = contentDesc;
 	}
 
-	@Column(name = "attachment_id")
-	public long getAttachmentId() {
-		return attachmentId;
-	}
+    @Column(name = "tags")
+    public String getTags() {
+        return tags;
+    }
 
-	public void setAttachmentId(long attachmentId) {
-		this.attachmentId = attachmentId;
-	}
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 
 	@Column(name = "picture_id")
-	public long getPictureId() {
+	public String getPictureId() {
 		return pictureId;
 	}
 
-	public void setPictureId(long pictureId) {
+	public void setPictureId(String pictureId) {
 		this.pictureId = pictureId;
 	}
 
@@ -229,8 +229,6 @@ public class KnowledgeBase implements Serializable {
 	public void setPublicDate(long publicDate) {
 		this.publicDate = publicDate;
 	}
-
-
 
     @Column(name = "status")
 	public short getStatus() {

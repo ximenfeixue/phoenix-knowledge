@@ -36,7 +36,6 @@ public class KnowledgeMongo extends KnowledgeBase implements Serializable {
         knowledgeMongo.setTitle(knowledgeBase.getTitle());
         knowledgeMongo.setContentDesc(knowledgeBase.getContentDesc());
         knowledgeMongo.setPictureId(knowledgeBase.getPictureId());
-        knowledgeMongo.setAttachmentId(knowledgeBase.getAttachmentId());
         knowledgeMongo.setAuditStatus(knowledgeBase.getAuditStatus());
         knowledgeMongo.setCreateUserId(knowledgeBase.getCreateUserId());
         knowledgeMongo.setCreateUserName(knowledgeBase.getCreateUserName());

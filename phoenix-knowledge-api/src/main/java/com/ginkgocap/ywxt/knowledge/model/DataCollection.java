@@ -110,12 +110,10 @@ public class DataCollection implements Serializable {
             this.knowledge.setTitle(this.knowledgeDetail.getTitle());
             this.knowledge.setContentDesc(this.knowledgeDetail.getContent());
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
-                this.knowledge.setPictureId(1111L);
-            }
-            if (this.knowledgeDetail.getAttachmentUrls() != null && this.knowledgeDetail.getAttachmentUrls().size()>0) {
-                this.knowledge.setAttachmentId(123456L);
+                this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
+            knowledge.setTags(knowledge.getTags());
             this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());
             this.knowledge.setCreateUserId(this.knowledgeDetail.getOwnerId());
             //For reference knowledge may be different with author

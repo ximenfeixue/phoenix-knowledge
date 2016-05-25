@@ -2,9 +2,12 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
+import com.ginkgocap.parasol.directory.service.DirectoryService;
 import com.ginkgocap.parasol.directory.service.DirectorySourceService;
 import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
+import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
+import com.ginkgocap.parasol.tags.service.TagService;
 import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
@@ -48,7 +51,13 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private DirectorySourceService directorySourceService;
 
     @Autowired
+    private DirectoryService directoryService;
+
+    @Autowired
     private TagSourceService tagSourceService;
+
+    @Autowired
+    private TagService tagService;
 
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception
@@ -143,6 +152,22 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
+
+    public InterfaceResult getTagListByIds(List<Long> tagItems,long userId) throws Exception
+    {
+        List<Tag> tags = tagService.getTags(-1L,tagItems);
+        if (tags != null && tags.size() > 0) {
+            return InterfaceResult.getSuccessInterfaceResultInstance(tags);
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
+    }
+
+    public InterfaceResult getDirectoryListByIds(List<Long> tagItems,long userId) throws Exception
+    {
+        return null;
+    }
+
 
     private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,short columnId)
     {

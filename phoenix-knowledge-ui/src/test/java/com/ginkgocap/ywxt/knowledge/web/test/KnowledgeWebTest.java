@@ -208,6 +208,20 @@ public class KnowledgeWebTest extends BaseTestCase {
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
+    @Test
+    public void testGetKnowledgeRelatedResources()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/knowledgeRelated/4/1/12/null";  //user/{columnId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     private String collectKnowledge(String title)
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"

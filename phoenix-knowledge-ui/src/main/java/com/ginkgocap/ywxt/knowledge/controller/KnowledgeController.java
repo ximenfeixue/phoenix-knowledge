@@ -748,6 +748,64 @@ public class KnowledgeController extends BaseController {
     }
 
     /**
+     * get Tags
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getTagListByIds", method = RequestMethod.POST)
+    public InterfaceResult getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (tagIds == null || tagIds.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeOtherService.getTagListByIds(tagIds, user.getId());
+        } catch (Exception e) {
+            logger.error("Delete knowledge failed！reason："+e.getMessage());
+        }
+        logger.info(".......report knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    /**
+     * 批打目录
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getDirectoryListByIds", method = RequestMethod.POST)
+    public InterfaceResult getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> DirectoryIds = KnowledgeUtil.readValue(List.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (DirectoryIds == null || DirectoryIds.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeOtherService.getTagListByIds(DirectoryIds, user.getId());
+        } catch (Exception e) {
+            logger.error("Delete knowledge failed！reason："+e.getMessage());
+        }
+        logger.info(".......report knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    /**
      * 推荐获取大数据推荐及个人关联知识
      * @throws IOException
      */
@@ -760,7 +818,7 @@ public class KnowledgeController extends BaseController {
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
 
         List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
-        List<KnowledgeMini2> listUserKnowledge = null; // 用户自己的知识
+
 
         User user = getUser(request);
 
@@ -770,7 +828,9 @@ public class KnowledgeController extends BaseController {
         long userId = user.getId();
 
         /** 金桐网推荐的相关“知识”数据 */
-        String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+        String bigDataQueryHost = "http://192.168.101.9:8090"; //TODO: This need to read from configure file.
+        //String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+        String durl = bigDataQueryHost + "/bigdata/query";
         durl = durl + "?scope=4&title=" + keyword + "&userid=" + userId;
 
         String djson = "";
@@ -838,15 +898,16 @@ public class KnowledgeController extends BaseController {
             }
         }
 
-        listUserKnowledge = new ArrayList<KnowledgeMini2>();
+        List<KnowledgeBase> listUserKnowledge = new ArrayList<KnowledgeBase>();// 用户自己的知识
         /** 用户自己的所有知识 */
         List<DataCollection> result = knowledgeService.getBaseAll(start, size).getResponseData();
-
         if (result != null || result.size() > 0) {
-            listUserKnowledge = changeKnowledgeMini2(result);
+            for (DataCollection data : result) {
+
+            }
         }
 
-        responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
+        //responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
         responseDataMap.put("listUserKnowledge", listUserKnowledge);
 
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
