@@ -5,7 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import java.util.List;
 
 /**
- * Created by Admin on 2016/5/24.
+ * Created by Chen Peifeng on 2016/5/24.
  */
 public interface KnowledgeCountService {
 

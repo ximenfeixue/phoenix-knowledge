@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-@Repository("KnowledgeReferenceDao")
+@Repository("knowledgeReferenceDao")
 public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> implements KnowledgeReferenceDao {
 
 	@Override

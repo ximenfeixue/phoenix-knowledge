@@ -3,17 +3,19 @@ package com.ginkgocap.ywxt.knowledge.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created by Chen Peifeng on 2016/5/24.
  */
+@Entity
+@Table(name = "tb_knowledge_count", catalog = "phoenix_knowledge_new")
 public class KnowledgeCount implements Serializable {
 
     private static final long serialVersionUID = 2655583530973124686L;
+
+    private long id;
 
     private long knowledgeId;
 
@@ -21,7 +23,7 @@ public class KnowledgeCount implements Serializable {
 
     private long shareNum;
 
-    private long collectionNum;
+    private long collectNum;
 
     private long commentNum;
 
@@ -32,9 +34,18 @@ public class KnowledgeCount implements Serializable {
     private short type;
 
     @Id
-    @GeneratedValue(generator = "knowledgeId")
-    @GenericGenerator(name = "knowledgeId", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "knowledgeId") })
-    @Column(name = "knowledgeId", unique = true, nullable = false)
+    @GeneratedValue(generator = "knowledgeCountId")
+    @GenericGenerator(name = "knowledgeCountId", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "knowledgeCountId") })
+    @Column(name = "id", unique = true, nullable = false)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Column(name = "knowledgeId")
     public long getKnowledgeId() {
         return knowledgeId;
     }
@@ -61,13 +72,13 @@ public class KnowledgeCount implements Serializable {
         this.shareNum = shareNum;
     }
 
-    @Column(name = "collectionNum")
-    public long getCollectionNum() {
-        return collectionNum;
+    @Column(name = "collectNum")
+    public long getCollectNum() {
+        return collectNum;
     }
 
-    public void setCollectionNum(long collectionNum) {
-        this.collectionNum = collectionNum;
+    public void setCollectNum(long collectNum) {
+        this.collectNum = collectNum;
     }
 
     @Column(name = "commentNum")

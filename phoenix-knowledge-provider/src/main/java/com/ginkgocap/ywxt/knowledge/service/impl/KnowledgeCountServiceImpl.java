@@ -6,12 +6,14 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by Admin on 2016/5/24.
+ * Created by Chen Peifeng on 2016/5/24.
  */
+@Service("knowledgeCountService")
 public class KnowledgeCountServiceImpl implements KnowledgeCountService {
 
     private final Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);

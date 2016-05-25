@@ -230,7 +230,9 @@ public class KnowledgeBase implements Serializable {
 		this.publicDate = publicDate;
 	}
 
-	@Column(name = "status")
+
+
+    @Column(name = "status")
 	public short getStatus() {
 		return status;
 	}

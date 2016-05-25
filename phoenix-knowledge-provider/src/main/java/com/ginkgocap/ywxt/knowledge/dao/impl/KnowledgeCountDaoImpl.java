@@ -4,12 +4,14 @@ import com.ginkgocap.parasol.common.service.exception.BaseServiceException;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by Admin on 2016/5/24.
  */
+@Repository("knowledgeCountDao")
 public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implements KnowledgeCountDao
 {
 
@@ -42,7 +44,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     public boolean updateCollectCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
-            knowledgeCount.setCollectionNum(knowledgeCount.getClickNum()+1);
+            knowledgeCount.setCollectNum(knowledgeCount.getCollectNum()+1);
             knowledgeCount.setHotNum(knowledgeCount.getHotNum()+1);
             this.saveKnowledgeCount(knowledgeCount);
             return true;
@@ -73,21 +75,32 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
         return knowledgeCounts;
     }
 
-    private KnowledgeCount getKnowledgeCount(long knowledgeI)
+    private KnowledgeCount getKnowledgeCount(long knowledgeId)
     {
         List<KnowledgeCount> knowledgeCounts = null;
         try {
-            knowledgeCounts = this.getEntitys("get_knowledge_count_by_id", new Object[]{knowledgeI});
+            knowledgeCounts = this.getEntitys("get_knowledge_count_by_id", new Object[]{knowledgeId});
         } catch (BaseServiceException e) {
             e.printStackTrace();
         }
-        return (knowledgeCounts != null && knowledgeCounts.size() > 0) ? knowledgeCounts.get(0) : null;
+
+        if (knowledgeCounts ==null || knowledgeCounts.size() <= 0) {
+            KnowledgeCount knowledgeCount = new KnowledgeCount();
+            knowledgeCount.setKnowledgeId(knowledgeId);
+            try {
+                this.saveEntity(knowledgeCount);
+            } catch (BaseServiceException e) {
+                e.printStackTrace();
+            }
+            return knowledgeCount;
+        }
+        return knowledgeCounts.get(0);
     }
 
     private void saveKnowledgeCount(KnowledgeCount knowledgeCount)
     {
         try {
-            this.saveEntity(knowledgeCount);
+            this.updateEntity(knowledgeCount);
         } catch (BaseServiceException e) {
             e.printStackTrace();
         }

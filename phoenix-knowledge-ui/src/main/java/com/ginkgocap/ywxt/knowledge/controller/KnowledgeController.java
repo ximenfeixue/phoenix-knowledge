@@ -303,16 +303,16 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 提取知识详细信息，一般用在详细查看界面、编辑界面
-	 * @param id 知识主键
+	 * @param knowledgeId 知识Id
 	 * @param columnId 栏目主键
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{id}/{columnId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{knowledgeId}/{columnId}", method = RequestMethod.GET)
 	@ResponseBody
 	public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable long id,@PathVariable short columnId) throws Exception {
+			@PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-		if(id <= 0 || columnId <= 0) {
+		if(knowledgeId <= 0 || columnId <= 0) {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
 
@@ -325,7 +325,7 @@ public class KnowledgeController extends BaseController {
         DataCollection data = new DataCollection();
 		InterfaceResult<KnowledgeDetail> knowledgeDetail = null; //DummyData.knowledgeDetailObject();
 		try {
-            knowledgeDetail = this.knowledgeService.getDetailById(id, columnId);
+            knowledgeDetail = this.knowledgeService.getDetailById(knowledgeId, columnId);
 		} catch (Exception e) {
 			logger.error("Query knowledge failed！reason：" + knowledgeDetail.getNotification().getNotifInfo());
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -337,14 +337,14 @@ public class KnowledgeController extends BaseController {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
 
-        InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(id, ResourceType.KNOW);
+        InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW);
         Notification noti = ret.getNotification();
         if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())){
             data.setPermission(ret.getResponseData());
         }
 
         AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), id);
+        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
         if (assomap.values() != null) {
             List assoList = new ArrayList(assomap.size());
             for (Iterator i = assomap.values().iterator(); i.hasNext();) {
@@ -362,7 +362,7 @@ public class KnowledgeController extends BaseController {
         jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
 
         //Click count
-        knowledgeCountService.updateClickCount(id);
+        knowledgeCountService.updateClickCount(knowledgeId);
 
         return jacksonValue;
 	}
@@ -752,10 +752,10 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/knowledgeRelated/{keyword}/{type}/{start}/{size}", method = RequestMethod.POST)
+    @RequestMapping(value = "/knowledgeRelated/{type}/{start}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
-                                                            @PathVariable String keyword, @PathVariable short type,
-                                                            @PathVariable int start, @PathVariable int size) throws Exception {
+                                                            @PathVariable short type,@PathVariable int start,
+                                                            @PathVariable int size, @PathVariable String keyword) throws Exception {
 
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
 
