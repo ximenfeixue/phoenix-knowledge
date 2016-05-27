@@ -399,13 +399,13 @@ public class KnowledgeController extends BaseController {
 	 * @param size 分页大小
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/all/{columnId}/{start}/{size}", method = RequestMethod.GET)
+	@RequestMapping(value = "/allByColumn/{columnId}/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getAllByColumnId(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable short columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		if(user == null) {
+		if(user == null || columnId <= 0 || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 		
@@ -420,13 +420,13 @@ public class KnowledgeController extends BaseController {
 		return dataCollectionList;
 	}
 
-    @RequestMapping(value = "/all/{keyWord}/{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allByKeyword/{keyWord}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
     public InterfaceResult<List<DataCollection>> getAllByKeyWord(HttpServletRequest request, HttpServletResponse response,
                                                                  @PathVariable String keyWord,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null) {
+        if(user == null || keyWord == null || keyWord.length() <= 0 || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -447,7 +447,7 @@ public class KnowledgeController extends BaseController {
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null) {
+        if(user == null || tagId <= 0 || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -462,14 +462,14 @@ public class KnowledgeController extends BaseController {
         return dataCollectionList;
     }
 
-    @RequestMapping(value = "/all/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
     public InterfaceResult<List<DataCollection>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
                                                                             @PathVariable String keyWord,@PathVariable short columnId,
                                                                             @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null) {
+        if(user == null || keyWord == null || keyWord.length() <= 0 || columnId <= 0 || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -496,7 +496,7 @@ public class KnowledgeController extends BaseController {
 			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		if(user == null) {
+		if(user == null || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 		
@@ -527,6 +527,14 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 		
+        if (columnId <= 0) {
+            return checkColumn(columnId);
+        }
+
+        if (start <= 0 || size <= 0 || start >= size) {
+            return checkStartAndSize(start, size);
+        }
+
 		InterfaceResult<List<DataCollection>> dataCollectionList = null; //DummyData.resultObject(DummyData.getDataCollectionList());
 		try {
             dataCollectionList = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);

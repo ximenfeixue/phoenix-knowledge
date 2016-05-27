@@ -71,7 +71,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
-    public void testAllKnowledgeList()
+    public void testAllKnowledge()
     {
         LogMethod();
         try {
@@ -85,11 +85,11 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
-    public void testKnowledgeListByColumnId()
+    public void testAllByColumnId()
     {
         LogMethod();
         try {
-            String subUrl = "/all/2/12"; ///all/{columnId}/{start}/{size}
+            String subUrl = "/allByColumn/2/1/5"; ///all/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -99,11 +99,25 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
-    public void testKnowledgeListByColumnIdAndKeyWord()
+    public void testAllByKeyWord()
     {
         LogMethod();
         try {
-            String subUrl = "/all/test/2/1/12"; ///all/{keyWord}/{columnId}/{start}/{size}
+            String subUrl = "/allByKeyword/test/1/3"; ///all/{keyWord}/{columnId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetAllByColumnIdAndKeyWord()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/allByKeywordAndColumn/test/2/1/3"; ////allByKeywordAndColumn/test/2/1/12"
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

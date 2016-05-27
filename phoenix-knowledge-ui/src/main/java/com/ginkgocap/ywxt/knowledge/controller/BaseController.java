@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.cache.redis.RedisCacheService;
+import com.gintong.frame.util.dto.CommonResultCode;
+import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +88,27 @@ public abstract class BaseController {
         JSONObject requestJson = JSONObject.fromObject(requestString == null ? "" : requestString);
 
         return requestJson;
+    }
+
+    protected InterfaceResult checkColumn(short column)
+    {
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        result.setResponseData("column Id is invalidate!");
+        return result;
+    }
+
+    protected InterfaceResult checkStartAndSize(int start, int size)
+    {
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        result.setResponseData("start and size are invalidate!");
+        return result;
+    }
+
+    protected InterfaceResult checkKeyword(String keyword)
+    {
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        result.setResponseData("keyword invalidate!");
+        return result;
     }
 
 }
