@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
 import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
@@ -752,7 +751,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/getTagListByIds", method = RequestMethod.POST)
+    @RequestMapping(value = "/tagList", method = RequestMethod.POST)
     public InterfaceResult getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = this.getUser(request);
@@ -768,12 +767,12 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            this.knowledgeOtherService.getTagListByIds(tagIds, user.getId());
+            return this.knowledgeOtherService.getTagListByIds(tagIds, user.getId());
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }
         logger.info(".......report knowledge success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
     }
 
     /**
@@ -781,7 +780,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/getDirectoryListByIds", method = RequestMethod.POST)
+    @RequestMapping(value = "/directoryList", method = RequestMethod.POST)
     public InterfaceResult getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = this.getUser(request);
@@ -790,19 +789,19 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<Long> DirectoryIds = KnowledgeUtil.readValue(List.class, requestJson);
+        List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (DirectoryIds == null || DirectoryIds.size() <= 0) {
+        if (directoryIds == null || directoryIds.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
-            this.knowledgeOtherService.getTagListByIds(DirectoryIds, user.getId());
+            return this.knowledgeOtherService.getDirectoryListByIds(directoryIds, user.getId());
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }
         logger.info(".......report knowledge success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
     }
 
     /**
@@ -816,18 +815,13 @@ public class KnowledgeController extends BaseController {
                                                             @PathVariable int size, @PathVariable String keyword) throws Exception {
 
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
-
         List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
 
-
         User user = getUser(request);
-
-        /**
-         * "keyword": "知识标题或关键字", "type": "1-关联需求；2-关联人脉；3-关联组织；4-关联知识"
-         * */
+        /*
+        //"keyword": "知识标题或关键字", "type": "1-关联需求；2-关联人脉；3-关联组织；4-关联知识"
         long userId = user.getId();
-
-        /** 金桐网推荐的相关“知识”数据 */
+        // 金桐网推荐的相关“知识”数据
         String bigDataQueryHost = "http://192.168.101.9:8090"; //TODO: This need to read from configure file.
         //String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
         String durl = bigDataQueryHost + "/bigdata/query";
@@ -847,9 +841,7 @@ public class KnowledgeController extends BaseController {
         if (null != djson && djson.trim().length() > 0 ) {
             jsonNode = KnowledgeUtil.readTree(djson);
             int status = jsonNode.get("status").intValue();
-            /** 返回状态正确 */
             if (status != 0) {
-                /** 判断数据是否为空 */
                 if (jsonNode.get("k") != null) {
                     List<JsonNode> tempList = jsonNode.findValues("k");
                     if (tempList.size() > 0) {
@@ -878,7 +870,7 @@ public class KnowledgeController extends BaseController {
 
                             User organizationUser = null;
 
-                            /** 推荐 用户为金桐脑 */
+                            // 推荐 用户为金桐脑
                             if (0 == connections.get(0)) {
                                 organizationUser = new User();
                                 organizationUser.setType(2);// 金桐脑为机构用户
@@ -894,22 +886,22 @@ public class KnowledgeController extends BaseController {
                         }
                     }
                 }
-
             }
-        }
+        }*/
 
-        List<KnowledgeBase> listUserKnowledge = new ArrayList<KnowledgeBase>();// 用户自己的知识
-        /** 用户自己的所有知识 */
+        // 用户自己的所有知识
+        List<KnowledgeBase> listUserKnowledge = new ArrayList<KnowledgeBase>();
         List<DataCollection> result = knowledgeService.getBaseAll(start, size).getResponseData();
         if (result != null || result.size() > 0) {
             for (DataCollection data : result) {
-
+                if (data.getKnowledge() != null) {
+                    listUserKnowledge.add(data.getKnowledge());
+                }
             }
         }
 
         //responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
         responseDataMap.put("listUserKnowledge", listUserKnowledge);
-
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 

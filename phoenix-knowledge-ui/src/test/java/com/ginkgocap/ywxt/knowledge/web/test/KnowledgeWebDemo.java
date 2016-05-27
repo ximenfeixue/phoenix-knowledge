@@ -8,6 +8,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -237,11 +238,47 @@ public class KnowledgeWebDemo {
 
     }
 
+    @Test
+    public void testGetTagsByIds()
+    {
+        LogMethod("批量获取标签", 2);
+        try {
+            String subUrl = "/tagList";
+            Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3956219358478388, 3956238736162890, 3956186739376159]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetDirectoryListByIds()
+    {
+        LogMethod("批量获取目录", 2);
+        try {
+            String subUrl = "/directoryList";
+            Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933417670705167, 3933423765028884, 3933423777611801]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void testGetKnowledgeRelatedResources()
+    {
+        LogMethod("获取推荐知识", 2);
+        try {
+            String subUrl = "/knowledgeRelated/4/1/12/test";  //user/{columnId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /////////////////////////////======Comment=============////////////////////////////
-
-
-
-
     private String collectKnowledge(String title, boolean debug)
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"

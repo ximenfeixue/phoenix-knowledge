@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
+import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
 import com.ginkgocap.parasol.directory.service.DirectoryService;
 import com.ginkgocap.parasol.directory.service.DirectorySourceService;
@@ -153,9 +154,9 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult getTagListByIds(List<Long> tagItems,long userId) throws Exception
+    public InterfaceResult getTagListByIds(List<Long> tagIds,long userId) throws Exception
     {
-        List<Tag> tags = tagService.getTags(-1L,tagItems);
+        List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
             return InterfaceResult.getSuccessInterfaceResultInstance(tags);
         }
@@ -163,9 +164,14 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
     }
 
-    public InterfaceResult getDirectoryListByIds(List<Long> tagItems,long userId) throws Exception
+    public InterfaceResult getDirectoryListByIds(List<Long> directoryIds,long userId) throws Exception
     {
-        return null;
+        List<Directory> directoryList = directoryService.getDirectoryList(APPID, -1L, directoryIds);
+        if (directoryList != null && directoryList.size() > 0) {
+            return InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
     }
 
 

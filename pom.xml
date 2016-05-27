@@ -33,16 +33,15 @@
         <parasol-common-provider.version>1.0.0-SNAPSHOT</parasol-common-provider.version>
         <parasol-cache.version>1.0.0-SNAPSHOT</parasol-cache.version>
         <parasol-tags.version>1.0.2-SNAPSHOT</parasol-tags.version>
+        <parasol-directory.version>1.0.2-SNAPSHOT</parasol-directory.version>
         <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
         <slf4j-api.version>1.7.2</slf4j-api.version>
         <slf4j-log4j12.version>1.7.2</slf4j-log4j12.version>
         <log4j.version>1.2.16</log4j.version>
         <cglib-nodep.version>2.2.2</cglib-nodep.version>
-
         <servlet-api.version>2.5</servlet-api.version>
         <json-lib.version>2.2.3</json-lib.version>
         <gson.version>2.2.4</gson.version>
-
         <mongo-java-driver.version>2.10.1</mongo-java-driver.version>
         <spring-data-jpa.version>1.1.0.RELEASE</spring-data-jpa.version>
         <jackson-databind.version>2.3.2</jackson-databind.version>
@@ -109,7 +108,7 @@
             <dependency>
                 <groupId>com.ginkgocap.parasol</groupId>
                 <artifactId>parasol-directory-api</artifactId>
-                <version>${parasol-metadata.version}</version>
+                <version>${parasol-directory.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.parasol</groupId>

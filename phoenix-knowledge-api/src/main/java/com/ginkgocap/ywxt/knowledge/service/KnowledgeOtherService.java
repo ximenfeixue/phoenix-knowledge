@@ -21,7 +21,7 @@ public interface KnowledgeOtherService
 
     public InterfaceResult batchCatalogs(List<LinkedHashMap<String, Object>> tagItems,long userId) throws Exception;
 
-    public InterfaceResult getTagListByIds(List<Long> tagItems,long userId) throws Exception;
+    public InterfaceResult getTagListByIds(List<Long> tagIds,long userId) throws Exception;
 
-    public InterfaceResult getDirectoryListByIds(List<Long> tagItems,long userId) throws Exception;
+    public InterfaceResult getDirectoryListByIds(List<Long> directoryIds,long userId) throws Exception;
 }

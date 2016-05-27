@@ -209,11 +209,43 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
+    public void testGetTagsByIds()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/tagList";
+            Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3938328957571763]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+    }
+
+    @Test
+    public void testGetDirectoryListByIds()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/directoryList";
+            Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3956238664860111, 3938126410361625]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+    }
+
+    @Test
     public void testGetKnowledgeRelatedResources()
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/4/1/12/null";  //user/{columnId}/{start}/{size}
+            String subUrl = "/knowledgeRelated/4/1/12/test";  //user/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
