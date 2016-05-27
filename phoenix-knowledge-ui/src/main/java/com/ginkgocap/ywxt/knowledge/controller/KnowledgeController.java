@@ -948,7 +948,7 @@ public class KnowledgeController extends BaseController {
             for (int index = 0; index < as.size(); index++) {
                 Associate associate = as.get(index);
                 associate.setSourceId(knowledgeId);
-                associate.setSourceTypeId(assoType.getId());
+                //associate.setSourceTypeId(assoType.getId());
                 associate.setAssocTypeId(assoType.getId());
                 associate.setUserId(userId);
                 associate.setAppId(APPID);

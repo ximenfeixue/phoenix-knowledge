@@ -215,7 +215,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             String subUrl = "/tagList";
             Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3938328957571763]");
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,7 +231,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             String subUrl = "/directoryList";
             Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3956238664860111, 3938126410361625]");
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933423765028884, 3933423777611801]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
