@@ -426,13 +426,44 @@ public class KnowledgeController extends BaseController {
                                                                  @PathVariable String keyWord,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || keyWord == null || keyWord.length() <= 0 || start <= 0 || size <= 0 || start >= size) {
+        if(user == null || start <= 0 || size <= 0 || start >= size) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         InterfaceResult<List<DataCollection>> dataCollectionList = null;
         try {
-            dataCollectionList = this.knowledgeService.getBaseByKeyWord(keyWord, start, size);
+            if (keyWord == null || keyWord.length() > 0) {
+                dataCollectionList = this.knowledgeService.getBaseAll(start, size);
+            }
+            else {
+                dataCollectionList = this.knowledgeService.getBaseByKeyWord(keyWord, start, size);
+            }
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return dataCollectionList;
+    }
+
+    @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult<List<DataCollection>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
+                                                                            @PathVariable String keyWord,@PathVariable short columnId,
+                                                                            @PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null || columnId <= 0 || start <= 0 || size <= 0 || start >= size) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        InterfaceResult<List<DataCollection>> dataCollectionList = null; //DummyData.resultObject(DummyData.getDataCollectionList());
+        try {
+            if (keyWord == null || keyWord.length() <= 0) {
+                dataCollectionList = this.knowledgeService.getBaseByColumnId(columnId, start, size);
+            } else {
+                dataCollectionList = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
+            }
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -456,28 +487,6 @@ public class KnowledgeController extends BaseController {
             dataCollectionList = this.knowledgeService.getBaseByTagId(tagId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-        }
-        logger.info(".......get all knowledge by columnId success......");
-        return dataCollectionList;
-    }
-
-    @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
-    @ResponseBody
-    public InterfaceResult<List<DataCollection>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
-                                                                            @PathVariable String keyWord,@PathVariable short columnId,
-                                                                            @PathVariable int start,@PathVariable int size) throws Exception {
-
-        User user = this.getUser(request);
-        if(user == null || keyWord == null || keyWord.length() <= 0 || columnId <= 0 || start <= 0 || size <= 0 || start >= size) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        InterfaceResult<List<DataCollection>> dataCollectionList = null; //DummyData.resultObject(DummyData.getDataCollectionList());
-        try {
-            dataCollectionList = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
-        } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",dataCollectionList.getNotification().getNotifInfo());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -820,7 +829,7 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/knowledgeRelated/{type}/{start}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
                                                             @PathVariable short type,@PathVariable int start,
-                                                            @PathVariable int size, @PathVariable String keyword) throws Exception {
+                                                            @PathVariable int size, @PathVariable String keyWord) throws Exception {
 
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
         List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
@@ -899,7 +908,12 @@ public class KnowledgeController extends BaseController {
 
         // 用户自己的所有知识
         List<KnowledgeBase> listUserKnowledge = new ArrayList<KnowledgeBase>();
-        List<DataCollection> result = knowledgeService.getBaseAll(start, size).getResponseData();
+        List<DataCollection> result = null;
+        if (keyWord == null || keyWord.length() <= 0) {
+            knowledgeService.getBaseAll(start, size).getResponseData();
+        } else {
+            knowledgeService.getBaseByKeyWord(keyWord, start, size).getResponseData();
+        }
         if (result != null || result.size() > 0) {
             for (DataCollection data : result) {
                 if (data.getKnowledge() != null) {
