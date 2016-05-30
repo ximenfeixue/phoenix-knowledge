@@ -171,7 +171,7 @@ public interface KnowledgeMysqlDao {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByAndKeyWord(String keyWord,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
     /**
      * 根据栏目提取

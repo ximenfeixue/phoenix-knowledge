@@ -15,7 +15,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -281,6 +283,38 @@ public final class KnowledgeUtil {
         }
 
         return buffer.toString();
+    }
+
+    /**
+     * 返回数据包装方法
+     * @param knowledgeList
+     * @return
+     */
+    public static List<DataCollection> getReturn(List<KnowledgeBase> knowledgeList) {
+
+        List<DataCollection> returnList = new ArrayList<DataCollection>(knowledgeList.size());
+        if(knowledgeList != null && !knowledgeList.isEmpty())
+            for (KnowledgeBase data : knowledgeList)
+                returnList.add(getReturn(data,null));
+
+        return returnList;
+    }
+
+    /**
+     * 返回数据包装方法
+     * @param knowledgeBase
+     * @param knowledgeReference
+     * @return
+     */
+    public static DataCollection getReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
+
+        DataCollection dataCollection = new DataCollection();
+
+        dataCollection.setKnowledge(knowledgeBase);
+
+        dataCollection.setReference(knowledgeReference);
+
+        return dataCollection;
     }
     //For Unit Test end
 }

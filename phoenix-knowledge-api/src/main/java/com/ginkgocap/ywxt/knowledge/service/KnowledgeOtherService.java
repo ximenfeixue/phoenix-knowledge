@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.gintong.frame.util.dto.InterfaceResult;
 
@@ -14,6 +15,8 @@ public interface KnowledgeOtherService
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception;
 
     public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, short columnId) throws Exception;
+
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId) throws Exception;
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 

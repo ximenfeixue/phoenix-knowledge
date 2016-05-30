@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.gintong.frame.util.dto.InterfaceResult;
 
@@ -124,7 +125,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
@@ -137,8 +138,19 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(long userId,int start,int size) throws Exception;
-	
+	public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception;
+
+    /**
+     * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
+     * <p>1、知识基础表信息</P>
+     * @author 周仕奇
+     * @date 2016年1月15日 上午9:41:32
+     * @param knowledgeIds
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds) throws Exception;
+
 	/**
 	 * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
@@ -216,7 +228,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public InterfaceResult<List<DataCollection>> getBaseByKeyWord(String keyWord,int start,int size) throws Exception;
+    public List<KnowledgeBase> getBaseByKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
     /**
      * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：

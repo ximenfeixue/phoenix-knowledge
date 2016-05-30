@@ -60,6 +60,8 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     @Autowired
     private TagService tagService;
 
+    private int maxCount = 100;
+
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception
     {
@@ -91,6 +93,19 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @Override
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId) throws Exception
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
+        if (columnId != -1) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        }
+        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+
+        return collectedItem;
     }
 
     @Override

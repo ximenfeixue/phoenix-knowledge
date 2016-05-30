@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -98,7 +99,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception
     {
-		return this.getEntitys("get_knowledge_by_Ids", knowledgeIds.toArray());
+        //TODO: this must be changed, bed performance
+        List<KnowledgeBase> knowledgeBaseList = new ArrayList<KnowledgeBase>(knowledgeIds.size());
+        for (Long knowledgeId : knowledgeIds) {
+            KnowledgeBase base = getByKnowledgeId(knowledgeId);
+            knowledgeBaseList.add(base);
+        }
+
+        return knowledgeBaseList;
 	}
 
 	@Override
@@ -137,8 +145,8 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 
     @Override
-    public List<KnowledgeBase> getByAndKeyWord(String keyWord,int start,int size) throws Exception {
-        return this.getEntitys("get_by_keyWord", new Object[]{"%"+keyWord+"%",start,size});
+    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception {
+        return this.getEntitys("get_by_createUserId_keyWord", new Object[]{userId, "%"+keyWord+"%",start,size});
     }
 
     @Override

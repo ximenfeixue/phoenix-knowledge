@@ -142,6 +142,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
 		//大数据MQ推送
+        /*
 		try {
 			bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, KnowledgeMongo.clone(knowledge), savedKnowledgeDetail.getOwnerId());
 		} catch (Exception e) {
@@ -151,7 +152,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		}
 		
 		//动态推送（仅推送观点）
-        /*
+
 		try {
 			userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(afterSaveKnowledgeMongo, diaryService));
 		} catch (Exception e) {
@@ -257,7 +258,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 		
 		//大数据MQ推送更新
-		try {
+		/*
+        try {
 			bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, KnowledgeMongo.clone(knowledge), knowledge.getCreateUserId());
 		} catch (Exception e) {
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getCause().toString());
@@ -265,7 +267,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		}
 		
 		//动态推送更新（仅推送观点）
-        /*
+
 		try {
 			userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(afterSaveKnowledgeMongo, diaryService));
 		} catch (Exception e) {
@@ -326,6 +328,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 		
 		//大数据MQ推送删除
+        /*
 		try {
 			bigDataService.deleteMessage(knowledgeId, columnId, userId);
 		} catch (Exception e) {
@@ -333,7 +336,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 
-        /*
+
 		//动态推送删除（仅推送观点）
 		try {
 			userFeedService.deleteDynamicKnowledge(knowledgeId);
@@ -374,6 +377,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		}
 		
 		//大数据MQ推送删除
+		/*
 		try {
             long userId = oldKnowledgeMongoList.get(0).getOwnerId();
 			bigDataService.sendMessage(BigDataService.KNOWLEDGE_DELETE, KnowledgeMongo.clone(oldKnowledgeMongoList), userId);
@@ -382,7 +386,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
 
-        /*
+
 		//动态推送删除（仅推送观点）
 		try {
 			for(long knowledgeId : knowledgeIds) 
@@ -431,16 +435,22 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseAll(int start,int size) throws Exception
+	public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception
     {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getAll(start, size)));
+		return this.knowledgeMysqlDao.getAll(start, size);
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserId(long userId,int start,int size) throws Exception
+	public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception
     {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserId(userId, start, size)));
+		return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
 	}
+
+    @Override
+    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
+    }
 
 	@Override
 	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception
@@ -469,8 +479,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
     @Override
-    public InterfaceResult<List<DataCollection>> getBaseByKeyWord(String keyWord,int start,int size) throws Exception {
-        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByAndKeyWord(keyWord, start, size)));
+    public List<KnowledgeBase> getBaseByKeyWord(long userId,String keyWord,int start,int size) throws Exception {
+        return this.knowledgeMysqlDao.getByCreateUserIdKeyWord(userId, keyWord, start, size);
     }
 
     @Override
