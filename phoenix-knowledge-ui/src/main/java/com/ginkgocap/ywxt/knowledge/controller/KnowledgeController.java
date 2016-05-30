@@ -343,17 +343,8 @@ public class KnowledgeController extends BaseController {
         }
 
         AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
-        if (assomap.values() != null) {
-            List assoList = new ArrayList(assomap.size());
-            for (Iterator i = assomap.values().iterator(); i.hasNext();) {
-                List<Associate> associateList = (List)i.next();
-                for (int j = 0; j < associateList.size(); j++) {
-                    assoList.add(associateList.get(j));
-                }
-            }
-            data.setAsso(assoList);
-        }
+        List<Associate> assoList =  associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
+        data.setAsso(assoList);
 
         logger.info(".......get knowledge detail success......");
         result.setResponseData(data);
@@ -964,25 +955,31 @@ public class KnowledgeController extends BaseController {
         return km2;
     }
 
-    private InterfaceResult createAssociate(List<Associate> as, long knowledgeId, long userId,AssociateType assoType)
+    private List<Long> createAssociate(List<Associate> as, long knowledgeId, long userId,AssociateType assoType)
     {
+        if (as == null || as.size() <= 0) {
+            return null;
+        }
+
+        List<Long> assoIdList = new ArrayList<Long>();
         try {
             for (int index = 0; index < as.size(); index++) {
                 Associate associate = as.get(index);
                 associate.setSourceId(knowledgeId);
-                //associate.setSourceTypeId(assoType.getId());
-                associate.setAssocTypeId(assoType.getId());
+                associate.setSourceTypeId(assoType.getId());
+                //associate.setAssocTypeId(assoType.getId());
                 associate.setUserId(userId);
                 associate.setAppId(APPID);
                 long assoId = associateService.createAssociate(APPID, userId, associate);
+                assoIdList.add(assoId);
                 logger.info("assoid:" + assoId);
             }
         }catch (Exception e) {
             logger.error("update Asso failed！reason：" + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return null;
         }
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return assoIdList;
     }
 
     private InterfaceResult deleteAssociate(long knowledgeId, long userId)
