@@ -311,7 +311,7 @@ public class KnowledgeController extends BaseController {
 	public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-		if(knowledgeId <= 0 || columnId <= 0) {
+		if(knowledgeId <= 0) {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
 

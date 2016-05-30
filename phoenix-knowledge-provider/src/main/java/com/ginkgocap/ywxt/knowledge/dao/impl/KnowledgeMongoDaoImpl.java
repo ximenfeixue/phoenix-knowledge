@@ -206,7 +206,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
-        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        //columnId < 0, it means we query knowledge only by knowledgeId
+        if (columnId > 0) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        }
         return query;
     }
 }
