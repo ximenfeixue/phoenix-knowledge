@@ -836,7 +836,7 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/knowledgeRelated/{type}/{start}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
                                                             @PathVariable short type,@PathVariable int start,
-                                                            @PathVariable int size, @PathVariable String keyWord) throws Exception {
+                                                            @PathVariable int size, @PathVariable String keyword) throws Exception {
 
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
         List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
@@ -914,19 +914,12 @@ public class KnowledgeController extends BaseController {
         }*/
 
         // 用户自己的所有知识
-        List<KnowledgeBase> listUserKnowledge = new ArrayList<KnowledgeBase>();
+        List<KnowledgeBase> listUserKnowledge = null;
         List<DataCollection> result = null;
-        if (keyWord == null || keyWord.length() <= 0) {
+        if ("null".equals(keyword)) {
             listUserKnowledge = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
         } else {
-            listUserKnowledge = knowledgeService.getBaseByKeyWord(user.getId(), keyWord, start, size);
-        }
-        if (result != null || result.size() > 0) {
-            for (DataCollection data : result) {
-                if (data.getKnowledge() != null) {
-                    listUserKnowledge.add(data.getKnowledge());
-                }
-            }
+            listUserKnowledge = knowledgeService.getBaseByKeyWord(user.getId(), keyword, start, size);
         }
 
         //responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
