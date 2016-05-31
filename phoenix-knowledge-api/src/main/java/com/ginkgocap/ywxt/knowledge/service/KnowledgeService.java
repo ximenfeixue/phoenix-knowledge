@@ -228,7 +228,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByKeyWord(long userId,String keyWord,int start,int size) throws Exception;
+    public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception;
 
     /**
      * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：

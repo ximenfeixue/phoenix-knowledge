@@ -91,7 +91,15 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception;
-	
+
+    /**
+     * 根据知识Id, 关键字提取
+     * @date 2016年1月11日 下午6:06:13
+     * @param knowledgeIds
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getByKnowledgeIdKeyWord(List<Long> knowledgeIds,String keyword) throws Exception;
 	/**
 	 * 根据主键list批量提取
 	 * @author 周仕奇

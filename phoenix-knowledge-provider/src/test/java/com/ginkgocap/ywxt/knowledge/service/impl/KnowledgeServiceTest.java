@@ -144,7 +144,7 @@ public class KnowledgeServiceTest extends TestBase {
         try {
             int start = 1;
             int end = 12;
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseAll(start, end);
+            List<KnowledgeBase> result = knowledgeService.getBaseAll(start, end);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,7 +156,7 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testGetBaseByCreateUserId() {
         System.out.println("===testGetBaseByCreateUserId===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByCreateUserId(userId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserId(userId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();

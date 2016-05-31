@@ -96,7 +96,22 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
         return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
 	}
 
-	@Override
+    @Override
+    public List<KnowledgeBase> getByKnowledgeIdKeyWord(List<Long> knowledgeIds,String keyword) throws Exception
+    {
+        List<KnowledgeBase> knowledgeBaseList = new ArrayList<KnowledgeBase>(knowledgeIds.size());
+        for (Long knowledgeId : knowledgeIds) {
+            List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id_keyword", new Object[]{knowledgeId,"%"+keyword+"%"});
+            KnowledgeBase base = (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
+            if (base != null) {
+                knowledgeBaseList.add(base);
+            }
+        }
+
+        return knowledgeBaseList;
+    }
+
+    @Override
 	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception
     {
         //TODO: this must be changed, bed performance
@@ -107,6 +122,16 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
         }
 
         return knowledgeBaseList;
+        /*
+        String Ids = "";
+        for(Long id : knowledgeIds) {
+            if ("".equals(Ids)) {
+                Ids =  Ids + id;
+            } else {
+                Ids = Ids + "," + id;
+            }
+        }
+        return this.getEntitys("get_knowledge_by_Ids", Ids);*/
 	}
 
 	@Override

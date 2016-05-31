@@ -40,6 +40,10 @@
                   sqlitem="select id from tb_knowledge_base where knowledge_id in (?)"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 
+            <list name="get_knowledge_by_Id_keyword"
+                  sqlitem="select id from tb_knowledge_base where knowledge_id = ? and title like ?"
+                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
+
             <list name="get_by_start_size"
                   sqlitem="select id from tb_knowledge_base order by create_date limit ?,?"
                   sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />

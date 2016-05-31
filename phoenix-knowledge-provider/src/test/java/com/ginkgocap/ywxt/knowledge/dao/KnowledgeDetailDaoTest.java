@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Chen Peifeng on 2016/4/7.
  */
-public class KnowledgeMongoDaoTest extends TestBase {
+public class KnowledgeDetailDaoTest extends TestBase {
     @Autowired
     private KnowledgeMongoDao knowledgeMongoDao;
 

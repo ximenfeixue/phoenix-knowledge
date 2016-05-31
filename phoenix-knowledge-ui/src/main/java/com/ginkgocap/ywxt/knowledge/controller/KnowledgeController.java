@@ -374,23 +374,15 @@ public class KnowledgeController extends BaseController {
         }
 
         long userId = user.getId();
-        Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>(); //DummyData.resultObject(DummyData.getDataCollectionList());
-		try {
-			List<KnowledgeBase> createdKnowledges = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
-            resultMap.put("created", createdKnowledges);
-        } catch (Exception e) {
-			logger.error("Query knowledge failed！reason：" + e.getMessage());
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-		}
+        Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, null);
+        if (createdKnowledgeItems != null && createdKnowledgeItems.size() > 0 ) {
+            resultMap.put("created", createdKnowledgeItems);
+        }
 
-        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1);
-        if (collectItems != null && collectItems.size() > 0) {
-            List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
-            for (KnowledgeCollect collect : collectItems) {
-                knowledgeIds.add(collect.getKnowledgeId());
-            }
-            List<KnowledgeBase> collectedKnowledges = this.knowledgeService.getMyCollected(knowledgeIds);
-            resultMap.put("collected", collectedKnowledges);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size);
+        if (collectedKnowledgeItems != null && collectedKnowledgeItems.size() > 0) {
+            resultMap.put("collected", collectedKnowledgeItems);
         }
 
         logger.info(".......get all knowledge success......");
@@ -414,16 +406,10 @@ public class KnowledgeController extends BaseController {
         }
 
         long userId = user.getId();
-        List<KnowledgeBase> createdKnowledges = null;
-        try {
-            createdKnowledges = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
-        } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：" + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-        }
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, null);
 
         logger.info(".......get all created knowledge success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledges);
+        return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledgeItems);
     }	/**
      * 提取所有知识数据
      * @param start 分页起始
@@ -441,18 +427,10 @@ public class KnowledgeController extends BaseController {
         }
 
         long userId = user.getId();
-        List<KnowledgeBase> collectedKnowledges = null;
-        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1);
-        if (collectItems != null && collectItems.size() > 0) {
-            List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
-            for (KnowledgeCollect collect : collectItems) {
-                knowledgeIds.add(collect.getKnowledgeId());
-            }
-            collectedKnowledges = this.knowledgeService.getMyCollected(knowledgeIds);
-        }
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size);
 
         logger.info(".......get all collected knowledge success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledges);
+        return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledgeItems);
     }
 
 
@@ -501,7 +479,7 @@ public class KnowledgeController extends BaseController {
                 knowledgeBaseItems = this.knowledgeService.getBaseByCreateUserId(usrId, start, size);
             }
             else {
-                knowledgeBaseItems = this.knowledgeService.getBaseByKeyWord(usrId, keyWord, start, size);
+                knowledgeBaseItems = this.knowledgeService.getBaseByKeyWord(usrId, start, size, keyWord);
             }
             result.setResponseData(knowledgeBaseItems);
         } catch (Exception e) {
@@ -978,7 +956,7 @@ public class KnowledgeController extends BaseController {
         if ("null".equals(keyword)) {
             listUserKnowledge = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
         } else {
-            listUserKnowledge = knowledgeService.getBaseByKeyWord(user.getId(), keyword, start, size);
+            listUserKnowledge = knowledgeService.getBaseByKeyWord(user.getId(), start, size, keyword);
         }
 
         //responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
@@ -1079,5 +1057,35 @@ public class KnowledgeController extends BaseController {
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
+    {
+        List<KnowledgeBase> createdKnowledgeItems = null;
+        try {
+            if (keyWord != null && keyWord.trim().length() > 0) {
+                createdKnowledgeItems = this.knowledgeService.getBaseByKeyWord(userId, start, size, keyWord);
+            }
+            else {
+                createdKnowledgeItems = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
+            }
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
+        }
+        return createdKnowledgeItems;
+    }
+
+    private List<KnowledgeBase> getCollectedKnowledge(long userId, int start, int size) throws Exception {
+        List<KnowledgeBase> collectedKnowledgeItems = null;
+        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1);
+        if (collectItems != null && collectItems.size() > 0) {
+            List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
+            for (KnowledgeCollect collect : collectItems) {
+                knowledgeIds.add(collect.getKnowledgeId());
+            }
+            collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds);
+        }
+
+        return collectedKnowledgeItems;
     }
 }

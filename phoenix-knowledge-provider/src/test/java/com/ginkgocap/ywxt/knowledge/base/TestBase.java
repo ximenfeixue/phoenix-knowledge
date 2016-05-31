@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.base;
 
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.gintong.frame.util.dto.InterfaceResult;
 import junit.framework.TestCase;
@@ -49,6 +50,16 @@ public class TestBase {
         TestCase.assertTrue(result.getResponseData().size() > 0);
         if (printResult) {
             String json = KnowledgeUtil.writeObjectToJson(result.getResponseData());
+            System.err.println(json);
+        }
+    }
+
+    protected void checkListResult(List<KnowledgeBase> result)
+    {
+        TestCase.assertNotNull(result);
+        TestCase.assertTrue(result.size() > 0);
+        if (printResult) {
+            String json = KnowledgeUtil.writeObjectToJson(result.toArray());
             System.err.println(json);
         }
     }

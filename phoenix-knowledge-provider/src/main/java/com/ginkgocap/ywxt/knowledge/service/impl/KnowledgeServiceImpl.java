@@ -476,7 +476,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
     @Override
-    public List<KnowledgeBase> getBaseByKeyWord(long userId,String keyWord,int start,int size) throws Exception {
+    public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception {
         return this.knowledgeMysqlDao.getByCreateUserIdKeyWord(userId, keyWord, start, size);
     }
 
