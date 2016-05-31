@@ -396,7 +396,66 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get all knowledge success......");
 		return InterfaceResult.getSuccessInterfaceResultInstance(resultMap);
 	}
-	
+
+    /**
+     * 提取所有知识数据
+     * @param start 分页起始
+     * @param size 分页大小
+     * @throws IOException
+     */
+    @RequestMapping(value = "/allCreated/{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult getAllCreated(HttpServletRequest request, HttpServletResponse response,
+                                  @PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = user.getId();
+        List<KnowledgeBase> createdKnowledges = null;
+        try {
+            createdKnowledges = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        logger.info(".......get all created knowledge success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledges);
+    }	/**
+     * 提取所有知识数据
+     * @param start 分页起始
+     * @param size 分页大小
+     * @throws IOException
+     */
+    @RequestMapping(value = "/allCollected/{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult getAllCollected(HttpServletRequest request, HttpServletResponse response,
+                                  @PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = user.getId();
+        List<KnowledgeBase> collectedKnowledges = null;
+        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1);
+        if (collectItems != null && collectItems.size() > 0) {
+            List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
+            for (KnowledgeCollect collect : collectItems) {
+                knowledgeIds.add(collect.getKnowledgeId());
+            }
+            collectedKnowledges = this.knowledgeService.getMyCollected(knowledgeIds);
+        }
+
+        logger.info(".......get all collected knowledge success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledges);
+    }
+
+
 	/**
 	 * 根据栏目提取知识数据
 	 * @param start 分页起始

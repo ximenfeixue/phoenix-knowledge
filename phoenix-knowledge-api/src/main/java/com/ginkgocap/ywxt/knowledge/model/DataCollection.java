@@ -108,7 +108,7 @@ public class DataCollection implements Serializable {
             this.knowledge = new KnowledgeBase();
             this.knowledge.setKnowledgeId(this.knowledgeDetail.getId());
             this.knowledge.setTitle(this.knowledgeDetail.getTitle());
-            this.knowledge.setContentDesc(this.knowledgeDetail.getContent());
+            this.knowledge.setContentDesc(this.knowledgeDetail.getContent().substring(0,200));
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
                 this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));
             }

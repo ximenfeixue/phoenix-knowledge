@@ -81,7 +81,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             knowledge.setKnowledgeId(knowledgeId);
 			this.knowledgeMysqlDao.insert(knowledge);
 		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, userId, true, false, false, false, false);
 			logger.error("知识基础表插入失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
@@ -93,7 +92,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
-                this.insertRollBack(knowledgeId, columnId, userId, true, true, false, false, false);
                 logger.error("知识基础表插入失败！失败原因：\n" + e.getCause().toString());
                 return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
             }
@@ -292,7 +290,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		try {
 			this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		} catch (Exception e) {
-			this.deleteRollBack(knowledgeId, columnId, oldKnowledgeDetail,null,null, true, false, false, false, false);
 			logger.error("知识基础表删除失败！失败原因：\n"+e.getCause().toString());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}
