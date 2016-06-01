@@ -16,7 +16,7 @@ public interface KnowledgeOtherService
 
     public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, short columnId) throws Exception;
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId) throws Exception;
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId,int start, int size) throws Exception;
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 

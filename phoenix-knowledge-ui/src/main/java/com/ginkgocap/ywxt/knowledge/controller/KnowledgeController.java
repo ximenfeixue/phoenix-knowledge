@@ -406,7 +406,7 @@ public class KnowledgeController extends BaseController {
         }
 
         long userId = user.getId();
-        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, null);
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
 
         logger.info(".......get all created knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledgeItems);
@@ -606,10 +606,10 @@ public class KnowledgeController extends BaseController {
 	 * @param size
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/all/{type}/{start}/{size}", method = RequestMethod.GET)
+	@RequestMapping(value = "/recommended/{type}/{start}/{size}", method = RequestMethod.GET)
 	@ResponseBody
 	public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response, 
-			@PathVariable String type,@PathVariable int start, @PathVariable int size) throws Exception {
+			@PathVariable short type,@PathVariable int start, @PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -620,7 +620,7 @@ public class KnowledgeController extends BaseController {
 		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
 		pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
 		pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
-		pairs.add(new BasicNameValuePair("type", type));// 1,推荐 2,发现
+		pairs.add(new BasicNameValuePair("type", String.valueOf(type)));// 1,推荐 2,发现
 		Map<String, Object> model = new HashMap<String, Object>();
 		try {
 			String responseJson = HttpClientHelper.post(url + "/API/hotKno.do", pairs);
@@ -1063,7 +1063,7 @@ public class KnowledgeController extends BaseController {
     {
         List<KnowledgeBase> createdKnowledgeItems = null;
         try {
-            if ("null".equals(keyWord)) {
+            if (keyWord == null || "null".equals(keyWord)) {
                 createdKnowledgeItems = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
 
             }
@@ -1078,12 +1078,15 @@ public class KnowledgeController extends BaseController {
 
     private List<KnowledgeBase> getCollectedKnowledge(long userId, int start, int size,String keyword) throws Exception {
         List<KnowledgeBase> collectedKnowledgeItems = null;
-        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1);
+        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1, start, size);
         if (collectItems != null && collectItems.size() > 0) {
             List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
             for (KnowledgeCollect collect : collectItems) {
-                knowledgeIds.add(collect.getKnowledgeId());
+                if (!knowledgeIds.contains(collect.getKnowledgeId())) {
+                    knowledgeIds.add(collect.getKnowledgeId());
+                }
             }
+            System.out.println(" knowledgeIds:" + knowledgeIds.toArray() + " keyword:"+keyword);
             collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
         }
 

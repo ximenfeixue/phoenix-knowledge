@@ -446,7 +446,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception
     {
-        if ("null".equals(keyword)) {
+        if (keyword == null || "null".equals(keyword)) {
             return this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
         } else {
             return this.knowledgeMysqlDao.getByKnowledgeIdKeyWord(knowledgeIds, keyword);

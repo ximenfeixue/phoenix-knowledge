@@ -61,26 +61,32 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private TagService tagService;
 
     private int maxCount = 100;
+    private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception
-    {
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception {
         KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         if (knowledgeDetail == null) {
             InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
-        KnowledgeCollect collect = new KnowledgeCollect();
-        collect.setId(knowledgeCommonService.getKnowledgeSeqenceId());
-        collect.setKnowledgeId(knowledgeId);
-        collect.setColumnId(columnId);
-        collect.setCreateTime(System.currentTimeMillis());
-        collect.setKnowledgeTitle(knowledgeDetail.getTitle());
-        collect.setOwnerId(userId);
+        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
+        if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
+            KnowledgeCollect collect = new KnowledgeCollect();
+            collect.setId(knowledgeCommonService.getKnowledgeSeqenceId());
+            collect.setKnowledgeId(knowledgeId);
+            collect.setColumnId(columnId);
+            collect.setCreateTime(System.currentTimeMillis());
+            collect.setKnowledgeTitle(knowledgeDetail.getTitle());
+            collect.setOwnerId(userId);
 
-        mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
+            mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("Have collected this knowledge!");
+
     }
 
     @Override
@@ -96,13 +102,26 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId,int start, int size) throws Exception
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
         if (columnId != -1) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }
+        long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        if (start >= count) {
+            start = 0;
+        }
+        if (size > maxSize) {
+            size = maxSize;
+        }
+        if (start+size >= count) {
+            size = (int)count - start;
+        }
+
+        query.skip(start);
+        query.limit(size);
         List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
 
         return collectedItem;
@@ -111,9 +130,12 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     @Override
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
     {
-        mongoTemplate.save(report, Constant.Collection.KnowledgeReport);
-
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        Query query = knowledgeColumnIdAndOwnerId(report.getUserId(), report.getKnowledgeId(), report.getColumnId());
+        if (mongoTemplate.findOne(query, KnowledgeReport.class, Constant.Collection.KnowledgeReport) == null) {
+            mongoTemplate.save(report, Constant.Collection.KnowledgeReport);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        }
+        return InterfaceResult.getSuccessInterfaceResultInstance("Have reported this knowledge!");
     }
 
     public InterfaceResult batchTags(List<LinkedHashMap<String, Object>> tagItems, long userId) throws Exception {
