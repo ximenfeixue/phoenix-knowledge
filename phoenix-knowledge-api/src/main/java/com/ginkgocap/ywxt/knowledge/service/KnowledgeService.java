@@ -149,7 +149,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds) throws Exception;
+    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception;
 
 	/**
 	 * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
