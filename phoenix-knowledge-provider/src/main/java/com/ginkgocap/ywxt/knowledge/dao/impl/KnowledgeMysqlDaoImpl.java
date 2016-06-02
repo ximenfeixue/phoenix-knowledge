@@ -118,7 +118,9 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
         List<KnowledgeBase> knowledgeBaseList = new ArrayList<KnowledgeBase>(knowledgeIds.size());
         for (Long knowledgeId : knowledgeIds) {
             KnowledgeBase base = getByKnowledgeId(knowledgeId);
-            knowledgeBaseList.add(base);
+            if (base != null) {
+                knowledgeBaseList.add(base);
+            }
         }
 
         return knowledgeBaseList;

@@ -121,11 +121,11 @@ public class TestData {
         knowledgeDetail.setModifyUserId(userId);
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         knowledgeDetail.setModifyTime(System.currentTimeMillis());
-        List<String> tagIds = new ArrayList<String>(1);
+        List<String> tagIds = new ArrayList<String>(2);
         tagIds.add("3971096034672650");
         tagIds.add("3969557253586945");
         knowledgeDetail.setTags(tagIds);
-        List<String> cataIds = new ArrayList<String>(1);
+        List<String> cataIds = new ArrayList<String>(2);
         cataIds.add("3969635594797376");
         cataIds.add("3971096089198959");
         knowledgeDetail.setCategoryIds(cataIds);

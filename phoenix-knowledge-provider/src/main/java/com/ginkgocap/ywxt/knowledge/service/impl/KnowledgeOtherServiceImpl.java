@@ -116,7 +116,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         if (size > maxSize) {
             size = maxSize;
         }
-        if (start+size >= count) {
+        if (start+size > count) {
             size = (int)count - start;
         }
 
@@ -132,6 +132,9 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     {
         Query query = knowledgeColumnIdAndOwnerId(report.getUserId(), report.getKnowledgeId(), report.getColumnId());
         if (mongoTemplate.findOne(query, KnowledgeReport.class, Constant.Collection.KnowledgeReport) == null) {
+            if (report.getCreateTime() <= 0) {
+                report.setCreateTime(System.currentTimeMillis());
+            }
             mongoTemplate.save(report, Constant.Collection.KnowledgeReport);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         }

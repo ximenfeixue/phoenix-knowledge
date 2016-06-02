@@ -30,7 +30,7 @@ public final class KnowledgeUtil {
     static {
         objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.setFilters(assoSimpleFilterProvider());
+        //objectMapper.setFilters(assoSimpleFilterProvider());
         //objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
     }
 
@@ -97,8 +97,8 @@ public final class KnowledgeUtil {
     public static User getDummyUser()
     {
         User user = new User();
-        user.setId(14526L);
-        user.setUid(14526L);
+        user.setId(201003L);
+        user.setUid(201003L);
         user.setUserName("UnitTestUser");
         user.setName("UnitTestUser");
         return user;

@@ -49,15 +49,15 @@
                 sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />
 
             <list name="get_by_createUserId"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,start,size" update="true" />
 
             <list name="get_by_createUserId_columnId"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,start,size" update="true" />
 
             <list name="get_by_createUserId_type"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,start,size" update="true" />
 
             <list name="get_by_columnId"
@@ -69,7 +69,7 @@
                   sqlType="hsql" valueProperty="id" keyProperty="columnId,title,start,size" update="true" />
 
             <list name="get_by_createUserId_keyWord"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and title like ? order by create_date limit ?,?"
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and title like ? order by create_date desc limit ?,?"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId,title,start,size" update="true" />
 
             <list name="get_by_type_columnId"
@@ -81,7 +81,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="type,start,size" update="true" />
 
             <list name="get_by_createUserId_type_columnId"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date limit desc ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId,start,size" update="true" />
 
             <!-- "<"使用"&lt;"替换，">"使用"&gt;"替代，"&"使用"&amp;"替代 -->
@@ -114,15 +114,15 @@
                 sqlType="hsql" valueProperty="id" keyProperty="reportStatus,start,size" update="true" />
 
             <list name="get_by_createUserId_status"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,status,start,size" update="true" />
 
             <list name="get_by_createUserId_auditStatus"
-                sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus,start,size" update="true" />
 
             <list name="get_by_createUserId_reportStatus"
-                sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date limit ?,?"
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date desc limit ?,?"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus,start,size" update="true" />
 
             <list name="get_by_columnId_status"

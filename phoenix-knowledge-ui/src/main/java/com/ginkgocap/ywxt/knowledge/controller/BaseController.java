@@ -48,6 +48,7 @@ public abstract class BaseController {
     protected User getUser(HttpServletRequest request) {
 //        String key = UserUtil.getUserSessionKey(request);
 //        User user = (User) redisCacheService.getRedisCacheByKey(key);
+//        return user;
         return KnowledgeUtil.getDummyUser();
     }
 
