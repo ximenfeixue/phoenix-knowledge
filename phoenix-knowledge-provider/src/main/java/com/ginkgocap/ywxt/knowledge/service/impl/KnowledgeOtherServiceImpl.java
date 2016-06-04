@@ -141,7 +141,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Have reported this knowledge!");
     }
 
-    public InterfaceResult batchTags(List<LinkedHashMap<String, Object>> tagItems, long userId) throws Exception {
+    public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception {
         try {
             for (int index = 0; index < tagItems.size(); index++) {
                 Map<String, Object> map = tagItems.get(index);
@@ -168,7 +168,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult batchCatalogs(List<LinkedHashMap<String, Object>> tagItems, long userId) throws Exception {
+    public InterfaceResult batchCatalogs(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception {
         try {
             for (int index = 0; index < tagItems.size(); index++) {
                 Map<String, Object> map = tagItems.get(index);
@@ -194,7 +194,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult getTagListByIds(List<Long> tagIds,long userId) throws Exception
+    public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception
     {
         List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
@@ -204,7 +204,22 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
     }
 
-    public InterfaceResult getDirectoryListByIds(List<Long> directoryIds,long userId) throws Exception
+    public InterfaceResult getTagSourceCountByIds(long AppId,List<Long> tagIds) throws Exception
+    {
+        if (tagIds == null || tagIds.size() <= 0) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("TagId List is null or size is 0!");
+        }
+         Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(tagIds.size());
+         for (long tagId : tagIds) {
+             int count = tagSourceService.countTagSourcesByAppIdTagId(APPID, tagId);
+             sourceMap.put(tagId, count);
+         }
+
+         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
+
+    }
+
+    public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds) throws Exception
     {
         List<Directory> directoryList = directoryService.getDirectoryList(APPID, -1L, directoryIds);
         if (directoryList != null && directoryList.size() > 0) {
@@ -214,6 +229,19 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
     }
 
+    public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception
+    {
+        if (directoryIds == null || directoryIds.size() <= 0) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("directory List is null or size is 0!");
+        }
+        Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(directoryIds.size());
+        for (long directoryId : directoryIds) {
+            int count = directorySourceService.countDirectorySourcesByDirectoryId(APPID, userId, directoryId);
+            sourceMap.put(directoryId, count);
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
+    }
 
     private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,short columnId)
     {

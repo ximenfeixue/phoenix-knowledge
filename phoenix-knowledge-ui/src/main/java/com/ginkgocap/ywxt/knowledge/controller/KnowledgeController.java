@@ -770,7 +770,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            this.knowledgeOtherService.batchTags(tagItems, user.getId());
+            this.knowledgeOtherService.batchTags(user.getId(),tagItems);
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }
@@ -799,7 +799,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            this.knowledgeOtherService.batchCatalogs(tagItems, user.getId());
+            this.knowledgeOtherService.batchCatalogs(user.getId(), tagItems);
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }
@@ -828,7 +828,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.getTagListByIds(tagIds, user.getId());
+            return this.knowledgeOtherService.getTagListByIds(user.getId(),tagIds);
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }
@@ -857,7 +857,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.getDirectoryListByIds(directoryIds, user.getId());
+            return this.knowledgeOtherService.getDirectoryListByIds(user.getId(), directoryIds);
         } catch (Exception e) {
             logger.error("Delete knowledge failed！reason："+e.getMessage());
         }

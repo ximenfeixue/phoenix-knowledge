@@ -20,11 +20,16 @@ public interface KnowledgeOtherService
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
-    public InterfaceResult batchTags(List<LinkedHashMap<String, Object>> tagItems,long userId) throws Exception;
+    //Common component will remove from knowledge
+    public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception;
 
-    public InterfaceResult batchCatalogs(List<LinkedHashMap<String, Object>> tagItems,long userId) throws Exception;
+    public InterfaceResult batchCatalogs(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception;
 
-    public InterfaceResult getTagListByIds(List<Long> tagIds,long userId) throws Exception;
+    public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception;
 
-    public InterfaceResult getDirectoryListByIds(List<Long> directoryIds,long userId) throws Exception;
+    public InterfaceResult getTagSourceCountByIds(long userId, List<Long> tagIds) throws Exception;
+
+    public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds) throws Exception;
+
+    public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception;
 }
