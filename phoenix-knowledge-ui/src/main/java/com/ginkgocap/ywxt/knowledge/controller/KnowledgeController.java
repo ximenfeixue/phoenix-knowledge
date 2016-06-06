@@ -229,11 +229,15 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
         }
         //TODO: If this step failed, how to do ?
-        for (Iterator i =  assomap.values().iterator(); i.hasNext();) {
-            List<Associate> associateList = (List)i.next();
-            for (int j = 0; j < associateList.size(); j++) {
-                associateService.removeAssociate(APPID, user.getId(), associateList.get(j).getId());
+        try {
+            for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
+                List<Associate> associateList = (List) i.next();
+                for (int j = 0; j < associateList.size(); j++) {
+                    associateService.removeAssociate(APPID, user.getId(), associateList.get(j).getId());
+                }
             }
+        } catch (AssociateServiceException ex) {
+            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, ex);
         }
 
         logger.info(".......delete knowledge success......");
@@ -246,7 +250,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value="/delete/{columnId}", method = RequestMethod.PUT)
+    @RequestMapping(value="/batchDelete/{columnId}", method = RequestMethod.PUT)
     public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response,@PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         if(user == null) {
@@ -736,7 +740,7 @@ public class KnowledgeController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value="/count/{knowledgeId}/{type}", method = RequestMethod.PUT)
-    public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response,
+    public InterfaceResult count(HttpServletRequest request,HttpServletResponse response,
                                        @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
@@ -1077,7 +1081,7 @@ public class KnowledgeController extends BaseController {
                 assoIdList.add(assoId);
                 logger.info("assoid:" + assoId);
             }
-        }catch (Exception e) {
+        }catch (AssociateServiceException e) {
             logger.error("update Asso failed！reason：" + e.getMessage());
             return null;
         }

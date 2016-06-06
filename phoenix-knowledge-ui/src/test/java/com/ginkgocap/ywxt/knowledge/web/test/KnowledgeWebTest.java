@@ -44,7 +44,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testDeleteKnowledge").getKnowledgeDetail();
-            String subUrl = "/" + data.getId() + "/" + data.getColumnId(); ///{id}/{columnId}
+            String subUrl = "/" + data.getId() + "/" + data.getColumnId(); ///delete/{id}/{columnId}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/all/1/10/test"; ////all/{start}/{size}/{keyword}
+            String subUrl = "/all/31/40/test"; ////all/{start}/{size}/{keyword}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
