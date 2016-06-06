@@ -239,11 +239,43 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
+    public void testGetTagSourceCountByIds()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/tagCount";
+            Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+    }
+
+    @Test
     public void testGetDirectoryListByIds()
     {
         LogMethod();
         try {
             String subUrl = "/directoryList";
+            Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933423765028884, 3933423777611801]");
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+    }
+
+    @Test
+    public void testGetDirectoryCountByIds()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/directoryCount";
             Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933423765028884, 3933423777611801]");
             Util.checkRequestResultSuccess(result);
