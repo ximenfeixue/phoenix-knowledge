@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.cache.redis.RedisCacheService;
+import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
@@ -46,10 +47,11 @@ public abstract class BaseController {
      * @throws Exception
      */
     protected User getUser(HttpServletRequest request) {
-//        String key = UserUtil.getUserSessionKey(request);
-//        User user = (User) redisCacheService.getRedisCacheByKey(key);
-//        return user;
-        return KnowledgeUtil.getDummyUser();
+        String key = UserUtil.getUserSessionKey(request);
+        User user = (User) redisCacheService.getRedisCacheByKey(key);
+        logger.info("login userId: {}, userName: {}",user.getId(), user.getName());
+        return user;
+        //return KnowledgeUtil.getDummyUser();
     }
 
     protected JsonNode getJsonNode(String jsonStr, String... values)

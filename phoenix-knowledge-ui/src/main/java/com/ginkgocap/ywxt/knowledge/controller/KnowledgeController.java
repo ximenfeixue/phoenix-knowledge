@@ -253,10 +253,6 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if(columnId <= 0){
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-        }
-
         String requestJson = this.getBodyParam(request);
         String[] konwledgeIds = requestJson.split(",");
         if (konwledgeIds == null || konwledgeIds.length <= 0) {

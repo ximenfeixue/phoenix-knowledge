@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<redis-config>
+    <!-- 按hash分布 -->
+    <hash>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+    </hash>
+</redis-config>

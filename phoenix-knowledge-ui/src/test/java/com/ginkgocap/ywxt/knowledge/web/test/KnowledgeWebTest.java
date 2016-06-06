@@ -113,7 +113,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetAllByColumnIdAndKeyWord()
+    public void testAllByColumnIdAndKeyWord()
     {
         LogMethod();
         try {
@@ -219,7 +219,19 @@ public class KnowledgeWebTest extends BaseTestCase {
     public void testBatchCatalogs()
     {
         LogMethod();
-        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+        try {
+            List<ResItem> resItems = new ArrayList<ResItem>(2);
+            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
+            ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+            resItems.add(resItem1);
+            resItems.add(resItem2);
+            String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchCatalogs", requestJson);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
@@ -228,7 +240,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/tagList";
-            Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
+            Long[] tagIds = new Long [] {3981267922321479L, 3981267939098696L, 3981290542202961L, 3981267964264526L, 3979800628953105L};
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
