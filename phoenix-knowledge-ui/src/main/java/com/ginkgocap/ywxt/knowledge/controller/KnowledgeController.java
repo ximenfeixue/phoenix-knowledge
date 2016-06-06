@@ -732,7 +732,7 @@ public class KnowledgeController extends BaseController {
 		try {
 			this.knowledgeOtherService.reportKnowledge(report);
 		} catch (Exception e) {
-			logger.error("Delete knowledge failed！reason："+e.getMessage());
+			logger.error("Report knowledge failed！reason："+e.getMessage());
 		}
         logger.info(".......report knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -772,9 +772,9 @@ public class KnowledgeController extends BaseController {
         try {
             this.knowledgeOtherService.batchTags(user.getId(),tagItems);
         } catch (Exception e) {
-            logger.error("Delete knowledge failed！reason："+e.getMessage());
+            logger.error("batch tags failed！reason："+e.getMessage());
         }
-        logger.info(".......report knowledge success......");
+        logger.info(".......batch tags success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -801,9 +801,9 @@ public class KnowledgeController extends BaseController {
         try {
             this.knowledgeOtherService.batchCatalogs(user.getId(), tagItems);
         } catch (Exception e) {
-            logger.error("Delete knowledge failed！reason："+e.getMessage());
+            logger.error("Delete catalogs failed！reason："+e.getMessage());
         }
-        logger.info(".......report knowledge success......");
+        logger.info(".......Delete catalogs success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -830,14 +830,43 @@ public class KnowledgeController extends BaseController {
         try {
             return this.knowledgeOtherService.getTagListByIds(user.getId(),tagIds);
         } catch (Exception e) {
-            logger.error("Delete knowledge failed！reason："+e.getMessage());
+            logger.error("Get Tag list failed！reason："+e.getMessage());
         }
-        logger.info(".......report knowledge success......");
+        logger.info(".......Get Tag list success......");
         return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
     }
 
     /**
-     * 批打目录
+     * get Tags
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/tagCount", method = RequestMethod.POST)
+    public InterfaceResult getTagSourceCountByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (tagIds == null || tagIds.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            return this.knowledgeOtherService.getTagSourceCountByIds(user.getId(),tagIds);
+        } catch (Exception e) {
+            logger.error("Get TagCount failed！reason："+e.getMessage());
+        }
+        logger.info(".......Get TagCount success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
+    }
+
+    /**
+     * 目录
      * @throws IOException
      */
     @ResponseBody
@@ -859,9 +888,38 @@ public class KnowledgeController extends BaseController {
         try {
             return this.knowledgeOtherService.getDirectoryListByIds(user.getId(), directoryIds);
         } catch (Exception e) {
-            logger.error("Delete knowledge failed！reason："+e.getMessage());
+            logger.error("Get directory list failed！reason："+e.getMessage());
         }
-        logger.info(".......report knowledge success......");
+        logger.info(".......Get directory list success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
+    }
+
+    /**
+     * 目录
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/directoryCount", method = RequestMethod.POST)
+    public InterfaceResult getDirectoryCountByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (directoryIds == null || directoryIds.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            return this.knowledgeOtherService.getDirectorySourceCountByIds(user.getId(), directoryIds);
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+        }
+        logger.info(".......Get directory count success......");
         return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
     }
 
