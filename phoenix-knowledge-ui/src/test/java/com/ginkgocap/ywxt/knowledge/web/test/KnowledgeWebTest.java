@@ -54,6 +54,23 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
+    public void testBatchDeleteKnowledge()
+    {
+        LogMethod();
+        try {
+            KnowledgeDetail data1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
+            KnowledgeDetail data2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
+            String knowledgeIds = "[" + data1.getId() + "," + data2.getId() + "]";
+            String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl+subUrl, knowledgeIds);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testKnowledgeDetail()
     {
         LogMethod();
@@ -75,7 +92,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/all/31/40/test"; ////all/{start}/{size}/{keyword}
+            String subUrl = "/all/1/20/test"; ////all/{start}/{size}/{keyword}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
@@ -89,7 +106,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/allByColumn/2/1/5"; ///all/{columnId}/{start}/{size}
+            String subUrl = "/allByColumn/2/21/40"; ///all/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

@@ -118,7 +118,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId,String... collectionName) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
-        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        if (columnId > 0) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        }
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
         if (result.getN() <=0 ) {
@@ -158,7 +160,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        if (columnId > 0) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        }
 		
 		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId,collectionName));
 	}

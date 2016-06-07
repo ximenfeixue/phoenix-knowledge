@@ -121,13 +121,8 @@ public final class DummyData {
     {
         String referenceJson = "{\"id\":1223,\"knowledgeId\":12344,\"articleName\":\"Test Title\",\"url\":\"http://travel.enorth.com.cn/system/2015/06/03/030277875_01.shtml\",\"websiteName\":\"transient\",\"status\":1,\"refDate\":1458901743546,\"createDate\":1458901743546,\"modifyDate\":1458901743546}";
 
-        KnowledgeReference kReference = null;
-        try {
-            kReference = KnowledgeUtil.readValue(KnowledgeReference.class, referenceJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (title != null) {
+        KnowledgeReference kReference = KnowledgeUtil.readValue(KnowledgeReference.class, referenceJson);
+        if (title != null && kReference != null) {
             kReference.setArticleName(title);
         }
         return kReference;

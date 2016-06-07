@@ -106,16 +106,17 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	@Override
 	public int deleteByKnowledgeId(long knowledgeId) throws Exception {
 		
-		return this.deleteList("delete_reference_by_knowledgeId", knowledgeId);
+		return this.deleteList("delete_reference_by_knowledgeId", new Object[]{knowledgeId});
 	}
 
 	@Override
 	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
 		
-		if(knowledgeIds == null || knowledgeIds.size() < 1)
-			return 0;
-		
-		return this.deleteList("delete_reference_by_knowledgeIds", knowledgeIds.toArray());
+		for(Long knowledgeId : knowledgeIds) {
+            this.deleteByKnowledgeId(knowledgeId);
+        }
+		return knowledgeIds.size();
+        //this.deleteList("delete_reference_by_knowledgeIds", knowledgeIds.toArray());
 	}
 
 	@Override

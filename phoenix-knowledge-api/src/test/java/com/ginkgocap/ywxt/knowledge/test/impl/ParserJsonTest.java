@@ -87,13 +87,7 @@ public class ParserJsonTest extends BaseTestCase {
             assertNotNull(knowledge);
         }
         else if(classz == KnowledgeComment.class) {
-            KnowledgeComment comment = null;
-            try {
-                comment = KnowledgeUtil.readValue(KnowledgeComment.class, jsonContent);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fail();
-            }
+            KnowledgeComment comment = KnowledgeUtil.readValue(KnowledgeComment.class, jsonContent);
             assertNotNull(comment);
         }
 	}

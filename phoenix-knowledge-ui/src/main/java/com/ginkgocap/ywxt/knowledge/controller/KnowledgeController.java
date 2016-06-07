@@ -246,27 +246,28 @@ public class KnowledgeController extends BaseController {
 
     /**
      * 批量删除数据
-     * @param columnId 栏目主键
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value="/batchDelete/{columnId}", method = RequestMethod.PUT)
-    public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response,@PathVariable short columnId) throws Exception {
+    @RequestMapping(value="/batchDelete", method = RequestMethod.PUT)
+    public InterfaceResult batchDelete(HttpServletRequest request,HttpServletResponse response) throws Exception {
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         String requestJson = this.getBodyParam(request);
+        requestJson = requestJson.substring(1, requestJson.length()-1);
         String[] konwledgeIds = requestJson.split(",");
+        //List<Integer> konwledgeIds = KnowledgeUtil.readValue(List.class, requestJson);
         if (konwledgeIds == null || konwledgeIds.length <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         List<Long> permDeleteIds = new ArrayList<Long>();
         List<Long> failedIds = new ArrayList<Long>();
-        for (String Id : konwledgeIds) {
-            long knowledgeId = Long.parseLong(Id);
+        for (String id : konwledgeIds) {
+            long knowledgeId = Long.parseLong(id);
             Permission per = new Permission();
             per.setResType(ResourceType.KNOW.getVal());
             per.setResId(knowledgeId);
@@ -282,7 +283,7 @@ public class KnowledgeController extends BaseController {
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
-            result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, columnId);
+            result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, (short)-1);
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -295,7 +296,7 @@ public class KnowledgeController extends BaseController {
 
         logger.info(".......delete knowledge success......");
         if (failedIds.size() > 0) {
-            result.setResponseData("failedId:" + failedIds.toArray());
+            result.setResponseData("failedId:" + failedIds.toString());
         }
         return result;
     }
@@ -1111,10 +1112,10 @@ public class KnowledgeController extends BaseController {
                 }
             }
         } catch (AssociateTypeServiceException ex) {
-            ex.printStackTrace();
+            logger.error("delete Associate failed, reason: {}", ex.getMessage());
         }
         catch (AssociateServiceException ex) {
-            ex.printStackTrace();
+            logger.error("delete Associate failed, reason: {}", ex.getMessage());
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);

@@ -117,11 +117,17 @@ public final class KnowledgeUtil {
         return null;
     }
 
-    public static <T> T readValue(Class<T> valueType, final String content) throws IOException {
+    public static <T> T readValue(Class<T> valueType, final String content) {
         if (StringUtils.isBlank(content)) {
             throw new IllegalArgumentException("Content is null");
         }
-        return objectMapper.readValue(content, valueType);
+        try {
+            return objectMapper.readValue(content, valueType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static JsonNode readTree(final String content) throws IOException {
