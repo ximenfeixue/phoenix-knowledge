@@ -92,7 +92,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/all/1/20/test"; ////all/{start}/{size}/{keyword}
+            String subUrl = "/all/1/10/null"; ////all/{start}/{size}/{keyword}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/allByColumn/2/21/40"; ///all/{columnId}/{start}/{size}
+            String subUrl = "/allByColumn/2/1/20"; ///all/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

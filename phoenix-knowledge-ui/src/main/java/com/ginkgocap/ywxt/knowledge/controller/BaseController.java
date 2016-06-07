@@ -105,7 +105,7 @@ public abstract class BaseController {
     protected InterfaceResult checkStartAndSize(int start, int size)
     {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        result.setResponseData("start and size are invalidate!");
+        result.setResponseData("start and end are invalidate!");
         return result;
     }
 

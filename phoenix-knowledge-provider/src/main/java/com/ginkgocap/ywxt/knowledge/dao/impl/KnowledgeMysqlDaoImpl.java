@@ -146,24 +146,24 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size)
+	public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_createUserId",  new Object[]{createUserId,start,size});
+		return this.getEntitys("get_by_createUserId",  new Object[]{userId,start,size});
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserIdAndType(long createUserId,
+	public List<KnowledgeBase> getByCreateUserIdAndType(long userId,
 			short type,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_type", new Object[]{createUserId,type,start,size});
+		return this.getEntitys("get_by_createUserId_type", new Object[]{userId,type,start,size});
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,
+	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long userId,
 			short columnId,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_columnId", new Object[]{createUserId,columnId,start,size});
+		return this.getEntitys("get_by_createUserId_columnId", new Object[]{userId,columnId,start,size});
 	}
 
 	@Override

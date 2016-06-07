@@ -156,6 +156,7 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testGetBaseByCreateUserId() {
         System.out.println("===testGetBaseByCreateUserId===");
         try {
+            userId = 201035L; start = 1; size = 10;
             List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserId(userId, start, size);
             checkListResult(result);
         } catch (Exception e) {

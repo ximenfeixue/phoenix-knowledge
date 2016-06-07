@@ -454,9 +454,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception
     {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size)));
+		return this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size);
 	}
 
 	@Override
@@ -499,8 +499,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
-        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size)));
+    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
+        return this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size);
     }
 
 	@Override
