@@ -107,6 +107,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                     directorySource.setDirectoryId(Long.parseLong(directoryId));
                     directorySource.setAppId(APPID);
                     directorySource.setSourceId(knowledgeId);
+                    directorySource.setSourceTitle(knowledgeDetail.getTitle());
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     directorySource.setSourceType((int) sourceType);
                     directorySource.setCreateAt(new Date().getTime());
@@ -127,6 +128,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                     tagSource.setUserId(userId);
                     tagSource.setAppId(APPID);
                     tagSource.setSourceId(knowledgeId);
+                    tagSource.setSourceTitle(knowledgeDetail.getTitle());
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     tagSource.setSourceType(sourceType);
                     tagSource.setTagId(Long.parseLong(tagId));
