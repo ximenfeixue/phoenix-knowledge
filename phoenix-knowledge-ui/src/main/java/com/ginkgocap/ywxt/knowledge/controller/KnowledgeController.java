@@ -21,6 +21,7 @@ import com.gintong.common.phoenix.permission.service.PermissionRepositoryService
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 
 @Controller
@@ -374,14 +376,20 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        System.err.println("----keyWord: " + keyword+"\n");
+        byte[] byteWord = keyword.getBytes("ISO-8859-1"); //以"ISO-8859-1"方式解析name字符串
+        String keyWord1= new String(byteWord, "UTF-8");
+        logger.info("---keyWord: {}", keyWord1);
+        System.err.println("----keyWord: " + keyWord1+"\n");
+
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
-        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyWord1);
         if (createdKnowledgeItems != null && createdKnowledgeItems.size() > 0 ) {
             resultMap.put("created", createdKnowledgeItems);
         }
 
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyWord1);
         if (collectedKnowledgeItems != null && collectedKnowledgeItems.size() > 0) {
             resultMap.put("collected", collectedKnowledgeItems);
         }
@@ -922,6 +930,30 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/createTag/(tagType)/{tagName}", method = RequestMethod.POST)
+    public InterfaceResult createTag(HttpServletRequest request, HttpServletResponse response,
+                                     @PathVariable short tagType, @PathVariable String tagName) throws Exception {
+        User user = this.getUser(request);
+        if (user == null || tagType < 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        try {
+            return this.knowledgeOtherService.createTag(tagType, tagName);
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("create Tag failed!");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/createDirectory", method = RequestMethod.POST)
+    public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return null;
+    }
+
     /**
      * 推荐获取大数据推荐及个人关联知识
      * @throws IOException
@@ -1146,7 +1178,7 @@ public class KnowledgeController extends BaseController {
                     knowledgeIds.add(collect.getKnowledgeId());
                 }
             }
-            System.out.println(" knowledgeIds:" + knowledgeIds.toArray() + " keyword:"+keyword);
+            System.out.println(" knowledgeIds:" + knowledgeIds.toString() + " keyword:"+keyword);
             collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
         }
 

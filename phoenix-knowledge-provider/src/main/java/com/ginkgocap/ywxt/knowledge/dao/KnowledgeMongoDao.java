@@ -28,44 +28,40 @@ public interface KnowledgeMongoDao {
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:20
 	 * @param knowledgeDetail
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception;
+	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail) throws Exception;
 	
 	/**
 	 * 批量插入
 	 * @author 周仕奇
 	 * @date 2016年1月13日 下午4:24:56
 	 * @param knowledgeDetailList
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList,String... collectionName) throws Exception;
+	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList) throws Exception;
 	
 	/**
 	 * 更新
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:29
 	 * @param knowledgeDetail
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception;
+	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) throws Exception;
 	
 	/**
 	 * 先删除后插入
 	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:44
 	 * @param knowledgeDetail
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception;
+	public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail) throws Exception;
 	
 	/**
 	 * 根据主键及栏目删除数据
@@ -73,11 +69,10 @@ public interface KnowledgeMongoDao {
 	 * @date 2016年1月13日 上午10:54:47
 	 * @param id
 	 * @param columnId
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByIdAndColumnId(long id,short columnId,String... collectionName) throws Exception;
+	public int deleteByIdAndColumnId(long id,short columnId) throws Exception;
 	
 	/**
 	 * 根据主键list以及栏目批量删除数据
@@ -85,11 +80,10 @@ public interface KnowledgeMongoDao {
 	 * @date 2016年1月13日 上午10:54:50
 	 * @param ids
 	 * @param columnId
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception;
+	public int deleteByIdsAndColumnId(List<Long> ids,short columnId) throws Exception;
 	
 	/**
 	 * 根据用户Id以及栏目删除数据
@@ -97,11 +91,10 @@ public interface KnowledgeMongoDao {
 	 * @date 2016年1月13日 上午10:54:53
 	 * @param createUserId
 	 * @param columnId
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId,String... collectionName) throws Exception;
+	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId) throws Exception;
 	
 	/**
 	 * 根据主键以及栏目提取数据
@@ -109,11 +102,10 @@ public interface KnowledgeMongoDao {
 	 * @date 2016年1月13日 上午10:54:56
 	 * @param id
 	 * @param columnId
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId,String... collectionName) throws Exception;
+	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) throws Exception;
 	
 	/**
 	 * 根据主键list以及栏目提取数据
@@ -121,9 +113,8 @@ public interface KnowledgeMongoDao {
 	 * @date 2016年1月13日 上午10:54:58
 	 * @param ids
 	 * @param columnId
-	 * @param collectionName 数据表名称（当前参数可传可不传），不传此参数时，将根据columnId构造出表名称
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception;
+	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId) throws Exception;
 }

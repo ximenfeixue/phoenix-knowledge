@@ -502,7 +502,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	private void updateRollBack(long knowledgeId, long columnId,
                                 KnowledgeDetail oldKnowledgeDetail,KnowledgeBase oldKnowledge,KnowledgeReference oldKnowledgeReference,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
-		if(isMongo) this.knowledgeMongoDao.insertAfterDelete(oldKnowledgeDetail, null);
+		if(isMongo) this.knowledgeMongoDao.insertAfterDelete(oldKnowledgeDetail);
 		if(isBase) this.knowledgeMysqlDao.insertAfterDelete(oldKnowledge);
 		if(isReference) {
             oldKnowledgeReference.setKnowledgeId(knowledgeId);

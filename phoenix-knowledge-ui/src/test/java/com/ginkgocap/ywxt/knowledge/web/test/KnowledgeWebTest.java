@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +93,10 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/all/1/10/null"; ////all/{start}/{size}/{keyword}
+            //createKnowledge("考虑,考虑");
+            //createKnowledge("考虑,考虑");
+            String subUrl = "/all/1/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
@@ -163,6 +167,21 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/user/2/1/12";  //user/{columnId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetAllByTagId()
+    {
+        LogMethod();
+        try {
+            long tagId = 12344L;
+            String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

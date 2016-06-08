@@ -20,6 +20,12 @@ public interface KnowledgeOtherService
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
+    //TODO: this just test interface, need to delete before deploy to online system
+    public InterfaceResult createTag(short type,String tagName) throws Exception;
+
+    public InterfaceResult createDirectory(short type,String tagName) throws Exception;
+    //End
+
     //Common component will remove from knowledge
     public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception;
 

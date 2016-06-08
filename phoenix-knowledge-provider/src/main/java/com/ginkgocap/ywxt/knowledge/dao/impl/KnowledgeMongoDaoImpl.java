@@ -32,7 +32,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     private KnowledgeCommonService knowledgeCommontService;
 	
 	@Override
-	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail, String... collectionName) throws Exception {
+	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail) throws Exception {
 		if(knowledgeDetail == null) {
             throw new IllegalArgumentException("knowledgeDetail is null");
         }
@@ -40,7 +40,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		long currentDate = new Date().getTime();
         knowledgeDetail.setCreateTime(currentDate);
 		
-		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
+		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
         knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
 		mongoTemplate.insert(knowledgeDetail,currCollectionName);
 		
@@ -48,7 +48,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 	
 	@Override
-	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList,  String... collectionName) throws Exception {
+	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList) throws Exception {
 		if(knowledgeDetailList != null && knowledgeDetailList.size() > 0) {
 			for(KnowledgeDetail knowledgeDetail : knowledgeDetailList) {
                 knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
@@ -60,7 +60,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail, String... collectionName)
+	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail)
 			throws Exception {
 
 		if(knowledgeDetail == null) {
@@ -78,7 +78,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         long currentDate = new Date().getTime();
         knowledgeDetail.setModifyTime(currentDate);
         Query query = knowledgeColumnIdQuery(knowledgeDetail.getId(), knowledgeDetail.getColumnId());
-        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
+        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
 		WriteResult result = mongoTemplate.updateFirst(query, getUpdate(knowledgeDetail), currCollectionName);
         if (result.getN()<=0) {
             return null;
@@ -89,10 +89,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
 
 	@Override
-	public int deleteByIdAndColumnId(long id,short columnId, String...collectionName ) throws Exception
+	public int deleteByIdAndColumnId(long id,short columnId) throws Exception
     {
 		Query query = knowledgeColumnIdQuery(id, columnId);
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
@@ -100,14 +100,14 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public int deleteByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception
+	public int deleteByIdsAndColumnId(List<Long> ids,short columnId) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
         if (columnId > 0) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }
 
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
@@ -115,14 +115,14 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId,String... collectionName) throws Exception
+	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
         if (columnId > 0) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }
 
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId,collectionName));
+        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
@@ -130,24 +130,23 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId,String... collectionName) throws Exception {
+	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) throws Exception {
 		Query query = knowledgeColumnIdQuery(id, columnId);
 		
-		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId,collectionName));
+		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId));
 	}
 
     @Override
-    public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail,String... collectionName) throws Exception {
+    public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail) throws Exception {
         long knowledgeId = knowledgeDetail.getId();
         if(knowledgeDetail == null || knowledgeId <= 0) {
             throw new IllegalArgumentException("knowledgeDetail is null or invalidated!");
         }
 
-        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId(),collectionName);
-        KnowledgeDetail oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId(),currCollectionName);
+        KnowledgeDetail oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId());
         if (oldValue == null) {
             try {
-                this.insert(knowledgeDetail, currCollectionName);
+                this.insert(knowledgeDetail);
             } catch (Exception ex) {
                  throw ex;
             }
@@ -157,17 +156,18 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId,String... collectionName) throws Exception
+	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant._ID).in(ids));
         if (columnId > 0) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }
 		
-		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId,collectionName));
+		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId));
 	}
-	
-	private String getCollectionName(long columnId) throws Exception {
+
+    /*
+	private String getCollectionName(short columnId) throws Exception {
 		
 		StringBuffer strBuf = new StringBuffer();
 		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
@@ -194,9 +194,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		}
 		
 		return strBuf.toString();
-	}
+	}*/
 	
-	private String getCollectionName(long columnId,String[] collectionName) throws Exception {
+	private String getCollectionName(short columnId) {
 		return "Knowledge"; //ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
 	}
 	

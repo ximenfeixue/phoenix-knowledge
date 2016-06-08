@@ -11,6 +11,8 @@ import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.parasol.tags.service.TagService;
 import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
@@ -39,6 +41,9 @@ import java.util.*;
 public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
 {
     private Logger logger = LoggerFactory.getLogger(KnowledgeOtherServiceImpl.class);
+    @Autowired
+    private KnowledgeMysqlDao knowledgeMysqlDao;
+
     @Resource
     private MongoTemplate mongoTemplate;
 
@@ -141,6 +146,18 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Have reported this knowledge!");
     }
 
+    //TODO: this just test interface, need to delete before deploy to online system
+    public InterfaceResult createTag(short type,String tagName) throws Exception
+    {
+        return null;
+    }
+
+    public InterfaceResult createDirectory(short type,String tagName) throws Exception
+    {
+        return null;
+    }
+    //End
+
     public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception {
         try {
             for (int index = 0; index < tagItems.size(); index++) {
@@ -148,19 +165,41 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Long> tagIds = (List<Long>)map.get("tagIds");
-                for (long tagId : tagIds) {
-                    TagSource tagSource = new TagSource();
-                    tagSource.setUserId(userId);
-                    tagSource.setAppId(APPID);
-                    tagSource.setSourceTitle(title);
-                    tagSource.setSourceId(knowledgeId);
-                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                    tagSource.setSourceType(sourceType);
-                    tagSource.setTagId(tagId);
-                    tagSource.setCreateAt(new Date().getTime());
-                    tagSourceService.createTagSource(tagSource);
-                    logger.info("tagId:" + tagId);
+                List<String> tagIds = (List<String>)map.get("tagIds");
+
+                //Update knowledge Detail
+                KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
+                if (knowledgeDetail != null) {
+                    knowledgeDetail.setTags(tagIds);
+                    knowledgeMongoDao.update(knowledgeDetail);
+                } else {
+                    logger.error("can't find this knowledge by Id: {}", knowledgeId);
+                }
+                //Update knowledge base
+                KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+                if (knowledgeBase != null) {
+                    knowledgeBase.setTags(tagIds.toString());
+                } else {
+                    logger.error("can't find this knowledge base info by Id: {}", knowledgeId);
+                }
+
+                if (knowledgeDetail != null && knowledgeBase != null) {
+                    for (String tagId : tagIds) {
+                        TagSource tagSource = new TagSource();
+                        tagSource.setUserId(userId);
+                        tagSource.setAppId(APPID);
+                        tagSource.setSourceTitle(title);
+                        tagSource.setSourceId(knowledgeId);
+                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                        tagSource.setSourceType(sourceType);
+                        tagSource.setTagId(Long.parseLong(tagId));
+                        tagSource.setCreateAt(new Date().getTime());
+                        tagSourceService.createTagSource(tagSource);
+                        logger.info("tagId:" + tagId);
+                    }
+                }
+                else {
+                    logger.error("can't find this knowledge base or detail info, so skip add tag to this knowledge, knowledgeId: {}", knowledgeId);
                 }
             }
         } catch (TagSourceServiceException ex) {
@@ -177,19 +216,34 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Long> tagIds = (List<Long>)map.get("tagIds");
-                for (long directoryId : tagIds) {
-                    DirectorySource directorySource = new DirectorySource();
-                    directorySource.setUserId(userId);
-                    directorySource.setDirectoryId(directoryId);
-                    directorySource.setAppId(APPID);
-                    directorySource.setSourceId(knowledgeId);
-                    directorySource.setSourceTitle(title);
-                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                    directorySource.setSourceType((int) sourceType);
-                    directorySource.setCreateAt(new Date().getTime());
-                    directorySourceService.createDirectorySources(directorySource);
-                    logger.info("directoryId:" + directoryId);
+                List<String> tagIds = (List<String>)map.get("tagIds");
+
+                //Update knowledge Detail
+                KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
+                if (knowledgeDetail != null) {
+                    knowledgeDetail.setCategoryIds(tagIds);
+                    knowledgeMongoDao.update(knowledgeDetail);
+                } else {
+                    logger.error("can't find this knowledge by Id: {}", knowledgeId);
+                }
+
+                if (knowledgeDetail != null) {
+                    for (String directoryId : tagIds) {
+                        DirectorySource directorySource = new DirectorySource();
+                        directorySource.setUserId(userId);
+                        directorySource.setDirectoryId(Long.parseLong(directoryId));
+                        directorySource.setAppId(APPID);
+                        directorySource.setSourceId(knowledgeId);
+                        directorySource.setSourceTitle(title);
+                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                        directorySource.setSourceType((int) sourceType);
+                        directorySource.setCreateAt(new Date().getTime());
+                        directorySourceService.createDirectorySources(directorySource);
+                        logger.info("directoryId:" + directoryId);
+                    }
+                }
+                else {
+                    logger.error("can't find this knowledge detail info, so skip add directory to this knowledge, knowledgeId: {}", knowledgeId);
                 }
             }
         } catch (DirectorySourceServiceException ex) {
