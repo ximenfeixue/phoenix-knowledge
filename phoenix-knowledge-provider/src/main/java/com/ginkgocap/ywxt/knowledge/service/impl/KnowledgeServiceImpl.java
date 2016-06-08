@@ -102,17 +102,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if(categorysList != null && categorysList.size() > 0){
             try {
                 for (String directoryId : categorysList) {
-                    DirectorySource directorySource = new DirectorySource();
-                    directorySource.setUserId(userId);
-                    directorySource.setDirectoryId(Long.parseLong(directoryId));
-                    directorySource.setAppId(APPID);
-                    directorySource.setSourceId(knowledgeId);
-                    directorySource.setSourceTitle(knowledgeDetail.getTitle());
-                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                    directorySource.setSourceType((int) sourceType);
-                    directorySource.setCreateAt(new Date().getTime());
-                    directorySourceService.createDirectorySources(directorySource);
-                    logger.info("dircetoryId:" + directoryId);
+                    if (StringUtils.isNotEmpty(directoryId)) {
+                        DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
+                        directorySourceService.createDirectorySources(directorySource);
+                    }
+                    logger.info("directoryId:" + directoryId);
                 }
             } catch (DirectorySourceServiceException ex) {
                 ex.printStackTrace();
@@ -124,16 +118,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if (tagsList != null && tagsList.size() > 0) {
             try {
                 for (String tagId : tagsList) {
-                    TagSource tagSource = new TagSource();
-                    tagSource.setUserId(userId);
-                    tagSource.setAppId(APPID);
-                    tagSource.setSourceId(knowledgeId);
-                    tagSource.setSourceTitle(knowledgeDetail.getTitle());
-                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                    tagSource.setSourceType(sourceType);
-                    tagSource.setTagId(Long.parseLong(tagId));
-                    tagSource.setCreateAt(new Date().getTime());
-                    tagSourceService.createTagSource(tagSource);
+                    if (StringUtils.isNotEmpty(tagId)) {
+                        TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
+                        tagSourceService.createTagSource(tagSource);
+                    }
                     logger.info("tagId:" + tagId);
                 }
             } catch (TagSourceServiceException ex) {
@@ -204,29 +192,24 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //Update directory
         try{
-            boolean removeDdirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, 4, knowledgeId);
-            if(removeDdirectoryFlag){
-                List<String> categorysList = knowledgeDetail.getCategoryIds();
-                if(categorysList != null && categorysList.size() > 0){
-                    for(String directoryId : categorysList){
-                        DirectorySource directorySource = new DirectorySource();
-                        directorySource.setUserId(userId);
-                        directorySource.setDirectoryId(Long.parseLong(directoryId));
-                        directorySource.setAppId(1);
-                        directorySource.setSourceId(knowledgeId);
-                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                        directorySource.setSourceType(3);
-                        directorySource.setCreateAt(new Date().getTime());
-                        directorySourceService.createDirectorySources(directorySource);
-                        logger.info("dircetoryId:"+directoryId);
+            boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
+            if(removeDirectoryFlag){
+                List<String> categoryList = knowledgeDetail.getCategoryIds();
+                if(categoryList != null && categoryList.size() > 0){
+                    for(String directoryId : categoryList){
+                        if(StringUtils.isNotEmpty(directoryId)) {
+                            DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
+                            directorySourceService.createDirectorySources(directorySource);
+                        }
+                        logger.info("directoryId:" + directoryId);
                     }
                 }
             }
             else{
-                logger.error("update categorys remove failed...userid=" + userId+ ", knowledgeId=" + knowledgeId);
+                logger.error("update category remove failed...userId=" + userId+ ", knowledgeId=" + knowledgeId);
             }
         }catch(DirectorySourceServiceException e1){
-            logger.error("update categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            logger.error("update category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
         }
         //Update tags
         try{
@@ -235,15 +218,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 List<String> tagsList = knowledgeDetail.getTags();
                 if(tagsList != null){
                     for(String tagId : tagsList){
-                        if(tagId != null && StringUtils.isNotBlank(tagId)){
-                            TagSource  tagSource  = new TagSource ();
-                            tagSource.setUserId(userId);
-                            tagSource.setAppId(APPID);
-                            tagSource.setSourceId(knowledgeId);
-                            //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                            tagSource.setSourceType(sourceType);
-                            tagSource.setTagId(Long.parseLong(tagId));
-                            tagSource.setCreateAt(new Date().getTime());
+                        if(StringUtils.isNotEmpty(tagId)){
+                            TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
                             tagSourceService.createTagSource(tagSource);
                             logger.info("tagId:"+tagId);
                         }
@@ -253,7 +229,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             else{
                 logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
             }
-        }catch(TagSourceServiceException e2){
+        }catch(TagSourceServiceException ex){
             logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
         }
 		
@@ -307,23 +283,21 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //delete directory
         try{
-            boolean removeDdirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, 4, knowledgeId);
-            if(!removeDdirectoryFlag){
-                logger.error("categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+            boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
+            if(!removeDirectoryFlag){
+                logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
             }
-        }catch(DirectorySourceServiceException e1){
-            logger.error("categorys remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
-            e1.printStackTrace();
+        }catch(DirectorySourceServiceException ex){
+            logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
         }
         //delete tags
         try{
             boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
             if(!removeTagsFlag){
-                logger.error("tags remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
+                logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
             }
-        }catch(TagSourceServiceException e2){
-            logger.error("tags remove failed...userid=" + userId + ", knowledgeId=" + knowledgeId);
-            e2.printStackTrace();
+        }catch(TagSourceServiceException ex){
+            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
         }
 		
 		//大数据MQ推送删除
@@ -637,5 +611,35 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         return returnList;
+    }
+
+    private DirectorySource createDirectorySource(long userId, String directoryId,KnowledgeDetail knowledge)
+    {
+        DirectorySource directorySource = new DirectorySource();
+        directorySource.setUserId(userId);
+        directorySource.setDirectoryId(Long.parseLong(directoryId));
+        directorySource.setAppId(APPID);
+        directorySource.setSourceId(knowledge.getId());
+        directorySource.setSourceTitle(knowledge.getTitle());
+        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+        directorySource.setSourceType(sourceType);
+        directorySource.setCreateAt(new Date().getTime());
+
+        return directorySource;
+    }
+
+    private TagSource createTagSource(long userId, String tagId,KnowledgeDetail knowledge)
+    {
+        TagSource tagSource = new TagSource();
+        tagSource.setUserId(userId);
+        tagSource.setAppId(APPID);
+        tagSource.setSourceId(knowledge.getId());
+        tagSource.setSourceTitle(knowledge.getTitle());
+        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+        tagSource.setSourceType(sourceType);
+        tagSource.setTagId(Long.parseLong(tagId));
+        tagSource.setCreateAt(new Date().getTime());
+
+        return tagSource;
     }
 }
