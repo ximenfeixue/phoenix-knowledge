@@ -396,15 +396,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds) throws Exception
+	public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception
     {
 		List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
-        if (knowledgeList == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        if (knowledgeList == null || knowledgeList.size() > 0 ) {
+            return knowledgeList;
         }
-		List<KnowledgeReference> referenceList = this.knowledgeReferenceDao.getByIds(knowledgeIds);
-		
-		return InterfaceResult.getSuccessInterfaceResultInstance(putReferenceList2BaseList(knowledgeList,referenceList));
+
+        return knowledgeList;
 	}
 
 	@Override
@@ -436,23 +435,23 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserIdAndType(userId, type, start, size)));
+	public List<KnowledgeBase> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception {
+		return this.knowledgeMysqlDao.getByCreateUserIdAndType(userId, type, start, size);
 	}
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long UserId,short columnId, short type,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByCreateUserIdAndTypeAndColumnId(UserId, type, columnId, start, size)));
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long UserId,short columnId, short type,int start,int size) throws Exception {
+		return this.knowledgeMysqlDao.getByCreateUserIdAndTypeAndColumnId(UserId, type, columnId, start, size);
 	}
 	
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByType(short type,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByType(type, start, size)));
+	public List<KnowledgeBase> getBaseByType(short type,int start,int size) throws Exception {
+		return this.knowledgeMysqlDao.getByType(type, start, size);
 	}
 	
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByColumnId(short columnId,int start,int size) throws Exception {
-		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByColumnId(columnId, start, size)));
+	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception {
+		return this.knowledgeMysqlDao.getByColumnId(columnId, start, size);
 	}
 
     @Override
@@ -461,9 +460,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult<List<DataCollection>> getBaseByTagId(long tagId,int start,int size) throws Exception
+    public List<KnowledgeBase> getBaseByTagId(long tagId,int start,int size) throws Exception
     {
-        List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagId(APPID, tagId, start, size );
+        List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagIdAndType(APPID, tagId, (long)sourceType, start, size );
         List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
         if (tagSources == null || tagSources.size() <= 0) {
             for (TagSource tag : tagSources) {

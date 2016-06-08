@@ -146,13 +146,15 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             for (int index = 0; index < tagItems.size(); index++) {
                 Map<String, Object> map = tagItems.get(index);
                 Set<String> set = map.keySet();
+                String title = map.get("title").toString();
+                long knowledgeId = Long.parseLong(map.get("id").toString());
                 List<Long> tagIds = (List<Long>)map.get("tagIds");
                 for (long tagId : tagIds) {
                     TagSource tagSource = new TagSource();
                     tagSource.setUserId(userId);
                     tagSource.setAppId(APPID);
-                    //tagSource.setTitle();
-                    tagSource.setSourceId(Long.parseLong(map.get("id").toString()));
+                    tagSource.setSourceTitle(title);
+                    tagSource.setSourceId(knowledgeId);
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     tagSource.setSourceType(sourceType);
                     tagSource.setTagId(tagId);
@@ -173,18 +175,21 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             for (int index = 0; index < tagItems.size(); index++) {
                 Map<String, Object> map = tagItems.get(index);
                 Set<String> set = map.keySet();
+                String title = map.get("title").toString();
+                long knowledgeId = Long.parseLong(map.get("id").toString());
                 List<Long> tagIds = (List<Long>)map.get("tagIds");
                 for (long directoryId : tagIds) {
                     DirectorySource directorySource = new DirectorySource();
                     directorySource.setUserId(userId);
                     directorySource.setDirectoryId(directoryId);
                     directorySource.setAppId(APPID);
-                    directorySource.setSourceId(Long.parseLong(map.get("id").toString()));
+                    directorySource.setSourceId(knowledgeId);
+                    directorySource.setSourceTitle(title);
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     directorySource.setSourceType((int) sourceType);
                     directorySource.setCreateAt(new Date().getTime());
                     directorySourceService.createDirectorySources(directorySource);
-                    logger.info("dircetoryId:" + directoryId);
+                    logger.info("directoryId:" + directoryId);
                 }
             }
         } catch (DirectorySourceServiceException ex) {

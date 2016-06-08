@@ -519,7 +519,7 @@ public class KnowledgeController extends BaseController {
 
     @RequestMapping(value = "/tag/{tagId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
-    public InterfaceResult<List<DataCollection>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult<List<KnowledgeBase>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
@@ -527,15 +527,15 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        InterfaceResult<List<DataCollection>> dataCollectionList = null;
+        List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            dataCollectionList = this.knowledgeService.getBaseByTagId(tagId, start, size);
+            knowledgeBaseList = this.knowledgeService.getBaseByTagId(tagId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
-        return dataCollectionList;
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
     }
 
 	/**

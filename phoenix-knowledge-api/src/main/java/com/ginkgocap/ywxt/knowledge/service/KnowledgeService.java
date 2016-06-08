@@ -113,7 +113,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByIds(List<Long> knowledgeIds) throws Exception;
+	public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception;
 	
 	/**
 	 * 提取所有数据（一般用在首页数据展示中）
@@ -175,7 +175,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户ID与类型提取简要信息列表（一般用在个人中心根据类型、栏目区分的知识信息列表查询的数据提取中），具体提取以下信息：
@@ -190,7 +190,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByCreateUserIdAndColumnIdAndType(long userId,short columnId,short type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long userId,short columnId,short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -203,7 +203,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByType(short type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByType(short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -216,7 +216,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByColumnId(short columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception;
 
 
     /**
@@ -239,7 +239,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public InterfaceResult<List<DataCollection>> getBaseByTagId(long tagId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getBaseByTagId(long tagId,int start,int size) throws Exception;
 
     /**
      * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
