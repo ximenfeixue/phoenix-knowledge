@@ -384,12 +384,12 @@ public class KnowledgeController extends BaseController {
 
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
-        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyWord1);
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
         if (createdKnowledgeItems != null && createdKnowledgeItems.size() > 0 ) {
             resultMap.put("created", createdKnowledgeItems);
         }
 
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyWord1);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyword);
         if (collectedKnowledgeItems != null && collectedKnowledgeItems.size() > 0) {
             resultMap.put("collected", collectedKnowledgeItems);
         }
