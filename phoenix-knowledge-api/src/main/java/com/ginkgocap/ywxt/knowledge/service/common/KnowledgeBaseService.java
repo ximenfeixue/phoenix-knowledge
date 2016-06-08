@@ -5,5 +5,5 @@ package com.ginkgocap.ywxt.knowledge.service.common;
  */
 public interface KnowledgeBaseService {
     public static final long APPID = 1l;
-    public static final long sourceType = 3L;
+    public static final int sourceType = 3;
 }
