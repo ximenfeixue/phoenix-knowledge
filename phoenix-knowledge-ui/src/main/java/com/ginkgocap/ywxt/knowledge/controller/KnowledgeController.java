@@ -940,7 +940,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.createTag(tagType, tagName);
+            return this.knowledgeOtherService.createTag(user.getId(), tagType, tagName);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
@@ -949,9 +949,21 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createDirectory", method = RequestMethod.POST)
-    public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return null;
+    @RequestMapping(value = "/createDirectory(type)/{name}", method = RequestMethod.POST)
+    public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response,
+                                           @PathVariable short type, @PathVariable String name) throws Exception {
+        User user = this.getUser(request);
+        if (user == null || type < 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        try {
+            return this.knowledgeOtherService.createDirectory(user.getId(), type, name);
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("create Directory failed!");
     }
 
     /**

@@ -124,7 +124,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/allByKeyword/test/1/3"; ///all/{keyWord}/{columnId}/{start}/{size}
+            String subUrl = "/allByKeyword/考虑/1/3"; ///all/{keyWord}/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/allByKeywordAndColumn/test/2/1/3"; ////allByKeywordAndColumn/test/2/1/12"
+            String subUrl = "/allByKeywordAndColumn/考虑/2/1/3"; ////allByKeywordAndColumn/test/2/1/12"
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {

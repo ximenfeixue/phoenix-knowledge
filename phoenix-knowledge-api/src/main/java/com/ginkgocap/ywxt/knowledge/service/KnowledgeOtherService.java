@@ -21,9 +21,9 @@ public interface KnowledgeOtherService
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public InterfaceResult createTag(short type,String tagName) throws Exception;
+    public InterfaceResult createTag(long userId,short type,String tagName) throws Exception;
 
-    public InterfaceResult createDirectory(short type,String tagName) throws Exception;
+    public InterfaceResult createDirectory(long userId,short type,String tagName) throws Exception;
     //End
 
     //Common component will remove from knowledge

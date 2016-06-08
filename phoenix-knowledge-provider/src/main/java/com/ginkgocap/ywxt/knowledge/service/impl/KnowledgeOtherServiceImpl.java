@@ -147,14 +147,27 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public InterfaceResult createTag(short type,String tagName) throws Exception
+    public InterfaceResult createTag(long userId,short tagType,String tagName) throws Exception
     {
-        return null;
+        Tag tag = new Tag();
+        tag.setAppId(APPID);
+        tag.setTagType(tagType);
+        tag.setTagName(tagName);
+        tag.setUserId(userId);
+        Long tagId = this.tagService.createTag(userId, tag);
+        return InterfaceResult.getSuccessInterfaceResultInstance(tagId);
     }
 
-    public InterfaceResult createDirectory(short type,String tagName) throws Exception
+    public InterfaceResult createDirectory(long userId,short type,String directoryName) throws Exception
     {
-        return null;
+        Directory directory = new Directory();
+        directory.setUserId(userId);
+        directory.setAppId(APPID);
+        directory.setName(directoryName);
+        directory.setTypeId(3933392601350164L);//This get from DB
+        Long directoryId =  directoryService.createDirectoryForRoot(userId, directory);
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(directoryId);
     }
     //End
 
