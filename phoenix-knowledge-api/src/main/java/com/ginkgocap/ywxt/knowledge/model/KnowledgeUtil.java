@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.model;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -123,6 +124,19 @@ public final class KnowledgeUtil {
         }
         try {
             return objectMapper.readValue(content, valueType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static <T> T readValue(TypeReference javaType, final String content) {
+        if (StringUtils.isBlank(content)) {
+            throw new IllegalArgumentException("Content is null");
+        }
+        try {
+            return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
             e.printStackTrace();
         }

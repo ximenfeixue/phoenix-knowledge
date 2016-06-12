@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
  * @version V1.0.0
  */
 public class DataCollection implements Serializable {
+
+    private Logger logger = LoggerFactory.getLogger(DataCollection.class);
 
 	private static final long serialVersionUID = -424912985959502809L;
 
@@ -112,11 +116,13 @@ public class DataCollection implements Serializable {
             int maxLen = contentLen > 250 ? 250 : contentLen;
             this.knowledge.setContentDesc(this.knowledgeDetail.getContent().substring(0,maxLen));
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
+                logger.info("save picture {}", this.knowledgeDetail.getMultiUrls().get(0));
                 this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
             if (knowledgeDetail.getTags() != null && knowledgeDetail.getTags().size() > 0) {
                 String tags = knowledgeDetail.getTags().toString();
+                logger.info("create tags for base {}", tags);
                 knowledge.setTags(tags.substring(1, tags.length()-1));
             }
             this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());

@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
+import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.LinkedHashMap;
@@ -21,15 +22,15 @@ public interface KnowledgeOtherService
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public InterfaceResult createTag(long userId,short type,String tagName) throws Exception;
+    public List<Long> createTag(long userId,short type,String tagName) throws Exception;
 
-    public InterfaceResult createDirectory(long userId,short type,String tagName) throws Exception;
+    public List<Long> createDirectory(long userId,short type,String tagName) throws Exception;
     //End
 
     //Common component will remove from knowledge
-    public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception;
+    public InterfaceResult batchTags(long userId,List<ResItem> tagItems) throws Exception;
 
-    public InterfaceResult batchCatalogs(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception;
+    public InterfaceResult batchCatalogs(long userId,List<ResItem> directoryItems) throws Exception;
 
     public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception;
 

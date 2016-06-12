@@ -1,13 +1,18 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.junit.Test;
+import org.springframework.context.annotation.Bean;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Chen Peifeng on 2016/3/31.
@@ -111,7 +116,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/allByColumn/2/1/20"; ///all/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,7 +130,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             String subUrl = "/allByKeyword/考虑/1/3"; ///all/{keyWord}/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,6 +247,13 @@ public class KnowledgeWebTest extends BaseTestCase {
             resItems.add(resItem1);
             resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
+
+            //ObjectMapper mapper = new ObjectMapper();
+            //JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, ResItem.class);
+
+            //List<ResItem> beanList =  (List<ResItem>)mapper.readValue(requestJson, javaType);
+            //List<ResItem> beanList = mapper.readValue(requestJson, new TypeReference<List<ResItem>>() {});
+            //System.out.print(beanList);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -257,7 +269,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
+            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, new long[]{3933811561988102L, 3933811356467203L});
             ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
             resItems.add(resItem1);
             resItems.add(resItem2);
@@ -391,5 +403,41 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
         return data;
+    }
+
+    private void createTag()
+    {
+        String subUrl = "/createTag/3/Tag" + getNextNum(); ///createTag/(tagType)/{tagName}
+        try {
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+            String IdList = Util.getResponseData(result);
+            System.out.print(IdList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    private void createDirectory() {
+        String subUrl = "/createDirectory/3/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
+        try {
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+            String IdList = Util.getResponseData(result);
+            System.out.print(IdList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    private int getNextNum()
+    {
+        int max=20;
+        int min=1;
+        Random random = new Random();
+
+        return random.nextInt(max)%(max-min+1) + min;
     }
 }

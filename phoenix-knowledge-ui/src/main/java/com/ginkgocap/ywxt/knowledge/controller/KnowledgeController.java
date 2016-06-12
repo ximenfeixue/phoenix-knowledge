@@ -1,15 +1,19 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
 import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
+import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.HttpClientHelper;
@@ -100,14 +104,13 @@ public class KnowledgeController extends BaseController {
 
         //TODO: If this step failed, how to do ?
         try {
-            AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
             List<Associate> as  = dataCollection.getAsso();
             if (as == null) {
                 logger.error("asso it null or converted failed...");
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
             }
 
-            createAssociate(as, knowledgeId, userId, assoType);
+            createAssociate(as, knowledgeId, userId);
         }catch (Exception e) {
             logger.error("Insert asso failed : " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -161,8 +164,7 @@ public class KnowledgeController extends BaseController {
 
         long knowledgeId = data.getKnowledgeDetail().getId();
         //Update Assso info
-        AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
+        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, (long)KnowledgeBaseService.sourceType, knowledgeId);
         if (assomap == null) {
             logger.error("asso it null or converted failed...");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
@@ -181,7 +183,7 @@ public class KnowledgeController extends BaseController {
         }
 
         List<Associate> as = data.getAsso();
-        createAssociate(as, knowledgeId, userId, assoType);
+        createAssociate(as, knowledgeId, userId);
 
         logger.info(".......update knowledge success......");
         return result;
@@ -771,7 +773,9 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<LinkedHashMap<String, Object>> tagItems = KnowledgeUtil.readValue(List.class, requestJson);
+
+        TypeReference javaType = new TypeReference<List<ResItem>>(){};
+        List<ResItem> tagItems = KnowledgeUtil.readValue(javaType, requestJson);
         if (tagItems == null || tagItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
@@ -800,13 +804,14 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<LinkedHashMap<String, Object>> tagItems = KnowledgeUtil.readValue(List.class, requestJson);
-        if (tagItems == null || tagItems.size() <= 0) {
+        TypeReference javaType = new TypeReference<List<ResItem>>(){};
+        List<ResItem> directoryItems = KnowledgeUtil.readValue(javaType, requestJson);
+        if (directoryItems == null || directoryItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
-            this.knowledgeOtherService.batchCatalogs(user.getId(), tagItems);
+            this.knowledgeOtherService.batchCatalogs(user.getId(), directoryItems);
         } catch (Exception e) {
             logger.error("Delete catalogs failed！reason："+e.getMessage());
         }
@@ -940,7 +945,8 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.createTag(user.getId(), tagType, tagName);
+            List<Long> tagIds = this.knowledgeOtherService.createTag(user.getId(), tagType, tagName);
+            return InterfaceResult.getSuccessInterfaceResultInstance(tagIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
@@ -958,7 +964,8 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.createDirectory(user.getId(), type, name);
+            List<Long> directoryIds = this.knowledgeOtherService.createDirectory(user.getId(), type, name);
+            return InterfaceResult.getSuccessInterfaceResultInstance(directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
@@ -1105,7 +1112,7 @@ public class KnowledgeController extends BaseController {
         return km2;
     }
 
-    private List<Long> createAssociate(List<Associate> as, long knowledgeId, long userId,AssociateType assoType)
+    private List<Long> createAssociate(List<Associate> as, long knowledgeId, long userId)
     {
         if (as == null || as.size() <= 0) {
             return null;
@@ -1116,7 +1123,7 @@ public class KnowledgeController extends BaseController {
             for (int index = 0; index < as.size(); index++) {
                 Associate associate = as.get(index);
                 associate.setSourceId(knowledgeId);
-                associate.setSourceTypeId(assoType.getId());
+                associate.setSourceTypeId(KnowledgeBaseService.sourceType);
                 //associate.setAssocTypeId(assoType.getId());
                 associate.setUserId(userId);
                 associate.setAppId(APPID);

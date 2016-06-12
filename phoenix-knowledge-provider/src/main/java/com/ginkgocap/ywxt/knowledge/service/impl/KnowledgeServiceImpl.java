@@ -98,11 +98,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         //save directory
-        List<String> categorysList = knowledgeDetail.getCategoryIds();
+        List<Long> categorysList = knowledgeDetail.getCategoryIds();
         if(categorysList != null && categorysList.size() > 0){
             try {
-                for (String directoryId : categorysList) {
-                    if (StringUtils.isNotEmpty(directoryId)) {
+                for (Long directoryId : categorysList) {
+                    if (directoryId > 0) {
                         DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                         directorySourceService.createDirectorySources(directorySource);
                     }
@@ -114,11 +114,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         }
         //save tags
-        List<String> tagsList = knowledgeDetail.getTags();
+        List<Long> tagsList = knowledgeDetail.getTags();
         if (tagsList != null && tagsList.size() > 0) {
             try {
-                for (String tagId : tagsList) {
-                    if (StringUtils.isNotEmpty(tagId)) {
+                for (Long tagId : tagsList) {
+                    if (tagId > 0) {
                         TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
                         tagSourceService.createTagSource(tagSource);
                     }
@@ -194,10 +194,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try{
             boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
             if(removeDirectoryFlag){
-                List<String> categoryList = knowledgeDetail.getCategoryIds();
+                List<Long> categoryList = knowledgeDetail.getCategoryIds();
                 if(categoryList != null && categoryList.size() > 0){
-                    for(String directoryId : categoryList){
-                        if(StringUtils.isNotEmpty(directoryId)) {
+                    for(Long directoryId : categoryList){
+                        if(directoryId >= 0) {
                             DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                             directorySourceService.createDirectorySources(directorySource);
                         }
@@ -215,10 +215,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try{
             boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
             if(removeTagsFlag){
-                List<String> tagsList = knowledgeDetail.getTags();
+                List<Long> tagsList = knowledgeDetail.getTags();
                 if(tagsList != null){
-                    for(String tagId : tagsList){
-                        if(StringUtils.isNotEmpty(tagId)){
+                    for(Long tagId : tagsList){
+                        if(tagId > 0){
                             TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
                             tagSourceService.createTagSource(tagSource);
                             logger.info("tagId:"+tagId);
@@ -612,11 +612,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return returnList;
     }
 
-    private DirectorySource createDirectorySource(long userId, String directoryId,KnowledgeDetail knowledge)
+    private DirectorySource createDirectorySource(long userId, long directoryId,KnowledgeDetail knowledge)
     {
         DirectorySource directorySource = new DirectorySource();
         directorySource.setUserId(userId);
-        directorySource.setDirectoryId(Long.parseLong(directoryId));
+        directorySource.setDirectoryId(directoryId);
         directorySource.setAppId(APPID);
         directorySource.setSourceId(knowledge.getId());
         directorySource.setSourceTitle(knowledge.getTitle());
@@ -627,7 +627,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return directorySource;
     }
 
-    private TagSource createTagSource(long userId, String tagId,KnowledgeDetail knowledge)
+    private TagSource createTagSource(long userId, Long tagId,KnowledgeDetail knowledge)
     {
         TagSource tagSource = new TagSource();
         tagSource.setUserId(userId);
@@ -636,7 +636,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         tagSource.setSourceTitle(knowledge.getTitle());
         //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
         tagSource.setSourceType(sourceType);
-        tagSource.setTagId(Long.parseLong(tagId));
+        tagSource.setTagId(tagId);
         tagSource.setCreateAt(new Date().getTime());
 
         return tagSource;

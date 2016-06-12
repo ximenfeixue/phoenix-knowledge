@@ -132,10 +132,10 @@ public class TestDataUtil {
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         //knowledgeDetail.setDemandType(Long.valueOf(knowledgeType.getTypeId()));
         //knowledgeDetail.setContact("Jerry");
-        List<String> Ids = new ArrayList<String>(3);
-        Ids.add("122");
-        Ids.add("1223");
-        Ids.add("345");
+        List<Long> Ids = new ArrayList<Long>(3);
+        Ids.add(122L);
+        Ids.add(1223L);
+        Ids.add(345L);
         knowledgeDetail.setTags(Ids);
         knowledgeDetail.setCategoryIds(Ids);
         knowledgeDetail.setMultiUrls(getImgVideos());

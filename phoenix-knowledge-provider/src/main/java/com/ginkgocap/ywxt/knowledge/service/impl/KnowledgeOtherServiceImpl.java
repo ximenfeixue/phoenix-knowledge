@@ -12,10 +12,7 @@ import com.ginkgocap.parasol.tags.service.TagService;
 import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
@@ -147,38 +144,60 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public InterfaceResult createTag(long userId,short tagType,String tagName) throws Exception
+    public List<Long> createTag(long userId,short tagType,String tagName) throws Exception
     {
+        List<Long> tagIds = new ArrayList<Long>();
+        List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long)sourceType);
+        if (tagList != null && tagList.size() >= 5) {
+            for (Tag tag : tagList) {
+                tagIds.add(tag.getId());
+            }
+            return tagIds;
+        }
+
         Tag tag = new Tag();
         tag.setAppId(APPID);
         tag.setTagType(tagType);
         tag.setTagName(tagName);
         tag.setUserId(userId);
+
         Long tagId = this.tagService.createTag(userId, tag);
-        return InterfaceResult.getSuccessInterfaceResultInstance(tagId);
+        tagIds.add(tagId);
+        return tagIds;
     }
 
-    public InterfaceResult createDirectory(long userId,short type,String directoryName) throws Exception
+    public List<Long> createDirectory(long userId,short type,String directoryName) throws Exception
     {
+        List<Long> directoryIds = new ArrayList<Long>();
+        List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, 3933392601350164L);
+        if (directoryList != null && directoryList.size() >= 5) {
+            for (Directory directory : directoryList) {
+                directoryIds.add(directory.getId());
+            }
+            return directoryIds;
+        }
+
         Directory directory = new Directory();
         directory.setUserId(userId);
         directory.setAppId(APPID);
         directory.setName(directoryName);
         directory.setTypeId(3933392601350164L);//This get from DB
         Long directoryId =  directoryService.createDirectoryForRoot(userId, directory);
-
-        return InterfaceResult.getSuccessInterfaceResultInstance(directoryId);
+        directoryIds.add(directoryId);
+        return directoryIds;
     }
     //End
 
-    public InterfaceResult batchTags(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception {
+    public InterfaceResult batchTags(long userId, List<ResItem> tagItems) throws Exception {
+        if (tagItems == null || tagItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
         try {
-            for (int index = 0; index < tagItems.size(); index++) {
-                Map<String, Object> map = tagItems.get(index);
-                Set<String> set = map.keySet();
-                String title = map.get("title").toString();
-                long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<String> tagIds = (List<String>)map.get("tagIds");
+            for (ResItem tagItem : tagItems) {
+                String title = tagItem.getTitle();
+                long knowledgeId = tagItem.getId();
+                List<Long> tagIds = tagItem.getTagIds();
 
                 //Update knowledge Detail
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
@@ -197,7 +216,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 }
 
                 if (knowledgeDetail != null && knowledgeBase != null) {
-                    for (String tagId : tagIds) {
+                    for (Long tagId : tagIds) {
                         TagSource tagSource = new TagSource();
                         tagSource.setUserId(userId);
                         tagSource.setAppId(APPID);
@@ -205,7 +224,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                         tagSource.setSourceId(knowledgeId);
                         //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                         tagSource.setSourceType(sourceType);
-                        tagSource.setTagId(Long.parseLong(tagId));
+                        tagSource.setTagId(tagId);
                         tagSource.setCreateAt(new Date().getTime());
                         tagSourceService.createTagSource(tagSource);
                         logger.info("tagId:" + tagId);
@@ -222,29 +241,31 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult batchCatalogs(long userId,List<LinkedHashMap<String, Object>> tagItems) throws Exception {
+    public InterfaceResult batchCatalogs(long userId,List<ResItem> directoryItems) throws Exception {
+        if (directoryItems == null || directoryItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
         try {
-            for (int index = 0; index < tagItems.size(); index++) {
-                Map<String, Object> map = tagItems.get(index);
-                Set<String> set = map.keySet();
-                String title = map.get("title").toString();
-                long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<String> tagIds = (List<String>)map.get("tagIds");
+            for (ResItem directory : directoryItems) {
+                String title = directory.getTitle();
+                long knowledgeId = directory.getId();
+                List<Long> directoryIds = directory.getTagIds();
 
                 //Update knowledge Detail
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
                 if (knowledgeDetail != null) {
-                    knowledgeDetail.setCategoryIds(tagIds);
+                    knowledgeDetail.setCategoryIds(directoryIds);
                     knowledgeMongoDao.update(knowledgeDetail);
                 } else {
                     logger.error("can't find this knowledge by Id: {}", knowledgeId);
                 }
 
                 if (knowledgeDetail != null) {
-                    for (String directoryId : tagIds) {
+                    for (Long directoryId : directoryIds) {
                         DirectorySource directorySource = new DirectorySource();
                         directorySource.setUserId(userId);
-                        directorySource.setDirectoryId(Long.parseLong(directoryId));
+                        directorySource.setDirectoryId(directoryId);
                         directorySource.setAppId(APPID);
                         directorySource.setSourceId(knowledgeId);
                         directorySource.setSourceTitle(title);

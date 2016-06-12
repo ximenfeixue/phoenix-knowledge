@@ -40,10 +40,10 @@ public class KnowledgeDetail implements Serializable {
     /** 附件 */
     private List<String> attachmentUrls;
 
-    private List<String> tags;
+    private List<Long> tags;
 
     /** 存储目录 **/
-    private List<String> categoryIds;
+    private List<Long> categoryIds;
 
     public long getId() {
         return id;
@@ -133,19 +133,19 @@ public class KnowledgeDetail implements Serializable {
         this.attachmentUrls = attachmentUrls;
     }
 
-    public List<String> getTags() {
+    public List<Long> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Long> tags) {
         this.tags = tags;
     }
 
-    public List<String> getCategoryIds() {
+    public List<Long> getCategoryIds() {
         return categoryIds;
     }
 
-    public void setCategoryIds(List<String> categoryIds) {
+    public void setCategoryIds(List<Long> categoryIds) {
         this.categoryIds = categoryIds;
     }
 
