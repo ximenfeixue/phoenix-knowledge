@@ -101,7 +101,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         List<Long> categorysList = knowledgeDetail.getCategoryIds();
         if(categorysList != null && categorysList.size() > 0){
             try {
-                for (Long directoryId : categorysList) {
+                for (long directoryId : categorysList) {
                     if (directoryId > 0) {
                         DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                         directorySourceService.createDirectorySources(directorySource);

@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class DataCollection implements Serializable {
 
-    private Logger logger = LoggerFactory.getLogger(DataCollection.class);
-
 	private static final long serialVersionUID = -424912985959502809L;
 
 	/**知识简略信息*/
@@ -116,13 +114,13 @@ public class DataCollection implements Serializable {
             int maxLen = contentLen > 250 ? 250 : contentLen;
             this.knowledge.setContentDesc(this.knowledgeDetail.getContent().substring(0,maxLen));
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
-                logger.info("save picture {}", this.knowledgeDetail.getMultiUrls().get(0));
+                System.out.println("save picture: " + this.knowledgeDetail.getMultiUrls().get(0));
                 this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
             if (knowledgeDetail.getTags() != null && knowledgeDetail.getTags().size() > 0) {
                 String tags = knowledgeDetail.getTags().toString();
-                logger.info("create tags for base {}", tags);
+                System.out.println("create tags for base: " + tags);
                 knowledge.setTags(tags.substring(1, tags.length()-1));
             }
             this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());
