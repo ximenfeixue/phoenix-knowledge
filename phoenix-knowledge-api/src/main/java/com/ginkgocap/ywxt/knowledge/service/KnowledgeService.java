@@ -249,7 +249,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByDirectoryId(long directoryId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception;
     /**
      * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>

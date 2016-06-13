@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import org.slf4j.Logger;
@@ -110,9 +111,10 @@ public class DataCollection implements Serializable {
             this.knowledge = new KnowledgeBase();
             this.knowledge.setKnowledgeId(this.knowledgeDetail.getId());
             this.knowledge.setTitle(this.knowledgeDetail.getTitle());
-            int contentLen = this.knowledgeDetail.getContent().length();
+            String knowledgeContent = HtmlToText.htmlToText(this.knowledgeDetail.getContent());
+            int contentLen = knowledgeContent.length();
             int maxLen = contentLen > 250 ? 250 : contentLen;
-            this.knowledge.setContentDesc(this.knowledgeDetail.getContent().substring(0,maxLen));
+            this.knowledge.setContentDesc(knowledgeContent.substring(0,maxLen));
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
                 System.out.println("save picture: " + this.knowledgeDetail.getMultiUrls().get(0));
                 this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));

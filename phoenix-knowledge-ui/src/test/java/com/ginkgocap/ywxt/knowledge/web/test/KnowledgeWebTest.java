@@ -181,21 +181,6 @@ public class KnowledgeWebTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetAllByTagId()
-    {
-        LogMethod();
-        try {
-            long tagId = 3933811356467203L;
-            String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     public void testKnowledgeCollect()
     {
         LogMethod();
@@ -321,6 +306,36 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
+    }
+
+    @Test
+    public void testGetAllByTagId()
+    {
+        LogMethod();
+        try {
+            long tagId = 3985888128532496L;
+            String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testGetAllByDirectoryId()
+    {
+        LogMethod();
+        try {
+            long directoryId = 3969635594797376L;
+            String subUrl = "/directory/" + directoryId + "/1/10";  ///directory/{directoryId}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test

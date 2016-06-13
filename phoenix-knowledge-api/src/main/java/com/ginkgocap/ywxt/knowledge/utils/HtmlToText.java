@@ -3,6 +3,10 @@ package com.ginkgocap.ywxt.knowledge.utils;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+//import org.jsoup.Jsoup;
+//import org.jsoup.nodes.Document;
+//import org.jsoup.nodes.Element;
+//import org.jsoup.select.Elements;
 
 public class HtmlToText {
 	
@@ -82,11 +86,24 @@ public class HtmlToText {
 		return content;
 	}
 
+
+    public static String htmlToText(String htmlContent)
+    {
+        if (htmlContent.indexOf("<html>") >= 0 && htmlContent.indexOf("/html") > 0) {
+            //Document doc = Jsoup.parse(htmlContent);
+            //return doc.body().text();
+            return html2Text(htmlContent);
+        }
+        return htmlContent;
+    }
+
 	public static void main(String[] args) {
 		String str = "<html>"
 				+ "<head><meta http-equiv='content-type' content='text/html;charset=utf-8'></head> "
 				+ "<body> " + "<p>ddddddddd</p> " + "</body> " + "</html>";
-		System.out.println(htmlTotest(str));
+		System.out.println(htmlToText(str));
+
+        //System.out.println(HtmlToText(str));
 		// String strs[] = str.split(",");
 		// for (int i = 0; i < strs.length; i++) {
 		// String s = "'" + strs[i].trim() + "',";

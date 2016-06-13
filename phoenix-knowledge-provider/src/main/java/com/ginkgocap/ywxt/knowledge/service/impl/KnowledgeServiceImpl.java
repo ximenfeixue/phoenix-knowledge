@@ -400,8 +400,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception
     {
 		List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
-        if (knowledgeList == null || knowledgeList.size() > 0 ) {
-            return knowledgeList;
+        if (knowledgeList == null || knowledgeList.size() <= 0 ) {
+            logger.info("can't get any knowledge by Ids: "+knowledgeIds.toString());
         }
 
         return knowledgeList;
@@ -475,13 +475,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByDirectoryId(long directoryId,int start,int size) throws Exception
+    public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception
     {
-        List<TagSource> tagSources = null;//directorySourceService.getDirectorySourcesByDirectoryId(APPID, directoryId, (long)sourceType, start, size );
-        List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
-        if (tagSources != null && tagSources.size() > 0) {
-            for (TagSource tag : tagSources) {
-                knowledgeIds.add(tag.getSourceId());
+        List<DirectorySource> directorySources = directorySourceService.getSourcesByDirectoryIdAndSourceType(userId, APPID, sourceType, directoryId);
+        List<Long> knowledgeIds = new ArrayList<Long>(directorySources.size());
+        if (directorySources != null && directorySources.size() > 0) {
+            for (DirectorySource source : directorySources) {
+                knowledgeIds.add(source.getSourceId());
+                logger.info("add knowledge source: "+source.getSourceId());
             }
         }
 

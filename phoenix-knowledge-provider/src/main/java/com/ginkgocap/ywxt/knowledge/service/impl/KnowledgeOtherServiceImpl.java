@@ -202,15 +202,30 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 //Update knowledge Detail
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
                 if (knowledgeDetail != null) {
-                    knowledgeDetail.setTags(tagIds);
+                    if (knowledgeDetail.getTags() == null) {
+                        knowledgeDetail.setTags(tagIds);
+                    } else {
+                        List<Long> oldTags = knowledgeDetail.getTags();
+                        oldTags.addAll(tagIds);
+                    }
                     knowledgeMongoDao.update(knowledgeDetail);
+                    logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
                 } else {
                     logger.error("can't find this knowledge by Id: {}", knowledgeId);
                 }
                 //Update knowledge base
                 KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
                 if (knowledgeBase != null) {
-                    knowledgeBase.setTags(tagIds.toString());
+                    String tagStr = tagIds.toString();
+                    tagStr = tagStr.substring(1, tagStr.length()-1);
+                    if (knowledgeBase.getTags() == null) {
+                        knowledgeBase.setTags(tagStr);
+                    }else {
+                        String oldTags = knowledgeBase.getTags();
+                        knowledgeBase.setTags(oldTags + "," + tagStr);
+                    }
+                    knowledgeMysqlDao.update(knowledgeBase);
+                    logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
                 } else {
                     logger.error("can't find this knowledge base info by Id: {}", knowledgeId);
                 }
@@ -227,7 +242,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                         tagSource.setTagId(tagId);
                         tagSource.setCreateAt(new Date().getTime());
                         tagSourceService.createTagSource(tagSource);
-                        logger.info("tagId:" + tagId);
+                        logger.info("create tag source tagId:" + tagId + " knowledgeId: " + knowledgeId);
                     }
                 }
                 else {
@@ -257,6 +272,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 if (knowledgeDetail != null) {
                     knowledgeDetail.setCategoryIds(directoryIds);
                     knowledgeMongoDao.update(knowledgeDetail);
+                    logger.info("add knowledge directory to Mongo knowledgeId: {}", knowledgeId);
                 } else {
                     logger.error("can't find this knowledge by Id: {}", knowledgeId);
                 }
@@ -273,7 +289,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                         directorySource.setSourceType((int) sourceType);
                         directorySource.setCreateAt(new Date().getTime());
                         directorySourceService.createDirectorySources(directorySource);
-                        logger.info("directoryId:" + directoryId);
+                        logger.info("create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                     }
                 }
                 else {
@@ -289,6 +305,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
 
     public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception
     {
+        logger.error("tag list is: " + tagIds.toString());
         List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
             return InterfaceResult.getSuccessInterfaceResultInstance(tags);

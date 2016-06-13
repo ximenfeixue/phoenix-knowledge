@@ -560,7 +560,7 @@ public class KnowledgeController extends BaseController {
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getBaseByTagId(directoryId, start, size);
+            knowledgeBaseList = this.knowledgeService.getBaseByDirectoryId(user.getId(), directoryId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -857,6 +857,7 @@ public class KnowledgeController extends BaseController {
         List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
+            logger.error("tag list is null...");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
