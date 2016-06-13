@@ -10,6 +10,7 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class KnowledgeServiceTest extends TestBase {
 
-	@Resource
+    @Autowired
 	private KnowledgeService knowledgeService;
 
     private static long knowledgeIdDelete = 0L;
@@ -130,7 +131,7 @@ public class KnowledgeServiceTest extends TestBase {
         try {
             knowledgeIds.add(data.getKnowledgeDetail().getId());
             System.out.println("----knowledgeIds :"+knowledgeIds.toString());
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByIds(knowledgeIds);
+            List<KnowledgeBase> result = knowledgeService.getBaseByIds(knowledgeIds);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,7 +171,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByCreateUserIdAndColumnId===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByCreateUserIdAndColumnId(userId, columnId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserIdAndColumnId(userId, columnId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,7 +184,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByCreateUserIdAndType===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByCreateUserIdAndColumnIdAndType(userId, columnId, type, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserIdAndColumnIdAndType(userId, columnId, type, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,7 +197,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByCreateUserIdAndColumnIdAndType===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByCreateUserIdAndColumnIdAndType(userId, columnId, type, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserIdAndColumnIdAndType(userId, columnId, type, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,7 +210,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByType===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByType(type, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByType(type, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -222,7 +223,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByColumnId===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByColumnId(columnId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByColumnId(columnId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +236,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByColumnIdAndKeyWord===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByColumnIdAndKeyWord("test", columnId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getBaseByColumnIdAndKeyWord("test", columnId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,6 +250,20 @@ public class KnowledgeServiceTest extends TestBase {
         System.out.println("===testGetBaseByColumnIdAndType===");
         try {
             InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByColumnIdAndType(columnId, type, start, size);
+            //checkListResult(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testGetAllByTagId()
+    {
+        System.out.println("===testGetBaseByColumnIdAndType===");
+        try {
+            long tagId = 3985603448537134L;
+            List<KnowledgeBase> result = knowledgeService.getBaseByTagId(tagId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();

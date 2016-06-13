@@ -185,7 +185,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            long tagId = 12344L;
+            long tagId = 3933811356467203L;
             String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
@@ -248,11 +248,20 @@ public class KnowledgeWebTest extends BaseTestCase {
             resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
 
-            //ObjectMapper mapper = new ObjectMapper();
-            //JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, ResItem.class);
+            ObjectMapper mapper = new ObjectMapper();
+            TypeReference javaType = new TypeReference<List<ResItem>>() {};
 
-            //List<ResItem> beanList =  (List<ResItem>)mapper.readValue(requestJson, javaType);
+            List<ResItem> tagItems =  KnowledgeUtil.readValue(javaType, requestJson);
             //List<ResItem> beanList = mapper.readValue(requestJson, new TypeReference<List<ResItem>>() {});
+
+            for (ResItem tagItem : tagItems) {
+                String title = tagItem.getTitle();
+                long knowledgeId = tagItem.getId();
+                List<Long> tagIds = tagItem.getTagIds();
+                for (Long tagId : tagIds) {
+                    System.out.print(tagId);
+                }
+            }
             //System.out.print(beanList);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
             Util.checkRequestResultSuccess(result);

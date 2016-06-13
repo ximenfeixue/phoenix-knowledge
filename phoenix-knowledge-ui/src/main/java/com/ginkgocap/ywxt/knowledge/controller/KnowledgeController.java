@@ -533,13 +533,34 @@ public class KnowledgeController extends BaseController {
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || tagId <= 0 || start <= 0 || size <= 0 || start >= size) {
+        if(user == null || tagId <= 0 || start <= 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
             knowledgeBaseList = this.knowledgeService.getBaseByTagId(tagId, start, size);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}", e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
+    }
+
+    @RequestMapping(value = "/directory/{directoryId}/{start}/{size}", method = RequestMethod.GET)
+    @ResponseBody
+    public InterfaceResult<List<KnowledgeBase>> getAllByDirectoryId(HttpServletRequest request, HttpServletResponse response,
+                                                              @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null || directoryId <= 0 || start <= 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        List<KnowledgeBase> knowledgeBaseList = null;
+        try {
+            knowledgeBaseList = this.knowledgeService.getBaseByTagId(directoryId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);

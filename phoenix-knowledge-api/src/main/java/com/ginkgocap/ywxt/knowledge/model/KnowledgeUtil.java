@@ -123,7 +123,9 @@ public final class KnowledgeUtil {
             throw new IllegalArgumentException("Content is null");
         }
         try {
-            return objectMapper.readValue(content, valueType);
+            synchronized (objectMapper) {
+                return objectMapper.readValue(content, valueType);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,7 +138,9 @@ public final class KnowledgeUtil {
             throw new IllegalArgumentException("Content is null");
         }
         try {
-            return objectMapper.readValue(content, javaType);
+            synchronized (objectMapper) {
+                return objectMapper.readValue(content, javaType);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,7 +152,9 @@ public final class KnowledgeUtil {
         if (StringUtils.isBlank(content)) {
             throw new IllegalArgumentException("Content is null");
         }
-        return objectMapper.readTree(content);
+        synchronized (objectMapper) {
+            return objectMapper.readTree(content);
+        }
     }
 
     public static String writeObjectToJson(Object content) {
@@ -157,7 +163,9 @@ public final class KnowledgeUtil {
         }
 
         try {
-            return objectMapper.writeValueAsString(content);
+            synchronized (objectMapper) {
+                return objectMapper.writeValueAsString(content);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -174,7 +182,9 @@ public final class KnowledgeUtil {
 
         JsonNode node = null;
         try {
-            node = objectMapper.readTree(jsonStr);
+            synchronized (objectMapper) {
+                node = objectMapper.readTree(jsonStr);
+            }
             if (values != null && values.length > 0) {
                 for (String v : values) {
                     node = node.path(v);
@@ -193,8 +203,10 @@ public final class KnowledgeUtil {
         }
         DataCollection dataCollection = null;
         try {
-            JsonNode node = objectMapper.readTree(jsonObject);
-            dataCollection = objectMapper.readValue(jsonObject, DataCollection.class);
+            synchronized (objectMapper) {
+                JsonNode node = objectMapper.readTree(jsonObject);
+                dataCollection = objectMapper.readValue(jsonObject, DataCollection.class);
+            }
         } catch (Exception e) {
             //logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
             System.out.println(e);

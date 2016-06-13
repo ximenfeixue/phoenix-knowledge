@@ -43,7 +43,7 @@ public class TestBase {
 	public void test(){
 	}
 
-    protected void checkListResult(InterfaceResult<List<DataCollection>> result)
+    protected void checkListResult(InterfaceResult<List<KnowledgeBase>> result)
     {
         TestCase.assertNotNull(result);
         TestCase.assertNotNull(result.getResponseData());

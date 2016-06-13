@@ -101,7 +101,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         List<Long> categorysList = knowledgeDetail.getCategoryIds();
         if(categorysList != null && categorysList.size() > 0){
             try {
-                for (long directoryId : categorysList) {
+                for (int index = 0; index < categorysList.size(); index++ ) {
+                    long directoryId = categorysList.get(index);
                     if (directoryId > 0) {
                         DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                         directorySourceService.createDirectorySources(directorySource);
@@ -464,7 +465,21 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagIdAndType(APPID, tagId, (long)sourceType, start, size );
         List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
-        if (tagSources == null || tagSources.size() <= 0) {
+        if (tagSources != null && tagSources.size() > 0) {
+            for (TagSource tag : tagSources) {
+                knowledgeIds.add(tag.getSourceId());
+            }
+        }
+
+        return getBaseByIds(knowledgeIds);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByDirectoryId(long directoryId,int start,int size) throws Exception
+    {
+        List<TagSource> tagSources = null;//directorySourceService.getDirectorySourcesByDirectoryId(APPID, directoryId, (long)sourceType, start, size );
+        List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
+        if (tagSources != null && tagSources.size() > 0) {
             for (TagSource tag : tagSources) {
                 knowledgeIds.add(tag.getSourceId());
             }
