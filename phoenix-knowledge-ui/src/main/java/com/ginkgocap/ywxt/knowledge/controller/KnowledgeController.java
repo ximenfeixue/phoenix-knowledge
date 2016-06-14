@@ -805,6 +805,7 @@ public class KnowledgeController extends BaseController {
             this.knowledgeOtherService.batchTags(user.getId(),requestJson);
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
+            e.printStackTrace();
         }
         logger.info(".......batch tags success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -835,9 +836,10 @@ public class KnowledgeController extends BaseController {
         try {
             this.knowledgeOtherService.batchCatalogs(user.getId(), requestJson);
         } catch (Exception e) {
-            logger.error("Delete catalogs failed！reason："+e.getMessage());
+            logger.error("Batch catalogs failed！reason："+e.getMessage());
+            e.printStackTrace();
         }
-        logger.info(".......Delete catalogs success......");
+        logger.info(".......Batch catalogs success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 

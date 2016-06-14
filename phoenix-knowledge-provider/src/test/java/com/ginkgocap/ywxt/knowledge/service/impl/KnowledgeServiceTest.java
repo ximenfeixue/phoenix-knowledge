@@ -290,7 +290,7 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
-    @Test
+    @org.junit.Test
     public void testBatchTags()
     {
         System.out.println("===testGetAllByDirectoryId===");

@@ -306,7 +306,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            long tagId = 3985888128532496L;
+            long tagId = 3985615481995309L;
             String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
