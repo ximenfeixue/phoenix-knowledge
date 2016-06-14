@@ -235,9 +235,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
                 if (knowledgeBase != null) {
                     String oldTags = knowledgeBase.getTags();
-                    if (StringUtils.isEmpty(oldTags)) {
-                        oldTags = "";
-                    }
+                    oldTags = StringUtils.isEmpty(oldTags) ? "" : oldTags + ",";
                     StringBuffer newTagIdList = new StringBuffer();
                     newTagIdList.append(oldTags);
                     for (long tagId : newTagIds) {
