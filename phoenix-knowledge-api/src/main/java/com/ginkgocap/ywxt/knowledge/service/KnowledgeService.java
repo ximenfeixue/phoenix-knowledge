@@ -45,7 +45,17 @@ public interface KnowledgeService {
 	 * @throws Exception
 	 */
 	public InterfaceResult update(DataCollection dataCollection) throws Exception;
-	
+
+    /**
+     * 更新，承担以下任务：
+     * <p>1、知识详细表更新</P>
+     * <p>2、知识基础表更新</P>
+     * @date 2016年1月15日 上午9:41:16
+     * @param dataCollection
+     * @return
+     * @throws Exception
+     */
+    public InterfaceResult updateKnowledge(DataCollection dataCollection) throws Exception;
 	/**
 	 * 删除，承担以下任务：
 	 * <p>1、知识详细表删除</P>

@@ -208,33 +208,50 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 //Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Long> tagIds = (List<Long>)map.get("tagIds");
-
-                //Update knowledge Detail
+                List<String> tagIds = (List<String>)map.get("tagIds");
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
-                if (knowledgeDetail != null) {
-                    if (knowledgeDetail.getTags() == null) {
-                        knowledgeDetail.setTags(tagIds);
-                    } else {
-                        List<Long> oldTags = knowledgeDetail.getTags();
-                        oldTags.addAll(tagIds);
-                    }
-                    knowledgeMongoDao.update(knowledgeDetail);
-                    logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
-                } else {
+                if (knowledgeDetail == null) {
                     logger.error("can't find this knowledge by Id: {}", knowledgeId);
                 }
+                List<Long> oldTagIds = knowledgeDetail.getTags();
+                logger.info("old tag List: {}, new Tag list: {}", oldTagIds, tagIds);
+                List<Long> newTagIds = convertStToLong(tagIds, oldTagIds);
+                if (newTagIds == null || newTagIds.size() <=0 ) {
+                    logger.error("tag Id is null or have contain these tags: {}", knowledgeId);
+                    continue;
+                }
+
+                //Update knowledge Detail
+                if (knowledgeDetail.getTags() == null) {
+                    knowledgeDetail.setTags(newTagIds);
+                } else {
+                    List<Long> oldTags = knowledgeDetail.getTags();
+                    oldTags.addAll(newTagIds);
+                }
+                knowledgeMongoDao.update(knowledgeDetail);
+                logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
+
                 //Update knowledge base
                 KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
                 if (knowledgeBase != null) {
-                    String tagStr = tagIds.toString();
-                    tagStr = tagStr.substring(1, tagStr.length()-1);
-                    if (knowledgeBase.getTags() == null) {
-                        knowledgeBase.setTags(tagStr);
-                    }else {
-                        String oldTags = knowledgeBase.getTags();
-                        knowledgeBase.setTags(oldTags + "," + tagStr);
+                    String oldTags = knowledgeBase.getTags();
+                    if (StringUtils.isEmpty(oldTags)) {
+                        oldTags = "";
                     }
+                    StringBuffer newTagIdList = new StringBuffer();
+                    newTagIdList.append(oldTags);
+                    for (long tagId : newTagIds) {
+                        if ((newTagIdList.toString() + tagId).length() < 255)
+                        {
+                            newTagIdList.append(tagId+",");
+                        }
+                        else  {
+                            logger.error("too long tagId list, skip to save tagId: {}, knowledgeId: {}", tagId, knowledgeId);
+                            break;
+                        }
+                    }
+                    newTagIdList.deleteCharAt(newTagIdList.length()-1);
+                    knowledgeBase.setTags(newTagIdList.toString());
                     knowledgeMysqlDao.update(knowledgeBase);
                     logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
                 } else {
@@ -242,7 +259,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 }
 
                 if (knowledgeDetail != null && knowledgeBase != null) {
-                    for (Long tagId : tagIds) {
+                    for (Long tagId : newTagIds) {
                         TagSource tagSource = new TagSource();
                         tagSource.setUserId(userId);
                         tagSource.setAppId(APPID);
@@ -379,5 +396,27 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
         query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         return query;
+    }
+
+    private List<Long> convertStToLong(List<String> idList, List<Long> existIdList)
+    {
+        if (idList == null || idList.size() <= 0) {
+            return null;
+        }
+        List<Long> newIdList =  new ArrayList<Long>(idList.size());
+        for (String id : idList) {
+            try {
+                long newId = Long.parseLong(id);
+                if ((existIdList == null || existIdList.size() <= 0) || (existIdList != null && !existIdList.contains(newId))) {
+                    newIdList.add(newId);
+                }
+                else {
+                    logger.info("This knowledge have add tag {}", newId);
+                }
+            } catch(NumberFormatException ex) {
+                logger.error("Convert String to number failed: {}", id);
+            }
+        }
+        return newIdList;
     }
 }

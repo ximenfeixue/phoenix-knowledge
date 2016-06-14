@@ -256,6 +256,30 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 	}
 
+    @Override
+    public InterfaceResult updateKnowledge(DataCollection dataCollection) throws Exception {
+
+        KnowledgeBase knowledge = dataCollection.getKnowledge();
+        KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
+
+        try {
+            //知识详细表更新
+            if (knowledgeDetail != null) {
+                this.knowledgeMongoDao.update(knowledgeDetail);
+            }
+
+            //知识简表更新
+            if (knowledge != null) {
+                this.knowledgeMysqlDao.update(knowledge);
+            }
+        } catch (Exception e) {
+            logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+        }
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
 	@Override
 	public InterfaceResult deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception {
 		
@@ -477,7 +501,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception
     {
-        List<DirectorySource> directorySources = directorySourceService.getSourcesByDirectoryIdAndSourceType(userId, APPID, sourceType, directoryId);
+        Object[] parameter = new Object[]{userId, APPID, sourceType, directoryId};
+        List<DirectorySource> directorySources = directorySourceService.getSourcesByDirectoryIdAndSourceType(start, size, parameter);
         List<Long> knowledgeIds = new ArrayList<Long>(directorySources.size());
         if (directorySources != null && directorySources.size() > 0) {
             for (DirectorySource source : directorySources) {
