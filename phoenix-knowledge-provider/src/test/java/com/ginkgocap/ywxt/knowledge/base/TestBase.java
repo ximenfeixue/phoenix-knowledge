@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
-@Transactional
+@ContextConfiguration(locations = { "/applicationContext.xml" })
 public class TestBase {
 
     private boolean printResult = true;

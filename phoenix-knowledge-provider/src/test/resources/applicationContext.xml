@@ -20,7 +20,7 @@
 	http://www.springframework.org/schema/data/jpa
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
 
-    <import resource="classpath:knowledge-dubbo-provider.xml" />
+    <import resource="classpath:knowledge-dubbo-consumer.xml" />
     <import resource="classpath:knowledge-mongo-config.xml" />
     <import resource="classpath:applicationContext_log.xml"/>
 

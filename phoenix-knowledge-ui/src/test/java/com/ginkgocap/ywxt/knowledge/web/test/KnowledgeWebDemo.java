@@ -8,7 +8,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
-import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -238,7 +237,6 @@ public class KnowledgeWebDemo {
 
     }
 
-    @Test
     public void testGetTagsByIds()
     {
         LogMethod("批量获取标签", 2);
@@ -252,7 +250,6 @@ public class KnowledgeWebDemo {
         }
     }
 
-    @Test
     public void testGetDirectoryListByIds()
     {
         LogMethod("批量获取目录", 2);

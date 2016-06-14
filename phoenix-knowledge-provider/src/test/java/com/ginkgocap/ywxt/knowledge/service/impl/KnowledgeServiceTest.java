@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -21,6 +22,9 @@ public class KnowledgeServiceTest extends TestBase {
 
     @Autowired
 	private KnowledgeService knowledgeService;
+
+    @Autowired
+    KnowledgeOtherService knowledgeOtherService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
@@ -257,6 +261,7 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
+
     @Test
     public void testGetAllByTagId()
     {
@@ -268,6 +273,32 @@ public class KnowledgeServiceTest extends TestBase {
         } catch (Exception e) {
             e.printStackTrace();
             TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testGetAllByDirectoryId()
+    {
+        System.out.println("===testGetAllByDirectoryId===");
+        try {
+            long tagId = 3985603448537134L;
+            List<KnowledgeBase> result = knowledgeService.getBaseByDirectoryId(1L, tagId, start, size);
+            checkListResult(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testBatchTags()
+    {
+        System.out.println("===testGetAllByDirectoryId===");
+        String jsonStr = "[{\"id\":1112323,\"title\":\"testBatchTags\",\"tagIds\":[3933811561988102,3933811356467203]},{\"id\":1112345,\"title\":\"testBatchTags\",\"tagIds\":[3933811561988102,3933811356467203]}]";
+        try {
+            knowledgeOtherService.batchTags(7L, jsonStr);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

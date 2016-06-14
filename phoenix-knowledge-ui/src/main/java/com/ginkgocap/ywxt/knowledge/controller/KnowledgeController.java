@@ -794,15 +794,15 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-
-        TypeReference javaType = new TypeReference<List<ResItem>>(){};
-        List<ResItem> tagItems = KnowledgeUtil.readValue(javaType, requestJson);
-        if (tagItems == null || tagItems.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-        }
+        //logger.info("batchTags: {}", requestJson );
+        //TypeReference javaType = new TypeReference<List<ResItem>>(){};
+        //List<ResItem> tagItems = KnowledgeUtil.readListValue(ResItem.class, requestJson);
+        //if (tagItems == null || tagItems.size() <= 0) {
+         //   return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+       // }
 
         try {
-            this.knowledgeOtherService.batchTags(user.getId(),tagItems);
+            this.knowledgeOtherService.batchTags(user.getId(),requestJson);
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
         }
@@ -825,14 +825,15 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        TypeReference javaType = new TypeReference<List<ResItem>>(){};
-        List<ResItem> directoryItems = KnowledgeUtil.readValue(javaType, requestJson);
-        if (directoryItems == null || directoryItems.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-        }
+//        logger.info("batchCatalogs: "+requestJson);
+//        TypeReference javaType = new TypeReference<List<ResItem>>(){};
+//        List<ResItem> directoryItems = KnowledgeUtil.readValue(javaType, requestJson);
+//        if (directoryItems == null || directoryItems.size() <= 0) {
+//            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+//        }
 
         try {
-            this.knowledgeOtherService.batchCatalogs(user.getId(), directoryItems);
+            this.knowledgeOtherService.batchCatalogs(user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("Delete catalogs failed！reason："+e.getMessage());
         }

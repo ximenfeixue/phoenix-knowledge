@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
-import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 
 import java.net.URLEncoder;
@@ -21,14 +20,12 @@ public class KnowledgeWebTest extends BaseTestCase {
 
     public final String baseUrl =  hostUrl + "/knowledge";
 
-    @Test
     public void testCreateKnowledge()
     {
         LogMethod();
         createKnowledge("KnowledgeWebTest_testCreateKnowledge");
     }
 
-    @Test
     public void testUpdateKnowledge()
     {
         LogMethod();
@@ -44,7 +41,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+    
     public void testDeleteKnowledge()
     {
         LogMethod();
@@ -59,7 +56,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testBatchDeleteKnowledge()
     {
         LogMethod();
@@ -76,7 +72,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testKnowledgeDetail()
     {
         LogMethod();
@@ -93,7 +89,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testAllKnowledge()
     {
         LogMethod();
@@ -110,7 +105,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testAllByColumnId()
     {
         LogMethod();
@@ -124,7 +118,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testAllByKeyWord()
     {
         LogMethod();
@@ -138,7 +132,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testAllByColumnIdAndKeyWord()
     {
         LogMethod();
@@ -152,7 +145,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testKnowledgeListByColumnIdByUserId()
     {
         LogMethod();
@@ -166,7 +159,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testKnowledgeListByUserIdAndColumnId()
     {
         LogMethod();
@@ -180,14 +173,13 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testKnowledgeCollect()
     {
         LogMethod();
         collectKnowledge("KnowledgeWebTest_testKnowledgeCollect");
     }
 
-    @Test
+
     public void testCancelCollectedKnowledge()
     {
         LogMethod();
@@ -201,7 +193,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testReportKnowledge()
     {
         LogMethod();
@@ -221,7 +213,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testBatchTags()
     {
         LogMethod();
@@ -233,6 +225,7 @@ public class KnowledgeWebTest extends BaseTestCase {
             resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
 
+            /*
             ObjectMapper mapper = new ObjectMapper();
             TypeReference javaType = new TypeReference<List<ResItem>>() {};
 
@@ -246,7 +239,7 @@ public class KnowledgeWebTest extends BaseTestCase {
                 for (Long tagId : tagIds) {
                     System.out.print(tagId);
                 }
-            }
+            }*/
             //System.out.print(beanList);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
             Util.checkRequestResultSuccess(result);
@@ -257,7 +250,7 @@ public class KnowledgeWebTest extends BaseTestCase {
 
     }
 
-    @Test
+
     public void testBatchCatalogs()
     {
         LogMethod();
@@ -276,7 +269,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
+
     public void testGetTagsByIds()
     {
         LogMethod();
@@ -292,7 +285,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
-    @Test
+
     public void testGetTagSourceCountByIds()
     {
         LogMethod();
@@ -308,7 +301,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
-    @Test
+
     public void testGetAllByTagId()
     {
         LogMethod();
@@ -323,7 +316,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testGetAllByDirectoryId()
     {
         LogMethod();
@@ -338,7 +330,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    @Test
     public void testGetDirectoryListByIds()
     {
         LogMethod();
@@ -354,7 +345,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
-    @Test
+
     public void testGetDirectoryCountByIds()
     {
         LogMethod();
@@ -370,7 +361,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
-    @Test
     public void testGetKnowledgeRelatedResources()
     {
         LogMethod();

@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.Test;
 
 /**
  * Created by Chen Peifeng on 2016/5/24.
@@ -10,7 +9,7 @@ public class KnowledgeCountWebTest extends BaseTestCase
 {
     private static String baseUrl = hostUrl + "/knowledgeCount/";
     private long knowledgeId = 12345678L;
-    @Test
+
     public void testUpdateClickCount()
     {
         LogMethod();
@@ -23,7 +22,7 @@ public class KnowledgeCountWebTest extends BaseTestCase
         }
     }
 
-    @Test
+
     public void testUpdateShareCount()
     {
         LogMethod();
@@ -36,7 +35,6 @@ public class KnowledgeCountWebTest extends BaseTestCase
         }
     }
 
-    @Test
     public void testCollectClickCount()
     {
         LogMethod();
@@ -49,7 +47,7 @@ public class KnowledgeCountWebTest extends BaseTestCase
         }
     }
 
-    @Test
+
     public void testCommentClickCount()
     {
         LogMethod();
@@ -62,7 +60,6 @@ public class KnowledgeCountWebTest extends BaseTestCase
         }
     }
 
-    @Test
     public void testGetHotKnowledge()
     {
         LogMethod();

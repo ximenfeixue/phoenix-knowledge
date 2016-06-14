@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
@@ -19,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,16 +191,24 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
     //End
 
-    public InterfaceResult batchTags(long userId, List<ResItem> tagItems) throws Exception {
+    public InterfaceResult batchTags(long userId, String requestJson) throws Exception {
+        logger.info("batchTags: {}", requestJson );
+        if(StringUtils.isEmpty(requestJson)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        List<LinkedHashMap<String, Object>> tagItems =  KnowledgeUtil.readValue(List.class, requestJson);
         if (tagItems == null || tagItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         try {
-            for (ResItem tagItem : tagItems) {
-                String title = tagItem.getTitle();
-                long knowledgeId = tagItem.getId();
-                List<Long> tagIds = tagItem.getTagIds();
+            for (int index = 0; index < tagItems.size(); index++) {
+                Map<String, Object> map = tagItems.get(index);
+                //Set<String> set = map.keySet();
+                String title = map.get("title").toString();
+                long knowledgeId = Long.parseLong(map.get("id").toString());
+                List<Long> tagIds = (List<Long>)map.get("tagIds");
 
                 //Update knowledge Detail
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
@@ -256,16 +267,24 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public InterfaceResult batchCatalogs(long userId,List<ResItem> directoryItems) throws Exception {
+    public InterfaceResult batchCatalogs(long userId,String requestJson) throws Exception {
+        logger.info("batchTags: {}", requestJson );
+        if(StringUtils.isEmpty(requestJson)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        List<LinkedHashMap<String, Object>> directoryItems =  KnowledgeUtil.readValue(List.class, requestJson);
         if (directoryItems == null || directoryItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         try {
-            for (ResItem directory : directoryItems) {
-                String title = directory.getTitle();
-                long knowledgeId = directory.getId();
-                List<Long> directoryIds = directory.getTagIds();
+            for (int index = 0; index < directoryItems.size(); index++) {
+                Map<String, Object> map = directoryItems.get(index);
+                //Set<String> set = map.keySet();
+                String title = map.get("title").toString();
+                long knowledgeId = Long.parseLong(map.get("id").toString());
+                List<Long> directoryIds = (List<Long>)map.get("tagIds");
 
                 //Update knowledge Detail
                 KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);

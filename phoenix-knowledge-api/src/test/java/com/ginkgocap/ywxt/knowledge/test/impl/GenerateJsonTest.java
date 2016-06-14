@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,19 +49,17 @@ public class GenerateJsonTest extends BaseTestCase {
         serviceCreateJsonCheck(TestData.dataCollection() );
     }
 
-    @Test
+
     public void testKnowledgeCommentCreateJson() throws Exception
     {
         serviceCreateJsonCheck( TestData.knowledgeComment(userId, knowledgeId(), columnId) );
     }
 
-    @Test
     public void testKnowledgeReportCreateJson() throws Exception
     {
         serviceCreateJsonCheck( TestData.knowledgeReport(userId, knowledgeId(), columnId) );
     }
 
-    @Test
     public void testBatchTags()
     {
         List<ResItem> resItems = new ArrayList<ResItem>(2);

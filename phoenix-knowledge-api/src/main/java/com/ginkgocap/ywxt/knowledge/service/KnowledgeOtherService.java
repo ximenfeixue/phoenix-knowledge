@@ -28,9 +28,9 @@ public interface KnowledgeOtherService
     //End
 
     //Common component will remove from knowledge
-    public InterfaceResult batchTags(long userId,List<ResItem> tagItems) throws Exception;
+    public InterfaceResult batchTags(long userId,String requestJson) throws Exception;
 
-    public InterfaceResult batchCatalogs(long userId,List<ResItem> directoryItems) throws Exception;
+    public InterfaceResult batchCatalogs(long userId,String requestJson) throws Exception;
 
     public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception;
 

@@ -148,6 +148,22 @@ public final class KnowledgeUtil {
         return null;
     }
 
+    public static <T> List<T> readListValue(Class<T> valueType, final String content) {
+        if (StringUtils.isBlank(content)) {
+            throw new IllegalArgumentException("Content is null");
+        }
+        try {
+            TypeReference javaType = new TypeReference<List<T>>(){};
+            synchronized (objectMapper) {
+                return objectMapper.readValue(content, javaType);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static JsonNode readTree(final String content) throws IOException {
         if (StringUtils.isBlank(content)) {
             throw new IllegalArgumentException("Content is null");
