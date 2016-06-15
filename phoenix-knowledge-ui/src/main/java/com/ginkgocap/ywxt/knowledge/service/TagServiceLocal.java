@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -144,7 +146,10 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         logger.error("tag list is: " + tagIds.toString());
         List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
-            return InterfaceResult.getSuccessInterfaceResultInstance(tags);
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(tags);
+            SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider();
+            mappingJacksonValue.setFilters(filterProvider);
+            return InterfaceResult.getSuccessInterfaceResultInstance(mappingJacksonValue);
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");

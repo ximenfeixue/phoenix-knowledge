@@ -13,6 +13,6 @@ public class MyObjectMapper extends ObjectMapper {
     private static final long serialVersionUID = 1L;
 
     public MyObjectMapper() {
-        setFilters(KnowledgeUtil.assoSimpleFilterProvider());
+        setFilters(KnowledgeUtil.assoFilterProvider());
     }
 }

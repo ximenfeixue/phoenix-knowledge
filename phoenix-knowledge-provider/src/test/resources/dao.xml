@@ -189,7 +189,7 @@
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_knowledge_count_order_desc"
-                  sqlitem="select id from tb_knowledge_count order by hotNum desc limit ?"
+                  sqlitem="select id from tb_knowledge_count order by hotNum desc limit 0, ?"
                   sqlType="hsql" valueProperty="id" keyProperty="num" update="true" />
         </object>
 

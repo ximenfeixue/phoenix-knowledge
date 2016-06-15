@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.directory.exception.DirectoryServiceException;
 import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
 import com.ginkgocap.parasol.directory.model.Directory;
@@ -17,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -151,7 +153,10 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             e.printStackTrace();
         }
         if (directoryList != null && directoryList.size() > 0) {
-            return InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(directoryList);
+            SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider();
+            mappingJacksonValue.setFilters(filterProvider);
+            return InterfaceResult.getSuccessInterfaceResultInstance(mappingJacksonValue);
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");

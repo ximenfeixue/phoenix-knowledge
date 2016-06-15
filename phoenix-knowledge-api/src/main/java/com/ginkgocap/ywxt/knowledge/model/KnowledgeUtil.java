@@ -31,7 +31,7 @@ public final class KnowledgeUtil {
     static {
         objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.setFilters(assoSimpleFilterProvider());
+        objectMapper.setFilters(assoFilterProvider());
         //objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
     }
 
@@ -230,7 +230,7 @@ public final class KnowledgeUtil {
         return dataCollection;
     }
 
-    public static SimpleFilterProvider assoSimpleFilterProvider() {
+    public static SimpleFilterProvider assoFilterProvider() {
         Set<String> filter = new HashSet<String>(8); //this number must be increased by fields
         filter.add("id"); // id',
         filter.add("appId");
@@ -240,6 +240,30 @@ public final class KnowledgeUtil {
         filter.add("assocId"); // '被关联数据ID',
         filter.add("assocTitle"); // '被关联数据标题',
         filter.add("assocMetadata"); // '被关联数据的的摘要用Json存放，如图片，连接URL定义等',
+
+        return simpleFilterProvider(Associate.class.getName(), filter);
+    }
+
+    public static SimpleFilterProvider tagFilterProvider() {
+        Set<String> filter = new HashSet<String>(6); //this number must be increased by fields
+        filter.add("id"); // id',
+        filter.add("sourceId"); // 资源ID
+        filter.add("sourceType"); // 资源类型
+        filter.add("sourceTitle"); // 资源标题
+        filter.add("createAt"); // 创建时间
+        filter.add("tagName"); // 标签名称
+
+        return simpleFilterProvider(Associate.class.getName(), filter);
+    }
+
+    public static SimpleFilterProvider directoryFilterProvider() {
+        Set<String> filter = new HashSet<String>(6); //this number must be increased by fields
+        filter.add("id"); // id',
+        filter.add("sourceId"); // 资源ID
+        filter.add("sourceType"); // 资源类型
+        filter.add("sourceUrl"); // 资源URL
+        filter.add("sourceTitle"); // 资源的title
+        filter.add("sourceData"); // 资源的Data
 
         return simpleFilterProvider(Associate.class.getName(), filter);
     }

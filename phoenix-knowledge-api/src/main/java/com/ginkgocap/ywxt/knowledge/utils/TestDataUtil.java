@@ -38,7 +38,7 @@ public class TestDataUtil {
 
         try {
         	String jsonFile = getJsonFile(jsonObject.getClass().getSimpleName());
-            objectMapper.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
+            objectMapper.setFilters(KnowledgeUtil.assoFilterProvider());
             jsonContent = objectMapper.writeValueAsString(jsonObject);
             System.out.print(jsonContent);
             //objectMapper.writeValue(new File(jsonFile), jsonContent);

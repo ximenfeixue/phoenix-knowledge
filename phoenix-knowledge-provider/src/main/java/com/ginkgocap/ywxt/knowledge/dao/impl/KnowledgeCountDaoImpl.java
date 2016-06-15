@@ -68,7 +68,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     public List<KnowledgeCount> getHotKnowledge(int limit) {
         List<KnowledgeCount> knowledgeCounts = null;
         try {
-            knowledgeCounts = this.getEntitys("get_knowledge_count_order_desc", new Object[]{limit});
+            knowledgeCounts = this.getEntitys("get_knowledge_count_order_desc", limit);
         } catch (BaseServiceException e) {
             e.printStackTrace();
         }

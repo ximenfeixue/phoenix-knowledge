@@ -386,7 +386,7 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get knowledge detail success......");
         result.setResponseData(data);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
+        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider());
 
         //Click count
         knowledgeCountService.updateClickCount(knowledgeId);
@@ -887,13 +887,12 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/tagList", method = RequestMethod.POST)
-    public MappingJacksonValue getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception
+    public InterfaceResult getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         MappingJacksonValue jacksonValue = new MappingJacksonValue(null);
         User user = this.getUser(request);
         if (user == null) {
-            jacksonValue.setValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
-            return jacksonValue;
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         String requestJson = this.getBodyParam(request);
@@ -901,21 +900,16 @@ public class KnowledgeController extends BaseController {
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
-            jacksonValue.setValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION));
-            return jacksonValue;
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
-            InterfaceResult result = this.tagServiceLocal.getTagListByIds(user.getId(),tagIds);
-            jacksonValue.setValue(result);
-            jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
-            return jacksonValue;
+            return this.tagServiceLocal.getTagListByIds(user.getId(),tagIds);
         } catch (Exception e) {
             logger.error("Get Tag list failed！reason："+e.getMessage());
         }
         logger.info(".......Get Tag list success......");
-        jacksonValue.setValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get"));
-        return jacksonValue;
+        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
     }
 
     /**
