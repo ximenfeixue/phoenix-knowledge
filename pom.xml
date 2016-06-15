@@ -467,8 +467,9 @@
                 <!-- mongo地址 -->
                 <mongodb.address>192.168.101.131:27017</mongodb.address>
                 <!-- mongo中数据库 -->
-                <mongodb.database>knowledge-test</mongodb.database>
+                <mongodb.database>knowledge-new</mongodb.database>
                 <!-- 数据库访问帐号 -->
+                <jdbc.url>jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true</jdbc.url>
                 <jdbc.username>zhangwei</jdbc.username>
                 <!-- 数据库访问密码 -->
                 <jdbc.password>zhangwei</jdbc.password>
@@ -479,8 +480,6 @@
                 <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
                 <log4j.path>./logs</log4j.path>
-                <!-- 日志级别，由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-                <log4j.level>debug</log4j.level>
 
                 <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
                 <dubbo.protocol.name>dubbo</dubbo.protocol.name>
