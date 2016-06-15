@@ -1,12 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.alibaba.dubbo.rpc.cluster.Directory;
-import com.ginkgocap.parasol.directory.model.DirectorySource;
 import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.parasol.tags.service.TagService;
 import com.ginkgocap.parasol.tags.service.TagSourceService;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
@@ -18,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -25,21 +25,20 @@ import java.util.*;
 /**
  * Created by gintong on 2016/6/14.
  */
-public class TagLocalService implements KnowledgeBaseService
+@Service("tagServiceLocal")
+public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
-    private Logger logger = LoggerFactory.getLogger(TagLocalService.class);
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private TagSourceService tagSourceService;
-
-    @Autowired
-    //private KnowledgeMysqlDao knowledgeMysqlDao;
+    private Logger logger = LoggerFactory.getLogger(TagServiceLocal.class);
 
     @Resource
-    private MongoTemplate mongoTemplate;
+    private TagService tagService;
+
+    @Resource
+    private TagSourceService tagSourceService;
+
+    //@Resource
+    //private KnowledgeService knowledgeService;
+
 
     //TODO: this just test interface, need to delete before deploy to online system
     public List<Long> createTag(long userId,short tagType,String tagName) throws Exception
@@ -66,8 +65,8 @@ public class TagLocalService implements KnowledgeBaseService
 
 
     //End
-    /*
-    public InterfaceResult batchTags(long userId, String requestJson) throws Exception {
+
+    public InterfaceResult batchTags(KnowledgeService knowledgeService,long userId, String requestJson) throws Exception {
         logger.info("batchTags: {}", requestJson );
         if(StringUtils.isEmpty(requestJson)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
@@ -84,41 +83,36 @@ public class TagLocalService implements KnowledgeBaseService
                 //Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Long> tagIds = (List<Long>)map.get("tagIds");
+                List<String> tagIds = (List<String>)map.get("tagIds");
 
                 //Update knowledge Detail
-                KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
-                if (knowledgeDetail != null) {
-                    if (knowledgeDetail.getTags() == null) {
-                        knowledgeDetail.setTags(tagIds);
-                    } else {
-                        List<Long> oldTags = knowledgeDetail.getTags();
-                        oldTags.addAll(tagIds);
-                    }
-                    //knowledgeMongoDao.update(knowledgeDetail);
-                    logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
-                } else {
-                    logger.error("can't find this knowledge by Id: {}", knowledgeId);
-                }
-                //Update knowledge base
-                KnowledgeBase knowledgeBase = null; //knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
-                if (knowledgeBase != null) {
-                    String tagStr = tagIds.toString();
-                    tagStr = tagStr.substring(1, tagStr.length()-1);
-                    if (knowledgeBase.getTags() == null) {
-                        knowledgeBase.setTags(tagStr);
-                    }else {
-                        String oldTags = knowledgeBase.getTags();
-                        knowledgeBase.setTags(oldTags + "," + tagStr);
-                    }
-                    //knowledgeMysqlDao.update(knowledgeBase);
-                    logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
-                } else {
-                    logger.error("can't find this knowledge base info by Id: {}", knowledgeId);
+                DataCollection data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
+                if (data == null) {
+                    logger.error("can't find this knowledge by Id: {}, skip to add tag", knowledgeId);
+                    continue;
                 }
 
+                List<Long> newTagIds = convertStToLong(tagIds);
+                KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
+                knowledgeDetail.setTags(newTagIds);
+
+                //Update knowledge base
+                KnowledgeBase knowledgeBase = data.getKnowledge();
+
+                String tagStr = tagIds.toString();
+                tagStr = tagStr.substring(1, tagStr.length()-1);
+                if (tagStr.length() > 255) {
+                    int lastIndex = tagStr.lastIndexOf(",");
+                    tagStr = tagStr.substring(0, lastIndex-1);
+                }
+                knowledgeBase.setTags(tagStr);
+                //knowledgeMysqlDao.update(knowledgeBase);
+
+                knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
+                logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+
                 if (knowledgeDetail != null && knowledgeBase != null) {
-                    for (Long tagId : tagIds) {
+                    for (Long tagId : newTagIds) {
                         TagSource tagSource = new TagSource();
                         tagSource.setUserId(userId);
                         tagSource.setAppId(APPID);
@@ -171,27 +165,88 @@ public class TagLocalService implements KnowledgeBaseService
 
     }
 
-    public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds) throws Exception
+    public boolean saveTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        List<Directory> directoryList = directoryService.getDirectoryList(APPID, -1L, directoryIds);
-        if (directoryList != null && directoryList.size() > 0) {
-            return InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
+        List<Long> tagsList = knowledgeDetail.getTags();
+        if (tagsList == null || tagsList.size() <= 0) {
+            logger.error("directory List is empty, so skip to save..");
+            return false;
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
+        try {
+            for (int index = 0; index < tagsList.size(); index++) {
+                logger.info("directoryId: {}", tagsList.get(index));
+                Long tagId = Long.valueOf(tagsList.get(index));
+                if (tagId > 0) {
+                    TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
+                    tagSourceService.createTagSource(tagSource);
+                }
+                logger.info("tagId:" + tagId);
+            }
+        } catch (TagSourceServiceException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
     }
 
-    public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception
+    public boolean updateTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        if (directoryIds == null || directoryIds.size() <= 0) {
-            return InterfaceResult.getSuccessInterfaceResultInstance("directory List is null or size is 0!");
-        }
-        Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(directoryIds.size());
-        for (long directoryId : directoryIds) {
-            int count = directorySourceService.countDirectorySourcesByDirectoryId(APPID, userId, directoryId);
-            sourceMap.put(directoryId, count);
+        long knowledgeId = knowledgeDetail.getId();
+        try{
+            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
+            if(removeTagsFlag){
+                List<Long> tagsList = knowledgeDetail.getTags();
+                if(tagsList != null){
+                    for(Long tagId : tagsList){
+                        if(tagId > 0){
+                            TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
+                            tagSourceService.createTagSource(tagSource);
+                            logger.info("tagId:"+tagId);
+                        }
+                    }
+                }
+            }
+            else{
+                logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+                return false;
+            }
+        }catch(TagSourceServiceException ex){
+            logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+            return false;
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
-    }*/
+        return true;
+    }
+
+    public boolean deleteTags(long userId, long knowledgeId)
+    {
+        try{
+            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
+            if(!removeTagsFlag){
+                logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
+                return false;
+            }
+        }catch(TagSourceServiceException ex){
+            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private TagSource createTagSource(long userId, Long tagId,KnowledgeDetail knowledge)
+    {
+        TagSource tagSource = new TagSource();
+        tagSource.setUserId(userId);
+        tagSource.setAppId(APPID);
+        tagSource.setSourceId(knowledge.getId());
+        tagSource.setSourceTitle(knowledge.getTitle());
+        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+        tagSource.setSourceType(sourceType);
+        tagSource.setTagId(tagId);
+        tagSource.setCreateAt(new Date().getTime());
+
+        return tagSource;
+    }
 }

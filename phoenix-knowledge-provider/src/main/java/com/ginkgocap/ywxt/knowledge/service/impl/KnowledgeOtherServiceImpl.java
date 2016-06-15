@@ -209,70 +209,25 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
                 List<String> tagIds = (List<String>)map.get("tagIds");
-                KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
-                if (knowledgeDetail == null) {
-                    logger.error("can't find this knowledge by Id: {}", knowledgeId);
-                }
-                List<Long> oldTagIds = knowledgeDetail.getTags();
-                logger.info("old tag List: {}, new Tag list: {}", oldTagIds, tagIds);
-                List<Long> newTagIds = convertStToLong(tagIds, oldTagIds);
-                if (newTagIds == null || newTagIds.size() <=0 ) {
-                    logger.error("tag Id is null or have contain these tags: {}", knowledgeId);
+                List<Long> newTagIds = convertStToLong(tagIds);
+
+                //Update knowledge Detail
+                if (!updateTag(knowledgeId, newTagIds)) {
                     continue;
                 }
 
-                //Update knowledge Detail
-                if (knowledgeDetail.getTags() == null) {
-                    knowledgeDetail.setTags(newTagIds);
-                } else {
-                    List<Long> oldTags = knowledgeDetail.getTags();
-                    oldTags.addAll(newTagIds);
-                }
-                knowledgeMongoDao.update(knowledgeDetail);
-                logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
-
-                //Update knowledge base
-                KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
-                if (knowledgeBase != null) {
-                    String oldTags = knowledgeBase.getTags();
-                    oldTags = StringUtils.isEmpty(oldTags) ? "" : oldTags + ",";
-                    StringBuffer newTagIdList = new StringBuffer();
-                    newTagIdList.append(oldTags);
-                    for (long tagId : newTagIds) {
-                        if ((newTagIdList.toString() + tagId).length() < 255)
-                        {
-                            newTagIdList.append(tagId+",");
-                        }
-                        else  {
-                            logger.error("too long tagId list, skip to save tagId: {}, knowledgeId: {}", tagId, knowledgeId);
-                            break;
-                        }
-                    }
-                    newTagIdList.deleteCharAt(newTagIdList.length()-1);
-                    knowledgeBase.setTags(newTagIdList.toString());
-                    knowledgeMysqlDao.update(knowledgeBase);
-                    logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
-                } else {
-                    logger.error("can't find this knowledge base info by Id: {}", knowledgeId);
-                }
-
-                if (knowledgeDetail != null && knowledgeBase != null) {
-                    for (Long tagId : newTagIds) {
-                        TagSource tagSource = new TagSource();
-                        tagSource.setUserId(userId);
-                        tagSource.setAppId(APPID);
-                        tagSource.setSourceTitle(title);
-                        tagSource.setSourceId(knowledgeId);
-                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                        tagSource.setSourceType(sourceType);
-                        tagSource.setTagId(tagId);
-                        tagSource.setCreateAt(new Date().getTime());
-                        tagSourceService.createTagSource(tagSource);
-                        logger.info("create tag source tagId:" + tagId + " knowledgeId: " + knowledgeId);
-                    }
-                }
-                else {
-                    logger.error("can't find this knowledge base or detail info, so skip add tag to this knowledge, knowledgeId: {}", knowledgeId);
+                for (Long tagId : newTagIds) {
+                    TagSource tagSource = new TagSource();
+                    tagSource.setUserId(userId);
+                    tagSource.setAppId(APPID);
+                    tagSource.setSourceTitle(title);
+                    tagSource.setSourceId(knowledgeId);
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    tagSource.setSourceType(sourceType);
+                    tagSource.setTagId(tagId);
+                    tagSource.setCreateAt(new Date().getTime());
+                    tagSourceService.createTagSource(tagSource);
+                    logger.info("create tag source tagId:" + tagId + " knowledgeId: " + knowledgeId);
                 }
             }
         } catch (TagSourceServiceException ex) {
@@ -299,35 +254,26 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                 //Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Long> directoryIds = (List<Long>)map.get("tagIds");
+                List<String> directoryIds = (List<String>)map.get("tagIds");
+                List<Long> newDirectoryIds = convertStToLong(directoryIds);
 
                 //Update knowledge Detail
-                KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
-                if (knowledgeDetail != null) {
-                    knowledgeDetail.setCategoryIds(directoryIds);
-                    knowledgeMongoDao.update(knowledgeDetail);
-                    logger.info("add knowledge directory to Mongo knowledgeId: {}", knowledgeId);
-                } else {
-                    logger.error("can't find this knowledge by Id: {}", knowledgeId);
+                if (!updateTag(knowledgeId, newDirectoryIds)) {
+                    continue;
                 }
 
-                if (knowledgeDetail != null) {
-                    for (Long directoryId : directoryIds) {
-                        DirectorySource directorySource = new DirectorySource();
-                        directorySource.setUserId(userId);
-                        directorySource.setDirectoryId(directoryId);
-                        directorySource.setAppId(APPID);
-                        directorySource.setSourceId(knowledgeId);
-                        directorySource.setSourceTitle(title);
-                        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                        directorySource.setSourceType((int) sourceType);
-                        directorySource.setCreateAt(new Date().getTime());
-                        directorySourceService.createDirectorySources(directorySource);
-                        logger.info("create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
-                    }
-                }
-                else {
-                    logger.error("can't find this knowledge detail info, so skip add directory to this knowledge, knowledgeId: {}", knowledgeId);
+                for (Long directoryId : newDirectoryIds) {
+                    DirectorySource directorySource = new DirectorySource();
+                    directorySource.setUserId(userId);
+                    directorySource.setDirectoryId(directoryId);
+                    directorySource.setAppId(APPID);
+                    directorySource.setSourceId(knowledgeId);
+                    directorySource.setSourceTitle(title);
+                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
+                    directorySource.setSourceType((int) sourceType);
+                    directorySource.setCreateAt(new Date().getTime());
+                    directorySourceService.createDirectorySources(directorySource);
+                    logger.info("create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                 }
             }
         } catch (DirectorySourceServiceException ex) {
@@ -396,7 +342,24 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return query;
     }
 
-    private List<Long> convertStToLong(List<String> idList, List<Long> existIdList)
+    private List<Long> convertStToLong(List<String> idList)
+    {
+        if (idList == null || idList.size() <= 0) {
+            return null;
+        }
+        List<Long> newIdList =  new ArrayList<Long>(idList.size());
+        for (String id : idList) {
+            try {
+                long newId = Long.parseLong(id);
+                newIdList.add(newId);
+            } catch(NumberFormatException ex) {
+                logger.error("Convert String to number failed: {}", id);
+            }
+        }
+        return newIdList;
+    }
+
+    private List<Long> convertStToLong2(List<String> idList, List<Long> existIdList)
     {
         if (idList == null || idList.size() <= 0) {
             return null;
@@ -416,5 +379,44 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             }
         }
         return newIdList;
+    }
+
+    private boolean updateTag(long knowledgeId, List<Long> newTagIds) throws Exception {
+
+        logger.info("new Tag list: {}", newTagIds);
+        if (newTagIds == null || newTagIds.size() <=0 ) {
+            logger.error("tag Id is null or have contain these tags: {}", knowledgeId);
+            return false;
+        }
+
+        KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, (short)-1);
+        if (knowledgeDetail == null) {
+            logger.error("can't find this knowledge by Id: {}", knowledgeId);
+            return false;
+        }
+
+        //Update knowledge Detail
+        knowledgeDetail.setTags(newTagIds);
+        logger.info("add knowledge tag to Mongo knowledgeId: {}", knowledgeId);
+
+        //Update knowledge base
+        KnowledgeBase knowledgeBase = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+        if (knowledgeBase == null) {
+            logger.error("can't find this knowledge base info by Id: {}", knowledgeId);
+        }
+
+        String newTagStr = newTagIds.toString();
+        newTagStr = newTagStr.substring(1,newTagStr.length()-1);
+        if (newTagStr.length() > 255) {
+            int lastIndex = newTagStr.lastIndexOf(",");
+            newTagStr = newTagStr.substring(0, lastIndex);
+        }
+        knowledgeBase.setTags(newTagStr);
+
+        knowledgeMongoDao.update(knowledgeDetail);
+        knowledgeMysqlDao.update(knowledgeBase);
+        logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
+
+        return true;
     }
 }

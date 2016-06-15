@@ -9,8 +9,11 @@
     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd" default-autowire="byName">
 
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+    <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
+    <context:component-scan base-package="com.ginkgocap.ywxt.knowledge"/>
+
     <context:annotation-config/>
-    <context:component-scan base-package="com.ginkgocap.ywxt.knowledge.controller"/>
     <mvc:annotation-driven/>
 
     <mvc:interceptors>

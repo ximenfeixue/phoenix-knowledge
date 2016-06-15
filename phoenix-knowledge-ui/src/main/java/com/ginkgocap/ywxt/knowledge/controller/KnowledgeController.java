@@ -10,9 +10,7 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -67,6 +65,12 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private PermissionRepositoryService permissionRepositoryService;
 
+    @Autowired
+    private TagServiceLocal tagServiceLocal;
+
+    @Autowired
+    private DirectoryServiceLocal directoryServiceLocal;
+
     private static final long APPID = 1L;
 	
 	/**
@@ -100,6 +104,13 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
+
+        KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
+        knowledgeDetail.setId(knowledgeId);
+
+        tagServiceLocal.saveTagSource(userId, knowledgeDetail);
+
+        directoryServiceLocal.saveDirectorySource(userId, knowledgeDetail);
         //save asso information
 
         //TODO: If this step failed, how to do ?
@@ -152,8 +163,17 @@ public class KnowledgeController extends BaseController {
 
 		String requestJson = this.getBodyParam(request);
 		DataCollection data = KnowledgeUtil.getDataCollection(requestJson);
-		InterfaceResult result = null;
+        if (data == null) {
+            logger.error("request data is null or incorrect");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+        KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
+        if (knowledgeDetail == null) {
+            logger.error("request knowledgeDetail is null or incorrect");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
 
+		InterfaceResult result = null;
 		try {
             data.serUserInfo(user);
             result = this.knowledgeService.update(data);
@@ -161,6 +181,12 @@ public class KnowledgeController extends BaseController {
 			logger.error("知识更新失败！失败原因："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
+
+        //Update tag info
+        tagServiceLocal.updateTagSource(userId, knowledgeDetail);
+
+        //Update Directory info
+        directoryServiceLocal.updateDirectorySource(userId, knowledgeDetail);
 
         long knowledgeId = data.getKnowledgeDetail().getId();
         //Update Assso info
@@ -191,26 +217,26 @@ public class KnowledgeController extends BaseController {
 	
 	/**
 	 * 删除数据
-	 * @param id 知识主键
+	 * @param knowledgeId 知识主键
 	 * @param columnId 栏目主键
 	 * @throws IOException
 	 */
     @ResponseBody
-	@RequestMapping(value="/{id}/{columnId}", method = RequestMethod.DELETE)
+	@RequestMapping(value="/{knowledgeId}/{columnId}", method = RequestMethod.DELETE)
 	public InterfaceResult delete(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable long id,@PathVariable short columnId) throws Exception {
+			@PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
 		User user = this.getUser(request);
 		if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-		if(id <= 0 || columnId <= 0){
+		if(knowledgeId <= 0 || columnId <= 0){
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
 
         Permission per=new Permission();
         per.setResType(ResourceType.KNOW.getVal());
-        per.setResId(id);
+        per.setResId(knowledgeId);
         InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
         if (result == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
@@ -218,15 +244,21 @@ public class KnowledgeController extends BaseController {
         }
 
 		try {
-            result = this.knowledgeService.deleteByKnowledgeId(id, columnId);
+            result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
 		} catch (Exception e) {
 			logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
 
+        long userId = user.getId();
+        //delete tags
+        tagServiceLocal.deleteTags(userId, knowledgeId);
+
+        //delete directory
+        directoryServiceLocal.deleteDirectory(userId, knowledgeId);
         //delete Assso info
         AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), id);
+        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
         if (assomap == null) {
             logger.error("asso id is null or converted failed...");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
@@ -236,7 +268,7 @@ public class KnowledgeController extends BaseController {
             for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
                 List<Associate> associateList = (List) i.next();
                 for (int j = 0; j < associateList.size(); j++) {
-                    associateService.removeAssociate(APPID, user.getId(), associateList.get(j).getId());
+                    associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
                 }
             }
         } catch (AssociateServiceException ex) {
@@ -327,14 +359,14 @@ public class KnowledgeController extends BaseController {
 		}
 
         DataCollection data = new DataCollection();
-		InterfaceResult<KnowledgeDetail> knowledgeDetail = null; //DummyData.knowledgeDetailObject();
+		KnowledgeDetail knowledgeDetail = null; //DummyData.knowledgeDetailObject();
 		try {
             knowledgeDetail = this.knowledgeService.getDetailById(knowledgeId, columnId);
 		} catch (Exception e) {
-			logger.error("Query knowledge failed！reason：" + knowledgeDetail.getNotification().getNotifInfo());
+			logger.error("Query knowledge failed！reason：" + e.getMessage());
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
-        data.setKnowledgeDetail(knowledgeDetail.getResponseData());
+        data.setKnowledgeDetail(knowledgeDetail);
 
 		//数据为空则直接返回异常给前端
 		if(knowledgeDetail == null) {
@@ -472,13 +504,13 @@ public class KnowledgeController extends BaseController {
 		return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
 	}
 
-    @RequestMapping(value = "/allByKeyword/{keyWord}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/allByKeyword/{keyWord}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult getAllByKeyWord(HttpServletRequest request, HttpServletResponse response,
                            @PathVariable String keyWord,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || start <= 0 || size <= 0 || start >= size) {
+        if(user == null || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -501,14 +533,14 @@ public class KnowledgeController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
                                                                             @PathVariable String keyWord,@PathVariable short columnId,
                                                                             @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || columnId <= 0 || start <= 0 || size <= 0 || start >= size) {
+        if(user == null || columnId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -527,13 +559,13 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
     }
 
-    @RequestMapping(value = "/tag/{tagId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/tag/{tagId}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getAllByTagId(HttpServletRequest request, HttpServletResponse response,
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || tagId <= 0 || start <= 0 || size <= 0) {
+        if(user == null || tagId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
@@ -548,19 +580,25 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
     }
 
-    @RequestMapping(value = "/directory/{directoryId}/{start}/{size}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/directory/{directoryId}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getAllByDirectoryId(HttpServletRequest request, HttpServletResponse response,
                                                               @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || directoryId <= 0 || start <= 0 || size <= 0) {
+        if(user == null || directoryId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getBaseByDirectoryId(user.getId(), directoryId, start, size);
+            List<Long> knowledgeIds = directoryServiceLocal.getKowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
+            if (knowledgeIds == null || knowledgeIds.size() <= 0) {
+                logger.error("get knowledge list is null by directoryId: " + directoryId);
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            }
+
+            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -581,7 +619,7 @@ public class KnowledgeController extends BaseController {
 			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		if(user == null || start <= 0 || size <= 0 || start >= size) {
+		if(user == null || start < 0 || size <= 0 ) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 		
@@ -616,7 +654,7 @@ public class KnowledgeController extends BaseController {
             return checkColumn(columnId);
         }
 
-        if (start <= 0 || size <= 0 ) {
+        if (start < 0 || size <= 0 ) {
             return checkStartAndSize(start, size);
         }
 
@@ -802,7 +840,7 @@ public class KnowledgeController extends BaseController {
        // }
 
         try {
-            this.knowledgeOtherService.batchTags(user.getId(),requestJson);
+            this.tagServiceLocal.batchTags(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
             e.printStackTrace();
@@ -834,7 +872,7 @@ public class KnowledgeController extends BaseController {
 //        }
 
         try {
-            this.knowledgeOtherService.batchCatalogs(user.getId(), requestJson);
+            this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("Batch catalogs failed！reason："+e.getMessage());
             e.printStackTrace();
@@ -849,11 +887,13 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/tagList", method = RequestMethod.POST)
-    public InterfaceResult getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+    public MappingJacksonValue getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(null);
         User user = this.getUser(request);
         if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            jacksonValue.setValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
+            return jacksonValue;
         }
 
         String requestJson = this.getBodyParam(request);
@@ -861,16 +901,21 @@ public class KnowledgeController extends BaseController {
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            jacksonValue.setValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION));
+            return jacksonValue;
         }
 
         try {
-            return this.knowledgeOtherService.getTagListByIds(user.getId(),tagIds);
+            InterfaceResult result = this.tagServiceLocal.getTagListByIds(user.getId(),tagIds);
+            jacksonValue.setValue(result);
+            jacksonValue.setFilters(KnowledgeUtil.assoSimpleFilterProvider());
+            return jacksonValue;
         } catch (Exception e) {
             logger.error("Get Tag list failed！reason："+e.getMessage());
         }
         logger.info(".......Get Tag list success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
+        jacksonValue.setValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get"));
+        return jacksonValue;
     }
 
     /**
@@ -894,7 +939,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.getTagSourceCountByIds(user.getId(),tagIds);
+            return this.tagServiceLocal.getTagSourceCountByIds(user.getId(),tagIds);
         } catch (Exception e) {
             logger.error("Get TagCount failed！reason："+e.getMessage());
         }
@@ -921,13 +966,15 @@ public class KnowledgeController extends BaseController {
         if (directoryIds == null || directoryIds.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
-
         try {
-            return this.knowledgeOtherService.getDirectoryListByIds(user.getId(), directoryIds);
-        } catch (Exception e) {
-            logger.error("Get directory list failed！reason："+e.getMessage());
+            return this.directoryServiceLocal.getDirectoryListByIds(user.getId(), directoryIds);
         }
-        logger.info(".......Get directory list success......");
+        catch (Exception ex) {
+            logger.error("Get directory list failed！reason："+ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        logger.info(".......Get directory list failed......");
         return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
     }
 
@@ -952,7 +999,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            return this.knowledgeOtherService.getDirectorySourceCountByIds(user.getId(), directoryIds);
+            return this.directoryServiceLocal.getDirectorySourceCountByIds(user.getId(), directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
@@ -970,7 +1017,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> tagIds = this.knowledgeOtherService.createTag(user.getId(), tagType, tagName);
+            List<Long> tagIds = this.tagServiceLocal.createTag(user.getId(), tagType, tagName);
             return InterfaceResult.getSuccessInterfaceResultInstance(tagIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
@@ -989,7 +1036,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> directoryIds = this.knowledgeOtherService.createDirectory(user.getId(), type, name);
+            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), type, name);
             return InterfaceResult.getSuccessInterfaceResultInstance(directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());

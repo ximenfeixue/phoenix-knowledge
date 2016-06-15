@@ -44,98 +44,98 @@
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? and title like ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
-            <list name="get_by_start_size"
-                  sqlitem="select id from tb_knowledge_base order by create_date limit ?,?"
+            <list name="get_all_start_size"
+                  sqlitem="select id from tb_knowledge_base order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />
 
             <list name="get_by_createUserId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
 
             <list name="get_by_createUserId_columnId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
 
             <list name="get_by_createUserId_type"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
 
             <list name="get_by_columnId"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where column_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId" update="true" />
 
             <list name="get_by_type_columnId"
-                  sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="type,columnId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />
 
             <list name="get_by_columnId_keyWord"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and title like ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,title,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and title like ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,title" update="true" />
 
             <list name="get_by_createUserId_keyWord"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and title like ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,title,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and title like ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,title" update="true" />
 
             <list name="get_by_type"
-                  sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="type,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
             <list name="get_by_createUserId_type_columnId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId" update="true" />
 
             <!-- "<"使用"&lt;"替换，">"使用"&gt;"替代，"&"使用"&amp;"替代 -->
             <list name="get_by_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_date &gt; ? and create_date &lt; ? limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="beginDate,endDate,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_date &gt; ? and create_date &lt; ?"
+                  sqlType="hsql" valueProperty="id" keyProperty="beginDate,endDate" update="true" />
 
             <list name="get_by_type_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where type = ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="type,beginDate,endDate,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where type = ? and create_date &gt; ? and create_date &lt; ?"
+                  sqlType="hsql" valueProperty="id" keyProperty="type,beginDate,endDate" update="true" />
 
             <list name="get_by_createUserId_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,beginDate,endDate,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and create_date &gt; ? and create_date &lt; ?"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,beginDate,endDate" update="true" />
 
             <list name="get_by_createUserId_columnId_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and column_id = ? and create_date &gt; ? and create_date &lt; ? limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and column_id = ? and create_date &gt; ? and create_date &lt; ?"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate" update="true" />
 
             <list name="get_by_status"
-                  sqlitem="select id from tb_knowledge_base where status = ? order by create_date limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="status,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where status = ? order by create_date"
+                  sqlType="hsql" valueProperty="id" keyProperty="status" update="true" />
 
             <list name="get_by_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where audit_status = ? order by create_date limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="auditStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where audit_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="auditStatus" update="true" />
 
             <list name="get_by_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where report_status = ? order by create_date limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="reportStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where report_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="reportStatus" update="true" />
 
             <list name="get_by_createUserId_status"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,status,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,status" update="true" />
 
             <list name="get_by_createUserId_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus" update="true" />
 
             <list name="get_by_createUserId_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus" update="true" />
 
             <list name="get_by_columnId_status"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,status,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,status" update="true" />
 
             <list name="get_by_columnId_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and audit_status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and audit_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus" update="true" />
 
             <list name="get_by_columnId_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc limit ?,?"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus,start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus" update="true" />
 
         </object>
 

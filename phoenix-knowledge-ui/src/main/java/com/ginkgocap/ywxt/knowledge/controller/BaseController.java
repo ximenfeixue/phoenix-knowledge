@@ -30,12 +30,18 @@ public abstract class BaseController {
      * @return
      * @throws Exception
      */
-    protected String getBodyParam(HttpServletRequest request) throws Exception {
-        BufferedReader reader = request.getReader();
-        String line = null;
+    protected String getBodyParam(HttpServletRequest request) {
+        BufferedReader reader = null;
         StringBuffer jsonIn = new StringBuffer();
-        while ((line = reader.readLine()) != null) {
-            jsonIn.append(line);
+        try {
+            reader = request.getReader();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                jsonIn.append(line);
+            }
+        } catch (IOException e) {
+            logger.error("read request body failed : "+e.getMessage());
+            e.printStackTrace();
         }
         return jsonIn.toString();
     }

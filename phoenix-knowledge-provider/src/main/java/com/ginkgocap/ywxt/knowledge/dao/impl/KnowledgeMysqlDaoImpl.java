@@ -94,7 +94,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception
     {
-        List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id", new Object[]{knowledgeId});
+        List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id", knowledgeId);
         return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
 	}
 
@@ -103,7 +103,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
     {
         List<KnowledgeBase> knowledgeBaseList = new ArrayList<KnowledgeBase>(knowledgeIds.size());
         for (Long knowledgeId : knowledgeIds) {
-            List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id_keyword", new Object[]{knowledgeId,"%"+keyword+"%"});
+            List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id_keyword", knowledgeId, "%"+keyword+"%");
             KnowledgeBase base = (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
             if (base != null) {
                 knowledgeBaseList.add(base);
@@ -142,87 +142,87 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	public List<KnowledgeBase> getAll(int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_start_size", new Object[]{start,size});
+		return this.getSubEntitys("get_all_start_size", start, size);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_createUserId",  new Object[]{userId,start,size});
+		return this.getSubEntitys("get_by_createUserId", start, size, userId);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndType(long userId,
 			short type,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_type", new Object[]{userId,type,start,size});
+		return this.getSubEntitys("get_by_createUserId_type", start, size, userId, type);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long userId,
 			short columnId,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_columnId", new Object[]{userId,columnId,start,size});
+		return this.getSubEntitys("get_by_createUserId_columnId", start, size, userId, columnId);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnId(short columnId,int start,int size) throws Exception {
 
-		return this.getEntitys("get_by_columnId", new Object[]{columnId,start,size});
+		return this.getSubEntitys("get_by_columnId", start, size, columnId);
 	}
 
 
     @Override
     public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception {
-        return this.getEntitys("get_by_createUserId_keyWord", new Object[]{userId, "%"+keyWord+"%",start,size});
+        return this.getSubEntitys("get_by_createUserId_keyWord", start, size, userId, "%"+keyWord+"%");
     }
 
     @Override
     public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
-        return this.getEntitys("get_by_columnId_keyWord", new Object[]{columnId,"%"+keyWord+"%",start,size});
+        return this.getSubEntitys("get_by_columnId_keyWord", start, size, columnId, "%"+keyWord+"%");
     }
 
     @Override
 	public List<KnowledgeBase> getByTypeAndColumnId(short type, short columnId,int start,int size)
 			throws Exception {
 
-		return this.getEntitys("get_by_type_columnId", new Object[]{type,columnId,start,size});
+		return this.getSubEntitys("get_by_type_columnId", start, size, type, columnId);
 	}
 	
 	@Override
 	public List<KnowledgeBase> getByType(short type,int start,int size)
 			throws Exception {
 
-		return this.getEntitys("get_by_type", new Object[]{type,start,size});
+		return this.getSubEntitys("get_by_type", start, size, type);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(
 			long createUserId, short type, short columnId,int start,int size) throws Exception {
 
-		return this.getEntitys("get_by_createUserId_type_columnId", new Object[]{createUserId,type,columnId,start,size});
+		return this.getSubEntitys("get_by_createUserId_type_columnId", start, size, createUserId, type, columnId);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,
 			Date endDate,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_beginDate_endDate", new Object[]{getDate(beginDate,true),getDate(endDate,false),start,size});
+		return this.getSubEntitys("get_by_beginDate_endDate", start, size, new Object[]{getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,
 			Date beginDate, Date endDate,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_type_beginDate_endDate", new Object[]{type,getDate(beginDate,true),getDate(endDate,false),start,size});
+		return this.getSubEntitys("get_by_type_beginDate_endDate", start, size, new Object[]{type,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(
 			long createUserId, Date beginDate, Date endDate,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_beginDate_endDate", new Object[]{createUserId,getDate(beginDate,true),getDate(endDate,false),start,size});
+		return this.getSubEntitys("get_by_createUserId_beginDate_endDate", start, size, new Object[]{createUserId,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
@@ -230,69 +230,69 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 			long createUserId, short columnId, Date beginDate, Date endDate,int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_columnId_beginDate_endDate", new Object[]{createUserId,columnId,getDate(beginDate,true),getDate(endDate,false),start,size});
+		return this.getSubEntitys("get_by_createUserId_columnId_beginDate_endDate", start, size, new Object[]{createUserId,columnId,getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByStatus(short status,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_status", new Object[]{status,start,size});
+		return this.getSubEntitys("get_by_status", start, size, status);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByAuditStatus(short auditStatus,int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_auditStatus", new Object[]{auditStatus,start,size});
+		return this.getSubEntitys("get_by_auditStatus", start, size, auditStatus);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByReportStatus(short reportStatus,int start,int size)
 			throws Exception {
 		
-		return this.getEntitys("get_by_reportStatus", new Object[]{reportStatus,start,size});
+		return this.getSubEntitys("get_by_reportStatus", start, size, reportStatus);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,
 			short status,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_status", new Object[]{createUserId,status,start,size});
+		return this.getSubEntitys("get_by_createUserId_status", start, size, new Object[]{createUserId, status});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(
 			long createUserId, short auditStatus,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_auditStatus", new Object[]{createUserId,auditStatus,start,size});
+		return this.getSubEntitys("get_by_createUserId_auditStatus", start, size, new Object[]{createUserId,auditStatus});
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(
 			long createUserId, short reportStatus,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_createUserId_reportStatus", new Object[]{createUserId,reportStatus,start,size});
+		return this.getSubEntitys("get_by_createUserId_reportStatus", start, size, createUserId, reportStatus);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndStatus(short columnId,
 			short status,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_columnId_status", new Object[]{columnId,status,start,size});
+		return this.getSubEntitys("get_by_columnId_status", start, size, columnId, status);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndAuditStatus(short columnId,
 			short auditStatus,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_columnId_auditStatus", new Object[]{columnId,auditStatus,start,size});
+		return this.getSubEntitys("get_by_columnId_auditStatus", start, size, columnId, auditStatus);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,
 			short reportStatus,int start,int size) throws Exception {
 		
-		return this.getEntitys("get_by_columnId_reportStatus", new Object[]{columnId,reportStatus,start,size});
+		return this.getSubEntitys("get_by_columnId_reportStatus", start, size, columnId, reportStatus);
 	}
 	
 	private Date getDate(Date date,boolean beginOrEnd) {

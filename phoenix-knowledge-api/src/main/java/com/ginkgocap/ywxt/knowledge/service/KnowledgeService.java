@@ -99,7 +99,16 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<KnowledgeDetail> getDetailById(long knowledgeId,short columnId) throws Exception;
+	public KnowledgeDetail getDetailById(long knowledgeId,short columnId) throws Exception;
+
+    /**
+     * 更新，承担以下任务：
+     * <p>1、获取知识详细</P>
+     * <p>2、获取知识基础</P>
+     * @return
+     * @throws Exception
+     */
+    public DataCollection getKnowledge(long knowledgeId,short columnId) throws Exception;
 	
 	/**
 	 * 提取简要信息（一般用在知识简要信息界面的数据提取中），具体提取以下信息：

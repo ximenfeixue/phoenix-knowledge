@@ -68,6 +68,12 @@ public class DataCollection implements Serializable {
         this.reference = reference;
     }
 
+    public DataCollection(KnowledgeBase knowledgeBase,KnowledgeDetail knowledgeDetail)
+    {
+        this.knowledge = knowledgeBase;
+        this.knowledgeDetail = knowledgeDetail;
+    }
+
 	public List<Associate> getAsso() {
 		return asso;
 	}
