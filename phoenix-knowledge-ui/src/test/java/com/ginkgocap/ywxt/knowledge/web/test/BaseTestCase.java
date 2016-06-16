@@ -1,7 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+
 import junit.framework.TestCase;
 
 /**
@@ -14,12 +17,15 @@ public abstract class BaseTestCase extends TestCase
     protected static boolean runTestCase = false;
     protected static long userId;
     protected static String hostUrl = null;
+    protected static SimpleFilterProvider assofilterProvider = null; 
+    
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
         userId = KnowledgeUtil.getDummyUser().getId();
         debugModel = System.getProperty("debugModel", "false").equals("true");
         runTestCase = System.getProperty("runTestCase", "false").equals("true");
         hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
+        assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
 
     @Override

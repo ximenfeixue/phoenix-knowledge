@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +34,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             DataCollection data = createKnowledge("KnowledgeWebTest_create");
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
-            String knowledgeJson = KnowledgeUtil.writeObjectToJson(data);
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl, knowledgeJson);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -406,7 +408,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
         try {
-            String knowledgeJson = KnowledgeUtil.writeObjectToJson(data);
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
             JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
             Util.checkResponse(response);
             long knowledgeId = Long.parseLong(Util.getResponseData(response));
