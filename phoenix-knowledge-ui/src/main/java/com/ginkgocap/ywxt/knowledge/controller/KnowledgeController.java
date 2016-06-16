@@ -400,8 +400,8 @@ public class KnowledgeController extends BaseController {
 	 * @param size 分页大小
 	 * @throws IOException
 	 */
+    @ResponseBody
 	@RequestMapping(value = "/all/{start}/{size}/{keyword}", method = RequestMethod.GET)
-	@ResponseBody
 	public InterfaceResult getAll(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
 
@@ -438,8 +438,8 @@ public class KnowledgeController extends BaseController {
      * @param size 分页大小
      * @throws IOException
      */
-    @RequestMapping(value = "/allCreated/{start}/{size}/{keyword}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/allCreated/{start}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCreated(HttpServletRequest request, HttpServletResponse response,
                                   @PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
 
@@ -459,8 +459,8 @@ public class KnowledgeController extends BaseController {
      * @param size 分页大小
      * @throws IOException
      */
-    @RequestMapping(value = "/allCollected/{start}/{size}/{keyword}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/allCollected/{start}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCollected(HttpServletRequest request, HttpServletResponse response,
                                   @PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
 
@@ -483,8 +483,8 @@ public class KnowledgeController extends BaseController {
 	 * @param size 分页大小
 	 * @throws IOException
 	 */
+    @ResponseBody
 	@RequestMapping(value = "/allByColumn/{columnId}/{start}/{size}", method = RequestMethod.GET)
-	@ResponseBody
 	public InterfaceResult getAllByColumnId(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable short columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
@@ -581,9 +581,10 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/directory/{directoryId}/{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/byDirectory/{directoryId}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getAllByDirectoryId(HttpServletRequest request, HttpServletResponse response,
-                                                              @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception {
+                              @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception
+    {
 
         User user = this.getUser(request);
         if(user == null || directoryId <= 0 || start < 0 || size <= 0) {
@@ -613,8 +614,8 @@ public class KnowledgeController extends BaseController {
 	 * @param size 分页大小
 	 * @throws IOException
 	 */
+    @ResponseBody
 	@RequestMapping(value = "/user/{start}/{size}", method = RequestMethod.GET)
-	@ResponseBody
 	public InterfaceResult<List<DataCollection>> getByCreateUserId(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable int start,@PathVariable int size) throws Exception {
 		
@@ -640,8 +641,8 @@ public class KnowledgeController extends BaseController {
 	 * @param size 分页大小
 	 * @throws IOException
 	 */
+    @ResponseBody
 	@RequestMapping(value = "/user/{columnId}/{start}/{size}", method = RequestMethod.GET)
-	@ResponseBody
 	public InterfaceResult<List<KnowledgeBase>> getByCreateUserIdAndColumnId(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable short columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
@@ -674,8 +675,8 @@ public class KnowledgeController extends BaseController {
 	 * @param size
 	 * @throws Exception
 	 */
+    @ResponseBody
 	@RequestMapping(value = "/recommended/{type}/{start}/{size}", method = RequestMethod.GET)
-	@ResponseBody
 	public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response, 
 			@PathVariable short type,@PathVariable int start, @PathVariable int size) throws Exception {
 
@@ -887,12 +888,11 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/tagList", method = RequestMethod.POST)
-    public InterfaceResult getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception
+    public MappingJacksonValue getTagsByIds(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-        MappingJacksonValue jacksonValue = new MappingJacksonValue(null);
         User user = this.getUser(request);
         if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         String requestJson = this.getBodyParam(request);
@@ -900,7 +900,7 @@ public class KnowledgeController extends BaseController {
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
@@ -909,7 +909,7 @@ public class KnowledgeController extends BaseController {
             logger.error("Get Tag list failed！reason："+e.getMessage());
         }
         logger.info(".......Get Tag list success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
+        return mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get"));
     }
 
     /**
@@ -947,18 +947,18 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/directoryList", method = RequestMethod.POST)
-    public InterfaceResult getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public MappingJacksonValue getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
         }
 
         String requestJson = this.getBodyParam(request);
         List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (directoryIds == null || directoryIds.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION));
         }
         try {
             return this.directoryServiceLocal.getDirectoryListByIds(user.getId(), directoryIds);
@@ -969,7 +969,7 @@ public class KnowledgeController extends BaseController {
         }
 
         logger.info(".......Get directory list failed......");
-        return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
+        return mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get"));
     }
 
     /**

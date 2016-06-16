@@ -10,6 +10,7 @@ import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.json.MappingJacksonValue;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -122,4 +123,13 @@ public abstract class BaseController {
         return result;
     }
 
+    protected MappingJacksonValue mappingJacksonValue(InterfaceResult result)
+    {
+        return new MappingJacksonValue(result);
+    }
+
+    protected MappingJacksonValue mappingJacksonValue(CommonResultCode resultCode)
+    {
+        return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(resultCode));
+    }
 }

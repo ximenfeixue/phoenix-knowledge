@@ -143,7 +143,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
     }
 
-    public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds)
+    public MappingJacksonValue getDirectoryListByIds(long userId,List<Long> directoryIds)
     {
         List<Directory> directoryList = null;
         try {
@@ -156,10 +156,11 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(directoryList);
             SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider();
             mappingJacksonValue.setFilters(filterProvider);
-            return InterfaceResult.getSuccessInterfaceResultInstance(mappingJacksonValue);
+            return mappingJacksonValue;
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance("Can't get any tags with given tag id");
+        logger.error("Can't get any tags with given tag id");
+        return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS));
     }
 
     public boolean saveDirectorySource(long userId, KnowledgeDetail knowledgeDetail)

@@ -307,7 +307,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             long tagId = 3985615481995309L;
-            String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
+            String subUrl = "/tag/" +tagId + "/1/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -321,7 +321,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             long directoryId = 3969635594797376L;
-            String subUrl = "/directory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
+            String subUrl = "/byDirectory/" + directoryId + "/1/10";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
