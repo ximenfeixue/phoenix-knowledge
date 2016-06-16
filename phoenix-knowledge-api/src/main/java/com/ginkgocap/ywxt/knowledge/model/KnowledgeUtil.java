@@ -1,14 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.user.model.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,15 +25,7 @@ import java.util.Set;
  */
 public final class KnowledgeUtil {
 
-    private static final boolean writeNumberAsString = false;
-    private static ObjectMapper objectMapper;
-    static {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.setFilters(assoFilterProvider());
-        //objectMapper.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, writeNumberAsString);
-    }
-
+    private static final boolean writeNumberAsString = false;;
     /*
     public static Class<? extends Knowledge> getClassByColumnId(short columnId)
     {
@@ -105,12 +96,17 @@ public final class KnowledgeUtil {
         return user;
     }
 
-    public static <T> T readValue(Class<T> valueType, final String content, String... values)
+    public static <T> T readValue(Class<T> valueType, final String jsonContent, String... values)
+    {
+        return readValue(null, valueType, jsonContent, values);
+    }
+
+    public static <T> T readValue(final FilterProvider filterProvider, Class<T> valueType, final String content, String... values)
     {
         try {
             JsonNode node = getJsonNode(content, values);
             if (node != null) {
-                return readValue(valueType, node.toString());
+                return readValue(filterProvider, valueType, node.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,14 +114,20 @@ public final class KnowledgeUtil {
         return null;
     }
 
-    public static <T> T readValue(Class<T> valueType, final String content) {
-        if (StringUtils.isBlank(content)) {
+    public static <T> T readValue(Class<T> valueType, final String jsonContent) {
+        return readValue(null, valueType, jsonContent);
+    }
+    public static <T> T readValue(final FilterProvider filterProvider,Class<T> valueType, final String jsonContent) {
+        if (StringUtils.isBlank(jsonContent)) {
             throw new IllegalArgumentException("Content is null");
         }
         try {
-            synchronized (objectMapper) {
-                return objectMapper.readValue(content, valueType);
+            ObjectMapper objectMapper = new ObjectMapper();
+            if (filterProvider != null) {
+                objectMapper.setFilters(filterProvider);
             }
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            return objectMapper.readValue(jsonContent, valueType);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,9 +140,9 @@ public final class KnowledgeUtil {
             throw new IllegalArgumentException("Content is null");
         }
         try {
-            synchronized (objectMapper) {
-                return objectMapper.readValue(content, javaType);
-            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -154,9 +156,9 @@ public final class KnowledgeUtil {
         }
         try {
             TypeReference javaType = new TypeReference<List<T>>(){};
-            synchronized (objectMapper) {
-                return objectMapper.readValue(content, javaType);
-            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -164,24 +166,39 @@ public final class KnowledgeUtil {
         return null;
     }
 
-    public static JsonNode readTree(final String content) throws IOException {
+    public static JsonNode readTree(final String content) {
         if (StringUtils.isBlank(content)) {
             throw new IllegalArgumentException("Content is null");
         }
-        synchronized (objectMapper) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        try {
             return objectMapper.readTree(content);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return null;
     }
 
-    public static String writeObjectToJson(Object content) {
-        if (content == null) {
+    public static String writeObjectToJson(final Object jsonContent)
+    {
+        return writeObjectToJson(null, jsonContent);
+    }
+
+    public static String writeObjectToJson(final FilterProvider filterProvider, final Object jsonContent)
+    {
+        if (jsonContent == null) {
             throw new IllegalArgumentException("Content is null");
         }
 
         try {
-            synchronized (objectMapper) {
-                return objectMapper.writeValueAsString(content);
+            ObjectMapper objectMapper = new ObjectMapper();
+            if (filterProvider != null) {
+                objectMapper.setFilters(filterProvider);
             }
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            return objectMapper.writeValueAsString(jsonContent);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -198,9 +215,9 @@ public final class KnowledgeUtil {
 
         JsonNode node = null;
         try {
-            synchronized (objectMapper) {
-                node = objectMapper.readTree(jsonStr);
-            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            node = objectMapper.readTree(jsonStr);
             if (values != null && values.length > 0) {
                 for (String v : values) {
                     node = node.path(v);
@@ -219,10 +236,10 @@ public final class KnowledgeUtil {
         }
         DataCollection dataCollection = null;
         try {
-            synchronized (objectMapper) {
-                JsonNode node = objectMapper.readTree(jsonObject);
-                dataCollection = objectMapper.readValue(jsonObject, DataCollection.class);
-            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            JsonNode node = objectMapper.readTree(jsonObject);
+            dataCollection = objectMapper.readValue(jsonObject, DataCollection.class);
         } catch (Exception e) {
             //logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
             System.out.println(e);
@@ -230,7 +247,7 @@ public final class KnowledgeUtil {
         return dataCollection;
     }
 
-    public static SimpleFilterProvider assoFilterProvider() {
+    public static SimpleFilterProvider assoFilterProvider(final String className) {
         Set<String> filter = new HashSet<String>(8); //this number must be increased by fields
         filter.add("id"); // id',
         filter.add("appId");
@@ -241,37 +258,33 @@ public final class KnowledgeUtil {
         filter.add("assocTitle"); // '被关联数据标题',
         filter.add("assocMetadata"); // '被关联数据的的摘要用Json存放，如图片，连接URL定义等',
 
-        return simpleFilterProvider(Associate.class.getName(), filter);
+        return simpleFilterProvider(className, filter);
     }
 
-    public static SimpleFilterProvider tagFilterProvider() {
+    public static SimpleFilterProvider tagFilterProvider(final String className) {
         Set<String> filter = new HashSet<String>(6); //this number must be increased by fields
         filter.add("id"); // id',
-        filter.add("sourceId"); // 资源ID
-        filter.add("sourceType"); // 资源类型
-        filter.add("sourceTitle"); // 资源标题
-        filter.add("createAt"); // 创建时间
-        filter.add("tagName"); // 标签名称
+        filter.add("tagType"); // tagType',
+        filter.add("tagName"); // Tag名称
 
-        return simpleFilterProvider(Associate.class.getName(), filter);
+        return simpleFilterProvider(className, filter);
     }
 
-    public static SimpleFilterProvider directoryFilterProvider() {
+    public static SimpleFilterProvider directoryFilterProvider(final String className) {
         Set<String> filter = new HashSet<String>(6); //this number must be increased by fields
         filter.add("id"); // id',
-        filter.add("sourceId"); // 资源ID
-        filter.add("sourceType"); // 资源类型
-        filter.add("sourceUrl"); // 资源URL
-        filter.add("sourceTitle"); // 资源的title
-        filter.add("sourceData"); // 资源的Data
+        filter.add("name"); // '分类名称',
+        filter.add("typeId"); // '应用的分类分类ID',
+        filter.add("appId"); // '应用的分类分类ID',
+        filter.add("userId"); // '应用的分类分类ID',
 
-        return simpleFilterProvider(Associate.class.getName(), filter);
+        return simpleFilterProvider(className, filter);
     }
 
     public static SimpleFilterProvider simpleFilterProvider(final String className, final Set<String> filter) {
         if (filter != null && filter.size() > 0) {
             SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-            filterProvider.addFilter(Associate.class.getName(), SimpleBeanPropertyFilter.filterOutAllExcept(filter));
+            filterProvider.addFilter(className, SimpleBeanPropertyFilter.filterOutAllExcept(filter));
             return filterProvider;
         }
         else {
@@ -303,6 +316,8 @@ public final class KnowledgeUtil {
     {
         String jsonNodeContent = null;
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             JsonNode node = objectMapper.readTree(jsonContent);
             jsonNodeContent =  node.get(nodeName).toString();
         } catch (IOException e) {

@@ -154,7 +154,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
         if (directoryList != null && directoryList.size() > 0) {
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(directoryList);
-            SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider();
+            SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider(Directory.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
             return mappingJacksonValue;
         }

@@ -379,14 +379,13 @@ public class KnowledgeController extends BaseController {
             data.setPermission(ret.getResponseData());
         }
 
-        AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID, "知识");
         List<Associate> assoList =  associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
         data.setAsso(assoList);
 
         logger.info(".......get knowledge detail success......");
         result.setResponseData(data);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider());
+        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
 
         //Click count
         knowledgeCountService.updateClickCount(knowledgeId);

@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.utils;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
@@ -31,14 +32,21 @@ public class TestDataUtil {
     {
         return jsonPath + fileName + ".json";
     }
-	
+
     public static String writeJsonData(Object jsonObject) throws IOException
+    {
+        return writeJsonData(jsonObject, null);
+    }
+
+    public static String writeJsonData(Object jsonObject,FilterProvider filterProvider) throws IOException
     {
         String jsonContent = null;
 
         try {
         	String jsonFile = getJsonFile(jsonObject.getClass().getSimpleName());
-            objectMapper.setFilters(KnowledgeUtil.assoFilterProvider());
+            if (filterProvider != null) {
+                objectMapper.setFilters(filterProvider);
+            }
             jsonContent = objectMapper.writeValueAsString(jsonObject);
             System.out.print(jsonContent);
             //objectMapper.writeValue(new File(jsonFile), jsonContent);

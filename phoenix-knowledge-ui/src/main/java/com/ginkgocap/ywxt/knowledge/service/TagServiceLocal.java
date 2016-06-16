@@ -147,7 +147,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(tags);
-            SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider();
+            SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider(Tag.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
             return mappingJacksonValue;
         }
