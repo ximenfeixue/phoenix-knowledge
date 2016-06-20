@@ -106,8 +106,8 @@ public class KnowledgeServiceTest extends TestBase {
             DataCollection data = this.createKnowledge("KnowledgeServiceTest_testGetDetailById");
             long knowledgeId = data.getKnowledgeDetail().getId();
             short columnId = data.getKnowledgeDetail().getColumnId();
-            InterfaceResult<KnowledgeDetail> result = knowledgeService.getDetailById(knowledgeId, columnId);
-            assertResponseWithData(result);
+            KnowledgeDetail result = knowledgeService.getDetailById(knowledgeId, columnId);
+            TestCase.assertNotNull(result);
         } catch (Exception e) {
             e.printStackTrace();
             TestCase.fail();

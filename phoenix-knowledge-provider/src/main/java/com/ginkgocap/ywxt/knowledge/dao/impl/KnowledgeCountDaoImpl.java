@@ -5,6 +5,7 @@ import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ import java.util.List;
 @Repository("knowledgeCountDao")
 public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implements KnowledgeCountDao
 {
-
     @Override
+    @Transactional
     public boolean updateClickCount(long knowledgeId)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
@@ -29,6 +30,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     }
 
     @Override
+    @Transactional
     public boolean updateShareCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
@@ -41,6 +43,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     }
 
     @Override
+    @Transactional
     public boolean updateCollectCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
@@ -53,6 +56,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     }
 
     @Override
+    @Transactional
     public boolean updateCommentCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {

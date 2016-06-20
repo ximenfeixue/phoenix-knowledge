@@ -20,26 +20,11 @@
 	http://www.springframework.org/schema/data/jpa
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
 
-    <import resource="classpath:knowledge-dubbo-consumer.xml" />
-    <import resource="classpath:knowledge-mongo-config.xml" />
-    <import resource="classpath:applicationContext_log.xml"/>
-
     <context:component-scan base-package="com.ginkgocap.ywxt.knowledge">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <import resource="classpath:rocketmq-dubbo-consumer.xml" />
-    <context:component-scan base-package="com.gintong.rocketmq">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-    </context:component-scan>
-
-    <import resource="classpath:user-dubbo-consumer.xml" />
-    <context:component-scan base-package="com.ginkgocap.ywxt.user">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-    </context:component-scan>
-
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
-
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
 
     <bean id="propertyConfigurer"

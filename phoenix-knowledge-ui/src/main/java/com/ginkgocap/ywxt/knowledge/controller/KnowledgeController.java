@@ -99,7 +99,7 @@ public class KnowledgeController extends BaseController {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
 
-        if (result == null || result.getNotification()== null) {
+        if (result == null || result.getNotification()== null || result.getResponseData() == null) {
             logger.error("Insert knowledge failed!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -370,6 +370,7 @@ public class KnowledgeController extends BaseController {
 
 		//数据为空则直接返回异常给前端
 		if(knowledgeDetail == null) {
+            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
 

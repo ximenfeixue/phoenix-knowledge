@@ -24,7 +24,7 @@ public abstract class BaseTestCase extends TestCase
         userId = KnowledgeUtil.getDummyUser().getId();
         debugModel = System.getProperty("debugModel", "false").equals("true");
         runTestCase = System.getProperty("runTestCase", "false").equals("true");
-        hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
+        hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080"); //"""); http://test.online.gintong.com
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
 

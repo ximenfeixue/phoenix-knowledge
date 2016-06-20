@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+
 import org.springframework.context.annotation.Bean;
 
 import java.net.URLEncoder;
@@ -83,8 +84,7 @@ public class KnowledgeWebTest extends BaseTestCase {
             long knowledgeId = data.getId();
             short columnId = data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            knowledgeDetail(knowledgeId, columnId);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -97,7 +97,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/all/0/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/all/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -414,11 +414,19 @@ public class KnowledgeWebTest extends BaseTestCase {
             long knowledgeId = Long.parseLong(Util.getResponseData(response));
             data.getKnowledgeDetail().setId(knowledgeId);
             data.getReference().setKnowledgeId(knowledgeId);
+            
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
         return data;
+    }
+    
+    private void knowledgeDetail(long knowledgeId,short columnId) throws Exception
+    {
+        String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
+        JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+        Util.checkResponseWithData(result);
     }
 
     private void createTag()
