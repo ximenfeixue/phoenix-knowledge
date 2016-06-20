@@ -191,6 +191,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
         } catch (TagSourceServiceException ex) {
             ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return true;

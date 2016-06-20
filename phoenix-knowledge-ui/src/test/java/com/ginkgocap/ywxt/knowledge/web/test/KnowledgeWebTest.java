@@ -80,10 +80,10 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            //KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 59L; //data.getId();
-            short columnId = 2; //data.getColumnId();
-            String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
+            KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = data.getId();
+            short columnId = data.getColumnId();
+            //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
             e.printStackTrace();

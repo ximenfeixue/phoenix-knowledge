@@ -108,9 +108,13 @@ public class KnowledgeController extends BaseController {
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
         knowledgeDetail.setId(knowledgeId);
 
-        tagServiceLocal.saveTagSource(userId, knowledgeDetail);
+        if (!tagServiceLocal.saveTagSource(userId, knowledgeDetail)) {
+            logger.error("Save Tag info failed, userId: {} knowledgeId: ", userId, knowledgeId);
+        }
 
-        directoryServiceLocal.saveDirectorySource(userId, knowledgeDetail);
+        if (!directoryServiceLocal.saveDirectorySource(userId, knowledgeDetail)) {
+            logger.error("Save Directory info failed, userId: {} knowledgeId: ", userId, knowledgeId);
+        }
         //save asso information
 
         //TODO: If this step failed, how to do ?
