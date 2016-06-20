@@ -194,13 +194,13 @@ public class KnowledgeController extends BaseController {
 
         long knowledgeId = data.getKnowledgeDetail().getId();
         //Update Assso info
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, (long)KnowledgeBaseService.sourceType, knowledgeId);
-        if (assomap == null) {
-            logger.error("asso it null or converted failed...");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
-        }
-        //TODO: If this step failed, how to do ?
         try {
+            Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, (long)KnowledgeBaseService.sourceType, knowledgeId);
+            if (assomap == null) {
+                logger.error("asso it null or converted failed...");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
+            }
+            //TODO: If this step failed, how to do ?
             for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
                 List<Associate> associateList = (List) i.next();
                 for (int j = 0; j < associateList.size(); j++) {
