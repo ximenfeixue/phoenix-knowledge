@@ -209,8 +209,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 logger.error("update category remove failed...userId=" + userId+ ", knowledgeId=" + knowledgeId);
                 return false;
             }
-        }catch(DirectorySourceServiceException e1){
+        }catch(Exception ex){
             logger.error("update category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
+            ex.printStackTrace();
             return false;
         }
         return true;
@@ -226,6 +227,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
         }catch(DirectorySourceServiceException ex){
             logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            return false;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
         return true;

@@ -219,7 +219,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
                 return false;
             }
-        }catch(TagSourceServiceException ex){
+        }catch(Exception ex){
             logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
             return false;
         }
@@ -236,6 +236,10 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 return false;
             }
         }catch(TagSourceServiceException ex){
+            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            return false;
+        }
+        catch(Exception ex){
             logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
             return false;
         }

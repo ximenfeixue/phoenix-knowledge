@@ -122,13 +122,13 @@ public class KnowledgeController extends BaseController {
             List<Associate> as  = dataCollection.getAsso();
             if (as == null) {
                 logger.error("asso it null or converted failed...");
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
+                //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
             }
 
             createAssociate(as, knowledgeId, userId);
         }catch (Exception e) {
             logger.error("Insert asso failed : " + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         try {
@@ -143,7 +143,7 @@ public class KnowledgeController extends BaseController {
             }
         } catch (Exception e) {
             logger.error("Insert knowledge failed : " + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         logger.info(".......create knowledge success......");
@@ -244,14 +244,14 @@ public class KnowledgeController extends BaseController {
         InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
         if (result == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
 		try {
             result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
 		} catch (Exception e) {
 			logger.error("knowledge delete failed！reason："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
 
         long userId = user.getId();
@@ -265,7 +265,7 @@ public class KnowledgeController extends BaseController {
         Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
         if (assomap == null) {
             logger.error("asso id is null or converted failed...");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
         }
         //TODO: If this step failed, how to do ?
         try {
@@ -277,6 +277,10 @@ public class KnowledgeController extends BaseController {
             }
         } catch (AssociateServiceException ex) {
             logger.error("delete Associate failed: {}", ex.getMessage());
+        }
+        catch (Exception ex) {
+            logger.error("delete Associate failed: {}", ex.getMessage());
+            ex.printStackTrace();
         }
 
         logger.info(".......delete knowledge success......");
@@ -729,6 +733,7 @@ public class KnowledgeController extends BaseController {
 			this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, columnId);
 		} catch (Exception e) {
 			logger.error("collect knowledge failed！：" + e.getMessage());
+            //return InterfaceResult.getInterfaceResultInstance();
 		}
 
         //collect count
