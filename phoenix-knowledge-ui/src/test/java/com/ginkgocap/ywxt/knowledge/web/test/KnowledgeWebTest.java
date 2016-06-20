@@ -80,16 +80,45 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = data.getId();
-            short columnId = data.getColumnId();
+            //KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = 59L; //data.getId();
+            short columnId = 2; //data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
-            knowledgeDetail(knowledgeId, columnId);
+            knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
     }
+    
+    public void testMultiThreadKnowledgeDetail()
+    {
+        LogMethod();
+        try {
+        	KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testMultiThreadKnowledgeDetail").getKnowledgeDetail();
+            final long knowledgeId = data.getId();
+            final short columnId = data.getColumnId();
+        	for (int index = 0; index < 5; index++) {
+        		new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+			            try {
+							knowledgeDetail(baseUrl, knowledgeId, columnId);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}}).start();
+        	}
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    
 
     public void testAllKnowledge()
     {
@@ -422,10 +451,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         return data;
     }
     
-    private void knowledgeDetail(long knowledgeId,short columnId) throws Exception
+    private static void knowledgeDetail(final String baseUrl, long knowledgeId,short columnId) throws Exception
     {
         String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
         JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+        System.out.println("Result: " + result);
         Util.checkResponseWithData(result);
     }
 
