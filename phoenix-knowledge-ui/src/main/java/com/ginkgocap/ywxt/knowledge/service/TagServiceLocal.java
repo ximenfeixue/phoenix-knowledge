@@ -189,9 +189,9 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 }
                 logger.info("tagId:" + tagId);
             }
-        } catch (TagSourceServiceException ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
+            logger.error("Save Tag info failed: {}" + ex.getMessage());
             ex.printStackTrace();
         }
 
