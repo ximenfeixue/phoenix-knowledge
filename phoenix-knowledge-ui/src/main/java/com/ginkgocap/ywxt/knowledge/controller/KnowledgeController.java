@@ -382,22 +382,37 @@ public class KnowledgeController extends BaseController {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
 
-        InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW);
-        Notification noti = ret.getNotification();
-        if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())){
-            data.setPermission(ret.getResponseData());
+        try {
+            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW);
+            Notification noti = ret.getNotification();
+            if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())) {
+                data.setPermission(ret.getResponseData());
+            }
+        }catch (Exception ex) {
+            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            ex.printStackTrace();
         }
 
-        List<Associate> assoList =  associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
-        data.setAsso(assoList);
+        try {
+            List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
+            data.setAsso(associateList);
+        } catch (Exception ex) {
+            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            ex.printStackTrace();
+        }
 
         logger.info(".......get knowledge detail success......");
         result.setResponseData(data);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
 
-        //Click count
-        knowledgeCountService.updateClickCount(knowledgeId);
+        //Click count this should be in queue
+        try {
+            knowledgeCountService.updateClickCount(knowledgeId);
+        } catch (Exception ex) {
+            logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            ex.printStackTrace();
+        }
 
         return jacksonValue;
 	}
@@ -854,6 +869,7 @@ public class KnowledgeController extends BaseController {
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
             e.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION.getCode(),"Call Tag service failed!");
         }
         logger.info(".......batch tags success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
