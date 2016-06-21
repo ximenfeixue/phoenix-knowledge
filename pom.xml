@@ -548,7 +548,7 @@
 
                 <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
-                <log4j.path>/home/work/project/new-knowledge/log</log4j.path>
+                <log4j.path>./logs</log4j.path>
 
                 <!-- dubbo configure -->
                 <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>

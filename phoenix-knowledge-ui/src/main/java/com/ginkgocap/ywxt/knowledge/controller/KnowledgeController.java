@@ -625,7 +625,7 @@ public class KnowledgeController extends BaseController {
             knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Query knowledge failed");
         }
         logger.info(".......get all knowledge by columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
