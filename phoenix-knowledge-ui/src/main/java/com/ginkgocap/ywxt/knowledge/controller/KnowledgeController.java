@@ -53,8 +53,8 @@ public class KnowledgeController extends BaseController {
     @Autowired
     KnowledgeOtherService knowledgeOtherService;
 
-    @Autowired
-    KnowledgeCountService knowledgeCountService;
+    //@Autowired
+    //KnowledgeCountService knowledgeCountService;
 
     @Autowired
     private AssociateService associateService;
@@ -408,7 +408,7 @@ public class KnowledgeController extends BaseController {
 
         //Click count this should be in queue
         try {
-            knowledgeCountService.updateClickCount(knowledgeId);
+            //knowledgeCountService.updateClickCount(knowledgeId);
         } catch (Exception ex) {
             logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             ex.printStackTrace();
@@ -752,7 +752,7 @@ public class KnowledgeController extends BaseController {
 		}
 
         //collect count
-        knowledgeCountService.updateCollectCount(knowledgeId);
+        //knowledgeCountService.updateCollectCount(knowledgeId);
         logger.info(".......collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
