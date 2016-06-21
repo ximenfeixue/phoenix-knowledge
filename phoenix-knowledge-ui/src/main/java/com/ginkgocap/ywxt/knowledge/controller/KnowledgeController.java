@@ -156,7 +156,6 @@ public class KnowledgeController extends BaseController {
 	 */
     @ResponseBody
 	@RequestMapping(method = RequestMethod.PUT)
-    @PermissionAnnotation(perType= PermissionOpType.UPDATE, resType=ResourceType.KNOW)
 	public InterfaceResult updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
 		User user = this.getUser(request);
@@ -171,20 +170,37 @@ public class KnowledgeController extends BaseController {
             logger.error("request data is null or incorrect");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
+
         KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
         if (knowledgeDetail == null) {
             logger.error("request knowledgeDetail is null or incorrect");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
-		InterfaceResult result = null;
+        Permission per=new Permission();
+        per.setAppId(APPID);
+        per.setResOwnerId(userId);
+        per.setResType(ResourceType.KNOW.getVal());
+        per.setResId(knowledgeDetail.getId());
+
+        InterfaceResult<Boolean> result = permissionRepositoryService.update(per);
+        if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
+            logger.error("permission validate failed, please check if user have permission!");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"No permission to update!");
+        }
+
 		try {
             data.serUserInfo(user);
             result = this.knowledgeService.update(data);
 		} catch (Exception e) {
 			logger.error("知识更新失败！失败原因："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION);
 		}
+
+        if (result == null || !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
+            logger.error("知识更新失败！");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
 
         //Update tag info
         tagServiceLocal.updateTagSource(userId, knowledgeDetail);
@@ -239,12 +255,14 @@ public class KnowledgeController extends BaseController {
 		}
 
         Permission per=new Permission();
-        per.setResType(ResourceType.KNOW.getVal());
+        per.setAppId(APPID);
+        per.setResOwnerId(user.getId());
         per.setResId(knowledgeId);
+        per.setResType(ResourceType.KNOW.getVal());
         InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
-        if (result == null || !result.getResponseData().booleanValue()) {
+        if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
-            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"permission validate failed.");
         }
 
 		try {
