@@ -96,12 +96,12 @@ public class KnowledgeController extends BaseController {
             result = this.knowledgeService.insert(dataCollection);
 		} catch (Exception e) {
 			logger.error("Insert knowledge failed : " + e.getMessage());
-			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+			return result;
 		}
 
         if (result == null || result.getNotification()== null || result.getResponseData() == null) {
             logger.error("Insert knowledge failed!");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return result;
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
 

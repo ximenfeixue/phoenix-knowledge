@@ -82,7 +82,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 			this.knowledgeMysqlDao.insert(knowledge);
 		} catch (Exception e) {
 			logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, e);
 		}
 		
 		//知识来源表插入
@@ -92,8 +92,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
-                logger.error("知识基础表插入失败！失败原因：\n" + e.getMessage());
-                return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+                logger.error("知识引用表插入失败！失败原因：\n" + e.getMessage());
+                return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, e);
             }
         }
 
