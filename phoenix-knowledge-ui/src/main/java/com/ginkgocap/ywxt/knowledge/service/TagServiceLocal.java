@@ -149,6 +149,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(tags);
             SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider(Tag.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
+            logger.info(".......Get Tag list success......");
             return mappingJacksonValue;
         }
 
@@ -167,6 +168,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             sourceMap.put(tagId, count);
         }
 
+        logger.info(".......Get Tag count success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
 
     }

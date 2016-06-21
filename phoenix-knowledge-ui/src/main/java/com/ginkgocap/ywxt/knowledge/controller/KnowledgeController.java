@@ -619,7 +619,7 @@ public class KnowledgeController extends BaseController {
             List<Long> knowledgeIds = directoryServiceLocal.getKowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
             if (knowledgeIds == null || knowledgeIds.size() <= 0) {
                 logger.error("get knowledge list is null by directoryId: " + directoryId);
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"get knowledge list is null this directoryId");
             }
 
             knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
@@ -925,16 +925,15 @@ public class KnowledgeController extends BaseController {
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
-            return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"tag list is null...");
         }
 
         try {
             return this.tagServiceLocal.getTagListByIds(user.getId(),tagIds);
         } catch (Exception e) {
             logger.error("Get Tag list failed！reason："+e.getMessage());
+            return mappingJacksonValue(CommonResultCode.SERVICES_EXCEPTION,"Get Tag Service error");
         }
-        logger.info(".......Get Tag list success......");
-        return mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get"));
     }
 
     /**
@@ -954,16 +953,16 @@ public class KnowledgeController extends BaseController {
         List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            logger.error("No tag list send.");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No tag list send.");
         }
 
         try {
             return this.tagServiceLocal.getTagSourceCountByIds(user.getId(),tagIds);
         } catch (Exception e) {
             logger.error("Get TagCount failed！reason："+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "Get Tag Service error");
         }
-        logger.info(".......Get TagCount success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance("Not any tag item get");
     }
 
     /**
@@ -983,7 +982,8 @@ public class KnowledgeController extends BaseController {
         List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (directoryIds == null || directoryIds.size() <= 0) {
-            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION));
+            logger.error("No any directory id send!");
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory id send!"));
         }
         try {
             return this.directoryServiceLocal.getDirectoryListByIds(user.getId(), directoryIds);
@@ -991,10 +991,8 @@ public class KnowledgeController extends BaseController {
         catch (Exception ex) {
             logger.error("Get directory list failed！reason："+ex.getMessage());
             ex.printStackTrace();
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Get directory list failed！"));
         }
-
-        logger.info(".......Get directory list failed......");
-        return mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get"));
     }
 
     /**
@@ -1014,16 +1012,17 @@ public class KnowledgeController extends BaseController {
         List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (directoryIds == null || directoryIds.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            logger.error("No any directory Id send..");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory Id send..");
         }
 
         try {
             return this.directoryServiceLocal.getDirectorySourceCountByIds(user.getId(), directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Not any directory get");
         }
-        logger.info(".......Get directory count success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance("Not any directory get");
+
     }
 
     @ResponseBody

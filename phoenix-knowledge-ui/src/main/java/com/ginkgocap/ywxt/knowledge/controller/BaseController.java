@@ -132,4 +132,9 @@ public abstract class BaseController {
     {
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(resultCode));
     }
+
+    protected MappingJacksonValue mappingJacksonValue(CommonResultCode resultCode,String message)
+    {
+        return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(resultCode,message));
+    }
 }

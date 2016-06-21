@@ -139,7 +139,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             int count = directorySourceService.countDirectorySourcesByDirectoryId(APPID, userId, directoryId);
             sourceMap.put(directoryId, count);
         }
-
+        logger.info(".......Get directory count success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
     }
 
@@ -156,6 +156,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(directoryList);
             SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider(Directory.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
+            logger.info(".......Get directory list success......");
             return mappingJacksonValue;
         }
 
