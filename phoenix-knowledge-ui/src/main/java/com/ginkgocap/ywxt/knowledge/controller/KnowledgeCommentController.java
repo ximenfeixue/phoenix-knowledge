@@ -33,8 +33,8 @@ public class KnowledgeCommentController extends BaseController
     @Autowired
     private KnowledgeCommentService knowledgeCommentService;
 
-    @Autowired
-    KnowledgeCountService knowledgeCountService;
+    //@Autowired
+    //KnowledgeCountService knowledgeCountService;
 
     /**
      * des:创建评论
@@ -69,7 +69,7 @@ public class KnowledgeCommentController extends BaseController
             knowledgeComment.setOwnerName(user.getName());
             long commentId = knowledgeCommentService.create(knowledgeComment);
             if (commentId > 0) {
-                knowledgeCountService.updateCommentCount(knowledgeId);
+                //knowledgeCountService.updateCommentCount(knowledgeId);
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
             logger.error("Save Knowledge Comment to Mongo failed : knowledgeId: " + knowledgeId + " Comment: " + knowledgeComment.getContent());
