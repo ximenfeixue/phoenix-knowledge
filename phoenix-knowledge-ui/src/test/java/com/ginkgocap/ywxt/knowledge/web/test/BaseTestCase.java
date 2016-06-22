@@ -17,15 +17,28 @@ public abstract class BaseTestCase extends TestCase
     protected static boolean runTestCase = false;
     protected static long userId;
     protected static String hostUrl = null;
-    protected static SimpleFilterProvider assofilterProvider = null; 
+    protected static SimpleFilterProvider assofilterProvider = null;
+    //private static String testEnv = "testOnline";
+    private static String testEnv = "dev";
+    //private static String testEnv = "local";
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
         userId = KnowledgeUtil.getDummyUser().getId();
         debugModel = System.getProperty("debugModel", "false").equals("true");
         runTestCase = System.getProperty("runTestCase", "false").equals("true");
-        //hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
-        hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
+        if ("local".equals(testEnv)) {
+            Util.loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
+        }
+        else if ("dev".equals(testEnv)) {
+            Util.loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
+        }
+        else if ("testOnline".equals(testEnv)) {
+            Util.loginUrl = "http://test.online.gintong.com/cross/login/loginConfiguration.json";
+            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
+        }
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
 

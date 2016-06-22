@@ -153,7 +153,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             e.printStackTrace();
         }
         if (directoryList != null && directoryList.size() > 0) {
-            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(directoryList);
+            InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
             SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider(Directory.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
             logger.info(".......Get directory list success......");

@@ -19,6 +19,7 @@ import com.gintong.common.phoenix.permission.PermissionAnnotation;
 import com.gintong.common.phoenix.permission.PermissionOpType;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import com.gintong.common.phoenix.permission.service.PermissionCheckService;
 import com.gintong.common.phoenix.permission.service.PermissionRepositoryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -64,6 +65,9 @@ public class KnowledgeController extends BaseController {
 
     @Autowired
     private PermissionRepositoryService permissionRepositoryService;
+
+    @Autowired
+    private PermissionCheckService permissionCheckService;
 
     @Autowired
     private TagServiceLocal tagServiceLocal;
@@ -132,17 +136,12 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            if (dataCollection.getPermission() != null) {
-                dataCollection.getPermission().setResId(knowledgeId);
-                dataCollection.getPermission().setResOwnerId(userId);
-                dataCollection.getPermission().setResType(ResourceType.KNOW.getVal());
-                if (dataCollection.getPermission().getPerTime() == null) {
-                    dataCollection.getPermission().setPerTime(new Date());
-                }
-                permissionRepositoryService.insert(dataCollection.getPermission());
+            Permission permission = permissionInfo(dataCollection.getPermission(), knowledgeId, userId);
+            if (permission != null) {
+                permissionRepositoryService.insert(permission);
             }
         } catch (Exception e) {
-            logger.error("Insert knowledge failed : " + e.getMessage());
+            logger.error("Insert knowledge permission failed : " + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
@@ -177,13 +176,8 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
-        Permission per=new Permission();
-        per.setAppId(APPID);
-        per.setResOwnerId(userId);
-        per.setResType(ResourceType.KNOW.getVal());
-        per.setResId(knowledgeDetail.getId());
-
-        InterfaceResult<Boolean> result = permissionRepositoryService.update(per);
+        long knowledgeId = knowledgeDetail.getId();
+        InterfaceResult<Boolean> result = permissionCheckService.isUpdatable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
         if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"No permission to update!");
@@ -202,13 +196,22 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
 
+        try {
+            Permission permission = permissionInfo(data.getPermission(), knowledgeId, userId);
+            if (permission != null) {
+                permissionRepositoryService.update(permission);
+            }
+        } catch (Exception e) {
+            logger.error("Update knowledge permission failed : " + e.getMessage());
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
         //Update tag info
         tagServiceLocal.updateTagSource(userId, knowledgeDetail);
 
         //Update Directory info
         directoryServiceLocal.updateDirectorySource(userId, knowledgeDetail);
 
-        long knowledgeId = data.getKnowledgeDetail().getId();
         //Update Assso info
         try {
             Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, (long)KnowledgeBaseService.sourceType, knowledgeId);
@@ -254,12 +257,7 @@ public class KnowledgeController extends BaseController {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
 
-        Permission per=new Permission();
-        per.setAppId(APPID);
-        per.setResOwnerId(user.getId());
-        per.setResId(knowledgeId);
-        per.setResType(ResourceType.KNOW.getVal());
-        InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
+        InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, user.getId(), APPID);
         if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"permission validate failed.");
@@ -280,7 +278,7 @@ public class KnowledgeController extends BaseController {
         directoryServiceLocal.deleteDirectory(userId, knowledgeId);
         //delete Assso info
         AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
+        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, 7L, knowledgeId);
         if (assomap == null) {
             logger.error("asso id is null or converted failed...");
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
@@ -299,6 +297,19 @@ public class KnowledgeController extends BaseController {
         catch (Exception ex) {
             logger.error("delete Associate failed: {}", ex.getMessage());
             ex.printStackTrace();
+        }
+
+        //delete permission info
+        try {
+            Permission permission = new Permission();
+            permission.setResType(ResourceType.KNOW.getVal());
+            permission.setResId(knowledgeId);//资源id
+            InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
+            if (ret == null || !ret.getResponseData()) {
+                logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
+            }
+        }catch (Exception ex) {
+            logger.error("Delete Permission failed, knowledgeId: " + knowledgeId + " Reason: "+ex.getMessage());
         }
 
         logger.info(".......delete knowledge success......");
@@ -1310,5 +1321,18 @@ public class KnowledgeController extends BaseController {
         }
 
         return collectedKnowledgeItems;
+    }
+
+    private Permission permissionInfo(Permission permission,long knowledgeId,long userId)
+    {
+        if (permission != null) {
+            permission.setResId(knowledgeId);
+            permission.setResOwnerId(userId);
+            permission.setResType(ResourceType.KNOW.getVal());
+            if (permission.getPerTime() == null) {
+                permission.setPerTime(new Date());
+            }
+        }
+        return permission;
     }
 }

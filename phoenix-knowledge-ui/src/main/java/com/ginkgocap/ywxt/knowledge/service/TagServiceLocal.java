@@ -146,7 +146,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         logger.error("tag list is: " + tagIds.toString());
         List<Tag> tags = tagService.getTags(-1L,tagIds);
         if (tags != null && tags.size() > 0) {
-            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(tags);
+            InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(tags);
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
             SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider(Tag.class.getName());
             mappingJacksonValue.setFilters(filterProvider);
             logger.info(".......Get Tag list success......");

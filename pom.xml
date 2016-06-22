@@ -503,11 +503,11 @@
                 <!-- redis端口 -->
                 <redis.port>6379</redis.port>
                 <!-- mongo地址 -->
-                <mongodb.address>192.168.101.131:27017</mongodb.address>
+                <mongodb.address>192.168.120.135:27017</mongodb.address>
                 <!-- mongo中数据库 -->
                 <mongodb.database>knowledge-new</mongodb.database>
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;autoReconnect=true</jdbc.url>
                 <jdbc.username>zhangwei</jdbc.username>
                 <jdbc.password>zhangwei</jdbc.password>
                 <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
@@ -521,7 +521,7 @@
                 <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
                 <dubbo.protocol.name>dubbo</dubbo.protocol.name>
                 <!--<dubbo.registry.address>zookeeper://192.168.120.155:2182?client=zkclient</dubbo.registry.address>-->
-                <dubbo.registry.address>zookeeper://192.168.101.15:2181?client=zkclient</dubbo.registry.address>
+                <dubbo.registry.address>zookeeper://192.168.120.135:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
                 <demand.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</demand.data.searchUrl>

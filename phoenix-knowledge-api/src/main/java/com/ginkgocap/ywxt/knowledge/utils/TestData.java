@@ -162,7 +162,7 @@ public class TestData {
         long System_AppId = 1L;
         long assocId = 2L; //,
         long sourceTypeId = 2L;
-        long typeId = 666L;
+        long typeId = 7L;
 
         Associate associate = new Associate();
         associate.setId(0);

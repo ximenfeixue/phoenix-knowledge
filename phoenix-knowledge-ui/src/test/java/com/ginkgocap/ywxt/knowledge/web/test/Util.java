@@ -22,6 +22,7 @@ public final class Util {
 
     private static ObjectMapper mapper = null;
     private static User user;
+    public static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
     static {
         mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true) ;
@@ -268,7 +269,6 @@ public final class Util {
 
     private static void login()
     {
-        final String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
         final String loginJson = "{\"clientID\":\"18311436234\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
         try {
             JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson, null);
