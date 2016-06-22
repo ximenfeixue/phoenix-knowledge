@@ -89,7 +89,7 @@ public class KnowledgeController extends BaseController {
 		if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        long userId = user.getUid();
+        long userId = user.getId();
 
 		String requestJson = this.getBodyParam(request);
 		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);
@@ -1326,6 +1326,7 @@ public class KnowledgeController extends BaseController {
     private Permission permissionInfo(Permission permission,long knowledgeId,long userId)
     {
         if (permission != null) {
+            permission.setAppId(APPID);
             permission.setResId(knowledgeId);
             permission.setResOwnerId(userId);
             permission.setResType(ResourceType.KNOW.getVal());
