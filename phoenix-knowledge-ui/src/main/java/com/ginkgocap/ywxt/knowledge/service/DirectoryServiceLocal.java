@@ -38,14 +38,11 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     @Resource
     private DirectoryService directoryService;
 
-    //@Resource
-    //private KnowledgeService knowledgeService;
-
-
-    public List<Long> createDirectory(long userId,short type,String directoryName) throws Exception
+    //Just for Unit test
+    public List<Long> createDirectory(long userId,String directoryName) throws Exception
     {
         List<Long> directoryIds = new ArrayList<Long>();
-        List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, 3933392601350164L);
+        List<Directory> directoryList = directoryService.getDirectorysByParentId(APPID, userId, 0L);
         if (directoryList != null && directoryList.size() >= 5) {
             for (Directory directory : directoryList) {
                 directoryIds.add(directory.getId());
@@ -53,13 +50,17 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             return directoryIds;
         }
 
-        Directory directory = new Directory();
-        directory.setUserId(userId);
-        directory.setAppId(APPID);
-        directory.setName(directoryName);
-        directory.setTypeId(3933392601350164L);//This get from DB
-        Long directoryId =  directoryService.createDirectoryForRoot(userId, directory);
-        directoryIds.add(directoryId);
+        try {
+            Directory directory = new Directory();
+            directory.setUserId(userId);
+            directory.setAppId(APPID);
+            directory.setName(directoryName);
+            directory.setTypeId(sourceType);//This get from DB
+            Long directoryId = directoryService.createDirectoryForRoot(userId, directory);
+            directoryIds.add(directoryId);
+        } catch (DirectoryServiceException ex) {
+            logger.error("create directory failed. userId: {} directoryName: {}", userId, directoryName);
+        }
         return directoryIds;
     }
 
@@ -71,6 +72,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
         List<LinkedHashMap<String, Object>> directoryItems =  KnowledgeUtil.readValue(List.class, requestJson);
         if (directoryItems == null || directoryItems.size() <= 0) {
+            logger.error("directory list is null. userId: {}", userId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
@@ -132,6 +134,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception
     {
         if (directoryIds == null || directoryIds.size() <= 0) {
+            logger.error("directory List is null or size is 0.");
             return InterfaceResult.getSuccessInterfaceResultInstance("directory List is null or size is 0!");
         }
         Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(directoryIds.size());
@@ -203,16 +206,16 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                             DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                             directorySourceService.createDirectorySources(directorySource);
                         }
-                        logger.info("directoryId:" + directoryId);
+                        logger.info("create directory success knowledgeId: {} directoryId: {}" + directoryId, knowledgeDetail.getId());
                     }
                 }
             }
             else{
-                logger.error("update category remove failed...userId=" + userId+ ", knowledgeId=" + knowledgeId);
+                logger.error("update category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
                 return false;
             }
         }catch(Exception ex){
-            logger.error("update category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
+            logger.error("update category failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
             ex.printStackTrace();
             return false;
         }
@@ -224,11 +227,11 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         try{
             boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
             if(!removeDirectoryFlag){
-                logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
+                logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
                 return false;
             }
         }catch(DirectorySourceServiceException ex){
-            logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
             return false;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -237,7 +240,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return true;
     }
 
-    public List<Long> getKowledgeIdListByDirectoryId(long userId,long directoryId,int start,int size)
+    public List<Long> getKnowledgeIdListByDirectoryId(long userId,long directoryId,int start,int size)
     {
         Object[] parameter = new Object[]{userId, APPID, sourceType, directoryId};
         List<DirectorySource> directorySources = null;

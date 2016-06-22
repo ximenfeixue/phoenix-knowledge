@@ -643,7 +643,7 @@ public class KnowledgeController extends BaseController {
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            List<Long> knowledgeIds = directoryServiceLocal.getKowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
+            List<Long> knowledgeIds = directoryServiceLocal.getKnowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
             if (knowledgeIds == null || knowledgeIds.size() <= 0) {
                 logger.error("get knowledge list is null by directoryId: " + directoryId);
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"get knowledge list is null this directoryId");
@@ -1053,7 +1053,7 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createTag/(tagType)/{tagName}", method = RequestMethod.POST)
+    @RequestMapping(value = "/createTag/{tagName}", method = RequestMethod.POST)
     public InterfaceResult createTag(HttpServletRequest request, HttpServletResponse response,
                                      @PathVariable short tagType, @PathVariable String tagName) throws Exception {
         User user = this.getUser(request);
@@ -1062,7 +1062,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> tagIds = this.tagServiceLocal.createTag(user.getId(), tagType, tagName);
+            List<Long> tagIds = this.tagServiceLocal.createTag(user.getId(), tagName);
             return InterfaceResult.getSuccessInterfaceResultInstance(tagIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
@@ -1072,7 +1072,7 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createDirectory(type)/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "/createDirectory/{name}", method = RequestMethod.POST)
     public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response,
                                            @PathVariable short type, @PathVariable String name) throws Exception {
         User user = this.getUser(request);
@@ -1081,7 +1081,7 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), type, name);
+            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), name);
             return InterfaceResult.getSuccessInterfaceResultInstance(directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());

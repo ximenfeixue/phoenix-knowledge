@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ginkgocap.parasol.tags.exception.TagServiceException;
 import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
@@ -43,7 +44,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public List<Long> createTag(long userId,short tagType,String tagName) throws Exception
+    public List<Long> createTag(long userId,String tagName) throws Exception
     {
         List<Long> tagIds = new ArrayList<Long>();
         List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long)sourceType);
@@ -56,12 +57,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         Tag tag = new Tag();
         tag.setAppId(APPID);
-        tag.setTagType(tagType);
+        tag.setTagType(sourceType);
         tag.setTagName(tagName);
         tag.setUserId(userId);
 
-        Long tagId = this.tagService.createTag(userId, tag);
-        tagIds.add(tagId);
+        try {
+            Long tagId = this.tagService.createTag(userId, tag);
+            tagIds.add(tagId);
+        } catch (TagServiceException ex) {
+            logger.error("create tag failed!  userId: {}, tagName: {}", tag.getUserId(), tag.getTagName());
+        }
         return tagIds;
     }
 
@@ -190,7 +195,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                     TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
                     tagSourceService.createTagSource(tagSource);
                 }
-                logger.info("tagId:" + tagId);
+                logger.info("Save tag success tagId:" + tagId);
             }
         }
         catch (Exception ex) {
@@ -213,17 +218,17 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                         if(tagId > 0){
                             TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
                             tagSourceService.createTagSource(tagSource);
-                            logger.info("tagId:"+tagId);
+                            logger.info("create tag success tagId:"+tagId);
                         }
                     }
                 }
             }
             else{
-                logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+                logger.error("update tags remove failed...userId: " + userId + ", knowledgeId: " +knowledgeId);
                 return false;
             }
         }catch(Exception ex){
-            logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
+            logger.error("update tags remove failed...userId: " + userId + " knowledgeId: " +knowledgeId);
             return false;
         }
 
@@ -235,15 +240,15 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         try{
             boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
             if(!removeTagsFlag){
-                logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
+                logger.error("delete tags failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
                 return false;
             }
         }catch(TagSourceServiceException ex){
-            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            logger.error("delete tag failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
             return false;
         }
         catch(Exception ex){
-            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
+            logger.error("delete tag failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
             return false;
         }
 

@@ -307,7 +307,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             String subUrl = "/tagList";
             Long[] tagIds = new Long [] {3981267922321479L, 3981267939098696L, 3981290542202961L, 3981267964264526L, 3979800628953105L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -437,12 +437,19 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
         try {
-            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
-            JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
-            Util.checkResponse(response);
-            long knowledgeId = Long.parseLong(Util.getResponseData(response));
-            data.getKnowledgeDetail().setId(knowledgeId);
-            data.getReference().setKnowledgeId(knowledgeId);
+            if (data != null && data.getKnowledgeDetail() != null) {
+                data.getKnowledgeDetail().setTags(createTag());
+                data.getKnowledgeDetail().setCategoryIds(createDirectory());
+                String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
+                JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
+                Util.checkResponse(response);
+                long knowledgeId = Long.parseLong(Util.getResponseData(response));
+                data.getKnowledgeDetail().setId(knowledgeId);
+                data.getReference().setKnowledgeId(knowledgeId);
+            }
+            else {
+                fail();
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -459,31 +466,41 @@ public class KnowledgeWebTest extends BaseTestCase {
         Util.checkResponseWithData(result);
     }
 
-    private void createTag()
+    private List<Long> createTag()
     {
-        String subUrl = "/createTag/3/Tag" + getNextNum(); ///createTag/(tagType)/{tagName}
+        List<Long> IdList = null;
         try {
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
-            String IdList = Util.getResponseData(result);
+            String subUrl = "/createTag/Tag" + getNextNum(); ///createTag/{tagName}
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, null);
+            IdList = getIdList(result);
             System.out.print(IdList);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
+        return IdList;
     }
 
-    private void createDirectory() {
-        String subUrl = "/createDirectory/3/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
+    private List<Long> createDirectory()
+    {
+        List<Long> IdList = null;
         try {
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
-            String IdList = Util.getResponseData(result);
+            String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, null);
+            IdList = getIdList(result);
             System.out.print(IdList);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
+        return IdList;
+    }
+
+    private List<Long> getIdList(JsonNode result)
+    {
+        Util.checkResponseWithData(result);
+        String idsJson = Util.getResponseData(result);
+        return (List<Long>)KnowledgeUtil.readValue(List.class, idsJson);
     }
 
     private int getNextNum()
