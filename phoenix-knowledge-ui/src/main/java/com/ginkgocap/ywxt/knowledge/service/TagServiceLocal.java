@@ -81,7 +81,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         List<LinkedHashMap<String, Object>> tagItems =  KnowledgeUtil.readValue(List.class, requestJson);
         if (tagItems == null || tagItems.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "tagItems is null");
         }
 
         try {
@@ -129,6 +129,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                         tagSource.setSourceType(sourceType);
                         tagSource.setTagId(tagId);
                         tagSource.setCreateAt(new Date().getTime());
+                        logger.info("before create tag source tagId:" + tagId + " knowledgeId: " + knowledgeId);
                         tagSourceService.createTagSource(tagSource);
                         logger.info("create tag source tagId:" + tagId + " knowledgeId: " + knowledgeId);
                     }
@@ -138,7 +139,9 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 }
             }
         } catch (TagSourceServiceException ex) {
+            logger.error("create Tag failed, knowledgeId: {}", userId);
             ex.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION);
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);

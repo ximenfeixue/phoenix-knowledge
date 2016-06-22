@@ -120,12 +120,15 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     directorySource.setSourceType((int) sourceType);
                     directorySource.setCreateAt(new Date().getTime());
+                    logger.info("before create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                     directorySourceService.createDirectorySources(directorySource);
                     logger.info("create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                 }
             }
         } catch (DirectorySourceServiceException ex) {
+            logger.info("create directory source, failed. userId: " + userId + " error: " + ex.getMessage());
             ex.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION);
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);

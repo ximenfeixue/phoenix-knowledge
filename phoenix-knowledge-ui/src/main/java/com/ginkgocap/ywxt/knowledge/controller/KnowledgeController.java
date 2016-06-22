@@ -892,14 +892,12 @@ public class KnowledgeController extends BaseController {
        // }
 
         try {
-            this.tagServiceLocal.batchTags(knowledgeService, user.getId(), requestJson);
+            return this.tagServiceLocal.batchTags(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
             e.printStackTrace();
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION.getCode(),"Call Tag service failed!");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"batch create Tag service failed!");
         }
-        logger.info(".......batch tags success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
 
@@ -925,13 +923,12 @@ public class KnowledgeController extends BaseController {
 //        }
 
         try {
-            this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), requestJson);
+            return this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("Batch catalogs failed！reason："+e.getMessage());
             e.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "Batch catalogs failed");
         }
-        logger.info(".......Batch catalogs success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     /**
