@@ -19,8 +19,8 @@ public abstract class BaseTestCase extends TestCase
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
     //private static String testEnv = "testOnline";
-    private static String testEnv = "dev";
-    //private static String testEnv = "local";
+    //private static String testEnv = "dev";
+    private static String testEnv = "local";
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080

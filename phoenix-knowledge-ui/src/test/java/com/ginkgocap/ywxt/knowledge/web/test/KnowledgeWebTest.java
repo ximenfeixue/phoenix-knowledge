@@ -119,8 +119,6 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
 
-    
-
     public void testAllKnowledge()
     {
         LogMethod();
@@ -128,6 +126,22 @@ public class KnowledgeWebTest extends BaseTestCase {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
             String subUrl = "/all/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    public void testAllCreateKnowledge()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑");
+            //createKnowledge("考虑,考虑");
+            String subUrl = "/allCreated/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
