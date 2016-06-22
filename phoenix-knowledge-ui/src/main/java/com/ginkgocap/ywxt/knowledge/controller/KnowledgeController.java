@@ -300,15 +300,7 @@ public class KnowledgeController extends BaseController {
         }
 
         //delete permission info
-        try {
-            Permission permission = permissionInfo(new Permission(), knowledgeId, userId);
-            InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
-            if (ret == null || !ret.getResponseData()) {
-                logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
-            }
-        }catch (Exception ex) {
-            logger.error("Delete Permission failed, knowledgeId: " + knowledgeId + " Reason: "+ex.getMessage());
-        }
+        deletePermissionInfo(userId, knowledgeId);
 
         logger.info(".......delete knowledge success......");
 		return result;
@@ -334,14 +326,12 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
+        long userId = user.getId();
         List<Long> permDeleteIds = new ArrayList<Long>();
         List<Long> failedIds = new ArrayList<Long>();
         for (String id : konwledgeIds) {
             long knowledgeId = Long.parseLong(id);
-            Permission per = new Permission();
-            per.setResType(ResourceType.KNOW.getVal());
-            per.setResId(knowledgeId);
-            InterfaceResult<Boolean> result = permissionRepositoryService.delete(per);
+            InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
             if (result == null || !result.getResponseData().booleanValue()) {
                 failedIds.add(knowledgeId);
                 logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
@@ -354,21 +344,29 @@ public class KnowledgeController extends BaseController {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, (short)-1);
-            result.setResponseData("successId:"+permDeleteIds.toString());
+
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
-        //delete Assso info
+        //This need to change to batch delete
         for (long knowledgeId : permDeleteIds) {
+            //delete Assso info
             deleteAssociate(knowledgeId, user.getId());
-        }
+            //delete tags
+            tagServiceLocal.deleteTags(userId, knowledgeId);
 
-        logger.info(".......delete knowledge success......");
-        if (failedIds.size() > 0) {
-            result.setResponseData("failedId:" + failedIds.toString());
+            //delete directory
+            directoryServiceLocal.deleteDirectory(userId, knowledgeId);
+
+            //delete permission information
+            deletePermissionInfo(userId, knowledgeId);
         }
+        String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
+        logger.info("delete knowledge success: {}", resp);
+
+        result.setResponseData(resp);
         return result;
     }
 	
@@ -1050,12 +1048,15 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createTag/{tagName}", method = RequestMethod.POST)
-    public InterfaceResult createTag(HttpServletRequest request, HttpServletResponse response,
-                                     @PathVariable short tagType, @PathVariable String tagName) throws Exception {
+    @RequestMapping(value = "/createTag/{tagName}", method = RequestMethod.GET)
+    public InterfaceResult createTag(HttpServletRequest request, HttpServletResponse response,@PathVariable String tagName) throws Exception {
         User user = this.getUser(request);
-        if (user == null || tagType < 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        if (StringUtils.isEmpty(tagName)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "tagName is null");
         }
 
         try {
@@ -1069,16 +1070,19 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createDirectory/{name}", method = RequestMethod.POST)
-    public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response,
-                                           @PathVariable short type, @PathVariable String name) throws Exception {
+    @RequestMapping(value = "/createDirectory/{directoryName}", method = RequestMethod.GET)
+    public InterfaceResult createDirectory(HttpServletRequest request, HttpServletResponse response, @PathVariable String directoryName) throws Exception {
         User user = this.getUser(request);
-        if (user == null || type < 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        if (StringUtils.isEmpty(directoryName)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "directory Name is null");
+        }
+
         try {
-            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), name);
+            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), directoryName);
             return InterfaceResult.getSuccessInterfaceResultInstance(directoryIds);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
@@ -1330,5 +1334,21 @@ public class KnowledgeController extends BaseController {
             }
         }
         return permission;
+    }
+
+    private boolean deletePermissionInfo(long userId,long knowledgeId)
+    {
+        try {
+            Permission permission = permissionInfo(new Permission(), knowledgeId, userId);
+            InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
+            if (ret == null || !ret.getResponseData()) {
+                logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
+            }
+        }catch (Exception ex) {
+            logger.error("Delete Permission failed, knowledgeId: " + knowledgeId + " Reason: "+ex.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

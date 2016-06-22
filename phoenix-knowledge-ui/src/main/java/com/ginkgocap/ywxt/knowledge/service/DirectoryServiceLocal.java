@@ -42,12 +42,16 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     public List<Long> createDirectory(long userId,String directoryName) throws Exception
     {
         List<Long> directoryIds = new ArrayList<Long>();
-        List<Directory> directoryList = directoryService.getDirectorysByParentId(APPID, userId, 0L);
-        if (directoryList != null && directoryList.size() >= 5) {
-            for (Directory directory : directoryList) {
-                directoryIds.add(directory.getId());
+        try {
+            List<Directory> directoryList = directoryService.getDirectorysByParentId(APPID, userId, 0L);
+            if (directoryList != null && directoryList.size() >= 5) {
+                for (Directory directory : directoryList) {
+                    directoryIds.add(directory.getId());
+                }
+                return directoryIds;
             }
-            return directoryIds;
+        } catch (DirectoryServiceException ex) {
+            logger.error("Can't get directoryList by userId: {}, parentId: {} error: {}", userId, 0, ex.getMessage());
         }
 
         try {
@@ -59,7 +63,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             Long directoryId = directoryService.createDirectoryForRoot(userId, directory);
             directoryIds.add(directoryId);
         } catch (DirectoryServiceException ex) {
-            logger.error("create directory failed. userId: {} directoryName: {}", userId, directoryName);
+            logger.error("create directory failed. userId: {} directoryName: {}, error: {}", userId, directoryName, ex.getMessage());
         }
         return directoryIds;
     }

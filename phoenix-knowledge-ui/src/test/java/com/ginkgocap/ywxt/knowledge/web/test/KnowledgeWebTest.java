@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -250,8 +251,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
-            ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+            List<Long> tagIds = createTag();
+            long [] tagIdList = convertList(tagIds);
+
+            ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, tagIdList);
+            ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, tagIdList);
             resItems.add(resItem1);
             resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
@@ -287,8 +291,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         try {
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, new long[]{3933811561988102L, 3933811356467203L});
-            ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+            List<Long> directoryIds = createDirectory();
+            long [] IdList = convertList(directoryIds);
+
+            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, IdList);
+            ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, IdList);
             resItems.add(resItem1);
             resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
@@ -351,7 +358,8 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            long directoryId = 3969635594797376L;
+        	List<Long> idList = createDirectory();
+            long directoryId = (idList != null && idList.size() > 0) ? idList.get(0) : 0L;
             String subUrl = "/byDirectory/" + directoryId + "/1/10";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
@@ -471,7 +479,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         List<Long> IdList = null;
         try {
             String subUrl = "/createTag/Tag" + getNextNum(); ///createTag/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, null);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             IdList = getIdList(result);
             System.out.print(IdList);
         } catch (Exception e) {
@@ -486,7 +494,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         List<Long> IdList = null;
         try {
             String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, null);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             IdList = getIdList(result);
             System.out.print(IdList);
         } catch (Exception e) {
@@ -501,6 +509,15 @@ public class KnowledgeWebTest extends BaseTestCase {
         Util.checkResponseWithData(result);
         String idsJson = Util.getResponseData(result);
         return (List<Long>)KnowledgeUtil.readValue(List.class, idsJson);
+    }
+
+    private long [] convertList(List<Long> tagIds)
+    {
+        long [] tagIdList = new long[tagIds.size()];
+        for (int index = 0; index < tagIds.size(); index++) {
+            tagIdList[index] = tagIds.get(index);
+        }
+        return tagIdList;
     }
 
     private int getNextNum()

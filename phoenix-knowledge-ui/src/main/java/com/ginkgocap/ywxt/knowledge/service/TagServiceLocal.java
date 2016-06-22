@@ -47,12 +47,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public List<Long> createTag(long userId,String tagName) throws Exception
     {
         List<Long> tagIds = new ArrayList<Long>();
-        List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long)sourceType);
-        if (tagList != null && tagList.size() >= 5) {
-            for (Tag tag : tagList) {
-                tagIds.add(tag.getId());
+        try {
+            List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
+            if (tagList != null && tagList.size() >= 5) {
+                for (Tag tag : tagList) {
+                    tagIds.add(tag.getId());
+                }
+                return tagIds;
             }
-            return tagIds;
+        } catch (TagServiceException ex) {
+            logger.error("can't get tag list by userId: {} appId: {} error: ", userId, APPID, ex.getMessage());
         }
 
         Tag tag = new Tag();
