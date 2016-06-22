@@ -257,7 +257,8 @@ public class KnowledgeController extends BaseController {
 			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
 		}
 
-        InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, user.getId(), APPID);
+        long userId = user.getId();
+        InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
         if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"permission validate failed.");
@@ -270,7 +271,6 @@ public class KnowledgeController extends BaseController {
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
 
-        long userId = user.getId();
         //delete tags
         tagServiceLocal.deleteTags(userId, knowledgeId);
 
@@ -301,9 +301,7 @@ public class KnowledgeController extends BaseController {
 
         //delete permission info
         try {
-            Permission permission = new Permission();
-            permission.setResType(ResourceType.KNOW.getVal());
-            permission.setResId(knowledgeId);//资源id
+            Permission permission = permissionInfo(new Permission(), knowledgeId, userId);
             InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
             if (ret == null || !ret.getResponseData()) {
                 logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
