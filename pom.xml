@@ -469,7 +469,7 @@
                 <!-- mongo中数据库 -->
                 <mongodb.database>knowledge-new</mongodb.database>
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://127.0.0.1:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://127.0.0.1:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>zhangwei</jdbc.username>
                 <jdbc.password>zhangwei</jdbc.password>
                 <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
@@ -507,7 +507,7 @@
                 <!-- mongo中数据库 -->
                 <mongodb.database>knowledge-new</mongodb.database>
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>zhangwei</jdbc.username>
                 <jdbc.password>zhangwei</jdbc.password>
                 <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
@@ -538,7 +538,7 @@
                 <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
 
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.101.42:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://192.168.101.42:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>ph_newknowledge</jdbc.username>
                 <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
 
