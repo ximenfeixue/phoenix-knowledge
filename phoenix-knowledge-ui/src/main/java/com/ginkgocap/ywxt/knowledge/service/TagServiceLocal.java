@@ -122,6 +122,11 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
                 logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
 
+                //First delete exist tag source
+                if (deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
+                    logger.error("delete old tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
+                }
+
                 if (knowledgeDetail != null && knowledgeBase != null) {
                     for (Long tagId : newTagIds) {
                         TagSource tagSource = new TagSource();
@@ -216,13 +221,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public boolean updateTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
         long knowledgeId = knowledgeDetail.getId();
-        try {
-            if (tagSourceService.removeTagSource(APPID, userId, knowledgeId)) {
-                logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId);
-                return false;
-            }
-        } catch (TagSourceServiceException ex) {
-            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
+        if (deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
+            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
             return false;
         }
 
@@ -281,5 +281,19 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         tagSource.setCreateAt(new Date().getTime());
 
         return tagSource;
+    }
+
+    private boolean deleteTagSourceByKnowledgeId(long userId, long knowledgeId)
+    {
+        try {
+            if (tagSourceService.removeTagSource(APPID, userId, knowledgeId)) {
+                logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId);
+                return false;
+            }
+        } catch (TagSourceServiceException ex) {
+            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
+            return false;
+        }
+        return true;
     }
 }

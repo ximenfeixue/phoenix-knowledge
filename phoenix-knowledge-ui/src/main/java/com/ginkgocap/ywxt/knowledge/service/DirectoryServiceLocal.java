@@ -68,6 +68,37 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return directoryIds;
     }
 
+    public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
+    {
+        long knowledgeId = knowledgeDetail.getId();
+        try {
+            if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
+                logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
+                return false;
+            }
+        } catch (DirectorySourceServiceException ex) {
+            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
+            return false;
+        }
+
+        List<Long> categoryIds = knowledgeDetail.getCategoryIds();
+        if(categoryIds == null || categoryIds.size() <= 0) {
+            return false;
+        }
+        for(Long directoryId : categoryIds){
+            if(directoryId >= 0) {
+                try {
+                    DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
+                    directorySourceService.createDirectorySources(directorySource);
+                } catch (DirectorySourceServiceException ex) {
+                    logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+                }
+            }
+        }
+
+        return true;
+    }
+
     public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
         logger.info("batchTags: {}", requestJson );
         if(StringUtils.isEmpty(requestJson)) {
@@ -114,6 +145,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
                 logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
 
+                if (!deleteDirectorySource(userId, knowledgeId)) {
+                    logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
+                }
                 for (Long directoryId : newDirectoryIds) {
                     DirectorySource directorySource = new DirectorySource();
                     directorySource.setUserId(userId);
@@ -200,37 +234,6 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return true;
     }
 
-    public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
-    {
-        long knowledgeId = knowledgeDetail.getId();
-        try {
-           if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
-               logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
-               return false;
-           }
-        } catch (DirectorySourceServiceException ex) {
-            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
-            return false;
-        }
-
-        List<Long> categoryIds = knowledgeDetail.getCategoryIds();
-        if(categoryIds == null || categoryIds.size() <= 0) {
-            return false;
-        }
-        for(Long directoryId : categoryIds){
-            if(directoryId >= 0) {
-                try {
-                    DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
-                    directorySourceService.createDirectorySources(directorySource);
-                } catch (DirectorySourceServiceException ex) {
-                    logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
-                }
-            }
-        }
-
-        return true;
-    }
-
     public boolean deleteDirectory(long userId, long knowledgeId)
     {
         try{
@@ -284,5 +287,19 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         directorySource.setCreateAt(new Date().getTime());
 
         return directorySource;
+    }
+
+    private boolean deleteDirectorySource(long userId, long knowledgeId)
+    {
+        try {
+            if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
+                logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
+                return false;
+            }
+        } catch (DirectorySourceServiceException ex) {
+            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
+            return false;
+        }
+        return true;
     }
 }
