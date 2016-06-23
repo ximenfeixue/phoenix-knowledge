@@ -171,6 +171,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
 		//知识详细表更新
         KnowledgeDetail ret = this.knowledgeMongoDao.update(knowledgeDetail);
+        logger.info("knowledgeDetail: {}", knowledgeDetail);
+        System.out.println("knowledgeDetail: "+knowledgeDetail);
 
         KnowledgeBase knowledge = dataCollection.generateKnowledge();
 		

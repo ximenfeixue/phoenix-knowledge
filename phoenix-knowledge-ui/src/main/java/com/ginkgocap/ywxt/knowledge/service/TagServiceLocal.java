@@ -216,29 +216,35 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public boolean updateTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
         long knowledgeId = knowledgeDetail.getId();
-        try{
-            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
-            if(removeTagsFlag){
-                List<Long> tagsList = knowledgeDetail.getTags();
-                if(tagsList != null){
-                    for(Long tagId : tagsList){
-                        if(tagId > 0){
-                            TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
-                            tagSourceService.createTagSource(tagSource);
-                            logger.info("create tag success tagId:"+tagId);
-                        }
-                    }
-                }
-            }
-            else{
-                logger.error("update tags remove failed...userId: " + userId + ", knowledgeId: " +knowledgeId);
+        try {
+            if (tagSourceService.removeTagSource(APPID, userId, knowledgeId)) {
+                logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId);
                 return false;
             }
-        }catch(Exception ex){
-            logger.error("update tags remove failed...userId: " + userId + " knowledgeId: " +knowledgeId);
+        } catch (TagSourceServiceException ex) {
+            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
             return false;
         }
 
+        List<Long> tagsList = knowledgeDetail.getTags();
+        if(tagsList != null || tagsList.size() <= 0) {
+            return false;
+        }
+
+        for(Long tagId : tagsList){
+            if(tagId > 0){
+                TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
+                try {
+                    tagSourceService.createTagSource(tagSource);
+                    logger.info("create tag success tagId:" + tagId);
+                } catch (TagSourceServiceException ex) {
+                    logger.error("update tags failed...userId: " + userId + " knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
+                }
+                catch(Exception ex){
+                    logger.error("update tags failed...userId: " + userId + " knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
+                }
+            }
+        }
         return true;
     }
 

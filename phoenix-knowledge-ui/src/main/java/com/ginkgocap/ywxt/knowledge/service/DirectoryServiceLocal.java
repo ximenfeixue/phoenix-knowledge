@@ -192,7 +192,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                     DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
                     directorySourceService.createDirectorySources(directorySource);
                 }
-                logger.info("directoryId:" + directoryId);
+                logger.info("create directory source success: knowledgeId: {}, directoryId: {}", knowledgeDetail.getId() ,directoryId);
             }
         } catch (DirectorySourceServiceException ex) {
             ex.printStackTrace();
@@ -203,29 +203,31 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
         long knowledgeId = knowledgeDetail.getId();
-        try{
-            boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
-            if(removeDirectoryFlag){
-                List<Long> categoryList = knowledgeDetail.getCategoryIds();
-                if(categoryList != null && categoryList.size() > 0){
-                    for(Long directoryId : categoryList){
-                        if(directoryId >= 0) {
-                            DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
-                            directorySourceService.createDirectorySources(directorySource);
-                        }
-                        logger.info("create directory success knowledgeId: {} directoryId: {}" + directoryId, knowledgeDetail.getId());
-                    }
-                }
-            }
-            else{
-                logger.error("update category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
-                return false;
-            }
-        }catch(Exception ex){
-            logger.error("update category failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
-            ex.printStackTrace();
+        try {
+           if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
+               logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
+               return false;
+           }
+        } catch (DirectorySourceServiceException ex) {
+            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
             return false;
         }
+
+        List<Long> categoryIds = knowledgeDetail.getCategoryIds();
+        if(categoryIds == null || categoryIds.size() <= 0) {
+            return false;
+        }
+        for(Long directoryId : categoryIds){
+            if(directoryId >= 0) {
+                try {
+                    DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
+                    directorySourceService.createDirectorySources(directorySource);
+                } catch (DirectorySourceServiceException ex) {
+                    logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+                }
+            }
+        }
+
         return true;
     }
 
