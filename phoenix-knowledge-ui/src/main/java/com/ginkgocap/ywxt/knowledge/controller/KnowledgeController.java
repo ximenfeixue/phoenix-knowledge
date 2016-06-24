@@ -408,10 +408,13 @@ public class KnowledgeController extends BaseController {
 		}
 
         try {
-            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW);
+            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
             Notification noti = ret.getNotification();
             if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())) {
                 data.setPermission(ret.getResponseData());
+            }
+            else {
+                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             }
         }catch (Exception ex) {
             logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
