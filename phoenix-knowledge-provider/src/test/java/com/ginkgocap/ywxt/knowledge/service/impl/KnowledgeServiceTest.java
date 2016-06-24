@@ -23,8 +23,8 @@ public class KnowledgeServiceTest extends TestBase {
     @Autowired
 	private KnowledgeService knowledgeService;
 
-    @Autowired
-    KnowledgeOtherService knowledgeOtherService;
+    //@Autowired
+    //KnowledgeOtherService knowledgeOtherService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
@@ -291,17 +291,6 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }*/
 
-    @org.junit.Test
-    public void testBatchTags()
-    {
-        System.out.println("===testGetAllByDirectoryId===");
-        String jsonStr = "[{\"id\":1112323,\"title\":\"testBatchTags\",\"tagIds\":[3933811561988102,3933811356467203]},{\"id\":1112345,\"title\":\"testBatchTags\",\"tagIds\":[3933811561988102,3933811356467203]}]";
-        try {
-            knowledgeOtherService.batchTags(7L, jsonStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private DataCollection createKnowledge(String title)
     {

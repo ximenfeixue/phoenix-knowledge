@@ -13,18 +13,25 @@ public abstract class BaseServiceLocal {
 
     private Logger logger = LoggerFactory.getLogger(BaseServiceLocal.class);
 
-    protected List<Long> convertStToLong(List<String> idList)
+    protected List<Long> convertStToLong(List<Object> idList)
     {
         if (idList == null || idList.size() <= 0) {
             return null;
         }
         List<Long> newIdList =  new ArrayList<Long>(idList.size());
-        for (String id : idList) {
+        for (int index = 0; index < idList.size(); index++) {
             try {
-                long newId = Long.parseLong(id);
+                long newId = 0L;
+                Object id = idList.get(index);
+                if (id instanceof String) {
+                    newId = Long.valueOf((String)id);
+                }
+                else if (id instanceof Long) {
+                    newId = Long.valueOf((Long)id);
+                }
                 newIdList.add(newId);
             } catch(NumberFormatException ex) {
-                logger.error("Convert String to number failed: {}", id);
+                logger.error("Convert String to number failed: {}", idList.get(index));
             }
         }
         return newIdList;

@@ -121,14 +121,14 @@ public class TestData {
         knowledgeDetail.setModifyUserId(userId);
         knowledgeDetail.setCreateTime(System.currentTimeMillis());
         knowledgeDetail.setModifyTime(System.currentTimeMillis());
-        List<Long> tagIds = new ArrayList<Long>(2);
-        tagIds.add(3971096034672650L);
-        tagIds.add(3969557253586945L);
-        knowledgeDetail.setTags(tagIds);
-        List<Long> cataIds = new ArrayList<Long>(2);
-        cataIds.add(3969635594797376L);
-        cataIds.add(3971096089198959L);
-        knowledgeDetail.setCategoryIds(cataIds);
+//        List<Long> tagIds = new ArrayList<Long>(2);
+//        tagIds.add(3971096034672650L);
+//        tagIds.add(3969557253586945L);
+//        knowledgeDetail.setTags(tagIds);
+//        List<Long> cataIds = new ArrayList<Long>(2);
+//        cataIds.add(3969635594797376L);
+//        cataIds.add(3971096089198959L);
+//        knowledgeDetail.setCategoryIds(cataIds);
 
         return knowledgeDetail;
     }

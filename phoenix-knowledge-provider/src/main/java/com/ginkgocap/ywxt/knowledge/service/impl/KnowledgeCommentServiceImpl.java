@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +35,9 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
             knowledgeComment.setId(knowledgeCommonService.getKnowledgeSeqenceId());
+            if (knowledgeComment.getCreateTime() <= 0) {
+                knowledgeComment.setCreateTime(new Date().getTime());
+            }
             mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);
             return knowledgeComment.getId();
         }
@@ -50,6 +55,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 
         Update update = new Update();
         update.set(Constant.Content, comment);
+        update.addToSet(Constant.createTime, new Date().getTime());
         KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
         if (knowledgeComment == null) {
             logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + commentId);
@@ -83,6 +89,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 
         Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
         Query query = new Query(c);
+        query.with(new Sort(Sort.Direction.DESC, "timestamp"));
 
         return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
     }

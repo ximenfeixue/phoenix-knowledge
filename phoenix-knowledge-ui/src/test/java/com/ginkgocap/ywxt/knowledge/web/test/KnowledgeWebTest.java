@@ -264,14 +264,18 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
+        	DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
             List<Long> tagIds = createTag();
             long [] tagIdList = convertList(tagIds);
-
-            ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, tagIdList);
-            ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, tagIdList);
+            long knowledgeId = 0L;
+            if (data != null ) {
+            	knowledgeId = data.getKnowledgeDetail().getId();
+            }
+            ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
+            //ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, tagIdList);
             resItems.add(resItem1);
-            resItems.add(resItem2);
+            //resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
 
             /*
@@ -304,14 +308,19 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
+        	DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
             List<Long> directoryIds = createDirectory();
             long [] IdList = convertList(directoryIds);
 
-            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", 1112323L, IdList);
-            ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, IdList);
+            long knowledgeId = 0L;
+            if (data != null ) {
+            	knowledgeId = data.getKnowledgeDetail().getId();
+            }
+            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", knowledgeId, IdList);
+            //ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, IdList);
             resItems.add(resItem1);
-            resItems.add(resItem2);
+            //resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchCatalogs", requestJson);
             Util.checkRequestResultSuccess(result);
@@ -460,11 +469,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
         try {
             if (data != null && data.getKnowledgeDetail() != null) {
-                //data.getKnowledgeDetail().setTags(createTag());
+                data.getKnowledgeDetail().setTags(createTag());
                 //data.getKnowledgeDetail().setCategoryIds(createDirectory());
                 String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
                 JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
-                Util.checkResponse(response);
+                Util.checkResponseWithData(response);
                 long knowledgeId = Long.parseLong(Util.getResponseData(response));
                 data.getKnowledgeDetail().setId(knowledgeId);
                 data.getReference().setKnowledgeId(knowledgeId);

@@ -39,7 +39,8 @@ public abstract class BaseTestCase extends TestCase
         else if ("testOnline".equals(testEnv)) {
             Util.loginUrl = "http://test.online.gintong.com/cross/login/loginConfiguration.json";
             //hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
-            hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
+            //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }

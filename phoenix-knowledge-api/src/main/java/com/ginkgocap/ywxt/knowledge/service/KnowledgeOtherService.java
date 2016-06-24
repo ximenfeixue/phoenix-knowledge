@@ -21,6 +21,7 @@ public interface KnowledgeOtherService
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
+     /*
     //TODO: this just test interface, need to delete before deploy to online system
     public List<Long> createTag(long userId,short type,String tagName) throws Exception;
 
@@ -28,6 +29,7 @@ public interface KnowledgeOtherService
     //End
 
     //Common component will remove from knowledge
+
     public InterfaceResult batchTags(long userId,String requestJson) throws Exception;
 
     public InterfaceResult batchCatalogs(long userId,String requestJson) throws Exception;
@@ -39,4 +41,5 @@ public interface KnowledgeOtherService
     public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds) throws Exception;
 
     public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception;
+    */
 }

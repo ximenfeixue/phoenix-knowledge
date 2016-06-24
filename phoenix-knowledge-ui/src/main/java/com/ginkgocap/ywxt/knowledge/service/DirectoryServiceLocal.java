@@ -117,7 +117,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 //Set<String> set = map.keySet();
                 String title = map.get("title").toString();
                 long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<String> directoryIds = (List<String>)map.get("tagIds");
+                List<Object> directoryIds = (List<Object>)map.get("tagIds");
 
                 //Update knowledge Detail
                 //Update knowledge Detail
@@ -129,20 +129,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
                 List<Long> newDirectoryIds = convertStToLong(directoryIds);
                 KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
-                knowledgeDetail.setTags(newDirectoryIds);
+                knowledgeDetail.setCategoryIds(newDirectoryIds);
 
-                //Update knowledge base
-                KnowledgeBase knowledgeBase = data.getKnowledge();
-
-                String tagStr = directoryIds.toString();
-                tagStr = tagStr.substring(1, tagStr.length()-1);
-                if (tagStr.length() > 255) {
-                    int lastIndex = tagStr.lastIndexOf(",");
-                    tagStr = tagStr.substring(0, lastIndex-1);
-                }
-                knowledgeBase.setTags(tagStr);
-
-                knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
+                knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
                 logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
 
                 if (!deleteDirectorySource(userId, knowledgeId)) {
@@ -158,9 +147,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                     //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
                     directorySource.setSourceType((int) sourceType);
                     directorySource.setCreateAt(new Date().getTime());
-                    logger.info("before create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
+                    logger.info("before create directory source. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                     directorySourceService.createDirectorySources(directorySource);
-                    logger.info("create directory source, directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
+                    logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                 }
             }
         } catch (DirectorySourceServiceException ex) {

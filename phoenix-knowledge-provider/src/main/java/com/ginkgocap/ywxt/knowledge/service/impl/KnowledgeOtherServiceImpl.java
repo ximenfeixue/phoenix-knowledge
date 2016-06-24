@@ -53,17 +53,17 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     @Autowired
     KnowledgeMongoDao knowledgeMongoDao;
 
-    @Autowired
-    private DirectorySourceService directorySourceService;
+    //@Autowired
+    //private DirectorySourceService directorySourceService;
 
-    @Autowired
-    private DirectoryService directoryService;
+    //@Autowired
+    //private DirectoryService directoryService;
 
-    @Autowired
-    private TagSourceService tagSourceService;
+    //@Autowired
+    //private TagSourceService tagSourceService;
 
-    @Autowired
-    private TagService tagService;
+    //@Autowired
+    //private TagService tagService;
 
     private int maxCount = 100;
     private int maxSize = 10;
@@ -146,6 +146,16 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Have reported this knowledge!");
     }
 
+    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,short columnId)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
+        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
+        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        return query;
+    }
+
+    /*
     //TODO: this just test interface, need to delete before deploy to online system
     public List<Long> createTag(long userId,short tagType,String tagName) throws Exception
     {
@@ -216,6 +226,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
                     continue;
                 }
 
+                //
                 for (Long tagId : newTagIds) {
                     TagSource tagSource = new TagSource();
                     tagSource.setUserId(userId);
@@ -333,15 +344,6 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
     }
 
-    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,short columnId)
-    {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
-        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        return query;
-    }
-
     private List<Long> convertStToLong(List<String> idList)
     {
         if (idList == null || idList.size() <= 0) {
@@ -418,5 +420,5 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         logger.info("add knowledge tag to mysql knowledgeId: {}", knowledgeId);
 
         return true;
-    }
+    }*/
 }
