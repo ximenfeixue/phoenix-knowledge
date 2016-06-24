@@ -276,6 +276,7 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
+    /*
     @Test
     public void testGetAllByDirectoryId()
     {
@@ -288,7 +289,7 @@ public class KnowledgeServiceTest extends TestBase {
             e.printStackTrace();
             TestCase.fail();
         }
-    }
+    }*/
 
     @org.junit.Test
     public void testBatchTags()

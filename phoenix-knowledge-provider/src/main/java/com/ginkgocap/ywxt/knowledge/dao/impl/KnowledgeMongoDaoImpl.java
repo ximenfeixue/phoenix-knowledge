@@ -8,6 +8,8 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicUpdate;
@@ -24,7 +26,8 @@ import java.util.List;
 
 @Repository("knowledgeMongoDao")
 public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
-	
+
+    private Logger logger = LoggerFactory.getLogger(KnowledgeMongoDaoImpl.class);
 	@Resource
 	private MongoTemplate mongoTemplate;
 
@@ -81,6 +84,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
 		WriteResult result = mongoTemplate.updateFirst(query, getUpdate(knowledgeDetail), currCollectionName);
         if (result.getN()<=0) {
+            logger.error("update knowledge detail failed. knowledgeId: {}",knowledgeDetail.getId());
             return null;
         }
 		

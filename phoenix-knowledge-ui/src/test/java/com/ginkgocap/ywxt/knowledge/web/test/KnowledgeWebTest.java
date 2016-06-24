@@ -460,8 +460,8 @@ public class KnowledgeWebTest extends BaseTestCase {
         DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
         try {
             if (data != null && data.getKnowledgeDetail() != null) {
-                data.getKnowledgeDetail().setTags(createTag());
-                data.getKnowledgeDetail().setCategoryIds(createDirectory());
+                //data.getKnowledgeDetail().setTags(createTag());
+                //data.getKnowledgeDetail().setCategoryIds(createDirectory());
                 String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
                 JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
                 Util.checkResponse(response);

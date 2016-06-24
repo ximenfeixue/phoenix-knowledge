@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Repository("knowledgeReferenceDao")
 public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> implements KnowledgeReferenceDao {
-
+	private Logger logger = LoggerFactory.getLogger(KnowledgeReferenceDaoImpl.class);
 	@Override
 	public KnowledgeReference insert(KnowledgeReference knowledgeReference)
 			throws Exception {
@@ -20,7 +22,7 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
         }
 		
 		if(knowledgeReference.getKnowledgeId() <= 0) {
-			throw new Exception("插入知识来源表时，知识主键缺失");
+			throw new Exception("插入知识来源表时，知识ID缺失");
 		}
 		
 		long currentDate = new Date().getTime();
@@ -52,11 +54,19 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	@Override
 	public KnowledgeReference update(KnowledgeReference knowledgeReference)
 			throws Exception {
-		if(knowledgeReference == null)
+		if(knowledgeReference == null) {
 			return null;
+		}
 
-        long currentDate = new Date().getTime();
-		knowledgeReference.setModifyDate(currentDate);
+		long knowledgeId = knowledgeReference.getKnowledgeId();
+		KnowledgeReference oldValue = this.getByKnowledgeId(knowledgeId);
+		if (oldValue == null) {
+			logger.error("update an not exist knowledge, knowledgeId: {}",knowledgeId);
+			return null;
+		}
+
+		knowledgeReference.setId(oldValue.getId());
+		knowledgeReference.setModifyDate(new Date().getTime());
 		this.updateEntity(knowledgeReference);
 		
 		return knowledgeReference;

@@ -172,8 +172,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		//知识详细表更新
         KnowledgeDetail ret = this.knowledgeMongoDao.update(knowledgeDetail);
         logger.info("knowledgeDetail: {}", knowledgeDetail);
-        System.out.println("knowledgeDetail: "+knowledgeDetail);
-
         KnowledgeBase knowledge = dataCollection.generateKnowledge();
 		
 		//知识简表更新
@@ -182,18 +180,17 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		} catch (Exception e) {
 			//this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,null,null, true, false, false, false, false);
 			logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+			return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
 		
 		//知识来源表更新
-        KnowledgeReference updatedReference = null;
         if (knowledgeReference != null) {
             try {
-                updatedReference = this.knowledgeReferenceDao.update(knowledgeReference);
+                this.knowledgeReferenceDao.update(knowledgeReference);
             } catch (Exception e) {
                 //this.updateRollBack(knowledgeId, columnId, oldKnowledgeDetail, knowledge, null, true, true, false, false, false);
                 logger.error("知识来源表更新失败！失败原因：\n" + e.getMessage());
-                return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
             }
         }
 
@@ -523,6 +520,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return getBaseByIds(knowledgeIds);
     }
 
+    /*
     @Override
     public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception
     {
@@ -537,7 +535,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         return getBaseByIds(knowledgeIds);
-    }
+    }*/
 
     @Override
     public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {

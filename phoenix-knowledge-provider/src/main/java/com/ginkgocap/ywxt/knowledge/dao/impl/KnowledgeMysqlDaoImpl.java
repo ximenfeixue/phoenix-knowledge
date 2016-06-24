@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
 
 @Repository("knowledgeMysqlDao")
 public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements KnowledgeMysqlDao {
-
+	private Logger logger = LoggerFactory.getLogger(KnowledgeMysqlDaoImpl.class);
 	@Override
 	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception
     {
@@ -36,12 +38,24 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public KnowledgeBase update(KnowledgeBase knowledgeBase) throws Exception {
 		
-		if(knowledgeBase == null)
+		if(knowledgeBase == null) {
 			return null;
-		
+		}
+		KnowledgeBase oldValue = this.getByKnowledgeId(knowledgeBase.getKnowledgeId());
+		if (oldValue == null) {
+			logger.error("update an not exist knowledge, knowledgeId: {}",knowledgeBase.getKnowledgeId());
+			return null;
+		}
+		knowledgeBase.setId(oldValue.getId());
+		knowledgeBase.setModifyDate(new Date().getTime());
+		if (knowledgeBase.getModifyUserId() <= 0) {
+			knowledgeBase.setModifyUserId(knowledgeBase.getCreateUserId());
+		}
+		if (knowledgeBase.getModifyUserName() == null) {
+			knowledgeBase.setModifyUserName(knowledgeBase.getCreateUserName());
+		}
 		this.updateEntity(knowledgeBase);
-		
-		return this.getByKnowledgeId(knowledgeBase.getId());
+		return knowledgeBase;
 	}
 
 	@Override
