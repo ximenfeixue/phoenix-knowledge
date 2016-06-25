@@ -438,7 +438,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/4/1/12/test";  //user/{columnId}/{start}/{size}
+            String subUrl = "/knowledgeRelated/2/0/12/test";  //user/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
