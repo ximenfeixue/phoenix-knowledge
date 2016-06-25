@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import junit.framework.Assert;
+
 /**
  * Created by Chen Peifeng on 2016/3/31.
  */
@@ -367,7 +369,8 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            long tagId = 3985615481995309L;
+        	List<Long> tagIds = this.createTag();
+            long tagId = (tagIds != null && tagIds.size() > 0) ? tagIds.get(0) : 0L;
             String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
@@ -504,7 +507,7 @@ public class KnowledgeWebTest extends BaseTestCase {
             String subUrl = "/createTag/Tag" + getNextNum(); ///createTag/{tagName}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             IdList = getIdList(result);
-            System.out.print(IdList);
+            Assert.assertTrue(IdList != null && IdList.size() > 0);
         } catch (Exception e) {
             e.printStackTrace();
             fail();

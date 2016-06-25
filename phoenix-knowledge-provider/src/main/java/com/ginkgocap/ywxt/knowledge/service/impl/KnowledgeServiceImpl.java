@@ -49,12 +49,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 //	@Autowired
 //	private DiaryService diaryService;
 
-    @Autowired
-    private DirectorySourceService directorySourceService;
-
-    @Autowired
-    private TagSourceService tagSourceService;
-
     boolean isBigData = false;
     boolean isUserFeed = false;
 
@@ -261,7 +255,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
     @Override
-    public InterfaceResult updateKnowledge(DataCollection dataCollection) throws Exception {
+    public boolean updateKnowledge(DataCollection dataCollection) throws Exception {
 
         KnowledgeBase knowledge = dataCollection.getKnowledge();
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
@@ -278,10 +272,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             }
         } catch (Exception e) {
             logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+            return false;
         }
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return true;
     }
 
 	@Override
@@ -507,37 +501,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByTagId(long tagId,int start,int size) throws Exception
-    {
-        List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagIdAndType(APPID, tagId, (long)sourceType, start, size );
-        List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
-        if (tagSources != null && tagSources.size() > 0) {
-            for (TagSource tag : tagSources) {
-                knowledgeIds.add(tag.getSourceId());
-            }
-        }
-
-        return getBaseByIds(knowledgeIds);
-    }
-
-    /*
-    @Override
-    public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception
-    {
-        Object[] parameter = new Object[]{userId, APPID, sourceType, directoryId};
-        List<DirectorySource> directorySources = directorySourceService.getSourcesByDirectoryIdAndSourceType(start, size, parameter);
-        List<Long> knowledgeIds = new ArrayList<Long>(directorySources.size());
-        if (directorySources != null && directorySources.size() > 0) {
-            for (DirectorySource source : directorySources) {
-                knowledgeIds.add(source.getSourceId());
-                logger.info("add knowledge source: "+source.getSourceId());
-            }
-        }
-
-        return getBaseByIds(knowledgeIds);
-    }*/
-
-    @Override
     public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
         return this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size);
     }
@@ -674,35 +637,5 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         return returnList;
-    }
-
-    private DirectorySource createDirectorySource(long userId, long directoryId,KnowledgeDetail knowledge)
-    {
-        DirectorySource directorySource = new DirectorySource();
-        directorySource.setUserId(userId);
-        directorySource.setDirectoryId(directoryId);
-        directorySource.setAppId(APPID);
-        directorySource.setSourceId(knowledge.getId());
-        directorySource.setSourceTitle(knowledge.getTitle());
-        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-        directorySource.setSourceType(sourceType);
-        directorySource.setCreateAt(new Date().getTime());
-
-        return directorySource;
-    }
-
-    private TagSource createTagSource(long userId, Long tagId,KnowledgeDetail knowledge)
-    {
-        TagSource tagSource = new TagSource();
-        tagSource.setUserId(userId);
-        tagSource.setAppId(APPID);
-        tagSource.setSourceId(knowledge.getId());
-        tagSource.setSourceTitle(knowledge.getTitle());
-        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-        tagSource.setSourceType(sourceType);
-        tagSource.setTagId(tagId);
-        tagSource.setCreateAt(new Date().getTime());
-
-        return tagSource;
     }
 }

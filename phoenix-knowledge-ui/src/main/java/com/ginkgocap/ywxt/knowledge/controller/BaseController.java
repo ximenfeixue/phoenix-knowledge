@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 public abstract class BaseController {
 
@@ -101,6 +103,7 @@ public abstract class BaseController {
 
         return requestJson;
     }
+
 
     protected InterfaceResult checkColumn(short column)
     {

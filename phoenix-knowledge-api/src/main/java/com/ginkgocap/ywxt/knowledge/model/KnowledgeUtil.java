@@ -1,14 +1,17 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.ywxt.user.model.User;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -103,15 +106,9 @@ public final class KnowledgeUtil {
 
     public static <T> T readValue(final FilterProvider filterProvider, Class<T> valueType, final String content, String... values)
     {
-        try {
-            JsonNode node = getJsonNode(content, values);
-            if (node != null) {
-                return readValue(filterProvider, valueType, node.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        JsonNode node = getJsonNode(content, values);
+        return readValue(filterProvider, valueType, node.toString());
+
     }
 
     public static <T> T readValue(Class<T> valueType, final String jsonContent) {
@@ -128,6 +125,10 @@ public final class KnowledgeUtil {
             }
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             return objectMapper.readValue(jsonContent, valueType);
+        } catch(JsonParseException ex) {
+            ex.printStackTrace();
+        } catch(JsonMappingException ex) {
+            ex.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

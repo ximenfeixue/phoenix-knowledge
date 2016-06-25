@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * @Title: 知识数据的大集合对象
  * @Description: 将涉及到知识的所有对象统一集合到此大集合对象中，以便统一管理以及统一标准
- * @author 周仕奇
  * @date 2016年1月15日 上午10:31:31
  * @version V1.0.0
  */

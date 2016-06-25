@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * @Title: 知识详细表
  * @Description: 存储知识详细，使用mongoDB进行存储
- * @author 周仕奇
  * @date 2016年1月11日 下午2:31:19
  * @version V1.0.0
  */
@@ -25,7 +24,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 插入
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:20
 	 * @param knowledgeDetail
 	 * @return
@@ -35,7 +33,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 批量插入
-	 * @author 周仕奇
 	 * @date 2016年1月13日 下午4:24:56
 	 * @param knowledgeDetailList
 	 * @return
@@ -45,7 +42,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 更新
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:29
 	 * @param knowledgeDetail
 	 * @return
@@ -55,7 +51,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 先删除后插入
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:44
 	 * @param knowledgeDetail
 	 * @return
@@ -65,7 +60,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 根据主键及栏目删除数据
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:47
 	 * @param id
 	 * @param columnId
@@ -76,7 +70,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 根据主键list以及栏目批量删除数据
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:50
 	 * @param ids
 	 * @param columnId
@@ -87,7 +80,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 根据用户Id以及栏目删除数据
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:53
 	 * @param createUserId
 	 * @param columnId
@@ -98,7 +90,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 根据主键以及栏目提取数据
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:56
 	 * @param id
 	 * @param columnId
@@ -109,7 +100,6 @@ public interface KnowledgeMongoDao {
 	
 	/**
 	 * 根据主键list以及栏目提取数据
-	 * @author 周仕奇
 	 * @date 2016年1月13日 上午10:54:58
 	 * @param ids
 	 * @param columnId

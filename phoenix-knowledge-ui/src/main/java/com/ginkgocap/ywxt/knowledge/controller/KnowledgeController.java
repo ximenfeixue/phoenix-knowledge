@@ -116,22 +116,27 @@ public class KnowledgeController extends BaseController {
             logger.error("Save Tag info failed, userId: {} knowledgeId: ", userId, knowledgeId);
         }
 
-        if (!directoryServiceLocal.saveDirectorySource(userId, knowledgeDetail)) {
-            logger.error("Save Directory info failed, userId: {} knowledgeId: ", userId, knowledgeId);
+        List<Long> successIds = directoryServiceLocal.saveDirectorySource(userId, knowledgeDetail);
+        if (successIds != null && successIds.size() >0) {
+            logger.error("Save Directory success. userId: {} knowledgeId: {}, plan size: {}, success size: {}",
+                    userId, knowledgeId, knowledgeDetail.getCategoryIds().size(), successIds.size());
+        }
+        else {
+            logger.error("Save Directory info have error, userId: {} knowledgeId: {}", userId, knowledgeId);
         }
         //save asso information
 
         //TODO: If this step failed, how to do ?
         try {
             List<Associate> as  = dataCollection.getAsso();
-            if (as == null) {
-                logger.error("asso it null or converted failed...");
-                //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
+            if (as != null) {
+                createAssociate(as, knowledgeId, userId);
+            } else {
+                logger.error("associate it null or converted failed, so skip to save!");
             }
 
-            createAssociate(as, knowledgeId, userId);
         }catch (Exception e) {
-            logger.error("Insert asso failed : " + e.getMessage());
+            logger.error("Insert associate failed : " + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
@@ -619,10 +624,14 @@ public class KnowledgeController extends BaseController {
         if(user == null || tagId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
+        List<Long> knowledgeIds = tagServiceLocal.getKnowlegeIdsByTagId(tagId, start, size);
+        if (knowledgeIds == null || knowledgeIds.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"No result.");
+        }
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getBaseByTagId(tagId, start, size);
+            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -636,7 +645,6 @@ public class KnowledgeController extends BaseController {
     public InterfaceResult<List<KnowledgeBase>> getAllByDirectoryId(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception
     {
-
         User user = this.getUser(request);
         if(user == null || directoryId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -885,14 +893,14 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        //logger.info("batchTags: {}", requestJson );
-        //TypeReference javaType = new TypeReference<List<ResItem>>(){};
-        //List<ResItem> tagItems = KnowledgeUtil.readListValue(ResItem.class, requestJson);
-        //if (tagItems == null || tagItems.size() <= 0) {
-         //   return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-       // }
+        logger.info("batchTags: {}", requestJson );
+        List<ResItem> batchItems = KnowledgeUtil.readListValue(ResItem.class, requestJson);
+        if (batchItems == null || batchItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+       }
 
         try {
+            //return this.tagServiceLocal.batchTags(knowledgeService, user.getId(), batchItems);
             return this.tagServiceLocal.batchTags(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("batch tags failed！reason："+e.getMessage());
@@ -916,14 +924,15 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-//        logger.info("batchCatalogs: "+requestJson);
-//        TypeReference javaType = new TypeReference<List<ResItem>>(){};
-//        List<ResItem> directoryItems = KnowledgeUtil.readValue(javaType, requestJson);
-//        if (directoryItems == null || directoryItems.size() <= 0) {
-//            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-//        }
+        logger.info("batchCatalogs: "+requestJson);
+
+        /*List<ResItem> batchItems = KnowledgeUtil.readListValue(ResItem.class, requestJson);
+        if (batchItems == null || batchItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }*/
 
         try {
+            //return this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), batchItems);
             return this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("Batch catalogs failed！reason："+e.getMessage());
@@ -947,7 +956,6 @@ public class KnowledgeController extends BaseController {
 
         String requestJson = this.getBodyParam(request);
         List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
-        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
             return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"tag list is null...");

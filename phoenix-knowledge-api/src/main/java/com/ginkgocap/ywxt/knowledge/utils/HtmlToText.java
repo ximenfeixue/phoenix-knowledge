@@ -12,7 +12,6 @@ public class HtmlToText {
 	
 	/**
 	 * html转化为text
-	 * @author 周仕奇
 	 * @date 2016年1月14日 下午3:57:29
 	 * @param inputString
 	 * @return
@@ -67,7 +66,6 @@ public class HtmlToText {
 
 	/**
 	 * 知识内容截取存入简介
-	 * @author 周仕奇
 	 * @date 2016年1月14日 下午3:57:47
 	 * @param htmlStr
 	 * @return

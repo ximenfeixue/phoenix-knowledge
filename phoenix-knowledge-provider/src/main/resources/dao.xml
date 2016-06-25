@@ -192,44 +192,6 @@
                   sqlitem="select id from tb_knowledge_count order by hotNum desc limit 0,?"
                   sqlType="hsql" valueProperty="id" keyProperty="num" update="true" />
         </object>
-
-        <object name="com.ginkgocap.ywxt.knowledge.model.ColumnSys"
-            listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
-            strategyProperty="id">
-            <dbStrategy name="aa"
-                clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy"
-                useCRC32="true">
-                <pattern value="[02468]$" group="g2" />
-                <pattern value="[13579]$" group="g3" />
-            </dbStrategy>
-
-            <list name="ColumnSysDao_queryListByUserId"
-                sqlitem="select id from tb_knowledge_column_system where user_id = ?"
-                sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
-        </object>
-
-        <object name="com.ginkgocap.ywxt.knowledge.model.ColumnCustom"
-            listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
-            strategyProperty="id">
-            <dbStrategy name="aa"
-                clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy"
-                useCRC32="true">
-                <pattern value="[02468]$" group="g2" />
-                <pattern value="[13579]$" group="g3" />
-            </dbStrategy>
-
-            <list name="ColumnCustomDao_queryListByUserId"
-                sqlitem="select id from tb_knowledge_column_customer where user_id = ?"
-                sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
-
-            <list name="ColumnCustomDao_queryMaxCCByUid"
-                sqlitem="select id from tb_knowledge_column_customer where user_id = ? order by id desc limit 1"
-                sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
-
-            <list name="ColumnCustomDao_queryListByPidAndUserId"
-                sqlitem="select id from tb_knowledge_column_customer where user_id = ? and pcid = ?"
-                sqlType="hsql" valueProperty="id" keyProperty="id" update="true" />
-        </object>
     </route>
 </dal>
 

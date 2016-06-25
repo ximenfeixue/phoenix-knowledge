@@ -7,10 +7,7 @@ import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
 import com.ginkgocap.parasol.directory.service.DirectoryService;
 import com.ginkgocap.parasol.directory.service.DirectorySourceService;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -39,7 +36,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     private DirectoryService directoryService;
 
     //Just for Unit test
-    public List<Long> createDirectory(long userId,String directoryName) throws Exception
+    public List<Long> createDirectory(long userId,String directoryName)
     {
         List<Long> directoryIds = new ArrayList<Long>();
         try {
@@ -88,7 +85,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         for(Long directoryId : categoryIds){
             if(directoryId >= 0) {
                 try {
-                    DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
+                    DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
                     directorySourceService.createDirectorySources(directorySource);
                 } catch (DirectorySourceServiceException ex) {
                     logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
@@ -97,6 +94,51 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
 
         return true;
+    }
+
+    public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,List<ResItem> directoryItems) throws Exception
+    {
+        logger.info("batchTags: {}", directoryItems );
+        if(directoryItems == null || directoryItems.size() <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+            for (ResItem item : directoryItems) {
+                long knowledgeId = item.getId();
+                List<Long> directoryIds = item.getTagIds();
+
+                if (directoryIds == null || directoryIds.size() <= 0) {
+                    logger.error("Directory list is null or empty, so skip to add. knowledgeId: {}", knowledgeId);
+                }
+
+                //Update knowledge Detail
+                DataCollection data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
+                if (data == null) {
+                    logger.error("can't find this knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
+                    continue;
+                }
+
+                KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
+                if (data.getKnowledgeDetail() == null) {
+                    logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
+                    continue;
+                }
+
+                if (!deleteDirectorySource(userId, knowledgeId)) {
+                    logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
+                }
+
+                //Batch create directory
+                List<Long> successIds = createDirectorySource(userId, directoryIds, knowledgeDetail);
+
+                //Update knowledge detail
+                knowledgeDetail.setCategoryIds(successIds);
+
+                knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
+                logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+            }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance("create directory success.");
     }
 
     public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
@@ -111,53 +153,43 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
-        try {
-            for (int index = 0; index < directoryItems.size(); index++) {
-                Map<String, Object> map = directoryItems.get(index);
-                //Set<String> set = map.keySet();
-                String title = map.get("title").toString();
-                long knowledgeId = Long.parseLong(map.get("id").toString());
-                List<Object> directoryIds = (List<Object>)map.get("tagIds");
+        for (int index = 0; index < directoryItems.size(); index++) {
+            Map<String, Object> map = directoryItems.get(index);
+            long knowledgeId = Long.parseLong(map.get("id").toString());
+            List<Object> directoryIds = (List<Object>)map.get("tagIds");
 
-                //Update knowledge Detail
-                //Update knowledge Detail
-                DataCollection data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
-                if (data == null) {
-                    logger.error("can't find this knowledge detail info, so skip add directory to this knowledge, knowledgeId: {}", knowledgeId);
-                    continue;
-                }
-
-                List<Long> newDirectoryIds = convertStToLong(directoryIds);
-                KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
-                knowledgeDetail.setCategoryIds(newDirectoryIds);
-
-                knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
-                logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
-
-                if (!deleteDirectorySource(userId, knowledgeId)) {
-                    logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
-                }
-                for (Long directoryId : newDirectoryIds) {
-                    DirectorySource directorySource = new DirectorySource();
-                    directorySource.setUserId(userId);
-                    directorySource.setDirectoryId(directoryId);
-                    directorySource.setAppId(APPID);
-                    directorySource.setSourceId(knowledgeId);
-                    directorySource.setSourceTitle(title);
-                    //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
-                    directorySource.setSourceType((int) sourceType);
-                    directorySource.setCreateAt(new Date().getTime());
-                    logger.info("before create directory source. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
-                    directorySourceService.createDirectorySources(directorySource);
-                    logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
-                }
+            List<Long> newDirectoryIds = convertObjectListToLongList(directoryIds);
+            if (newDirectoryIds == null || newDirectoryIds.size() <= 0) {
+                logger.error("There is no valid and safe tag Id, so skip. knowledgeId: {}", knowledgeId);
+                continue;
             }
-        } catch (DirectorySourceServiceException ex) {
-            logger.info("create directory source, failed. userId: " + userId + " error: " + ex.getMessage());
-            ex.printStackTrace();
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION);
-        }
 
+            DataCollection data = knowledgeService.getKnowledge(knowledgeId, (short)-1);
+            if (data == null) {
+                logger.error("can't find this knowledge info, so skip add directory, knowledgeId: {}", knowledgeId);
+                continue;
+            }
+
+            KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
+            if (data.getKnowledgeDetail() == null) {
+                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
+                continue;
+            }
+
+            //Delete existing directory items
+            if (!deleteDirectorySource(userId, knowledgeId)) {
+                logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
+            }
+
+            //Add new directory items
+            List<Long> successIds = createDirectorySource(userId, newDirectoryIds, knowledgeDetail);
+
+            //Update knowledge Detail
+            knowledgeDetail.setCategoryIds(successIds);
+
+            knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
+            logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+        }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -198,29 +230,16 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS));
     }
 
-    public boolean saveDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
+    public List<Long> saveDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
         //save directory
-        List<Long> categorysList = knowledgeDetail.getCategoryIds();
-        if (categorysList == null || categorysList.size() <= 0) {
+        List<Long> directoryIds = knowledgeDetail.getCategoryIds();
+        if (directoryIds == null || directoryIds.size() <= 0) {
             logger.error("directory List is empty, so skip to save..");
-            return false;
+            return null;
         }
 
-        try {
-            for (int index = 0; index < categorysList.size(); index++) {
-                logger.info("directoryId: {}", categorysList.get(index));
-                long directoryId = Long.valueOf(categorysList.get(index));
-                if (directoryId > 0) {
-                    DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
-                    directorySourceService.createDirectorySources(directorySource);
-                }
-                logger.info("create directory source success: knowledgeId: {}, directoryId: {}", knowledgeDetail.getId() ,directoryId);
-            }
-        } catch (DirectorySourceServiceException ex) {
-            ex.printStackTrace();
-        }
-        return true;
+        return createDirectorySource(userId, directoryIds, knowledgeDetail);
     }
 
     public boolean deleteDirectory(long userId, long knowledgeId)
@@ -263,7 +282,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     }
 
 
-    private DirectorySource createDirectorySource(long userId, long directoryId,KnowledgeDetail knowledge)
+    private DirectorySource newDirectorySourceObject(long userId, long directoryId,KnowledgeDetail knowledge)
     {
         DirectorySource directorySource = new DirectorySource();
         directorySource.setUserId(userId);
@@ -271,10 +290,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         directorySource.setAppId(APPID);
         directorySource.setSourceId(knowledge.getId());
         directorySource.setSourceTitle(knowledge.getTitle());
-        //source type 为定义的类型id:exp(用户为1,人脉为2,知识为3,需求为4,事务为5)
         directorySource.setSourceType(sourceType);
-        directorySource.setCreateAt(new Date().getTime());
-
+        directorySource.setCreateAt(new Date().getTime());//source type 为定义的类型id:exp(用户为1,人脉为2,需求为7,知识为8,事务为5)
         return directorySource;
     }
 
@@ -290,5 +307,25 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             return false;
         }
         return true;
+    }
+
+    private List<Long> createDirectorySource(long userId, final List<Long> directoryIds, final KnowledgeDetail knowledgeDetail)
+    {
+        long knowledgeId = knowledgeDetail.getId();
+        List<Long> successIds = new ArrayList<Long>(directoryIds.size());
+        for (Long directoryId : directoryIds) {
+            DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
+            try {
+                logger.info("before create directory source. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
+                directorySourceService.createDirectorySources(directorySource);
+                successIds.add(directoryId);
+                logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
+            } catch (DirectorySourceServiceException ex) {
+                logger.info("create directory source, failed. userId: " + userId + " error: " + ex.getMessage());
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        return successIds;
     }
 }

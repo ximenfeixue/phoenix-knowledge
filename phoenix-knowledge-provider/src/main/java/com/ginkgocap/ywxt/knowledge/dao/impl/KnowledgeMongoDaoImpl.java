@@ -1,13 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.ColumnSys;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 @Repository("knowledgeMongoDao")
@@ -63,8 +59,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail)
-			throws Exception {
+	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) throws Exception {
 
 		if(knowledgeDetail == null) {
             throw new IllegalArgumentException("knowledgel is null");

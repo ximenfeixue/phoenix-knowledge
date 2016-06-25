@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 /**
  * @Title: 数据包装转换类
- * @author 周仕奇
  * @date 2016年1月14日 下午4:28:19
  * @version V1.0.0
  */
@@ -25,7 +24,6 @@ public class PackingDataUtil {
 	
 	/**
 	 * 包装发送给MQ的数据
-	 * @author 周仕奇
 	 * @date 2016年1月14日 下午4:33:26
 	 * @param knowledgeMongo
 	 * @param userId
@@ -55,7 +53,6 @@ public class PackingDataUtil {
 	
 	/**
 	 * 动态推送数据包装
-	 * @author 周仕奇
 	 * @date 2016年1月14日 下午5:04:52
 	 * @param knowledgeMongo
 	 * @param user
@@ -91,8 +88,6 @@ public class PackingDataUtil {
 	
 
 	/**
-	 * 
-	 * @author 周仕奇
 	 * @date 2016年1月18日 上午10:54:14
 	 * @param str
 	 * @return
@@ -122,7 +117,6 @@ public class PackingDataUtil {
 	
 	/**
 	 * 将文本包装为HTML
-	 * @author 周仕奇
 	 * @date 2016年1月18日 下午2:41:06
 	 * @param html
 	 * @return

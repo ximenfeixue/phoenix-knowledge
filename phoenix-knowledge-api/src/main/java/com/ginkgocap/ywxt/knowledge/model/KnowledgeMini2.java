@@ -227,9 +227,7 @@ public class KnowledgeMini2  implements Serializable {
     }
 
     /**
-     * @author zhangzhen
      * 如果数据为空返回null
-     *
      * 指导使用方法
      * JSONObject j = JSONObject.fromObject(requestJson);
      * Object jsonData = j.get("Entity");

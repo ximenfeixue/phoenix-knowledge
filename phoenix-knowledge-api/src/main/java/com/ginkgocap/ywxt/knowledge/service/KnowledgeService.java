@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * @Title: 知识管理服务
  * @Description: 知识管理服务
- * @author 周仕奇
  * @date 2016年1月11日 下午2:31:19
  * @version V1.0.0
  */
@@ -23,7 +22,6 @@ public interface KnowledgeService {
 	 * <p>3、知识来源表插入</P>
 	 * <p>4、大数据MQ推送</P>
 	 * <p>5、动态推送</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:03
 	 * @param dataCollection
 	 * @return
@@ -38,7 +36,6 @@ public interface KnowledgeService {
 	 * <p>3、知识来源表更新</P>
 	 * <p>4、大数据MQ推送更新</P>
 	 * <p>5、动态推送更新</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:16
 	 * @param dataCollection
 	 * @return
@@ -55,7 +52,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public InterfaceResult updateKnowledge(DataCollection dataCollection) throws Exception;
+    public boolean updateKnowledge(DataCollection dataCollection) throws Exception;
 	/**
 	 * 删除，承担以下任务：
 	 * <p>1、知识详细表删除</P>
@@ -63,7 +60,6 @@ public interface KnowledgeService {
 	 * <p>3、知识来源表删除</P>
 	 * <p>4、大数据MQ推送删除</P>
 	 * <p>5、动态推送删除</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:20
 	 * @param knowledgeId
 	 * @param columnId
@@ -79,7 +75,6 @@ public interface KnowledgeService {
 	 * <p>3、知识来源表批量删除</P>
 	 * <p>4、大数据MQ推送批量删除</P>
 	 * <p>5、动态推送批量删除</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:23
 	 * @param knowledgeIds
 	 * @param columnId
@@ -92,7 +87,6 @@ public interface KnowledgeService {
 	 * 提取详细信息（一般用在知识详细信息查看界面、知识编辑界面的数据提取中），具体提取以下信息：
 	 * <p>1、知识详细表信息</P>
 	 * <p>2、知识来源表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:26
 	 * @param knowledgeId
 	 * @param columnId 由于知识详细表信息为分库存储，则columnId为必须字段
@@ -114,7 +108,6 @@ public interface KnowledgeService {
 	 * 提取简要信息（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
 	 * <p>2、知识来源表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:39
 	 * @param knowledgeId
 	 * @return
@@ -126,7 +119,6 @@ public interface KnowledgeService {
 	 * 提取简要信息列表（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
 	 * <p>2、知识来源表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:37
 	 * @param knowledgeIds
 	 * @return
@@ -137,7 +129,6 @@ public interface KnowledgeService {
 	/**
 	 * 提取所有数据（一般用在首页数据展示中）
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 下午5:43:26
 	 * @param start
 	 * @param size
@@ -149,7 +140,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:33
 	 * @param userId
 	 * @param start
@@ -162,7 +152,6 @@ public interface KnowledgeService {
     /**
      * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
-     * @author 周仕奇
      * @date 2016年1月15日 上午9:41:32
      * @param knowledgeIds
      * @return
@@ -173,7 +162,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:32
 	 * @param columnId
 	 * @param start
@@ -186,7 +174,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据用户ID与类型提取简要信息列表（一般用个人中心在根据类型区分的知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:30
 	 * @param type
 	 * @param start
@@ -199,7 +186,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据用户ID与类型提取简要信息列表（一般用在个人中心根据类型、栏目区分的知识信息列表查询的数据提取中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午9:41:29
 	 * @param userId
 	 * @param columnId
@@ -214,7 +200,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午10:14:51
 	 * @param type
 	 * @param start
@@ -227,7 +212,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午10:14:55
 	 * @param columnId
 	 * @param start
@@ -248,17 +232,6 @@ public interface KnowledgeService {
      * @throws Exception
      */
     public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception;
-
-    /**
-     * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
-     * <p>1、知识基础表信息</P>
-     * @param tagId
-     * @param start
-     * @param size
-     * @return
-     * @throws Exception
-     */
-    public List<KnowledgeBase> getBaseByTagId(long tagId,int start,int size) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>
@@ -284,7 +257,6 @@ public interface KnowledgeService {
 	/**
 	 * 根据栏目、类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
 	 * <p>1、知识基础表信息</P>
-	 * @author 周仕奇
 	 * @date 2016年1月15日 上午10:14:59
 	 * @param columnId
 	 * @param type

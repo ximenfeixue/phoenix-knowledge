@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.model.common;
 /**
  * @Title: 主键（mongoDB中主键生成策略的对象）
  * @Description: TODO
- * @author 周仕奇
  * @date 2016年1月13日 下午2:51:32
  * @version V1.0.0
  */

@@ -9,7 +9,6 @@ import java.util.List;
 
 /**
  * @Title: 知识详细信息（mongoDB保存，保存知识的全部信息，提供给编辑、详细信息查看界面查询）
- * @author 周仕奇
  * @date 2016年1月11日 下午3:38:53
  * @version V1.0.0
  */
