@@ -326,6 +326,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 for (TagSource tag : tagSources) {
                     knowledgeIds.add(tag.getSourceId());
                 }
+                return knowledgeIds;
             }
             else {
                 logger.error("There is no any resource add this tag, tagId: {}", tagId);

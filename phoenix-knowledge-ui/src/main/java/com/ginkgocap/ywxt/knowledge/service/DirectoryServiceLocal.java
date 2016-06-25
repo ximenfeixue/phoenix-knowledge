@@ -40,7 +40,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         List<Long> directoryIds = new ArrayList<Long>();
         try {
-            List<Directory> directoryList = directoryService.getDirectorysByParentId(APPID, userId, 0L);
+            List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, (long)sourceType);
             if (directoryList != null && directoryList.size() >= 5) {
                 for (Directory directory : directoryList) {
                     directoryIds.add(directory.getId());
@@ -64,6 +64,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
         return directoryIds;
     }
+    //end
 
     public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
