@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by gintong on 2016/6/14.
+ * Created by Chen Peifeng on 2016/6/14.
  */
 @Service("tagServiceLocal")
 public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseService

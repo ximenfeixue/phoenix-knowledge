@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by gintong on 2016/6/14.
+ * Created by Chen Peifeng on 2016/6/14.
  */
 @Service("directoryServiceLocal")
 public class DirectoryServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
@@ -40,7 +40,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         List<Long> directoryIds = new ArrayList<Long>();
         try {
-            List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, (long)sourceType);
+            List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, (long) sourceType);
             if (directoryList != null && directoryList.size() >= 5) {
                 for (Directory directory : directoryList) {
                     directoryIds.add(directory.getId());

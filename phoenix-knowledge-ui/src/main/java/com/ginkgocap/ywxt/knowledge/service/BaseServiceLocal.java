@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gintong on 2016/6/15.
+ * Created by Chen Peifeng on 2016/6/15.
  */
 public abstract class BaseServiceLocal {
 

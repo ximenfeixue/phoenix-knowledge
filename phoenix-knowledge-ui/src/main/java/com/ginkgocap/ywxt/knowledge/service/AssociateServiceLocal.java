@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by gintong on 2016/6/21.
+ * Created by Chen Peifeng on 2016/6/21.
  */
 public class AssociateServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
