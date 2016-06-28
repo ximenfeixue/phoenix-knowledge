@@ -270,12 +270,12 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
         	DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> tagIds = createTag();
+            List<Long> tagIds = createTag().subList(2, 3);
             long [] tagIdList = convertList(tagIds);
-            long knowledgeId = 0L;
-            if (data != null ) {
-            	knowledgeId = data.getKnowledgeDetail().getId();
-            }
+            long knowledgeId = 325L;
+//            if (data != null ) {
+//            	knowledgeId = data.getKnowledgeDetail().getId();
+//            }
             ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
             //ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, tagIdList);
             resItems.add(resItem1);
@@ -298,6 +298,34 @@ public class KnowledgeWebTest extends BaseTestCase {
                 }
             }*/
             //System.out.print(beanList);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+    
+    public void testMutilBatchTags()
+    {
+        LogMethod();
+        try {
+        	//DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
+            List<ResItem> resItems = new ArrayList<ResItem>(2);
+            List<Long> tagIds = createTag();
+            long [] tagIdList = convertList(tagIds);
+            long knowledgeId = 335L;
+//            if (data != null ) {
+//            	knowledgeId = data.getKnowledgeDetail().getId();
+//            }
+            
+            for (int index = 0; index < 1; index ++) {
+            	createBatchTag(knowledgeId, convertList(tagIds.subList(index,index+1)));
+            }
+            ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
+            resItems.add(resItem1);
+            String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
             Util.checkResponseWithData(result);
         } catch (Exception e) {
@@ -557,6 +585,23 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
         return IdList;
+    }
+    
+    private void createBatchTag(long knowledgeId,long [] tagIds)
+    {
+    	List<ResItem> resItems = new ArrayList<ResItem>(1);
+        ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIds);
+        resItems.add(resItem1);
+        String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
+        JsonNode result;
+		try {
+			result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+			Util.checkResponseWithData(result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
     }
 
     private List<Long> getIdList(JsonNode result)

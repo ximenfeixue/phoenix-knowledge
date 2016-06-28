@@ -1,10 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.gintong.frame.util.dto.CommonResultCode;
+import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Chen Peifeng on 2016/6/15.
@@ -45,27 +50,61 @@ public abstract class BaseServiceLocal {
     protected String convertLongValueListToString(List<Long> ids,String existTag)
     {
         if (ids == null || ids.size() <= 0) {
-            return null;
+            return existTag;
         }
 
-        StringBuffer strBuffer = existTag != null ? new StringBuffer(existTag) : new StringBuffer();
+        StringBuffer strBuffer = existTag != null ? new StringBuffer(existTag+",") : new StringBuffer();
         for (Long id : ids) {
             String tagId = String.valueOf(id);
-            if (strBuffer.length() + tagId.length() < 255) {
+            if (strBuffer.toString().length() + tagId.length() < 255) {
                 strBuffer.append(tagId);
             } else {
                 break;
             }
             strBuffer.append(",");
         }
-        if (strBuffer.length() > 1) {
-            strBuffer.setLength(strBuffer.length() - 1);
+
+        String tagList = strBuffer.toString();
+        if (tagList.length() > 1) {
+            tagList = tagList.substring(0, tagList.length()-1);
         }
-        return strBuffer.toString();
+        return tagList;
     }
 
-    protected String batchResult(int success,int failed,String message)
+    protected String convertLongValueListToString(List<Long> ids)
     {
-        return "success: " + success + " failed: " + failed + message;
+        if (ids == null || ids.size() <= 0) {
+            return null;
+        }
+
+        StringBuffer tagIds = new StringBuffer();
+        for (int index = 0; index < 10 && index < ids.size(); index++) {
+            tagIds.append(String.valueOf(ids.get(index)));
+            tagIds.append(",");
+        }
+        tagIds.deleteCharAt(tagIds.lastIndexOf(","));
+        return tagIds.toString();
+    }
+
+    protected InterfaceResult batchResult(int success,int failed,boolean overMaxLimit)
+    {
+        InterfaceResult result = null;
+        if (failed == 0) {
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            result.setResponseData("添加成功");
+        }
+        else if (success ==0) {
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            String errorMessage = "添加失败";
+            if (overMaxLimit) {
+                errorMessage = "添加失败，标签数量超过限制，最多添加10个；";
+            }
+            result.setResponseData(errorMessage);
+        } else {
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            result.setResponseData("部分失败：" + success + "条成功，" + failed + "条失败，标签数量超过限制，最多添加10个");
+        }
+
+        return result;
     }
 }

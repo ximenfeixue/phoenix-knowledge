@@ -156,7 +156,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
         int successResult = 0;
         int failedResult = 0;
-        String errorMessage = "";
+        boolean overMaxLimit = false;
         for (int index = 0; index < directoryItems.size(); index++) {
             Map<String, Object> map = directoryItems.get(index);
             long knowledgeId = Long.parseLong(map.get("resId").toString());
@@ -193,7 +193,9 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             if (existCategoryIds == null || existCategoryIds.size() <= 0) {
                 existCategoryIds = successIds;
             } else {
-                existCategoryIds.addAll(successIds);
+                if (successIds != null && successIds.size() > 0) {
+                    existCategoryIds.addAll(successIds);
+                }
             }
             knowledgeDetail.setCategoryIds(existCategoryIds);
 
@@ -202,7 +204,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             successResult = + successIds.size();
             failedResult = + newDirectoryIds.size() - successIds.size();
         }
-        return InterfaceResult.getSuccessInterfaceResultInstance(batchResult(successResult, failedResult, errorMessage));
+        return batchResult(successResult, failedResult, overMaxLimit);
     }
 
     public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception

@@ -41,7 +41,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         List<Long> tagIds = new ArrayList<Long>();
         try {
             List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
-            if (tagList != null && tagList.size() >= 5) {
+            if (tagList != null && tagList.size() >= 12) {
                 for (Tag tag : tagList) {
                     tagIds.add(tag.getId());
                 }
@@ -137,7 +137,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         int successResult = 0;
         int failedResult = 0;
-        String errorMessage = "";
+        boolean overMaxLimit = false;
         for (int index = 0; index < tagItems.size(); index++) {
             Map<String, Object> map = tagItems.get(index);
             long knowledgeId = Long.parseLong(map.get("resId").toString());
@@ -182,14 +182,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 existTagsIds = successIds;
             } else {
                 if (existTagsIds.size() + newTagIds.size() > 10) {
-                    errorMessage = tagLimitErrorMsg;
+                    overMaxLimit = true;
                 }
-                existTagsIds.addAll(successIds);
+                if (successIds != null && successIds.size() > 0) {
+                    existTagsIds.addAll(successIds);
+                }
             }
             knowledgeDetail.setTags(existTagsIds);
 
             //Update knowledge base
-            String tagString = convertLongValueListToString(successIds, knowledgeBase.getTags());
+            String tagString = convertLongValueListToString(existTagsIds);
             knowledgeBase.setTags(tagString);
 
             knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
@@ -198,7 +200,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             failedResult = + newTagIds.size() - successIds.size();
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance(batchResult(successResult,failedResult, errorMessage));
+       return batchResult(successResult, failedResult, overMaxLimit);
     }
 
 
