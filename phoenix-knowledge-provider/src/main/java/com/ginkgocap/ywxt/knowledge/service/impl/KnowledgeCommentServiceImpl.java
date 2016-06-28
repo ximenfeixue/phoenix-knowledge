@@ -35,7 +35,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
             knowledgeComment.setId(knowledgeCommonService.getKnowledgeSeqenceId());
-            if (knowledgeComment.getCreateTime() <= 0) {
+            if (knowledgeComment.getCreateTime() == null || knowledgeComment.getCreateTime() <= 0) {
                 knowledgeComment.setCreateTime(new Date().getTime());
             }
             mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);

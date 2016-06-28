@@ -68,26 +68,26 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
     public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        long knowledgeId = knowledgeDetail.getId();
-        try {
-            if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
-                logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
-                return false;
-            }
-        } catch (DirectorySourceServiceException ex) {
-            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
-            return false;
-        }
-
         List<Long> categoryIds = knowledgeDetail.getCategoryIds();
         if(categoryIds == null || categoryIds.size() <= 0) {
             return false;
         }
+
+        long knowledgeId = knowledgeDetail.getId();
+        try {
+            if (!directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
+                logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
+            }
+        } catch (DirectorySourceServiceException ex) {
+            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
+        }
+
         for(Long directoryId : categoryIds){
             if(directoryId >= 0) {
                 try {
                     DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
-                    directorySourceService.createDirectorySources(directorySource);
+                    long directorySourceId = directorySourceService.createDirectorySources(directorySource);
+                    logger.info("create directory success. userId: " + userId + ", knowledgeId: " + knowledgeId + "directorySourceId: " + directorySourceId);
                 } catch (DirectorySourceServiceException ex) {
                     logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
                 }
@@ -105,8 +105,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
 
             for (ResItem item : directoryItems) {
-                long knowledgeId = item.getId();
-                List<Long> directoryIds = item.getTagIds();
+                long knowledgeId = item.getResId();
+                List<Long> directoryIds = item.getIds();
 
                 if (directoryIds == null || directoryIds.size() <= 0) {
                     logger.error("Directory list is null or empty, so skip to add. knowledgeId: {}", knowledgeId);
@@ -154,10 +154,13 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        int successResult = 0;
+        int failedResult = 0;
+        String errorMessage = "";
         for (int index = 0; index < directoryItems.size(); index++) {
             Map<String, Object> map = directoryItems.get(index);
-            long knowledgeId = Long.parseLong(map.get("id").toString());
-            List<Object> directoryIds = (List<Object>)map.get("tagIds");
+            long knowledgeId = Long.parseLong(map.get("resId").toString());
+            List<Object> directoryIds = (List<Object>)map.get("ids");
 
             List<Long> newDirectoryIds = convertObjectListToLongList(directoryIds);
             if (newDirectoryIds == null || newDirectoryIds.size() <= 0) {
@@ -178,20 +181,28 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
 
             //Delete existing directory items
-            if (!deleteDirectorySource(userId, knowledgeId)) {
+            /*if (!deleteDirectorySource(userId, knowledgeId)) {
                 logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
-            }
+            }*/
 
             //Add new directory items
             List<Long> successIds = createDirectorySource(userId, newDirectoryIds, knowledgeDetail);
 
             //Update knowledge Detail
-            knowledgeDetail.setCategoryIds(successIds);
+            List<Long> existCategoryIds = knowledgeDetail.getCategoryIds();
+            if (existCategoryIds == null || existCategoryIds.size() <= 0) {
+                existCategoryIds = successIds;
+            } else {
+                existCategoryIds.addAll(successIds);
+            }
+            knowledgeDetail.setCategoryIds(existCategoryIds);
 
             knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
             logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+            successResult = + successIds.size();
+            failedResult = + newDirectoryIds.size() - successIds.size();
         }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getSuccessInterfaceResultInstance(batchResult(successResult, failedResult, errorMessage));
     }
 
     public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception
@@ -299,7 +310,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     private boolean deleteDirectorySource(long userId, long knowledgeId)
     {
         try {
-            if (directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
+            if (!directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
                 logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
                 return false;
             }
@@ -322,9 +333,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 successIds.add(directoryId);
                 logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
             } catch (DirectorySourceServiceException ex) {
-                logger.info("create directory source, failed. userId: " + userId + " error: " + ex.getMessage());
-                ex.printStackTrace();
-                return null;
+                logger.info("create directory source, failed. userId: {}, knowledgeId: {}, directoryId: {} error: {}",
+                        userId, knowledgeId, directoryId, ex.getMessage());
             }
         }
         return successIds;

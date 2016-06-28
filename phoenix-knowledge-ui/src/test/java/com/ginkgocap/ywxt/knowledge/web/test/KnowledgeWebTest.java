@@ -38,6 +38,8 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             DataCollection data = createKnowledge("KnowledgeWebTest_create");
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
+            data.getKnowledgeDetail().setTags(createTag());
+            data.getKnowledgeDetail().setCategoryIds(createDirectory());
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl, knowledgeJson);
             Util.checkRequestResultSuccess(result);
@@ -296,8 +298,8 @@ public class KnowledgeWebTest extends BaseTestCase {
                 }
             }*/
             //System.out.print(beanList);
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+            Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -488,6 +490,11 @@ public class KnowledgeWebTest extends BaseTestCase {
     private DataCollection createKnowledgeWithDirectoy(String title,List<Long> directoyIds)
     {
     	return createKnowledge(title, null, directoyIds);
+    }
+    
+    private DataCollection createKnowledgeWithTagAndDirectory(String title)
+    {
+    	return createKnowledge(title, createTag(), createDirectory());
     }
 
     private DataCollection createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)

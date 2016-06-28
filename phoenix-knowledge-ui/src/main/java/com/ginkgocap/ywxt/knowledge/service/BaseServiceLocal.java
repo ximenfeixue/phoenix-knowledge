@@ -12,6 +12,7 @@ import java.util.List;
 public abstract class BaseServiceLocal {
 
     private Logger logger = LoggerFactory.getLogger(BaseServiceLocal.class);
+    protected String tagLimitErrorMsg = "，标签数量超过限制，最多添加10个 ；";
 
     protected List<Long> convertObjectListToLongList(List<Object> idList)
     {
@@ -41,13 +42,13 @@ public abstract class BaseServiceLocal {
         return newIdList;
     }
 
-    protected String convertLongValueListToString(List<Long> ids)
+    protected String convertLongValueListToString(List<Long> ids,String existTag)
     {
         if (ids == null || ids.size() <= 0) {
             return null;
         }
 
-        StringBuffer strBuffer = new StringBuffer();
+        StringBuffer strBuffer = existTag != null ? new StringBuffer(existTag) : new StringBuffer();
         for (Long id : ids) {
             String tagId = String.valueOf(id);
             if (strBuffer.length() + tagId.length() < 255) {
@@ -61,5 +62,10 @@ public abstract class BaseServiceLocal {
             strBuffer.setLength(strBuffer.length() - 1);
         }
         return strBuffer.toString();
+    }
+
+    protected String batchResult(int success,int failed,String message)
+    {
+        return "success: " + success + " failed: " + failed + message;
     }
 }

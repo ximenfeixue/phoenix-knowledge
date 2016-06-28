@@ -65,9 +65,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         }
         return tagIds;
     }
-
-
     //End
+
     public InterfaceResult batchTags(KnowledgeService knowledgeService,long userId, List<ResItem> tagItems) throws Exception
     {
         if (tagItems == null || tagItems.size() <= 0) {
@@ -75,9 +74,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         }
 
         for (ResItem batchItem : tagItems) {
-            String title = batchItem.getTitle();
-            long knowledgeId = batchItem.getId();
-            List<Long> tagIds = batchItem.getTagIds();
+            long knowledgeId = batchItem.getResId();
+            List<Long> tagIds = batchItem.getIds();
 
             DataCollection data = knowledgeService.getKnowledge(knowledgeId, (short) -1);
             if (data == null) {
@@ -90,7 +88,6 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 logger.error("can't find this knowledge detail info, knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
             }
-
 
             KnowledgeBase knowledgeBase = data.getKnowledge();
             if (knowledgeBase == null) {
@@ -107,10 +104,17 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             List<Long> successIds = createTagSource(userId, tagIds, knowledgeDetail);
 
             //Update knowledge Detail
-            knowledgeDetail.setTags(successIds);
+            List<Long> existTags = knowledgeDetail.getTags();
+            if (existTags == null || existTags.size() <= 0) {
+                existTags = successIds;
+            }
+            else {
+                existTags.addAll(successIds);
+            }
+            knowledgeDetail.setTags(existTags);
 
             //Update knowledge base
-            String tagString = convertLongValueListToString(successIds);
+            String tagString = convertLongValueListToString(successIds, knowledgeBase.getTags());
             knowledgeBase.setTags(tagString);
 
             knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
@@ -131,10 +135,13 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "tagItems is null");
         }
 
+        int successResult = 0;
+        int failedResult = 0;
+        String errorMessage = "";
         for (int index = 0; index < tagItems.size(); index++) {
             Map<String, Object> map = tagItems.get(index);
-            long knowledgeId = Long.parseLong(map.get("id").toString());
-            List<Object> tagIds = (List<Object>)map.get("tagIds");
+            long knowledgeId = Long.parseLong(map.get("resId").toString());
+            List<Object> tagIds = (List<Object>)map.get("ids");
 
             //tag id list check
             List<Long> newTagIds = convertObjectListToLongList(tagIds);
@@ -162,25 +169,36 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
 
             //First delete exist tag source
-            if (deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
+            /*if (!deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
                 logger.error("delete old tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
-            }
+            }*/
 
             logger.debug("create Tag for UserId: {}", userId);
             List<Long> successIds =  createTagSource(userId, newTagIds, knowledgeDetail);
 
             //Update knowledge base
-            knowledgeDetail.setTags(successIds);
+            List<Long> existTagsIds = knowledgeDetail.getTags();
+            if (existTagsIds == null || existTagsIds.size() <= 0) {
+                existTagsIds = successIds;
+            } else {
+                if (existTagsIds.size() + newTagIds.size() > 10) {
+                    errorMessage = tagLimitErrorMsg;
+                }
+                existTagsIds.addAll(successIds);
+            }
+            knowledgeDetail.setTags(existTagsIds);
 
             //Update knowledge base
-            String tagString = convertLongValueListToString(successIds);
+            String tagString = convertLongValueListToString(successIds, knowledgeBase.getTags());
             knowledgeBase.setTags(tagString);
 
             knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
             logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+            successResult = + successIds.size();
+            failedResult = + newTagIds.size() - successIds.size();
         }
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getSuccessInterfaceResultInstance(batchResult(successResult,failedResult, errorMessage));
     }
 
 
@@ -247,15 +265,15 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
     public boolean updateTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        long knowledgeId = knowledgeDetail.getId();
-        if (deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
-            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
+
+        List<Long> tagsList = knowledgeDetail.getTags();
+        if(tagsList == null || tagsList.size() <= 0) {
             return false;
         }
 
-        List<Long> tagsList = knowledgeDetail.getTags();
-        if(tagsList != null || tagsList.size() <= 0) {
-            return false;
+        long knowledgeId = knowledgeDetail.getId();
+        if (!deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
+            logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
         }
 
         for(Long tagId : tagsList){
@@ -309,8 +327,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 logger.info("create tag source success. tagId:" + tagId + " knowledgeId: " + knowledgeId);
             }
             catch (TagSourceServiceException ex) {
-                logger.error("create Tag failed, userId: {}, knowledgeId: {}, tagId: {}", userId, knowledgeId, tagId);
-                ex.printStackTrace();
+                logger.error("create Tag failed, userId: {}, knowledgeId: {}, tagId: {}, error: {}",
+                        userId, knowledgeId, tagId, ex.getMessage());
             }
         }
 
@@ -362,7 +380,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             return false;
         }
 
-        if (tagSources == null && tagSources.size() <= 0) {
+        if (tagSources == null || tagSources.size() <= 0) {
             logger.warn("no tags add to this knowledge...userId: " + userId + ", knowledgeId: " + knowledgeId);
             return false;
         }
@@ -370,7 +388,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         for (TagSource tagSource : tagSources) {
             long tagSourceId = tagSource.getId();
             try {
-                if (tagSourceService.removeTagSource(APPID, userId, tagSourceId)) {
+                if (!tagSourceService.removeTagSource(APPID, userId, tagSourceId)) {
                     logger.error("delete tags failed...userId: " + userId + ", tagSourceId: " + tagSource.getId());
                 }
             } catch (TagSourceServiceException ex) {
