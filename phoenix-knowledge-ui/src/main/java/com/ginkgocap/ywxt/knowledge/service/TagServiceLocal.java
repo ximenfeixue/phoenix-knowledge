@@ -298,8 +298,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public boolean deleteTags(long userId, long knowledgeId)
     {
         try{
-            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
-            if(!removeTagsFlag){
+            int removeTagsFlag = tagSourceService.removeTagSourceBySourceId(APPID, userId, knowledgeId, (long)sourceType);
+            if(removeTagsFlag <= 0){
                 logger.error("delete tags failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
                 return false;
             }

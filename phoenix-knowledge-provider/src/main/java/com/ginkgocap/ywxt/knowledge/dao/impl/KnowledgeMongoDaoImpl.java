@@ -77,9 +77,12 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledgeDetail.setModifyTime(currentDate);
         Query query = knowledgeColumnIdQuery(knowledgeDetail.getId(), knowledgeDetail.getColumnId());
         String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
-        KnowledgeDetail result = mongoTemplate.findAndModify(query, getUpdate(knowledgeDetail), KnowledgeDetail.class, currCollectionName);
-        if (result == null) {
-            logger.error("update knowledge detail failed. knowledgeId: {}",knowledgeDetail.getId());
+        KnowledgeDetail existValue = mongoTemplate.findOne(query, KnowledgeDetail.class, currCollectionName);
+        if (existValue != null) {
+            mongoTemplate.save(knowledgeDetail, currCollectionName);
+        }
+        else {
+            logger.error("can't find this knowledge, so skip update. knowledgeId: {}",knowledgeDetail.getId());
             return null;
         }
 		

@@ -261,14 +261,14 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
-
+    /*
     @Test
     public void testGetAllByTagId()
     {
         System.out.println("===testGetBaseByColumnIdAndType===");
         try {
             long tagId = 3985603448537134L;
-            List<KnowledgeBase> result = knowledgeService.getBaseByTagId(tagId, start, size);
+            List<KnowledgeBase> result = knowledgeService(tagId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,7 +276,6 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
-    /*
     @Test
     public void testGetAllByDirectoryId()
     {

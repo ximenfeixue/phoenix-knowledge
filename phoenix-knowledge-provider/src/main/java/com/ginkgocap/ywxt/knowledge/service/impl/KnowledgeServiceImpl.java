@@ -260,13 +260,24 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledge = dataCollection.getKnowledge();
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
 
+        KnowledgeDetail update = null;
         try {
             //知识详细表更新
             if (knowledgeDetail != null) {
-                this.knowledgeMongoDao.update(knowledgeDetail);
+                update = this.knowledgeMongoDao.update(knowledgeDetail);
             }
+            if (update == null) {
+                logger.error("知识详细表更新失败！\n");
+                return false;
+            }
+        }
+        catch (Exception e) {
+            logger.error("知识详细表更新失败！失败原因：\n"+e.getMessage());
+            return false;
+        }
 
             //知识简表更新
+        try {
             if (knowledge != null) {
                 this.knowledgeMysqlDao.update(knowledge);
             }
