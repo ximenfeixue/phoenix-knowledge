@@ -41,7 +41,7 @@ public class KnowlegeMongoTest {
     static {
         Mongo mongo = null;
         try {
-            mongo = new Mongo("192.168.120.135");
+            mongo = new Mongo("192.168.120.133");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -77,12 +77,15 @@ public class KnowlegeMongoTest {
     public static void updateKnowledge(KnowledgeDetail knowledgeDetail)
     {
 
-        Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeDetail.getId());
+        Criteria c = Criteria.where(Constant._ID).is(knowledgeDetail.getId());
         Query query = new Query(c);
 
-        WriteResult wr = mongoTemplate.updateMulti(query, getUpdate(knowledgeDetail), KnowledgeDetail.class, Constant.Collection.Knowledge);
-        if (wr.getN()<0) {
-            System.out.print("Update failed....");
+        KnowledgeDetail existValue = mongoTemplate.findOne(query, KnowledgeDetail.class, Constant.Collection.Knowledge);
+        if (existValue != null) {
+            mongoTemplate.save(knowledgeDetail, Constant.Collection.Knowledge);
+        }
+        else {
+            System.err.println("can't find this knowledge, so skip update. knowledgeId: "+knowledgeDetail.getId());
         }
     }
 
