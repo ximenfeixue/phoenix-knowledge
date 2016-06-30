@@ -589,11 +589,38 @@ public class KnowledgeController extends BaseController {
         return result;
     }
 
+    @Deprecated
     @ResponseBody
     @RequestMapping(value = "/allByKeywordAndColumn/{keyWord}/{columnId}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getAllByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
                                                                             @PathVariable String keyWord,@PathVariable short columnId,
                                                                             @PathVariable int start,@PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null || columnId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        List<KnowledgeBase> knowledgeBasesItems = null;
+        try {
+            if (keyWord == null || keyWord.length() <= 0) {
+                knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+            } else {
+                knowledgeBasesItems = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
+            }
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/allByColumnAndKeyword/{columnId}/{keyWord}/{start}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<List<KnowledgeBase>> allByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
+                                                                           @PathVariable short columnId,@PathVariable String keyWord,
+                                                                           @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
         if(user == null || columnId <= 0 || start < 0 || size <= 0) {

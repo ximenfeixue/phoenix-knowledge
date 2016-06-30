@@ -153,6 +153,12 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-commons-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
