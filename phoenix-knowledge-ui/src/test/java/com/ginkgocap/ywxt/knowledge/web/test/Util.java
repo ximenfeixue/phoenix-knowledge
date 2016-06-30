@@ -22,11 +22,24 @@ public final class Util {
 
     private static ObjectMapper mapper = null;
     private static User user;
+    private static String sessionID = null;
     public static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
     static {
         mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true) ;
         user = KnowledgeUtil.getDummyUser();
+        
+        final String loginJson = "{\"clientID\":\"18311436234\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
+        try {
+            JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
+            if (retNode != null) {
+                JsonNode jsonNode = retNode.get("responseData");
+                sessionID = jsonNode != null ? jsonNode.get("sessionID").asText() : null;
+	            }
+  
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static class HttpMethod
@@ -52,9 +65,7 @@ public final class Util {
         public static final String RespData = "responseData";
     }
 
-    private static String sessionID = null;
 
-    public static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String getJsonFile(String fileName)
     {
@@ -173,19 +184,11 @@ public final class Util {
 
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent) throws Exception
     {
-        if (sessionID == null) {
-            login();
-        }
-        return HttpRequestFull(httpMethod, urlString, jsonContent, sessionID);
-    }
-
-    public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent,String sessionId) throws Exception
-    {
-        String response = HttpRequestFullJson(httpMethod, urlString, jsonContent, sessionId);
+        String response = HttpRequestFullJson(httpMethod, urlString, jsonContent);
         return response != null ? mapper.readTree(response) : null;
     }
 
-    public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent,String sessionId) throws Exception
+    public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
     	System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         if (jsonContent != null) {
@@ -199,8 +202,8 @@ public final class Util {
         	httpConn.setRequestProperty( "Content-Length",String.valueOf( jsonContent.length() ) );
         }
         httpConn.setRequestProperty("s","api");
-        if (sessionId != null) {
-        	httpConn.setRequestProperty("sessionID", sessionId);
+        if (sessionID != null) {
+        	httpConn.setRequestProperty("sessionID", sessionID);
         }
         httpConn.setRequestProperty("Content-Type","text/xml; charset=utf-8");
         httpConn.setRequestMethod( httpMethod );
@@ -271,11 +274,12 @@ public final class Util {
     {
         final String loginJson = "{\"clientID\":\"18311436234\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
         try {
-            JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson, null);
+            JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
             if (retNode != null) {
                 JsonNode jsonNode = retNode.get("responseData");
                 sessionID = jsonNode != null ? jsonNode.get("sessionID").asText() : null;
-            }
+	            }
+  
         } catch (Exception e) {
             e.printStackTrace();
         }
