@@ -385,19 +385,20 @@ public class KnowledgeController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
-        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-		if(knowledgeId <= 0) {
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-		}
 
-		User user = this.getUser(request);
-		if (null == user) {
-			user = new User();
-			user.setId(0);// 金桐脑
+        User user = this.getUser(request);
+        if (user == null) {
+            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+
+		if(knowledgeId <= 0) {
+            return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"知识Id无效");
 		}
 
         DataCollection data = new DataCollection();
-		KnowledgeDetail knowledgeDetail = null; //DummyData.knowledgeDetailObject();
+		KnowledgeDetail knowledgeDetail = null;
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
 		try {
             knowledgeDetail = this.knowledgeService.getDetailById(knowledgeId, columnId);
 		} catch (Exception e) {
@@ -545,7 +546,10 @@ public class KnowledgeController extends BaseController {
 			@PathVariable short columnId,@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		if(user == null || columnId <= 0 || start < 0 || size <= 0 ) {
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if (columnId <= 0 || start < 0 || size <= 0 ) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
@@ -566,8 +570,11 @@ public class KnowledgeController extends BaseController {
                            @PathVariable String keyWord,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || start < 0 || size <= 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -597,8 +604,11 @@ public class KnowledgeController extends BaseController {
                                                                             @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || columnId <= 0 || start < 0 || size <= 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(columnId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         List<KnowledgeBase> knowledgeBasesItems = null;
@@ -623,8 +633,11 @@ public class KnowledgeController extends BaseController {
                                                                            @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || columnId <= 0 || start < 0 || size <= 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(columnId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         List<KnowledgeBase> knowledgeBasesItems = null;
@@ -648,8 +661,11 @@ public class KnowledgeController extends BaseController {
                                                                @PathVariable long tagId,@PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
-        if(user == null || tagId <= 0 || start < 0 || size <= 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(tagId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
         List<Long> knowledgeIds = tagServiceLocal.getKnowlegeIdsByTagId(tagId, start, size);
         if (knowledgeIds == null || knowledgeIds.size() <= 0) {
@@ -673,8 +689,11 @@ public class KnowledgeController extends BaseController {
                               @PathVariable long directoryId,@PathVariable int start,@PathVariable int size) throws Exception
     {
         User user = this.getUser(request);
-        if(user == null || directoryId <= 0 || start < 0 || size <= 0) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(directoryId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         List<KnowledgeBase> knowledgeBaseList = null;
@@ -706,8 +725,11 @@ public class KnowledgeController extends BaseController {
 			@PathVariable int start,@PathVariable int size) throws Exception {
 		
 		User user = this.getUser(request);
-		if(user == null || start < 0 || size <= 0 ) {
+        if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+		if(start < 0 || size <= 0 ) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 		
 		List<DataCollection> dataCollectionList = null; //DummyData.resultObject(DummyData.getDataCollectionList());
