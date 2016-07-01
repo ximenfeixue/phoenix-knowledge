@@ -35,6 +35,7 @@ public final class Util {
             if (retNode != null) {
                 JsonNode jsonNode = retNode.get("responseData");
                 sessionID = jsonNode != null ? jsonNode.get("sessionID").asText() : null;
+                System.err.println("......sessionID: "+sessionID);
 	            }
   
         } catch (Exception e) {
