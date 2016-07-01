@@ -103,19 +103,22 @@ public class KnowledgeWebTest extends BaseTestCase {
         	KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testMultiThreadKnowledgeDetail").getKnowledgeDetail();
             final long knowledgeId = data.getId();
             final short columnId = data.getColumnId();
-        	for (int index = 0; index < 5; index++) {
+            knowledgeDetail(baseUrl, knowledgeId, columnId);
+            /*
+        	for (int index = 0; index < 1; index++) {
         		new Thread(new Runnable() {
 
 					@Override
 					public void run() {
 			            try {
 							knowledgeDetail(baseUrl, knowledgeId, columnId);
+							Thread.sleep(4);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}}).start();
-        	}
+        	}*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,7 +189,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/allByKeywordAndColumn/考虑/2/0/3"; ////allByKeywordAndColumn/test/2/1/12"
+            String subUrl = "/allByColumnAndKeyword/2/考虑/0/3"; ////allByKeywordAndColumn/test/2/1/12"
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -268,11 +271,11 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-        	DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
+        	//DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> tagIds = createTag().subList(2, 3);
+            List<Long> tagIds = createTag();
             long [] tagIdList = convertList(tagIds);
-            long knowledgeId = 325L;
+            long knowledgeId = 355L;
 //            if (data != null ) {
 //            	knowledgeId = data.getKnowledgeDetail().getId();
 //            }
@@ -311,17 +314,19 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-        	//DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
+        	DataCollection data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
             List<Long> tagIds = createTag();
             long [] tagIdList = convertList(tagIds);
-            long knowledgeId = 335L;
-//            if (data != null ) {
-//            	knowledgeId = data.getKnowledgeDetail().getId();
-//            }
+            long knowledgeId = 0L;
+            if (data != null ) {
+            	knowledgeId = data.getKnowledgeDetail().getId();
+            }
             
             for (int index = 0; index < 1; index ++) {
-            	createBatchTag(knowledgeId, convertList(tagIds.subList(index,index+1)));
+                long tagId = tagIds.get(index);
+            	createBatchTag(knowledgeId, new long[]{tagId});
+                Thread.sleep(3);
             }
             ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
             resItems.add(resItem1);
@@ -550,7 +555,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         return data;
     }
     
-    private static void knowledgeDetail(final String baseUrl, long knowledgeId,short columnId) throws Exception
+    private void knowledgeDetail(final String baseUrl, long knowledgeId,short columnId) throws Exception
     {
         String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
         JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);

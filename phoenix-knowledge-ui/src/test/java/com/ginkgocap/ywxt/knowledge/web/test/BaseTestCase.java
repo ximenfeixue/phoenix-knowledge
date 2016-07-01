@@ -18,8 +18,9 @@ public abstract class BaseTestCase extends TestCase
     protected static long userId;
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
-    private static String testEnv = "testOnline";
-    //private static String testEnv = "dev";
+    protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+    //private static String testEnv = "testOnline";
+    private static String testEnv = "dev";
     //private static String testEnv = "local";
     
     static {
@@ -28,21 +29,22 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "false").equals("true");
         runTestCase = System.getProperty("runTestCase", "false").equals("true");
         if ("local".equals(testEnv)) {
-            Util.loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            Util.loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
             
         }
         else if ("testOnline".equals(testEnv)) {
-            Util.loginUrl = "http://test.online.gintong.com/cross/login/loginConfiguration.json";
-            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com");
+            loginUrl = "http://test.online.gintong.com/cross/login/loginConfiguration.json";
+            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
+        Util.login(loginUrl);
     }
 
     @Override
