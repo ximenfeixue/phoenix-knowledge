@@ -1,29 +1,36 @@
-package com.ginkgocap.ywxt.knowledge.service.impl.common;
+package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
-import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
+import com.gintong.rocketmq.api.utils.FlagTypeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("bigDataService")
-public class BigDataServiceImpl implements BigDataService {
+public class BigDataServiceImpl
+{
+
+	/**知识MQ插入*/
+	public final static String KNOWLEDGE_INSERT = FlagTypeUtils.createKnowledgeFlag();
+
+	/**知识MQ更新*/
+	public final static String KNOWLEDGE_UPDATE = FlagTypeUtils.createKnowledgeFlag();
+
+	/**知识MQ删除*/
+	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.createKnowledgeFlag();
 
 	private static final Logger logger = LoggerFactory.getLogger(BigDataServiceImpl.class);
 
 	@Autowired(required = true)
 	private DefaultMessageService defaultMessageService;
 
-	@Override
 	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo, long userId) {
 		logger.info("通知大数据，发送请求 请求用户{}", userId);
 		RocketSendResult result = null;
@@ -39,8 +46,7 @@ public class BigDataServiceImpl implements BigDataService {
 			logger.info("发送失败  返回参数{}", result.getSendResult());
 		}
 	}
-	
-	@Override
+
 	public void sendMessage(String optionType, List<KnowledgeMongo> knowledgeMongoList, long userId) {
 		if(knowledgeMongoList != null && !knowledgeMongoList.isEmpty()) {
 			
@@ -53,7 +59,6 @@ public class BigDataServiceImpl implements BigDataService {
 		}
 	}
 
-	@Override
 	public void deleteMessage(long knowledgeId, short columnId, long userId)
 			throws Exception {
 		

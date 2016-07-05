@@ -41,7 +41,7 @@
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:consumer timeout="10000" check="false" />
 
-    <dubbo:service ref="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" version="3.0.0"/>
+    <!--dubbo:service ref="bigDataService" interface="com.ginkgocap.ywxt.knowledge.service.common.BigDataService" version="3.0.0"/ -->
  	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>

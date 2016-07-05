@@ -1,28 +1,25 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
-import com.ginkgocap.parasol.directory.model.DirectorySource;
-import com.ginkgocap.parasol.directory.service.DirectorySourceService;
-import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
-import com.ginkgocap.parasol.tags.model.TagSource;
-import com.ginkgocap.parasol.tags.service.TagSourceService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
-import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.common.BigDataService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.user.service.DiaryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("knowledgeService")
 public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseService {
@@ -40,8 +37,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	private KnowledgeReferenceDao knowledgeReferenceDao;
 
 	/**MQ大数据服务*/
-	@Autowired
-	private BigDataService bigDataService;
+	//@Autowired
+	//private BigDataService bigDataService;
 	/**动态推送服务*/
 	//@Autowired
 	//private UserFeedService userFeedService;
@@ -529,7 +526,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		if(isBase) this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		if(isReference) this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
-		if(isBigData) this.bigDataService.deleteMessage(knowledgeId, columnId, userId);
+		//if(isBigData) this.bigDataService.deleteMessage(knowledgeId, columnId, userId);
 		//if(isUserFeed) this.userFeedService.deleteDynamicKnowledge(knowledgeId);
 	}
 	

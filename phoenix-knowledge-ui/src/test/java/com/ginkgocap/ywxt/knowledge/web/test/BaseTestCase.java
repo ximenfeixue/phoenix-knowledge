@@ -19,8 +19,8 @@ public abstract class BaseTestCase extends TestCase
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
     protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
-    //private static String testEnv = "testOnline";
-    private static String testEnv = "dev";
+    private static String testEnv = "testOnline";
+    //private static String testEnv = "dev";
     //private static String testEnv = "local";
     
     static {
