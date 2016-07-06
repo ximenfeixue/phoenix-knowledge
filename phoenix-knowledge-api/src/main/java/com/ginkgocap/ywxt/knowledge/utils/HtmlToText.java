@@ -87,7 +87,7 @@ public class HtmlToText {
 
     public static String htmlToText(String htmlContent)
     {
-        if (htmlContent.indexOf("html>") >= 0 && htmlContent.indexOf("/html>") > 0) {
+        if (htmlContent.indexOf("html>") >= 0 || htmlContent.indexOf("/html>") > 0 || htmlContent.indexOf("<style") > 0) {
             //Document doc = Jsoup.parse(htmlContent);
             //return doc.body().text();
             return html2Text(htmlContent);

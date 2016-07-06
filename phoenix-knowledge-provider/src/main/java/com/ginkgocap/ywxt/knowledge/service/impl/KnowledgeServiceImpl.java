@@ -62,7 +62,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if (savedKnowledgeDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
-        short columnId = knowledgeDetail.getColumnId();
         long knowledgeId = savedKnowledgeDetail.getId();
         long userId = knowledgeDetail.getOwnerId();
 
@@ -518,6 +517,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
 	}
 
+    @Override
+    public long getKnowledgeCount(long userId) throws Exception {
+
+        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
+    }
 	/**
 	 * 插入时异常手动回滚方法
 	 * @throws Exception

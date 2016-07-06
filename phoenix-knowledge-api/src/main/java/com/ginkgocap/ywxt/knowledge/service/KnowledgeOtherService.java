@@ -19,6 +19,8 @@ public interface KnowledgeOtherService
 
     public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId,int start, int size) throws Exception;
 
+    public long myCollectKnowledgeCount(long userId) throws Exception;
+
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
      /*

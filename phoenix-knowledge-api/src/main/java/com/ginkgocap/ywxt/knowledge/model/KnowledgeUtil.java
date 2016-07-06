@@ -317,6 +317,48 @@ public final class KnowledgeUtil {
         return filterProvider;
     }
 
+    public static List<Long> convertStringToLongList(String ids)
+    {
+        if (StringUtils.isEmpty(ids)) {
+            return null;
+        }
+        List<Long> idList = null;
+        if (ids.indexOf(",") <= 0) {
+            idList = new ArrayList<Long>(1);
+            idList.add(convertStringToLong(ids));
+        }
+        //TODO: performance bad, need to change it.
+        String[] idStr = ids.split(",");
+        idList = new ArrayList<Long>(idStr.length);
+        for (String id : idStr) {
+            try {
+                long newId =  Long.parseLong(ids);
+                if(newId > 0) {
+                    idList = new ArrayList<Long>(1);
+                    idList.add(newId);
+                }
+            } catch (NumberFormatException ex) {
+                //TODO: will add log
+                System.out.println("parse String to long error: " + ids);
+                ex.printStackTrace();
+            }
+        }
+        return idList;
+    }
+
+    public static long convertStringToLong(String number)
+    {
+        try {
+            return Long.parseLong(number);
+        } catch (NumberFormatException ex) {
+            //TODO: will add log
+            System.out.println("parse String to long error: " + number);
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+
     //This is just for Unit Test code
     public static String getJsonNodeContentFromObject(final String jsonContent, final String nodeName)
     {

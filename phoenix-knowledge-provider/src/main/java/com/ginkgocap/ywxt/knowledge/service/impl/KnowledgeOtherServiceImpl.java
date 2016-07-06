@@ -133,6 +133,15 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
+    public long myCollectKnowledgeCount(long userId) throws Exception
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
+
+        return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+    }
+
+    @Override
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
     {
         Query query = knowledgeColumnIdAndOwnerId(report.getUserId(), report.getKnowledgeId(), report.getColumnId());

@@ -308,6 +308,12 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		
 		return this.getSubEntitys("get_by_columnId_reportStatus", start, size, columnId, reportStatus);
 	}
+
+	@Override
+	public long getKnowledgeCount(long userId) throws Exception
+	{
+		return this.countEntitys("get_count_by_user", userId);
+	}
 	
 	private Date getDate(Date date,boolean beginOrEnd) {
 		

@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -527,8 +528,12 @@ public class KnowledgeWebTest extends BaseTestCase {
 
     private DataCollection createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)
     {
-        DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
+        DataCollection data = TestData.getDataCollection(userId, (short)2, title);
         try {
+        	long time1 = new Date().getTime();
+        	long time2 = System.currentTimeMillis();
+        	System.out.println(time1);
+        	System.out.println(time2);
             if (data != null && data.getKnowledgeDetail() != null) {
                 data.getKnowledgeDetail().setTags(tagIds);
                 data.getKnowledgeDetail().setCategoryIds(directoryIds);

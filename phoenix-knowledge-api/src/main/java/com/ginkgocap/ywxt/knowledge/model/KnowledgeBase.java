@@ -36,16 +36,24 @@ public class KnowledgeBase implements Serializable {
 
 	/**描述*/
 	private String content;
-	
+
+	//来源
+	private String source;
+
 	/**描述简略，一般存储描述的前50个字*/
 	private String contentDesc;
+
+	private short essence;
 
     /** 标签信息 **/
     private String tags;
 	
 	/**图片ID*/
 	private String pictureId;
-	
+
+	/**column Path*/
+	private String cpath;
+
 	/**创建人ID*/
 	private long createUserId;
 	
@@ -81,6 +89,9 @@ public class KnowledgeBase implements Serializable {
 
     /** 星标(1:是,0:否(默认)) **/
     private short userStar;
+
+	//分享给我的知识记录id
+	private long shareMeId;
 
 	@Id
 	@GeneratedValue(generator = "id")
@@ -139,6 +150,15 @@ public class KnowledgeBase implements Serializable {
 		this.content = content;
 	}
 
+	@Column(name = "source")
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 	@Column(name = "content_desc")
 	public String getContentDesc() {
 		return contentDesc;
@@ -148,7 +168,25 @@ public class KnowledgeBase implements Serializable {
 		this.contentDesc = contentDesc;
 	}
 
-    @Column(name = "tags")
+	@Column(name = "essence")
+	public short getEssence() {
+		return essence;
+	}
+
+	public void setEssence(short essence) {
+		this.essence = essence;
+	}
+
+	public String getCpath() {
+		return cpath;
+	}
+
+	public void setCpath(String cpath) {
+		this.cpath = cpath;
+	}
+
+
+	@Column(name = "tags")
     public String getTags() {
         return tags;
     }
@@ -164,6 +202,14 @@ public class KnowledgeBase implements Serializable {
 
 	public void setPictureId(String pictureId) {
 		this.pictureId = pictureId;
+	}
+
+	public String getCPath() {
+		return cpath;
+	}
+
+	public void setCPath(String cPath) {
+		this.cpath = cPath;
 	}
 
 	@Column(name = "create_user_id")
@@ -274,4 +320,11 @@ public class KnowledgeBase implements Serializable {
         this.userStar = userStar;
     }
 
+	public long getShareMeId() {
+		return shareMeId;
+	}
+
+	public void setShareMeId(long shareMeId) {
+		this.shareMeId = shareMeId;
+	}
 }

@@ -14,6 +14,9 @@ public class KnowledgeDetail implements Serializable {
 
     /** 栏目类型 **/
     private short columnId;
+
+    //1. 组织， 2. 人
+    private short virtual;
     
     /** 栏目路径**/
     private String cpath;
@@ -23,10 +26,30 @@ public class KnowledgeDetail implements Serializable {
     /** 知识介绍 **/
     private String content;
 
-    /** 创建者id **/
+    private String hcontent;
+
+    /** 知识所有者id **/
     private long ownerId;
-    /** 创建人姓名 **/
+    /** 知识所有者姓名 **/
     private String ownerName;
+    
+	// 创建人id
+	private long cid;
+
+	// 创建人名称
+	private String cname;
+
+    // 来源
+    private String source;
+
+    // 来源地址
+    private String s_addr;
+
+    // 封面地址
+    private String pic;
+
+    // 描述
+    private String desc;
 
     /** 创建时间 **/
     private long createTime;
@@ -48,6 +71,12 @@ public class KnowledgeDetail implements Serializable {
     /** 存储目录 **/
     private List<Long> categoryIds;
 
+    // 是否加精
+    private short essence;
+
+    // 是否收藏
+    private short collected;
+
     public long getId() {
         return id;
     }
@@ -63,7 +92,16 @@ public class KnowledgeDetail implements Serializable {
     public void setColumnId(short columnId) {
         this.columnId = columnId;
     }
-    
+
+    public short getVirtual() {
+        return virtual;
+    }
+
+    public void setVirtual(short virtual) {
+        this.virtual = virtual;
+    }
+
+
     public String getCpath() {
 		return cpath;
 	}
@@ -102,6 +140,62 @@ public class KnowledgeDetail implements Serializable {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+	public long getCid() {
+		return cid;
+	}
+
+	public void setCid(long cid) {
+		this.cid = cid;
+	}
+
+	public String getCname() {
+		return cname;
+	}
+
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+
+    public String getHcontent() {
+        return hcontent;
+    }
+
+    public void setHcontent(String hcontent) {
+        this.hcontent = hcontent;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getS_addr() {
+        return s_addr;
+    }
+
+    public void setS_addr(String s_addr) {
+        this.s_addr = s_addr;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public long getCreateTime() {
@@ -160,5 +254,19 @@ public class KnowledgeDetail implements Serializable {
         this.categoryIds = categoryIds;
     }
 
+    public short getEssence() {
+        return essence;
+    }
 
+    public void setEssence(short essence) {
+        this.essence = essence;
+    }
+
+    public short getCollected() {
+        return collected;
+    }
+
+    public void setCollected(short collected) {
+        this.collected = collected;
+    }
 }

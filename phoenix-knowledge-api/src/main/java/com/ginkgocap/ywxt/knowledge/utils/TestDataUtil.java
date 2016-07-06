@@ -129,8 +129,6 @@ public class TestDataUtil {
     
     public static void initBaseData(KnowledgeDetail knowledgeDetail)
     {
-        //System.out.println("DemandType： "+knowledgeType);
-        //demandBase.setId(1234L);
         knowledgeDetail.setColumnId((short)2);
         knowledgeDetail.setTitle("title1");
         knowledgeDetail.setContent("note");

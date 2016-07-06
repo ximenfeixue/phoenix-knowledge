@@ -1,6 +1,9 @@
-package com.ginkgocap.ywxt.knowledge.model;
+package com.ginkgocap.ywxt.knowledge.model.mobile;
 
-import java.io.IOException;
+import com.alibaba.fastjson.JSON;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +12,6 @@ import java.util.List;
  * Created by Admin on 2016/5/17.
  */
 public class KnowledgeMini2  implements Serializable {
-
     private static final long serialVersionUID = 5946644419907638023L;
 
     private long id;// 知识id
@@ -30,9 +32,9 @@ public class KnowledgeMini2  implements Serializable {
 
     private String url;//知识链接
 
-    private String[] listTag;
+    private List<Long> listTag;
 
-    private List<Long> connections;//关系集合
+    private Connections connections;//关系集合
     private String name;//在生态关联中， 知识标题为 name，需要设置为title
 
 
@@ -62,7 +64,7 @@ public class KnowledgeMini2  implements Serializable {
         self.setSource("手工输入" + id);
         self.setTag("标签" + id + ";");
 
-        List<Long> connections = new ArrayList<Long>(id+1);
+        Connections connections = Connections.createDemo(id+1,true);
         self.setConnections(connections);
         return self;
     }
@@ -70,18 +72,18 @@ public class KnowledgeMini2  implements Serializable {
     //获取知识拥有者id
     public Long getOwnerId(){
         if(null != connections){
-            return connections.get(0);
+            return connections.getOwnerId();
         }
         return new Long(0);
     }
 
     //获取关系拥有者名称
-//    public String getOwnerName(){
-//        if(null != connections){
-//            return connections.getOwnerName();
-//        }
-//        return "";
-//    }
+    public String getOwnerName(){
+        if(null != connections){
+            return connections.getOwnerName();
+        }
+        return "";
+    }
 
     /**
      * 知识id
@@ -181,11 +183,11 @@ public class KnowledgeMini2  implements Serializable {
         this.tag = tag;
     }
 
-    public List<Long> getConnections() {
+    public Connections getConnections() {
         return connections;
     }
 
-    public void setConnections(List<Long> connections) {
+    public void setConnections(Connections connections) {
         this.connections = connections;
     }
 
@@ -204,10 +206,10 @@ public class KnowledgeMini2  implements Serializable {
     public void setType(int type) {
         this.type = type;
     }
-    public String[] getListTag() {
+    public List<Long> getListTag() {
         return listTag;
     }
-    public void setListTag(String[] listTag) {
+    public void setListTag(List<Long> listTag) {
         this.listTag = listTag;
     }
 
@@ -223,11 +225,13 @@ public class KnowledgeMini2  implements Serializable {
         if(jsonEntity.equals("{}")) {
             return null; //无数据判断
         }
-        return getByJsonObject(jsonEntity);
+        return KnowledgeUtil.readValue(KnowledgeMini2.class, jsonEntity);
     }
 
     /**
+     * @author zhangzhen
      * 如果数据为空返回null
+     *
      * 指导使用方法
      * JSONObject j = JSONObject.fromObject(requestJson);
      * Object jsonData = j.get("Entity");
@@ -244,8 +248,8 @@ public class KnowledgeMini2  implements Serializable {
      * JSONObject j = JSONObject.fromObject(requestJson);
      * String jsonData = j.getString("Entity");
      * */
-    public static List<KnowledgeMini2> getListByJsonString(String object) throws IOException {
-        return KnowledgeUtil.readValue(new ArrayList<KnowledgeMini2>(1).getClass(), object);
+    public static List<KnowledgeMini2> getListByJsonString(String object) {
+        return JSON.parseArray(object, KnowledgeMini2.class);
     }
 
     /**
@@ -258,12 +262,7 @@ public class KnowledgeMini2  implements Serializable {
      * Object jsonData = j.get("EntityList");
      * */
     public static List<KnowledgeMini2> getListByJsonObject(Object object) {
-        try {
-            return getListByJsonString(object.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getListByJsonString(object.toString());
     }
 
     public String getColumnpath() {
@@ -282,19 +281,19 @@ public class KnowledgeMini2  implements Serializable {
     }
 
     /** 虚假数据填充项 */
-//    static Page getSpPage() {
-//        Page page = new Page();
-//        List<KnowledgeMini2> km2s = new ArrayList<KnowledgeMini2>();
-//		//Connections connections = Connections.createDemo(1, true);
-//        for (int i = 1; i < 5; i++) {
-//            km2s.add(KnowledgeMini2.createDemo(i));
-//        }
-//        page.setIndex(0);/** 当前页码 */
-//        page.setSize(4);/** 该页内容数 */
-//        page.setListKnowledgeMini(km2s);/** 集合 */
-//        page.setTotal(4);
-//        return page;
-//    }
+    static Page getSpPage() {
+        Page page = new Page();
+        List<KnowledgeMini2> km2s = new ArrayList<KnowledgeMini2>();
+//		Connections connections = Connections.createDemo(1, true);
+        for (int i = 1; i < 5; i++) {
+            km2s.add(KnowledgeMini2.createDemo(i));
+        }
+        page.setIndex(0);/** 当前页码 */
+        page.setSize(4);/** 该页内容数 */
+        page.setListKnowledgeMini(km2s);/** 集合 */
+        page.setTotal(4);
+        return page;
+    }
 
     public String getName() {
         return name;

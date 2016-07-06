@@ -486,7 +486,7 @@
                 <dubbo.registry.address>zookeeper://127.0.0.1:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
-                <demand.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</demand.data.searchUrl>
+                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
             </properties>
         </profile>
         <profile>
@@ -524,7 +524,7 @@
                 <dubbo.registry.address>zookeeper://192.168.120.135:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
-                <demand.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</demand.data.searchUrl>
+                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
             </properties>
         </profile>
         <profile>
@@ -567,7 +567,7 @@
                 <memcached.object_1.port>11211</memcached.object_1.port>
 
                 <!-- 访问大数据接口地址 -->
-                <demand.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</demand.data.searchUrl>
+                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
             </properties>
         </profile>
     </profiles>

@@ -11,16 +11,16 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return "demand-test";
+        return "knowledge-test";
     }
 
     @Override
     public @Bean Mongo mongo() throws Exception {
-        return new Mongo("192.168.120.131");
+        return new Mongo("192.168.120.135");
     }
     @Override
     public @Bean
     MongoTemplate mongoTemplate() throws Exception {
-        return new MongoTemplate(mongo(),"demand-test");
+        return new MongoTemplate(mongo(),"knowledge-test");
     }
 }

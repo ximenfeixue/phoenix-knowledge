@@ -1,22 +1,25 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
 import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
-import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
+import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
+import com.ginkgocap.ywxt.knowledge.model.mobile.KnowledgeMini2;
+import com.ginkgocap.ywxt.knowledge.model.mobile.OrganizationMini;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.ginkgocap.ywxt.knowledge.utils.ContantDefine;
+import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.HttpClientHelper;
-import com.gintong.common.phoenix.permission.PermissionAnnotation;
-import com.gintong.common.phoenix.permission.PermissionOpType;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.service.PermissionCheckService;
@@ -24,11 +27,13 @@ import com.gintong.common.phoenix.permission.service.PermissionRepositoryService
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +44,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.*;
 
 @Controller
@@ -56,6 +60,9 @@ public class KnowledgeController extends BaseController {
 
     //@Autowired
     //KnowledgeCountService knowledgeCountService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AssociateService associateService;
@@ -75,8 +82,10 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private DirectoryServiceLocal directoryServiceLocal;
 
-    private static final long APPID = 1L;
-	
+    @Value("#{configuers.knowledgeDataSearchUrl}")
+    private String knowledgeDataSearchUrl;
+
+    private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 	/**
 	 * 插入数据
 	 * @throws IOException
@@ -405,13 +414,18 @@ public class KnowledgeController extends BaseController {
 			logger.error("Query knowledge failed！reason：" + e.getMessage());
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 		}
-        data.setKnowledgeDetail(knowledgeDetail);
 
 		//数据为空则直接返回异常给前端
 		if(knowledgeDetail == null) {
             logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
 		}
+        String hContent = HtmlToText.htmlToText(knowledgeDetail.getContent());
+        int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
+        hContent = hContent.substring(0, maxLen);
+        knowledgeDetail.setHcontent(hContent);
+        knowledgeDetail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
+        data.setKnowledgeDetail(knowledgeDetail);
 
         try {
             InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
@@ -917,15 +931,42 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value="/count/{knowledgeId}/{type}", method = RequestMethod.PUT)
-    public InterfaceResult count(HttpServletRequest request,HttpServletResponse response,
-                                       @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
+    @RequestMapping(value="/count//{columnId}", method = RequestMethod.PUT)
+    public InterfaceResult countBy(HttpServletRequest request,HttpServletResponse response, @PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/my/count/", method = RequestMethod.PUT)
+    public InterfaceResult myCount(HttpServletRequest request,HttpServletResponse response,
+                                 @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = user.getId();
+        long createCount = 0L;
+        try {
+            createCount = this.knowledgeService.getKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+        }
+
+        long collectedCount = 0L;
+        try {
+            knowledgeOtherService.myCollectKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+        }
+        logger.info("createCount: {}, collectedCount: {}", createCount, collectedCount);
+
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, createCount+collectedCount);
     }
 
     /**
@@ -1162,23 +1203,34 @@ public class KnowledgeController extends BaseController {
                                                             @PathVariable int size, @PathVariable String keyword) throws Exception {
 
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
-        List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
 
         User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        /*
+
+//        String jsonContent =  this.getJsonParamStr(request);
+//        if (StringUtils.isEmpty(jsonContent)) {
+//            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"查询内容为空！");
+//        }
+
         //"keyword": "知识标题或关键字", "type": "1-关联需求；2-关联人脉；3-关联组织；4-关联知识"
+        /** 关键字 */
+        //JSONObject json = JSONObject.fromObject(jsonContent);
+        //String keywordSRC = StringUtils.trim(json.optString("keyword"));
+        //String keyword = java.net.URLEncoder.encode(keywordSRC);
+
         long userId = user.getId();
         // 金桐网推荐的相关“知识”数据
-        String bigDataQueryHost = "http://192.168.101.9:8090"; //TODO: This need to read from configure file.
-        //String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
-        String durl = bigDataQueryHost + "/bigdata/query";
+        String durl = knowledgeDataSearchUrl; //request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+        System.out.println("------durl: "+durl);
+        logger.info("------durl: "+durl);
         durl = durl + "?scope=4&title=" + keyword + "&userid=" + userId;
 
+        //String bigDataQueryHost = "http://192.168.101.9:8090"; //TODO: This need to read from configure file.
+        //String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+
         String djson = "";
-        JsonNode jsonNode = null;
         try {
             djson = HttpClientHelper.get(durl);
         } catch (java.net.ConnectException e) {
@@ -1188,6 +1240,8 @@ public class KnowledgeController extends BaseController {
         }
 
         int RECOMMEND_COUNT = 5;
+        JsonNode jsonNode = null;
+        List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
         if (null != djson && djson.trim().length() > 0 ) {
             jsonNode = KnowledgeUtil.readTree(djson);
             int status = jsonNode.get("status").intValue();
@@ -1212,44 +1266,74 @@ public class KnowledgeController extends BaseController {
                             km2.setColumntype(Integer.parseInt(m.get("columntype").toString()));
                             Object objColumnPath = m.get("columnpath");
                             String columnPath = objColumnPath == null ? "" : objColumnPath.toString();
-                            //km2.setColumnpath(commonService.getDisposeString(columnPath));
+                            //TODO: fix the cptah
+                            //km2.setPictureId(commonService.getDisposeString(columnPath));
 
-                            List<Long> connections = new  ArrayList<Long>(1);
+                            Connections connections = new Connections();
                             String ownerid = oid.toString();
-                            connections.add(Long.parseLong(ownerid));
+                            connections.setId(Long.parseLong(ownerid));
 
                             User organizationUser = null;
-
-                            // 推荐 用户为金桐脑
-                            if (0 == connections.get(0)) {
+                            /** 推荐 用户为金桐脑 */
+                            if (0 == connections.getId()) {
                                 organizationUser = new User();
                                 organizationUser.setType(2);// 金桐脑为机构用户
-                            } else if (-1 == connections.get(0)) {
+                            } else if (-1 == connections.getId()) {
                                 organizationUser = new User();
                                 organizationUser.setType(2);// 全平台机构用户
                             } else {
-                                organizationUser = null; //userService.selectByPrimaryKey(Long.parseLong(m.get("ownerid").toString()));
+                                //TODO: need to fix this
+                                //organizationUser = userService.selectByPrimaryKey(Long.parseLong(m.get("ownerid").toString()));
                             }
-
+                            if (null != organizationUser) {
+                                /** 判断用户属性 */
+                                int usertype = organizationUser.getType();
+                                String ownername = m.get("ownername").toString();
+                                int temp = Connections.TYPE_PERSON;
+                                if (usertype != 1)
+                                    temp = Connections.TYPE_ORGANIZATION;
+                                connections.setType(temp);
+                                if (usertype == Connections.TYPE_PERSON) {
+                                    JTContactMini mini = new JTContactMini();
+                                    mini.setName(ownername);
+                                    mini.setIsOffline(true);
+                                    mini.setOwnerid(Long.parseLong(ownerid));
+                                    mini.setOwnername(ownername);
+                                    connections.setJtContactMini(mini);
+                                } else {
+                                    OrganizationMini om = new OrganizationMini();
+                                    om.setFullName(ownername);
+                                    om.setIsOnline(true);
+                                    om.setOwnerid(Long.parseLong(ownerid));
+                                    om.setOwnername(ownername);
+                                    connections.setOrganizationMini(om);
+                                }
+                            }
                             km2.setConnections(connections);
                             listPlatformKnowledge.add(km2);
                         }
+                        }
                     }
-                }
             }
-        }*/
-
-        // 用户自己的所有知识
-        List<KnowledgeBase> listUserKnowledge = null;
-        List<DataCollection> result = null;
-        if ("null".equals(keyword)) {
-            listUserKnowledge = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
-        } else {
-            listUserKnowledge = knowledgeService.getBaseByKeyWord(user.getId(), start, size, keyword);
         }
 
-        //responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
+        // 用户自己的所有知识
+        List<KnowledgeMini2> listUserKnowledge = null; // 用户自己的知识
+        List<KnowledgeBase> userKnowledgeBase = null;
+        List<DataCollection> result = null;
+        if ("null".equals(keyword) || keyword == null) {
+            userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
+        } else {
+            userKnowledgeBase = knowledgeService.getBaseByKeyWord(user.getId(), start, size, keyword);
+        }
+
+        if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
+            listUserKnowledge = convertKnowledgeBaseList(userKnowledgeBase);
+        }
+
+        responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
         responseDataMap.put("listUserKnowledge", listUserKnowledge);
+        responseDataMap.put("type", type);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
@@ -1264,30 +1348,164 @@ public class KnowledgeController extends BaseController {
         return kbds;
     }
 
-    public KnowledgeMini2 chanageKnowledgeToMini2(KnowledgeBase knowledgeBase) {
+    public List<KnowledgeMini2> convertKnowledgeBaseList(List<KnowledgeBase> baseList)
+    {
+        if (baseList == null || baseList.size() <= 0) {
+            return null;
+        }
+
+        List<KnowledgeMini2> km2List =  new ArrayList<KnowledgeMini2>(baseList.size());
+        for(KnowledgeBase base : baseList) {
+            km2List.add(chanageKnowledgeToMini2(base));
+        }
+
+        return km2List;
+    }
+
+    public KnowledgeMini2 chanageKnowledgeToMini2(KnowledgeBase knowledgeBase)
+    {
         KnowledgeMini2 km2 = new KnowledgeMini2();
 
         //分享给我的知识专用
-        //km2.setShareMeId(knowledgeBase.getShareMeId());
+        km2.setShareMeId(knowledgeBase.getShareMeId());
 
-        //Connections connections = new Connections();
+        Connections connections = new Connections();
         /**作者id*/
         long userId = knowledgeBase.getCreateUserId();
+        if(userId>0) {//判断是否传过来知识作者id - 剔除 全平台与金桐网
+            User detailUser = userService.selectByPrimaryKey(userId);
+            if(null != detailUser) {
+                connections.setType(detailUser.getType());
+                connections.setId(userId);//存在隐患
+                if(detailUser.getType()==1) {
+                    JTContactMini mini = new JTContactMini();//参考loginConfiguration 175 ConnectionsController 1909
+                    mini.setId(userId+"");
+                    mini.setName(detailUser.getName());
+                    mini.setLastName("");
+                    mini.setNameChar(detailUser.getNameFirst());
+                    mini.setImage(detailUser.getPicPath());
+                    mini.setCompany(detailUser.getCompanyName());
+                    List<String> emials = new ArrayList<String>();
+                    emials.add(detailUser.getEmail());
+                    mini.setListEmail(emials);
 
+                    mini.setOwnerid(userId);
+                    mini.setOwnername(detailUser.getName());
+                    connections.setJtContactMini(mini);
+                } else {
+                    OrganizationMini mini = new OrganizationMini();
+                    mini.setId("" + userId);
+                    mini.setOwnerid(userId);
+                    mini.setIsOnline(true);
+                    mini.setFullName(detailUser.getName());
+                    mini.setOwnername(detailUser.getName());
+                    mini.setShortName(detailUser.getShortName());
+                    connections.setOrganizationMini(mini);
+                }
+            }
+            km2.setConnections(connections);// 关系对象
+        }
         km2.setUrl("");//知识链接
-        km2.setType(knowledgeBase.getType());//知识类型
+        km2.setType(knowledgeBase.getColumnId());//知识类型
         km2.setColumntype(knowledgeBase.getColumnId());
         km2.setId(knowledgeBase.getKnowledgeId());// 知识id
-        //km2.setTag(knowledgeBase.get);// 标签
+        km2.setTag(knowledgeBase.getTags());// 标签
 
-        //km2.setListTag(getMapValue(knowledgeBaseData.getTag()).split(" "));//标签
-        //km2.setSource(knowledgeBase.get);// 来源
-        km2.setTitle(knowledgeBase.getTitle());// 标题
-        km2.setPic(String.valueOf(knowledgeBase.getPictureId()));// 封面地址
-        km2.setDesc(knowledgeBase.getContentDesc());// 描述
-        km2.setModifytime(knowledgeBase.getCreateDate());// 最后修改时间
-
+        KnowledgeDetail kn = null;
+        if(knowledgeBase.getKnowledgeId() !=0 && knowledgeBase.getColumnId() != 0) {
+            try {
+                kn = knowledgeService.getDetailById(knowledgeBase.getKnowledgeId(), knowledgeBase.getColumnId());
+            } catch (Exception ex) {
+                logger.error("Get Knowledge Detail failed: KnowledgeId: {}, ColumnId: {}, error: {}",
+                        knowledgeBase.getKnowledgeId(), knowledgeBase.getColumnId(), ex.getMessage());
+            }
+        }
+        if(kn!=null) {
+            km2.setListTag(kn.getTags());//标签
+            km2.setSource(kn.getSource());// 来源
+            km2.setTitle(kn.getTitle());// 标题
+            km2.setPic(changeImage(kn.getPic()));// 封面地址
+            km2.setDesc(getDesc(kn.getDesc()));// 描述
+            km2.setModifytime(kn.getModifyTime());// 最后修改时间
+        } else {
+            List<Long> tags = KnowledgeUtil.convertStringToLongList(knowledgeBase.getTags());
+            km2.setListTag(tags);//标签
+            km2.setSource(knowledgeBase.getSource());// 来源
+            km2.setTitle(knowledgeBase.getTitle());// 标题
+            km2.setPic(changeImage(knowledgeBase.getPictureId()));// 封面地址
+            km2.setDesc(knowledgeBase.getContentDesc());// 描述
+            km2.setModifytime(knowledgeBase.getModifyDate());// 最后修改时间
+        }
+        km2.setColumnpath(getDisposeString(knowledgeBase.getCpath()));
         return km2;
+    }
+
+    /** 图片头部信息拼接 */
+    private String changeImage(String image) {
+        if(image == null||"null".equals(image)) return "";
+        //移动端图片
+        if(image.indexOf("download") != -1) {
+            return image;
+        }
+        if(image.indexOf("http") != -1) {
+            return image;
+        }
+        //web端图片地址
+        if(!StringUtils.isEmpty(image) && image.indexOf("default") == -1) {
+            return resourceBundle.getString("nginx.root") +image;
+        }
+        return "";
+    }
+
+    /**
+     * @param picPath 头像相对路径
+     * @param userIsVirtual 用户是否组织
+     * @return
+     */
+    private String changeUserImage(String picPath, boolean userIsVirtual) {
+        if (StringUtils.isBlank(picPath)) {
+            if (userIsVirtual)
+                picPath = ContantDefine.ORGAN_DEFAULT_PIC_PATH;
+            else
+                picPath = ContantDefine.USER_DEFAULT_PIC_PATH_MALE;
+        } else if (picPath.startsWith("http")) {
+            return picPath;
+        }
+        return resourceBundle.getString("nginx.root") + picPath;
+    }
+
+    private String getMapValue(Object obj) {
+        if(null == obj) {
+            return "";
+        }
+        String temp = obj.toString();
+        if(temp.startsWith("net")) {
+            return "";
+        }
+        return temp;
+    }
+
+    private String getDesc(String desc) {
+        if(desc != null && !desc.equals("")) {
+            if(desc.length() > 50) {
+                return desc.substring(0, 49);
+            }
+        }
+        return desc;
+    }
+
+    private String getDisposeString(String str) {
+
+        if(null == str || str.equals("")) {
+            return str;
+        }
+        String[] tempStr = str.split("/");
+
+        if (tempStr.length > 0) {
+            return tempStr[0];
+        }
+
+        return str;
     }
 
     private List<Long> createAssociate(List<Associate> as, long knowledgeId, long userId)

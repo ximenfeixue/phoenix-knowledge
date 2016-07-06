@@ -266,4 +266,6 @@ public interface KnowledgeService {
 	 * @throws Exception
 	 */
 	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception;
+
+	public long getKnowledgeCount(long userId) throws Exception;
 }
