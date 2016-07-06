@@ -12,10 +12,13 @@ public class KnowledgeDetail implements Serializable {
     /** 知识id **/
     private long id;
 
-    /** 知识类型 **/
+    /** 栏目类型 **/
     private short columnId;
+    
+    /** 栏目路径**/
+    private String cpath;
 
-    /** 知识标题 **/
+	/** 知识标题 **/
     private String title;
     /** 知识介绍 **/
     private String content;
@@ -60,6 +63,14 @@ public class KnowledgeDetail implements Serializable {
     public void setColumnId(short columnId) {
         this.columnId = columnId;
     }
+    
+    public String getCpath() {
+		return cpath;
+	}
+
+	public void setCpath(String cpath) {
+		this.cpath = cpath;
+	}
 
     public String getTitle() {
         return title;
