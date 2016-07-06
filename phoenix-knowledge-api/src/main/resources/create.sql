@@ -32,7 +32,7 @@ CREATE TABLE `tb_knowledge_base` (
 CREATE TABLE `tb_knowledge_reference` (
    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
    `knowledge_id` bigint(20) DEFAULT NULL COMMENT '知识Id（投融工具和行业有）',
-   `article_name` varchar(50) DEFAULT NULL COMMENT '引用资料文章名称',
+   `article_name` varchar(255) DEFAULT NULL COMMENT '引用资料文章名称',
    `url` varchar(255) DEFAULT NULL COMMENT 'URL地址',
    `website_name` varchar(255) DEFAULT NULL COMMENT '网站名',
    `status` char(1) DEFAULT NULL COMMENT '标示本条资料是否有效，1：为有效，0：为无效',

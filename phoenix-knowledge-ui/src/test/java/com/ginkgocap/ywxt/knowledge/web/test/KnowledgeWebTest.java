@@ -1,21 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.ginkgocap.parasol.associate.model.Associate;
-import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.utils.TestData;
-
-import org.springframework.context.annotation.Bean;
-
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.ResItem;
+import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 import junit.framework.Assert;
 
@@ -537,12 +532,17 @@ public class KnowledgeWebTest extends BaseTestCase {
             if (data != null && data.getKnowledgeDetail() != null) {
                 data.getKnowledgeDetail().setTags(tagIds);
                 data.getKnowledgeDetail().setCategoryIds(directoryIds);
+                //data.getKnowledgeDetail().setContent(content);
                 String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
                 JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
                 Util.checkResponseWithData(response);
-                long knowledgeId = Long.parseLong(Util.getResponseData(response));
-                data.getKnowledgeDetail().setId(knowledgeId);
-                data.getReference().setKnowledgeId(knowledgeId);
+                String retData = Util.getResponseData(response);
+                Assert.assertFalse("null".equals(retData));
+                if (retData != null && !"null".equals(retData)) {
+	                long knowledgeId = Long.parseLong(retData);
+	                data.getKnowledgeDetail().setId(knowledgeId);
+	                data.getReference().setKnowledgeId(knowledgeId);
+                }
             }
             else {
                 fail();
