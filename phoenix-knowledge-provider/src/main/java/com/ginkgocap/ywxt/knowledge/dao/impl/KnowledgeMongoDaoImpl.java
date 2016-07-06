@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.mongodb.BasicDBObject;
@@ -199,7 +200,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}*/
 	
 	private String getCollectionName(short columnId) {
-		return "Knowledge"; //ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
+		return KnowledgeUtil.getKnowledgeCollectionName(columnId);
 	}
 	
 	private Update getUpdate(KnowledgeDetail knowledgeDetail) {

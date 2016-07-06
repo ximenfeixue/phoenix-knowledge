@@ -88,6 +88,11 @@ public final class KnowledgeUtil {
         return knowledgeBase;
     }*/
 
+    public static String getKnowledgeCollectionName(short columnId)
+    {
+        return "Knowledge"; //ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
+    }
+
     //This is just for test, need do knowledge test but real user not exist
     public static User getDummyUser()
     {
