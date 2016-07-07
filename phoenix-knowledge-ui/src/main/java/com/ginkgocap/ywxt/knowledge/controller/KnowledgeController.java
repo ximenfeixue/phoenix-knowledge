@@ -1445,7 +1445,7 @@ public class KnowledgeController extends BaseController {
             km2.setDesc(knowledgeBase.getContentDesc());// 描述
             km2.setModifytime(knowledgeBase.getModifyDate());// 最后修改时间
         }
-        km2.setColumnpath(getDisposeString(knowledgeBase.getCPath()));
+        km2.setColumnpath(getDisposeString(knowledgeBase.getCpath()));
         return km2;
     }
 

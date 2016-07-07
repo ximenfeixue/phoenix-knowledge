@@ -110,6 +110,8 @@ public class TestData {
         KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
         knowledgeDetail.setOwnerId(userId);
         knowledgeDetail.setOwnerName("testUser");
+        knowledgeDetail.setCid(userId);
+        knowledgeDetail.setCname("testUser");
         knowledgeDetail.setTitle(title == null ? "TestTitle" : title);
         knowledgeDetail.setContent("Knowledge Description");
         List<String> UrlIds= new ArrayList<String>();

@@ -52,7 +52,7 @@ public class KnowledgeBase implements Serializable {
 	private String pictureId;
 
 	/**column Path*/
-	private String CPath;
+	private String cpath;
 
 	/**创建人ID*/
 	private long createUserId;
@@ -196,12 +196,12 @@ public class KnowledgeBase implements Serializable {
 		this.pictureId = pictureId;
 	}
 
-	public String getCPath() {
-		return CPath;
+	public String getCpath() {
+		return cpath;
 	}
 
-	public void setCPath(String CPath) {
-		this.CPath = CPath;
+	public void setCpath(String cpath) {
+		this.cpath = cpath;
 	}
 
 	@Column(name = "create_user_id")
