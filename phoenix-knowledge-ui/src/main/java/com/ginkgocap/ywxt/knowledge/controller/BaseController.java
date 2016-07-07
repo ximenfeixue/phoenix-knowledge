@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
@@ -63,6 +66,16 @@ public abstract class BaseController {
         }
         return user;
         //return KnowledgeUtil.getDummyUser();
+    }
+
+    protected long getUserId(User user) {
+        //This return Id or Uid
+        return user.getId();
+    }
+
+    protected String getUserName(User user) {
+        //This return name or userName
+        return user.getName();
     }
 
     protected JsonNode getJsonNode(String jsonStr, String... values)
@@ -139,5 +152,14 @@ public abstract class BaseController {
     protected MappingJacksonValue mappingJacksonValue(CommonResultCode resultCode,String message)
     {
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(resultCode,message));
+    }
+
+    protected MappingJacksonValue knowledgeDetail(DataCollection data)
+    {
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        result.setResponseData(data);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
+        return jacksonValue;
     }
 }

@@ -6,8 +6,11 @@ import java.util.List;
 /**
  * Created by Chen Peifeng on 2016/5/16.
  */
-public class ResItem implements Serializable {
-    private long resId; //knowledgeId
+public class ResItem implements Serializable 
+{
+	private static final long serialVersionUID = 4260148152954320931L;
+	
+	private long resId; //knowledgeId
     List<Long> ids;
     
     public long getResId() {
@@ -22,5 +25,4 @@ public class ResItem implements Serializable {
 	public void setIds(List<Long> ids) {
 		this.ids = ids;
 	}
-	
 }

@@ -310,7 +310,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public long getKnowledgeCount(long userId) throws Exception
+	public int getKnowledgeCount(long userId) throws Exception
 	{
 		return this.countEntitys("get_count_by_user", userId);
 	}

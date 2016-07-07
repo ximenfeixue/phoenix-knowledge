@@ -89,7 +89,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 
         Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
         Query query = new Query(c);
-        query.with(new Sort(Sort.Direction.DESC, "timestamp"));
+        query.with(new Sort(Sort.Direction.ASC, "timestamp"));
 
         return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
     }

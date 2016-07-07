@@ -1,10 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import java.io.Serializable;
+
 /**
  * Created by gintong on 2016/7/7.
  */
-public class Pair {
-    public long getId() {
+public class IdName implements Serializable {
+
+	private static final long serialVersionUID = -4719512970628605310L;
+	
+	public long getId() {
         return id;
     }
 
@@ -17,6 +22,12 @@ public class Pair {
     }
 
     public void setName(String name) {
+        this.name = name;
+    }
+
+    public IdName(long id, String name)
+    {
+        this.id = id;
         this.name = name;
     }
 

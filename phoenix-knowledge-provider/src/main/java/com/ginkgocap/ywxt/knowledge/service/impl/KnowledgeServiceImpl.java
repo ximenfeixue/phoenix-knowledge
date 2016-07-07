@@ -493,33 +493,38 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 	
 	@Override
-	public List<KnowledgeBase> getBaseByType(short type,int start,int size) throws Exception {
+	public List<KnowledgeBase> getBaseByType(short type,int start,int size) throws Exception
+    {
 		return this.knowledgeMysqlDao.getByType(type, start, size);
 	}
 	
 	@Override
-	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception {
+	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception
+    {
 		return this.knowledgeMysqlDao.getByColumnId(columnId, start, size);
 	}
 
     @Override
-    public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception {
+    public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception
+    {
         return this.knowledgeMysqlDao.getByCreateUserIdKeyWord(userId, keyWord, start, size);
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
+    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception
+    {
         return this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size);
     }
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception {
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception
+    {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
 	}
 
     @Override
-    public long getKnowledgeCount(long userId) throws Exception {
-
+    public int getKnowledgeCount(long userId) throws Exception
+    {
         return this.knowledgeMysqlDao.getKnowledgeCount(userId);
     }
 	/**

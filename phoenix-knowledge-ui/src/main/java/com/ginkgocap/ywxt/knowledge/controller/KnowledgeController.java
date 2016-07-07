@@ -7,6 +7,7 @@ import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
+import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
@@ -28,7 +29,7 @@ import com.gintong.common.phoenix.permission.service.PermissionRepositoryService
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
-import net.sf.json.JSONObject;
+import com.gintong.frame.util.Page;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -459,10 +460,8 @@ public class KnowledgeController extends BaseController {
             ex.printStackTrace();
         }
 
-        logger.info(".......get knowledge detail success......");
-        result.setResponseData(data);
-        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
+        logger.info(".......get knowledge detail complete......");
+        MappingJacksonValue jacksonValue = knowledgeDetail(data);
 
         //Click count this should be in queue
         try {
@@ -480,28 +479,33 @@ public class KnowledgeController extends BaseController {
      * @param knowledgeId 知识Id
      * @param columnId 栏目主键
      * @throws IOException
-     *
+     */
     @RequestMapping(value = "/web/{knowledgeId}/{columnId}", method = RequestMethod.GET)
     @ResponseBody
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         InterfaceResult<DataCollection> result = knowledgeDetail(user, knowledgeId, columnId);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if (result != null) {
             DataCollection data = result.getResponseData();
-            MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
             if (data == null || data.getKnowledgeDetail() == null) {
                 logger.error("get knowledge detail failed: knowledgeId: {}", knowledgeId);
                 return jacksonValue;
             }
+            long userId = user.getId();
             KnowledgeDetail detail = data.getKnowledgeDetail();
             List<Long> tags = detail.getTags();
             List<Long> directorys = detail.getCategoryIds();
-            //WList<Tag> = tagServiceLocal.getTagList(user.getId(), tags);
-            directoryServiceLocal.getDirectoryList(user.getId(), directorys);
-
+            List<IdName> minTags = this.getMinTagList(userId, tags);
+            List<IdNameType> minDirectorys = this.getMinDirectoryList(userId, directorys);
+            logger.debug("get minTags: {} minDirectorys: {}", minTags, minDirectorys);
+            KnowledgeDetailWeb webDetail = new KnowledgeDetailWeb(detail, minTags, minDirectorys);
+            data.setKnowledgeDetail(webDetail);
+            jacksonValue = knowledgeDetail(data);
         }
-    }*/
+        return jacksonValue;
+    }
 	
 	/**
 	 * 提取所有知识数据
@@ -540,6 +544,63 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get all knowledge success......");
 		return InterfaceResult.getSuccessInterfaceResultInstance(resultMap);
 	}
+
+    /**
+     * 提取所有知识数据
+     * @param num 分页起始
+     * @param size 分页大小
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/myList/{num}/{size}/{total}", method = RequestMethod.GET)
+    public InterfaceResult getAllMy(HttpServletRequest request, HttpServletResponse response,
+                                  @PathVariable int num,@PathVariable int size,@PathVariable int total) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = getUserId(user);
+        //First request need to get from server
+        if (total == -1) {
+            total = getKnowledgeCount(userId);
+        }
+
+        int gotTotal = num * size;
+        if ( gotTotal >= total) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = null;
+        int createCount = getCreatedKnowledgeCount(userId);
+        if (createCount < gotTotal) {
+            createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, null);
+            if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
+                logger.info("get created knowledge size: {}", createdKnowledgeList.size());
+                return knowledgeListPage(total, num, size, createdKnowledgeList);
+            }
+        }
+
+        if (createdKnowledgeList != null && createdKnowledgeList.size() > 0) {
+            int restSize = size - createdKnowledgeList.size();
+            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, null);
+            logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedKnowledgeList.size());
+            createdKnowledgeList.addAll(collectedKnowledgeList);
+            return knowledgeListPage(total, num, createdKnowledgeList.size(), createdKnowledgeList);
+        }
+
+
+        num = gotTotal - createCount;
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, num, size, null);
+        if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
+            logger.info("get collected size: {}", collectedKnowledgeList.size());
+            return knowledgeListPage(total, num, collectedKnowledgeList.size(), collectedKnowledgeList);
+        }
+
+        logger.info(".......get all knowledge complete......");
+        return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+    }
 
     /**
      * 提取所有知识数据
@@ -987,23 +1048,11 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        long userId = user.getId();
-        long createCount = 0L;
-        try {
-            createCount = this.knowledgeService.getKnowledgeCount(userId);
-        }catch (Exception ex) {
-            logger.error("get created knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
-        }
+        long userId = this.getUserId(user);
+        long knowledgeCount = getKnowledgeCount(userId);
+        logger.info("totalCount: {}", knowledgeCount);
 
-        long collectedCount = 0L;
-        try {
-            collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
-        }catch (Exception ex) {
-            logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
-        }
-        logger.info("createCount: {}, collectedCount: {}", createCount, collectedCount);
-
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, createCount+collectedCount);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, knowledgeCount);
     }
 
     /**
@@ -1630,7 +1679,7 @@ public class KnowledgeController extends BaseController {
                     knowledgeIds.add(collect.getKnowledgeId());
                 }
             }
-            System.out.println(" knowledgeIds:" + knowledgeIds.toString() + " keyword:"+keyword);
+            logger.info(" knowledgeIds: {}, keyword: {}", knowledgeIds, keyword);
             collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
         }
 
@@ -1733,5 +1782,79 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get knowledge detail complete......");
 
         return result;
+    }
+
+    private int getKnowledgeCount(long userId)
+    {
+        int createCount = getCreatedKnowledgeCount(userId);
+        int collectedCount = new Long(getCollectedKnowledgeCount(userId)).intValue();
+        logger.info("createCount: {}, collectedCount: {}", createCount, collectedCount);
+
+        return createCount + collectedCount;
+    }
+
+    private int getCreatedKnowledgeCount(long userId)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.getKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+        }
+
+        logger.info("createCount: {}", createCount);
+
+        return createCount;
+    }
+
+    private long getCollectedKnowledgeCount(long userId)
+    {
+        long collectedCount = 0;
+        try {
+            collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+        }
+        logger.info("collectedCount: {}", collectedCount);
+
+        return collectedCount;
+    }
+
+    private List<IdName> getMinTagList(long userId, List<Long> tagIds)
+    {
+        List<Tag> tags = tagServiceLocal.getTagList(userId, tagIds);
+        if (tags != null && tags.size() >0) {
+            List<IdName> minTags = new ArrayList<IdName>(tags.size());
+            for (Tag tag : tags) {
+                IdName pair = new IdName(tag.getId(), tag.getTagName());
+                minTags.add(pair);
+            }
+            return minTags;
+        }
+        return null;
+    }
+
+    private List<IdNameType> getMinDirectoryList(long userId, List<Long> directoryIds)
+    {
+        List<Directory> directorys = directoryServiceLocal.getDirectoryList(userId, directoryIds);
+        if (directorys != null && directorys.size() >0) {
+            List<IdNameType> minDirectoryList = new ArrayList<IdNameType>(directorys.size());
+            for (Directory dir : directorys) {
+                IdNameType minDirectory = new IdNameType(dir.getId(), dir.getName(), dir.getTypeId());
+                minDirectoryList.add(minDirectory);
+            }
+            return minDirectoryList;
+        }
+        return null;
+    }
+
+    private InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(int total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    {
+        Page<KnowledgeBase> page = new Page<KnowledgeBase>();
+        page.setTotalCount(total);
+        page.setPageNo(num);
+        page.setPageSize(size);
+        page.setList(knowledgeBaseItems);
+        return InterfaceResult.getSuccessInterfaceResultInstance(page);
     }
 }

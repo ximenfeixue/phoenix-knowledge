@@ -340,5 +340,5 @@ public interface KnowledgeMysqlDao {
 	 */
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,short reportStatus,int start,int size) throws Exception;
 
-	public long getKnowledgeCount(long userId) throws Exception;
+	public int getKnowledgeCount(long userId) throws Exception;
 }

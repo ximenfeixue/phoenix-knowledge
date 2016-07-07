@@ -1,14 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import java.io.Serializable;
+import java.util.List;
+
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * @Title: 知识数据的大集合对象
