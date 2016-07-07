@@ -7,6 +7,7 @@ import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
+import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
 import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
@@ -473,6 +474,34 @@ public class KnowledgeController extends BaseController {
 
         return jacksonValue;
 	}
+
+    /**
+     * 提取知识详细信息，一般用在详细查看界面、编辑界面
+     * @param knowledgeId 知识Id
+     * @param columnId 栏目主键
+     * @throws IOException
+     *
+    @RequestMapping(value = "/web/{knowledgeId}/{columnId}", method = RequestMethod.GET)
+    @ResponseBody
+    public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable long knowledgeId,@PathVariable short columnId) throws Exception {
+        User user = this.getUser(request);
+        InterfaceResult<DataCollection> result = knowledgeDetail(user, knowledgeId, columnId);
+        if (result != null) {
+            DataCollection data = result.getResponseData();
+            MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+            if (data == null || data.getKnowledgeDetail() == null) {
+                logger.error("get knowledge detail failed: knowledgeId: {}", knowledgeId);
+                return jacksonValue;
+            }
+            KnowledgeDetail detail = data.getKnowledgeDetail();
+            List<Long> tags = detail.getTags();
+            List<Long> directorys = detail.getCategoryIds();
+            //WList<Tag> = tagServiceLocal.getTagList(user.getId(), tags);
+            directoryServiceLocal.getDirectoryList(user.getId(), directorys);
+
+        }
+    }*/
 	
 	/**
 	 * 提取所有知识数据
@@ -940,7 +969,7 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value="/count//{columnId}", method = RequestMethod.PUT)
+    @RequestMapping(value="/count/{columnId}", method = RequestMethod.PUT)
     public InterfaceResult countBy(HttpServletRequest request,HttpServletResponse response, @PathVariable short columnId) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
@@ -951,9 +980,8 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value="/my/count/", method = RequestMethod.PUT)
-    public InterfaceResult myCount(HttpServletRequest request,HttpServletResponse response,
-                                 @PathVariable long knowledgeId, @PathVariable short columnId) throws Exception {
+    @RequestMapping(value="/my/count", method = RequestMethod.GET)
+    public InterfaceResult myCount(HttpServletRequest request,HttpServletResponse response) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -969,7 +997,7 @@ public class KnowledgeController extends BaseController {
 
         long collectedCount = 0L;
         try {
-            knowledgeOtherService.myCollectKnowledgeCount(userId);
+            collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
         }catch (Exception ex) {
             logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
         }
@@ -1637,5 +1665,73 @@ public class KnowledgeController extends BaseController {
         }
 
         return true;
+    }
+
+    private InterfaceResult<DataCollection> knowledgeDetail(User user,long knowledgeId, short columnId) {
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        if(knowledgeId <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION, "知识Id无效");
+        }
+
+        DataCollection data = new DataCollection();
+        KnowledgeDetail knowledgeDetail = null;
+        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        try {
+            knowledgeDetail = this.knowledgeService.getDetailById(knowledgeId, columnId);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        //数据为空则直接返回异常给前端
+        if(knowledgeDetail == null) {
+            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        String hContent = HtmlToText.htmlToText(knowledgeDetail.getContent());
+        int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
+        hContent = hContent.substring(0, maxLen);
+        knowledgeDetail.setHcontent(hContent);
+        knowledgeDetail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
+        data.setKnowledgeDetail(knowledgeDetail);
+
+        boolean isCollected = false;
+        long userId = user.getId();
+        try {
+            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnId);
+        } catch (Exception ex) {
+            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
+        }
+        knowledgeDetail.setCollected(isCollected ? (short)1 : (short)0);
+
+        try {
+            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
+            Notification noti = ret.getNotification();
+            if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())) {
+                data.setPermission(ret.getResponseData());
+            }
+            else {
+                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            }
+        }catch (Exception ex) {
+            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            ex.printStackTrace();
+        }
+
+        try {
+            List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
+            data.setAsso(associateList);
+        } catch (Exception ex) {
+            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            ex.printStackTrace();
+        }
+
+        result.setResponseData(data);
+        logger.info(".......get knowledge detail complete......");
+
+        return result;
     }
 }

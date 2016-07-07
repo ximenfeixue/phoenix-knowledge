@@ -208,7 +208,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public MappingJacksonValue getTagListByIds(long userId,List<Long> tagIds) throws Exception
     {
         logger.error("tag list is: " + tagIds.toString());
-        List<Tag> tags = tagService.getTags(-1L,tagIds);
+        List<Tag> tags = getTagList(userId, tagIds);
         if (tags != null && tags.size() > 0) {
             InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(tags);
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
@@ -220,6 +220,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         logger.error("Can't get any tags with given tag id");
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS));
+    }
+
+    public List<Tag> getTagList(long userId,List<Long> tagIds)
+    {
+        try {
+            return tagService.getTags(-1L,tagIds);
+        } catch (TagServiceException ex) {
+            logger.error("get tag failed: {}", tagIds);
+        }
+        return null;
     }
 
     public InterfaceResult getTagSourceCountByIds(long AppId,List<Long> tagIds) throws Exception

@@ -138,6 +138,19 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
+	public void testKnowlegeCount() {
+		LogMethod();
+		try {
+			String subUrl = "/my/count";
+			JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl
+					+ subUrl, null);
+			Util.checkResponseWithData(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+
     public void testAllCreateKnowledge()
     {
         LogMethod();

@@ -224,13 +224,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
     public MappingJacksonValue getDirectoryListByIds(long userId,List<Long> directoryIds)
     {
-        List<Directory> directoryList = null;
-        try {
-            directoryList = directoryService.getDirectoryList(APPID, -1L, directoryIds);
-        } catch (DirectoryServiceException e) {
-            logger.error("Get directory list failed！reason："+e.getMessage());
-            e.printStackTrace();
-        }
+        List<Directory> directoryList = getDirectoryList(userId, directoryIds);
         if (directoryList != null && directoryList.size() > 0) {
             InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
@@ -242,6 +236,17 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
         logger.error("Can't get any tags with given tag id");
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS));
+    }
+
+    public List<Directory> getDirectoryList(long userId,List<Long> directoryIds)
+    {
+        try {
+            return directoryService.getDirectoryList(APPID, -1L, directoryIds);
+        } catch (DirectoryServiceException e) {
+            logger.error("Get directory list failed！reason："+e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Long> saveDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
