@@ -105,8 +105,8 @@ public class DataCollection implements Serializable {
             throw new IllegalArgumentException("User is null");
         }
         if (this.knowledgeDetail != null) {
-            this.knowledgeDetail.setOwnerId(user.getId());
-            this.knowledgeDetail.setOwnerName(user.getName());
+            this.knowledgeDetail.setCid(user.getId());
+            this.knowledgeDetail.setCname(user.getName());
         }
     }
 
