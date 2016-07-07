@@ -107,6 +107,13 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, short columnId)
+    {
+        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
+        return mongoTemplate.exists(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+    }
+
+    @Override
     public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId,int start, int size) throws Exception
     {
         Query query = new Query();
@@ -160,7 +167,9 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
         query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        if (columnId != -1) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        }
         return query;
     }
 

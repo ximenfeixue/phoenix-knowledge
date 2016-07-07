@@ -82,8 +82,8 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private DirectoryServiceLocal directoryServiceLocal;
 
-    @Value("#{configuers.knowledgeDataSearchUrl}")
-    private String knowledgeDataSearchUrl;
+    @Value("#{configuers.knowledgeBigDataSearchUrl}")
+    private String knowledgeBigDataSearchUrl;
 
     private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 	/**
@@ -426,6 +426,15 @@ public class KnowledgeController extends BaseController {
         knowledgeDetail.setHcontent(hContent);
         knowledgeDetail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
         data.setKnowledgeDetail(knowledgeDetail);
+
+        boolean isCollected = false;
+        long userId = user.getId();
+        try {
+            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnId);
+        } catch (Exception ex) {
+            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
+        }
+        knowledgeDetail.setCollected(isCollected ? (short)1 : (short)0);
 
         try {
             InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
@@ -1222,7 +1231,7 @@ public class KnowledgeController extends BaseController {
 
         long userId = user.getId();
         // 金桐网推荐的相关“知识”数据
-        String durl = knowledgeDataSearchUrl; //request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
+        String durl = knowledgeBigDataSearchUrl + "/bigdata/query"; //request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
         System.out.println("------durl: "+durl);
         logger.info("------durl: "+durl);
         durl = durl + "?scope=4&title=" + keyword + "&userid=" + userId;
@@ -1436,7 +1445,7 @@ public class KnowledgeController extends BaseController {
             km2.setDesc(knowledgeBase.getContentDesc());// 描述
             km2.setModifytime(knowledgeBase.getModifyDate());// 最后修改时间
         }
-        km2.setColumnpath(getDisposeString(knowledgeBase.getCpath()));
+        km2.setColumnpath(getDisposeString(knowledgeBase.getCPath()));
         return km2;
     }
 

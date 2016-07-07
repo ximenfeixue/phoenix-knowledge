@@ -332,7 +332,11 @@ public final class KnowledgeUtil {
         idList = new ArrayList<Long>(idStr.length);
         for (String id : idStr) {
             try {
-                long newId =  Long.parseLong(ids);
+                if (id == null) {
+                    System.err.println("id is null.");
+                    continue;
+                }
+                long newId =  Long.parseLong(id.trim());
                 if(newId > 0) {
                     idList = new ArrayList<Long>(1);
                     idList.add(newId);

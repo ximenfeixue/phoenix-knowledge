@@ -487,6 +487,7 @@
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
+                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
             </properties>
         </profile>
         <profile>
@@ -521,10 +522,11 @@
                 <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
                 <dubbo.protocol.name>dubbo</dubbo.protocol.name>
                 <!--<dubbo.registry.address>zookeeper://192.168.120.155:2182?client=zkclient</dubbo.registry.address>-->
-                <dubbo.registry.address>zookeeper://192.168.120.135:2181?client=zkclient</dubbo.registry.address>
+                <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
+                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
             </properties>
         </profile>
         <profile>
@@ -568,6 +570,7 @@
 
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
+                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
             </properties>
         </profile>
     </profiles>

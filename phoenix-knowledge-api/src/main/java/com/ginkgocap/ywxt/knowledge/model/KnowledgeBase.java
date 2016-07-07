@@ -52,7 +52,7 @@ public class KnowledgeBase implements Serializable {
 	private String pictureId;
 
 	/**column Path*/
-	private String cpath;
+	private String CPath;
 
 	/**创建人ID*/
 	private long createUserId;
@@ -177,14 +177,6 @@ public class KnowledgeBase implements Serializable {
 		this.essence = essence;
 	}
 
-	public String getCpath() {
-		return cpath;
-	}
-
-	public void setCpath(String cpath) {
-		this.cpath = cpath;
-	}
-
 
 	@Column(name = "tags")
     public String getTags() {
@@ -205,11 +197,11 @@ public class KnowledgeBase implements Serializable {
 	}
 
 	public String getCPath() {
-		return cpath;
+		return CPath;
 	}
 
-	public void setCPath(String cPath) {
-		this.cpath = cPath;
+	public void setCPath(String CPath) {
+		this.CPath = CPath;
 	}
 
 	@Column(name = "create_user_id")

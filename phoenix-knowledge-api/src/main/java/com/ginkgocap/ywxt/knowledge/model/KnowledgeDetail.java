@@ -19,7 +19,7 @@ public class KnowledgeDetail implements Serializable {
     private short virtual;
     
     /** 栏目路径**/
-    private String cpath;
+    private String CPath;
 
 	/** 知识标题 **/
     private String title;
@@ -102,12 +102,12 @@ public class KnowledgeDetail implements Serializable {
     }
 
 
-    public String getCpath() {
-		return cpath;
+    public String getCPath() {
+		return CPath;
 	}
 
-	public void setCpath(String cpath) {
-		this.cpath = cpath;
+	public void setCPath(String cpath) {
+		this.CPath = cpath;
 	}
 
     public String getTitle() {
