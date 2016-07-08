@@ -41,7 +41,7 @@ public class KnowlegeMongoTest {
     static {
         Mongo mongo = null;
         try {
-            mongo = new Mongo("192.168.120.133");
+            mongo = new Mongo("192.168.101.131");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

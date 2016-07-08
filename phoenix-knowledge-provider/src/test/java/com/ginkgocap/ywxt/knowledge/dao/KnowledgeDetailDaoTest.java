@@ -1,7 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import junit.framework.TestCase;
@@ -19,7 +22,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     private KnowledgeMongoDao knowledgeMongoDao;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommontService;
+    private KnowledgeCommentService knowledgeCommentService;
 
     private static KnowledgeDetail updateKnowledgeDetail = null;
 
@@ -149,6 +152,14 @@ public class KnowledgeDetailDaoTest extends TestBase {
             e.printStackTrace();
             TestCase.fail();
         }
+    }
+
+    @Test
+    public void testGetCommentList()
+    {
+        List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(11111111L);
+        String json = KnowledgeUtil.writeObjectToJson(commentList);
+        System.out.println(json);
     }
 
     private KnowledgeDetail createKnowledge(short columnId)

@@ -23,7 +23,7 @@ public class KnowledgeComment implements Serializable{
     private String ownerName;
 
     /** 评论时间 **/
-    private Long createTime;
+    private long createTime;
 
     /** 评论内容 **/
     private String content;
@@ -79,11 +79,11 @@ public class KnowledgeComment implements Serializable{
         this.ownerName = ownerName;
     }
 
-    public Long getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Long createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
