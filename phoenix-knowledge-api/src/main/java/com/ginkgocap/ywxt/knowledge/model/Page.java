@@ -6,9 +6,11 @@ import java.util.List;
 /**
  * Created by gintong on 2016/7/8.
  */
-public class Page<E> {
-    
-    private long totalCount;// 总数据数
+public class Page<E> implements Serializable
+{
+	private static final long serialVersionUID = 4313491047942049436L;
+
+	private long totalCount;// 总数据数
 
     private int pageSize;// 该页内容数
 
