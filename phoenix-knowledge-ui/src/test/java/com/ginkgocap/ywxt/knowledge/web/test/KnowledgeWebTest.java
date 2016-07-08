@@ -156,11 +156,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
-    public void testMyKnowledgeList()
+    public void testAllKnowledgeByPageList()
     {
         LogMethod();
         try {
-            String subUrl = "/myList/37/10/369"; // + URLEncoder.encode("考虑", "UTF-8"); ///myList/{num}/{size}/{total}
+            String subUrl = "/all/page/37/10/369"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -184,13 +184,61 @@ public class KnowledgeWebTest extends BaseTestCase {
 		}
 	}
 
-    public void testAllCreateKnowledge()
+    public void testAllCreatedKnowledge()
     {
         LogMethod();
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
             String subUrl = "/allCreated/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    public void testAllCreatedByPageKnowledge()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑");
+            //createKnowledge("考虑,考虑");
+            String subUrl = "/allCreated/page/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    public void testAllCollectedKnowledge()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑");
+            //createKnowledge("考虑,考虑");
+            String subUrl = "/allCollected/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    public void testAllCollectedByPageKnowledge()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑");
+            //createKnowledge("考虑,考虑");
+            String subUrl = "/allCollected/page/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);

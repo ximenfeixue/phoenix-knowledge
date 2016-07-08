@@ -558,8 +558,8 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/myList/{num}/{size}/{total}", method = RequestMethod.GET)
-    public InterfaceResult getAllMy(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/all/page/{num}/{size}/{total}", method = RequestMethod.GET)
+    public InterfaceResult getAllByPage(HttpServletRequest request, HttpServletResponse response,
                                   @PathVariable int num,@PathVariable int size,@PathVariable int total) throws Exception {
 
         User user = this.getUser(request);
@@ -629,7 +629,44 @@ public class KnowledgeController extends BaseController {
 
         logger.info(".......get all created knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledgeItems);
-    }	/**
+    }
+
+    /**
+     * 提取所有知识数据
+     * @param num 分页起始
+     * @param size 分页大小
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/allCreated/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    public InterfaceResult getAllCreatedByPage(HttpServletRequest request, HttpServletResponse response,
+                                         @PathVariable int num,@PathVariable int size,
+                                         @PathVariable int total,@PathVariable String keyword) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = this.getUserId(user);
+        if (total == -1) {
+            //TODO: need to check if long to int
+            total = new Long(getCollectedKnowledgeCount(userId)).intValue();
+        }
+
+        int start = num * size;
+        if (start > total) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
+
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, num, size, createdKnowledgeList);
+        logger.info(".......get all created knowledge success. size: {}", createdKnowledgeList.size());
+        return result;
+    }
+
+    /**
      * 提取所有知识数据
      * @param start 分页起始
      * @param size 分页大小
@@ -645,11 +682,46 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        long userId = user.getId();
+        long userId = this.getUserId(user);
         List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyword);
 
         logger.info(".......get all collected knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledgeItems);
+    }
+
+    /**
+     * 提取所有知识数据
+     * @param num 分页起始
+     * @param size 分页大小
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/allCollected/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    public InterfaceResult getAllCollectedByPage(HttpServletRequest request, HttpServletResponse response,
+                                           @PathVariable int num,@PathVariable int size,
+                                           @PathVariable int total,@PathVariable String keyword) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = this.getUserId(user);
+        if (total == -1) {
+            //TODO: need to check if long to int
+            total = new Long(getCollectedKnowledgeCount(userId)).intValue();
+        }
+
+        int start = num * size;
+        if (start > total) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, start, size, keyword);
+
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, num, size, collectedKnowledgeList);
+        logger.info(".......get all collected knowledge success. size: {}", collectedKnowledgeList.size());
+        return result;
     }
 
 
