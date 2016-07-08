@@ -557,9 +557,10 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/all/page/{num}/{size}/{total}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllByPage(HttpServletRequest request, HttpServletResponse response,
-                                  @PathVariable int num,@PathVariable int size,@PathVariable long total) throws Exception {
+                                  @PathVariable int num,@PathVariable int size,
+                                  @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -580,7 +581,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> createdKnowledgeList = null;
         int createCount = getCreatedKnowledgeCount(userId);
         if (createCount > gotTotal) {
-            createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, null);
+            createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, keyword);
             if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
                 logger.info("get created knowledge size: {}", createdKnowledgeList.size());
                 return knowledgeListPage(total, num, size, createdKnowledgeList);
@@ -589,7 +590,7 @@ public class KnowledgeController extends BaseController {
 
         if (createdKnowledgeList != null && createdKnowledgeList.size() > 0) {
             int restSize = size - createdKnowledgeList.size();
-            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, null);
+            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, keyword);
             logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedKnowledgeList.size());
             createdKnowledgeList.addAll(collectedKnowledgeList);
             return knowledgeListPage(total, num, createdKnowledgeList.size(), createdKnowledgeList);
@@ -597,7 +598,7 @@ public class KnowledgeController extends BaseController {
 
 
         num = gotTotal - createCount;
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, num, size, null);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, num, size, keyword);
         if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
             logger.info("get collected size: {}", collectedKnowledgeList.size());
             return knowledgeListPage(total, num, collectedKnowledgeList.size(), collectedKnowledgeList);
@@ -637,7 +638,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCreated/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCreatedByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCreatedByPage(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable int num,@PathVariable int size,
                                          @PathVariable long total,@PathVariable String keyword) throws Exception {
@@ -695,7 +696,7 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCollected/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCollectedByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCollectedByPage(HttpServletRequest request, HttpServletResponse response,
                                            @PathVariable int num,@PathVariable int size,
                                            @PathVariable long total,@PathVariable String keyword) throws Exception {
@@ -828,6 +829,22 @@ public class KnowledgeController extends BaseController {
         }
         if(columnId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
+
+        }
+        else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
+
+        }
+        else if (source == KnowledgeConstant.SOURCE_MY_SELF) {
+
+        }
+        else if (source == KnowledgeConstant.SOURCE_MY_FRIEND) {
+
+        }
+        else {
+
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }

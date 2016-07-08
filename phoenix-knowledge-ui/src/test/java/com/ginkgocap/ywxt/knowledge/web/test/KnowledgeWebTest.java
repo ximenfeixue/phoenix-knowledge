@@ -83,7 +83,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             //KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
             //data.setContent("");
-            long knowledgeId = 647L; //data.getId();
+            long knowledgeId = 640L; //data.getId();
             short columnId = -1; //data.getColumnId();
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
@@ -161,7 +161,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            String subUrl = "/all/page/37/10/369"; // /page/allCollected/{num}/{size}/{total}/{keyword}
+            String subUrl = "/allByPage/30/10/369"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -191,7 +191,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/allCreated/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/allCreated/0/10/test"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -201,13 +201,13 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
-    public void testAllCreatedByPageKnowledge()
+    public void testAllCreatedKnowledgeByPage()
     {
         LogMethod();
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/allCreated/page/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/allCreatedByPage/0/10/-1/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -223,7 +223,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/allCollected/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/allCollected/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -239,7 +239,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/allCollected/page/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/allCollectedByPage/1/10/-1/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
