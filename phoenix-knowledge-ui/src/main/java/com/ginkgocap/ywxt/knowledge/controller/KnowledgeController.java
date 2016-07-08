@@ -16,7 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.KnowledgeMini2;
 import com.ginkgocap.ywxt.knowledge.model.mobile.OrganizationMini;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.knowledge.utils.ContantDefine;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,6 +84,9 @@ public class KnowledgeController extends BaseController {
 
     @Autowired
     private DirectoryServiceLocal directoryServiceLocal;
+
+    @Autowired
+    private Cache cache;
 
     @Value("#{configuers.knowledgeBigDataSearchUrl}")
     private String knowledgeBigDataSearchUrl;
@@ -737,6 +741,23 @@ public class KnowledgeController extends BaseController {
         }
         logger.info(".......get all knowledge by columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/allKnowledgeByColumnAndSource/{columnId}/{source}/{start}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<List<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
+                                                                           @PathVariable short columnId,@PathVariable short source,
+                                                                           @PathVariable int start,@PathVariable int size) throws Exception
+    {
+        User user = getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(columnId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @ResponseBody
@@ -1551,9 +1572,9 @@ public class KnowledgeController extends BaseController {
     private String changeUserImage(String picPath, boolean userIsVirtual) {
         if (StringUtils.isBlank(picPath)) {
             if (userIsVirtual)
-                picPath = ContantDefine.ORGAN_DEFAULT_PIC_PATH;
+                picPath = KnowledgeConstant.ORGAN_DEFAULT_PIC_PATH;
             else
-                picPath = ContantDefine.USER_DEFAULT_PIC_PATH_MALE;
+                picPath = KnowledgeConstant.USER_DEFAULT_PIC_PATH_MALE;
         } else if (picPath.startsWith("http")) {
             return picPath;
         }
