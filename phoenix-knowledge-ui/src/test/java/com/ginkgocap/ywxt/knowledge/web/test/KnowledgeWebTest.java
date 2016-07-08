@@ -81,9 +81,10 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = data.getId();
-            short columnId = data.getColumnId();
+            //KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            //data.setContent("");
+            long knowledgeId = 647L; //data.getId();
+            short columnId = -1; //data.getColumnId();
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -656,7 +657,7 @@ public class KnowledgeWebTest extends BaseTestCase {
     
     private void knowledgeDetail(final String baseUrl, long knowledgeId,short columnId) throws Exception
     {
-        String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
+        String subUrl = "/" + knowledgeId + "/" + columnId;  //{id}/{columnId}
         JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
         System.out.println("Result: " + result);
         Util.checkResponseWithData(result);

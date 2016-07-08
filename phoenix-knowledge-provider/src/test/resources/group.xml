@@ -9,6 +9,9 @@
             maxActive=""
             maxIdle=""
             maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
                 />
 
         <ds name="master"
@@ -19,6 +22,9 @@
             maxActive=""
             maxIdle=""
             maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
                 />
         <ds name="slave"
             driverClassName="com.mysql.jdbc.Driver"
@@ -28,6 +34,9 @@
             maxActive=""
             maxIdle=""
             maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
                 />
     </datasources>
     <groups>
