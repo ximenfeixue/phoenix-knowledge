@@ -92,6 +92,24 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
+    public void testKnowledgeDetailWeb()
+    {
+        LogMethod();
+        try {
+        	
+            KnowledgeDetail data = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = data.getId();
+            short columnId = data.getColumnId();
+            //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
+            knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    
+    
     public void testMultiThreadKnowledgeDetail()
     {
         LogMethod();
@@ -137,6 +155,21 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
     }
+    
+    public void testMyKnowledgeList()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/myList/37/10/369"; // + URLEncoder.encode("考虑", "UTF-8"); ///myList/{num}/{size}/{total}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
     
 	public void testKnowlegeCount() {
 		LogMethod();
@@ -580,6 +613,15 @@ public class KnowledgeWebTest extends BaseTestCase {
         System.out.println("Result: " + result);
         Util.checkResponseWithData(result);
     }
+    
+    private void knowledgeDetailWeb(final String baseUrl, long knowledgeId,short columnId) throws Exception
+    {
+        String subUrl = "/web/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
+        JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+        System.out.println("Result: " + result);
+        Util.checkResponseWithData(result);
+    }
+
 
     private List<Long> createTag()
     {

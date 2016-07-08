@@ -14,10 +14,13 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
 import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
 import com.ginkgocap.ywxt.knowledge.model.mobile.KnowledgeMini2;
 import com.ginkgocap.ywxt.knowledge.model.mobile.OrganizationMini;
-import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.knowledge.service.DirectoryServiceLocal;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
@@ -26,17 +29,16 @@ import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.service.PermissionCheckService;
 import com.gintong.common.phoenix.permission.service.PermissionRepositoryService;
+import com.gintong.frame.util.Page;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
-import com.gintong.frame.util.Page;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,8 +87,8 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private DirectoryServiceLocal directoryServiceLocal;
 
-    @Autowired
-    private Cache cache;
+    //@Autowired
+    //private Cache cache;
 
     @Value("#{configuers.knowledgeBigDataSearchUrl}")
     private String knowledgeBigDataSearchUrl;
@@ -578,7 +580,7 @@ public class KnowledgeController extends BaseController {
 
         List<KnowledgeBase> createdKnowledgeList = null;
         int createCount = getCreatedKnowledgeCount(userId);
-        if (createCount < gotTotal) {
+        if (createCount > gotTotal) {
             createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, null);
             if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
                 logger.info("get created knowledge size: {}", createdKnowledgeList.size());
