@@ -29,7 +29,6 @@ import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.service.PermissionCheckService;
 import com.gintong.common.phoenix.permission.service.PermissionRepositoryService;
-import com.gintong.frame.util.Page;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
@@ -560,7 +559,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/all/page/{num}/{size}/{total}", method = RequestMethod.GET)
     public InterfaceResult getAllByPage(HttpServletRequest request, HttpServletResponse response,
-                                  @PathVariable int num,@PathVariable int size,@PathVariable int total) throws Exception {
+                                  @PathVariable int num,@PathVariable int size,@PathVariable long total) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -641,7 +640,7 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/allCreated/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCreatedByPage(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable int num,@PathVariable int size,
-                                         @PathVariable int total,@PathVariable String keyword) throws Exception {
+                                         @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -651,7 +650,7 @@ public class KnowledgeController extends BaseController {
         long userId = this.getUserId(user);
         if (total == -1) {
             //TODO: need to check if long to int
-            total = new Long(getCollectedKnowledgeCount(userId)).intValue();
+            total = getCollectedKnowledgeCount(userId);
         }
 
         int start = num * size;
@@ -699,7 +698,7 @@ public class KnowledgeController extends BaseController {
     @RequestMapping(value = "/allCollected/page/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCollectedByPage(HttpServletRequest request, HttpServletResponse response,
                                            @PathVariable int num,@PathVariable int size,
-                                           @PathVariable int total,@PathVariable String keyword) throws Exception {
+                                           @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -708,8 +707,7 @@ public class KnowledgeController extends BaseController {
 
         long userId = this.getUserId(user);
         if (total == -1) {
-            //TODO: need to check if long to int
-            total = new Long(getCollectedKnowledgeCount(userId)).intValue();
+            total = getCollectedKnowledgeCount(userId);
         }
 
         int start = num * size;
@@ -1879,10 +1877,10 @@ public class KnowledgeController extends BaseController {
         return result;
     }
 
-    private int getKnowledgeCount(long userId)
+    private long getKnowledgeCount(long userId)
     {
         int createCount = getCreatedKnowledgeCount(userId);
-        int collectedCount = new Long(getCollectedKnowledgeCount(userId)).intValue();
+        long collectedCount = getCollectedKnowledgeCount(userId);
         logger.info("createCount: {}, collectedCount: {}", createCount, collectedCount);
 
         return createCount + collectedCount;
@@ -1943,7 +1941,7 @@ public class KnowledgeController extends BaseController {
         return null;
     }
 
-    private InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(int total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    private InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
     {
         Page<KnowledgeBase> page = new Page<KnowledgeBase>();
         page.setTotalCount(total);
