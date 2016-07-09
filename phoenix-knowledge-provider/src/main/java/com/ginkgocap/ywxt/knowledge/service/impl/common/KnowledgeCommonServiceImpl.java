@@ -17,7 +17,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
     private MongoTemplate mongoTemplate;
 	
 	@Override
-	public Long getKnowledgeSeqenceId() {
+	public Long getKnowledgeSequenceId() {
 		Criteria c = Criteria.where("name").is("kid");
 		
 		Update update =new Update();

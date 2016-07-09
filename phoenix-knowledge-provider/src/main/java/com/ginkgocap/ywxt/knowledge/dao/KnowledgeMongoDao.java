@@ -47,7 +47,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) throws Exception;
+	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail);
 	
 	/**
 	 * 先删除后插入
@@ -87,6 +87,16 @@ public interface KnowledgeMongoDao {
 	 * @throws Exception
 	 */
 	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId) throws Exception;
+
+	/**
+	 *
+	 * @date 2016年1月13日 上午10:54:53
+	 * @param knowledgeId
+	 * @param directoryId
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean deleteKnowledgeDirectory(long knowledgeId,short columnId,long directoryId);
 	
 	/**
 	 * 根据主键以及栏目提取数据
@@ -96,7 +106,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) throws Exception;
+	public KnowledgeDetail getByIdAndColumnId(long id,short columnId);
 	
 	/**
 	 * 根据主键list以及栏目提取数据

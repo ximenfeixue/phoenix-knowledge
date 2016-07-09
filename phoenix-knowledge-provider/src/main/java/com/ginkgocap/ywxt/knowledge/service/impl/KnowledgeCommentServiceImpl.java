@@ -34,7 +34,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     @Override
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
-            knowledgeComment.setId(knowledgeCommonService.getKnowledgeSeqenceId());
+            knowledgeComment.setId(knowledgeCommonService.getKnowledgeSequenceId());
             if (knowledgeComment.getCreateTime() <= 0) {
                 knowledgeComment.setCreateTime(System.currentTimeMillis());
             }

@@ -78,7 +78,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
         if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
-            collect.setId(knowledgeCommonService.getKnowledgeSeqenceId());
+            collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
             collect.setKnowledgeId(knowledgeId);
             collect.setColumnId(columnId);
             collect.setCreateTime(System.currentTimeMillis());
@@ -86,7 +86,6 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             collect.setOwnerId(userId);
 
             mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
-
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         }
 

@@ -29,7 +29,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	private MongoTemplate mongoTemplate;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommontService;
+    private KnowledgeCommonService knowledgeCommonService;
 
     private final int maxSize = 20;
 	
@@ -43,7 +43,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledgeDetail.setCreateTime(currentDate);
 		
 		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
-        knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
+        knowledgeDetail.setId(knowledgeCommonService.getKnowledgeSequenceId());
 		mongoTemplate.insert(knowledgeDetail,currCollectionName);
 		
 		return knowledgeDetail;
@@ -53,7 +53,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList) throws Exception {
 		if(knowledgeDetailList != null && knowledgeDetailList.size() > 0) {
 			for(KnowledgeDetail knowledgeDetail : knowledgeDetailList) {
-                knowledgeDetail.setId(knowledgeCommontService.getKnowledgeSeqenceId());
+                knowledgeDetail.setId(knowledgeCommonService.getKnowledgeSequenceId());
 			}
 		}
         mongoTemplate.insert(knowledgeDetailList, KnowledgeDetail.class);
@@ -62,7 +62,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) throws Exception {
+	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) {
 
 		if(knowledgeDetail == null) {
             throw new IllegalArgumentException("knowledgel is null");
@@ -134,10 +134,26 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		return 0;
 	}
 
+    @Override
+    public boolean deleteKnowledgeDirectory(long knowledgeId,short columnId,long directoryId)
+    {
+        KnowledgeDetail detail = getByIdAndColumnId(knowledgeId, columnId);
+        List<Long> directoryIds = detail.getCategoryIds();
+        if (directoryIds != null && directoryIds.contains(directoryId)) {
+            directoryIds.remove(directoryId);
+            detail.setCategoryIds(directoryIds);
+            update(detail);
+            return true;
+        }
+        else {
+            logger.error("can't find the knowledge by, knowledgeId: {} columnId: {}", knowledgeId, columnId);
+            return false;
+        }
+    }
+
 	@Override
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) throws Exception {
+	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) {
 		Query query = knowledgeColumnIdQuery(id, columnId);
-		
 		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId));
 	}
 

@@ -14,5 +14,5 @@ public interface KnowledgeCommonService {
 	 * @date 2016年1月13日 下午2:42:57
 	 * @return
 	 */
-	public Long getKnowledgeSeqenceId();
+	public Long getKnowledgeSequenceId();
 }
