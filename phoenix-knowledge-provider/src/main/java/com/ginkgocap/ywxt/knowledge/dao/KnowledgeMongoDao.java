@@ -107,4 +107,14 @@ public interface KnowledgeMongoDao {
 	 * @throws Exception
 	 */
 	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId) throws Exception;
+
+	/**
+	 *
+	 * @date 2016年1月13日 上午10:54:58
+	 * @param userId
+	 * @param start
+	 * @param size
+	 * @throws Exception
+	 */
+	public List<KnowledgeDetail> getNoDirectory(long userId,int start,int size);
 }

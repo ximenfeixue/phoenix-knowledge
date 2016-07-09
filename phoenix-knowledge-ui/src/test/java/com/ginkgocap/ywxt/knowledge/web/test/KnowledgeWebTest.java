@@ -316,6 +316,19 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
     }
+    
+    public void testAllNoDirectory()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/allNoDirectory/0/12";  ///allNoDirectory/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
     public void testCollectKnowledge()
     {

@@ -142,4 +142,39 @@ public class DataCollection implements Serializable {
 
         return this.knowledge;
     }
+
+    public static KnowledgeBase generateKnowledge(KnowledgeDetail detail)
+    {
+        KnowledgeBase knowledgeBase = null;
+        if (detail != null) {
+            knowledgeBase = new KnowledgeBase();
+            knowledgeBase.setKnowledgeId(detail.getId());
+            knowledgeBase.setTitle(detail.getTitle());
+            String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
+            int contentLen = knowledgeContent.length();
+            int maxLen = contentLen > 250 ? 250 : contentLen;
+            knowledgeBase.setContentDesc(knowledgeContent.substring(0,maxLen));
+            if (detail.getMultiUrls() != null && detail.getMultiUrls().size()>0) {
+                System.out.println("save picture: " + detail.getMultiUrls().get(0));
+                knowledgeBase.setPictureId(detail.getMultiUrls().get(0));
+            }
+            //knowledge.setAuditStatus(auditStatus);
+            if (detail.getTags() != null && detail.getTags().size() > 0) {
+                String tags = detail.getTags().toString();
+                System.out.println("create tags for base: " + tags);
+                knowledgeBase.setTags(tags.substring(1, tags.length()-1));
+            }
+            knowledgeBase.setColumnId(detail.getColumnId());
+            knowledgeBase.setCreateUserId(detail.getOwnerId());
+            //For reference knowledge may be different with author
+            knowledgeBase.setCreateUserName(detail.getOwnerName());
+            knowledgeBase.setCreateDate(detail.getCreateTime());
+            knowledgeBase.setModifyDate(detail.getModifyTime());
+            knowledgeBase.setIsOld((short)0);
+            knowledgeBase.setUserStar((short)0);
+            //knowledge.setPublicDate(System.currentTimeMillis());
+            //knowledge.setReportStatus(reportStatus);
+        }
+        return knowledgeBase;
+    }
 }

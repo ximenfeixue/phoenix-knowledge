@@ -852,8 +852,8 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/allByColumnAndKeyword/{columnId}/{keyWord}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> allByColumnIdAndKeyWord(HttpServletRequest request, HttpServletResponse response,
-                                                                           @PathVariable short columnId,@PathVariable String keyWord,
-                                                                           @PathVariable int start,@PathVariable int size) throws Exception {
+                                                                        @PathVariable short columnId,@PathVariable String keyWord,
+                                                                        @PathVariable int start,@PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
@@ -876,6 +876,30 @@ public class KnowledgeController extends BaseController {
         }
         logger.info(".......get all knowledge by columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/allNoDirectory/{start}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<List<KnowledgeBase>> allByColumnIdAndKeyWord(HttpServletRequest request,HttpServletResponse response,
+                                                                        @PathVariable int start,@PathVariable int size) throws Exception
+    {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        long userId = this.getUserId(user);
+        List<KnowledgeBase> knowledgeBasesItemList = null;
+        try {
+            knowledgeBasesItemList = knowledgeService.getKnowledgeNoDirectory(userId, start, size);
+
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！userId: {} reason：{}", userId, e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge list success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItemList);
     }
 
     @ResponseBody

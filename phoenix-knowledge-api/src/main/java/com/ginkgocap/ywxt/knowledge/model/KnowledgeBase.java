@@ -47,7 +47,10 @@ public class KnowledgeBase implements Serializable {
 
     /** 标签信息 **/
     private String tags;
-	
+
+	/** 标签信息 **/
+	//private String directorys;
+
 	/**图片ID*/
 	private String pictureId;
 
@@ -187,6 +190,16 @@ public class KnowledgeBase implements Serializable {
         this.tags = tags;
     }
 
+	/*
+	@Column(name = "directorys")
+	public String getDirectorys() {
+		return directorys;
+	}
+
+	public void setDirectorys(String directorys) {
+		this.directorys = directorys;
+	}*/
+
 	@Column(name = "picture_id")
 	public String getPictureId() {
 		return pictureId;
@@ -196,6 +209,7 @@ public class KnowledgeBase implements Serializable {
 		this.pictureId = pictureId;
 	}
 
+	@Column(name = "cpath")
 	public String getCpath() {
 		return cpath;
 	}
@@ -312,6 +326,7 @@ public class KnowledgeBase implements Serializable {
         this.userStar = userStar;
     }
 
+	@Column(name = "shareMeId")
 	public long getShareMeId() {
 		return shareMeId;
 	}

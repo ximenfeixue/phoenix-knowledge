@@ -267,5 +267,25 @@ public interface KnowledgeService {
 	 */
 	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception;
 
+	/**
+	 * 获取知识数量：
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 上午10:14:59
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	public int getKnowledgeCount(long userId) throws Exception;
+
+	/**
+	 * 获取未分组知识数量：
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 上午10:14:59
+	 * @param userId
+	 * @param start
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
 }

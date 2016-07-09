@@ -26,4 +26,5 @@ public class Constant {
     public final static String Title = "title";
     public final static String Content = "content";
     public final static String createTime = "createTime";
+    public final static String categoryIds = "categoryIds";
 }

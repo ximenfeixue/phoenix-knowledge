@@ -340,5 +340,19 @@ public interface KnowledgeMysqlDao {
 	 */
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,short reportStatus,int start,int size) throws Exception;
 
+	/**
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	public int getKnowledgeCount(long userId) throws Exception;
+
+	/**
+	 * @param userId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
 }

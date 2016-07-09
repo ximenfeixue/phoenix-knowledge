@@ -30,6 +30,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     @Autowired
     private KnowledgeCommonService knowledgeCommontService;
+
+    private final int maxSize = 20;
 	
 	@Override
 	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail) throws Exception {
@@ -169,6 +171,28 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId));
 	}
 
+    public List<KnowledgeDetail> getNoDirectory(long userId,int start,int size)
+    {
+        Query query = new Query(Criteria.where(Constant.OwnerId).is(userId));
+        query.addCriteria(Criteria.where(Constant.categoryIds).exists(false));
+        final String collectName = getCollectionName((short)0);
+        long count = mongoTemplate.count(query, KnowledgeDetail.class, collectName);
+        if (start >= count) {
+            start = 0;
+        }
+        if (size > maxSize) {
+            size = maxSize;
+        }
+        if (start+size > count) {
+            size = (int)count - start;
+        }
+
+        query.skip(start);
+        query.limit(size);
+        Class classType = getKnowledgeClassType((short)0);
+        return mongoTemplate.find(query, classType, collectName);
+    }
+
     /*
 	private String getCollectionName(short columnId) throws Exception {
 		
@@ -202,6 +226,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	private String getCollectionName(short columnId) {
 		return KnowledgeUtil.getKnowledgeCollectionName(columnId);
 	}
+
+    private Class getKnowledgeClassType(short columnId)
+    {
+        return KnowledgeUtil.getKnowledgeClassType(columnId);
+    }
 	
 	private Update getUpdate(KnowledgeDetail knowledgeDetail) {
         BasicDBObject basicDBObject = new BasicDBObject();

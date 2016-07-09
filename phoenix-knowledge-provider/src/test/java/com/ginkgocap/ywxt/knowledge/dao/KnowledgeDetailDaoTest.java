@@ -31,6 +31,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     {
         KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(userId, (short)2, "KnowledgeMongoDaoTest");
         try {
+            knowledgeDetail.setCategoryIds(null);
             updateKnowledgeDetail = knowledgeMongoDao.insert(knowledgeDetail);
             TestCase.assertNotNull(updateKnowledgeDetail);
         } catch (Exception e) {
@@ -159,6 +160,14 @@ public class KnowledgeDetailDaoTest extends TestBase {
     {
         List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(11111111L);
         String json = KnowledgeUtil.writeObjectToJson(commentList);
+        System.out.println(json);
+    }
+
+    @Test
+    public void testGetNoDirectory()
+    {
+        List<KnowledgeDetail> knowledgeDetailList = knowledgeMongoDao.getNoDirectory(userId, 10, 10);
+        String json = KnowledgeUtil.writeObjectToJson(knowledgeDetailList);
         System.out.println(json);
     }
 

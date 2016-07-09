@@ -29,10 +29,11 @@ import java.util.Set;
 public final class KnowledgeUtil {
 
     private static final boolean writeNumberAsString = false;;
-    /*
-    public static Class<? extends Knowledge> getClassByColumnId(short columnId)
+
+    public static Class getKnowledgeClassType(short columnId)
     {
         switch (columnId){
+            /*
             case 1: return KnowledgeNews.class;
             case 2: return KnowledgeInvestment.class;
             case 3: return KnowledgeIndustry.class;
@@ -43,7 +44,7 @@ public final class KnowledgeUtil {
             case 8: return KnowledgeOpinion.class;
             case 9: return KnowledgeLaw.class;
             case 10: return KnowledgeArticle.class;
-            /* For new requirement
+             For new requirement
             case 21: return KnowledgeInternet.class;
             case 22: return EKnowledgeSales.class;
             case 23: return EKnowledgeFinance.class;
@@ -58,11 +59,12 @@ public final class KnowledgeUtil {
             case 32: return KnowledgeSports.class;
             case 33: return KnowledgeSociety.class;
             case 34: return KnowledgeMovie.class;
-
-            default: return null;
+            */
+            default: return KnowledgeDetail.class;
         }
     }
 
+    /*
     public static KnowledgeBase convertOldKnowledge(Knowledge knowledge)
     {
         if (knowledge == null) {

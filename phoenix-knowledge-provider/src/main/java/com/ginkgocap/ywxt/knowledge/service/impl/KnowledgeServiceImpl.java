@@ -527,6 +527,28 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         return this.knowledgeMysqlDao.getKnowledgeCount(userId);
     }
+
+    @Override
+    public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception
+    {
+        //return this.knowledgeMysqlDao.getKnowledgeNoDirectory(userId, start, size);
+        List<KnowledgeDetail> detailList = null;
+        try {
+            detailList = knowledgeMongoDao.getNoDirectory(userId, start, size);
+        } catch (Exception ex) {
+            logger.error("get knowledge detail list failed: userId: {}", userId);
+        }
+        if (detailList != null && detailList.size() >0) {
+            List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
+            for (KnowledgeDetail detail : detailList) {
+                KnowledgeBase base = DataCollection.generateKnowledge(detail);
+                baseList.add(base);
+            }
+            return baseList;
+        }
+        return null;
+    }
+
 	/**
 	 * 插入时异常手动回滚方法
 	 * @throws Exception
@@ -625,9 +647,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     private DataCollection getReturn(KnowledgeDetail knowledgeDetail, KnowledgeReference knowledgeReference) {
 
         DataCollection dataCollection = new DataCollection();
-
         dataCollection.setKnowledgeDetail(knowledgeDetail);
-
         dataCollection.setReference(knowledgeReference);
 
         return dataCollection;

@@ -81,27 +81,9 @@ public class TestData {
         return dataCollection(KnowledgeUtil.getDummyUser().getId(), null);
     }
 
-    public static KnowledgeBase knowledgeBase()
+    public static KnowledgeBase knowledgeBase(KnowledgeDetail detail)
     {
-        short columnId = (short)1;
-        short typeId = (short)1;
-        short auditStatus = (short)1;
-        short reportStatus = (short)0;
-        String pictureId = "123456L";
-        KnowledgeBase knowledge = new KnowledgeBase();
-        knowledge.setType(typeId);
-        knowledge.setTitle("TestTitle");
-        knowledge.setContentDesc("Knowledge Description");
-        knowledge.setPictureId(pictureId);
-        knowledge.setAuditStatus(auditStatus);
-        knowledge.setColumnId(columnId);
-        knowledge.setCreateUserId(KnowledgeUtil.getDummyUser().getId());
-        knowledge.setCreateUserName("TestUserName");
-        knowledge.setCreateDate(System.currentTimeMillis());
-        knowledge.setPublicDate(System.currentTimeMillis());
-        knowledge.setReportStatus(reportStatus);
-
-        return knowledge;
+        return DataCollection.generateKnowledge(detail);
     }
 
     public static KnowledgeDetail knowledgeDetail(long userId,short columnId,String title)
