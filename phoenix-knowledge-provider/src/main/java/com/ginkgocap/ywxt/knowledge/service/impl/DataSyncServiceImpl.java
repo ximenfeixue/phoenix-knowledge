@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by gintong on 2016/7/9.
  */
-@Service("dataSyncServiceImpl")
+@Service("dataSyncService")
 public class DataSyncServiceImpl implements DataSyncService, Runnable
 {
     private Logger logger = LoggerFactory.getLogger(DataSyncServiceImpl.class);
