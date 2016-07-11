@@ -99,10 +99,10 @@ public final class KnowledgeUtil {
     public static User getDummyUser()
     {
         User user = new User();
-        user.setId(201003L);
-        user.setUid(201003L);
-        user.setUserName("UnitTestUser");
-        user.setName("UnitTestUser");
+        user.setId(200562L);
+        user.setUid(200562L);
+        user.setUserName("LiuSuo");
+        user.setName("LiuSuo");
         return user;
     }
 
