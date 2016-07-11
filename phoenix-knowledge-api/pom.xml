@@ -4,19 +4,19 @@
 	<parent>
 		<artifactId>phoenix-knowledge</artifactId>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<version>${knowledge.version}</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge-api</artifactId>
 	<name>${project.artifactId}</name>
+	<version>3.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<skip_maven_deploy>true</skip_maven_deploy>
+		<skip_maven_deploy>false</skip_maven_deploy>
 	</properties>
 	
 	<dependencies>
-		
 		<dependency>
 			<groupId>com.ginkgocap.parasol</groupId>
 			<artifactId>parasol-common-provider</artifactId>
@@ -73,7 +73,6 @@
 		</dependency>
 		<!-- MQ end -->
 	</dependencies>
-
 	<profiles>
 		<profile>
 			<id>snapshotsjar</id>
@@ -130,6 +129,16 @@
 						</executions>
 
 					</plugin>
+					
+					<plugin>
+						<groupId>org.mybatis.generator</groupId>
+						<artifactId>mybatis-generator-maven-plugin</artifactId>
+						<version>1.3.2</version>
+						<configuration>
+							<verbose>true</verbose>
+							<overwrite>true</overwrite>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -165,127 +174,6 @@
 						</executions>
 					</plugin>
 				</plugins>
-				<pluginManagement>
-					<plugins>
-						<!-- 解决子项识别不出来execution问题 -->
-						<plugin>
-							<groupId>org.eclipse.m2e</groupId>
-							<artifactId>lifecycle-mapping</artifactId>
-							<version>1.0.0</version>
-							<configuration>
-								<lifecycleMappingMetadata>
-									<pluginExecutions>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.apache.maven.plugins</groupId>
-												<artifactId>maven-antrun-plugin</artifactId>
-												<versionRange>[1.7,)</versionRange>
-												<goals>
-													<goal>run</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.apache.maven.plugins</groupId>
-												<artifactId>maven-resources-plugin</artifactId>
-												<versionRange>[2.5,)</versionRange>
-												<goals>
-													<goal>resources</goal>
-													<goal>testResources</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.codehaus.mojo</groupId>
-												<artifactId>properties-maven-plugin</artifactId>
-												<versionRange>[1.0-alpha-2,)</versionRange>
-												<goals>
-													<goal>read-project-properties</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.apache.cxf</groupId>
-												<artifactId>cxf-codegen-plugin</artifactId>
-												<versionRange>[2.2,)</versionRange>
-												<goals>
-													<goal>wsdl2java</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.apache.maven.plugins</groupId>
-												<artifactId>maven-ear-plugin</artifactId>
-												<versionRange>[2.6,)</versionRange>
-												<goals>
-													<goal>generate-application-xml</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.codehaus.mojo</groupId>
-												<artifactId>sql-maven-plugin</artifactId>
-												<versionRange>[1.5,)</versionRange>
-												<goals>
-													<goal>execute</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.codehaus.mojo</groupId>
-												<artifactId>dbunit-maven-plugin</artifactId>
-												<versionRange>[1.0-beta-3,)</versionRange>
-												<goals>
-													<goal>operation</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-										<pluginExecution>
-											<pluginExecutionFilter>
-												<groupId>org.apache.maven.plugins</groupId>
-												<artifactId>maven-dependency-plugin</artifactId>
-												<versionRange>[2.0,)</versionRange>
-												<goals>
-													<goal>unpack</goal>
-												</goals>
-											</pluginExecutionFilter>
-											<action>
-												<ignore />
-											</action>
-										</pluginExecution>
-									</pluginExecutions>
-								</lifecycleMappingMetadata>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
 			</build>
 		</profile>
 	</profiles>

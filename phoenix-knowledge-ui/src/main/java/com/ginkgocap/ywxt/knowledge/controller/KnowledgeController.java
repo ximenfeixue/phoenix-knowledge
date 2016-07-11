@@ -820,8 +820,8 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/allKnowledgeByColumnAndSource/{columnId}/{source}/{start}/{size}", method = RequestMethod.GET)
     public InterfaceResult<List<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
-                                                                           @PathVariable short columnId,@PathVariable short source,
-                                                                           @PathVariable int start,@PathVariable int size) throws Exception
+                                                                              @PathVariable short columnId,@PathVariable short source,
+                                                                              @PathVariable int start,@PathVariable int size) throws Exception
     {
         User user = getUser(request);
         if (user == null) {
@@ -847,6 +847,31 @@ public class KnowledgeController extends BaseController {
 
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{columnId}/{source}/{start}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<List<KnowledgeBase>> getKnowledgeByColumnAndSourceWeb(HttpServletRequest request, HttpServletResponse response,
+                                                                           @PathVariable short columnId,@PathVariable short source,
+                                                                           @PathVariable int start,@PathVariable int size) throws Exception
+    {
+        User user = getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if(columnId <= 0 || start < 0 || size <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        List<KnowledgeBase> knowledgeBasesItems = null;
+        try {
+            knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        logger.info(".......get all knowledge by columnId success......");
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
     }
 
     @ResponseBody

@@ -71,6 +71,12 @@ public class KnowledgeDetail implements Serializable {
     /** 存储目录 **/
     private List<Long> categoryIds;
 
+    private short status;
+    
+	private short reportStatus;
+    
+    private short isH;
+    
     // 是否加精
     private short essence;
 
@@ -253,6 +259,30 @@ public class KnowledgeDetail implements Serializable {
     public void setCategoryIds(List<Long> categoryIds) {
         this.categoryIds = categoryIds;
     }
+
+    public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	public short getReportStatus() {
+		return reportStatus;
+	}
+
+	public void setReportStatus(short reportStatus) {
+		this.reportStatus = reportStatus;
+	}
+
+	public short getIsH() {
+		return isH;
+	}
+
+	public void setIsH(short isH) {
+		this.isH = isH;
+	}
 
     public short getEssence() {
         return essence;

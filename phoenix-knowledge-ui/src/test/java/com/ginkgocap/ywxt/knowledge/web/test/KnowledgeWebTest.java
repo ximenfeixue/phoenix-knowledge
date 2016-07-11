@@ -157,11 +157,11 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
-    public void testAllKnowledgeByPageList()
+    public void testAllKnowledgeByPage()
     {
         LogMethod();
         try {
-            String subUrl = "/allByPage/30/10/369"; // /page/allCollected/{num}/{size}/{total}/{keyword}
+            String subUrl = "/allByPage/30/10/369/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
