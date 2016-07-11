@@ -36,12 +36,13 @@ public class DataSyncServiceImpl implements DataSyncService, Runnable
     public DataSyncServiceImpl()
     {
         //First get 50
+        /*
         List<DataSync> dataSyncList = dataSyncMongoDao.getDataSyncList();
         if (dataSyncList != null && dataSyncList.size() >0) {
             for (DataSync data : dataSyncList) {
                 dataSyncQueue.offer(data);
             }
-        }
+        }*/
     }
 
     public boolean saveDataNeedSync(DataSync data)
@@ -57,6 +58,7 @@ public class DataSyncServiceImpl implements DataSyncService, Runnable
 
     @Override
     public void run() {
+        /*
         try {
             DataSync data = dataSyncQueue.peek();
             if (data.getAction() == EActionType.EDeleteKnowledgeDirectory.getValue()) {
@@ -84,6 +86,6 @@ public class DataSyncServiceImpl implements DataSyncService, Runnable
             }
         } catch (Exception ex) {
             logger.error("Data sycn error: {}", ex.getMessage());
-        }
+        }*/
     }
 }
