@@ -487,7 +487,8 @@
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
-                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
+                <bigData.url>http://192.168.101.9:8090/</bigData.url>
+                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
             </properties>
         </profile>
         <profile>
@@ -526,7 +527,8 @@
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
-                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
+                <bigData.url>http://192.168.101.9:8090/</bigData.url>
+                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
             </properties>
         </profile>
         <profile>
@@ -570,7 +572,8 @@
 
                 <!-- 访问大数据接口地址 -->
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
-                <knowledge.bigData.searchUrl>http://192.168.101.9:8090</knowledge.bigData.searchUrl>
+                <bigData.url>http://192.168.101.9:8090/</bigData.url>
+                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
             </properties>
         </profile>
     </profiles>

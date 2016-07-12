@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.util.Encodes;
 import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -18,6 +19,7 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
@@ -161,5 +163,23 @@ public abstract class BaseController {
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
         return jacksonValue;
+    }
+
+    protected void setSessionAndErr(HttpServletRequest request, HttpServletResponse response, String errCode, String errMessage) {
+        User user = this.getUser(request);
+        if (user != null) {
+            /*
+            // user = userService.selectByPrimaryKey(user.getId());
+            JTMember jtmember = (JTMember) cache.getByRedis(sessionId);
+            redisCacheService.setByRedis("user" + sessionId, user, 60 * 60 * 24 * 3);// 设定过期日期为1天
+            // 如需修改可滞后
+            cache.setByRedis(sessionId, jtmember, 60 * 60 * 24 * 3);// 设定过期日期为1天
+            // 如需修改可滞后
+            cache.setByRedis("mobileLoginUser" + user.getId() + "SessionId", sessionId, 60 * 60 * 24 * 3);// 设定国企日期为1天
+            // 如需修改可滞后
+            response.setHeader("sessionID", sessionId);*/
+        }
+        response.setHeader("errorCode", errCode);
+        response.setHeader("errorMessage", Encodes.encodeBase64(errMessage.getBytes()));
     }
 }

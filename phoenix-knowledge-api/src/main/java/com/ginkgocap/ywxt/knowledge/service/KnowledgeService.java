@@ -27,7 +27,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult insert(DataCollection dataCollection) throws Exception;
+	public InterfaceResult insert(DataCollection dataCollection);
 	
 	/**
 	 * 更新，承担以下任务：

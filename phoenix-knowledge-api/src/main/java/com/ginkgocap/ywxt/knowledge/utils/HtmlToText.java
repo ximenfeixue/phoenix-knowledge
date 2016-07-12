@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -98,6 +99,16 @@ public class HtmlToText {
         }
         return htmlContent;
     }
+
+	public static String filterHtml(String html) {
+		Pattern pattern = Pattern.compile("<style[^>]*?>[\\D\\d]*?<\\/style>");
+		Matcher matcher = pattern.matcher(html);
+		String htmlStr = matcher.replaceAll("");
+		pattern = Pattern.compile("<[^>]+>");
+		String filterStr = pattern.matcher(htmlStr).replaceAll("");
+		filterStr.replace("&nbsp;", " ");
+		return filterStr;
+	}
 
 	public static void main(String[] args) {
 		String str = "<html>"

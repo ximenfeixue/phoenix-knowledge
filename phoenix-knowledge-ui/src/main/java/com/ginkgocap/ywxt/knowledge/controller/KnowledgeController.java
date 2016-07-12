@@ -89,8 +89,8 @@ public class KnowledgeController extends BaseController {
     //@Autowired
     //private Cache cache;
 
-    @Value("#{configuers.knowledgeBigDataSearchUrl}")
-    private String knowledgeBigDataSearchUrl;
+    //@Value("#{configuers.knowledgeBigDataSearchUrl}")
+    //private String knowledgeBigDataSearchUrl;
 
     private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 	/**
@@ -1467,6 +1467,8 @@ public class KnowledgeController extends BaseController {
 
         long userId = user.getId();
         // 金桐网推荐的相关“知识”数据
+        ResourceBundle resource = ResourceBundle.getBundle("application");
+        String knowledgeBigDataSearchUrl = resource.getString("knowledge.data.search.url");
         String durl = knowledgeBigDataSearchUrl + "/bigdata/query"; //request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
         System.out.println("------durl: "+durl);
         logger.info("------durl: "+durl);

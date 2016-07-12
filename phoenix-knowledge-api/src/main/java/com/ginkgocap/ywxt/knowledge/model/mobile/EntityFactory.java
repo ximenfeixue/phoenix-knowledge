@@ -10,28 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
+import com.ginkgocap.ywxt.knowledge.model.UserCategory;
+import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
+import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-//import com.ginkgocap.ywxt.knowledge.entity.Column;
-//import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
-//import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-//import com.ginkgocap.ywxt.model.mobile.AffairMini;
-//import com.ginkgocap.ywxt.model.mobile.AffairNode;
-//import com.ginkgocap.ywxt.model.mobile.Connections;
-//import com.ginkgocap.ywxt.model.mobile.ConnectionsNode;
-//import com.ginkgocap.ywxt.model.mobile.JTContactMini;
-//import com.ginkgocap.ywxt.model.mobile.KnowledgeMini2;
-//import com.ginkgocap.ywxt.model.mobile.KnowledgeNode;
-//import com.ginkgocap.ywxt.model.mobile.MobilePhone;
-//import com.ginkgocap.ywxt.model.mobile.OrganizationMini;
-//import com.ginkgocap.ywxt.user.model.User;
-//import com.ginkgocap.ywxt.user.service.UserService;
-//import com.ginkgocap.ywxt.utils.CommonUtil;
-//import com.ginkgocap.ywxt.utils.DateUtil;
-//import com.ginkgocap.ywxt.utils.Utils;
 
 public class EntityFactory {
     //@Autowired//用户详情接口
@@ -55,7 +41,7 @@ public class EntityFactory {
      * @description 创建一个KnowledgeStatics实体类对象
      * @param obj
      * @return
-     *
+     */
     public static KnowledgeStatics createKnowledgeStaticsFromJson(JSONObject obj){
         try{
             KnowledgeStatics self = new KnowledgeStatics();
@@ -65,8 +51,8 @@ public class EntityFactory {
             self.setCollectioncount(CommonUtil.optLongFromJSONObject(obj, "collectioncount"));
             self.setClickcount(CommonUtil.optLongFromJSONObject(obj, "clickcount"));
             //self.setTitle(obj.optString("title"));
-            self.setType((short)obj.optInt("type"));
-            self.setSource((short)obj.optInt("source"));
+            self.setType((short) obj.optInt("type"));
+            self.setSource((short) obj.optInt("source"));
             return self;
         }catch(Exception e){
             return null;
@@ -102,13 +88,13 @@ public class EntityFactory {
         }catch(Exception e){
             return null;
         }
-    }
+    }*/
 
     /**
      * @description 创建一个UserCategory list 实体类对象
-     * @param obj
+     * @param array
      * @return
-     *
+     */
     public static List<UserCategory> createListUserCategoryFromJson(JSONArray array){
         try{
             List<UserCategory> self = new ArrayList<UserCategory>();
@@ -131,7 +117,7 @@ public class EntityFactory {
      * @description 创建一个UserCategory 实体类对象
      * @param obj
      * @return
-     *
+     */
     public static UserCategory createUserCategoryFromJson(JSONObject obj){
         try{
             UserCategory self = new UserCategory();
@@ -209,7 +195,7 @@ public class EntityFactory {
             obj.put("dule", true);
         }
         return obj.toString();
-    }
+    }*/
 
     /**
      * @description 生成关联组件对应的json

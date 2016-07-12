@@ -97,10 +97,8 @@ public class KnowledgeBase implements Serializable {
 	private long shareMeId;
 
 	@Id
-	@GeneratedValue(generator = "id")
-	@GenericGenerator(name = "id", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "t_knowledge_label") })
 	@Column(name = "id", unique = true, nullable = false)
-    public long getId() {
+	public long getId() {
 		return id;
 	}
 

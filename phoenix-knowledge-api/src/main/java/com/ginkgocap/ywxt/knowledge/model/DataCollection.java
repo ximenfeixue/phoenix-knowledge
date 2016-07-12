@@ -112,6 +112,7 @@ public class DataCollection implements Serializable {
     {
         if (this.knowledgeDetail != null) {
             this.knowledge = new KnowledgeBase();
+            this.knowledge.setId(this.knowledgeDetail.getId());
             this.knowledge.setKnowledgeId(this.knowledgeDetail.getId());
             this.knowledge.setTitle(this.knowledgeDetail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(this.knowledgeDetail.getContent());
@@ -148,6 +149,7 @@ public class DataCollection implements Serializable {
         KnowledgeBase knowledgeBase = null;
         if (detail != null) {
             knowledgeBase = new KnowledgeBase();
+            knowledgeBase.setId(detail.getId());
             knowledgeBase.setKnowledgeId(detail.getId());
             knowledgeBase.setTitle(detail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(detail.getContent());

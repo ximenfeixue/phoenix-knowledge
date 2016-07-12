@@ -50,7 +50,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     boolean isUserFeed = false;
 
 	@Override
-	public InterfaceResult insert(DataCollection dataCollection) throws Exception {
+	public InterfaceResult insert(DataCollection dataCollection) {
 		
         KnowledgeDetail knowledgeDetail = dataCollection.getKnowledgeDetail();
 		KnowledgeReference knowledgeReference = dataCollection.getReference();
@@ -58,7 +58,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //knowledgeDetail.createContendDesc();
 		
 		//知识详细信息插入
-        KnowledgeDetail savedKnowledgeDetail = this.knowledgeMongoDao.insert(knowledgeDetail);
+        KnowledgeDetail savedKnowledgeDetail = null;
+        try {
+            savedKnowledgeDetail = this.knowledgeMongoDao.insert(knowledgeDetail);
+        } catch (Exception ex) {
+            logger.error("Create knowledge detail failed: error:  {}", ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
         if (savedKnowledgeDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
