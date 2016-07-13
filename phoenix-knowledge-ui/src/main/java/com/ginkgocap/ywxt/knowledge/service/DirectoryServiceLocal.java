@@ -99,7 +99,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
     public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,List<ResItem> directoryItems) throws Exception
     {
-        logger.info("batchTags: {}", directoryItems );
+        logger.info("batchDirectory: {}", directoryItems );
         if(directoryItems == null || directoryItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
@@ -136,14 +136,14 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 knowledgeDetail.setCategoryIds(successIds);
 
                 knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
-                logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+                logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
             }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("create directory success.");
     }
 
     public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
-        logger.info("batchTags: {}", requestJson );
+        logger.info("batchDirectory: {}", requestJson );
         if(StringUtils.isEmpty(requestJson)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
@@ -164,7 +164,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
             List<Long> newDirectoryIds = convertObjectListToLongList(directoryIds);
             if (newDirectoryIds == null || newDirectoryIds.size() <= 0) {
-                logger.error("There is no valid and safe tag Id, so skip. knowledgeId: {}", knowledgeId);
+                logger.error("There is no valid and safe Directory Id, so skip. knowledgeId: {}", knowledgeId);
                 continue;
             }
 
@@ -200,7 +200,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             knowledgeDetail.setCategoryIds(existCategoryIds);
 
             knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
-            logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+            logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
             successResult = + successIds.size();
             failedResult = + newDirectoryIds.size() - successIds.size();
         }
@@ -234,7 +234,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             return mappingJacksonValue;
         }
 
-        logger.error("Can't get any tags with given tag id");
+        logger.error("Can't get any directory with given directory id");
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS));
     }
 

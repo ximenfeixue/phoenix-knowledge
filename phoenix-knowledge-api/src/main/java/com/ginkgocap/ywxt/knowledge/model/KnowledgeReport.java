@@ -21,7 +21,7 @@ public class KnowledgeReport implements Serializable {
     /**
      * 举报的栏目id
      */
-    private short columnId;
+    private int columnId;
 
     /**
      * 举报时间
@@ -105,11 +105,11 @@ public class KnowledgeReport implements Serializable {
         this.knowledgeId = knowledgeId;
     }
 
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 

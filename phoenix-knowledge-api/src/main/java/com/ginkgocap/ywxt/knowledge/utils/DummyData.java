@@ -46,7 +46,7 @@ public final class DummyData {
 
     public static KnowledgeBase knowledgeBaseObject()
     {
-        short columnId = (short)1;
+        int columnId = 1;
         short typeId = (short)1;
         short auditStatus = (short)1;
         short reportStatus = (short)0;
@@ -67,7 +67,7 @@ public final class DummyData {
         return knowledge;
     }
 
-    public static KnowledgeDetail knowledgeDetail(short columnId,String title)
+    public static KnowledgeDetail knowledgeDetail(int columnId,String title)
     {
         long ownerId = 123456L;
         long pictureId = 123456L;
@@ -89,7 +89,7 @@ public final class DummyData {
         return knowledgeDetail;
     }
 
-    public static DataCollection getDataCollection(short columnId,String title)
+    public static DataCollection getDataCollection(int columnId,String title)
     {
         DataCollection data = new DataCollection();
         data.setKnowledgeDetail(knowledgeDetail(columnId, title));

@@ -66,7 +66,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception;
+	public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnId) throws Exception;
 	
 	/**
 	 * 批量删除，承担以下任务：
@@ -81,7 +81,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception;
+	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnId) throws Exception;
 	
 	/**
 	 * 提取详细信息（一般用在知识详细信息查看界面、知识编辑界面的数据提取中），具体提取以下信息：
@@ -93,7 +93,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail getDetailById(long knowledgeId,short columnId) throws Exception;
+	public KnowledgeDetail getDetailById(long knowledgeId,int columnId) throws Exception;
 
     /**
      * 更新，承担以下任务：
@@ -102,7 +102,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public DataCollection getKnowledge(long knowledgeId,short columnId) throws Exception;
+    public DataCollection getKnowledge(long knowledgeId,int columnId) throws Exception;
 	
 	/**
 	 * 提取简要信息（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
@@ -169,7 +169,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户ID与类型提取简要信息列表（一般用个人中心在根据类型区分的知识信息列表查询的数据提取中），具体提取以下信息：
@@ -195,7 +195,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long userId,short columnId,short type,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long userId,int columnId,short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -219,7 +219,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception;
 
 
     /**
@@ -252,7 +252,7 @@ public interface KnowledgeService {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception;
 
 	/**
 	 * 根据栏目、类型提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
@@ -265,7 +265,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception;
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception;
 
 	/**
 	 * 获取知识数量：

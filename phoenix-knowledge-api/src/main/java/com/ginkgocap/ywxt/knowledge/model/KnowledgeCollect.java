@@ -27,7 +27,7 @@ public class KnowledgeCollect implements Serializable {
     /**
      * 需求服务类型id
      */
-    private short columnId;
+    private int columnId;
 
     /**
      * 创建时间
@@ -56,10 +56,10 @@ public class KnowledgeCollect implements Serializable {
     public void setKnowledgeTitle(String knowledgeTitle) {
         this.knowledgeTitle = knowledgeTitle;
     }
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 

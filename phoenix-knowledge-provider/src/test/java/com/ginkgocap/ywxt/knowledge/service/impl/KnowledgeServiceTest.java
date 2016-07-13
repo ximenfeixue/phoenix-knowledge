@@ -89,7 +89,7 @@ public class KnowledgeServiceTest extends TestBase {
             data = this.createKnowledge("test-delete-KnowledgeServiceTest_"+index);
             knowledgeIds.add(data.getKnowledgeDetail().getId());
         }
-        short columnId = data != null ? data.getKnowledgeDetail().getColumnId() :  2;
+        int columnId = data != null ? data.getKnowledgeDetail().getColumnId() :  2;
         try {
             InterfaceResult result = knowledgeService.batchDeleteByKnowledgeIds(knowledgeIds, columnId);
             assertResponseWithData(result);
@@ -105,7 +105,7 @@ public class KnowledgeServiceTest extends TestBase {
         try {
             DataCollection data = this.createKnowledge("KnowledgeServiceTest_testGetDetailById");
             long knowledgeId = data.getKnowledgeDetail().getId();
-            short columnId = data.getKnowledgeDetail().getColumnId();
+            int columnId = data.getKnowledgeDetail().getColumnId();
             KnowledgeDetail result = knowledgeService.getDetailById(knowledgeId, columnId);
             TestCase.assertNotNull(result);
         } catch (Exception e) {

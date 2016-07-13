@@ -13,7 +13,7 @@ public class KnowledgeUnique implements Serializable
     private long id;
 
     //columnId
-    private short columnId;
+    private int columnId;
 
     public long getId() {
         return id;
@@ -23,11 +23,11 @@ public class KnowledgeUnique implements Serializable
         this.id = id;
     }
 
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 }

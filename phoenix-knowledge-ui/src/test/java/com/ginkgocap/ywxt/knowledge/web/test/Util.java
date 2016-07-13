@@ -120,7 +120,7 @@ public final class Util {
         return getKnowledgeComment(KnowledgeId, (short)0, content);
     }
 
-    public static String getKnowledgeComment(long KnowledgeId, short columnId, String content)
+    public static String getKnowledgeComment(long KnowledgeId, int columnId, String content)
     {
         columnId = columnId == 0 ? 2 : columnId;
         KnowledgeComment KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content);

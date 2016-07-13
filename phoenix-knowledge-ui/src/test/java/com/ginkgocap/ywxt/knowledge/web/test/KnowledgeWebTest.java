@@ -27,6 +27,15 @@ public class KnowledgeWebTest extends BaseTestCase {
         LogMethod();
         createKnowledge("KnowledgeWebTest_testCreateKnowledge");
     }
+    
+    public void testCreateKnowledgeWithTag()
+    {
+    	LogMethod();
+    	List<Long> idList = createTag();
+    	if ((idList != null && idList.size() > 0)) {
+    		createKnowledgeWithTag("testCreateKnowledgeWithTag", idList.subList(0, 1));
+    	}
+    }
 
     public void testUpdateKnowledge()
     {
@@ -81,10 +90,10 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            //KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
             //data.setContent("");
-            long knowledgeId = 640L; //data.getId();
-            short columnId = -1; //data.getColumnId();
+            long knowledgeId = data.getId();
+            int columnId = data.getColumnId();
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -100,7 +109,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         	
             KnowledgeDetail data = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
             long knowledgeId = data.getId();
-            short columnId = data.getColumnId();
+            int columnId = data.getColumnId();
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -117,7 +126,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         try {
         	KnowledgeDetail data = createKnowledge("KnowledgeWebTest_testMultiThreadKnowledgeDetail").getKnowledgeDetail();
             final long knowledgeId = data.getId();
-            final short columnId = data.getColumnId();
+            final int columnId = data.getColumnId();
             knowledgeDetail(baseUrl, knowledgeId, columnId);
             /*
         	for (int index = 0; index < 1; index++) {
@@ -358,7 +367,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         // "/report/{knowledgeId}/{columnId}"
         try {
             long knowledgeId = data.getKnowledgeDetail().getId();
-            short columnId = data.getKnowledgeDetail().getColumnId();
+            int columnId = data.getKnowledgeDetail().getColumnId();
             String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
             KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
@@ -508,12 +517,14 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-        	long tagId = 3989273414205472L;
-        	List<Long> idList = createTag();
-        	if ((idList != null && idList.size() > 0)) {
+        	long tagId = 3995008890044562L;
+        	List<Long> idList = new ArrayList<Long>(); //createTag();
+        	idList.add(tagId);
+        	createKnowledgeWithTag("testGetAllByDirectoryId", idList);
+        	/*if ((idList != null && idList.size() > 0)) {
         		createKnowledgeWithTag("testGetAllByDirectoryId", idList.subList(0, 1));
         		tagId = idList.get(0);
-        	}
+        	}*/
             String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
@@ -585,6 +596,20 @@ public class KnowledgeWebTest extends BaseTestCase {
             fail();
         }
     }
+    
+    public void testGetRecommendedKnowledge()
+    {
+        LogMethod();
+        try {
+        	//type: 1,推荐 2,发现
+            String subUrl = "/getRecommendedKnowledge/2/0/12";  //getRecommendedKnowledge/{type}/{start}/{size}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+           
+    }
 
     private String collectKnowledge(String title)
     {
@@ -604,12 +629,12 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         DataCollection data = createKnowledge(testCase);
         long knowledgeId = data.getKnowledgeDetail().getId();
-        short columnId = data.getKnowledgeDetail().getColumnId();
+        int columnId = data.getKnowledgeDetail().getColumnId();
 
         return "/" + knowledgeId + "/" + columnId;
     }
 
-    private String knowledAndColumnIdUrl(long knowledgeId, short columnId)
+    private String knowledAndColumnIdUrl(long knowledgeId, int columnId)
     {
         return  "/" + knowledgeId + "/" + columnId;
     }
@@ -668,7 +693,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         return data;
     }
     
-    private void knowledgeDetail(final String baseUrl, long knowledgeId,short columnId) throws Exception
+    private void knowledgeDetail(final String baseUrl, long knowledgeId,int columnId) throws Exception
     {
         String subUrl = "/" + knowledgeId + "/" + columnId;  //{id}/{columnId}
         JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
@@ -676,7 +701,7 @@ public class KnowledgeWebTest extends BaseTestCase {
         Util.checkResponseWithData(result);
     }
     
-    private void knowledgeDetailWeb(final String baseUrl, long knowledgeId,short columnId) throws Exception
+    private void knowledgeDetailWeb(final String baseUrl, long knowledgeId,int columnId) throws Exception
     {
         String subUrl = "/web/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
         JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);

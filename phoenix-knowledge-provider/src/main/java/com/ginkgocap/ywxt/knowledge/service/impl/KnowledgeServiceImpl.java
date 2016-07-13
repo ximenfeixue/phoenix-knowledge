@@ -162,7 +162,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		
 		Long knowledgeId = knowledgeDetail.getId();
         long userId = knowledgeDetail.getOwnerId();
-		short columnId = knowledgeDetail.getColumnId();
+		int columnId = knowledgeDetail.getColumnId();
 
 		//knowledgeMongo.createContendDesc();
 
@@ -293,7 +293,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
 	@Override
-	public InterfaceResult deleteByKnowledgeId(long knowledgeId, short columnId) throws Exception {
+	public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnId) throws Exception {
 		
         KnowledgeDetail oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         long userId = oldKnowledgeDetail.getOwnerId();
@@ -361,7 +361,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, short columnId) throws Exception {
+	public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnId) throws Exception {
 		
 		List<KnowledgeDetail> oldKnowledgeMongoList = this.knowledgeMongoDao.getByIdsAndColumnId(knowledgeIds, columnId);
         if (oldKnowledgeMongoList == null || oldKnowledgeMongoList.size() <= 0) {
@@ -412,7 +412,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public KnowledgeDetail getDetailById(long knowledgeId, short columnId) throws Exception {
+	public KnowledgeDetail getDetailById(long knowledgeId, int columnId) throws Exception {
 
         KnowledgeDetail knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
 		if (knowledgeDetail == null) {
@@ -422,7 +422,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return knowledgeDetail;
 	}
 
-    public DataCollection getKnowledge(long knowledgeId,short columnId) throws Exception
+    public DataCollection getKnowledge(long knowledgeId,int columnId) throws Exception
     {
         KnowledgeDetail knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         if (knowledgeDetail == null) {
@@ -484,7 +484,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
 	@Override
-	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,short columnId,int start,int size) throws Exception
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception
     {
 		return this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size);
 	}
@@ -495,7 +495,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
 	@Override
-	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long UserId,short columnId, short type,int start,int size) throws Exception {
+	public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long UserId,int columnId, short type,int start,int size) throws Exception {
 		return this.knowledgeMysqlDao.getByCreateUserIdAndTypeAndColumnId(UserId, type, columnId, start, size);
 	}
 	
@@ -506,7 +506,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 	
 	@Override
-	public List<KnowledgeBase> getBaseByColumnId(short columnId,int start,int size) throws Exception
+	public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception
     {
 		return this.knowledgeMysqlDao.getByColumnId(columnId, start, size);
 	}
@@ -518,13 +518,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception
+    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size);
     }
 
 	@Override
-	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(short columnId,short type,int start,int size) throws Exception
+	public InterfaceResult<List<DataCollection>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception
     {
 		return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
 	}
@@ -560,7 +560,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	 * 插入时异常手动回滚方法
 	 * @throws Exception
 	 */
-	private void insertRollBack(long knowledgeId, short columnId,long userId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
+	private void insertRollBack(long knowledgeId, int columnId,long userId,boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
 		if(isBase) this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
 		if(isReference) this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
@@ -589,7 +589,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	 * 单条删除时异常手动回滚方法
 	 * @throws Exception
 	 */
-	private void deleteRollBack(long knowledgeId, short columnId,
+	private void deleteRollBack(long knowledgeId, int columnId,
                                 KnowledgeDetail oldKnowledgeMongo,KnowledgeBase knowledge,KnowledgeReference oldKnowledgeReference,
 			boolean isMongo,boolean isBase,boolean isReference,boolean isBigData,boolean isUserFeed) throws Exception {
 		if(isMongo) this.knowledgeMongoDao.insert(oldKnowledgeMongo);

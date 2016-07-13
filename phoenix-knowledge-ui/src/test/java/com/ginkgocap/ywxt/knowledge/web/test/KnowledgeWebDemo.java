@@ -129,7 +129,7 @@ public class KnowledgeWebDemo {
         try {
             KnowledgeDetail data = createKnowledge("knowledgeDetail", null).getKnowledgeDetail();
             long knowledgeId = data.getId();
-            short columnId = data.getColumnId();
+            int columnId = data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{knowledgeId}/{columnId}
             Util.HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
@@ -254,7 +254,7 @@ public class KnowledgeWebDemo {
         try {
             DataCollection data = createKnowledge("reportKnowledge", null);
             long knowledgeId = data.getKnowledgeDetail().getId();
-            short columnId = data.getKnowledgeDetail().getColumnId();
+            int columnId = data.getKnowledgeDetail().getColumnId();
             String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
             KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
@@ -320,12 +320,12 @@ public class KnowledgeWebDemo {
     {
         DataCollection data = createKnowledge(testCase, null);
         long knowledgeId = data.getKnowledgeDetail().getId();
-        short columnId = data.getKnowledgeDetail().getColumnId();
+        int columnId = data.getKnowledgeDetail().getColumnId();
 
         return "/" + knowledgeId + "/" + columnId;
     }
 
-    private String knowledAndColumnIdUrl(long knowledgeId, short columnId)
+    private String knowledAndColumnIdUrl(long knowledgeId, int columnId)
     {
         return  "/" + knowledgeId + "/" + columnId;
     }

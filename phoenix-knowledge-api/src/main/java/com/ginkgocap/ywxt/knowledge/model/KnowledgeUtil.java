@@ -30,7 +30,7 @@ public final class KnowledgeUtil {
 
     private static final boolean writeNumberAsString = false;;
 
-    public static Class getKnowledgeClassType(short columnId)
+    public static Class getKnowledgeClassType(int columnId)
     {
         switch (columnId){
             /*
@@ -90,7 +90,7 @@ public final class KnowledgeUtil {
         return knowledgeBase;
     }*/
 
-    public static String getKnowledgeCollectionName(short columnId)
+    public static String getKnowledgeCollectionName(int columnId)
     {
         return "Knowledge"; //ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
     }

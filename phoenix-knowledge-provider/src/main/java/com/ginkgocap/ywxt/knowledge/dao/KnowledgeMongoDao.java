@@ -66,7 +66,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByIdAndColumnId(long id,short columnId) throws Exception;
+	public int deleteByIdAndColumnId(long id,int columnId) throws Exception;
 	
 	/**
 	 * 根据主键list以及栏目批量删除数据
@@ -76,7 +76,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByIdsAndColumnId(List<Long> ids,short columnId) throws Exception;
+	public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
 	
 	/**
 	 * 根据用户Id以及栏目删除数据
@@ -86,7 +86,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId) throws Exception;
+	public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception;
 
 	/**
 	 *
@@ -96,7 +96,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean deleteKnowledgeDirectory(long knowledgeId,short columnId,long directoryId);
+	public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId);
 	
 	/**
 	 * 根据主键以及栏目提取数据
@@ -106,7 +106,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId);
+	public KnowledgeDetail getByIdAndColumnId(long id,int columnId);
 	
 	/**
 	 * 根据主键list以及栏目提取数据
@@ -116,7 +116,7 @@ public interface KnowledgeMongoDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId) throws Exception;
+	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
 
 	/**
 	 *

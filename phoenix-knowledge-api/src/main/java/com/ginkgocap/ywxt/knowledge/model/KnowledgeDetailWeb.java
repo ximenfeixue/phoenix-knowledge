@@ -81,7 +81,7 @@ public class KnowledgeDetailWeb extends KnowledgeDetail
     public void setCategoryIds(List<Long> categoryIds){}
 
     @JsonIgnore
-    public void setColumnId(short columnId) {}
+    public void setColumnId(int columnId) {}
 
 
 }

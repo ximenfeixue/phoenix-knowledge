@@ -94,7 +94,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
 
 	@Override
-	public int deleteByIdAndColumnId(long id,short columnId) throws Exception
+	public int deleteByIdAndColumnId(long id,int columnId) throws Exception
     {
 		Query query = knowledgeColumnIdQuery(id, columnId);
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
@@ -105,7 +105,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public int deleteByIdsAndColumnId(List<Long> ids,short columnId) throws Exception
+	public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
         if (columnId > 0) {
@@ -120,7 +120,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
 	@Override
-	public int deleteByCreateUserIdAndColumnId(long createUserId,short columnId) throws Exception
+	public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
         if (columnId > 0) {
@@ -135,7 +135,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	}
 
     @Override
-    public boolean deleteKnowledgeDirectory(long knowledgeId,short columnId,long directoryId)
+    public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId)
     {
         KnowledgeDetail detail = getByIdAndColumnId(knowledgeId, columnId);
         List<Long> directoryIds = detail.getCategoryIds();
@@ -152,7 +152,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
 	@Override
-	public KnowledgeDetail getByIdAndColumnId(long id,short columnId) {
+	public KnowledgeDetail getByIdAndColumnId(long id,int columnId) {
 		Query query = knowledgeColumnIdQuery(id, columnId);
 		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId));
 	}
@@ -177,7 +177,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,short columnId) throws Exception
+	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
 		Query query = new Query(Criteria.where(Constant._ID).in(ids));
         if (columnId > 0) {
@@ -239,11 +239,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		return strBuf.toString();
 	}*/
 	
-	private String getCollectionName(short columnId) {
+	private String getCollectionName(int columnId) {
 		return KnowledgeUtil.getKnowledgeCollectionName(columnId);
 	}
 
-    private Class getKnowledgeClassType(short columnId)
+    private Class getKnowledgeClassType(int columnId)
     {
         return KnowledgeUtil.getKnowledgeClassType(columnId);
     }
@@ -256,7 +256,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		return update;
 	}
 
-    private Query knowledgeColumnIdQuery(long knowledgeId,short columnId)
+    private Query knowledgeColumnIdQuery(long knowledgeId,int columnId)
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));

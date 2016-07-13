@@ -26,8 +26,8 @@ public class Knowledge2 {
 
     private long id;
     // "类型:1-资讯，2-投融工具，3-行业，4-经典案例，5-图书报告，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章"
-    private Integer type;
-    private short columnId;
+    private int type;
+    private int columnId;
     private String title;// 标题
     private long uid;// 作者
     private String uname;// 作者名称
@@ -51,10 +51,10 @@ public class Knowledge2 {
     private KnowledgeStatics knowledgeStatics;
     //private Column column;
     private List<UserCategory> listUserCategory;
-    private Boolean isConnectionAble;// 当前用户对接权限
-    private Boolean isShareAble;// 当前用户分享权限
-    private Boolean isZhongLeForMe;// 当前用户分享中乐权限
-    private Boolean isSaved;// 当前用户保存权限
+    private boolean isConnectionAble;// 当前用户对接权限
+    private boolean isShareAble;// 当前用户分享权限
+    private boolean isZhongLeForMe;// 当前用户分享中乐权限
+    private boolean isSaved;// 当前用户保存权限
     private List<ConnectionsNode> listRelatedConnectionsNode;
     private List<ConnectionsNode> listRelatedOrganizationNode;
     private List<KnowledgeNode> listRelatedKnowledgeNode;
@@ -93,19 +93,19 @@ public class Knowledge2 {
     // WEB端和APP分开
     private int web;
 
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 
-    public Boolean getIsZhongLeForMe() {
+    public boolean getIsZhongLeForMe() {
         return isZhongLeForMe;
     }
 
-    public void setIsZhongLeForMe(Boolean isZhongLeForMe) {
+    public void setIsZhongLeForMe(boolean isZhongLeForMe) {
         this.isZhongLeForMe = isZhongLeForMe;
     }
 
@@ -181,11 +181,11 @@ public class Knowledge2 {
         this.authorType = authorType;
     }
 
-    public Boolean getIsSaved() {
+    public boolean getIsSaved() {
         return isSaved;
     }
 
-    public void setIsSaved(Boolean isSaved) {
+    public void setIsSaved(boolean isSaved) {
         this.isSaved = isSaved;
     }
 
@@ -561,11 +561,11 @@ public class Knowledge2 {
         this.id = id;
     }
 
-    public Integer getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -746,19 +746,19 @@ public class Knowledge2 {
         this.listUserCategory = listUserCategory;
     }
 
-    public Boolean getIsConnectionAble() {
+    public boolean getIsConnectionAble() {
         return isConnectionAble;
     }
 
-    public void setIsConnectionAble(Boolean isConnectionAble) {
+    public void setIsConnectionAble(boolean isConnectionAble) {
         this.isConnectionAble = isConnectionAble;
     }
 
-    public Boolean getIsShareAble() {
+    public boolean getIsShareAble() {
         return isShareAble;
     }
 
-    public void setIsShareAble(Boolean isShareAble) {
+    public void setIsShareAble(boolean isShareAble) {
         this.isShareAble = isShareAble;
     }
 

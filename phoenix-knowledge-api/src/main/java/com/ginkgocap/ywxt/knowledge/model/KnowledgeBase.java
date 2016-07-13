@@ -26,7 +26,7 @@ public class KnowledgeBase implements Serializable {
     private short type;
 
     /**栏目主键*/
-    private short columnId;
+    private int columnId;
 
     /**旧知识id*/
     private long knowledgeId;
@@ -43,6 +43,7 @@ public class KnowledgeBase implements Serializable {
 	/**描述简略，一般存储描述的前50个字*/
 	private String contentDesc;
 
+	//是否加精, 0否，1是
 	private short essence;
 
     /** 标签信息 **/
@@ -116,11 +117,11 @@ public class KnowledgeBase implements Serializable {
     }
 
     @Column(name = "column_id")
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
 
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 

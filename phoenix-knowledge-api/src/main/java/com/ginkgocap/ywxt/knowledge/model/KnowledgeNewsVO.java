@@ -9,8 +9,8 @@ public class KnowledgeNewsVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long kId; // 知识ID
-    private short columnId;
+    private long kId; // 知识ID
+    private int columnId;
     private String title; // 知识标题
     private String content; // 知识内容
     private String pic; // 知识封面图片
@@ -77,10 +77,10 @@ public class KnowledgeNewsVO implements Serializable {
 
     private String fileType;
 
-    public short getColumnId() {
+    public int getColumnId() {
         return columnId;
     }
-    public void setColumnId(short columnId) {
+    public void setColumnId(int columnId) {
         this.columnId = columnId;
     }
 
@@ -199,11 +199,11 @@ public class KnowledgeNewsVO implements Serializable {
         return serialVersionUID;
     }
 
-    public Long getkId() {
+    public long getkId() {
         return kId;
     }
 
-    public void setkId(Long kId) {
+    public void setkId(long kId) {
         this.kId = kId;
     }
 

@@ -52,7 +52,7 @@ public class TestData {
         return dataCollection;
     }
 
-    public static DataCollection getDataCollection(long userId, short columnId,String title)
+    public static DataCollection getDataCollection(long userId, int columnId,String title)
     {
         DataCollection data = new DataCollection();
         data.setKnowledgeDetail(knowledgeDetail(userId,columnId, title));
@@ -86,7 +86,7 @@ public class TestData {
         return DataCollection.generateKnowledge(detail);
     }
 
-    public static KnowledgeDetail knowledgeDetail(long userId,short columnId,String title)
+    public static KnowledgeDetail knowledgeDetail(long userId,int columnId,String title)
     {
         long pictureId = 123456L;
         KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
@@ -174,12 +174,12 @@ public class TestData {
     }
 
     //For Knowledge Comment
-    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, short columnId) throws Exception
+    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, int columnId) throws Exception
     {
         return knowledgeComment(userId, knowledgeId, columnId, null);
     }
 
-    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, short columnId, String content)
+    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, int columnId, String content)
     {
         KnowledgeComment comment = new KnowledgeComment();
         comment.setOwnerId(userId);
@@ -192,7 +192,7 @@ public class TestData {
         return comment;
     }
 
-    public static KnowledgeReport knowledgeReport(long userId, long knowledgeId, short columnId) throws Exception
+    public static KnowledgeReport knowledgeReport(long userId, long knowledgeId, int columnId) throws Exception
     {
         KnowledgeReport report = new KnowledgeReport();
         report.setId(0);

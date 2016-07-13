@@ -175,13 +175,13 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long userId,
-			short columnId,int start,int size) throws Exception {
+			int columnId,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_createUserId_columnId", start, size, userId, columnId);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnId(short columnId,int start,int size) throws Exception {
+	public List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception {
 
 		return this.getSubEntitys("get_by_columnId", start, size, columnId);
 	}
@@ -193,12 +193,12 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
     }
 
     @Override
-    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,short columnId,int start,int size) throws Exception {
+    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception {
         return this.getSubEntitys("get_by_columnId_keyWord", start, size, columnId, "%"+keyWord+"%");
     }
 
     @Override
-	public List<KnowledgeBase> getByTypeAndColumnId(short type, short columnId,int start,int size)
+	public List<KnowledgeBase> getByTypeAndColumnId(short type, int columnId,int start,int size)
 			throws Exception {
 
 		return this.getSubEntitys("get_by_type_columnId", start, size, type, columnId);
@@ -213,7 +213,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(
-			long createUserId, short type, short columnId,int start,int size) throws Exception {
+			long createUserId, short type, int columnId,int start,int size) throws Exception {
 
 		return this.getSubEntitys("get_by_createUserId_type_columnId", start, size, createUserId, type, columnId);
 	}
@@ -241,7 +241,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(
-			long createUserId, short columnId, Date beginDate, Date endDate,int start,int size)
+			long createUserId, int columnId, Date beginDate, Date endDate,int start,int size)
 			throws Exception {
 		
 		return this.getSubEntitys("get_by_createUserId_columnId_beginDate_endDate", start, size, new Object[]{createUserId,columnId,getDate(beginDate,true),getDate(endDate,false)});
@@ -289,21 +289,21 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnIdAndStatus(short columnId,
+	public List<KnowledgeBase> getByColumnIdAndStatus(int columnId,
 			short status,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_columnId_status", start, size, columnId, status);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnIdAndAuditStatus(short columnId,
+	public List<KnowledgeBase> getByColumnIdAndAuditStatus(int columnId,
 			short auditStatus,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_columnId_auditStatus", start, size, columnId, auditStatus);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnIdAndReportStatus(short columnId,
+	public List<KnowledgeBase> getByColumnIdAndReportStatus(int columnId,
 			short reportStatus,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_columnId_reportStatus", start, size, columnId, reportStatus);

@@ -84,15 +84,24 @@ public class KnowledgeOtherControl extends BaseController {
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalException(url, jsonNode.textValue());
+                    bigDataResponse = externalException(url, jsonNode.toString());
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
-                        dataJson = KnowledgeUtil.readTree("responseData");
-                        content = dataJson.get("content").textValue();
-                        title = dataJson.get("title").textValue();
-                        if (StringUtils.isNotEmpty(content) && StringUtils.isNotEmpty(title))
+                        JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
+                        if (responseJson == null) {
+                            logger.error("Return json content is invalidated..");
+                            continue;
+                        }
+                        dataJson = responseJson.get("responseData");
+                        if (dataJson == null) {
+                            logger.error("no responseData in return json content..");
+                            continue;
+                        }
+                        content = dataJson.get("content").toString();
+                        title = dataJson.get("title").toString();
+                        if (StringUtils.isNotEmpty(content) && StringUtils.isNotEmpty(title)) {
                             break;
+                        }
                     }
-
                 }
 
                 if (StringUtils.isBlank(bigDataResponse) || StringUtils.isBlank(title) ||
@@ -108,12 +117,11 @@ public class KnowledgeOtherControl extends BaseController {
 
                 logger.warn(bigDataResponse);
                 if (bigDataResponse.indexOf("<!DOCTYPE html>") == -1 && bigDataResponse.startsWith("{")) {
-                    String time = dataJson.get("publish_time").textValue();
+                    String time = dataJson.get("publish_time").toString();
 
                     // 测试条件
                     // content = getSping(content);
                     // title = getSping(title);
-
                     /** 以下条件，则大数据异常 */
                     if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
                         content.replace("\\", "");
@@ -131,32 +139,35 @@ public class KnowledgeOtherControl extends BaseController {
                         // 带样式标签内容
                         knowledge.setContent(content);
                         knowledge.setTitle(title);
-
                         knowledge.setCreateTime(System.currentTimeMillis());
 
                         @SuppressWarnings("unchecked")
-                        List<String> imgs = dataJson.findValuesAsText("imgs");
-                        if (imgs != null) {
+                        List<String> imgs = null;
+                        List<JsonNode> imgNodes = dataJson.findValues("imgs");
+                        if (imgNodes != null && imgNodes.size() > 0) {
+                            int size = imgNodes.size();
+                            imgs = new ArrayList<String>(size);
+                            for (JsonNode imgNode : imgNodes) {
+                                imgs.add(imgNode.toString());
+                            }
+                        }
+                        if (imgs != null && imgs.size() > 0) {
                             int tempSize = imgs.size();
                             if (tempSize > 0) {
                                 String[] strs = new String[tempSize];
                                 // 临时存储
                                 List<String> tempPic = new ArrayList<String>(tempSize);
                                 for (int i = 0; i < tempSize; i++) {
-
                                     String tempStr = imgs.get(i);
-
                                     // 2015-1-29 start
                                     if (tempStr.length() < 255) {
                                         // 将符合标准长度的图片地址存放在list中,防止在插入数据库中时报错
                                         tempPic.add(tempStr);
                                     }
-
                                     strs[i] = tempStr;
                                     // 2015-1-29 end
                                 }
                                 knowledge.setListImageUrl(strs);
-
                                 if (tempPic.size() > 0)
                                     // 设置封面图片
                                     knowledge.setPic(tempPic.get((int) (tempPic.size() / 2)));
@@ -170,8 +181,8 @@ public class KnowledgeOtherControl extends BaseController {
                         // 设置默认标签
                         knowledge.setTags(new ArrayList<Long>());
                         // 判断标示
-                        if (jsonNode.get("isCreate").asBoolean()) {
-
+                        JsonNode isCreate = jsonNode.get("isCreate");
+                        if (isCreate != null && isCreate.asBoolean()) {
                             // 创建者ID
                             knowledge.setCid(user.getId());
                             // 创建人姓名
@@ -200,6 +211,8 @@ public class KnowledgeOtherControl extends BaseController {
                             Long kId = (Long) createResult.getResponseData();
                             // 知识ID
                             knowledge.setId(kId);
+                        } else {
+                            logger.warn("isCreate is not existing, so skip to create knowledge!");
                         }
                     } else {
                         // 大数据错误
@@ -261,7 +274,6 @@ public class KnowledgeOtherControl extends BaseController {
             // result = (new HttpClientUtil()).getGintongPost(url,"",
             // json.toString().replace("externalUrl", "url"));
             RestTemplate restTemplate = new RestTemplate();
-
             result = restTemplate.postForObject(url, jsonContent.replace("externalUrl", "url").getBytes("utf-8"), String.class);
         } catch (IOException e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());

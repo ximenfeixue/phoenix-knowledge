@@ -120,7 +120,7 @@ public abstract class BaseController {
     }
 
 
-    protected InterfaceResult checkColumn(short column)
+    protected InterfaceResult checkColumn(int column)
     {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         result.setResponseData("column Id is invalidate!");

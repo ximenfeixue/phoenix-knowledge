@@ -252,13 +252,13 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     {
         List<Long> tagsList = knowledgeDetail.getTags();
         if (tagsList == null || tagsList.size() <= 0) {
-            logger.error("directory List is empty, so skip to save..");
+            logger.error("tag List is empty, so skip to save..");
             return false;
         }
 
         try {
             for (int index = 0; index < tagsList.size(); index++) {
-                logger.info("directoryId: {}", tagsList.get(index));
+                logger.info("tagId: {}", tagsList.get(index));
                 Long tagId = Long.valueOf(tagsList.get(index));
                 if (tagId > 0) {
                     TagSource tagSource = newTagSourceObject(userId, tagId, knowledgeDetail);

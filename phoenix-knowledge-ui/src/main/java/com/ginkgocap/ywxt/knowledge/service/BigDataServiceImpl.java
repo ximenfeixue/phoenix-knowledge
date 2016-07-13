@@ -59,7 +59,7 @@ public class BigDataServiceImpl
 		}
 	}
 
-	public void deleteMessage(long knowledgeId, short columnId, long userId)
+	public void deleteMessage(long knowledgeId, int columnId, long userId)
 			throws Exception {
 		
 		KnowledgeBase data = new KnowledgeBase();

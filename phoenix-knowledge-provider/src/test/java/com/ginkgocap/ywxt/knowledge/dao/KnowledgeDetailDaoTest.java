@@ -29,7 +29,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public void testInsert()
     {
-        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(userId, (short)2, "KnowledgeMongoDaoTest");
+        KnowledgeDetail knowledgeDetail = TestData.knowledgeDetail(userId, 2, "KnowledgeMongoDaoTest");
         try {
             knowledgeDetail.setCategoryIds(null);
             updateKnowledgeDetail = knowledgeMongoDao.insert(knowledgeDetail);
@@ -43,8 +43,8 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public void testInsertList() {
         List<KnowledgeDetail> knowledgeDetailList = new ArrayList<KnowledgeDetail>(2);
-        knowledgeDetailList.add(TestData.knowledgeDetail(userId, (short)3, "KnowledgeMongoDaoTest"));
-        knowledgeDetailList.add(TestData.knowledgeDetail(userId, (short)4, "KnowledgeMongoDaoTest"));
+        knowledgeDetailList.add(TestData.knowledgeDetail(userId, 3, "KnowledgeMongoDaoTest"));
+        knowledgeDetailList.add(TestData.knowledgeDetail(userId, 4, "KnowledgeMongoDaoTest"));
         try {
             List<KnowledgeDetail> knowledgeList = knowledgeMongoDao.insertList(knowledgeDetailList);
             TestCase.assertNotNull(knowledgeList);
@@ -58,7 +58,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     public void testUpdate() {
         try {
             if (updateKnowledgeDetail == null) {
-                updateKnowledgeDetail = createKnowledge((short)2);
+                updateKnowledgeDetail = createKnowledge(2);
             }
             if (updateKnowledgeDetail != null) {
                 updateKnowledgeDetail.setTitle("Update-Title");
@@ -76,7 +76,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public  void testInsertAfterDelete() {
         try {
-            KnowledgeDetail knowledgeDetail = createKnowledge((short)2);
+            KnowledgeDetail knowledgeDetail = createKnowledge(2);
             KnowledgeDetail knowledge = knowledgeMongoDao.insertAfterDelete(knowledgeDetail);
             TestCase.assertNotNull(knowledge);
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public  void testDeleteByIdAndColumnId() {
         try {
-            short columnId = (short)2;
+            int columnId = 2;
             KnowledgeDetail knowledgeDetail = createKnowledge(columnId);
             long Id = knowledgeDetail.getId();
             int ret = knowledgeMongoDao.deleteByIdAndColumnId(Id, columnId);
@@ -102,7 +102,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public void testDeleteByIdsAndColumnId() {
         try {
-            short columnId = 2;
+            int columnId = 2;
             List<Long> ids = createKnowledgeList(2, columnId);
             int ret = knowledgeMongoDao.deleteByIdsAndColumnId(ids, columnId);
             TestCase.assertTrue(ret==0);
@@ -115,9 +115,9 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public  void testDeleteByCreateUserIdAndColumnId() {
         try {
-            KnowledgeDetail knowledgeDetail = createKnowledge((short)2);
+            KnowledgeDetail knowledgeDetail = createKnowledge(2);
             long createUserId = knowledgeDetail.getOwnerId();
-            short columnId = knowledgeDetail.getColumnId();
+            int columnId = knowledgeDetail.getColumnId();
             int ret = knowledgeMongoDao.deleteByCreateUserIdAndColumnId(createUserId, columnId);
             TestCase.assertTrue(ret==0);
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     @Test
     public  void testGetByIdAndColumnId() {
         try {
-            short columnId = (short)2;
+            int columnId = 2;
             KnowledgeDetail knowledgeDetail = createKnowledge(columnId);
             long Id = knowledgeDetail.getId();
             KnowledgeDetail knowledge = knowledgeMongoDao.getByIdAndColumnId(Id, columnId);
@@ -144,7 +144,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
     public void testGetByIdsAndColumnId()
     {
         try {
-            short columnId = (short)2;
+            int columnId = 2;
             List<Long> ids = createKnowledgeList(3, columnId);
             List<KnowledgeDetail> knowledgeList = knowledgeMongoDao.getByIdsAndColumnId(ids, columnId);
             TestCase.assertTrue(knowledgeList != null && knowledgeList.size()==3);
@@ -171,7 +171,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
         System.out.println(json);
     }
 
-    private KnowledgeDetail createKnowledge(short columnId)
+    private KnowledgeDetail createKnowledge(int columnId)
     {
         KnowledgeDetail createdKnowledge = null;
         try {
@@ -185,7 +185,7 @@ public class KnowledgeDetailDaoTest extends TestBase {
         return createdKnowledge;
     }
 
-    private List<Long> createKnowledgeList(int count,short columnId)
+    private List<Long> createKnowledgeList(int count,int columnId)
     {
         List<Long> ids = new ArrayList<Long>(count);
         for (int index = 0; index < count; ++index) {

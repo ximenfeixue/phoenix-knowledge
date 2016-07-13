@@ -140,9 +140,13 @@ public class Utils {
         for(String line : lines){
             htmlsb.append("<p>" + line.replace("\r", "") + "</p>");
         }
-        for(String url : urls){
-            htmlsb.append("<img src='" + url + "'/> <br/> <br/>");
+
+        if (null != urls) {
+            for (String url : urls) {
+                htmlsb.append("<img src='" + url + "'/> <br/> <br/>");
+            }
         }
+
         if (null != listImageUrl) {
             for (String img : listImageUrl) {
                 htmlsb.append("<img src='" + img + "'/> <br/> <br/>");
@@ -154,5 +158,4 @@ public class Utils {
         htmlsb.append("</div></body></html>");
         return htmlsb.toString();
     }
-
 }

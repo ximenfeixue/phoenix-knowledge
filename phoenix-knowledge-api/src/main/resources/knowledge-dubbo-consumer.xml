@@ -33,4 +33,5 @@
     <dubbo:reference id="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
     <dubbo:reference id="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
     <dubbo:reference id="knowledgeOtherService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeHomeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="3.0.0"/>
 </beans>

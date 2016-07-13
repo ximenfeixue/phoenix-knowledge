@@ -69,7 +69,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, short columnId) throws Exception {
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int columnId) throws Exception {
         KnowledgeDetail knowledgeDetail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         if (knowledgeDetail == null) {
             InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -94,7 +94,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,short columnId) throws Exception
+    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int columnId) throws Exception
     {
         Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, columnId);
         KnowledgeCollect collect = mongoTemplate.findAndRemove(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
@@ -106,14 +106,14 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, short columnId)
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
     {
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
         return mongoTemplate.exists(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,short columnId,int start, int size) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size) throws Exception
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
@@ -161,7 +161,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return InterfaceResult.getSuccessInterfaceResultInstance("Have reported this knowledge!");
     }
 
-    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,short columnId)
+    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,int columnId)
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
