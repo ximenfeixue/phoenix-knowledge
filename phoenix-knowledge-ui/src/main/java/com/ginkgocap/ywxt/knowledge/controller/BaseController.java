@@ -182,4 +182,9 @@ public abstract class BaseController {
         response.setHeader("errorCode", errCode);
         response.setHeader("errorMessage", Encodes.encodeBase64(errMessage.getBytes()));
     }
+
+    protected InterfaceResult queryKnowledgeEnd()
+    {
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"到达最后一页，知识已经取完。");
+    }
 }

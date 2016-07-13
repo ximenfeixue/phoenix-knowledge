@@ -74,6 +74,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识基础表插入
         KnowledgeBase knowledge = dataCollection.generateKnowledge();
+        dataCollection.getPermission().getPublicFlag();
 		try {
             knowledge.setKnowledgeId(knowledgeId);
 			this.knowledgeMysqlDao.insert(knowledge);
@@ -466,6 +467,18 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
 		return this.knowledgeMysqlDao.getAll(start, size);
 	}
+
+    @Override
+    public long getBaseAllPublicCount() throws Exception
+    {
+        return this.knowledgeMysqlDao.getAllPublicCount();
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseAllPublic(int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getAllPublic(start, size);
+    }
 
 	@Override
 	public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception

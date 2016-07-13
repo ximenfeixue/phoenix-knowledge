@@ -101,7 +101,22 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	public List<KnowledgeBase> getAll(int start,int size) throws Exception;
-	
+
+	/**
+	 * 提取所有数据数量
+	 * @return
+	 * @throws Exception
+	 */
+	public long getAllPublicCount() throws Exception;
+	/**
+	 * 提取所有数据
+	 * @param start
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getAllPublic(int start,int size) throws Exception;
+
 	/**
 	 * 根据用户ID提取
 	 * @param createUserId

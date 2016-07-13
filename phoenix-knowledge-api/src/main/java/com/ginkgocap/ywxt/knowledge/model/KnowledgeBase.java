@@ -22,7 +22,7 @@ public class KnowledgeBase implements Serializable {
 	/**主键*/
 	private long id;
 
-    /**类型，0为系统创建，1为用户创建*/
+    /**类型，一级栏目*/
     private short type;
 
     /**栏目主键*/
@@ -96,6 +96,9 @@ public class KnowledgeBase implements Serializable {
 
 	//分享给我的知识记录id
 	private long shareMeId;
+
+	//是否私密，1是，0否
+	private short privated;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -332,5 +335,14 @@ public class KnowledgeBase implements Serializable {
 
 	public void setShareMeId(long shareMeId) {
 		this.shareMeId = shareMeId;
+	}
+
+	@Column(name = "privated")
+	public short getPrivated() {
+		return privated;
+	}
+
+	public void setPrivated(short privated) {
+		this.privated = privated;
 	}
 }

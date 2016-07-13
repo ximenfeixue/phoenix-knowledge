@@ -153,61 +153,69 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List<KnowledgeBase> getAll(int start,int size)
-			throws Exception {
+	public List<KnowledgeBase> getAll(int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_all_start_size", start, size);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size)
-			throws Exception {
+	public long getAllPublicCount() throws Exception
+	{
+		return this.countEntitys("get_all_public_start_size", new Integer(0));
+	}
+
+	@Override
+	public List<KnowledgeBase> getAllPublic(int start,int size)	throws Exception {
+
+		return this.getSubEntitys("get_all_public_start_size", start, size, new Integer(0));
+	}
+
+	@Override
+	public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_createUserId", start, size, userId);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserIdAndType(long userId,
-			short type,int start,int size) throws Exception {
-		
+	public List<KnowledgeBase> getByCreateUserIdAndType(long userId, short type, int start, int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_createUserId_type", start, size, userId, type);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long userId,
-			int columnId,int start,int size) throws Exception {
-		
+	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long userId, int columnId, int start, int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_createUserId_columnId", start, size, userId, columnId);
 	}
 
 	@Override
-	public List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception {
-
+	public List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_columnId", start, size, columnId);
 	}
 
 
     @Override
-    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception {
+    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
+	{
         return this.getSubEntitys("get_by_createUserId_keyWord", start, size, userId, "%"+keyWord+"%");
     }
 
     @Override
-    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception {
+    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception
+	{
         return this.getSubEntitys("get_by_columnId_keyWord", start, size, columnId, "%"+keyWord+"%");
     }
 
     @Override
-	public List<KnowledgeBase> getByTypeAndColumnId(short type, int columnId,int start,int size)
-			throws Exception {
-
+	public List<KnowledgeBase> getByTypeAndColumnId(short type, int columnId,int start,int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_type_columnId", start, size, type, columnId);
 	}
 	
 	@Override
-	public List<KnowledgeBase> getByType(short type,int start,int size)
-			throws Exception {
-
+	public List<KnowledgeBase> getByType(short type,int start,int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_type", start, size, type);
 	}
 
@@ -219,16 +227,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,
-			Date endDate,int start,int size) throws Exception {
-		
+	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate, Date endDate,int start,int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_beginDate_endDate", start, size, new Object[]{getDate(beginDate,true),getDate(endDate,false)});
 	}
 
 	@Override
-	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,
-			Date beginDate, Date endDate,int start,int size) throws Exception {
-		
+	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,Date beginDate, Date endDate,int start,int size) throws Exception
+	{
 		return this.getSubEntitys("get_by_type_beginDate_endDate", start, size, new Object[]{type,getDate(beginDate,true),getDate(endDate,false)});
 	}
 

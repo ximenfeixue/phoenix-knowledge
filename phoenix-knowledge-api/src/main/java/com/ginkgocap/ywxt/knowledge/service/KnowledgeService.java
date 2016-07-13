@@ -136,6 +136,26 @@ public interface KnowledgeService {
 	 * @throws Exception
 	 */
 	public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception;
+
+	/**
+	 * 提取所有数据（一般用在首页数据展示中）
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 下午5:43:26
+	 * @return
+	 * @throws Exception
+	 */
+	public long getBaseAllPublicCount() throws Exception;
+
+	/**
+	 * 提取所有数据（一般用在首页数据展示中）
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 下午5:43:26
+	 * @param start
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getBaseAllPublic(int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：

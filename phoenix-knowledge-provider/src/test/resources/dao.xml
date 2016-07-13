@@ -48,6 +48,10 @@
                   sqlitem="select id from tb_knowledge_base order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />
 
+            <list name="get_all_public_start_size"
+                  sqlitem="select id from tb_knowledge_base where privated = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="privated" update="true" />
+
             <list name="get_by_createUserId"
                   sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />

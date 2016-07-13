@@ -15,6 +15,9 @@ public class KnowledgeDetail implements Serializable {
     /** 栏目类型 **/
     private int columnId;
 
+    /**栏目类型，一级栏目*/
+    private short type;
+
     //1. 组织， 2. 用户
     private short virtual;
     
@@ -97,6 +100,14 @@ public class KnowledgeDetail implements Serializable {
 
     public void setColumnId(int columnId) {
         this.columnId = columnId;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
     }
 
     public short getVirtual() {

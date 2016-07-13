@@ -818,27 +818,55 @@ public class KnowledgeController extends BaseController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/allKnowledgeByColumnAndSource/{columnId}/{source}/{start}/{size}", method = RequestMethod.GET)
-    public InterfaceResult<List<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
-                                                                              @PathVariable int columnId,@PathVariable short source,
-                                                                              @PathVariable int start,@PathVariable int size) throws Exception
+    @RequestMapping(value = "/allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}", method = RequestMethod.GET)
+    public InterfaceResult<Page<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
+                                                                              @PathVariable short type,@PathVariable int columnId,
+                                                                              @PathVariable short source, @PathVariable int page,
+                                                                              @PathVariable int size, @PathVariable long total) throws Exception
     {
         User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        if(columnId <= 0 || start < 0 || size <= 0) {
+        if(columnId <= 0 || page < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        long userId = this.getUserId(user);
+        int start = page * size;
+        List<KnowledgeBase> knowledgeList = null;
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
-
+            //First get total;
+            userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN;
+            if (total == -1) {
+                total = getCreatedKnowledgeCount(userId);
+            }
+            if (total > 0 && start < total) {
+                knowledgeList = this.getCreatedKnowledge(userId, start, size, null);
+            } else {
+                return queryKnowledgeEnd();
+            }
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
-
+            if (total == -1) {
+                total = this.knowledgeService.getBaseAllPublicCount();
+            }
+            if (total > 0 && start < total) {
+                knowledgeList = this.knowledgeService.getBaseAllPublic(start, size);
+            } else {
+                return queryKnowledgeEnd();
+            }
         }
         else if (source == KnowledgeConstant.SOURCE_MY_SELF) {
-
+            //First get total;
+            if (total == -1) {
+                total = getKnowledgeCount(userId);
+            }
+            if (total > 0 && start < total) {
+                knowledgeList = this.getCreatedKnowledge(userId, start, size, null);
+            } else {
+                return queryKnowledgeEnd();
+            }
         }
         else if (source == KnowledgeConstant.SOURCE_MY_FRIEND) {
 
@@ -846,32 +874,44 @@ public class KnowledgeController extends BaseController {
         else {
 
         }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+
+        return knowledgeListPage(total, page, size, knowledgeList);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{columnId}/{source}/{start}/{size}", method = RequestMethod.GET)
-    public InterfaceResult<List<KnowledgeBase>> getKnowledgeByColumnAndSourceWeb(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{columnId}/{page}/{size}", method = RequestMethod.GET)
+    public InterfaceResult getKnowledgeByColumnAndSourceWeb(HttpServletRequest request, HttpServletResponse response,
                                                                            @PathVariable int columnId,@PathVariable short source,
-                                                                           @PathVariable int start,@PathVariable int size) throws Exception
+                                                                           @PathVariable int page,@PathVariable int size) throws Exception
     {
         User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        if(columnId <= 0 || start < 0 || size <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        }
 
-        List<KnowledgeBase> knowledgeBasesItems = null;
+        return getAllByColumnId(request, response, columnId, page*size, size);
+        /*
         try {
-            knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+
+            // 获取分类
+
+            long userId = 0;
+            if (user != null) {
+                userId = user.getId();
+            }
+            // 获取栏目列表
+
+            List<ColumnVisible> cl = columnVisibleService.queryListByPidAndUserIdAndState(userId == null ? 0l : userId, type, (short) 0);
+            Map<String, Object> model = putKnowledge(model, type + "", columnid, userId, page, size);
+            model.put("cl", cl);
+            model.put("column", c);
+            model.put("columnone", co);
+            model.put("columnid", columnid);
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            logger.error("查询栏目出错,错误信息:{}", e.toString());
+            e.printStackTrace();
         }
-        logger.info(".......get all knowledge by columnId success......");
-        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBasesItems);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);*/
     }
 
     @ResponseBody
