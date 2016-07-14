@@ -837,7 +837,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> knowledgeList = null;
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
             //First get total;
-            userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN;
+            userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
             if (total == -1) {
                 total = getCreatedKnowledgeCount(userId);
             }
@@ -1112,7 +1112,9 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+        //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+        ResourceBundle resource = ResourceBundle.getBundle("application");
+        String url = resource.getString("knowledge.newQueryHost");
 		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
 		pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
 		pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));

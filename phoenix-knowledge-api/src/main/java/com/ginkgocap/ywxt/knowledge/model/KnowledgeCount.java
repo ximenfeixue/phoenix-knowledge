@@ -19,23 +19,23 @@ public class KnowledgeCount implements Serializable {
 
     private long knowledgeId;
 
-    private long clickNum;
+    private long clickCount;
 
-    private long shareNum;
+    private long shareCount;
 
-    private long collectNum;
+    private long collectCount;
 
-    private long commentNum;
+    private long commentCount;
 
-    private long hotNum;
+    private long hotCount;
+
+    private String title;
 
     private String source;
 
     private short type;
 
     @Id
-    @GeneratedValue(generator = "knowledgeCountId")
-    @GenericGenerator(name = "knowledgeCountId", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "knowledgeCountId") })
     @Column(name = "id", unique = true, nullable = false)
     public long getId() {
         return id;
@@ -54,49 +54,58 @@ public class KnowledgeCount implements Serializable {
         this.knowledgeId = knowledgeId;
     }
 
-    @Column(name = "clickNum")
-    public long getClickNum() {
-        return clickNum;
+    @Column(name = "clickCount")
+    public long getClickCount() {
+        return clickCount;
     }
 
-    public void setClickNum(long clickNum) {
-        this.clickNum = clickNum;
+    public void setClickCount(long clickCount) {
+        this.clickCount = clickCount;
     }
 
-    @Column(name = "shareNum")
-    public long getShareNum() {
-        return shareNum;
+    @Column(name = "shareCount")
+    public long getShareCount() {
+        return shareCount;
     }
 
-    public void setShareNum(long shareNum) {
-        this.shareNum = shareNum;
+    public void setShareCount(long shareCount) {
+        this.shareCount = shareCount;
     }
 
-    @Column(name = "collectNum")
-    public long getCollectNum() {
-        return collectNum;
+    @Column(name = "collectCount")
+    public long getCollectCount() {
+        return collectCount;
     }
 
-    public void setCollectNum(long collectNum) {
-        this.collectNum = collectNum;
+    public void setCollectCount(long collectCount) {
+        this.collectCount = collectCount;
     }
 
-    @Column(name = "commentNum")
-    public long getCommentNum() {
-        return commentNum;
+    @Column(name = "commentCount")
+    public long getCommentCount() {
+        return commentCount;
     }
 
-    public void setCommentNum(long commentNum) {
-        this.commentNum = commentNum;
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
     }
 
-    @Column(name = "hotNum")
-    public long getHotNum() {
-        return hotNum;
+    @Column(name = "hotCount")
+    public long getHotCount() {
+        return hotCount;
     }
 
-    public void setHotNum(long hotNum) {
-        this.hotNum = hotNum;
+    public void setHotCount(long hotCount) {
+        this.hotCount = hotCount;
+    }
+
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Column(name = "source")

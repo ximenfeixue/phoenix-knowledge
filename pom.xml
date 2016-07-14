@@ -489,6 +489,7 @@
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.9:8090/</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
+                <new.query.host>http://192.168.101.14:8090</new.query.host>
             </properties>
         </profile>
         <profile>
@@ -529,6 +530,7 @@
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.9:8090/</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
+                <new.query.host>http://192.168.101.14:8090</new.query.host>
             </properties>
         </profile>
         <profile>
@@ -574,6 +576,7 @@
                 <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.9:8090/</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
+                <new.query.host>http://192.168.101.14:8090</new.query.host>
             </properties>
         </profile>
     </profiles>

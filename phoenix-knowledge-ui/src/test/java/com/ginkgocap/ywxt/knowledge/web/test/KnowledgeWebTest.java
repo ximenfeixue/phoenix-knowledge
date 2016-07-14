@@ -170,9 +170,9 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            createKnowledge("考虑,考虑");
-            createKnowledge("考虑,考虑");
-            String subUrl = "/allKnowledgeByColumnAndSource/2/2/6/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            createKnowledge("考虑,考虑1");
+            createKnowledge("考虑,考虑2");
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -677,7 +677,7 @@ public class KnowledgeWebTest extends BaseTestCase {
 
     private DataCollection createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)
     {
-        DataCollection data = TestData.getDataCollection(userId, (short)2, title);
+        DataCollection data = TestData.getDataCollection(userId, 1, title);
         try {
         	long time1 = new Date().getTime();
         	long time2 = System.currentTimeMillis();

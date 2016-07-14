@@ -9,6 +9,8 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.ginkgocap.ywxt.user.service.DiaryService;
+import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.slf4j.Logger;
@@ -39,12 +41,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	/**MQ大数据服务*/
 	//@Autowired
 	//private BigDataService bigDataService;
-	/**动态推送服务*/
+	// 动态推送服务
 	//@Autowired
 	//private UserFeedService userFeedService;
+
 	/**心情日记*/
-//	@Autowired
-//	private DiaryService diaryService;
+	//@Autowired
+	//private DiaryService diaryService;
 
     boolean isBigData = false;
     boolean isUserFeed = false;
@@ -85,6 +88,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeReference savedKnowledgeReference = null;
         if (knowledgeReference != null) {
             try {
+                knowledgeReference.setId(knowledgeId);
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
@@ -138,14 +142,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 			this.insertRollBack(knowledgeId, columnId, userId, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
+		}*/
 		
 		//动态推送（仅推送观点）
-
-		try {
+		/*try {
 			userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(afterSaveKnowledgeMongo, diaryService));
 		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, true, true, true, true, false);
 			logger.error("动态推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
@@ -183,6 +185,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		//知识来源表更新
         if (knowledgeReference != null) {
             try {
+                knowledgeReference.setId(knowledgeId);
+                knowledgeReference.setKnowledgeId(knowledgeId);
                 this.knowledgeReferenceDao.update(knowledgeReference);
             } catch (Exception e) {
                 //this.updateRollBack(knowledgeId, columnId, oldKnowledgeDetail, knowledge, null, true, true, false, false, false);
@@ -709,7 +713,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private short permissionValue(DataCollection data)
     {
-        short privated = 1; //default is public
+        short privated = 0; //default is private
         if (data.getPermission() != null && data.getPermission().getPublicFlag() != null) {
             privated = data.getPermission().getPublicFlag().shortValue();
         }

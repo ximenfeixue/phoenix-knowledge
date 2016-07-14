@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Admin on 2016/5/24.
@@ -15,15 +17,16 @@ import java.util.List;
 @Repository("knowledgeCountDao")
 public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implements KnowledgeCountDao
 {
+    private ConcurrentMap<Long, KnowledgeCount> hotCountMap = new ConcurrentHashMap<Long, KnowledgeCount>();
+
     @Override
     @Transactional
     public boolean updateClickCount(long knowledgeId)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
-            knowledgeCount.setClickNum(knowledgeCount.getClickNum()+1);
-            knowledgeCount.setHotNum(knowledgeCount.getHotNum()+1);
-            this.saveKnowledgeCount(knowledgeCount);
+            knowledgeCount.setClickCount(knowledgeCount.getClickCount() + 1);
+            knowledgeCount.setHotCount(knowledgeCount.getHotCount() + 1);
             return true;
         }
         return false;
@@ -34,9 +37,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     public boolean updateShareCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
-            knowledgeCount.setShareNum(knowledgeCount.getShareNum()+1);
-            knowledgeCount.setHotNum(knowledgeCount.getHotNum()+1);
-            this.saveKnowledgeCount(knowledgeCount);
+            knowledgeCount.setShareCount(knowledgeCount.getShareCount() + 1);
             return true;
         }
         return false;
@@ -47,9 +48,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     public boolean updateCollectCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
-            knowledgeCount.setCollectNum(knowledgeCount.getCollectNum()+1);
-            knowledgeCount.setHotNum(knowledgeCount.getHotNum()+1);
-            this.saveKnowledgeCount(knowledgeCount);
+            knowledgeCount.setCollectCount(knowledgeCount.getCollectCount() + 1);
             return true;
         }
         return false;
@@ -60,9 +59,7 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     public boolean updateCommentCount(long knowledgeId) {
         KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId);
         if (knowledgeCount != null) {
-            knowledgeCount.setCommentNum(knowledgeCount.getCommentNum()+1);
-            knowledgeCount.setHotNum(knowledgeCount.getHotNum()+1);
-            this.saveKnowledgeCount(knowledgeCount);
+            knowledgeCount.setCommentCount(knowledgeCount.getCommentCount() + 1);
             return true;
         }
         return false;
@@ -81,15 +78,19 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
 
     private KnowledgeCount getKnowledgeCount(long knowledgeId)
     {
-        List<KnowledgeCount> knowledgeCounts = null;
+        KnowledgeCount knowledgeCount = hotCountMap.get(knowledgeId);
+        if (knowledgeCount != null ) {
+            return knowledgeCount;
+        }
+
         try {
-            knowledgeCounts = this.getEntitys("get_knowledge_count_by_id", new Object[]{knowledgeId});
+            knowledgeCount = this.getEntity(knowledgeId);
         } catch (BaseServiceException e) {
             e.printStackTrace();
         }
 
-        if (knowledgeCounts ==null || knowledgeCounts.size() <= 0) {
-            KnowledgeCount knowledgeCount = new KnowledgeCount();
+        if (knowledgeCount == null) {
+            knowledgeCount = new KnowledgeCount();
             knowledgeCount.setKnowledgeId(knowledgeId);
             try {
                 this.saveEntity(knowledgeCount);
@@ -98,7 +99,9 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
             }
             return knowledgeCount;
         }
-        return knowledgeCounts.get(0);
+
+        hotCountMap.put(knowledgeId, knowledgeCount);
+        return knowledgeCount;
     }
 
     private void saveKnowledgeCount(KnowledgeCount knowledgeCount)

@@ -46,8 +46,6 @@ public class KnowledgeReference implements Serializable {
 	private long modifyDate;
 
 	@Id
-	@GeneratedValue(generator = "id")
-	@GenericGenerator(name = "id", strategy = "com.ginkgocap.ywxt.framework.dal.dao.id.util.TimeIdGenerator", parameters = { @Parameter(name = "sequence", value = "t_knowledge_reference_label") })
 	@Column(name = "id", unique = true, nullable = false)
 	public long getId() {
 		return id;

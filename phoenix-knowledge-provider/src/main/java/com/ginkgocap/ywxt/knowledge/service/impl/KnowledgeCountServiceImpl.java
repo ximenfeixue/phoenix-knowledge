@@ -16,9 +16,7 @@ import java.util.List;
 @Service("knowledgeCountService")
 public class KnowledgeCountServiceImpl implements KnowledgeCountService {
 
-    private final Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);
-
-    private final int defaultLimit = 10;
+     private final int defaultLimit = 10;
     /**知识简表*/
     @Autowired
     private KnowledgeCountDao knowledgeCountDao;

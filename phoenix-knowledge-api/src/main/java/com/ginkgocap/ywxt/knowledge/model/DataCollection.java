@@ -33,6 +33,8 @@ public class DataCollection implements Serializable {
     /**权限*/
     private Permission permission;
 
+    private short updateDynamic;
+
     public KnowledgeBase getKnowledge() {
 		return knowledge;
 	}
@@ -56,6 +58,15 @@ public class DataCollection implements Serializable {
 	public void setReference(KnowledgeReference reference) {
 		this.reference = reference;
 	}
+
+    public short getUpdateDynamic() {
+        return updateDynamic;
+    }
+
+    public void setUpdateDynamic(short updateDynamic) {
+        this.updateDynamic = updateDynamic;
+    }
+
 
     public DataCollection(){}
 
