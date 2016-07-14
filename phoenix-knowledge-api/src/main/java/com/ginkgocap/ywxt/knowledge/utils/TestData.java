@@ -100,6 +100,7 @@ public class TestData {
         UrlIds.add("11122");
         knowledgeDetail.setMultiUrls(UrlIds);
         knowledgeDetail.setAttachmentUrls(UrlIds);
+        knowledgeDetail.setType((short)columnId);
         knowledgeDetail.setColumnId(columnId);
         knowledgeDetail.setModifyUserId(userId);
         knowledgeDetail.setCreateTime(System.currentTimeMillis());

@@ -161,7 +161,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public long getAllPublicCount(short permission) throws Exception
 	{
-		return this.countEntitys("get_all_public_start_size", permission);
+		return this.countEntitys("get_all_public", permission);
 	}
 
 	@Override
