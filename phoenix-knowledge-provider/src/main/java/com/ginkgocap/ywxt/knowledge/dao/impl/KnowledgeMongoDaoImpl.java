@@ -42,7 +42,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 		long currentDate = new Date().getTime();
         knowledgeDetail.setCreateTime(currentDate);
 		
-		String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
+		String currCollectionName = getCollectionName(knowledgeDetail.getType());
         knowledgeDetail.setId(knowledgeCommonService.getKnowledgeSequenceId());
 		mongoTemplate.insert(knowledgeDetail,currCollectionName);
 		
@@ -79,7 +79,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         long currentDate = new Date().getTime();
         knowledgeDetail.setModifyTime(currentDate);
         Query query = knowledgeColumnIdQuery(knowledgeDetail.getId(), knowledgeDetail.getColumnId());
-        String currCollectionName = getCollectionName(knowledgeDetail.getColumnId());
+        String currCollectionName = getCollectionName(knowledgeDetail.getType());
         KnowledgeDetail existValue = mongoTemplate.findOne(query, KnowledgeDetail.class, currCollectionName);
         if (existValue != null) {
             mongoTemplate.save(knowledgeDetail, currCollectionName);

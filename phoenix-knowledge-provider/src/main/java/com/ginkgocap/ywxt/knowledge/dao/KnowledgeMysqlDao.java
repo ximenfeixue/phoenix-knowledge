@@ -159,6 +159,24 @@ public interface KnowledgeMysqlDao {
 	 */
 	public List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception;
 
+	/**
+	 * 根据栏目提取
+	 * @param columnId
+	 * @return
+	 * @throws Exception
+	 */
+	public long getPublicCountByColumnId(int columnId,short permission) throws Exception;
+
+	/**
+	 * 根据栏目提取
+	 * @param columnId
+	 * @param start 分页起始行数
+	 * @param size 分页大小
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getPublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
+
     /**
      * 根据关键字提取
      * @param keyWord

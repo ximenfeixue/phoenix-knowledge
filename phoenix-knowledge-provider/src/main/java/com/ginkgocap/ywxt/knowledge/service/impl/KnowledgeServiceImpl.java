@@ -70,13 +70,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = savedKnowledgeDetail.getId();
-        long userId = knowledgeDetail.getOwnerId();
 
         //知识基础表插入
         KnowledgeBase knowledge = dataCollection.generateKnowledge();
-        dataCollection.getPermission().getPublicFlag();
 		try {
-            knowledge.setKnowledgeId(knowledgeId);
+            knowledge.setPrivated(permissionValue(dataCollection));
 			this.knowledgeMysqlDao.insert(knowledge);
 		} catch (Exception e) {
 			logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
@@ -174,6 +172,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		
 		//知识简表更新
 		try {
+            knowledge.setPrivated(permissionValue(dataCollection));
 			this.knowledgeMysqlDao.update(knowledge);
 		} catch (Exception e) {
 			//this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,null,null, true, false, false, false, false);
@@ -521,8 +520,20 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	@Override
 	public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception
     {
-		return this.knowledgeMysqlDao.getByColumnId(columnId, start, size);
+		return this.knowledgeMysqlDao.getByColumnId(columnId,start,size);
 	}
+
+    @Override
+    public long getBasePublicCountByColumnId(int columnId,short permission) throws Exception
+    {
+        return this.knowledgeMysqlDao.getPublicCountByColumnId(columnId, permission);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBasePublicByColumnId(int columnId,short permission,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getPublicByColumnId(columnId, permission, start, size);
+    }
 
     @Override
     public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception
@@ -694,5 +705,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         return returnList;
+    }
+
+    private short permissionValue(DataCollection data)
+    {
+        short privated = 1; //default is public
+        if (data.getPermission() != null && data.getPermission().getPublicFlag() != null) {
+            privated = data.getPermission().getPublicFlag().shortValue();
+        }
+        return privated;
     }
 }

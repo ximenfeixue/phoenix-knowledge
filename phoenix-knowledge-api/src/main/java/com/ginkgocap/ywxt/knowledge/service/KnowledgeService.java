@@ -242,6 +242,30 @@ public interface KnowledgeService {
 	public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception;
 
 
+	/**
+	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 上午10:14:55
+	 * @param columnId
+	 * @param permission
+	 * @return
+	 * @throws Exception
+	 */
+	public long getBasePublicCountByColumnId(int columnId,short permission) throws Exception;
+
+	/**
+	 * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
+	 * <p>1、知识基础表信息</P>
+	 * @date 2016年1月15日 上午10:14:55
+	 * @param columnId
+	 * @param start
+	 * @param size
+	 * @param permission
+	 * @return
+	 * @throws Exception
+	 */
+	public List<KnowledgeBase> getBasePublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
+
     /**
      * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>

@@ -68,6 +68,10 @@
                   sqlitem="select id from tb_knowledge_base where column_id = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="columnId" update="true" />
 
+            <list name="get_public_by_columnId"
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and privated != 0 order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="columnId,privated" update="true" />
+
             <list name="get_by_type_columnId"
                   sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />

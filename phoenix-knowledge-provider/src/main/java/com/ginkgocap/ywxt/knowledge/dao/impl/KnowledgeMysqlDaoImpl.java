@@ -194,6 +194,17 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		return this.getSubEntitys("get_by_columnId", start, size, columnId);
 	}
 
+	@Override
+	public long getPublicCountByColumnId(int columnId,short permission) throws Exception
+	{
+		return this.countEntitys("get_public_by_columnId", columnId, permission);
+	}
+
+	@Override
+	public List<KnowledgeBase> getPublicByColumnId(int columnId,short permission,int start,int size) throws Exception
+	{
+		return this.getSubEntitys("get_public_by_columnId", start, size, columnId, permission);
+	}
 
     @Override
     public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
@@ -327,6 +338,13 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	{
 		return this.countEntitys("get_count_by_user", userId);
 	}
+
+	/*
+	@Override
+	public int getKnowledgeListByUserIds(List<Long> userIds) throws Exception
+	{
+		return this.countEntitys("get_count_by_user", userId);
+	}*/
 
 	private Date getDate(Date date,boolean beginOrEnd) {
 		

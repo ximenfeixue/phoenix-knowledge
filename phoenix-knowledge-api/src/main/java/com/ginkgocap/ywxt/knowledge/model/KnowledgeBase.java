@@ -81,8 +81,8 @@ public class KnowledgeBase implements Serializable {
 	
 	/**状态（0为无效/删除，1为有效，2为草稿，3,：回收站）*/
 	private short status;
-	
-	/**审核状态（0：未通过，1：审核中，2：审核通过）*/
+
+	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
 	private short auditStatus;
 	
 	/**举报状态（3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报）*/

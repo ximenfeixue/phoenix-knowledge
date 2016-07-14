@@ -27,6 +27,9 @@ public class KnowledgeConstant {
             return value;
         }
     };*/
+    public static final short PRIVATED = 0;
+    public static final short AUDIT_PASS = 4;
+
     public static  final int SOURCE_GINTONG_BRAIN_ID = 0;
     public static  final int SOURCE_GINTONG_BRAIN = 1;
     public static  final int SOURCE_ALL_PLATFORM = 2;
