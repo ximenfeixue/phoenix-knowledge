@@ -818,7 +818,7 @@ public class KnowledgeController extends BaseController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allKnowledgeByColumnAndSource/{type}/{columnId}/{source}/{page}/{size}/{total}", method = RequestMethod.GET)
     public InterfaceResult<Page<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
                                                                               @PathVariable short type,@PathVariable int columnId,
                                                                               @PathVariable short source, @PathVariable int page,

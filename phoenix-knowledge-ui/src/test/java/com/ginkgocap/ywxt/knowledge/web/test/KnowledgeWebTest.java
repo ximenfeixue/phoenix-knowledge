@@ -166,6 +166,22 @@ public class KnowledgeWebTest extends BaseTestCase {
         }
     }
     
+    public void testGetKnowledgeByColumnAndSource()
+    {
+        LogMethod();
+        try {
+            createKnowledge("考虑,考虑");
+            createKnowledge("考虑,考虑");
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/0/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
     public void testAllKnowledgeByPage()
     {
         LogMethod();
