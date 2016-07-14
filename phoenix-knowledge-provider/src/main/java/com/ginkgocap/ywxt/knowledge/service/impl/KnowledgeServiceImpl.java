@@ -468,15 +468,15 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 	}
 
     @Override
-    public long getBaseAllPublicCount() throws Exception
+    public long getBaseAllPublicCount(short permission) throws Exception
     {
-        return this.knowledgeMysqlDao.getAllPublicCount();
+        return this.knowledgeMysqlDao.getAllPublicCount(permission);
     }
 
     @Override
-    public List<KnowledgeBase> getBaseAllPublic(int start,int size) throws Exception
+    public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception
     {
-        return this.knowledgeMysqlDao.getAllPublic(start, size);
+        return this.knowledgeMysqlDao.getAllPublic(start, size, permission);
     }
 
 	@Override

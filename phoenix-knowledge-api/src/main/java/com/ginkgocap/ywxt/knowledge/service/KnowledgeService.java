@@ -144,7 +144,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public long getBaseAllPublicCount() throws Exception;
+	public long getBaseAllPublicCount(short permission) throws Exception;
 
 	/**
 	 * 提取所有数据（一般用在首页数据展示中）
@@ -155,7 +155,7 @@ public interface KnowledgeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getBaseAllPublic(int start,int size) throws Exception;
+	public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception;
 	
 	/**
 	 * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：

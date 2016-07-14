@@ -48,7 +48,7 @@
                 sqlitem="select id from tb_knowledge_base order by create_date desc"
                 sqlType="hsql" valueProperty="id" update="true" />
 
-            <list name="get_all_public_start_size"
+            <list name="get_all_public"
                   sqlitem="select id from tb_knowledge_base where privated != ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="privated" update="true" />
 
@@ -69,7 +69,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="columnId" update="true" />
 
             <list name="get_public_by_columnId"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and privated != 0 order by create_date desc"
+                  sqlitem="select id from tb_knowledge_base where column_id = ? and privated != ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="columnId,privated" update="true" />
 
             <list name="get_by_columnId_keyWord"

@@ -107,7 +107,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public long getAllPublicCount() throws Exception;
+	public long getAllPublicCount(short permission) throws Exception;
 	/**
 	 * 提取所有数据
 	 * @param start
@@ -115,7 +115,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getAllPublic(int start,int size) throws Exception;
+	public List<KnowledgeBase> getAllPublic(int start,int size,short permission) throws Exception;
 
 	/**
 	 * 根据用户ID提取

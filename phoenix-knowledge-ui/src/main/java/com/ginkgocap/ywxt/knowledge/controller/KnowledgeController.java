@@ -873,10 +873,10 @@ public class KnowledgeController extends BaseController {
         }
         else {
             if (total == -1) {
-                total = this.knowledgeService.getBaseAllPublicCount();
+                total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
             }
             if (total > 0 && start < total) {
-                knowledgeList = this.knowledgeService.getBaseAllPublic(start, size);
+                knowledgeList = this.knowledgeService.getBaseAllPublic(start, size, KnowledgeConstant.PRIVATED);
             } else {
                 return queryKnowledgeEnd();
             }
