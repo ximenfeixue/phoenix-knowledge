@@ -16,13 +16,17 @@ public class DataSync implements Serializable
     //resourceId
     private long resId;
 
+    //execute userId
+    private long userId;
+
     //1. add  2. update, 3, delete
     private short action;
 
-    //1. tag, 2. directory, 3. asso, 4. permission
+    //1. tag, 2. directory, 3. asso, 4. permission, 5,dynamic
     private short idType;
 
-    private List<KnowledgeUnique> ids;
+    //Request content
+    private String content;
 
     public long getResId() {
         return resId;
@@ -38,6 +42,14 @@ public class DataSync implements Serializable
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public short getAction() {
@@ -56,11 +68,11 @@ public class DataSync implements Serializable
         this.idType = idType;
     }
 
-    public List<KnowledgeUnique> getIds() {
-        return ids;
+    public String getContent() {
+        return content;
     }
 
-    public void setIds(List<KnowledgeUnique> ids) {
-        this.ids = ids;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

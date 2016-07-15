@@ -9,6 +9,7 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
+import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
 import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
@@ -86,6 +87,14 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private DirectoryServiceLocal directoryServiceLocal;
 
+    @Autowired
+    DynamicNewsServiceLocal dynamicNewsServiceLocal;
+
+    /*private static DataSyncTask dataSyncTask;
+    static {
+        dataSyncTask = new DataSyncTask();
+        new Thread(dataSyncTask).start();
+    }*/
     //@Autowired
     //private Cache cache;
 
@@ -156,14 +165,27 @@ public class KnowledgeController extends BaseController {
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
+        boolean syncToDynamic = false;
         try {
             Permission permission = permissionInfo(dataCollection.getPermission(), knowledgeId, userId);
             if (permission != null) {
+                syncToDynamic = (permission.getPublicFlag() != 0 && dataCollection.getUpdateDynamic() == 1);
                 permissionRepositoryService.insert(permission);
             }
         } catch (Exception e) {
             logger.error("Insert knowledge permission failed : " + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        //Sync to dynamic news
+        if (syncToDynamic) {
+            String dymnaicNews = createDynamicNews(knowledgeDetail);
+            dynamicNewsServiceLocal.addDynamicToAll(dymnaicNews, userId);
+            /*
+            DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail);
+            if (dataSyncTask != null) {
+                dataSyncTask.saveDataNeedSync(dataSync);
+            }*/
         }
 
         logger.info(".......create knowledge success......");
@@ -2135,5 +2157,40 @@ public class KnowledgeController extends BaseController {
         page.setPageSize(size);
         page.setList(knowledgeBaseItems);
         return InterfaceResult.getSuccessInterfaceResultInstance(page);
+    }
+
+    private DataSync createDynamicNewsDataSync(KnowledgeDetail knowledge)
+    {
+        DataSync data = new DataSync();
+        data.setIdType((short)5);
+        data.setResId(knowledge.getId());
+        data.setUserId(knowledge.getCid());
+        data.setAction(EActionType.EAddDynamic.getValue());
+        data.setContent(createDynamicNews(knowledge));
+        return data;
+    }
+    private String createDynamicNews(KnowledgeDetail knowledge)
+    {
+        DynamicNews dynamic = new DynamicNews();
+        dynamic.setTargetId(knowledge.getId());
+        dynamic.setTitle(knowledge.getTitle());
+        dynamic.setContent(knowledge.getContent());
+        dynamic.setContentPath(knowledge.getS_addr());
+        dynamic.setCreaterId(knowledge.getCid());
+        String clearContent = HtmlToText.html2Text(knowledge.getContent());
+        clearContent = clearContent.length() > 250 ? clearContent.substring(0,250) : clearContent;
+        dynamic.setClearContent(clearContent);
+        dynamic.setPicPath(knowledge.getPic());
+        dynamic.setCreaterName(knowledge.getCname());
+        dynamic.setCtime(knowledge.getCreateTime());
+        //dynamic.setDemandCount());
+        //dynamic.setId();
+        dynamic.setImgPath(knowledge.getPic());
+        dynamic.setKnowledgeCount(1);
+        String createType = knowledge.getVirtual() == 1 ? "1" : "2";
+        dynamic.setCreateType(createType);
+        dynamic.setScope(String.valueOf(0));
+        //dynamic.setVirtual(knowledge.getVirtual());
+        return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 }

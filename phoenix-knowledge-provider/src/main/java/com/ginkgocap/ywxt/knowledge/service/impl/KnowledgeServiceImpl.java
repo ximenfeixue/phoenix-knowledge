@@ -59,7 +59,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		KnowledgeReference knowledgeReference = dataCollection.getReference();
 
         //knowledgeDetail.createContendDesc();
-		
 		//知识详细信息插入
         KnowledgeDetail savedKnowledgeDetail = null;
         try {

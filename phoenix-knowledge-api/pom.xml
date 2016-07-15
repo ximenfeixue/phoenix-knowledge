@@ -7,8 +7,7 @@
 		<version>${knowledge.version}</version>
 	</parent>
 	<artifactId>phoenix-knowledge-api</artifactId>
-	<name>phoenix-knowledge-api</name>
-	<version>${project.parent.version}</version>
+	<name>${project.artifactId}</name>
 	<packaging>jar</packaging>
 	
 	<properties>

@@ -4,7 +4,7 @@ package com.ginkgocap.ywxt.knowledge.model;
  * Created by gintong on 2016/7/9.
  */
 public enum EActionType {
-    EAdd((short)1),
+    EAddDynamic((short)1),
     EUpdate((short)2),
     EDelete((short)3),
     EDeleteKnowledgeTag((short)7),

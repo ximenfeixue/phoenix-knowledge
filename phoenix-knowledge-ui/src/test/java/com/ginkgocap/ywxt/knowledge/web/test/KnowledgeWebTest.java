@@ -170,8 +170,8 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         LogMethod();
         try {
-            createKnowledge("考虑,考虑1");
-            createKnowledge("考虑,考虑2");
+            //createKnowledge("考虑,考虑1");
+            //createKnowledge("考虑,考虑2");
             String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);

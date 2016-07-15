@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-dynamic-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-knowledge-api</artifactId>
             <version>${knowledge.version}</version>
         </dependency>
