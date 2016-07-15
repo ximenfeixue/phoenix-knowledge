@@ -404,7 +404,7 @@ public class KnowledgeWebTest extends BaseTestCase {
             List<ResItem> resItems = new ArrayList<ResItem>(2);
             List<Long> tagIds = createTag();
             long [] tagIdList = convertList(tagIds);
-            long knowledgeId = 355L;
+            long knowledgeId = createKnowledge("testBatchTags").getKnowledgeDetail().getId();
 //            if (data != null ) {
 //            	knowledgeId = data.getKnowledgeDetail().getId();
 //            }

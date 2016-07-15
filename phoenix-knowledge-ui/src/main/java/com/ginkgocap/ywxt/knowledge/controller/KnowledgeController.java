@@ -2175,7 +2175,7 @@ public class KnowledgeController extends BaseController {
         DynamicNews dynamic = new DynamicNews();
         dynamic.setTargetId(knowledge.getId());
         dynamic.setTitle(knowledge.getTitle());
-        dynamic.setContent(knowledge.getContent());
+        //dynamic.setContent(knowledge.getContent());
         dynamic.setContentPath(knowledge.getS_addr());
         dynamic.setCreaterId(knowledge.getCid());
         String clearContent = HtmlToText.html2Text(knowledge.getContent());

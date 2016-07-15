@@ -101,7 +101,11 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
 
             //add new tag to tag source services
-            List<Long> successIds = createTagSource(userId, tagIds, knowledgeDetail);
+            InterfaceResult result = createTagSource(userId, tagIds, knowledgeDetail);
+            if (!"0".equals(result.getNotification().getNotifCode())) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"标签添加全部失败: "+result.getNotification().getNotifInfo());
+            }
+            List<Long> successIds = (List<Long>)result.getResponseData();
 
             //Update knowledge Detail
             List<Long> existTags = knowledgeDetail.getTags();
@@ -174,8 +178,11 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }*/
 
             logger.debug("create Tag for UserId: {}", userId);
-            List<Long> successIds =  createTagSource(userId, newTagIds, knowledgeDetail);
-
+            InterfaceResult result = createTagSource(userId, newTagIds, knowledgeDetail);
+            if (!"0".equals(result.getNotification().getNotifCode())) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"标签添加全部失败: "+result.getNotification().getNotifInfo());
+            }
+            List<Long> successIds = (List<Long>)result.getResponseData();
             //Update knowledge base
             List<Long> existTagsIds = knowledgeDetail.getTags();
             if (existTagsIds == null || existTagsIds.size() <= 0) {
@@ -325,7 +332,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         return true;
     }
 
-    private List<Long> createTagSource(long userId, List<Long> tagIds, KnowledgeDetail knowledgeDetail)
+    private InterfaceResult createTagSource(long userId, List<Long> tagIds, KnowledgeDetail knowledgeDetail)
     {
         logger.debug("create Tag for UserId: {}", userId);
         long knowledgeId = knowledgeDetail.getId();
@@ -341,10 +348,11 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             catch (TagSourceServiceException ex) {
                 logger.error("create Tag failed, userId: {}, knowledgeId: {}, tagId: {}, error: {}",
                         userId, knowledgeId, tagId, ex.getMessage());
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, ex.getMessage());
             }
         }
 
-        return successIds;
+        return InterfaceResult.getSuccessInterfaceResultInstance(successIds);
     }
 
     public List<Long> getKnowlegeIdsByTagId(long tagId, int start, int size)
