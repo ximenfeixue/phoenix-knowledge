@@ -59,6 +59,7 @@ public class TestData {
         data.setReference(referenceObject(title));
         data.setPermission(permission(0, userId));
         data.setAsso(assoList());
+        data.setUpdateDynamic((short)1);
 
         return data;
     }

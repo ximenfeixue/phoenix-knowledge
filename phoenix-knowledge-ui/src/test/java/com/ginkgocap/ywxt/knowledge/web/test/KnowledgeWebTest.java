@@ -679,10 +679,6 @@ public class KnowledgeWebTest extends BaseTestCase {
     {
         DataCollection data = TestData.getDataCollection(userId, 1, title);
         try {
-        	long time1 = new Date().getTime();
-        	long time2 = System.currentTimeMillis();
-        	System.out.println(time1);
-        	System.out.println(time2);
             if (data != null && data.getKnowledgeDetail() != null) {
                 data.getKnowledgeDetail().setTags(tagIds);
                 data.getKnowledgeDetail().setCategoryIds(directoryIds);

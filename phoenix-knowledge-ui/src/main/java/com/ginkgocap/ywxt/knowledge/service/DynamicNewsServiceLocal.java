@@ -89,7 +89,7 @@ public class DynamicNewsServiceLocal
         return;
     }
 
-    public void addDynamicToAll(String newsContent, long userId) throws IOException {
+    public boolean addDynamicToAll(String newsContent, long userId) throws IOException {
         try{
             List<Long> receiverIds = null;
             long user_id = userId > 0 ? userId : 1l;
@@ -116,8 +116,9 @@ public class DynamicNewsServiceLocal
             logger.info("create dynamic success, dynamicId: {}", dynamicId);
         }catch(Exception e){
             logger.error("添加动态失败！",e);
+            return false;
         }
-        return;
+        return true;
     }
 
     /*

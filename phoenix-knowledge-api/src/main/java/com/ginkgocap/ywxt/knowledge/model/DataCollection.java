@@ -18,21 +18,22 @@ public class DataCollection implements Serializable {
 
 	private static final long serialVersionUID = -424912985959502809L;
 
-	/**知识简略信息*/
+	// 知识简略信息
 	private KnowledgeBase knowledge;
 
-    /** 知识详细信息**/
+    // 知识详细信息
     private KnowledgeDetail knowledgeDetail;
 
-	/**知识来源*/
+	// 知识来源
 	private KnowledgeReference reference;
 
-	/**关联*/
+	// 关联
 	private List<Associate> asso;
 
-    /**权限*/
+    // 权限
     private Permission permission;
 
+    //同步到动态
     private short updateDynamic;
 
     public KnowledgeBase getKnowledge() {
@@ -141,9 +142,9 @@ public class DataCollection implements Serializable {
                 knowledge.setTags(tags.substring(1, tags.length()-1));
             }
             this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());
-            this.knowledge.setCreateUserId(this.knowledgeDetail.getOwnerId());
+            this.knowledge.setCreateUserId(this.knowledgeDetail.getCid());
             //For reference knowledge may be different with author
-            this.knowledge.setCreateUserName(this.knowledgeDetail.getOwnerName());
+            this.knowledge.setCreateUserName(this.knowledgeDetail.getCname());
             this.knowledge.setCreateDate(this.knowledgeDetail.getCreateTime());
             this.knowledge.setModifyDate(this.knowledgeDetail.getModifyTime());
             this.knowledge.setIsOld((short)0);
@@ -178,9 +179,9 @@ public class DataCollection implements Serializable {
                 knowledgeBase.setTags(tags.substring(1, tags.length()-1));
             }
             knowledgeBase.setColumnId(detail.getColumnId());
-            knowledgeBase.setCreateUserId(detail.getOwnerId());
+            knowledgeBase.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author
-            knowledgeBase.setCreateUserName(detail.getOwnerName());
+            knowledgeBase.setCreateUserName(detail.getCname());
             knowledgeBase.setCreateDate(detail.getCreateTime());
             knowledgeBase.setModifyDate(detail.getModifyTime());
             knowledgeBase.setIsOld((short)0);
