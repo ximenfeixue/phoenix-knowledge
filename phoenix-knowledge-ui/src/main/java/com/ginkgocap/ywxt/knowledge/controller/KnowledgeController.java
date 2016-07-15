@@ -2173,6 +2173,7 @@ public class KnowledgeController extends BaseController {
     private String createDynamicNews(KnowledgeDetail knowledge)
     {
         DynamicNews dynamic = new DynamicNews();
+        dynamic.setType("10"); //创建知识
         dynamic.setTargetId(knowledge.getId());
         dynamic.setTitle(knowledge.getTitle());
         //dynamic.setContent(knowledge.getContent());

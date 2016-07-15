@@ -45,14 +45,14 @@ CREATE TABLE `tb_knowledge_reference` (
 CREATE TABLE `tb_knowledge_count` (
    `id` bigint(20) unsigned zerofill NOT NULL COMMENT 'id',
    `knowledgeId` bigint(20) NOT NULL COMMENT '知识id',
-   `commentNum` bigint(20) DEFAULT '0' COMMENT '评论数',
-   `shareNum` bigint(20) DEFAULT '0' COMMENT '分享数',
-   `collectNum` bigint(20) DEFAULT '0' COMMENT '收藏数',
-   `clickNum` bigint(20) DEFAULT '0' COMMENT '点击数',
-   `hotNum` bigint(20) NOT NULL DEFAULT '0' COMMENT '知识热度',
+   `commentCount` bigint(20) DEFAULT '0' COMMENT '评论数',
+   `shareCount` bigint(20) DEFAULT '0' COMMENT '分享数',
+   `collectCount` bigint(20) DEFAULT '0' COMMENT '收藏数',
+   `clickCount` bigint(20) DEFAULT '0' COMMENT '点击数',
+   `hotCount` bigint(20) NOT NULL DEFAULT '0' COMMENT '知识热度',
    `source` smallint(6) DEFAULT NULL COMMENT '知识来源(0-系统 1-用户)',
    `type` smallint(6) DEFAULT NULL,
-   PRIMARY KEY (`id`,`knowledgeId`,`hotNum`),
+   PRIMARY KEY (`id`,`knowledgeId`,`hotCount`),
    KEY `idx_ks_type` (`type`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='知识统计表';
  
