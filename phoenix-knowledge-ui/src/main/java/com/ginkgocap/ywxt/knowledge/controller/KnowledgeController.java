@@ -16,6 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
 import com.ginkgocap.ywxt.knowledge.model.mobile.KnowledgeMini2;
 import com.ginkgocap.ywxt.knowledge.model.mobile.OrganizationMini;
 import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
