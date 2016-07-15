@@ -40,6 +40,7 @@
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
+    <bean id="knowledgeCountServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeCountServiceImpl" />
 
     <import resource="classpath:metadata-directory-consumer.xml"/>
     <import resource="classpath:tags-dubbo-consumer.xml"/>

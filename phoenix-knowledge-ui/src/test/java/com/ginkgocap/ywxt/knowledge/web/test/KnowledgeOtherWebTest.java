@@ -26,6 +26,33 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         }
     }
 
+    @Test
+    public void testShareCount()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/shareCount/1/111111"; // /shareCount/{type}/{knowledgeId}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCollectCount()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/collectCount/1/111111"; // /shareCount/{type}/{knowledgeId}
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+   
+    
     public void testPush()
     {
         LogMethod();

@@ -8,13 +8,12 @@ import java.util.List;
  * Created by Chen Peifeng on 2016/5/24.
  */
 public interface KnowledgeCountDao {
-    public boolean updateClickCount(long knowledgeId);
 
-    public boolean updateShareCount(long knowledgeId);
+    public KnowledgeCount getKnowledgeCount(long knowledgeId)throws Exception;
 
-    public boolean updateCollectCount(long knowledgeId);
+    public void saveKnowledgeCount(KnowledgeCount knowledgeCount) throws Exception;
 
-    public boolean updateCommentCount(long knowledgeId);
+    public void saveKnowledgeCountList(List<KnowledgeCount> knowledgeCountList)throws Exception;
 
-    public List<KnowledgeCount> getHotKnowledge(int limit);
+    public List<KnowledgeCount> getHotKnowledge(int size);
 }

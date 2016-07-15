@@ -19,6 +19,10 @@ public class KnowledgeCount implements Serializable {
 
     private long knowledgeId;
 
+    private short type;
+
+    private long userId;
+
     private long clickCount;
 
     private long shareCount;
@@ -32,8 +36,6 @@ public class KnowledgeCount implements Serializable {
     private String title;
 
     private String source;
-
-    private short type;
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -54,6 +56,23 @@ public class KnowledgeCount implements Serializable {
         this.knowledgeId = knowledgeId;
     }
 
+    @Column(name = "type")
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
+
+    @Column(name = "userId")
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
     @Column(name = "clickCount")
     public long getClickCount() {
         return clickCount;
@@ -115,14 +134,5 @@ public class KnowledgeCount implements Serializable {
 
     public void setSource(String source) {
         this.source = source;
-    }
-
-    @Column(name = "type")
-    public short getType() {
-        return type;
-    }
-
-    public void setType(short type) {
-        this.type = type;
     }
 }

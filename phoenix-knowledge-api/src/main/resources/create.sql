@@ -43,15 +43,17 @@ CREATE TABLE `tb_knowledge_reference` (
  ) ENGINE=InnoDB AUTO_INCREMENT=3984133961548042 DEFAULT CHARSET=utf8 COMMENT='参考资料表';
  
 CREATE TABLE `tb_knowledge_count` (
-   `id` bigint(20) unsigned zerofill NOT NULL COMMENT 'id',
+   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+   `type` smallint(6) DEFAULT NULL COMMENT '栏目类型',
    `knowledgeId` bigint(20) NOT NULL COMMENT '知识id',
+   `title` varchar(255) DEFAULT NULL COMMENT '知识标题',
+   `userId` bigint(20) NOT NULL COMMENT '用户id',
    `commentCount` bigint(20) DEFAULT '0' COMMENT '评论数',
    `shareCount` bigint(20) DEFAULT '0' COMMENT '分享数',
    `collectCount` bigint(20) DEFAULT '0' COMMENT '收藏数',
    `clickCount` bigint(20) DEFAULT '0' COMMENT '点击数',
    `hotCount` bigint(20) NOT NULL DEFAULT '0' COMMENT '知识热度',
    `source` smallint(6) DEFAULT NULL COMMENT '知识来源(0-系统 1-用户)',
-   `type` smallint(6) DEFAULT NULL,
    PRIMARY KEY (`id`,`knowledgeId`,`hotCount`),
    KEY `idx_ks_type` (`type`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='知识统计表';

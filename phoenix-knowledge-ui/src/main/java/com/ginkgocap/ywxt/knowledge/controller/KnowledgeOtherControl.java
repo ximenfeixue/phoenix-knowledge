@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +37,9 @@ public class KnowledgeOtherControl extends BaseController {
 
     @Autowired
     KnowledgeService knowledgeService;
+
+    @Autowired
+    KnowledgeCountService knowledgeCountService;
 
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
 
@@ -244,6 +249,37 @@ public class KnowledgeOtherControl extends BaseController {
         responseDataMap.put("knowledge", knowledge);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
+
+    @ResponseBody
+    @RequestMapping(value="/shareCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    public InterfaceResult shareCount(HttpServletRequest request,HttpServletResponse response,
+                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        long userId = this.getUserId(user);
+
+        logger.debug("shareCount request, userId: {} type: {}, knowledgeId: {}", userId, type, knowledgeId);
+        knowledgeCountService.updateShareCount(userId, knowledgeId, type);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/collectCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    public InterfaceResult collectCount(HttpServletRequest request,HttpServletResponse response,
+                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        long userId = this.getUserId(user);
+
+        logger.debug("collectCount request, userId: {} type: {}, knowledgeId: {}", userId, type, knowledgeId);
+        knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
 
     /*
     @ResponseBody
