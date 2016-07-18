@@ -140,9 +140,9 @@ public class DataCollection implements Serializable {
             }
             //knowledge.setAuditStatus(auditStatus);
             if (knowledgeDetail.getTags() != null && knowledgeDetail.getTags().size() > 0) {
-                String tags = knowledgeDetail.getTags().toString();
+                String tags = convertLongListToBase(knowledgeDetail.getTags());
                 System.out.println("create tags for base: " + tags);
-                knowledge.setTags(tags.substring(1, tags.length()-1));
+                knowledge.setTags(tags);
             }
             this.knowledge.setColumnId(this.knowledgeDetail.getColumnId());
             this.knowledge.setCreateUserId(this.knowledgeDetail.getCid());
@@ -177,9 +177,9 @@ public class DataCollection implements Serializable {
             }
             //knowledge.setAuditStatus(auditStatus);
             if (detail.getTags() != null && detail.getTags().size() > 0) {
-                String tags = detail.getTags().toString();
+                String tags = convertLongListToBase(detail.getTags());
                 System.out.println("create tags for base: " + tags);
-                knowledgeBase.setTags(tags.substring(1, tags.length()-1));
+                knowledgeBase.setTags(tags);
             }
             knowledgeBase.setColumnId(detail.getColumnId());
             knowledgeBase.setCreateUserId(detail.getCid());
@@ -193,5 +193,20 @@ public class DataCollection implements Serializable {
             //knowledge.setReportStatus(reportStatus);
         }
         return knowledgeBase;
+    }
+
+    public static String convertLongListToBase(List<Long> ids)
+    {
+        if (ids == null || ids.size() <= 0) {
+            return null;
+        }
+
+        StringBuffer tagIds = new StringBuffer();
+        for (int index = 0; index < 10 && index < ids.size(); index++) {
+            tagIds.append(String.valueOf(ids.get(index)));
+            tagIds.append(",");
+        }
+        tagIds.deleteCharAt(tagIds.lastIndexOf(","));
+        return tagIds.toString();
     }
 }

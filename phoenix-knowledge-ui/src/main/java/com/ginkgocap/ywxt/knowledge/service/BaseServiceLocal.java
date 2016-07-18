@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -73,17 +74,7 @@ public abstract class BaseServiceLocal {
 
     protected String convertLongValueListToString(List<Long> ids)
     {
-        if (ids == null || ids.size() <= 0) {
-            return null;
-        }
-
-        StringBuffer tagIds = new StringBuffer();
-        for (int index = 0; index < 10 && index < ids.size(); index++) {
-            tagIds.append(String.valueOf(ids.get(index)));
-            tagIds.append(",");
-        }
-        tagIds.deleteCharAt(tagIds.lastIndexOf(","));
-        return tagIds.toString();
+        return DataCollection.convertLongListToBase(ids);
     }
 
     protected InterfaceResult batchResult(int success,int failed,boolean overMaxLimit)
