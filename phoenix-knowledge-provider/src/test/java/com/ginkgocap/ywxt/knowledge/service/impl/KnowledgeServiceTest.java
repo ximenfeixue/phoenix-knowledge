@@ -5,7 +5,6 @@ import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -13,7 +12,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

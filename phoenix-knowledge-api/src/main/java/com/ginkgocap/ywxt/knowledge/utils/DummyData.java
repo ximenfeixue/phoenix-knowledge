@@ -2,9 +2,9 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.gintong.frame.util.dto.InterfaceResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +55,7 @@ public final class DummyData {
         knowledge.setType(typeId);
         knowledge.setTitle("TestTitle");
         knowledge.setContentDesc("Knowledge Description");
-        knowledge.setPictureId(pictureId);
+        knowledge.setCoverPic(pictureId);
         knowledge.setAuditStatus(auditStatus);
         knowledge.setColumnId(columnId);
         knowledge.setCreateUserId(KnowledgeUtil.getDummyUser().getId());

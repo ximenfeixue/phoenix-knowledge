@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
@@ -133,7 +136,7 @@ public class DataCollection implements Serializable {
             this.knowledge.setContentDesc(knowledgeContent.substring(0,maxLen));
             if (this.knowledgeDetail.getMultiUrls() != null && this.knowledgeDetail.getMultiUrls().size()>0) {
                 System.out.println("save picture: " + this.knowledgeDetail.getMultiUrls().get(0));
-                this.knowledge.setPictureId(this.knowledgeDetail.getMultiUrls().get(0));
+                this.knowledge.setCoverPic(this.knowledgeDetail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
             if (knowledgeDetail.getTags() != null && knowledgeDetail.getTags().size() > 0) {
@@ -170,7 +173,7 @@ public class DataCollection implements Serializable {
             knowledgeBase.setContentDesc(knowledgeContent.substring(0,maxLen));
             if (detail.getMultiUrls() != null && detail.getMultiUrls().size()>0) {
                 System.out.println("save picture: " + detail.getMultiUrls().get(0));
-                knowledgeBase.setPictureId(detail.getMultiUrls().get(0));
+                knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
             if (detail.getTags() != null && detail.getTags().size() > 0) {

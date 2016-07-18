@@ -18,7 +18,7 @@ public class KnowledgeDetail implements Serializable {
     /**栏目类型，一级栏目*/
     private short type;
 
-    //1. 组织， 2. 用户
+    //1. 人， 2. 组织
     private short virtual;
     
     /** 栏目路径**/

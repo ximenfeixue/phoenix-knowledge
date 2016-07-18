@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 

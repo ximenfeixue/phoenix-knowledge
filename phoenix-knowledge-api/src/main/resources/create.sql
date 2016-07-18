@@ -19,13 +19,15 @@ CREATE TABLE `tb_knowledge_base` (
    `report_status` tinyint(1) DEFAULT NULL COMMENT '举报状态(3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报)',
    `create_date` bigint(20) NOT NULL COMMENT '创建时间',
    `attachment_id` int(20) unsigned zerofill DEFAULT '00000000000000000000',
-   `picture_id` varchar(255) DEFAULT NULL,
+   `coverPic` varchar(255) DEFAULT NULL COMMENT '封面图片地址',
+   `taskId ` varchar(255) DEFAULT NULL,
    `tags` varchar(255) DEFAULT NULL COMMENT '标签Id集合',
    `content` text,
    `modify_user_id` int(11) DEFAULT NULL,
    `modify_user_name` varchar(255) DEFAULT NULL,
    `userStar` tinyint(4) DEFAULT '0' COMMENT '星标(1:是,0:否(默认))',
    `isOld` tinyint(1) DEFAULT '0' COMMENT '是否是旧数据',
+   `privated` tinyint(1) DEFAULT '0' COMMENT '是否私密',
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB AUTO_INCREMENT=3984133961548092 DEFAULT CHARSET=utf8 COMMENT='知识基础表';
 

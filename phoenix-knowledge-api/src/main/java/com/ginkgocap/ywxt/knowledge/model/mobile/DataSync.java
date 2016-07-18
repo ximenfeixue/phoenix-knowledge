@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.model;
+package com.ginkgocap.ywxt.knowledge.model.mobile;
 
 import java.io.Serializable;
 import java.util.List;

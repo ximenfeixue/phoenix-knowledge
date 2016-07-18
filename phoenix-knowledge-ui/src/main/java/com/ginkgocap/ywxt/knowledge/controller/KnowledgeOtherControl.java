@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;

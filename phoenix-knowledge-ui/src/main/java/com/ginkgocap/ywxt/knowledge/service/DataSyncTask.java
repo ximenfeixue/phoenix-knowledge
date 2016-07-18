@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.ginkgocap.ywxt.knowledge.model.DataSync;
-import com.ginkgocap.ywxt.knowledge.model.EActionType;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
+import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

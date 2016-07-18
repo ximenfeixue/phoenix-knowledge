@@ -3,9 +3,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
 import com.gintong.frame.cache.redis.RedisCacheService;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
 
 public abstract class BaseController {
 

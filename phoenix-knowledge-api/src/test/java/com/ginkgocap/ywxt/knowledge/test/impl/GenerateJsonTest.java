@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.test.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 

@@ -1,8 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.DataSyncMongoDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.DataSync;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -11,10 +11,8 @@ import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
-import com.ginkgocap.ywxt.knowledge.model.mobile.JTContactMini;
-import com.ginkgocap.ywxt.knowledge.model.mobile.KnowledgeMini2;
-import com.ginkgocap.ywxt.knowledge.model.mobile.OrganizationMini;
+import com.ginkgocap.ywxt.knowledge.model.Page;
+import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
@@ -36,7 +34,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -1755,7 +1752,7 @@ public class KnowledgeController extends BaseController {
         KnowledgeMini2 km2 = new KnowledgeMini2();
 
         //分享给我的知识专用
-        km2.setShareMeId(knowledgeBase.getShareMeId());
+        //km2.setShareMeId(knowledgeBase.getShareMeId());
 
         Connections connections = new Connections();
         /**作者id*/
@@ -1820,7 +1817,7 @@ public class KnowledgeController extends BaseController {
             km2.setListTag(tags);//标签
             km2.setSource(knowledgeBase.getSource());// 来源
             km2.setTitle(knowledgeBase.getTitle());// 标题
-            km2.setPic(changeImage(knowledgeBase.getPictureId()));// 封面地址
+            km2.setPic(changeImage(knowledgeBase.getCoverPic()));// 封面地址
             km2.setDesc(knowledgeBase.getContentDesc());// 描述
             km2.setModifytime(knowledgeBase.getModifyDate());// 最后修改时间
         }

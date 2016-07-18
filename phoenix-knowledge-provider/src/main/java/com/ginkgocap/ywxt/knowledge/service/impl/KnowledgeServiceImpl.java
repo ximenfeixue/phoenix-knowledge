@@ -9,8 +9,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.user.service.DiaryService;
-import com.ginkgocap.ywxt.user.service.UserFeedService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.slf4j.Logger;

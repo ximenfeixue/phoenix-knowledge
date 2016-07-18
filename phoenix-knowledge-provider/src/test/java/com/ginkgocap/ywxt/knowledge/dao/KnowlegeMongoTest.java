@@ -1,16 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
-import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Mongo;
-import com.mongodb.WriteResult;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;

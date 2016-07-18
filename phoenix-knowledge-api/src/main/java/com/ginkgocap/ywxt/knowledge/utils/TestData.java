@@ -2,12 +2,12 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.DataCollection;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.InterfaceResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

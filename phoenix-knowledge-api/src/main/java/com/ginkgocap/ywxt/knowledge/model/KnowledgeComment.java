@@ -28,6 +28,12 @@ public class KnowledgeComment implements Serializable{
     /** 评论内容 **/
     private String content;
 
+    private long parentId;
+
+    private long count;
+
+    private String pic;
+
     /** 是否可见 0 不可见， 1 可见**/
     private Integer visible;
 
@@ -85,6 +91,30 @@ public class KnowledgeComment implements Serializable{
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public Integer getVisible() {

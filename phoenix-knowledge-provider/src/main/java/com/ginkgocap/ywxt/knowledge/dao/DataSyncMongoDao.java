@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
-import com.ginkgocap.ywxt.knowledge.model.DataSync;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 
 import java.util.List;
 

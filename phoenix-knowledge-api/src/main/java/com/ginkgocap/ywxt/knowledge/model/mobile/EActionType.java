@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.model;
+package com.ginkgocap.ywxt.knowledge.model.mobile;
 
 /**
  * Created by gintong on 2016/7/9.

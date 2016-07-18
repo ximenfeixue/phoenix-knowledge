@@ -49,14 +49,13 @@ public class KnowledgeBase implements Serializable {
     /** 标签信息 **/
     private String tags;
 
-	/** 标签信息 **/
-	//private String directorys;
-
-	/**图片ID*/
-	private String pictureId;
+	/**封面图片地址*/
+	private String coverPic;
 
 	/**column Path*/
 	private String cpath;
+
+	private String taskId;
 
 	/**创建人ID*/
 	private long createUserId;
@@ -93,9 +92,6 @@ public class KnowledgeBase implements Serializable {
 
     /** 星标(1:是,0:否(默认)) **/
     private short userStar;
-
-	//分享给我的知识记录id
-	private long shareMeId;
 
 	//是否私密，1是，0否
 	private short privated;
@@ -202,13 +198,13 @@ public class KnowledgeBase implements Serializable {
 		this.directorys = directorys;
 	}*/
 
-	@Column(name = "picture_id")
-	public String getPictureId() {
-		return pictureId;
+	@Column(name = "coverPic")
+	public String getCoverPic() {
+		return coverPic;
 	}
 
-	public void setPictureId(String pictureId) {
-		this.pictureId = pictureId;
+	public void setCoverPic(String coverPic) {
+		this.coverPic = coverPic;
 	}
 
 	@Column(name = "cpath")
@@ -218,6 +214,15 @@ public class KnowledgeBase implements Serializable {
 
 	public void setCpath(String cpath) {
 		this.cpath = cpath;
+	}
+
+	@Column(name = "taskId")
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
 	@Column(name = "create_user_id")
@@ -327,15 +332,6 @@ public class KnowledgeBase implements Serializable {
     public void setUserStar(short userStar) {
         this.userStar = userStar;
     }
-
-	@Column(name = "shareMeId")
-	public long getShareMeId() {
-		return shareMeId;
-	}
-
-	public void setShareMeId(long shareMeId) {
-		this.shareMeId = shareMeId;
-	}
 
 	@Column(name = "privated")
 	public short getPrivated() {

@@ -37,7 +37,7 @@ public class PackingDataUtil {
 		json.put("cname", null);
 		json.put("title", knowledgeMongo.getTitle());
 		json.put("cpathid", /*knowledgeMongo.getColumnId()*/"");
-		json.put("pic", knowledgeMongo.getPictureId());
+		json.put("pic", knowledgeMongo.getCoverPic());
 		json.put("selectedIds", /*vo.getSelectedIds()*/"");
 		json.put("status", knowledgeMongo.getStatus());
 		json.put("tags", /*vo.getTags()*/"");
