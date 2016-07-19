@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.user.model.User;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Admin on 2016/3/24.
@@ -32,36 +32,7 @@ public final class KnowledgeUtil {
 
     public static Class getKnowledgeClassType(int columnId)
     {
-        switch (columnId){
-            /*
-            case 1: return KnowledgeNews.class;
-            case 2: return KnowledgeInvestment.class;
-            case 3: return KnowledgeIndustry.class;
-            case 4: return KnowledgeCase.class;
-            case 5: return KnowledgeNewMaterials.class;
-            case 6: return KnowledgeAsset.class;
-            case 7: return KnowledgeMacro.class;
-            case 8: return KnowledgeOpinion.class;
-            case 9: return KnowledgeLaw.class;
-            case 10: return KnowledgeArticle.class;
-             For new requirement
-            case 21: return KnowledgeInternet.class;
-            case 22: return EKnowledgeSales.class;
-            case 23: return EKnowledgeFinance.class;
-            case 24: return EKnowledgeGame.class;
-            case 25: return EKnowledgeEducation.class;
-            case 26: return EKnowledgeMedical.class;
-            case 27: return EKnowledgePolitical.class;
-            case 28: return EKnowledgeAffair.class;
-            case 29: return EKnowledgeScience.class;
-            case 30: return EKnowledgeCulture.class;
-            case 31: return EKnowledgeLiterature.class;
-            case 32: return KnowledgeSports.class;
-            case 33: return KnowledgeSociety.class;
-            case 34: return KnowledgeMovie.class;
-            */
-            default: return KnowledgeDetail.class;
-        }
+        return KnowledgeType.knowledgeType(columnId).cls();
     }
 
     /*
@@ -92,7 +63,7 @@ public final class KnowledgeUtil {
 
     public static String getKnowledgeCollectionName(int columnId)
     {
-        return "Knowledge"; //ArrayUtils.isEmpty(collectionName) && StringUtils.isEmpty(collectionName[0]) ? getCollectionName(columnId) : collectionName[0];
+        return KnowledgeType.knowledgeType(columnId).tableName();
     }
 
     //This is just for test, need do knowledge test but real user not exist
@@ -255,6 +226,24 @@ public final class KnowledgeUtil {
         return dataCollection;
     }
 
+    public static DataCollect getDataCollect(String jsonObject)
+    {
+        if (StringUtils.isBlank(jsonObject)) {
+            throw new IllegalArgumentException("jsonObject is null");
+        }
+        DataCollect dataCollection = null;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            JsonNode node = objectMapper.readTree(jsonObject);
+            dataCollection = objectMapper.readValue(jsonObject, DataCollect.class);
+        } catch (Exception e) {
+            //logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
+            System.out.println(e);
+        }
+        return dataCollection;
+    }
+
     public static SimpleFilterProvider assoFilterProvider(final String className) {
         Set<String> filter = new HashSet<String>(8); //this number must be increased by fields
         filter.add("id"); // id',
@@ -364,6 +353,78 @@ public final class KnowledgeUtil {
         }
     }
 
+    public static String convertLongListToBase(List<Long> ids) {
+        if (ids == null || ids.size() <= 0) {
+            return null;
+        }
+
+        StringBuffer tagIds = new StringBuffer();
+        for (int index = 0; index < 10 && index < ids.size(); index++) {
+            tagIds.append(String.valueOf(ids.get(index)));
+            tagIds.append(",");
+        }
+        tagIds.deleteCharAt(tagIds.lastIndexOf(","));
+        return tagIds.toString();
+    }
+
+    public static String convertTagsToBase(String tags)
+    {
+        if (StringUtils.isEmpty(tags)) {
+            return null;
+        }
+
+        if (tags.length() > 255) {
+            tags = tags.substring(0, 255);
+            tags = tags.substring(0, tags.lastIndexOf(",")-1);
+        }
+        return tags;
+    }
+
+    public static String removeBlankOfTags(String tags)
+    {
+        if (tags.indexOf(" ") > 0) {
+            return tags.replace(" ", ",");
+        }
+        return tags;
+    }
+
+    public static int parserColumnId(String columnId)
+    {
+        if (StringUtils.isEmpty(columnId)) {
+            return -1;
+        }
+
+        int newColumnId = 0;
+        try {
+            newColumnId = Integer.parseInt(columnId);
+        } catch (Exception ex) {
+            return -1;
+        }
+
+        return newColumnId;
+    }
+
+    public static long parserTimeToLong(String time)
+    {
+        long newTime = 0L;
+        try {
+            newTime = Long.valueOf(time);
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+
+        if (newTime > 0) {
+            return newTime;
+        } else {
+            try {
+                newTime = new Date(time).getTime();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return newTime;
+    }
+
 
     //This is just for Unit Test code
     public static String getJsonNodeContentFromObject(final String jsonContent, final String nodeName)
@@ -426,6 +487,8 @@ public final class KnowledgeUtil {
         return buffer.toString();
     }
 
+
+
     /**
      * 返回数据包装方法
      * @param knowledgeList
@@ -437,6 +500,16 @@ public final class KnowledgeUtil {
         if(knowledgeList != null && !knowledgeList.isEmpty())
             for (KnowledgeBase data : knowledgeList)
                 returnList.add(getReturn(data,null));
+
+        return returnList;
+    }
+
+    public static List<DataCollect> getDataCollectReturn(List<KnowledgeBase> knowledgeList) {
+
+        List<DataCollect> returnList = new ArrayList<DataCollect>(knowledgeList.size());
+        if(knowledgeList != null && !knowledgeList.isEmpty())
+            for (KnowledgeBase data : knowledgeList)
+                returnList.add(getDataCollectReturn(data, null));
 
         return returnList;
     }
@@ -456,6 +529,17 @@ public final class KnowledgeUtil {
         dataCollection.setReference(knowledgeReference);
 
         return dataCollection;
+    }
+
+    public static DataCollect getDataCollectReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
+
+        DataCollect data = new DataCollect();
+
+        data.setKnowledge(knowledgeBase);
+
+        data.setReference(knowledgeReference);
+
+        return data;
     }
     //For Unit Test end
 }

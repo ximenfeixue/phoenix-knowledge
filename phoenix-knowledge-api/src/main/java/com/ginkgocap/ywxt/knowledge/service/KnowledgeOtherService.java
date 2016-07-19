@@ -2,10 +2,8 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
-import com.ginkgocap.ywxt.knowledge.model.ResItem;
 import com.gintong.frame.util.dto.InterfaceResult;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**

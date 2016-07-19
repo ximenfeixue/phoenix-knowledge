@@ -2,10 +2,14 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -25,7 +29,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Chen Peifeng on 2016/5/23.
@@ -37,7 +45,7 @@ public class KnowledgeOtherControl extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     @Autowired
-    KnowledgeService knowledgeService;
+    KnowledgeServiceV1 knowledgeServiceV1;
 
     @Autowired
     KnowledgeCountService knowledgeCountService;
@@ -145,7 +153,18 @@ public class KnowledgeOtherControl extends BaseController {
                         // 带样式标签内容
                         knowledge.setContent(content);
                         knowledge.setTitle(title);
-                        knowledge.setCreateTime(System.currentTimeMillis());
+                        Date date = null;
+                        if (StringUtils.isNotBlank(time)) {
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            try {
+                                date = formatter.parse(time);
+                            } catch (ParseException e) {
+                                date = new Date();
+                            }
+                        } else {
+                            date = new Date();
+                        }
+                        knowledge.setCreateTime(date.getTime());
 
                         @SuppressWarnings("unchecked")
                         List<String> imgs = null;
@@ -322,22 +341,37 @@ public class KnowledgeOtherControl extends BaseController {
         return result;
     }
 
+//    private InterfaceResult createKnowledge(Knowledge2 knowledge2, User user, String url) {
+//
+//        KnowledgeNewsVO detail = getKnowledgeNewsVO(knowledge2, user, url);
+//        detail.setColumnid(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));// 手机端创建的知识默认栏目类型和栏目id都是1
+//        //vo.setColumnType(DEFAULT_KNOWLEDGE_TYPE);// 设置默认类型为咨询，目前手机端只支持咨询
+//        // 调用平台层插入知识
+//        DataCollection data = new DataCollection(null, detail);
+//        data.generateKnowledge();
+//        data.serUserId(this.getUserId(user));
+//        return knowledgeService.insert(data);
+//    }
+
+    /**
+     * 创建知识抽离
+     * */
     private InterfaceResult createKnowledge(Knowledge2 knowledge2, User user, String url) {
 
-        KnowledgeDetail detail = getKnowledgeNewsVO(knowledge2, user, url);
-        detail.setColumnId(DEFAULT_KNOWLEDGE_TYPE);// 手机端创建的知识默认栏目类型和栏目id都是1
-        //vo.setColumnType(DEFAULT_KNOWLEDGE_TYPE);// 设置默认类型为咨询，目前手机端只支持咨询
+        Knowledge vo = getKnowledgeNewsVO(knowledge2, user, url);
+        vo.setColumnid(String.valueOf(KnowledgeType.ENews.value()));
+        vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));// 设置默认类型为咨询，目前手机端只支持咨询
         // 调用平台层插入知识
-        DataCollection data = new DataCollection(null, detail);
+        DataCollect data = new DataCollect(null, vo);
+        data.serUserId(user.getId());
         data.generateKnowledge();
-        data.serUserId(this.getUserId(user));
-        return knowledgeService.insert(data);
+        return this.knowledgeServiceV1.insert(data);
     }
 
 
-    private KnowledgeDetail getKnowledgeNewsVO(Knowledge2 knowledge2, User user, String url) {
+    private Knowledge getKnowledgeNewsVO(Knowledge2 knowledge2, User user, String url) {
 
-        KnowledgeDetail vo = genVo(knowledge2, url);
+        Knowledge vo = genVo(knowledge2, url);
         /*
         JSONObject jsonAsso = JSONObject.fromObject(vo.getAsso());
 
@@ -348,32 +382,100 @@ public class KnowledgeOtherControl extends BaseController {
         return vo;
     }
 
-    private KnowledgeDetail genVo(Knowledge2 knowledge2, String url) {
+    private Knowledge genVo(Knowledge2 knowledge2, String url) {
 
-        if (knowledge2.getType() == KnowledgeType.Law.value()) {
-            KnowledgeLaw knowledge = new KnowledgeLaw();
-            knowledge.setTitanic(knowledge2.getTitanic());
-            knowledge.setPostUnit(knowledge2.getPostUnit());
-            knowledge.setPublishTime(knowledge2.getSubmitTime());
-            knowledge.setPerformTime(knowledge2.getPerformTime());
-            setKnowledgeContent(knowledge2, knowledge, null, url);
-            return knowledge;
-        }
-        if (knowledge2.getType() == KnowledgeType.Investment.value()) {
-            KnowledgeInvestment knowledge = new KnowledgeInvestment();
-            knowledge.setSynonyms(knowledge2.getSynonyms());
-            setKnowledgeContent(knowledge2, knowledge, null, url);
-            return knowledge;
-        }
-        KnowledgeDetail knowledge = new KnowledgeDetail();
-        setKnowledgeContent(knowledge2, knowledge, null, url);
-        return knowledge;
-        /*
+        Knowledge vo = new Knowledge();
+
         if (knowledge2.getId() != 0) {
-            vo.setKnowledgeid(knowledge2.getId() + "");
-            vo.setkId(knowledge2.getId());
+            vo.setId(knowledge2.getId());
+            vo.setKnowledgeMainId(knowledge2.getId());
+        }
+        if (knowledge2.getType() == KnowledgeType.ELaw.value()) {
+            vo.setTitanic(knowledge2.getTitanic());
+            vo.setPostUnit(knowledge2.getPostUnit());
+            vo.setSubmitTime(knowledge2.getSubmitTime());
+            vo.setPerformTime(knowledge2.getPerformTime());
+        }
+        if (knowledge2.getType() == KnowledgeType.EInvestment.value()) {
+            vo.setSynonyms(knowledge2.getSynonyms());
+        }
+        vo.setTaskid(knowledge2.getTaskId());
+        vo.setTitle(knowledge2.getTitle());
+        try {
+            List<String> listImageUrl = new ArrayList<String>();
+
+            // 测试指定taskid的文件
+            // knowledge2.setTaskId("taskId-123456");
+
+            // 根据taskid获取到附件列表
+            /* this position we don't need it
+            List<JTFile> listAttachFile = mJTFileService.getJTFileByTaskId(knowledge2.getTaskId() + "");
+            if (listAttachFile != null) {
+                for (JTFile jt : listAttachFile) {
+                    if (jt.getType() != null) {
+                        if (jt.getType().equals(JTFile.TYPE_IMAGE)) {
+                            // 如果是图片类型，则要合并到html里取
+                            listImageUrl.add(jt.getUrl());
+                        }
+                    }
+                }
+            }*/
+            // 区分APP和WEB
+            if (knowledge2.getWeb() > 0) {
+                vo.setContent(knowledge2.getContent());
+            } else {
+                String htmlContent = Utils.txt2Html(knowledge2.getContent(), listImageUrl, knowledge2.getListImageUrl(), url);
+                // htmlContent =
+                // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
+                vo.setContent(htmlContent);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        vo.setPic(knowledge2.getPic());
+
+        String contentDes;
+        if ((knowledge2.getContent() != null) && (knowledge2.getContent().length() > 0)) {
+            String content = knowledge2.getContent();
+            contentDes = filterHtml(content).length() < 40 ? filterHtml(content) : filterHtml(content).substring(0, 35) + "...";
+
+        } else {
+            contentDes = " ";
+        }
+        vo.setDesc(contentDes);
+
+        if (knowledge2.getTags() != null && knowledge2.getTags().size() > 0) {
+            String tags = knowledge2.getTags().toString();
+            vo.setTags(tags.substring(1, tags.length()-1));
+        }
+
+        vo.setSource(knowledge2.getSource());
+        // 知识所在目录
+        /*
+        String strUc = "";
+        if (knowledge2.getListUserCategory() != null) {
+            for (int i = 0; i < knowledge2.getListUserCategory().size(); i++) {
+                UserCategory uc = knowledge2.getListUserCategory().get(i);
+                strUc += uc.getId();
+                if (i < (knowledge2.getListUserCategory().size() - 1))
+                    strUc += ",";
+            }
+            vo.setDirectorys(strUc);
         }*/
 
+        vo.setEssence(knowledge2.getEssence());
+        //vo.setShareMessage("");// 分享消息内容
+
+        if (knowledge2.getColumnId() > 0) {
+            vo.setColumnid(String.valueOf(knowledge2.getColumnId()));
+            vo.setColumnType(String.valueOf(knowledge2.getColumnId()));
+            vo.setCpathid(knowledge2.getCpathid());
+            //vo.setColumnName(knowledge2.getco);
+        } else {
+            // 如果没指定栏目， 默认为资讯
+            vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
+        }
 
         // 关联管理器
         /*
@@ -384,6 +486,8 @@ public class KnowledgeOtherControl extends BaseController {
         // 权限管理器
         vo.setSelectedIds(EntityFactory.genSelectIds(knowledge2.getListHightPermission(), knowledge2.getListMiddlePermission(),
                 knowledge2.getListLowPermission()));*/
+
+        return vo;
     }
 
     public void checkGroup(long userid) {
@@ -393,7 +497,7 @@ public class KnowledgeOtherControl extends BaseController {
         //userCategoryService.checkNogroup(userid, idtype);
     }
 
-    private void setKnowledgeContent(Knowledge2 knowledge2, KnowledgeDetail detail, List<String> urls, String url)
+    private void setKnowledgeContent(Knowledge2 knowledge2, Knowledge detail, List<String> urls, String url)
     {
         if (knowledge2.getWeb() > 0) {
             detail.setContent(knowledge2.getContent());
@@ -418,6 +522,7 @@ public class KnowledgeOtherControl extends BaseController {
         detail.setSource(knowledge2.getSource());
 
         // 知识所在目录
+        /*
         List<Long> directoryList = null;
         if (knowledge2.getListUserCategory() != null && knowledge2.getListUserCategory().size() > 0) {
             int size = knowledge2.getListUserCategory().size();
@@ -426,21 +531,30 @@ public class KnowledgeOtherControl extends BaseController {
                 UserCategory uc = knowledge2.getListUserCategory().get(i);
                 if (uc.getId() > 0) {
                     directoryList.add(uc.getId());
-                }
-                else {
+                } else {
                     logger.error("An invalidated directoryId: {}", uc.getId());
                 }
             }
-            detail.setCategoryIds(directoryList);
-        }
+            detail.setDirectorys(directoryList);
+        }*/
 
         detail.setEssence(knowledge2.getEssence());
         //detail.setShareMessage("");// 分享消息内容
 
         if (knowledge2.getColumnId() <= 0) {
             // 如果没指定栏目， 默认为资讯
-            detail.setColumnId(DEFAULT_KNOWLEDGE_TYPE);
+            detail.setColumnid(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));
         }
+    }
+
+    public String filterHtml(String html) {
+        Pattern pattern = Pattern.compile("<style[^>]*?>[\\D\\d]*?<\\/style>");
+        Matcher matcher = pattern.matcher(html);
+        String htmlStr = matcher.replaceAll("");
+        pattern = Pattern.compile("<[^>]+>");
+        String filterStr = pattern.matcher(htmlStr).replaceAll("");
+        filterStr.replace("&nbsp;", " ");
+        return filterStr;
     }
 
 }

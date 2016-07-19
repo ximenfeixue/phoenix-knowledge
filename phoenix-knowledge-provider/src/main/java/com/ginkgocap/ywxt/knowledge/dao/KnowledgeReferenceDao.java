@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 
 import java.util.List;
 

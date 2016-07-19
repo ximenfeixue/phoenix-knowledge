@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import org.apache.commons.lang3.StringUtils;
 

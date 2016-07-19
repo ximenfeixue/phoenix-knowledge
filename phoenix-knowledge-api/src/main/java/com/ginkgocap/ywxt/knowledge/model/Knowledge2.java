@@ -1,10 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
@@ -70,10 +69,10 @@ public class Knowledge2 {
     private int authorType;
 
     // 法律法规-发布日期
-    private long submitTime;
+    private String submitTime;
 
     // 法律法规-执行日期
-    private long performTime;
+    private String performTime;
 
     // 法律法规-发文单位
     private String postUnit;
@@ -157,19 +156,19 @@ public class Knowledge2 {
         this.titanic = titanic;
     }
 
-    public long getSubmitTime() {
+    public String getSubmitTime() {
         return submitTime;
     }
 
-    public void setSubmitTime(long submitTime) {
+    public void setSubmitTime(String submitTime) {
         this.submitTime = submitTime;
     }
 
-    public long getPerformTime() {
+    public String getPerformTime() {
         return performTime;
     }
 
-    public void setPerformTime(long performTime) {
+    public void setPerformTime(String performTime) {
         this.performTime = performTime;
     }
 
@@ -366,8 +365,8 @@ public class Knowledge2 {
         self.desc = knowledge2Json.optString("desc");
         self.titanic=knowledge2Json.optString("titanic");
         self.postUnit =knowledge2Json.optString("postUnit");
-        self.submitTime = Long.parseLong(knowledge2Json.optString("submitTime"));
-        self.performTime = Long.parseLong(knowledge2Json.optString("performTime"));
+        self.submitTime = knowledge2Json.optString("submitTime");
+        self.performTime = knowledge2Json.optString("performTime");
         self.synonyms = knowledge2Json.optString("synonyms");
         self.content = getString(knowledge2Json.optString("content"));
         self.hcontent = knowledge2Json.optString("hcontent");

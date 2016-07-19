@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.base;
 
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.gintong.frame.util.dto.InterfaceResult;

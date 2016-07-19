@@ -17,7 +17,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	String JsonContent = "{\"externalUrl\":\"http://tech.sina.com.cn/it/2016-07-12/doc-ifxtwiht3615423.shtml\",\"isCreate\":\"true\"}";
+        	String JsonContent = "{\"externalUrl\":\"http://sports.china.com/sportsnews/nba/11172837/20160704/22984107.html\",\"isCreate\":\"true\"}";
             String subUrl = "/fetchExternalKnowledgeUrl";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, JsonContent);
             Util.checkRequestResultSuccess(result);

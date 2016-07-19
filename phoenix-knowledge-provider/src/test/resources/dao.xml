@@ -147,7 +147,7 @@
 
         </object>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeReference"
+        <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference"
                 listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
                 strategyProperty="id">
             <dbStrategy name="aa"

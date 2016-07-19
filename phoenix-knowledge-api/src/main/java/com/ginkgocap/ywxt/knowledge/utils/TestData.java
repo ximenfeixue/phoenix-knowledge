@@ -2,7 +2,12 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
@@ -56,6 +61,18 @@ public class TestData {
     {
         DataCollection data = new DataCollection();
         data.setKnowledgeDetail(knowledgeDetail(userId,columnId, title));
+        data.setReference(referenceObject(title));
+        data.setPermission(permission(0, userId));
+        data.setAsso(assoList());
+        data.setUpdateDynamic((short)1);
+
+        return data;
+    }
+    
+    public static DataCollect getDataCollect(long userId, int columnId,String title)
+    {
+        DataCollect data = new DataCollect();
+        data.setKnowledgeDetail(knowledge(userId,columnId, title));
         data.setReference(referenceObject(title));
         data.setPermission(permission(0, userId));
         data.setAsso(assoList());
@@ -117,6 +134,28 @@ public class TestData {
 
         return knowledgeDetail;
     }
+    
+    public static Knowledge knowledge(long userId,int columnId,String title)
+    {
+        Knowledge detail = new Knowledge();
+        detail.setCid(userId);
+        detail.setCname("testUser");
+        detail.setCid(userId);
+        detail.setCname("testUser");
+        detail.setTitle(title == null ? "TestTitle" : title);
+        detail.setContent("Knowledge Description");
+        List<String> UrlIds= new ArrayList<String>();
+        UrlIds.add("11122");
+        detail.setMultiUrls(UrlIds);
+        detail.setAttachUrls(UrlIds);
+        detail.setColumnType(String.valueOf(columnId));
+        detail.setColumnid(String.valueOf(columnId));
+        detail.setModifytime(String.valueOf(System.currentTimeMillis()));
+        detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
+
+        return detail;
+    }
+
 
     private static KnowledgeReference referenceObject(String title)
     {

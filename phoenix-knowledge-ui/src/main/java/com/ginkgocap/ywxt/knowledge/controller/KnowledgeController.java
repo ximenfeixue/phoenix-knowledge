@@ -11,7 +11,8 @@ import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.Page;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
+import com.ginkgocap.ywxt.knowledge.model.common.*;
 import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
@@ -47,7 +48,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@RequestMapping("/knowledge")
+@RequestMapping("/knowledgeV2")
 public class KnowledgeController extends BaseController {
 
 	private final Logger logger = LoggerFactory.getLogger(KnowledgeController.class);
@@ -869,7 +870,7 @@ public class KnowledgeController extends BaseController {
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
             if (total == -1) {
-                total = this.knowledgeService.getBasePublicCountByColumnId(type,KnowledgeConstant.PRIVATED);
+                total = this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (total > 0 && start < total) {
                 knowledgeList = this.knowledgeService.getBasePublicByColumnId(type, KnowledgeConstant.PRIVATED, start, size);
@@ -1727,7 +1728,7 @@ public class KnowledgeController extends BaseController {
         for (DataCollection collection : data) {
             KnowledgeBase kbd = collection.getKnowledge();
             if (kbd != null) {
-                chanageKnowledgeToMini2(kbd);
+                changeKnowledgeToMini2(kbd);
             }
         }
         return kbds;
@@ -1741,13 +1742,13 @@ public class KnowledgeController extends BaseController {
 
         List<KnowledgeMini2> km2List =  new ArrayList<KnowledgeMini2>(baseList.size());
         for(KnowledgeBase base : baseList) {
-            km2List.add(chanageKnowledgeToMini2(base));
+            km2List.add(changeKnowledgeToMini2(base));
         }
 
         return km2List;
     }
 
-    public KnowledgeMini2 chanageKnowledgeToMini2(KnowledgeBase knowledgeBase)
+    public KnowledgeMini2 changeKnowledgeToMini2(KnowledgeBase knowledgeBase)
     {
         KnowledgeMini2 km2 = new KnowledgeMini2();
 

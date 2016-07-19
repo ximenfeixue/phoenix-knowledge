@@ -2,7 +2,9 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.ArrayList;

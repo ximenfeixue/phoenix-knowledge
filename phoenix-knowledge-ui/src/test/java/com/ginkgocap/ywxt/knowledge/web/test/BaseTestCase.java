@@ -26,8 +26,8 @@ public abstract class BaseTestCase extends TestCase
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
         userId = KnowledgeUtil.getDummyUser().getId();
-        debugModel = System.getProperty("debugModel", "false").equals("true");
-        runTestCase = System.getProperty("runTestCase", "false").equals("true");
+        debugModel = System.getProperty("debugModel", "true").equals("true");
+        runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
             loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");

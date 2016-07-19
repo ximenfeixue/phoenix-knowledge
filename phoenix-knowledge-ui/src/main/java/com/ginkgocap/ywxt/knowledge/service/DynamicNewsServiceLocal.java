@@ -1,26 +1,24 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * Created by gintong on 2016/7/9.
  */
 
-@Service("dynamicNewsServiceLocal")
+@Repository("dynamicNewsServiceLocal")
 public class DynamicNewsServiceLocal
 {
     private Logger logger = LoggerFactory.getLogger(DynamicNewsServiceLocal.class);

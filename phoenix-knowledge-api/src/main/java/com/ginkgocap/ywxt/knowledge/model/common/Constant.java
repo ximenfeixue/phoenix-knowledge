@@ -21,6 +21,8 @@ public class Constant {
     public final static String _ID = "_id";
     public final static String KnowledgeId = "knowledgeId";
     public final static String ColumnId = "columnId";
+    //For old data
+    public final static String columnid = "columnid";
     public final static String OwnerId = "ownerId";
     public final static String KnowledgeType = "knowledgeType";
     public final static String Title = "title";

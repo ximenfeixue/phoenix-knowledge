@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.model;
+package com.ginkgocap.ywxt.knowledge.model.common;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;

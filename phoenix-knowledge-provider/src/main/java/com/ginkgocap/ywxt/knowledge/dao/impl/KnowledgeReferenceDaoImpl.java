@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

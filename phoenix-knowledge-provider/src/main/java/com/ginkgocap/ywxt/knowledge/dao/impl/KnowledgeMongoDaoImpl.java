@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
@@ -208,39 +208,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Class classType = getKnowledgeClassType((short)0);
         return mongoTemplate.find(query, classType, collectName);
     }
-
-    /*
-	private String getCollectionName(short columnId) throws Exception {
-		
-		StringBuffer strBuf = new StringBuffer();
-		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
-		
-		//从缓存中获取系统栏目
-		List<ColumnSys> columnSysList = new ArrayList<ColumnSys>();
-		Iterator<ColumnSys> it = columnSysList.iterator();
-		boolean columnCodeNotExistflag = true;
-		
-		while(it.hasNext()) {
-			ColumnSys columnSys = it.next();
-			if(columnId == columnSys.getId()) {
-				if(StringUtils.isEmpty(columnSys.getColumnCode())) {
-					break;
-				}
-				columnCodeNotExistflag = false;
-				strBuf.append(columnSys.getColumnCode());
-				break;
-			}
-		}
-		
-		if(columnCodeNotExistflag) {
-			strBuf.append(KNOWLEDGE_COLLECTION_USERSELF_NAME);
-		}
-		
-		return strBuf.toString();
-	}*/
 	
 	private String getCollectionName(int columnId) {
-		return KnowledgeUtil.getKnowledgeCollectionName(columnId);
+		return "Knowledge"; //KnowledgeUtil.getKnowledgeCollectionName(columnId);
 	}
 
     private Class getKnowledgeClassType(int columnId)

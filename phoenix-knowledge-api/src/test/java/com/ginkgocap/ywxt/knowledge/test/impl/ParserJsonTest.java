@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.test.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ginkgocap.ywxt.knowledge.model.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
