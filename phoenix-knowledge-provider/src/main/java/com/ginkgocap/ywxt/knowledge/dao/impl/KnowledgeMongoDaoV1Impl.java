@@ -45,7 +45,6 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
         }
 
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
-
         String currCollectionName = getCollectionName(knowledge.getColumnType());
         knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
         mongoTemplate.insert(knowledge,currCollectionName);
@@ -112,9 +111,7 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
     public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.columnid).is(columnId));
-        }
+        addColumnIdToQuery(query, columnId);
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
@@ -126,10 +123,8 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
     @Override
     public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception
     {
-        Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
+        Query query = new Query(Criteria.where(Constant.cid).is(createUserId));
+        addColumnIdToQuery(query, columnId);
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
@@ -186,9 +181,7 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
     public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
+        addColumnIdToQuery(query, columnId);
 
         return mongoTemplate.find(query,Knowledge.class, getCollectionName(columnId));
     }
@@ -214,36 +207,6 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
         Class classType = getKnowledgeClassType((short)0);
         return mongoTemplate.find(query, classType, collectName);
     }
-
-    /*
-	private String getCollectionName(short columnId) throws Exception {
-
-		StringBuffer strBuf = new StringBuffer();
-		strBuf.append(KNOWLEDGE_COLLECTION_NAME);
-
-		//从缓存中获取系统栏目
-		List<ColumnSys> columnSysList = new ArrayList<ColumnSys>();
-		Iterator<ColumnSys> it = columnSysList.iterator();
-		boolean columnCodeNotExistflag = true;
-
-		while(it.hasNext()) {
-			ColumnSys columnSys = it.next();
-			if(columnId == columnSys.getId()) {
-				if(StringUtils.isEmpty(columnSys.getColumnCode())) {
-					break;
-				}
-				columnCodeNotExistflag = false;
-				strBuf.append(columnSys.getColumnCode());
-				break;
-			}
-		}
-
-		if(columnCodeNotExistflag) {
-			strBuf.append(KNOWLEDGE_COLLECTION_USERSELF_NAME);
-		}
-
-		return strBuf.toString();
-	}*/
 
     private String getCollectionName(String columnId) {
         int type = 1;
@@ -284,10 +247,32 @@ public class KnowledgeMongoDaoV1Impl implements KnowledgeMongoDaoV1 {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
         //columnId < 0, it means we query knowledge only by knowledgeId
+        addColumnIdToQuery(query, columnId);
+        return query;
+    }
+
+    private Query knowledgeColumnIdQuery2(long knowledgeId,String columnId)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
+        //columnId < 0, it means we query knowledge only by knowledgeId
+        addColumnIdToQuery(query, columnId);
+        return query;
+    }
+
+
+    private void addColumnIdToQuery(Query query, int columnId)
+    {
         if (columnId > 0) {
+            query.addCriteria(Criteria.where(Constant.columnid).is(String.valueOf(columnId)));
+        }
+    }
+
+    private void addColumnIdToQuery(Query query,String columnId)
+    {
+        if (validateColumnId(columnId)) {
             query.addCriteria(Criteria.where(Constant.columnid).is(columnId));
         }
-        return query;
     }
 
     private boolean validateColumnId(String columnId)

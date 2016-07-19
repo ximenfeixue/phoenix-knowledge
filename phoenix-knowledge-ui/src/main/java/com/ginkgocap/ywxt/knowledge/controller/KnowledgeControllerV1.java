@@ -310,7 +310,7 @@ public class KnowledgeControllerV1 extends BaseController {
             result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
-            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"删除知识失败!");
         }
 
         //delete tags
@@ -422,7 +422,6 @@ public class KnowledgeControllerV1 extends BaseController {
     @ResponseBody
     public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable int columnId) throws Exception {
-
         User user = this.getUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
@@ -433,27 +432,26 @@ public class KnowledgeControllerV1 extends BaseController {
             return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"知识Id无效");
         }
 
-        DataCollect data = new DataCollect();
         Knowledge detail = null;
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             detail = this.knowledgeService.getDetailById(knowledgeId, columnId);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         //数据为空则直接返回异常给前端
         if(detail == null) {
             logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);//.DATA_DELETE_EXCEPTION);
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
+            return mappingJacksonValue(result);
         }
         String hContent = HtmlToText.htmlToText(detail.getContent());
         int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
         hContent = hContent.substring(0, maxLen);
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
-        data.setKnowledgeDetail(detail);
+        DataCollect data = new DataCollect(null, detail);
 
         boolean isCollected = false;
         long userId = user.getId();
@@ -2025,27 +2023,25 @@ public class KnowledgeControllerV1 extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION, "知识Id无效");
         }
 
-        DataCollect data = new DataCollect();
         Knowledge detail = null;
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             detail = this.knowledgeService.getDetailById(knowledgeId, columnId);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         //数据为空则直接返回异常给前端
         if(detail == null) {
             logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
         }
         String hContent = HtmlToText.htmlToText(detail.getContent());
         int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
         hContent = hContent.substring(0, maxLen);
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
-        data.setKnowledgeDetail(detail);
+        DataCollect data = new DataCollect(null, detail);
 
         boolean isCollected = false;
         long userId = user.getId();
