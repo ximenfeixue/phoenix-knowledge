@@ -7,9 +7,9 @@ import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
 import com.ginkgocap.parasol.directory.service.DirectoryService;
 import com.ginkgocap.parasol.directory.service.DirectorySourceService;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by gintong on 2016/7/19.
+ * Created by Chen Peifeng on 2016/6/14.
  */
 @Repository("directoryServiceLocalV1")
 public class DirectoryServiceLocalV1 extends BaseServiceLocal implements KnowledgeBaseService
@@ -68,10 +68,10 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
     }
     //end
 
-    public boolean updateDirectorySource(long userId, Knowledge knowledgeDetail)
+    public boolean updateDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        List<Long> directoryIds = knowledgeDetail.getDirectorys();
-        if(directoryIds == null || directoryIds.size() <= 0) {
+        List<Long> categoryIds = knowledgeDetail.getCategoryIds();
+        if(categoryIds == null || categoryIds.size() <= 0) {
             return false;
         }
 
@@ -84,7 +84,7 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
             logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
         }
 
-        for(Long directoryId : directoryIds){
+        for(Long directoryId : categoryIds){
             if(directoryId >= 0) {
                 try {
                     DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
@@ -106,40 +106,40 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
-        for (ResItem item : directoryItems) {
-            long knowledgeId = item.getResId();
-            List<Long> directoryIds = item.getIds();
+            for (ResItem item : directoryItems) {
+                long knowledgeId = item.getResId();
+                List<Long> directoryIds = item.getIds();
 
-            if (directoryIds == null || directoryIds.size() <= 0) {
-                logger.error("Directory list is null or empty, so skip to add. knowledgeId: {}", knowledgeId);
+                if (directoryIds == null || directoryIds.size() <= 0) {
+                    logger.error("Directory list is null or empty, so skip to add. knowledgeId: {}", knowledgeId);
+                }
+
+                //Update knowledge Detail
+                DataCollection data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
+                if (data == null) {
+                    logger.error("can't find this knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
+                    continue;
+                }
+
+                KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
+                if (data.getKnowledgeDetail() == null) {
+                    logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
+                    continue;
+                }
+
+                if (!deleteDirectorySource(userId, knowledgeId)) {
+                    logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
+                }
+
+                //Batch create directory
+                List<Long> successIds = createDirectorySource(userId, directoryIds, knowledgeDetail);
+
+                //Update knowledge detail
+                knowledgeDetail.setCategoryIds(successIds);
+
+                knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
+                logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
             }
-
-            //Update knowledge Detail
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
-            if (data == null) {
-                logger.error("can't find this knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
-                continue;
-            }
-
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
-            if (data.getKnowledgeDetail() == null) {
-                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
-                continue;
-            }
-
-            if (!deleteDirectorySource(userId, knowledgeId)) {
-                logger.error("delete old directory source failed, userId:" + userId + " knowledgeId: " + knowledgeId);
-            }
-
-            //Batch create directory
-            List<Long> successIds = createDirectorySource(userId, directoryIds, knowledgeDetail);
-
-            //Update knowledge detail
-            knowledgeDetail.setDirectorys(successIds);
-
-            knowledgeService.updateKnowledge(new DataCollect(null, knowledgeDetail));
-            logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
-        }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("create directory success.");
     }
@@ -170,13 +170,13 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
                 continue;
             }
 
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId, (short)-1);
+            DataCollection data = knowledgeService.getKnowledge(knowledgeId, (short)-1);
             if (data == null) {
                 logger.error("can't find this knowledge info, so skip add directory, knowledgeId: {}", knowledgeId);
                 continue;
             }
 
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
+            KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
             if (data.getKnowledgeDetail() == null) {
                 logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
                 continue;
@@ -191,15 +191,17 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
             List<Long> successIds = createDirectorySource(userId, newDirectoryIds, knowledgeDetail);
 
             //Update knowledge Detail
-            List<Long> existDirectoryIds = knowledgeDetail.getDirectorys();
-            if (existDirectoryIds == null || existDirectoryIds.size() <= 0) {
-                existDirectoryIds = successIds;
-            } else if (successIds != null && successIds.size() > 0) {
-                existDirectoryIds.addAll(successIds);
+            List<Long> existCategoryIds = knowledgeDetail.getCategoryIds();
+            if (existCategoryIds == null || existCategoryIds.size() <= 0) {
+                existCategoryIds = successIds;
+            } else {
+                if (successIds != null && successIds.size() > 0) {
+                    existCategoryIds.addAll(successIds);
+                }
             }
-            knowledgeDetail.setDirectorys(existDirectoryIds);
+            knowledgeDetail.setCategoryIds(existCategoryIds);
 
-            knowledgeService.updateKnowledge(new DataCollect(null, knowledgeDetail));
+            knowledgeService.updateKnowledge(new DataCollection(null, knowledgeDetail));
             logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
             successResult = + successIds.size();
             failedResult = + newDirectoryIds.size() - successIds.size();
@@ -249,10 +251,10 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
         return null;
     }
 
-    public List<Long> saveDirectorySource(long userId, Knowledge knowledgeDetail)
+    public List<Long> saveDirectorySource(long userId, KnowledgeDetail knowledgeDetail)
     {
         //save directory
-        List<Long> directoryIds = knowledgeDetail.getDirectorys();
+        List<Long> directoryIds = knowledgeDetail.getCategoryIds();
         if (directoryIds == null || directoryIds.size() <= 0) {
             logger.error("directory List is empty, so skip to save..");
             return null;
@@ -301,7 +303,7 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
     }
 
 
-    private DirectorySource newDirectorySourceObject(long userId, long directoryId,Knowledge knowledge)
+    private DirectorySource newDirectorySourceObject(long userId, long directoryId,KnowledgeDetail knowledge)
     {
         DirectorySource directorySource = new DirectorySource();
         directorySource.setUserId(userId);
@@ -328,7 +330,7 @@ public class DirectoryServiceLocalV1 extends BaseServiceLocal implements Knowled
         return true;
     }
 
-    private List<Long> createDirectorySource(long userId, final List<Long> directoryIds, final Knowledge knowledgeDetail)
+    private List<Long> createDirectorySource(long userId, final List<Long> directoryIds, final KnowledgeDetail knowledgeDetail)
     {
         long knowledgeId = knowledgeDetail.getId();
         List<Long> successIds = new ArrayList<Long>(directoryIds.size());

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class KnowledgeDetailDaoTest extends TestBase {
     @Autowired
-    private KnowledgeMongoDao knowledgeMongoDao;
+    private KnowledgeMongoDaoV1 knowledgeMongoDao;
 
     @Autowired
     private KnowledgeCommentService knowledgeCommentService;

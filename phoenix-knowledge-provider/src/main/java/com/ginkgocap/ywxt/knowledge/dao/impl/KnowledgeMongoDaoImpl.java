@@ -1,12 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,130 +19,126 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * Created by gintong on 2016/7/19.
+ */
 @Repository("knowledgeMongoDao")
 public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     private Logger logger = LoggerFactory.getLogger(KnowledgeMongoDaoImpl.class);
-	@Resource
-	private MongoTemplate mongoTemplate;
+    @Resource
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private KnowledgeCommonService knowledgeCommonService;
 
     private final int maxSize = 20;
-	
-	@Override
-	public KnowledgeDetail insert(KnowledgeDetail knowledgeDetail) throws Exception {
-		if(knowledgeDetail == null) {
-            throw new IllegalArgumentException("knowledgeDetail is null");
+
+    @Override
+    public Knowledge insert(Knowledge knowledge) throws Exception {
+        if(knowledge == null) {
+            throw new IllegalArgumentException("Knowledge is null");
         }
 
-		long currentDate = new Date().getTime();
-        knowledgeDetail.setCreateTime(currentDate);
-		
-		String currCollectionName = getCollectionName(knowledgeDetail.getType());
-        knowledgeDetail.setId(knowledgeCommonService.getKnowledgeSequenceId());
-		mongoTemplate.insert(knowledgeDetail,currCollectionName);
-		
-		return knowledgeDetail;
-	}
-	
-	@Override
-	public List<KnowledgeDetail> insertList(List<KnowledgeDetail> knowledgeDetailList) throws Exception {
-		if(knowledgeDetailList != null && knowledgeDetailList.size() > 0) {
-			for(KnowledgeDetail knowledgeDetail : knowledgeDetailList) {
-                knowledgeDetail.setId(knowledgeCommonService.getKnowledgeSequenceId());
-			}
-		}
-        mongoTemplate.insert(knowledgeDetailList, KnowledgeDetail.class);
+        knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
+        String currCollectionName = getCollectionName(knowledge.getColumnType());
+        knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
+        mongoTemplate.insert(knowledge,currCollectionName);
 
-		return knowledgeDetailList;
-	}
+        return knowledge;
+    }
 
-	@Override
-	public KnowledgeDetail update(KnowledgeDetail knowledgeDetail) {
+    @Override
+    public List<Knowledge> insertList(List<Knowledge> KnowledgeList) throws Exception {
+        if(KnowledgeList != null && KnowledgeList.size() > 0) {
+            for(Knowledge Knowledge : KnowledgeList) {
+                Knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
+            }
+        }
+        mongoTemplate.insert(KnowledgeList, Knowledge.class);
 
-		if(knowledgeDetail == null) {
-            throw new IllegalArgumentException("knowledgel is null");
+        return KnowledgeList;
+    }
+
+    @Override
+    public Knowledge update(Knowledge knowledge) {
+
+        if(knowledge == null) {
+            throw new IllegalArgumentException("knowledge is null");
         }
 
-        if (knowledgeDetail.getId() <= 0) {
-            throw new IllegalArgumentException("knowledge Id is invalidated, id: "+knowledgeDetail.getId());
+        if (knowledge.getId() <= 0) {
+            throw new IllegalArgumentException("knowledge Id is invalidated, id: "+knowledge.getId());
         }
 
-        if (knowledgeDetail.getColumnId() <= 0) {
-            throw new IllegalArgumentException("knowledge columnId is invalidated, columnId: "+knowledgeDetail.getColumnId());
+        if (!validateColumnId(knowledge.getColumnid())) {
+            throw new IllegalArgumentException("knowledge columnId is invalidated, columnId: "+knowledge.getColumnid());
         }
 
-        long currentDate = new Date().getTime();
-        knowledgeDetail.setModifyTime(currentDate);
-        Query query = knowledgeColumnIdQuery(knowledgeDetail.getId(), knowledgeDetail.getColumnId());
-        String currCollectionName = getCollectionName(knowledgeDetail.getType());
-        KnowledgeDetail existValue = mongoTemplate.findOne(query, KnowledgeDetail.class, currCollectionName);
+        knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
+        Query query = knowledgeColumnIdQuery(knowledge.getId(), knowledge.getColumnid());
+        int columnType = parserColumnId(knowledge.getColumnType());
+        String currCollectionName = getCollectionName(columnType);
+        Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, currCollectionName);
         if (existValue != null) {
-            mongoTemplate.save(knowledgeDetail, currCollectionName);
+            mongoTemplate.save(knowledge, currCollectionName);
         }
         else {
-            logger.error("can't find this knowledge, so skip update. knowledgeId: {}",knowledgeDetail.getId());
+            logger.error("can't find this knowledge, so skip update. knowledgeId: {}",knowledge.getId());
             return null;
         }
-		
-		return knowledgeDetail;
-	}
+
+        return knowledge;
+    }
 
 
-	@Override
-	public int deleteByIdAndColumnId(long id,int columnId) throws Exception
+    @Override
+    public int deleteByIdAndColumnId(long id,int columnId)
     {
-		Query query = knowledgeColumnIdQuery(id, columnId);
+        Query query = knowledgeColumnIdQuery(id, columnId);
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
-		return 0;
-	}
+        return 0;
+    }
 
-	@Override
-	public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
+    @Override
+    public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
+        addColumnIdToQuery(query, columnId);
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
-		return 0;
-	}
+        return 0;
+    }
 
-	@Override
-	public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception
+    @Override
+    public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception
     {
-		Query query = new Query(Criteria.where(Constant.OwnerId).is(createUserId));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
+        Query query = new Query(Criteria.where(Constant.cid).is(createUserId));
+        addColumnIdToQuery(query, columnId);
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
         }
-		return 0;
-	}
+        return 0;
+    }
 
     @Override
     public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId)
     {
-        KnowledgeDetail detail = getByIdAndColumnId(knowledgeId, columnId);
-        List<Long> directoryIds = detail.getCategoryIds();
+        Knowledge detail = getByIdAndColumnId(knowledgeId, columnId);
+        List<Long> directoryIds = detail.getDirectorys();
         if (directoryIds != null && directoryIds.contains(directoryId)) {
             directoryIds.remove(directoryId);
-            detail.setCategoryIds(directoryIds);
+            detail.setDirectorys(directoryIds);
             update(detail);
             return true;
         }
@@ -151,25 +148,27 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
     }
 
-	@Override
-	public KnowledgeDetail getByIdAndColumnId(long id,int columnId) {
-		Query query = knowledgeColumnIdQuery(id, columnId);
-		return mongoTemplate.findOne(query,KnowledgeDetail.class, getCollectionName(columnId));
-	}
+    @Override
+    public Knowledge getByIdAndColumnId(long id,int columnId) {
+        Query query = knowledgeColumnIdQuery(id, columnId);
+        return mongoTemplate.findOne(query,Knowledge.class, getCollectionName(columnId));
+    }
 
     @Override
-    public KnowledgeDetail insertAfterDelete(KnowledgeDetail knowledgeDetail) throws Exception {
-        long knowledgeId = knowledgeDetail.getId();
-        if(knowledgeDetail == null || knowledgeId <= 0) {
-            throw new IllegalArgumentException("knowledgeDetail is null or invalidated!");
+    public Knowledge insertAfterDelete(Knowledge knowledge) throws Exception {
+
+        if(knowledge == null || knowledge.getId() <= 0) {
+            throw new IllegalArgumentException("Knowledge is null or invalidated!");
         }
 
-        KnowledgeDetail oldValue = this.getByIdAndColumnId(knowledgeId,knowledgeDetail.getColumnId());
+        long knowledgeId = knowledge.getId();
+        int columnId = parserColumnId(knowledge.getColumnid());
+        Knowledge oldValue = this.getByIdAndColumnId(knowledgeId,columnId);
         if (oldValue == null) {
             try {
-                this.insert(knowledgeDetail);
+                this.insert(knowledge);
             } catch (Exception ex) {
-                 throw ex;
+                throw ex;
             }
         }
 
@@ -177,22 +176,20 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-	public List<KnowledgeDetail> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
+    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
     {
-		Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
-		
-		return mongoTemplate.find(query,KnowledgeDetail.class, getCollectionName(columnId));
-	}
+        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        addColumnIdToQuery(query, columnId);
 
-    public List<KnowledgeDetail> getNoDirectory(long userId,int start,int size)
+        return mongoTemplate.find(query,Knowledge.class, getCollectionName(columnId));
+    }
+
+    public List<Knowledge> getNoDirectory(long userId,int start,int size)
     {
         Query query = new Query(Criteria.where(Constant.OwnerId).is(userId));
         query.addCriteria(Criteria.where(Constant.categoryIds).exists(false));
         final String collectName = getCollectionName((short)0);
-        long count = mongoTemplate.count(query, KnowledgeDetail.class, collectName);
+        long count = mongoTemplate.count(query, Knowledge.class, collectName);
         if (start >= count) {
             start = 0;
         }
@@ -208,32 +205,92 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Class classType = getKnowledgeClassType((short)0);
         return mongoTemplate.find(query, classType, collectName);
     }
-	
-	private String getCollectionName(int columnId) {
-		return "Knowledge"; //KnowledgeUtil.getKnowledgeCollectionName(columnId);
-	}
+
+    private String getCollectionName(String columnId) {
+        int type = 1;
+        try {
+            type = Integer.parseInt(columnId);
+        }catch (NumberFormatException ex) {
+            logger.error("Can't parser this columnId to number. columnId: {} error: ",columnId, ex.getMessage());
+        }
+        return KnowledgeUtil.getKnowledgeCollectionName(type);
+    }
+
+    private String getCollectionName(int columnId) {
+        return KnowledgeUtil.getKnowledgeCollectionName(columnId);
+    }
+
 
     private Class getKnowledgeClassType(int columnId)
     {
         return KnowledgeUtil.getKnowledgeClassType(columnId);
     }
-	
-	private Update getUpdate(KnowledgeDetail knowledgeDetail) {
+
+    private Update getUpdate(Knowledge Knowledge) {
         BasicDBObject basicDBObject = new BasicDBObject();
-        basicDBObject.put("$set", knowledgeDetail);
+        basicDBObject.put("$set", Knowledge);
         Update update = new BasicUpdate(basicDBObject);
-		
-		return update;
-	}
+
+        return update;
+    }
+
+    private Query knowledgeColumnIdQuery(long knowledgeId,String columnId)
+    {
+        int newColumnId = parserColumnId(columnId);
+        return knowledgeColumnIdQuery(knowledgeId, newColumnId);
+    }
 
     private Query knowledgeColumnIdQuery(long knowledgeId,int columnId)
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
         //columnId < 0, it means we query knowledge only by knowledgeId
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
+        addColumnIdToQuery(query, columnId);
         return query;
+    }
+
+    private Query knowledgeColumnIdQuery2(long knowledgeId,String columnId)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
+        //columnId < 0, it means we query knowledge only by knowledgeId
+        addColumnIdToQuery(query, columnId);
+        return query;
+    }
+
+
+    private void addColumnIdToQuery(Query query, int columnId)
+    {
+        if (columnId > 0) {
+            query.addCriteria(Criteria.where(Constant.columnid).is(String.valueOf(columnId)));
+        }
+    }
+
+    private void addColumnIdToQuery(Query query,String columnId)
+    {
+        if (validateColumnId(columnId)) {
+            query.addCriteria(Criteria.where(Constant.columnid).is(columnId));
+        }
+    }
+
+    private boolean validateColumnId(String columnId)
+    {
+        if (StringUtils.isEmpty(columnId)) {
+            return false;
+        }
+
+        int newColumnId = 0;
+        try {
+            newColumnId = Integer.parseInt(columnId);
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return newColumnId > 0;
+    }
+
+    private int parserColumnId(String columnId)
+    {
+        return KnowledgeUtil.parserColumnId(columnId);
     }
 }

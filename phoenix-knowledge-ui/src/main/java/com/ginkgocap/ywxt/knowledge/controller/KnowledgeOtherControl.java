@@ -3,13 +3,9 @@ package com.ginkgocap.ywxt.knowledge.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -45,7 +41,7 @@ public class KnowledgeOtherControl extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     @Autowired
-    KnowledgeServiceV1 knowledgeServiceV1;
+    KnowledgeService knowledgeServiceV1;
 
     @Autowired
     KnowledgeCountService knowledgeCountService;

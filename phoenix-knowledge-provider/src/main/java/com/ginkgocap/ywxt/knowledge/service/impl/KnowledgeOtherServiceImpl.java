@@ -1,11 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDaoV1;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
@@ -40,7 +38,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private KnowledgeCommonService knowledgeCommonService;
 
     @Autowired
-    KnowledgeMongoDaoV1 knowledgeMongoDao;
+    KnowledgeMongoDao knowledgeMongoDao;
 
     private int maxCount = 100;
     private int maxSize = 10;

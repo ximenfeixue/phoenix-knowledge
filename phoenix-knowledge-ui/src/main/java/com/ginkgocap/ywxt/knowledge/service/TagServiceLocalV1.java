@@ -7,10 +7,7 @@ import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.parasol.tags.service.TagService;
 import com.ginkgocap.parasol.tags.service.TagSourceService;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
@@ -22,13 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by gintong on 2016/7/19.
+ * Created by Chen Peifeng on 2016/6/14.
  */
 @Repository("tagServiceLocalV1")
 public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBaseService
@@ -40,6 +36,7 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
 
     @Resource
     private TagSourceService tagSourceService;
+
 
     //TODO: this just test interface, need to delete before deploy to online system
     public List<Long> createTag(long userId,String tagName) throws Exception
@@ -83,13 +80,13 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
             long knowledgeId = batchItem.getResId();
             List<Long> tagIds = batchItem.getIds();
 
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId, (short) -1);
+            DataCollection data = knowledgeService.getKnowledge(knowledgeId, (short) -1);
             if (data == null) {
                 logger.error("can't find this knowledge by knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
             }
 
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
+            KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
             if (knowledgeDetail == null) {
                 logger.error("can't find this knowledge detail info, knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
@@ -114,20 +111,20 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
             List<Long> successIds = (List<Long>)result.getResponseData();
 
             //Update knowledge Detail
-            List<Long> existTags = knowledgeDetail.getTagList();
+            List<Long> existTags = knowledgeDetail.getTags();
             if (existTags == null || existTags.size() <= 0) {
                 existTags = successIds;
             }
             else {
                 existTags.addAll(successIds);
             }
-            knowledgeDetail.setTagList(existTags);
+            knowledgeDetail.setTags(existTags);
 
             //Update knowledge base
             String tagString = convertLongValueListToString(successIds, knowledgeBase.getTags());
             knowledgeBase.setTags(tagString);
 
-            knowledgeService.updateKnowledge(new DataCollect(knowledgeBase, knowledgeDetail));
+            knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
             logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
         }
 
@@ -161,12 +158,12 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
             }
 
             //Update knowledge Detail
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
+            DataCollection data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
             if (data == null) {
                 logger.error("can't find this knowledge failed. knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
             }
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
+            KnowledgeDetail knowledgeDetail = data.getKnowledgeDetail();
             if (data.getKnowledgeDetail() == null) {
                 logger.error("can't find this knowledge detail failed. knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
@@ -190,25 +187,30 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
             }
             List<Long> successIds = (List<Long>)result.getResponseData();
             //Update knowledge base
-            List<Long> existTagsIds = knowledgeDetail.getTagList();
+            List<Long> existTagsIds = knowledgeDetail.getTags();
             if (existTagsIds == null || existTagsIds.size() <= 0) {
                 existTagsIds = successIds;
-            } else if (successIds != null && successIds.size() > 0) {
+            } else {
+                if (existTagsIds.size() + newTagIds.size() > 10) {
+                    overMaxLimit = true;
+                }
+                if (successIds != null && successIds.size() > 0) {
                     existTagsIds.addAll(successIds);
+                }
             }
-            knowledgeDetail.setTagList(existTagsIds);
+            knowledgeDetail.setTags(existTagsIds);
 
             //Update knowledge base
             String tagString = convertLongValueListToString(existTagsIds);
             knowledgeBase.setTags(tagString);
 
-            knowledgeService.updateKnowledge(new DataCollect(knowledgeBase, knowledgeDetail));
+            knowledgeService.updateKnowledge(new DataCollection(knowledgeBase, knowledgeDetail));
             logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
             successResult = + successIds.size();
             failedResult = + newTagIds.size() - successIds.size();
         }
 
-        return batchResult(successResult, failedResult, overMaxLimit);
+       return batchResult(successResult, failedResult, overMaxLimit);
     }
 
 
@@ -256,9 +258,9 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
 
     }
 
-    public boolean saveTagSource(long userId, Knowledge knowledgeDetail)
+    public boolean saveTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
-        List<Long> tagsList = knowledgeDetail.getTagList();
+        List<Long> tagsList = knowledgeDetail.getTags();
         if (tagsList == null || tagsList.size() <= 0) {
             logger.error("tag List is empty, so skip to save..");
             return false;
@@ -283,10 +285,10 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
         return true;
     }
 
-    public boolean updateTagSource(long userId, Knowledge knowledgeDetail)
+    public boolean updateTagSource(long userId, KnowledgeDetail knowledgeDetail)
     {
 
-        List<Long> tagsList = knowledgeDetail.getTagList();
+        List<Long> tagsList = knowledgeDetail.getTags();
         if(tagsList == null || tagsList.size() <= 0) {
             return false;
         }
@@ -333,7 +335,7 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
         return true;
     }
 
-    private InterfaceResult createTagSource(long userId, List<Long> tagIds, Knowledge knowledgeDetail)
+    private InterfaceResult createTagSource(long userId, List<Long> tagIds, KnowledgeDetail knowledgeDetail)
     {
         logger.debug("create Tag for UserId: {}", userId);
         long knowledgeId = knowledgeDetail.getId();
@@ -376,7 +378,7 @@ public class TagServiceLocalV1 extends BaseServiceLocal implements KnowledgeBase
         return null;
     }
 
-    private TagSource newTagSourceObject(long userId, Long tagId, Knowledge knowledge)
+    private TagSource newTagSourceObject(long userId, Long tagId, KnowledgeDetail knowledge)
     {
         TagSource tagSource = new TagSource();
         tagSource.setUserId(userId);
