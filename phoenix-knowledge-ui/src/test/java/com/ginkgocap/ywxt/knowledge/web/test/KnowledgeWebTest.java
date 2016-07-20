@@ -21,7 +21,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledge()
     {
         LogMethod();
-        createKnowledge("KnowledgeWebTest_testCreateKnowledge");
+        createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的，苹果将在劫难逃！");
     }
     
     public void testCreateKnowledgeWithTag()

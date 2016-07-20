@@ -42,9 +42,9 @@
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
         <!-- get_knowledge_by_Ids -->
-        <region name="get_knowledge_by_Id_keyword" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
+        <!-- region name="get_knowledge_by_Id_keyword" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
-        </region>
+        </region -->
 
         <region name="get_knowledge_by_Id_keyword" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
@@ -78,13 +78,13 @@
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
 
-        <region name="get_by_columnId_keyWord"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
+        <!-- region name="get_by_columnId_keyWord"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
 
         <region name="get_by_createUserId_keyWord" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
-        </region>
+        </region -->
 
         <region name="get_by_type_columnId" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
