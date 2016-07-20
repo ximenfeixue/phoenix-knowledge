@@ -130,17 +130,16 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         saveToDB(KnowledgeCountList);
     }
 
-    private List<KnowledgeCount> saveToDB(List<KnowledgeCount> KnowledgeCountList)
+    private List<KnowledgeCount> saveToDB(List<KnowledgeCount> knowledgeCountList)
     {
         try {
-            knowledgeCountDao.saveKnowledgeCountList(KnowledgeCountList);
+            knowledgeCountDao.saveKnowledgeCountList(knowledgeCountList);
         } catch (Exception e) {
             logger.error("Save knowledge Count info failed: error: {}", e.getMessage());
             e.printStackTrace();
-        } finally {
-            KnowledgeCountList = new ArrayList<KnowledgeCount>(20);
-            return KnowledgeCountList;
-        }
+        } 
+        return new ArrayList<KnowledgeCount>(20);
+        
     }
 
     private void startTimer() {

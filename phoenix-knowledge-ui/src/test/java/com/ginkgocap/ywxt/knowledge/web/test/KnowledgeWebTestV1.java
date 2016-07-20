@@ -498,14 +498,13 @@ public class KnowledgeWebTestV1 extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/tagList";
-            Long[] tagIds = new Long [] {3981267922321479L, 3981267939098696L, 3981290542202961L, 3981267964264526L, 3979800628953105L};
+            List<Long> tags = this.createTag();
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
-        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
 
@@ -514,7 +513,7 @@ public class KnowledgeWebTestV1 extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/tagCount";
-            Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
+            List<Long> tags = this.createTag();
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
