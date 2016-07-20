@@ -63,7 +63,7 @@ public class KnowledgeController extends BaseController {
     KnowledgeOtherService knowledgeOtherService;
 
     //@Autowired
-    //KnowledgeCountService knowledgeCountService;
+    //ColumnSysService columnSysService;
 
     @Autowired
     private UserService userService;
@@ -1579,8 +1579,6 @@ public class KnowledgeController extends BaseController {
                                                         @PathVariable short type,@PathVariable int start,
                                                         @PathVariable int size, @PathVariable String keyword) throws Exception {
 
-        Map<String, Object> responseDataMap = new HashMap<String, Object>();
-
         User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -1618,9 +1616,9 @@ public class KnowledgeController extends BaseController {
             logger.error("knowledge /getKnowledgeRelatedResources.json");
         }
 
-        int RECOMMEND_COUNT = 5;
+        int recommend_count = 5;
         JsonNode jsonNode = null;
-        List<KnowledgeMini2> listPlatformKnowledge = new ArrayList<KnowledgeMini2>(); // 金桐脑推荐的知识
+        List<KnowledgeMini> platformKnowledge = null; // 金桐脑推荐的知识
         if (null != djson && djson.trim().length() > 0 ) {
             jsonNode = KnowledgeUtil.readTree(djson);
             int status = jsonNode.get("status").intValue();
@@ -1628,68 +1626,45 @@ public class KnowledgeController extends BaseController {
                 if (jsonNode.get("k") != null) {
                     List<JsonNode> tempList = jsonNode.findValues("k");
                     if (tempList.size() > 0) {
-                        KnowledgeMini2 km2 = null;
-                        RECOMMEND_COUNT = RECOMMEND_COUNT < tempList.size() ? RECOMMEND_COUNT : tempList.size();
-                        for (int i = 0; i < RECOMMEND_COUNT; i++) {
-                            JsonNode m = tempList.get(i);
-                            Object tempId = m.get("id");
-                            Object oid = m.get("ownerid");
-                            if (null == tempId || oid == null) {
+                        KnowledgeMini mini = null;
+                        recommend_count = recommend_count < tempList.size() ? recommend_count : tempList.size();
+                        platformKnowledge = new ArrayList<KnowledgeMini>(recommend_count);
+                        for (int i = 0; i < recommend_count; i++) {
+                            JsonNode knowNode = tempList.get(i);
+                            Object kId = knowNode.get("id");
+                            Object ownerId = knowNode.get("ownerid");
+                            Object columnType = knowNode.get("columntype");
+                            if (null == kId || ownerId == null || columnType == null) {
                                 continue;
                             }
-                            String id = tempId.toString();
-                            km2 = new KnowledgeMini2();
-                            km2.setTitle(m.get("title") == null ? "" : m.get("title").toString());
-                            km2.setId(Long.parseLong(id));
-                            km2.setType(Integer.parseInt(m.get("columntype").toString()));
-                            km2.setColumntype(Integer.parseInt(m.get("columntype").toString()));
-                            Object objColumnPath = m.get("columnpath");
-                            String columnPath = objColumnPath == null ? "" : objColumnPath.toString();
-                            //TODO: fix the cptah
-                            //km2.setPictureId(commonService.getDisposeString(columnPath));
 
-                            Connections connections = new Connections();
-                            String ownerId = oid.toString();
-                            connections.setId(Long.parseLong(ownerId));
+                            long knowledgeId = KnowledgeUtil.parserStringIdToLong(kId.toString());
+                            if (knowledgeId <= 0) {
+                                logger.error("this knowledge is invalidated, knowledgeId: {}", kId);
+                                continue;
+                            }
 
-                            User organizationUser = null;
-                            /** 推荐 用户为金桐脑 */
-                            if (0 == connections.getId()) {
-                                organizationUser = new User();
-                                organizationUser.setType(2);// 金桐脑为机构用户
-                            } else if (-1 == connections.getId()) {
-                                organizationUser = new User();
-                                organizationUser.setType(2);// 全平台机构用户
-                            } else {
-                                //TODO: need to fix this
-                                //organizationUser = userService.selectByPrimaryKey(Long.parseLong(m.get("ownerid").toString()));
+                            long uid = KnowledgeUtil.parserStringIdToLong(ownerId.toString());
+                            if (uid <= 0) {
+                                logger.error("this knowledge is invalidated, ownerId: {}", ownerId);
+                                continue;
                             }
-                            if (null != organizationUser) {
-                                /** 判断用户属性 */
-                                int usertype = organizationUser.getType();
-                                String ownername = m.get("ownername").toString();
-                                int temp = Connections.TYPE_PERSON;
-                                if (usertype != 1)
-                                    temp = Connections.TYPE_ORGANIZATION;
-                                connections.setType(temp);
-                                if (usertype == Connections.TYPE_PERSON) {
-                                    JTContactMini mini = new JTContactMini();
-                                    mini.setName(ownername);
-                                    mini.setIsOffline(true);
-                                    mini.setOwnerid(Long.parseLong(ownerId));
-                                    mini.setOwnername(ownername);
-                                    connections.setJtContactMini(mini);
-                                } else {
-                                    OrganizationMini om = new OrganizationMini();
-                                    om.setFullName(ownername);
-                                    om.setIsOnline(true);
-                                    om.setOwnerid(Long.parseLong(ownerId));
-                                    om.setOwnername(ownername);
-                                    connections.setOrganizationMini(om);
-                                }
+
+                            short ctype = KnowledgeUtil.parserShortType(columnType.toString());
+                            if (ctype <= 0) {
+                                logger.error("this knowledge is invalidated, columnType: {}", columnType);
+                                continue;
                             }
-                            km2.setConnections(connections);
-                            listPlatformKnowledge.add(km2);
+
+                            mini = new KnowledgeMini();
+                            mini.setId(knowledgeId);
+                            mini.setUserId(uid);
+                            JsonNode titleNode = knowNode.get("title");
+                            if (titleNode != null) {
+                                mini.setTitle(knowNode.get("title").textValue());
+                            }
+                            mini.setType(ctype);
+                            platformKnowledge.add(mini);
                         }
                     }
                 }
@@ -1697,9 +1672,9 @@ public class KnowledgeController extends BaseController {
         }
 
         // 用户自己的所有知识
-        List<KnowledgeMini2> listUserKnowledge = null; // 用户自己的知识
+        Map<String, Object> responseDataMap = new HashMap<String, Object>(2);
         List<KnowledgeBase> userKnowledgeBase = null;
-        List<DataCollection> result = null;
+        List<KnowledgeMini> userKnowledge = null;
         if ("null".equals(keyword) || keyword == null) {
             userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
         } else {
@@ -1707,16 +1682,50 @@ public class KnowledgeController extends BaseController {
         }
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
-            listUserKnowledge = convertKnowledgeBaseList(userKnowledgeBase);
+            userKnowledge = convertKnowledgeBaseToMini(userKnowledgeBase);
         }
 
-        responseDataMap.put("listPlatformKnowledge", listPlatformKnowledge);
-        responseDataMap.put("listUserKnowledge", listUserKnowledge);
+        responseDataMap.put("listPlatformKnowledge", platformKnowledge);
+        responseDataMap.put("listUserKnowledge", userKnowledge);
         responseDataMap.put("type", type);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
-    private List<KnowledgeMini2> changeKnowledgeMini2(List<DataCollection> data) {
+    public List<KnowledgeMini> convertKnowledgeBaseToMini(List<KnowledgeBase> baseList)
+    {
+        if (baseList == null || baseList.size() <= 0) {
+            return null;
+        }
+
+        List<KnowledgeMini> km2List =  new ArrayList<KnowledgeMini>(baseList.size());
+        for(KnowledgeBase base : baseList) {
+            KnowledgeMini mini = changeKnowledgeToMini(base);
+            if (mini != null) {
+                km2List.add(mini);
+            }
+        }
+
+        return km2List;
+    }
+
+    public KnowledgeMini changeKnowledgeToMini(KnowledgeBase base)
+    {
+        if (base == null) {
+            logger.error("give knowledge base is null..");
+            return null;
+        }
+        KnowledgeMini km = new KnowledgeMini();
+        km.setId(base.getId());
+        km.setTitle(base.getTitle());
+        km.setUserId(base.getCreateUserId());
+        km.setUserName(base.getCreateUserName());
+        km.setTime(base.getCreateDate());
+
+        return km;
+    }
+
+    /*
+        private List<KnowledgeMini2> changeKnowledgeMini2(List<DataCollection> data) {
         List<KnowledgeMini2> kbds = new ArrayList<KnowledgeMini2>();
         for (DataCollection collection : data) {
             KnowledgeBase kbd = collection.getKnowledge();
@@ -1739,7 +1748,7 @@ public class KnowledgeController extends BaseController {
         }
 
         return km2List;
-    }
+    }*/
 
     public KnowledgeMini2 changeKnowledgeToMini2(KnowledgeBase knowledgeBase)
     {

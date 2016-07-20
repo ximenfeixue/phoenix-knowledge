@@ -388,6 +388,22 @@ public final class KnowledgeUtil {
         return tags;
     }
 
+    public static short parserShortType(String columnType)
+    {
+        short newColumnId = -1;
+        if (StringUtils.isEmpty(columnType)) {
+            return newColumnId;
+        }
+
+        try {
+            newColumnId = Short.parseShort(columnType);
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
+
+        return newColumnId;
+    }
+
     public static int parserColumnId(String columnId)
     {
         if (StringUtils.isEmpty(columnId)) {
@@ -397,11 +413,27 @@ public final class KnowledgeUtil {
         int newColumnId = 0;
         try {
             newColumnId = Integer.parseInt(columnId);
-        } catch (Exception ex) {
+        } catch (NumberFormatException ex) {
             return -1;
         }
 
         return newColumnId;
+    }
+
+    public static long parserStringIdToLong(String id)
+    {
+        long newId = -1L;
+        if (StringUtils.isEmpty(id)) {
+            return newId;
+        }
+
+        try {
+            newId = Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+
+        return newId;
     }
 
     public static long parserTimeToLong(String time)

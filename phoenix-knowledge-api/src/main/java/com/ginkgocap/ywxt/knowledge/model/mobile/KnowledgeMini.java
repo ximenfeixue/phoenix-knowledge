@@ -13,6 +13,8 @@ public class KnowledgeMini implements Serializable {
 
     private long id;//相关知识列表，知识id
 
+    private short type;
+
     private String url;//知识对应url
 
     private String title;//知识标题
@@ -27,6 +29,21 @@ public class KnowledgeMini implements Serializable {
 
     private String sharedName;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
 
     public String getUrl() {
         return url;
@@ -82,65 +99,5 @@ public class KnowledgeMini implements Serializable {
 
     public void setSharedName(String sharedName) {
         this.sharedName = sharedName;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
-     * @author zhangzhen
-     * 如果数据为空返回null
-     *
-     * 指导使用方法
-     * JSONObject j = JSONObject.fromObject(requestJson);
-     * String jsonData = j.getString("Entity");
-     * */
-    public static KnowledgeMini getByJsonString(String jsonEntity) {
-        if(jsonEntity.equals("{}")) {
-            return null; //无数据判断
-        }
-        return JSON.parseObject(jsonEntity, KnowledgeMini.class);
-    }
-
-    /**
-     * @author zhangzhen
-     * 如果数据为空返回null
-     *
-     * 指导使用方法
-     * JSONObject j = JSONObject.fromObject(requestJson);
-     * Object jsonData = j.get("Entity");
-     * */
-    public static KnowledgeMini getByJsonObject(Object jsonEntity) {
-        return getByJsonString(jsonEntity.toString());
-    }
-
-    /**
-     * @author zhangzhen
-     * 如果没有数据，返回空数组
-     *
-     * 指导使用方法
-     * JSONObject j = JSONObject.fromObject(requestJson);
-     * String jsonData = j.getString("Entity");
-     * */
-    public static List<KnowledgeMini> getListByJsonString(String object) {
-        return JSON.parseArray(object, KnowledgeMini.class);
-    }
-
-    /**
-     * @author zhangzhen
-     * @CreateTime 2014-11-11
-     * 如果没有数据，返回空数组
-     *
-     * 指导使用方法
-     * JSONObject j = JSONObject.fromObject(requestJson);
-     * Object jsonData = j.get("EntityList");
-     * */
-    public static List<KnowledgeMini> getListByJsonObject(Object object) {
-        return getListByJsonString(object.toString());
     }
 }

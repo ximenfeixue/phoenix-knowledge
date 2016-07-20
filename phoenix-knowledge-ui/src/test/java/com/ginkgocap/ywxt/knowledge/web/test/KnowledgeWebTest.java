@@ -32,6 +32,24 @@ public class KnowledgeWebTest extends BaseTestCase
     		createKnowledgeWithTag("testCreateKnowledgeWithTag", idList.subList(0, 1));
     	}
     }
+    
+    public void testCreateKnowledgeWithDirectoy()
+    {
+    	LogMethod();
+    	List<Long> idList = createDirectory();
+    	if ((idList != null && idList.size() > 0)) {
+    		createKnowledgeWithDirectoy("testCreateKnowledgeWithTag", idList.subList(0, 1));
+    	}
+    }
+    
+    public void testCreateKnowledgeWithTagAndDirectory()
+    {
+    	LogMethod();
+    	List<Long> idList = createTag();
+    	if ((idList != null && idList.size() > 0)) {
+    		createKnowledgeWithTagAndDirectory("testCreateKnowledgeWithTag");
+    	}
+    }
 
     public void testUpdateKnowledge()
     {

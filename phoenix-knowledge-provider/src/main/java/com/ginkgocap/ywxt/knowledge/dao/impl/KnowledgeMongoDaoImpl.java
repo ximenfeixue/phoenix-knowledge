@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
+import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
@@ -8,18 +9,24 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicUpdate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by gintong on 2016/7/19.
@@ -34,7 +41,13 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     @Autowired
     private KnowledgeCommonService knowledgeCommonService;
 
+    @Resource
+    private Cache cache;
+
     private final int maxSize = 20;
+
+    private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
+    private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     @Override
     public Knowledge insert(Knowledge knowledge) throws Exception {
@@ -149,7 +162,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge getByIdAndColumnId(long id,int columnId) {
+    public Knowledge getByIdAndColumnId(long id,int columnId)
+    {
         Query query = knowledgeColumnIdQuery(id, columnId);
         return mongoTemplate.findOne(query,Knowledge.class, getCollectionName(columnId));
     }
@@ -186,7 +200,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     public List<Knowledge> getNoDirectory(long userId,int start,int size)
     {
-        Query query = new Query(Criteria.where(Constant.OwnerId).is(userId));
+        Query query = new Query(Criteria.where(Constant.cid).is(userId));
         query.addCriteria(Criteria.where(Constant.categoryIds).exists(false));
         final String collectName = getCollectionName((short)0);
         long count = mongoTemplate.count(query, Knowledge.class, collectName);
@@ -204,6 +218,85 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         query.limit(size);
         Class classType = getKnowledgeClassType((short)0);
         return mongoTemplate.find(query, classType, collectName);
+    }
+
+    @Override
+    public Map<String, Object> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int page, int size)
+    {
+        long start = System.currentTimeMillis();
+        logger.info("columnType:{} columnId:{} userId:{}", columnType, columnId, userId);
+
+        Map<String, Object> model = new HashMap<String, Object>();
+        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+
+        List<Knowledge> list = getMongoIds(columnId, columnPath, 0, collectionName, (page - 1) * size, size);
+        model.put("list", list);
+        return model;
+    }
+
+    private List<Knowledge> getMongoIds(int columnId, String columnPath, long userId, String tableName, int start, int size) {
+        String key = getKey(columnId, userId,  tableName);
+        List<Long> knowledgeIds = (List<Long>) cache.get(key);
+        List<Knowledge> result = new ArrayList<Knowledge>(size);
+        int skip = 0;
+        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
+        if (knowledgeIds == null && !bLoading) {
+            try {
+                loadingMap.put(key, Boolean.TRUE);
+                // 查询栏目类型
+                Criteria criteria = Criteria.where("status").is(4);
+                // 金桐脑知识条件
+                criteria.and("uid").is(userId);
+                // 查询栏目目录为当前分类下的所有数据
+                String reful = columnPath;
+                // 该栏目路径下的所有文章条件
+                criteria.and("cpathid").regex("^" + reful + ".*$");
+                Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                query.limit(300);
+                query.skip(0);
+
+                List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                List<Long> ids = new CopyOnWriteArrayList<Long>();
+                if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                    for (Knowledge knowledge : knowledgeList) {
+                        if (knowledge != null) {
+                            ids.add(knowledge.getId());
+                            if (skip >= start && skip < skip + size) {
+                                result.add(knowledge);
+                            }
+                        }
+                        skip++;
+                    }
+                }
+                cache.set(key, ids);
+            } finally {
+                loadingMap.remove(key);
+            }
+        } else {
+            List<Long> ids = knowledgeIds == null ? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()),
+                    Math.min(start + size, knowledgeIds.size()));
+            for (Long id : ids) {
+                Knowledge vo = mongoTemplate.findById(id, Knowledge.class, tableName);
+                if (vo != null) {
+                    result.add(vo);
+                }
+            }
+            // 执行更新
+            executorService.execute(new TakeRecordTask(columnId, (short)4, userId, tableName, columnPath));
+        }
+        return result;
+    }
+
+    private static String getKey(Object... params) {
+        if (ArrayUtils.isEmpty(params)) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < params.length; i++) {
+            sb.append(i > 0 ? "_" : "").append(params[i]);
+        }
+        return sb.toString();
     }
 
     private String getCollectionName(String columnId) {
@@ -292,5 +385,59 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     private int parserColumnId(String columnId)
     {
         return KnowledgeUtil.parserColumnId(columnId);
+    }
+
+    private class TakeRecordTask implements Runnable {
+        private int columnId;
+        private short status;
+        private long uid;
+        private String name;
+        private String key;
+        private String columnPath;
+
+        public TakeRecordTask(int columnId, short status, long uid, String name,String columnPath) {
+            this.columnId = columnId;
+            this.status = status;
+            this.uid = uid;
+            this.name = name;
+            this.columnPath = columnPath;
+            this.key = getKey(columnId, status, uid, name);
+        }
+
+        @Override
+        public void run() {
+            boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
+            if (!bLoading) {
+                try {
+                    loadingMap.put(key, Boolean.TRUE);
+                    // 查询栏目类型
+                    Criteria criteria = Criteria.where("status").is(4);
+                    // 金桐脑知识条件
+                    criteria.and("uid").is(uid);
+                    // 查询栏目目录为当前分类下的所有数据
+                    String reful = columnPath;
+                    // 该栏目路径下的所有文章条件
+                    criteria.and("cpathid").regex("^" + reful + ".*$");
+                    Query query = new Query(criteria);
+                    query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                    query.limit(300);
+                    query.skip(0);
+
+                    List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, name);
+                    List<Long> ids = new CopyOnWriteArrayList<Long>();
+                    if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                        for (Knowledge knowledge : knowledgeList) {
+                            if (knowledge != null) {
+                                ids.add(knowledge.getId());
+                            }
+                        }
+                    }
+                    cache.set(key, ids);
+                } finally {
+                    loadingMap.remove(key);
+                }
+            }
+
+        }
     }
 }

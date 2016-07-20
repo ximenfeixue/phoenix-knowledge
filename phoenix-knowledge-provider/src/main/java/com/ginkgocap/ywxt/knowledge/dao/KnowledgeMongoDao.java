@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gintong on 2016/7/19.
@@ -106,7 +107,6 @@ public interface KnowledgeMongoDao
     public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
 
     /**
-     *
      * @date 2016年1月13日 上午10:54:58
      * @param userId
      * @param start
@@ -114,4 +114,11 @@ public interface KnowledgeMongoDao
      * @throws Exception
      */
     public List<Knowledge> getNoDirectory(long userId,int start,int size);
+
+    /**
+     * @date 2016年1月13日 上午10:54:58
+     * @param userId
+     * @throws Exception
+     */
+    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
 }

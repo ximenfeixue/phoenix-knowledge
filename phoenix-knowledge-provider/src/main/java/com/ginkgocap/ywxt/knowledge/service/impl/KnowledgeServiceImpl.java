@@ -565,6 +565,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public int getKnowledgeCount(long userId) throws Exception
     {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
         return this.knowledgeMysqlDao.getKnowledgeCount(userId);
     }
 
