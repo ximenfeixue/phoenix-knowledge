@@ -16,6 +16,8 @@ import java.util.concurrent.Executors;
 import javax.annotation.Resource;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -49,9 +51,20 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
     KnowledgeMongoDao knowledgeMongoDao;
 
     @Override
-    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size)
+    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int page, int size)
     {
         return knowledgeMongoDao.getAllByParam(type, columnPath, columnId, userId, page, size);
+    }
+
+    @Override
+    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type)
+    {
+        return knowledgeMongoDao.getKnowledgeCountByUserIdAndColumnID(columnID, userId, type);
+    }
+
+    @Override
+    public List<Knowledge> getKnowledge(String[] columnID, long user_id, short type, int start, int size) {
+        return knowledgeMongoDao.getKnowledge(columnID, user_id, type, start, size);
     }
 
     @Override
@@ -137,16 +150,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
     }
 
     //@Override
-    public List<KnowledgeBase> selectPlatform(int columnId, String columnPath,long userId, int page, int size) {
+    public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int page, int size) {
         long start = System.currentTimeMillis();
-        /*
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},", type);
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},", columnid);
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectPlatform:{},", userid);
-        String[] names = getNames(type);
-        int length = names.length;
         // 栏目id
-        Column column = columnMapper.selectByPrimaryKey(columnid);
+        /*
         Criteria criteria = Criteria.where("status").is(4);
         // 权限条件过滤
         Criteria criteriaUp = null;
@@ -184,7 +191,8 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
         }
         query.limit(size);
         query.skip((page - 1) * size);
-        List<KnowledgeVO> list = (List<KnowledgeVO>) mongoTemplate.find(query, KnowledgeVO.class, names[length - 1]);
+        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        List<Knowledge> list = (List<Knowledge>) mongoTemplate.find(query, Knowledge.class, collectionName);
         logger.info("总消耗时间为  end= " + (System.currentTimeMillis() - start));
         return list;*/
         return null;

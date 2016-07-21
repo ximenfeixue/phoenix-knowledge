@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeStatics;
 
@@ -29,7 +30,11 @@ public interface KnowledgeHomeService
      * @param size 每页大小
      * @return
      */
-    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
+    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int start, int size);
+
+    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type);
+
+    public List<Knowledge> getKnowledge(String[] columnID, long user_id, short type, int start, int size);
 
     /**
      * 查询目录知识

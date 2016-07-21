@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Admin on 2016/6/1.
  */
-public class KnowlegeMongoTest {
+public class KnowledgeMongoTest {
 
     private static long userId = 1234567L;
     private static String dataBase = "knowledge-test";

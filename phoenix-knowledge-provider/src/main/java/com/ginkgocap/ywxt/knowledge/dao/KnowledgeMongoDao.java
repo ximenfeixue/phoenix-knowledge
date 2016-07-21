@@ -129,5 +129,9 @@ public interface KnowledgeMongoDao
      * @param userId
      * @throws Exception
      */
-    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
+    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
+
+    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type);
+
+    public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size);
 }

@@ -234,7 +234,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Map<String, Object> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int page, int size)
+    public List<Knowledge> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int page, int size)
     {
         long start = System.currentTimeMillis();
         logger.info("columnType:{} columnId:{} userId:{}", columnType, columnId, userId);
@@ -242,9 +242,30 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Map<String, Object> model = new HashMap<String, Object>();
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
 
-        List<Knowledge> list = getMongoIds(columnId, columnPath, 0, collectionName, (page - 1) * size, size);
-        model.put("list", list);
-        return model;
+        return getMongoIds(columnId, columnPath, 0, collectionName, (page - 1) * size, size);
+    }
+
+    @Override
+    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type)
+    {
+        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        List<String> list = new ArrayList<String>(columnID.length);
+        for(int i = 0; i < columnID.length; i++) {
+            list.add(columnID[i]);
+        }
+        return mongoTemplate.count(new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)), collectionName);
+    }
+
+    @Override
+    public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size) {
+        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        List<String> list = new ArrayList<String>(columnID.length);
+        for(int i = 0; i < columnID.length; i++) {
+            list.add(columnID[i]);
+        }
+        Query query = new Query(Criteria.where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        return mongoTemplate.find(query, Knowledge.class, collectionName);
     }
 
     private List<Knowledge> getMongoIds(int columnId, String columnPath, long userId, String tableName, int start, int size) {

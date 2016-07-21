@@ -863,21 +863,37 @@ public class KnowledgeController extends BaseController {
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
             //First get total;
             userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
+            String [] idList = null;
             if (total == -1) {
-                total = getCreatedKnowledgeCount(userId);
+                List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
+                if (columnList != null && columnList.size() > 0) {
+                    idList =  new String[columnList.size()];
+                    int index = 0;
+                    for (ColumnSelf column : columnList) {
+                        idList[index++] = column.getId().toString();
+                    }
+                }
+                if (idList == null) {
+                    idList = new String[1];
+                    idList[0]= String.valueOf(columnId);
+                }
+                total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
             }
             if (total > 0 && start < total) {
-                knowledgeList = this.getCreatedKnowledge(userId, start, size, null);
+                List<Knowledge> detailList = this.knowledgeHomeService.getKnowledge(idList, userId, type, start, size);
+                knowledgeList = convertKnowledgeDetailListToBase(detailList);
             } else {
                 return queryKnowledgeEnd();
             }
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
+            ColumnCustom column = columnCustomService.queryByCid((long) type);
             if (total == -1) {
                 total = this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (total > 0 && start < total) {
-                knowledgeList = this.knowledgeService.getBasePublicByColumnId(type, KnowledgeConstant.PRIVATED, start, size);
+                List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, start, size);
+                knowledgeList = convertKnowledgeDetailListToBase(detailList);
             } else {
                 return queryKnowledgeEnd();
             }
@@ -1710,14 +1726,13 @@ public class KnowledgeController extends BaseController {
         Map<Long, Object> pll = new HashMap<Long, Object>(size);
         Map<Long, Object> plr = new HashMap<Long, Object>(size);
         Map<Long, Object> plcontent = new HashMap<Long, Object>(size);
-        List<Knowledge> knl = null;
 
-        model = knowledgeHomeService.getAllByParam(type, null, columnId, userId, page, size);
+        List<Knowledge> knowledgeList = knowledgeHomeService.getAllByParam(type, null, columnId, userId, page, size);
         if (model != null) {
-            knl = (List<Knowledge>) model.get("list");
+            model.put("list", knowledgeList);
         }
 
-        putRelationAndOther(type, knl, userId, plr, pll, plcontent, model);
+        putRelationAndOther(type, knowledgeList, userId, plr, pll, plcontent, model);
         return model;
     }
 
@@ -2284,5 +2299,21 @@ public class KnowledgeController extends BaseController {
                 }
             }
         }
+    }
+
+    private List<KnowledgeBase> convertKnowledgeDetailListToBase(List<Knowledge> detailList)
+    {
+        if (detailList == null || detailList.size() <=0) {
+            return null;
+        }
+
+        List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
+        for (Knowledge detail : detailList) {
+            KnowledgeBase base = DataCollect.generateKnowledge(detail);
+            if (base != null) {
+                baseList.add(base);
+            }
+        }
+        return baseList;
     }
 }
