@@ -1975,24 +1975,25 @@ public class KnowledgeController extends BaseController {
         }
 
         List<Long> assoIdList = new ArrayList<Long>();
-        try {
-            for (int index = 0; index < as.size(); index++) {
-                Associate associate = as.get(index);
-                associate.setSourceId(knowledgeId);
-                associate.setSourceTypeId(KnowledgeBaseService.sourceType);
-                //associate.setAssocTypeId(assoType.getId());
-                associate.setUserId(userId);
-                associate.setAppId(APPID);
+
+        for (int index = 0; index < as.size(); index++) {
+            Associate associate = as.get(index);
+            associate.setSourceId(knowledgeId);
+            associate.setSourceTypeId(KnowledgeBaseService.sourceType);
+            //associate.setAssocTypeId(assoType.getId());
+            associate.setUserId(userId);
+            associate.setAppId(APPID);
+            try {
                 long assoId = associateService.createAssociate(APPID, userId, associate);
                 assoIdList.add(assoId);
-                logger.info("assoid:" + assoId);
+            logger.info("assoid:" + assoId);
+            }catch (AssociateServiceException e) {
+                logger.error("update Asso failed！reason：" + e.getMessage());
+                return null;
+            } catch (Throwable e) {
+                logger.error("update Asso failed！reason：" + e.getMessage());
+                return null;
             }
-        }catch (AssociateServiceException e) {
-            logger.error("update Asso failed！reason：" + e.getMessage());
-            return null;
-        } catch (Throwable e) {
-            logger.error("update Asso failed！reason：" + e.getMessage());
-            return null;
         }
 
         return assoIdList;
