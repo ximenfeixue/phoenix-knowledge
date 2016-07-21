@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import com.ginkgocap.parasol.common.service.exception.BaseServiceException;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
@@ -85,7 +84,8 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         return knowledgeCountDao.getHotKnowledge(size);
     }
 
-    private KnowledgeCount getKnowledgeCount(long userId,long knowledgeId,short type)
+    @Override
+    public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
     {
         KnowledgeCount knowledgeCount = hotCountMap.get(knowledgeId);
         if (knowledgeCount != null ) {

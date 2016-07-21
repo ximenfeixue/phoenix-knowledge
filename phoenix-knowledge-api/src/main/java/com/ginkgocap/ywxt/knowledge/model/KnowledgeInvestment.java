@@ -72,7 +72,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setContent(vo.getContent());
 		this.setEssence(Integer.parseInt(StringUtils.isBlank(vo.getEssence()) ? "0" : vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
-		this.setStatus(vo.getSelectedIds().equals(KnowledgeConstant.Ids.platform.v()) ? KnowledgeConstant.Status.checking
+		this.setStatus(vo.getSelectedIds().equals(KnowledgeConstant.Ids.EPlatform.v()) ? KnowledgeConstant.Status.checking
 				.v() : KnowledgeConstant.Status.checked.v());
 		this.setReport_status(KnowledgeConstant.ReportStatus.unreport.v());
 		this.setIsh(KnowledgeConstant.HighLight.unlight.v());

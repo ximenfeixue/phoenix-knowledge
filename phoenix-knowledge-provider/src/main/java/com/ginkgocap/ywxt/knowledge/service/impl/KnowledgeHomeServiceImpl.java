@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -42,11 +43,15 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 @Service("knowledgeHomeService")
 public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
 {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final static Logger logger = LoggerFactory.getLogger(KnowledgeHomeServiceImpl.class);
+
+    @Autowired
+    KnowledgeMongoDao knowledgeMongoDao;
 
     @Override
-    public <T> Map<String, Object> selectAllByParam(T t, int state, int columnId, long userId, int page, int size) {
-        return null;
+    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size)
+    {
+        return knowledgeMongoDao.getAllByParam(type, columnPath, columnId, userId, page, size);
     }
 
     @Override

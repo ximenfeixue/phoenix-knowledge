@@ -330,15 +330,15 @@ public class KnowledgeConstant {
     }
 
     public static enum Ids {
-        jinTN(0), platform(-1);
+        EGinTN((short)0), EPlatform((short)-1);
 
-        private int v;
+        private short v;
 
-        private Ids(int v) {
+        private Ids(short v) {
             this.v = v;
         }
 
-        public int v() {
+        public short v() {
             return v;
         }
     }

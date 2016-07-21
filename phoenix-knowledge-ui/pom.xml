@@ -49,6 +49,10 @@
             <artifactId>parasol-tags-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-column-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame-util</artifactId>
             <version>${phoenix-frame-util.version}</version>

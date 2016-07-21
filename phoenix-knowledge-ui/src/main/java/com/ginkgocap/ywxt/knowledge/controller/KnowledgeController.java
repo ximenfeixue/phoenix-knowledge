@@ -89,6 +89,9 @@ public class KnowledgeController extends BaseController {
     @Autowired
     DynamicNewsServiceLocal dynamicNewsServiceLocal;
 
+    @Autowired
+    KnowledgeCountService knowledgeCountService;
+
     //@Autowired
     //private Cache cache;
 
@@ -900,9 +903,9 @@ public class KnowledgeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{columnId}/{page}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{type}/{columnId}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByColumnAndSourceWeb(HttpServletRequest request, HttpServletResponse response,
-                                                            @PathVariable int columnId,@PathVariable short source,
+                                                            @PathVariable short type, @PathVariable int columnId, @PathVariable short source,
                                                             @PathVariable int page,@PathVariable int size) throws Exception
     {
         User user = getUser(request);
@@ -910,20 +913,26 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        return getAllByColumnId(request, response, columnId, page*size, size);
         /*
         try {
-
             // 获取分类
+            long userId = this.getUserId(user.getId();
+            logger.info("进入知识分类首页！");
 
-            long userId = 0;
-            if (user != null) {
-                userId = user.getId();
+            Column column = columnService.queryById(columnid);
+            short type = 0;
+            if (column != null) {
+                type = column.getType();
             }
-            // 获取栏目列表
+            Column c = null;
+            Column co = null;
+            co = columnService.queryById(type);// 一级栏目
+            c = columnService.queryById(columnid);// 当前栏目
 
+            // 获取栏目列表
+            Map<String, Object> model = new HashMap<String, Object>(20);
             List<ColumnVisible> cl = columnVisibleService.queryListByPidAndUserIdAndState(userId == null ? 0l : userId, type, (short) 0);
-            Map<String, Object> model = putKnowledge(model, type + "", columnid, userId, page, size);
+            Map<String, Object> model = putKnowledge(model, type, columnId, userId, page, size);
             model.put("cl", cl);
             model.put("column", c);
             model.put("columnone", co);
@@ -931,8 +940,8 @@ public class KnowledgeController extends BaseController {
         } catch (Exception e) {
             logger.error("查询栏目出错,错误信息:{}", e.toString());
             e.printStackTrace();
-        }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);*/
+        }*/
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @ResponseBody
@@ -1689,6 +1698,63 @@ public class KnowledgeController extends BaseController {
         responseDataMap.put("listUserKnowledge", userKnowledge);
         responseDataMap.put("type", type);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+    }
+
+    private Map<String, Object> putKnowledge(Map<String, Object> model, short type, int columnId, Long userId, int page, int size) {
+        Map<Long, Object> pll = new HashMap<Long, Object>();
+        Map<Long, Object> plr = new HashMap<Long, Object>();
+        Map<Long, Object> plcontent = new HashMap<Long, Object>();
+        List<Knowledge> knl = null;
+
+        model = knowledgeHomeService.getAllByParam(type, null, columnId, userId, page, size);
+        if (model != null) {
+            knl = (List<Knowledge>) model.get("list");
+        }
+
+        putRelationAndOther(type, knl, userId, plr, pll, plcontent, model);
+        return model;
+    }
+
+    private void putRelationAndOther(short type, List<Knowledge> knl, Long userId, Map<Long, Object> plr, Map<Long, Object> pll,
+                                     Map<Long, Object> plcontent, Map<String, Object> model) {
+        for (Knowledge k : knl) {
+            putBeRelation(type, k, userId, model, plr, pll);
+
+        }
+    }
+
+    private void putBeRelation(short type, Knowledge k, Long userId, Map<String, Object> model, Map<Long, Object> plr, Map<Long, Object> pll) {
+        // 1 自己 2好友 3 金桐脑 4全平台
+        int relation = 0;
+        if (userId == null) {
+            if (k.getUid() == KnowledgeConstant.Ids.EGinTN.v()) {
+                relation = 3;
+            } else {
+                relation = 4;
+            }
+            plr.put(k.getId(), relation);
+            model.put("plr", plr);
+            getCommentCount(type, k.getId(), userId, pll);
+            model.put("pll", pll);
+
+        } else {
+            putBeRelation(type, k.getUid(), userId, model, plr, pll, k.getId());
+        }
+    }
+
+    private void putBeRelation(short type, long ci, long userId, Map<String, Object> model, Map<Long, Object> plr, Map<Long, Object> pll, long knowledgeId) {
+        if (userId < 0) {
+            userId = 0l;
+        }
+
+        getCommentCount(type, knowledgeId, userId, pll);
+        model.put("pll", pll);
+    }
+
+    private void getCommentCount(short type, long kId, long userId, Map<Long, Object> commentCountMap) {
+        // 评论数
+        KnowledgeCount kCount = knowledgeCountService.getKnowledgeCount(userId, kId, type);
+        commentCountMap.put(kId, kCount);
     }
 
     public List<KnowledgeMini> convertKnowledgeBaseToMini(List<KnowledgeBase> baseList)

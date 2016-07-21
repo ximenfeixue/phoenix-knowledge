@@ -59,7 +59,7 @@ public class KnowledgeCase extends Knowledge {
 				: vo.getEssence()));
 		this.setCreatetime(vo.getCreatetime());
 		this.setStatus(vo.getSelectedIds().equals(
-				KnowledgeConstant.Ids.platform.v()) ? KnowledgeConstant.Status.checking
+				KnowledgeConstant.Ids.EPlatform.v()) ? KnowledgeConstant.Status.checking
 				.v() : KnowledgeConstant.Status.checked.v());
 		this.setReport_status(KnowledgeConstant.ReportStatus.unreport.v());
 		this.setIsh(KnowledgeConstant.HighLight.unlight.v());

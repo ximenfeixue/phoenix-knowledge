@@ -17,5 +17,7 @@ public interface KnowledgeCountService {
 
     public boolean updateCommentCount(long userId,long knowledgeId,short type);
 
+    public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
+
     public List<KnowledgeCount> getHotKnowledge(int size);
 }

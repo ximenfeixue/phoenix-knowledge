@@ -29,7 +29,7 @@ public interface KnowledgeHomeService
      * @param size 每页大小
      * @return
      */
-    public <T> Map<String, Object> selectAllByParam(T t, int state, int columnId, long userId, int page, int size);
+    public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
 
     /**
      * 查询目录知识

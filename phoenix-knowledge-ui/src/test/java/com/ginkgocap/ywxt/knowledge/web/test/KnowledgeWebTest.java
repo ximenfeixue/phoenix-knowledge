@@ -749,6 +749,19 @@ public class KnowledgeWebTest extends BaseTestCase
         }
         return IdList;
     }
+    
+    public void testCreateDirectory()
+    {
+        List<Long> IdList = null;
+        try {
+            String subUrl = "/createDirectory/Directory" + 1; //getNextNum(); ///createTag/(tagType)/{tagName}
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            IdList = getIdList(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
     private List<Long> createDirectory()
     {
