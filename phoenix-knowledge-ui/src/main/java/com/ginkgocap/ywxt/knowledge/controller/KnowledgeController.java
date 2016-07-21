@@ -9,6 +9,10 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
+import org.parasol.column.entity.ColumnSelf;
+import org.parasol.column.entity.ColumnSys;
+import org.parasol.column.service.ColumnSelfService;
+import org.parasol.column.service.ColumnSysService;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
@@ -32,6 +36,7 @@ import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.frame.util.dto.Notification;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +67,11 @@ public class KnowledgeController extends BaseController {
     @Autowired
     KnowledgeOtherService knowledgeOtherService;
 
-    //@Autowired
-    //ColumnSysService columnSysService;
+    @Autowired
+    ColumnSysService columnSysService;
+
+    @Autowired
+    ColumnSelfService columnSelfService;
 
     @Autowired
     private UserService userService;
@@ -905,7 +913,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/allKnowledgeByColumnAndSourceWeb/{type}/{columnId}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByColumnAndSourceWeb(HttpServletRequest request, HttpServletResponse response,
-                                                            @PathVariable short type, @PathVariable int columnId, @PathVariable short source,
+                                                            @PathVariable short type, @PathVariable int columnId,
                                                             @PathVariable int page,@PathVariable int size) throws Exception
     {
         User user = getUser(request);
@@ -913,34 +921,32 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        /*
         try {
             // 获取分类
-            long userId = this.getUserId(user.getId();
+            long userId = this.getUserId(user);
             logger.info("进入知识分类首页！");
 
-            Column column = columnService.queryById(columnid);
-            short type = 0;
+            ColumnSys column = columnSysService.selectByPrimaryKey((long)type);
             if (column != null) {
                 type = column.getType();
             }
-            Column c = null;
-            Column co = null;
-            co = columnService.queryById(type);// 一级栏目
-            c = columnService.queryById(columnid);// 当前栏目
+            ColumnSys c = null;
+            ColumnSys co = null;
+            co = columnSysService.selectByPrimaryKey((long)type);// 一级栏目
+            c = columnSysService.selectByPrimaryKey((long)columnId);// 当前栏目
 
             // 获取栏目列表
             Map<String, Object> model = new HashMap<String, Object>(20);
-            List<ColumnVisible> cl = columnVisibleService.queryListByPidAndUserIdAndState(userId == null ? 0l : userId, type, (short) 0);
-            Map<String, Object> model = putKnowledge(model, type, columnId, userId, page, size);
+            List<ColumnSelf> cl = columnSelfService.queryListByPidAndUserId((long)type, userId);
+            model = putKnowledge(model, type, columnId, userId, page, size);
             model.put("cl", cl);
             model.put("column", c);
             model.put("columnone", co);
-            model.put("columnid", columnid);
+            model.put("columnid", columnId);
         } catch (Exception e) {
             logger.error("查询栏目出错,错误信息:{}", e.toString());
             e.printStackTrace();
-        }*/
+        }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -1701,9 +1707,9 @@ public class KnowledgeController extends BaseController {
     }
 
     private Map<String, Object> putKnowledge(Map<String, Object> model, short type, int columnId, Long userId, int page, int size) {
-        Map<Long, Object> pll = new HashMap<Long, Object>();
-        Map<Long, Object> plr = new HashMap<Long, Object>();
-        Map<Long, Object> plcontent = new HashMap<Long, Object>();
+        Map<Long, Object> pll = new HashMap<Long, Object>(size);
+        Map<Long, Object> plr = new HashMap<Long, Object>(size);
+        Map<Long, Object> plcontent = new HashMap<Long, Object>(size);
         List<Knowledge> knl = null;
 
         model = knowledgeHomeService.getAllByParam(type, null, columnId, userId, page, size);

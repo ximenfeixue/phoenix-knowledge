@@ -221,6 +221,19 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
+    public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size)
+    {
+        String collectionName = this.getCollectionName(type);
+        List<String> list = new ArrayList<String>(columnIds.length);
+        for(int i = 0; i < columnIds.length; i++) {
+            list.add(String.valueOf(columnIds[i]));
+        }
+        Query query = new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        return mongoTemplate.find(query, Knowledge.class, collectionName);
+    }
+
+    @Override
     public Map<String, Object> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int page, int size)
     {
         long start = System.currentTimeMillis();

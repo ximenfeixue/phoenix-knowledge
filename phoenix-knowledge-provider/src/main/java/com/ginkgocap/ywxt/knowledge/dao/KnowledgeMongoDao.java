@@ -118,6 +118,15 @@ public interface KnowledgeMongoDao
     /**
      * @date 2016年1月13日 上午10:54:58
      * @param userId
+     * @param start
+     * @param size
+     * @throws Exception
+     */
+    public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size);
+
+    /**
+     * @date 2016年1月13日 上午10:54:58
+     * @param userId
      * @throws Exception
      */
     public Map<String, Object> getAllByParam(short type,String columnPath,int columnId, Long userId, int page, int size);
