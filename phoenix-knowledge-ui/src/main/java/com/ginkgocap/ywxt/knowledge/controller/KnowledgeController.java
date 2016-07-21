@@ -165,7 +165,7 @@ public class KnowledgeController extends BaseController {
                 logger.error("associate it null or converted failed, so skip to save!");
             }
 
-        }catch (Exception e) {
+        }catch (Throwable e) {
             logger.error("Insert associate failed : " + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -1988,6 +1988,9 @@ public class KnowledgeController extends BaseController {
                 logger.info("assoid:" + assoId);
             }
         }catch (AssociateServiceException e) {
+            logger.error("update Asso failed！reason：" + e.getMessage());
+            return null;
+        } catch (Throwable e) {
             logger.error("update Asso failed！reason：" + e.getMessage());
             return null;
         }
