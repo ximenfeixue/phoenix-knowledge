@@ -122,6 +122,7 @@ public class KnowledgeController extends BaseController {
 
         String requestJson = this.getBodyParam(request);
         DataCollect data = KnowledgeUtil.getDataCollect(requestJson);
+        initKnowledgeTime(data);
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
@@ -183,8 +184,8 @@ public class KnowledgeController extends BaseController {
 
         //Sync to dynamic news
         if (syncToDynamic) {
-            String dymnaicNews = createDynamicNews(detail);
-            dynamicNewsServiceLocal.addDynamicToAll(dymnaicNews, userId);
+            String dynamicNews = createDynamicNews(detail);
+            dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId);
             /*
             DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail);
             if (dataSyncTask != null) {
@@ -2254,7 +2255,7 @@ public class KnowledgeController extends BaseController {
         dynamic.setClearContent(clearContent);
         dynamic.setPicPath(detail.getPic());
         dynamic.setCreaterName(detail.getCname());
-        dynamic.setCtime(Long.parseLong(detail.getCreatetime()));
+        dynamic.setCtime(KnowledgeUtil.parserTimeToLong(detail.getCreatetime()));
         //dynamic.setDemandCount());
         //dynamic.setId();
         dynamic.setImgPath(detail.getPic());
@@ -2264,5 +2265,20 @@ public class KnowledgeController extends BaseController {
         dynamic.setScope(String.valueOf(0));
         //dynamic.setVirtual(knowledge.getVirtual());
         return KnowledgeUtil.writeObjectToJson(dynamic);
+    }
+
+    private void initKnowledgeTime(DataCollect data)
+    {
+        if (data != null) {
+            Knowledge detail = data.getKnowledgeDetail();
+            if (detail != null) {
+                if (StringUtils.isEmpty(detail.getCreatetime())) {
+                    detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
+                }
+                if (StringUtils.isEmpty(detail.getModifytime())) {
+                    detail.setModifytime(String.valueOf(detail.getModifytime()));
+                }
+            }
+        }
     }
 }

@@ -438,6 +438,10 @@ public final class KnowledgeUtil {
 
     public static long parserTimeToLong(String time)
     {
+        if (StringUtils.isEmpty(time)) {
+            return System.currentTimeMillis();
+        }
+
         long newTime = 0L;
         try {
             newTime = Long.valueOf(time);
