@@ -9,8 +9,10 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
+import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.entity.ColumnSys;
+import org.parasol.column.service.ColumnCustomService;
 import org.parasol.column.service.ColumnSelfService;
 import org.parasol.column.service.ColumnSysService;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
@@ -68,10 +70,7 @@ public class KnowledgeController extends BaseController {
     KnowledgeOtherService knowledgeOtherService;
 
     @Autowired
-    ColumnSysService columnSysService;
-
-    @Autowired
-    ColumnSelfService columnSelfService;
+    ColumnCustomService columnCustomService;
 
     @Autowired
     private UserService userService;
@@ -926,18 +925,18 @@ public class KnowledgeController extends BaseController {
             long userId = this.getUserId(user);
             logger.info("进入知识分类首页！");
 
-            ColumnSys column = columnSysService.selectByPrimaryKey((long)type);
+            ColumnCustom column = columnCustomService.queryByCid((long) type);
             if (column != null) {
-                type = column.getType();
+                type = column.getType().shortValue();
             }
-            ColumnSys c = null;
-            ColumnSys co = null;
-            co = columnSysService.selectByPrimaryKey((long)type);// 一级栏目
-            c = columnSysService.selectByPrimaryKey((long)columnId);// 当前栏目
+            ColumnCustom c = null;
+            ColumnCustom co = null;
+            co = columnCustomService.queryByCid((long) type);// 一级栏目
+            c = columnCustomService.queryByCid((long) columnId);// 当前栏目
 
             // 获取栏目列表
             Map<String, Object> model = new HashMap<String, Object>(20);
-            List<ColumnSelf> cl = columnSelfService.queryListByPidAndUserId((long)type, userId);
+            List<ColumnSelf> cl = columnCustomService.queryListByPidAndUserId((long)type, userId);
             model = putKnowledge(model, type, columnId, userId, page, size);
             model.put("cl", cl);
             model.put("column", c);
