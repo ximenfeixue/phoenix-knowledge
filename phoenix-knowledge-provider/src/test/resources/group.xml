@@ -3,7 +3,7 @@
     <datasources>
         <ds name="idCenterDS"
             driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new_test?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
             username="zhangwei"
             password="zhangwei"
             maxActive=""
@@ -16,7 +16,7 @@
 
         <ds name="master"
             driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new_test?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
             username="zhangwei"
             password="zhangwei"
             maxActive=""
@@ -28,7 +28,7 @@
                 />
         <ds name="slave"
             driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new_test?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
             username="zhangwei"
             password="zhangwei"
             maxActive=""

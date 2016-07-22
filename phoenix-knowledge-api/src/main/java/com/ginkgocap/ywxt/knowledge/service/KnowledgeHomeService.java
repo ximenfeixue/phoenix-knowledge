@@ -23,10 +23,9 @@ public interface KnowledgeHomeService
 
     /**
      * 查询知识
-     * @param state 0 栏目 1 目录 2 收藏
      * @param columnId 栏目id
      * @param userId 用户id
-     * @param page 当前页码
+     * @param start 起始实记录
      * @param size 每页大小
      * @return
      */
@@ -48,7 +47,6 @@ public interface KnowledgeHomeService
      * @param size 每页大小
      * @return map<pre>example：
      * selectAllKnowledgeCategoryByParam("1","1",0,"000000001", 1l,"关键词", 1, 20);</pre>
-     * @see {@link KnowledgeHomeServiceImpl#selectAllByParam}
      * @author bianzhiwei
      * @since 2014.11.11
      */

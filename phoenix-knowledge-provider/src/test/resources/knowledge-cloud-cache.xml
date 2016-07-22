@@ -11,8 +11,8 @@
 	</bean>
 	<!-- jedis 多个服务器配置-->
 	<bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">
-		<constructor-arg index="0" value="${redis.host}" />
-		<constructor-arg index="1" value="${redis.port}" />
+		<constructor-arg index="0" value="192.168.101.131" />
+		<constructor-arg index="1" value="6379" />
 	</bean>
 	
 	<bean id="jedisPool" class="redis.clients.jedis.ShardedJedisPool">

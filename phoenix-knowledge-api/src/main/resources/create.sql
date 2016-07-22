@@ -6,7 +6,7 @@ CREATE TABLE `tb_knowledge_base` (
   `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人',
   `create_user_name` varchar(50) DEFAULT NULL COMMENT '创建人名称',
   `column_id` bigint(20) DEFAULT NULL COMMENT '知识类型（默认0：其他,1：资讯，2：投融工具，3：行业，4：经典案例，5：图书报告，6：资产管理，7：宏观，8：观点，9：判例，10，法律法规，11：文章）',
-  `type` tinyint(2) DEFAULT NULL COMMENT '类型，0为系统创建，1为用户创建',
+  `type` smallint(2) DEFAULT NULL COMMENT '11种栏目类型',
   `source` varchar(255) DEFAULT NULL COMMENT '来源',
   `content_desc` varchar(255) DEFAULT NULL COMMENT '描述(知识前50个字符)',
   `title` varchar(255) DEFAULT NULL COMMENT '标题',
@@ -32,6 +32,7 @@ CREATE TABLE `tb_knowledge_base` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='知识基础表';
 
+
 CREATE TABLE `tb_knowledge_reference` (
   `id` bigint(20) NOT NULL DEFAULT '0' COMMENT 'id',
   `knowledge_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '知识Id（投融工具和行业有）',
@@ -50,14 +51,13 @@ CREATE TABLE `tb_knowledge_count` (
   `type` smallint(6) DEFAULT NULL COMMENT '栏目类型',
   `knowledgeId` bigint(20) NOT NULL COMMENT '知识id',
   `title` varchar(255) DEFAULT NULL COMMENT '知识标题',
-  `userId` bigint(20) NOT NULL COMMENT '用户id',
+  `userId` bigint(20) DEFAULT '0' COMMENT '用户id',
   `commentCount` bigint(20) DEFAULT '0' COMMENT '评论数',
   `shareCount` bigint(20) DEFAULT '0' COMMENT '分享数',
   `collectCount` bigint(20) DEFAULT '0' COMMENT '收藏数',
   `clickCount` bigint(20) DEFAULT '0' COMMENT '点击数',
   `hotCount` bigint(20) NOT NULL DEFAULT '0' COMMENT '知识热度',
   `source` smallint(6) DEFAULT NULL COMMENT '知识来源(0-系统 1-用户)',
-  PRIMARY KEY (`id`,`knowledgeId`,`hotCount`),
-  KEY `idx_ks_type` (`type`)
+  PRIMARY KEY (`id`,`knowledgeId`,`hotCount`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='知识统计表';
  
