@@ -21,9 +21,15 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
 
     @Override
     public List<KnowledgeCount> getHotKnowledge(int size) {
+        return getHotKnowledgeByPage(0, size);
+    }
+
+    @Override
+    public List<KnowledgeCount> getHotKnowledgeByPage(int start,int size)
+    {
         List<KnowledgeCount> knowledgeCounts = null;
         try {
-            knowledgeCounts = this.getEntitys("get_knowledge_count_order_desc", size);
+            knowledgeCounts = this.getSubEntitys("get_knowledge_count_by_page", start, size, 0);
         } catch (BaseServiceException e) {
             e.printStackTrace();
         }

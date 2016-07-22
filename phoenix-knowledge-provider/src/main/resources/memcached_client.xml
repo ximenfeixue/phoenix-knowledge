@@ -160,14 +160,9 @@
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
 
-        <region name="get_knowledge_count_order_desc"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
+        <region name="get_knowledge_count_by_page"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
-        <!--
-        <region name="List_Id_AppId_TagId_SourceType"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
-            <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
-        </region>
-         -->
 	</regions>
 </root>
 

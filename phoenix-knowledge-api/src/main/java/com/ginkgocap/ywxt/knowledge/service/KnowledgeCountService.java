@@ -20,4 +20,6 @@ public interface KnowledgeCountService {
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
 
     public List<KnowledgeCount> getHotKnowledge(int size);
+
+    public List<KnowledgeCount> getHotKnowledgeByPage(int start,int size);
 }

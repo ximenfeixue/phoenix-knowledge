@@ -84,6 +84,11 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         return knowledgeCountDao.getHotKnowledge(size);
     }
 
+    public List<KnowledgeCount> getHotKnowledgeByPage(int start,int size)
+    {
+        return knowledgeCountDao.getHotKnowledgeByPage(start, size);
+    }
+
     @Override
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
     {
