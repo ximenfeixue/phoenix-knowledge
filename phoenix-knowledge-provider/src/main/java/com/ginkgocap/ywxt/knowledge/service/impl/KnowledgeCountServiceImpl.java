@@ -101,7 +101,6 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         if (knowledgeCount == null) {
             knowledgeCount = new KnowledgeCount();
             knowledgeCount.setId(knowledgeId);
-            knowledgeCount.setKnowledgeId(knowledgeId);
             knowledgeCount.setUserId(userId);
             knowledgeCount.setType(type);
             try {
