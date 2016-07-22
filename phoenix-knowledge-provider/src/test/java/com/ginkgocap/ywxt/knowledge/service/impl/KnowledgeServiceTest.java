@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -20,9 +21,6 @@ public class KnowledgeServiceTest extends TestBase {
 
     @Autowired
 	private KnowledgeServiceV1 knowledgeService;
-
-    //@Autowired
-    //KnowledgeOtherService knowledgeOtherService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;

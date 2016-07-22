@@ -300,6 +300,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnId) throws Exception {
 
         Knowledge oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+        if (oldKnowledgeDetail == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, "要删除的知识不存在!");
+        }
         long userId = oldKnowledgeDetail.getCid();
 
         //知识详细表删除

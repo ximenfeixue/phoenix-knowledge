@@ -520,7 +520,7 @@
                 <!-- mongo地址 -->
                 <mongodb.address>192.168.120.135:27017</mongodb.address>
                 <!-- mongo中数据库 -->
-                <mongodb.database>knowledge-new</mongodb.database>
+                <mongodb.database>knowledge-test</mongodb.database>
                 <!-- 数据库访问帐号 -->
                 <jdbc.url>jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>zhangwei</jdbc.username>

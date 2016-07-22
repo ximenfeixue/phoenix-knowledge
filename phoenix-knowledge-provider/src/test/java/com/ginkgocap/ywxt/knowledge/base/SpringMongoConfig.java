@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class SpringMongoConfig extends AbstractMongoConfiguration {
 
-    private final String database = "knowledge-new";
+    private final String database = "knowledge-test";
     @Override
     protected String getDatabaseName() {
         return database;
@@ -17,7 +17,7 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public @Bean Mongo mongo() throws Exception {
-        return new Mongo("192.168.101.131");
+        return new Mongo("192.168.120.135");
     }
     @Override
     public @Bean

@@ -21,7 +21,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledge()
     {
         LogMethod();
-        createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的，苹果将在劫难逃！");
+        createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的");
     }
     
     public void testCreateKnowledgeWithTag()
@@ -186,7 +186,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             createKnowledge("考虑,考虑1");
             //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/2/2697/1/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/1/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
