@@ -876,10 +876,6 @@ public class KnowledgeController extends BaseController {
                 idList = new String[1];
                 idList[0]= String.valueOf(columnId);
             }
-            if (idList == null) {
-                idList = new String[1];
-                idList[0]= String.valueOf(columnId);
-            }
             if (total == -1) {
                 total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
             }
