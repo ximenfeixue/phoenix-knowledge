@@ -864,19 +864,23 @@ public class KnowledgeController extends BaseController {
             //First get total;
             userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
             String [] idList = null;
+            List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
+            if (columnList != null && columnList.size() > 0) {
+                idList =  new String[columnList.size()];
+                int index = 0;
+                for (ColumnSelf column : columnList) {
+                    idList[index++] = column.getId().toString();
+                }
+            }
+            if (idList == null) {
+                idList = new String[1];
+                idList[0]= String.valueOf(columnId);
+            }
+            if (idList == null) {
+                idList = new String[1];
+                idList[0]= String.valueOf(columnId);
+            }
             if (total == -1) {
-                List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
-                if (columnList != null && columnList.size() > 0) {
-                    idList =  new String[columnList.size()];
-                    int index = 0;
-                    for (ColumnSelf column : columnList) {
-                        idList[index++] = column.getId().toString();
-                    }
-                }
-                if (idList == null) {
-                    idList = new String[1];
-                    idList[0]= String.valueOf(columnId);
-                }
                 total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
             }
             if (total > 0 && start < total) {
