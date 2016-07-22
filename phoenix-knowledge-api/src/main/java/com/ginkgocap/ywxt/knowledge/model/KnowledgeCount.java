@@ -17,8 +17,6 @@ public class KnowledgeCount implements Serializable {
 
     private long id;
 
-    private long knowledgeId;
-
     private short type;
 
     private long userId;
@@ -45,15 +43,6 @@ public class KnowledgeCount implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @Column(name = "knowledgeId")
-    public long getKnowledgeId() {
-        return knowledgeId;
-    }
-
-    public void setKnowledgeId(long knowledgeId) {
-        this.knowledgeId = knowledgeId;
     }
 
     @Column(name = "type")

@@ -308,8 +308,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 loadingMap.remove(key);
             }
         } else {
-            List<Long> ids = knowledgeIds == null ? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()),
-                    Math.min(start + size, knowledgeIds.size()));
+            List<Long> ids = knowledgeIds == null ? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()-1),
+                    Math.min(start + size, knowledgeIds.size()-1));
             for (Long id : ids) {
                 Knowledge vo = mongoTemplate.findById(id, Knowledge.class, tableName);
                 if (vo != null) {
