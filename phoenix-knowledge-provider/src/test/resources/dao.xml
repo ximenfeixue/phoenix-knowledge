@@ -45,8 +45,8 @@
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_all_start_size"
-                  sqlitem="select id from tb_knowledge_base order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="start,size" update="true" />
+                  sqlitem="select id from tb_knowledge_base where id > ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="value" update="true" />
 
             <list name="get_all_public"
                   sqlitem="select id from tb_knowledge_base where privated != ? order by create_date desc"

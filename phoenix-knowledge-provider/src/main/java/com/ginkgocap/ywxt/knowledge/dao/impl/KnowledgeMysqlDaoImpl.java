@@ -155,7 +155,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public List<KnowledgeBase> getAll(int start,int size) throws Exception {
 		
-		return this.getSubEntitys("get_all_start_size", start, size);
+		return this.getSubEntitys("get_all_start_size", start, size, 0);
 	}
 
 	@Override

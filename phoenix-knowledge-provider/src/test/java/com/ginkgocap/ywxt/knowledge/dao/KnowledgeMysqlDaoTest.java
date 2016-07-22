@@ -24,14 +24,13 @@ public class KnowledgeMysqlDaoTest extends TestBase {
     {
         try {
             for (int index = 0; index <15; index++) {
-                System.out.println("Index: "+index);
-                List<KnowledgeBase> baseList = knowledgeMysqlDao.getAllPublic(index, 20, (short) 0);
-                index += 20;
+                System.err.println("Index: " + index);
+                List<KnowledgeBase> baseList = knowledgeMysqlDao.getAll(0, 20);
+                System.err.println("Size: " + baseList.size());
                 String jsContent = KnowledgeUtil.writeObjectToJson(baseList);
                 System.out.println(jsContent);
                 TestCase.assertTrue(baseList != null && baseList.size() > 0);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,14 +40,16 @@ public class KnowledgeMysqlDaoTest extends TestBase {
     public void testInsert()
     {
         try {
-            DataCollect data = TestData.getDataCollect(1234567L, 1, "testInsert");
-            data.generateKnowledge();
-            KnowledgeBase base = data.getKnowledge();
-            base.setId(System.currentTimeMillis());
-            base.setKnowledgeId(System.currentTimeMillis());
-            KnowledgeBase newBase = knowledgeMysqlDao.insert(data.getKnowledge());
-            System.out.println(newBase);
-            TestCase.assertTrue(newBase != null);
+            for(int index = 0; index <10; index++) {
+                DataCollect data = TestData.getDataCollect(1234567L, 1, "testInsert");
+                data.generateKnowledge();
+                KnowledgeBase base = data.getKnowledge();
+                base.setId(System.currentTimeMillis());
+                base.setKnowledgeId(System.currentTimeMillis());
+                KnowledgeBase newBase = knowledgeMysqlDao.insert(data.getKnowledge());
+                System.out.println(newBase);
+                TestCase.assertTrue(newBase != null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -178,7 +178,6 @@ public class KnowledgeBase implements Serializable {
 		this.essence = essence;
 	}
 
-
 	@Column(name = "tags")
     public String getTags() {
         return tags;

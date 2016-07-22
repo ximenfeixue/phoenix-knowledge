@@ -27,7 +27,7 @@
 	<bean id="cache" class="com.ginkgocap.ywxt.cache.Cache">
 		<property name="jedisPool" ref="jedisPool"></property>
         <property name="local" value="true"></property>
-        <property name="localTTL" value="${user.cache.expiredTime}"></property>
+        <property name="localTTL" value="86400"></property>
 	</bean>
 	
 </beans>
