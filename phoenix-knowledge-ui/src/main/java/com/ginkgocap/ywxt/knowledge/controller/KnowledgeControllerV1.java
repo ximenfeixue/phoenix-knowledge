@@ -47,8 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@Controller
-@RequestMapping("/knowledgeV1")
+//@Controller
+//@RequestMapping("/knowledgeV1")
 public class KnowledgeControllerV1 extends BaseController {
 
 	private final Logger logger = LoggerFactory.getLogger(KnowledgeControllerV1.class);
