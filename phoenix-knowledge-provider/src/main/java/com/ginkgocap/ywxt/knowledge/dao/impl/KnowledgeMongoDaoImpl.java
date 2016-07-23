@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
 import org.apache.commons.lang.StringUtils;
@@ -266,6 +267,47 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Query query = new Query(Criteria.where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));
         return mongoTemplate.find(query, Knowledge.class, collectionName);
+    }
+
+    // 首页主页
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids)
+    {
+        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService", type);
+        String collectionName = getCollectionName(type);
+        Criteria criteria = Criteria.where("status").is(4);
+        Criteria criteriaPj = new Criteria();
+        Criteria criteriaUp = new Criteria();
+        Criteria criteriaGt = new Criteria();
+
+        criteriaGt.and("uid").is(KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID);
+        // 查询栏目大类下的数据：全平台
+        // 查询资讯
+        Query query = null;
+        if (ids != null && ids.size() > 0) {
+            criteriaUp.and("_id").in(ids);
+            criteriaPj.orOperator(criteriaUp, criteriaGt);
+            criteriaPj.andOperator(criteria);
+            query = new Query(criteriaPj);
+        } else {
+            criteria.andOperator(criteriaGt);
+            query = new Query(criteria);
+        }
+        String str = "" + KnowledgeUtil.writeObjectToJson(criteria);
+        logger.info("MongoObject:" + collectionName + ",Query:" + str);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        long count;
+        try {
+            // count = mongoTemplate.count(query, names[length - 1]);
+            // PageUtil p = new PageUtil((int) count, page, size);
+            query.limit(size);
+            query.skip(0);
+            return mongoTemplate.find(query, Knowledge.class, collectionName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, final int size) {

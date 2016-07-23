@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Resource;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import net.sf.json.JSONObject;
@@ -49,6 +50,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
 
     @Autowired
     KnowledgeMongoDao knowledgeMongoDao;
+
+    @Autowired
+    KnowledgeMysqlDao knowledgeMysqlDao;
 
     @Override
     public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int page, int size)
@@ -88,45 +92,15 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
     }
 
     @Override
-    public <T> List<T> selectIndexByParam(int columnId, int page, int size) {
-        /*
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectIndexByParam:{},", ty);
-        String[] names = ty.obj().split("\\.");
-        int length = names.length;
-        Criteria criteria = Criteria.where("status").is(4);
-        Criteria criteriaPj = new Criteria();
-        Criteria criteriaUp = new Criteria();
-        Criteria criteriaGt = new Criteria();
-        List<Long> ids = new ArrayList<Long>();
-
-        criteriaGt.and("uid").is(0L); // 0 金桐脑
-        // 查询栏目大类下的数据：全平台
-        ids = userPermissionValueMapper.selectByParamsSingle(null, (long) ty.v());
-        // 查询资讯
-        Query query = null;
-        if (ids != null && ids.size() > 0) {
-            criteriaUp.and("_id").in(ids);
-            criteriaPj.orOperator(criteriaUp, criteriaGt);
-            criteriaPj.andOperator(criteria);
-            query = new Query(criteriaPj);
-        } else {
-            criteria.andOperator(criteriaGt);
-            query = new Query(criteria);
-        }
-        String str = "" + JSONObject.fromObject(criteria);
-        logger.info("MongoObject:" + ty.obj() + ",Query:" + str);
-        query.sort().on("_id", Order.DESCENDING);
-        long count;
+    public List<Knowledge> selectIndexByParam(short type, int page, int size)
+    {
+        List<Long> ids = null;
         try {
-            // count = mongoTemplate.count(query, names[length - 1]);
-            // PageUtil p = new PageUtil((int) count, page, size);
-            query.limit(size);
-            query.skip(0);
-            //return (List<T>) mongoTemplate.find(query, KnowledgeVO.class, names[length - 1]);
+            ids = knowledgeMysqlDao.getKnowledgeIdsByType(type, size);
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
-        return null;
+        }
+        return knowledgeMongoDao.selectIndexByParam(type, page, size, ids);
     }
 
     @Override

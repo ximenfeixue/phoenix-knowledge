@@ -5,6 +5,7 @@ package com.ginkgocap.ywxt.knowledge.model.mobile;
  */
 import java.util.List;
 
+import com.ginkgocap.ywxt.knowledge.model.AffairMini;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

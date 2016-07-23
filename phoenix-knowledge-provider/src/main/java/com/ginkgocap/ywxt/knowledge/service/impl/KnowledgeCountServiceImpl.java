@@ -89,6 +89,19 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         return knowledgeCountDao.getHotKnowledgeByPage(start, size);
     }
 
+    //Only check exist or not
+    @Override
+    public KnowledgeCount getKnowledgeCount(long knowledgeId)
+    {
+        try {
+            return knowledgeCountDao.getKnowledgeCount(knowledgeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     @Override
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
     {

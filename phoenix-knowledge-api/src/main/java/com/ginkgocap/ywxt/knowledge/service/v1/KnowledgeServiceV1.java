@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.service.v1;
 
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;

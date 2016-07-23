@@ -134,4 +134,6 @@ public interface KnowledgeMongoDao
     public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type);
 
     public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size);
+
+    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids);
 }

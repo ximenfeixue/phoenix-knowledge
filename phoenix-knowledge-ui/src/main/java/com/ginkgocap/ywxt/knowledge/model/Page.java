@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.model.mobile;
+package com.ginkgocap.ywxt.knowledge.model;
 
 /**
  * Created by gintong on 2016/7/6.
@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
+import com.ginkgocap.ywxt.knowledge.model.mobile.Flow;
+import com.ginkgocap.ywxt.knowledge.model.mobile.SearchResult;
 
 public class Page implements Serializable {
     private static final long serialVersionUID = -1952086533379737985L;

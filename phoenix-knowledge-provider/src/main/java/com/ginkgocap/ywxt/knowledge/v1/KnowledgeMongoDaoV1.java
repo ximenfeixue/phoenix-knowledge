@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.dao;
+package com.ginkgocap.ywxt.knowledge.v1;
 
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 

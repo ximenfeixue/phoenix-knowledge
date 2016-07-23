@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.ginkgocap.parasol.directory.model.Directory;
 import junit.framework.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.parasol.tags.model.Tag;
+import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
@@ -27,7 +30,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledgeWithTag()
     {
     	LogMethod();
-    	List<Long> idList = createTag();
+    	List<Long> idList = getTagList();
     	if ((idList != null && idList.size() > 0)) {
     		createKnowledgeWithTag("testCreateKnowledgeWithTag", idList.subList(0, 1));
     	}
@@ -36,7 +39,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledgeWithDirectoy()
     {
     	LogMethod();
-    	List<Long> idList = createDirectory();
+    	List<Long> idList = getDirectoryList();
     	if ((idList != null && idList.size() > 0)) {
     		createKnowledgeWithDirectoy("testCreateKnowledgeWithTag", idList.subList(0, 1));
     	}
@@ -45,10 +48,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledgeWithTagAndDirectory()
     {
     	LogMethod();
-    	List<Long> idList = createTag();
-    	if ((idList != null && idList.size() > 0)) {
-    		createKnowledgeWithTagAndDirectory("testCreateKnowledgeWithTag");
-    	}
+    	createKnowledgeWithTagAndDirectory("testCreateKnowledgeWithTagAndDirectory");
     }
 
     public void testUpdateKnowledge()
@@ -57,8 +57,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             DataCollect data = createKnowledge("KnowledgeWebTest_create");
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
-            data.getKnowledgeDetail().setTagList(createTag());
-            data.getKnowledgeDetail().setDirectorys(createDirectory());
+            data.getKnowledgeDetail().setTagList(getTagList());
+            data.getKnowledgeDetail().setDirectorys(getDirectoryList());
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl, knowledgeJson);
             Util.checkRequestResultSuccess(result);
@@ -186,7 +186,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             //createKnowledge("考虑,考虑1");
             //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/2/2/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/3/20/110"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -211,17 +211,16 @@ public class KnowledgeWebTest extends BaseTestCase
     }
     
     
-	public void testKnowlegeCount() {
+	public void testKnowledgeCount() {
 		LogMethod();
 		try {
 			String subUrl = "/my/count";
-			JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl
-					+ subUrl, null);
+			JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
 			Util.checkResponseWithData(result);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail();
-		}
+            e.printStackTrace();
+            fail();
+        }
 	}
 
     public void testAllCreatedKnowledge()
@@ -416,7 +415,11 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	//DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> tagIds = createTag();
+            List<Long> tagIds = getTagList();
+            if (tagIds == null || tagIds.size() <= 0) {
+                System.out.println("No tag to added");
+                fail();
+            }
             long [] tagIdList = convertList(tagIds);
             long knowledgeId = createKnowledge("testBatchTags").getKnowledgeDetail().getId();
 //            if (data != null ) {
@@ -459,7 +462,11 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> tagIds = createTag();
+            List<Long> tagIds = getTagList();
+            if (tagIds == null || tagIds.size() <= 0) {
+                System.err.println("No tag added");
+                fail();
+            }
             long [] tagIdList = convertList(tagIds);
             long knowledgeId = 0L;
             if (data != null ) {
@@ -490,7 +497,11 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
             List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> directoryIds = createDirectory();
+            List<Long> directoryIds = getDirectoryList();
+            if (directoryIds == null || directoryIds.size() <= 0) {
+                System.err.println("No directory added");
+                fail();
+            }
             long [] IdList = convertList(directoryIds);
 
             long knowledgeId = 0L;
@@ -516,7 +527,11 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/tagList";
-            List<Long> tags = this.createTag();
+            List<Long> tags = this.getTagList();
+            if (tags == null || tags.size() <= 0) {
+                System.err.println("can't get tags");
+                fail();
+            }
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -531,7 +546,11 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/tagCount";
-            List<Long> tags = this.createTag();
+            List<Long> tags = this.getTagList();
+            if (tags == null || tags.size() <= 0) {
+                System.err.println("can't get tags");
+                fail();
+            }
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -568,11 +587,14 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
         	long directoryId = 3990305410121740L;
-        	List<Long> idList = createDirectory();
+        	List<Long> idList = getDirectoryList();
         	if ((idList != null && idList.size() > 0)) {
         		createKnowledgeWithDirectoy("testGetAllByDirectoryId", idList.subList(0, 1));
         		directoryId = idList.get(0);
-        	}
+        	} else {
+                System.err.println("can't get directory");
+                fail();
+            }
             String subUrl = "/byDirectory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
@@ -642,7 +664,7 @@ public class KnowledgeWebTest extends BaseTestCase
     
     public void testCreateTag()
     {
-    	 LogMethod();
+    	LogMethod();
         createTag();
     }	
     
@@ -652,7 +674,20 @@ public class KnowledgeWebTest extends BaseTestCase
         createDirectory();
     }
     
-
+    public void testSeparate()
+    {
+    	LogMethod();
+        try {
+        	for (int type = 1; type <12; type ++) {
+	            String subUrl = "home/separate/" + type;  ///home/separate/{type}
+	            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+	            Util.checkRequestResultSuccess(result);
+	        	}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     private String collectKnowledge(String title)
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"
@@ -698,7 +733,7 @@ public class KnowledgeWebTest extends BaseTestCase
     
     private DataCollect createKnowledgeWithTagAndDirectory(String title)
     {
-    	return createKnowledge(title, createTag(), createDirectory());
+        return createKnowledge(title, getTagList(), getDirectoryList());
     }
 
     private DataCollect createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)
@@ -747,33 +782,38 @@ public class KnowledgeWebTest extends BaseTestCase
         Util.checkResponseWithData(result);
     }
 
-    private List<Long> createTag()
+    private long createTag()
     {
-        List<Long> IdList = null;
+        long tagId = 0L;
         try {
             String subUrl = "/createTag/Tag" + getNextNum(); ///createTag/{tagName}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            IdList = getIdList(result);
-            Assert.assertTrue(IdList != null && IdList.size() > 0);
+            String retData = Util.getResponseData(result);
+            Assert.assertFalse("null".equals(retData));
+            System.out.println("tagId: " + retData);
+            tagId = Long.parseLong(retData);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
-        return IdList;
+        return tagId;
     }
 
-    private List<Long> createDirectory()
+    private long createDirectory()
     {
-        List<Long> IdList = null;
+    	long id = 0L;
         try {
             String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            IdList = getIdList(result);
+            String retData = Util.getResponseData(result);
+            Assert.assertFalse("null".equals(retData));
+            System.out.println("tagId: " + retData);
+            id = Long.parseLong(retData);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
-        return IdList;
+        return id;
     }
     
     private void createBatchTag(long knowledgeId,long [] tagIds)
@@ -792,12 +832,71 @@ public class KnowledgeWebTest extends BaseTestCase
 		}
         
     }
+    
+    private List<Long> getTagList()
+    {
+        List<Long> IdList = null;
+        try {
+            String subUrl = "/getTagList"; ///createTag/{tagName}
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            IdList = convertTagIdList(result);
+            Assert.assertTrue(IdList != null && IdList.size() > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        return IdList;
+    }
+
+    private List<Long> getDirectoryList()
+    {
+        List<Long> IdList = null;
+        try {
+            String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            IdList = convertDirectoryIdList(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        return IdList;
+    }
 
     private List<Long> getIdList(JsonNode result)
     {
         Util.checkResponseWithData(result);
         String idsJson = Util.getResponseData(result);
         return (List<Long>)KnowledgeUtil.readValue(List.class, idsJson);
+    }
+    
+    private List<Long> convertTagIdList(JsonNode result)
+    {
+        Util.checkResponseWithData(result);
+        String idsJson = Util.getResponseData(result);
+        List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
+        if (tagList != null && tagList.size() > 0) {
+            List<Long> tagIds  = new ArrayList<Long>(tagList.size());
+            for (Tag tag : tagList) {
+                tagIds.add(tag.getId());
+            }
+            return tagIds;
+        }
+        return null;
+    }
+    
+    private List<Long> convertDirectoryIdList(JsonNode result)
+    {
+        Util.checkResponseWithData(result);
+        String idsJson = Util.getResponseData(result);
+        List<Directory> directoryList = KnowledgeUtil.readListValue(Directory.class, idsJson);
+        if (directoryList != null && directoryList.size() > 0) {
+            List<Long> ids  = new ArrayList<Long>(directoryList.size());
+            for (Directory item : directoryList) {
+                ids.add(item.getId());
+            }
+            return ids;
+        }
+        return null;
     }
 
     private long [] convertList(List<Long> tagIds)

@@ -1,9 +1,10 @@
-package com.ginkgocap.ywxt.knowledge.model.mobile;
+package com.ginkgocap.ywxt.knowledge.model;
 
 
 import java.io.Serializable;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
+import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
 
 /**
  * Created by gintong on 2016/7/11.

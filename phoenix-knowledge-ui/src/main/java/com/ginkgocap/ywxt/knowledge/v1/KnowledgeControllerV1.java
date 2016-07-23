@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.controller;
+package com.ginkgocap.ywxt.knowledge.v1;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
@@ -10,6 +10,7 @@ import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
+import com.ginkgocap.ywxt.knowledge.controller.BaseController;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.common.*;
@@ -17,6 +18,7 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
@@ -36,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -108,7 +109,7 @@ public class KnowledgeControllerV1 extends BaseController {
 		if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        long userId = user.getId();
+        long userId = this.getUserId(user);
 
 		String requestJson = this.getBodyParam(request);
 		DataCollection dataCollection = KnowledgeUtil.getDataCollection(requestJson);

@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDaoV1;
+import com.ginkgocap.ywxt.knowledge.v1.KnowledgeMongoDaoV1;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;

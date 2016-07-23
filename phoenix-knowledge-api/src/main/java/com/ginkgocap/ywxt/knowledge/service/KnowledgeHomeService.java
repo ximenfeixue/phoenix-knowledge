@@ -74,12 +74,12 @@ public interface KnowledgeHomeService
 
     /**
      * 首页查询
-     * @param columnId 类型
+     * @param type 类型
      * @param page 当前页
      * @param size 每页大小
      * @return
      */
-    public <T> List<T> selectIndexByParam(int columnId, int page, int size);
+    public List<Knowledge> selectIndexByParam(short type, int page, int size);
 
     /**
      * 出现栏目

@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+import com.ginkgocap.ywxt.knowledge.v1.KnowledgeMongoDaoV1;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

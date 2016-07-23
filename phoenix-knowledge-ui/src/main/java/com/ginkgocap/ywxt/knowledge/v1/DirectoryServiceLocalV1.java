@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.v1;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.directory.exception.DirectoryServiceException;
@@ -11,6 +11,8 @@ import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
+import com.ginkgocap.ywxt.knowledge.service.BaseServiceLocal;
+import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;

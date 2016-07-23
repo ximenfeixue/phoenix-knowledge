@@ -1,13 +1,12 @@
-package com.ginkgocap.ywxt.knowledge.service.impl;
+package com.ginkgocap.ywxt.knowledge.v1;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDaoV1;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1;
+import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;

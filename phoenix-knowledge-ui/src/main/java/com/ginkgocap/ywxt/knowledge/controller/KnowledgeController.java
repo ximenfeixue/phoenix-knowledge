@@ -11,10 +11,7 @@ import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
-import org.parasol.column.entity.ColumnSys;
 import org.parasol.column.service.ColumnCustomService;
-import org.parasol.column.service.ColumnSelfService;
-import org.parasol.column.service.ColumnSysService;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
@@ -98,6 +95,9 @@ public class KnowledgeController extends BaseController {
 
     @Autowired
     KnowledgeCountService knowledgeCountService;
+
+    @Autowired
+    JTFileService mJTFileService;
 
     //@Autowired
     //private Cache cache;
@@ -1175,74 +1175,6 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(model);
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/home/getHotTag/{count}", method = RequestMethod.GET)
-    public InterfaceResult getHotTag(final HttpServletRequest request, final HttpServletResponse response,
-                                     @PathVariable int count) throws Exception
-    {
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        if (count <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"请求参数不合法");
-        }
-
-        try {
-            String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryTagUrl");
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("num", String.valueOf(count));
-            String str = HttpClientHelper.post(url + "/user/tags/search.json", params);
-            String tags = "";
-            try {
-                if (!StringUtils.isBlank(str)) {
-                    tags = str.replace("[", "").replace("]", "");
-                }
-            } catch (Exception e) {
-                logger.error("搜索首页热门标签请求查询失败,{}", e.toString());
-                e.printStackTrace();
-            }
-            Map<String, Object> model = new HashMap<String, Object>(1);
-            model.put("list", tags);
-            return InterfaceResult.getSuccessInterfaceResultInstance(model);
-        } catch (Exception e) {
-            logger.error("最热排行请求失败{}", e.toString());
-            e.printStackTrace();
-        }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET )
-    public InterfaceResult separate(final HttpServletRequest request, final HttpServletResponse response,
-                                    @PathVariable int type)  throws IOException {
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        if (type <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"请求参数不合法");
-        }
-
-        List<KnowledgeBase> knowledgeList = new ArrayList<KnowledgeBase>();
-        /*
-        if (type == 4) {
-            knowledgeList = knowledgeHomeService.selectIndexByParam(type, 1, 6);
-            try {
-                model.put("knowledgeRead", getReadCount(knowledgeList));
-            } catch (Exception e) {
-                logger.error("无法获取阅读个数");
-                e.printStackTrace();
-            }
-        } else {
-            knowledgeList = knowledgeHomeService.selectIndexByParam(Constants.getEnumType(type), 1, 6);
-        }
-
-        model.put("list", knowledgeList);*/
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
 
     /**
      * 收藏知识
@@ -1818,6 +1750,7 @@ public class KnowledgeController extends BaseController {
         commentCountMap.put(kId, kCount);
     }
 
+
     public List<KnowledgeMini> convertKnowledgeBaseToMini(List<KnowledgeBase> baseList)
     {
         if (baseList == null || baseList.size() <= 0) {
@@ -1834,6 +1767,7 @@ public class KnowledgeController extends BaseController {
 
         return km2List;
     }
+
 
     public KnowledgeMini changeKnowledgeToMini(KnowledgeBase base)
     {
@@ -1875,7 +1809,7 @@ public class KnowledgeController extends BaseController {
         }
 
         return km2List;
-    }*/
+    }
 
     public KnowledgeMini2 changeKnowledgeToMini2(KnowledgeBase knowledgeBase)
     {
@@ -1885,7 +1819,7 @@ public class KnowledgeController extends BaseController {
         //km2.setShareMeId(knowledgeBase.getShareMeId());
 
         Connections connections = new Connections();
-        /**作者id*/
+        // 作者id
         long userId = knowledgeBase.getCreateUserId();
         if(userId>0) {//判断是否传过来知识作者id - 剔除 全平台与金桐网
             User detailUser = userService.selectByPrimaryKey(userId);
@@ -1953,9 +1887,9 @@ public class KnowledgeController extends BaseController {
         }
         km2.setColumnpath(getDisposeString(knowledgeBase.getCpath()));
         return km2;
-    }
+    }*/
 
-    /** 图片头部信息拼接 */
+    // 图片头部信息拼接
     private String changeImage(String image) {
         if(image == null||"null".equals(image)) return "";
         //移动端图片

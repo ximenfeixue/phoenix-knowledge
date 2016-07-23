@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ginkgocap.ywxt.knowledge.model.OrganizationMini;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

@@ -339,6 +339,12 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		return this.countEntitys("get_count_by_user", userId);
 	}
 
+	@Override
+	public List<Long> getKnowledgeIdsByType(short type, int size) throws Exception
+	{
+		return this.getIds("get_id_list_by_type", 0, size, new Object[]{type});
+	}
+
 	/*
 	@Override
 	public int getKnowledgeListByUserIds(List<Long> userIds) throws Exception

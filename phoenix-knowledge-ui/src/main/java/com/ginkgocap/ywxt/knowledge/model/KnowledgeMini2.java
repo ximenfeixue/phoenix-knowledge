@@ -1,8 +1,7 @@
-package com.ginkgocap.ywxt.knowledge.model.mobile;
+package com.ginkgocap.ywxt.knowledge.model;
 
 import com.alibaba.fastjson.JSON;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
 
 import java.io.Serializable;
 import java.util.ArrayList;

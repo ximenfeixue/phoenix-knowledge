@@ -381,6 +381,14 @@ public interface KnowledgeMysqlDao {
 	public int getKnowledgeCount(long userId) throws Exception;
 
 	/**
+	 * @param type
+	 * @param size
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Long> getKnowledgeIdsByType(short type, int size)  throws Exception;
+
+	/**
 	 * @param userId
 	 * @param start 分页起始行数
 	 * @param size 分页大小
