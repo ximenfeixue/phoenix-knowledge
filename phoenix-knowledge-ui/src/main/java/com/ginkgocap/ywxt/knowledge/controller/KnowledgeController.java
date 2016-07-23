@@ -1569,13 +1569,33 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> tagIds = this.tagServiceLocal.createTag(user.getId(), tagName);
-            return InterfaceResult.getSuccessInterfaceResultInstance(tagIds);
+            long tagId = this.tagServiceLocal.createTag(user.getId(), tagName);
+            return InterfaceResult.getSuccessInterfaceResultInstance(tagId);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("create Tag failed!");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getTagList", method = RequestMethod.GET)
+    public MappingJacksonValue getTagList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return this.mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
+        }
+
+        try {
+            List<Tag> tagList = this.tagServiceLocal.getTagList(user.getId());
+            if (tagList != null && tagList.size() > 0) {
+                return tagServiceLocal.convertInterfaceResult(tagList);
+            }
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+        }
+
+        return this.mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("get Tag failed, or no tags create!"));
     }
 
     @ResponseBody
@@ -1591,13 +1611,33 @@ public class KnowledgeController extends BaseController {
         }
 
         try {
-            List<Long> directoryIds = this.directoryServiceLocal.createDirectory(user.getId(), directoryName);
-            return InterfaceResult.getSuccessInterfaceResultInstance(directoryIds);
+            long directoryId = this.directoryServiceLocal.createDirectory(user.getId(), directoryName);
+            return InterfaceResult.getSuccessInterfaceResultInstance(directoryId);
         } catch (Exception e) {
             logger.error("Get directory count failed！reason："+e.getMessage());
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("create Directory failed!");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getDirectoryList", method = RequestMethod.GET)
+    public MappingJacksonValue getDirectoryList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return this.mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
+        }
+
+        try {
+            List<Directory> directoryList = this.directoryServiceLocal.getDirectoryList(user.getId());
+            if (directoryList != null && directoryList.size() > 0) {
+                return directoryServiceLocal.convertToMappingJacksonValue(directoryList);
+            }
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+        }
+
+        return this.mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("get Directory list failed or is empty "));
     }
 
     /**

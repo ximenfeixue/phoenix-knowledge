@@ -39,21 +39,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     private TagSourceService tagSourceService;
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public List<Long> createTag(long userId,String tagName) throws Exception
+    public long createTag(long userId,String tagName) throws Exception
     {
-        List<Long> tagIds = new ArrayList<Long>();
-        try {
-            List<Tag> tagList = this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
-            if (tagList != null && tagList.size() >= 12) {
-                for (Tag tag : tagList) {
-                    tagIds.add(tag.getId());
-                }
-                return tagIds;
-            }
-        } catch (TagServiceException ex) {
-            logger.error("can't get tag list by userId: {} appId: {} error: ", userId, APPID, ex.getMessage());
-        }
-
         Tag tag = new Tag();
         tag.setAppId(APPID);
         tag.setTagType(sourceType);
@@ -61,12 +48,22 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         tag.setUserId(userId);
 
         try {
-            Long tagId = this.tagService.createTag(userId, tag);
-            tagIds.add(tagId);
+            return this.tagService.createTag(userId, tag);
         } catch (TagServiceException ex) {
             logger.error("create tag failed!  userId: {}, tagName: {}", tag.getUserId(), tag.getTagName());
         }
-        return tagIds;
+        return -1L;
+    }
+
+    public List<Tag> getTagList(long userId) throws Exception
+    {
+        try {
+            return this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
+        } catch (TagServiceException ex) {
+            logger.error("can't get tag list by userId: {} appId: {} error: ", userId, APPID, ex.getMessage());
+        }
+
+        return null;
     }
     //End
 
@@ -414,5 +411,13 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
         }
         return true;
+    }
+
+    public MappingJacksonValue convertInterfaceResult(List<Tag> tags) {
+        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(tags);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
+        SimpleFilterProvider filterProvider = KnowledgeUtil.tagFilterProvider(Tag.class.getName());
+        mappingJacksonValue.setFilters(filterProvider);
+        return mappingJacksonValue;
     }
 }

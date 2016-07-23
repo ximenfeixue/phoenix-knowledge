@@ -38,33 +38,30 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     private DirectoryService directoryService;
 
     //Just for Unit test
-    public List<Long> createDirectory(long userId,String directoryName)
+    public long createDirectory(long userId,String directoryName)
     {
-        List<Long> directoryIds = new ArrayList<Long>();
-        try {
-            List<Directory> directoryList = directoryService.getDirectorysForRoot(APPID, userId, (long) sourceType);
-            if (directoryList != null && directoryList.size() >= 5) {
-                for (Directory directory : directoryList) {
-                    directoryIds.add(directory.getId());
-                }
-                return directoryIds;
-            }
-        } catch (DirectoryServiceException ex) {
-            logger.error("Can't get directoryList by userId: {}, parentId: {} error: {}", userId, 0, ex.getMessage());
-        }
-
         try {
             Directory directory = new Directory();
             directory.setUserId(userId);
             directory.setAppId(APPID);
             directory.setName(directoryName);
             directory.setTypeId(sourceType);//This get from DB
-            Long directoryId = directoryService.createDirectoryForRoot(userId, directory);
-            directoryIds.add(directoryId);
+            return directoryService.createDirectoryForRoot(userId, directory);
         } catch (DirectoryServiceException ex) {
             logger.error("create directory failed. userId: {} directoryName: {}, error: {}", userId, directoryName, ex.getMessage());
         }
-        return directoryIds;
+        return -1L;
+    }
+
+    public List<Directory> getDirectoryList(long userId)
+    {
+        try {
+            return directoryService.getDirectorysForRoot(APPID, userId, (long) sourceType);
+        } catch (DirectoryServiceException ex) {
+            logger.error("Can't get directoryList by userId: {}, parentId: {} error: {}", userId, 0, ex.getMessage());
+        }
+
+        return null;
     }
     //end
 
@@ -345,5 +342,15 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
         }
         return successIds;
+    }
+
+    public MappingJacksonValue convertToMappingJacksonValue(List<Directory> directoryList)
+    {
+        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance(directoryList);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
+        SimpleFilterProvider filterProvider = KnowledgeUtil.directoryFilterProvider(Directory.class.getName());
+        mappingJacksonValue.setFilters(filterProvider);
+        logger.info(".......Get directory list success......");
+        return mappingJacksonValue;
     }
 }

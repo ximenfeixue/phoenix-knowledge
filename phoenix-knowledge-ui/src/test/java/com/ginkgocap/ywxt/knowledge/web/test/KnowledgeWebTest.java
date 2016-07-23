@@ -186,7 +186,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             //createKnowledge("考虑,考虑1");
             //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/2/2697/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/2/2/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);
@@ -639,6 +639,19 @@ public class KnowledgeWebTest extends BaseTestCase
         }
            
     }
+    
+    public void testCreateTag()
+    {
+    	 LogMethod();
+        createTag();
+    }	
+    
+    public void testCreateDirectory()
+    {
+    	LogMethod();
+        createDirectory();
+    }
+    
 
     private String collectKnowledge(String title)
     {
@@ -734,7 +747,6 @@ public class KnowledgeWebTest extends BaseTestCase
         Util.checkResponseWithData(result);
     }
 
-
     private List<Long> createTag()
     {
         List<Long> IdList = null;
@@ -748,19 +760,6 @@ public class KnowledgeWebTest extends BaseTestCase
             fail();
         }
         return IdList;
-    }
-    
-    public void testCreateDirectory()
-    {
-        List<Long> IdList = null;
-        try {
-            String subUrl = "/createDirectory/Directory" + 1; //getNextNum(); ///createTag/(tagType)/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            IdList = getIdList(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
     }
 
     private List<Long> createDirectory()
