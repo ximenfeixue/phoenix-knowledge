@@ -58,7 +58,7 @@ import java.util.*;
 @RequestMapping("/knowledge")
 public class KnowledgeController extends BaseController {
 
-    private final Logger logger = LoggerFactory.getLogger(KnowledgeControllerV1.class);
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeController.class);
 
     @Autowired
     private KnowledgeService knowledgeService;
