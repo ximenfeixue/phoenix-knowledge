@@ -42,7 +42,7 @@
     <dubbo:consumer timeout="10000" check="false" />
 
     <dubbo:service ref="dataSyncService" interface="com.ginkgocap.ywxt.knowledge.service.DataSyncService" version="3.0.0"/>
- 	<dubbo:service ref="knowledgeServiceV1" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1" version="3.0.0"/>
+ 	<!-- dubbo:service ref="knowledgeServiceV1" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeServiceV1" version="3.0.0"/ -->
 	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
