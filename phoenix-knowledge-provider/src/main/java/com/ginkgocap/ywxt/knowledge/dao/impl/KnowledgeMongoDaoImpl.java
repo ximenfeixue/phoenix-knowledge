@@ -268,7 +268,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return mongoTemplate.find(query, Knowledge.class, collectionName);
     }
 
-    private List<Knowledge> getMongoIds(int columnId, String columnPath, long userId, String tableName, int start, int size) {
+    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, final int size) {
         String key = getKey(columnId, userId,  tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         List<Knowledge> result = new ArrayList<Knowledge>(size);
@@ -304,18 +304,28 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                     }
                 }
                 cache.set(key, ids);
-            } finally {
+            } 
+            catch(Exception ex) {
+            	ex.printStackTrace();
+            }
+            finally {
                 loadingMap.remove(key);
             }
         } else {
-            List<Long> ids = knowledgeIds == null ? new ArrayList<Long>() : knowledgeIds.subList(Math.min(start, knowledgeIds.size()-1),
-                    Math.min(start + size, knowledgeIds.size()-1));
-            for (Long id : ids) {
-                Knowledge vo = mongoTemplate.findById(id, Knowledge.class, tableName);
-                if (vo != null) {
-                    result.add(vo);
-                }
-            }
+        	List<Long> ids = null;
+        	if (knowledgeIds != null && knowledgeIds.size() > start) {
+        		int fromIndex = start;
+        		int toIndex = Math.min(start + size, knowledgeIds.size()-1);
+        		ids = knowledgeIds.subList(fromIndex, toIndex);
+        	} 
+        	if (ids != null && ids.size() > 0) {
+	            for (Long id : ids) {
+	                Knowledge vo = mongoTemplate.findById(id, Knowledge.class, tableName);
+	                if (vo != null) {
+	                    result.add(vo);
+	                }
+	            }
+        	}
             // 执行更新
             executorService.execute(new TakeRecordTask(columnId, (short)4, userId, tableName, columnPath));
         }
