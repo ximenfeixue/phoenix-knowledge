@@ -256,6 +256,17 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
+    @Test
+    public void testGetKnowledgeCount()
+    {
+        try {
+            int size = knowledgeService.getKnowledgeCount(201003L);
+            System.out.println("Count: " + size);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /*
     @Test
     public void testGetAllByTagId()

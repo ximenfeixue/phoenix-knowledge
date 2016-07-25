@@ -13,11 +13,13 @@ import java.util.List;
 public class KnowledgeWeb extends Knowledge
 {
     //private IdName column;
+    private IdName column;
+
     private List<IdName> minTags;
 
     private List<IdNameType> minDirectorys;
 
-    public KnowledgeWeb(Knowledge detail,List<IdName> minTags,List<IdNameType> minDirectory)
+    public KnowledgeWeb(Knowledge detail,List<IdName> minTags,List<IdNameType> minDirectory,IdName column)
     {
         this.setId(detail.getId());
         this.setColumnid(detail.getColumnid());
@@ -44,8 +46,17 @@ public class KnowledgeWeb extends Knowledge
         this.setSource(detail.getSource());
 
         //Web data
+        this.setColumn(column);
         this.setMinTags(minTags);
         this.setMinDirectorys(minDirectory);
+    }
+
+    public IdName getColumn() {
+        return column;
+    }
+
+    public void setColumn(IdName column) {
+        this.column = column;
     }
 
     public List<IdName> getMinTags() {

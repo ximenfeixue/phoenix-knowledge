@@ -22,12 +22,12 @@ public class KnowledgeHomeWebTest extends BaseTestCase
         }
     }
     
-    public void testSeparate()
+    public void testHomeSeparateByType()
     {
     	LogMethod();
         try {
         	for (int type = 1; type <12; type ++) {
-	            String subUrl = "home/separate/" + type;  ///home/separate/{type}
+	            String subUrl = "/home/separate/" + type;  ///home/separate/{type}
 	            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
 	            Util.checkRequestResultSuccess(result);
 	        	}

@@ -526,11 +526,13 @@ public class KnowledgeController extends BaseController {
             long userId = user.getId();
             Knowledge detail = data.getKnowledgeDetail();
             List<Long> tags = detail.getTagList();
-            List<Long> directorys = detail.getDirectorys();
+            List<Long> directoryIds = detail.getDirectorys();
             List<IdName> minTags = this.getMinTagList(userId, tags);
-            List<IdNameType> minDirectorys = this.getMinDirectoryList(userId, directorys);
-            logger.debug("get minTags: {} minDirectorys: {}", minTags, minDirectorys);
-            KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectorys);
+            List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
+            logger.debug("get minTags: {} minDirectoryList: {}", minTags, minDirectoryList);
+            ColumnCustom columnCustom = getColumn(detail.getColumnid());
+            IdName column = columnCustom != null ? new IdName(columnCustom.getId(), columnCustom.getColumnname()) : null;
+            KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
             jacksonValue = knowledgeDetail(data);
         }
@@ -2273,5 +2275,15 @@ public class KnowledgeController extends BaseController {
             }
         }
         return baseList;
+    }
+
+    private ColumnCustom getColumn(String columnId)
+    {
+        long id = KnowledgeUtil.parserStringIdToLong(columnId);
+        if (id > 0) {
+            return columnCustomService.queryByCid(id);
+        }
+        logger.error("ColumnId is invalidated. columnId: "+columnId);
+        return null;
     }
 }
