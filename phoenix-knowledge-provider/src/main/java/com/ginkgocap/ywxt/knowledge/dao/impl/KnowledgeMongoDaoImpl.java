@@ -366,7 +366,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             }
         	List<Long> ids = null;
             if (knowledgeIds != null && fromIndex < toIndex) {
-                logger.info("fromIndex: {} toIndex: {} size: {}", fromIndex, toIndex, knowledgeIds.size());
+                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
         		ids = knowledgeIds.subList(fromIndex, toIndex);
         	} 
         	if (ids != null && ids.size() > 0) {
