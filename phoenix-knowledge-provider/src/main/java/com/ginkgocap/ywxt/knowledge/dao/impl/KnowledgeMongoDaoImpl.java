@@ -354,12 +354,17 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 loadingMap.remove(key);
             }
         } else {
-            int fromIndex = start;
-            int toIndex = start + size;
         	List<Long> ids = null;
-        	if (knowledgeIds != null && knowledgeIds.size() > fromIndex && knowledgeIds.size() > toIndex && fromIndex < toIndex) {
-                logger.info("fromIndex: {} toIndex: {} size: {}", fromIndex, toIndex, knowledgeIds.size());
-        		ids = knowledgeIds.subList(fromIndex, toIndex);
+            if (knowledgeIds != null && knowledgeIds.size() > 0 && knowledgeIds.size() > start ) {
+                logger.info("start: {} size: {}", start, size);
+                int toIndex = (start + size);
+                if (toIndex > knowledgeIds.size() - 1) {
+                    toIndex= knowledgeIds.size() - 1;
+                }
+                ids = new ArrayList<Long>(toIndex-start);
+                for (int index = start; index < toIndex; index++) {
+                    ids.add(knowledgeIds.get(index));
+                }
         	} 
         	if (ids != null && ids.size() > 0) {
 	            for (Long id : ids) {
