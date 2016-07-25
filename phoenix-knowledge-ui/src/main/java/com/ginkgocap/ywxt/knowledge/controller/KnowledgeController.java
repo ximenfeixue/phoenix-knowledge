@@ -577,7 +577,7 @@ public class KnowledgeController extends BaseController {
 
     /**
      * 提取所有知识数据
-     * @param num 分页起始
+     * @param page 分页
      * @param size 分页大小
      * @throws java.io.IOException
      */
@@ -676,7 +676,7 @@ public class KnowledgeController extends BaseController {
 
     /**
      * 提取所有知识数据
-     * @param num 分页起始
+     * @param page 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
      */
@@ -734,7 +734,7 @@ public class KnowledgeController extends BaseController {
 
     /**
      * 提取所有知识数据
-     * @param num 分页起始
+     * @param page 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
      */
@@ -910,7 +910,7 @@ public class KnowledgeController extends BaseController {
                 total = this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (total > 0 && start < total) {
-                List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, start, size);
+                List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList);
             } else {
                 return queryKnowledgeEnd();

@@ -235,15 +235,14 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public List<Knowledge> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int page, int size)
+    public List<Knowledge> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int start, int size)
     {
-        long start = System.currentTimeMillis();
         logger.info("columnType:{} columnId:{} userId:{}", columnType, columnId, userId);
 
         Map<String, Object> model = new HashMap<String, Object>();
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
 
-        return getMongoIds(columnId, columnPath, 0, collectionName, page, size);
+        return getMongoIds(columnId, columnPath, 0, collectionName, start, size);
     }
 
     @Override
@@ -310,16 +309,15 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return null;
     }
 
-    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int page, final int size) {
-        if (page < 0 || size < 0) {
-            logger.error("paramter is invalidated. page: {}, size: {}", page, size);
+    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, final int size) {
+        if (start < 0 || size < 0) {
+            logger.error("paramter is invalidated. start: {}, size: {}", start, size);
             return null;
         }
         String key = getKey(columnId, userId,  tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         List<Knowledge> result = new ArrayList<Knowledge>(size);
         int skip = 0;
-        int start = page * size;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
         if (knowledgeIds == null && !bLoading) {
             try {

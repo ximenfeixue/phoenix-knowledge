@@ -55,9 +55,9 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
     KnowledgeMysqlDao knowledgeMysqlDao;
 
     @Override
-    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int page, int size)
+    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int start, int size)
     {
-        return knowledgeMongoDao.getAllByParam(type, columnPath, columnId, userId, page, size);
+        return knowledgeMongoDao.getAllByParam(type, columnPath, columnId, userId, start, size);
     }
 
     @Override
