@@ -33,7 +33,8 @@ public class UserCategory implements Serializable {
     public UserCategory() {
     	super();
     }
-    
+
+    /*
     public UserCategory(com.ginkgocap.ywxt.knowledge.entity.UserCategory userCategory) {
     	
     	this.id = userCategory.getId();
@@ -45,7 +46,7 @@ public class UserCategory implements Serializable {
     	this.parentId = userCategory.getParentId();
     	this.categoryType = userCategory.getCategoryType();
     	
-    }
+    }*/
 
     public Long getId() {
         return id;

@@ -30,6 +30,11 @@ public abstract class BaseController {
 
     protected static final long APPID = 1l;
 
+    protected final static short KNOWLEDGE_MYCOLLECT = 1;
+    protected final static short KNOWLEDGE_SHAREME = 2;
+    protected final static short KNOWLEDGE_MYCREATE = 3;
+    protected final static short KNOWLEDGE_ALL = -1;
+	
     /**
      * 从body中获得参数
      * @param request

@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.mobile.RecommendResult;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
+import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -52,16 +53,7 @@ public class KnowledgeHomeController extends BaseController {
     ColumnCustomService columnCustomService;
 
     @Autowired
-    DynamicNewsServiceLocal dynamicNewsServiceLocal;
-
-    @Autowired
     KnowledgeCountService knowledgeCountService;
-
-    //@Autowired
-    //private Cache cache;
-
-    //@Value("#{configuers.knowledgeBigDataSearchUrl}")
-    //private String knowledgeBigDataSearchUrl;
 
     private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 
@@ -244,6 +236,41 @@ public class KnowledgeHomeController extends BaseController {
             }
         }
 
+        return InterfaceResult.getSuccessInterfaceResultInstance(model);
+    }
+
+    /**
+     * 首页获取大数据知识热门推荐和发现热门知识
+     * @param type 1,推荐 2,发现
+     * @param start
+     * @param size
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/home/getRecommendedKnowledge/{type}/{start}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                                                        @PathVariable short type,@PathVariable int start, @PathVariable int size) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+        ResourceBundle resource = ResourceBundle.getBundle("application");
+        String url = resource.getString("knowledge.newQueryHost");
+        List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
+        pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
+        pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
+        pairs.add(new BasicNameValuePair("type", String.valueOf(type)));// 1,推荐 2,发现
+        Map<String, Object> model = new HashMap<String, Object>();
+        try {
+            String responseJson = HttpClientHelper.post(url + "/API/hotKno.do", pairs);
+            model.put("list", PackingDataUtil.getRecommendResult(responseJson));
+        } catch (Exception e) {
+            logger.error("connect big data service failed！");
+            e.printStackTrace();
+        }
         return InterfaceResult.getSuccessInterfaceResultInstance(model);
     }
 

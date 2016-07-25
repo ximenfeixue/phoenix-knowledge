@@ -1,14 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import com.ginkgocap.ywxt.knowledge.entity.Column;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeStatics;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-import com.ginkgocap.ywxt.model.*;
+import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
-import com.ginkgocap.ywxt.utils.CommonUtil;
-import com.ginkgocap.ywxt.utils.DateUtil;
-import com.ginkgocap.ywxt.utils.Utils;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +47,8 @@ public class EntityFactory {
 	
 	/**
 	 * @description 创建一个KnowledgeStatics实体类对象
-	 * @param obj
 	 * @return
-	 */
+	 *
 	public static KnowledgeStatics createKnowledgeStaticsFromJson(JSONObject obj){
 		try{
 			KnowledgeStatics self = new KnowledgeStatics();
@@ -74,9 +68,8 @@ public class EntityFactory {
 	
 	/**
 	 * @description 创建一个Column实体类对象
-	 * @param obj
 	 * @return
-	 */
+	 *
 	public static Column createColumnFromJson(JSONObject obj){
 		try{
 			Column self = new Column();
@@ -105,9 +98,8 @@ public class EntityFactory {
 	
 	/**
 	 * @description 创建一个UserCategory list 实体类对象
-	 * @param obj
 	 * @return
-	 */
+	 *
 	public static List<UserCategory> createListUserCategoryFromJson(JSONArray array){
 		try{
 			List<UserCategory> self = new ArrayList<UserCategory>();
@@ -128,9 +120,8 @@ public class EntityFactory {
 	
 	/**
 	 * @description 创建一个UserCategory 实体类对象
-	 * @param obj
 	 * @return
-	 */
+	 *
 	public static UserCategory createUserCategoryFromJson(JSONObject obj){
 		try{
 			UserCategory self = new UserCategory();
@@ -153,9 +144,8 @@ public class EntityFactory {
 	
 	/**
 	 * @description 权限管理器对象，创建符合平台层需求的字符串
-	 * @param obj
 	 * @return {"dule":false,"xiaoles":[17,14449],"zhongles":[0,10357,14358],"dales":[14360,-1]})
-	 */
+	 *
 	public static String genSelectIds(List<Connections> listHightPermission, 
 			List<Connections> listMiddlePermission,
 			List<Connections> listLowPermission){
@@ -212,7 +202,6 @@ public class EntityFactory {
 	
 	/**
 	 * @description 生成关联组件对应的json
-	 * @param obj
 	 * @return { 
 				r:[{tag:xx, conn:[{需求}]}], // 关联的需求分为几个类目，每个类目包含多个需求 
 				p:[{tag:xx, conn:[{人}]}], // 关联的人分为几个类目，每个类目包含多个人 
@@ -387,15 +376,15 @@ public class EntityFactory {
 		return obj.toString();
 	}
 	
-	/** 剥离 json 并组装成 ConnectionsNode  2014-11-4*/
+	/** 剥离 json 并组装成 ConnectionsNode  2014-11-4
 	public static ConnectionsNode getConnectionsNodeByPeopleJson(JSONObject obj) {
 		if(obj.toString().equals("null")) {return null;}
 		ConnectionsNode cn = new ConnectionsNode();
 		List<Connections> cs = new ArrayList<Connections>();
 		JSONArray tempList = obj.getJSONArray("details");
-		@SuppressWarnings("unchecked") /**将json形式的数据map集合转换为List<Map>*/
+		@SuppressWarnings("unchecked") /**将json形式的数据map集合转换为List<Map>
 		List<Map<String,Object>> list = (List<Map<String, Object>>) JSONArray.toCollection(tempList, Map.class);
-		/** 临时长度记录 */
+		// 临时长度记录
 		int tempSize = list.size();
 		Connections c = null;
 		for (int i = 0; i < tempSize; i++) {
@@ -403,12 +392,12 @@ public class EntityFactory {
 			Object tempId = m.get("id");
 			Object tempType = m.get("type");
 			Object tempName = m.get("name");
-			/** 脏数据排除机制 */
+			// 脏数据排除机制
 			if(isNullOrEmpty(tempId) || isNullOrEmpty(tempType) || isNullOrEmpty(tempName))
 				break;
 			
 			String id = tempId.toString();
-			/** 2 人脉 3 全平台普通用户 */
+			// 2 人脉 3 全平台普通用户
 			int type = Integer.parseInt(tempType.toString());
 			
 			c = new Connections();
@@ -420,8 +409,8 @@ public class EntityFactory {
 			List<MobilePhone> mps = new ArrayList<MobilePhone>();
 			MobilePhone mp = new MobilePhone();
 			mp.setName("电话");
-			/** 获取用户详情 */
-			if (type == JOINT_RESOURCES_TYPE_ALL_PLATFORM) {/**全平台普通用户*/
+			//获取用户详情
+			if (type == JOINT_RESOURCES_TYPE_ALL_PLATFORM) {// 全平台普通用户
 				User detailUser = userService.selectByPrimaryKey(c.getId());
 				if(null != detailUser) {
 				mini.setIsOffline(true);
@@ -429,7 +418,7 @@ public class EntityFactory {
 				mp.setMobile(detailUser.getMobile());
 				}
 			}
-			if(type == JOINT_RESOURCES_TYPE_ALL_PEOPLE) {/**人脉*/
+			if(type == JOINT_RESOURCES_TYPE_ALL_PEOPLE) {//人脉
 //				PeopleTemp pt = peopleMongoService.selectByPrimary(id);
 //				if(null != pt) {
 //				mini.setImage(pt.getPortrait());
@@ -450,15 +439,15 @@ public class EntityFactory {
 		return cn;
 	}
 	
-	/** 剥离json 并组装成AffairNode对象 2014-11-5 */
+	// 剥离json 并组装成AffairNode对象 2014-11-5
 	public static AffairNode getAffairNodeByjson(JSONObject obj) {
 		if(obj.toString().equals("null")) {return null;}
 		AffairNode an = new AffairNode();
 		List<AffairMini> ams = new ArrayList<AffairMini>();
 		JSONArray tempList = obj.getJSONArray("details");
-		@SuppressWarnings("unchecked") /**将json形式的数据map集合转换为List<Map>*/
+		@SuppressWarnings("unchecked") // 将json形式的数据map集合转换为List<Map>
 		List<Map<String,Object>> list = (List<Map<String, Object>>) JSONArray.toCollection(tempList, Map.class);
-		/** 临时长度记录 */
+		//临时长度记录
 		int tempSize = list.size();
 		AffairMini am = null;
 		for (int i = 0; i < tempSize; i++) {
@@ -468,12 +457,12 @@ public class EntityFactory {
 			Object tempTitle= m.get("title");
 			Object tempOwnerid = m.get("ownerid");
 			Object tempOwnername = m.get("ownername");
-			/** 脏数据排除机制 */
+			// 脏数据排除机制
 			if(isNullOrEmpty(tempId) || isNullOrEmpty(tempTitle) || isNullOrEmpty(tempOwnerid) || isNullOrEmpty(tempOwnername))
 				break;
 			
 			am = new AffairMini();
-			am.setType(1);/**目前查询的全是需求*/
+			am.setType(1);// 目前查询的全是需求
 			am.setTitle(m.get("title").toString());
 			String id = m.get("id").toString();
 			am.setId(Integer.parseInt(id));
@@ -506,7 +495,7 @@ public class EntityFactory {
 		an.setMemo(obj.getString("clmname"));
 		an.setListAffairMini(ams);
 		return an;
-	}
+	}*/
 	
 	/** 剥离 json 并组装成 ConnectionsNode  2014-11-4 */
 	public static ConnectionsNode getConnectionsNodeByOrganizationJson(JSONObject obj) {
@@ -561,7 +550,7 @@ public class EntityFactory {
 		return cn;
 	}
 	
-	/** 剥离 json 并组装成 knowledgeNode  2014-11-4 */
+	// 剥离 json 并组装成 knowledgeNode  2014-11-4
 	public static KnowledgeNode getknowledgeNodeByjson(JSONObject obj) {
 		if(obj.toString().equals("null")) {return null;}
 		KnowledgeNode kn = new KnowledgeNode();
@@ -612,7 +601,7 @@ public class EntityFactory {
 				connections.setOrganizationMini(om);
 				}
 			}
-			km2.setConnections(connections);
+			//km2.setConnections(connections);
 			km2s.add(km2);
 		}
 		kn.setMemo(obj.getString("clmname"));
@@ -622,7 +611,6 @@ public class EntityFactory {
 	
 	 /**
      * 判断对象是否为null或空
-     * @param obj
      * return IOException
      */
 	public static boolean isNullOrEmpty(Object obj){

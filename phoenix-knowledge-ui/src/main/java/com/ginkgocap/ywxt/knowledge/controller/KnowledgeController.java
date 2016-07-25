@@ -582,9 +582,9 @@ public class KnowledgeController extends BaseController {
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllByPage(HttpServletRequest request, HttpServletResponse response,
-                                        @PathVariable int num,@PathVariable int size,
+                                        @PathVariable int page,@PathVariable int size,
                                         @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
@@ -598,7 +598,7 @@ public class KnowledgeController extends BaseController {
             total = getKnowledgeCount(userId);
         }
 
-        int gotTotal = num * size;
+        int gotTotal = page * size;
         if ( gotTotal >= total) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"到达最后一页，知识已经取完。");
         }
@@ -609,7 +609,7 @@ public class KnowledgeController extends BaseController {
             createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, keyword);
             if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
                 logger.info("get created knowledge size: {}", createdKnowledgeList.size());
-                return knowledgeListPage(total, num, size, createdKnowledgeList);
+                return knowledgeListPage(total, page, size, createdKnowledgeList);
             }
         }
 
@@ -618,19 +618,37 @@ public class KnowledgeController extends BaseController {
             List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, keyword);
             logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedKnowledgeList.size());
             createdKnowledgeList.addAll(collectedKnowledgeList);
-            return knowledgeListPage(total, num, createdKnowledgeList.size(), createdKnowledgeList);
+            return knowledgeListPage(total, page, createdKnowledgeList.size(), createdKnowledgeList);
         }
 
 
-        num = gotTotal - createCount;
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, num, size, keyword);
+        page = gotTotal - createCount;
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, page, size, keyword);
         if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
             logger.info("get collected size: {}", collectedKnowledgeList.size());
-            return knowledgeListPage(total, num, collectedKnowledgeList.size(), collectedKnowledgeList);
+            return knowledgeListPage(total, page, collectedKnowledgeList.size(), collectedKnowledgeList);
         }
 
         logger.info(".......get all knowledge complete......");
         return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getKnowledgeByTypeAndKeyword/{type}{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    public InterfaceResult getKnowledgeByTypeAndKeyword(HttpServletRequest request, HttpServletResponse response,
+    													@PathVariable short type, @PathVariable int page,@PathVariable int size,
+    													@PathVariable long total,@PathVariable String keyword) throws Exception {
+
+        if (type == KNOWLEDGE_MYCOLLECT) {
+			return this.getAllCreatedByPage(request, response, page, size, total, keyword);
+		} else if (type == KNOWLEDGE_SHAREME) {
+			return this.getAllCollectedByPage(request, response, page, size, total, keyword);
+		} else if (type == KNOWLEDGE_MYCREATE) {
+			return null;
+		} else if (type == KNOWLEDGE_ALL) {
+			return this.getAllByPage(request, response, page, size, total, keyword);
+		}
+        return InterfaceResult.getSuccessInterfaceResultInstance("No data");
     }
 
     /**
@@ -663,9 +681,9 @@ public class KnowledgeController extends BaseController {
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCreatedByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCreatedByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCreatedByPage(HttpServletRequest request, HttpServletResponse response,
-                                               @PathVariable int num,@PathVariable int size,
+                                               @PathVariable int page,@PathVariable int size,
                                                @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
@@ -679,14 +697,14 @@ public class KnowledgeController extends BaseController {
             total = getCollectedKnowledgeCount(userId);
         }
 
-        int start = num * size;
+        int start = page * size;
         if (start > total) {
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
         List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
 
-        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, num, size, createdKnowledgeList);
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: {}", createdKnowledgeList.size());
         return result;
     }
@@ -721,9 +739,9 @@ public class KnowledgeController extends BaseController {
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCollectedByPage/{num}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCollectedByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getAllCollectedByPage(HttpServletRequest request, HttpServletResponse response,
-                                                 @PathVariable int num,@PathVariable int size,
+                                                 @PathVariable int page,@PathVariable int size,
                                                  @PathVariable long total,@PathVariable String keyword) throws Exception {
 
         User user = this.getUser(request);
@@ -736,14 +754,14 @@ public class KnowledgeController extends BaseController {
             total = getCollectedKnowledgeCount(userId);
         }
 
-        int start = num * size;
+        int start = page * size;
         if (start > total) {
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
         List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, start, size, keyword);
 
-        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, num, size, collectedKnowledgeList);
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
         logger.info(".......get all collected knowledge success. size: {}", collectedKnowledgeList.size());
         return result;
     }
@@ -1139,42 +1157,6 @@ public class KnowledgeController extends BaseController {
         logger.info(".......get all knowledge by create userId and columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(KnowledgeBaseList);
     }
-
-    /**
-     * 首页获取大数据知识热门推荐和发现热门知识
-     * @param type 1,推荐 2,发现
-     * @param start
-     * @param size
-     * @throws Exception
-     */
-    @ResponseBody
-    @RequestMapping(value = "/getRecommendedKnowledge/{type}/{start}/{size}", method = RequestMethod.GET)
-    public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response,
-                                                                        @PathVariable short type,@PathVariable int start, @PathVariable int size) throws Exception {
-
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
-        ResourceBundle resource = ResourceBundle.getBundle("application");
-        String url = resource.getString("knowledge.newQueryHost");
-        List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
-        pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
-        pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
-        pairs.add(new BasicNameValuePair("type", String.valueOf(type)));// 1,推荐 2,发现
-        Map<String, Object> model = new HashMap<String, Object>();
-        try {
-            String responseJson = HttpClientHelper.post(url + "/API/hotKno.do", pairs);
-            model.put("list", PackingDataUtil.getRecommendResult(responseJson));
-        } catch (Exception e) {
-            logger.error("connect big data service failed！");
-            e.printStackTrace();
-        }
-        return InterfaceResult.getSuccessInterfaceResultInstance(model);
-    }
-
 
     /**
      * 收藏知识

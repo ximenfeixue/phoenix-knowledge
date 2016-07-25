@@ -7,9 +7,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import java.util.List;
 
-import org.jsoup.helper.StringUtil;
-
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 
 public class JTFile implements Serializable,Comparable {
 
@@ -57,9 +56,9 @@ public class JTFile implements Serializable,Comparable {
 	}
 
 	public String getType() {
-		if(StringUtil.isBlank(type)){
+		if(StringUtils.isBlank(type)){
 			//如果文件类型为空， 根据后缀判断
-			if(!StringUtil.isBlank(suffixName)){
+			if(!StringUtils.isBlank(suffixName)){
 				if( (suffixName.equalsIgnoreCase("jpg")) ||
 						(suffixName.equalsIgnoreCase("png")) ||
 						(suffixName.equalsIgnoreCase("gif")) ||

@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.ginkgocap.ywxt.model.Connections;
+import com.ginkgocap.ywxt.knowledge.model.Connections;
 
 public class NameComparator  implements Comparator<Connections> {
 

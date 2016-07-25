@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCommentMini;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import java.util.List;
 public class KnowledgeCommentWebTest extends BaseTestCase
 {
     private Long KnowledgeId = 11111111L;
-    List<KnowledgeComment> knowledgeCommentList = new ArrayList<KnowledgeComment>();
+    List<KnowledgeCommentMini> knowledgeCommentList = new ArrayList<KnowledgeCommentMini>();
     private String CommentForCreate = "Comment For Update-UnitTest";
     private String CommentForUpdate = "Comment For Update-UnitTest";
     private String CommentForDelete = "Comment For Delete-UnitTest";
@@ -41,12 +41,12 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     {
         CommentForUpdate = LogMethod();
         createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForUpdate));
-        List<KnowledgeComment> comments = getKnowledgeCommentList();
+        List<KnowledgeCommentMini> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
             tryFail();
         }
         Long commentId = 0L;
-        for (KnowledgeComment comment : comments) {
+        for (KnowledgeCommentMini comment : comments) {
             if (CommentForUpdate.equals(comment.getContent())) {
                 commentId = comment.getId();
                 break;
@@ -111,13 +111,13 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         CommentForDelete = LogMethod();
         long commentId = 0L;
         createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForDelete));
-        List<KnowledgeComment> comments = getKnowledgeCommentList();
+        List<KnowledgeCommentMini> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
             tryFail();
         }
 
         LOG("Knowledge Comment for for delete size: "+comments.size());
-        for (KnowledgeComment comment : comments) {
+        for (KnowledgeCommentMini comment : comments) {
             commentId = comment.getId();
             if ("testKnowledgeCommentDelete".equals(comment.getContent())) {
                 break;
@@ -153,7 +153,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     }
 
     //Private method
-    private List<KnowledgeComment> getKnowledgeCommentList()
+    private List<KnowledgeCommentMini> getKnowledgeCommentList()
     {
         String URL = listUrl + KnowledgeId;
         JsonNode retNode = null;
@@ -164,12 +164,12 @@ public class KnowledgeCommentWebTest extends BaseTestCase
             objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
             JsonNode jsonNode = objectMapper.readTree(retData.asText());
             if (jsonNode != null && jsonNode.isArray()) {
-                knowledgeCommentList = new ArrayList<KnowledgeComment>();
+                knowledgeCommentList = new ArrayList<KnowledgeCommentMini>();
                 Iterator<JsonNode> fields = jsonNode.iterator();
                 while (fields.hasNext()) {
                     JsonNode node = fields.next();
                     if (node.getNodeType() == JsonNodeType.OBJECT) {
-                        KnowledgeComment comment = (KnowledgeComment) objectMapper.readValue(node.toString(), KnowledgeComment.class);
+                        KnowledgeCommentMini comment = (KnowledgeCommentMini) objectMapper.readValue(node.toString(), KnowledgeCommentMini.class);
                         knowledgeCommentList.add(comment);
                     }
                 }
