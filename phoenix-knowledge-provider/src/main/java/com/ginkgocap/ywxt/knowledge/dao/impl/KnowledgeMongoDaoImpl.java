@@ -354,10 +354,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 loadingMap.remove(key);
             }
         } else {
+            int fromIndex = start;
+            int toIndex = start + size;
         	List<Long> ids = null;
-        	if (knowledgeIds != null && knowledgeIds.size() > (start + start)) {
-        		int fromIndex = start;
-        		int toIndex = start + size;
+        	if (knowledgeIds != null && knowledgeIds.size() > fromIndex && knowledgeIds.size() > toIndex && fromIndex < toIndex) {
                 logger.info("fromIndex: {} toIndex: {} size: {}", fromIndex, toIndex, knowledgeIds.size());
         		ids = knowledgeIds.subList(fromIndex, toIndex);
         	} 
@@ -370,7 +370,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 	            }
         	}
             // 执行更新
-            executorService.execute(new TakeRecordTask(columnId, (short)4, userId, tableName, columnPath));
+            executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath));
         }
         return result;
     }
