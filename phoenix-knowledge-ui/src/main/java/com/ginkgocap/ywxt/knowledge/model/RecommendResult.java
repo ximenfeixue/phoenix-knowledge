@@ -9,7 +9,7 @@ public class RecommendResult extends SearchResult implements Serializable {
 
 	private static final long serialVersionUID = 3799748746576697718L;
 
-	private String knowledgeType; // 知识类型
+	private int knowledgeType; // 知识类型
 
 	private String tagsScores;// 对接的人
 
@@ -25,11 +25,11 @@ public class RecommendResult extends SearchResult implements Serializable {
 		this.desc = desc;
 	}
 
-	public String getKnowledgeType() {
+	public int getKnowledgeType() {
 		return knowledgeType;
 	}
 
-	public void setKnowledgeType(String knowledgeType) {
+	public void setKnowledgeType(int knowledgeType) {
 		this.knowledgeType = knowledgeType;
 	}
 

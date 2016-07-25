@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
-import com.ginkgocap.ywxt.knowledge.model.mobile.Connections;
+import com.ginkgocap.ywxt.knowledge.model.Connections;
 import com.ginkgocap.ywxt.knowledge.model.mobile.JTFile;
 import com.ginkgocap.ywxt.message.letter.model.Person;
 import com.ginkgocap.ywxt.user.model.User;

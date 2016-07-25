@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
-import com.ginkgocap.ywxt.knowledge.model.mobile.Flow;
-import com.ginkgocap.ywxt.knowledge.model.mobile.SearchResult;
+import com.ginkgocap.ywxt.knowledge.model.Flow;
+import com.ginkgocap.ywxt.knowledge.model.SearchResult;
 
 public class Page implements Serializable {
     private static final long serialVersionUID = -1952086533379737985L;

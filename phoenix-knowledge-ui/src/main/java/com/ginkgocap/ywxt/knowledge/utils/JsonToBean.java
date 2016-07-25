@@ -7,28 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.ginkgocap.ywxt.knowledge.model.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 //import com.ginkgocap.ywxt.cloud.model.CaseFile;
-import com.ginkgocap.ywxt.knowledge.model.AffairMini;
-import com.ginkgocap.ywxt.knowledge.model.Area;
-import com.ginkgocap.ywxt.knowledge.model.BusinessRequirement;
-import com.ginkgocap.ywxt.knowledge.model.Connections;
-import com.ginkgocap.ywxt.knowledge.model.ConnectionsMini;
-import com.ginkgocap.ywxt.knowledge.model.InvestKeyword;
-import com.ginkgocap.ywxt.knowledge.model.InvestType;
-import com.ginkgocap.ywxt.knowledge.model.JTContact;
-import com.ginkgocap.ywxt.knowledge.model.JTContactMini;
 import com.ginkgocap.ywxt.knowledge.model.mobile.JTFile;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeMini;
-import com.ginkgocap.ywxt.knowledge.model.MoneyType;
-import com.ginkgocap.ywxt.knowledge.model.OrganizationMini;
-import com.ginkgocap.ywxt.knowledge.model.Project;
-import com.ginkgocap.ywxt.knowledge.model.RequirementMini;
-import com.ginkgocap.ywxt.knowledge.model.Task;
-import com.ginkgocap.ywxt.knowledge.model.Trade;
-import com.ginkgocap.ywxt.knowledge.model.WorkExperience;
 import com.ginkgocap.ywxt.file.model.FileIndex;
 //import com.ginkgocap.ywxt.model.inc.customer.BusinessCustomer;
 //import com.ginkgocap.ywxt.model.inc.people.BusinessPeople;
@@ -233,7 +217,8 @@ public class JsonToBean {
                 knowledgeMini.setUrl(jsonObj.getString("url"));//知识URL
             }
             if(jsonObj.get("time")!=null&&strIsNotBank(jsonObj.get("time").toString())){
-                knowledgeMini.setTime(jsonObj.getString("time"));//发布时间
+                long time = KnowledgeUtil.parserTimeToLong(jsonObj.getString("time"));
+                knowledgeMini.setTime(time);//发布时间
             }
         }
         return knowledgeMini;

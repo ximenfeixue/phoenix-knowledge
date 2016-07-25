@@ -379,13 +379,11 @@ public class Knowledge2 {
         self.tags = knowledge2Json.optJSONArray("listTag");
         self.ish = knowledge2Json.optInt("ish");
         self.knowledgeUrl = knowledge2Json.optString("knowledgeUrl");
-        self.knowledgeStatics = EntityFactory.createKnowledgeStaticsFromJson(knowledge2Json.optJSONObject("knowledgeStatics"));
+        //self.knowledgeStatics = EntityFactory.createKnowledgeStaticsFromJson(knowledge2Json.optJSONObject("knowledgeStatics"));
         //self.column = EntityFactory.createColumnFromJson(knowledge2Json.optJSONObject("column"));
 
-        /** 如果没有对象报错 */
-        self.listUserCategory = EntityFactory
-                .createListUserCategoryFromJson(knowledge2Json
-                        .optJSONArray("listUserCategory"));
+        // 如果没有对象报错
+        //self.listUserCategory = EntityFactory.createListUserCategoryFromJson(knowledge2Json.optJSONArray("listUserCategory"));
 
         self.isConnectionAble = knowledge2Json.optBoolean("isConnectionAble");
         self.isShareAble = knowledge2Json.optBoolean("isShareAble");
