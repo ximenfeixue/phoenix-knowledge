@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-file-api</artifactId>
+            <version>${phoenix-file-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-dynamic-api</artifactId>
         </dependency>
         <dependency>

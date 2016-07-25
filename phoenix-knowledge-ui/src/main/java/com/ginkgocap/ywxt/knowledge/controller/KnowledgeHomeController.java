@@ -136,7 +136,7 @@ public class KnowledgeHomeController extends BaseController {
 
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
-            String url = (String) request.getSession().getServletContext().getAttribute("konwledgeQueryHotUrl");
+            String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryHotUrl");
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
             String str = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
@@ -164,7 +164,7 @@ public class KnowledgeHomeController extends BaseController {
 
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
-            String url = (String) request.getSession().getServletContext().getAttribute("konwledgeQueryCommentUrl");
+            String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryCommentUrl");
             //List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
             //pairs.add(new BasicNameValuePair("type", String.valueOf(type)));
 

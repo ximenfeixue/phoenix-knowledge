@@ -97,7 +97,7 @@ public class KnowledgeController extends BaseController {
     KnowledgeCountService knowledgeCountService;
 
     @Autowired
-    JTFileService mJTFileService;
+    JTFileService jtFileService;
 
     //@Autowired
     //private Cache cache;
@@ -1960,10 +1960,8 @@ public class KnowledgeController extends BaseController {
             logger.info("assoid:" + assoId);
             }catch (AssociateServiceException e) {
                 logger.error("update Asso failed！reason：" + e.getMessage());
-                return null;
             } catch (Throwable e) {
                 logger.error("update Asso failed！reason：" + e.getMessage());
-                return null;
             }
         }
 
@@ -1988,7 +1986,11 @@ public class KnowledgeController extends BaseController {
             for (Iterator i =  assomap.values().iterator(); i.hasNext();) {
                 List<Associate> associateList = (List)i.next();
                 for (int j = 0; j < associateList.size(); j++) {
-                    associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
+                    try {
+                        associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
+                    }catch (Exception ex) {
+                        logger.error("delete Associate failed, reason: {}", ex.getMessage());
+                    }
                 }
             }
         } catch (AssociateTypeServiceException ex) {

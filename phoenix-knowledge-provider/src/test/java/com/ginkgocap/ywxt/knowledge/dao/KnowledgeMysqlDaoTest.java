@@ -23,7 +23,7 @@ public class KnowledgeMysqlDaoTest extends TestBase {
     public void testGetAll()
     {
         try {
-            for (int index = 0; index <15; index++) {
+            for (int index = 0; index <1044; index++) {
                 System.err.println("Index: " + index);
                 List<KnowledgeBase> baseList = knowledgeMysqlDao.getAll(0, 20);
                 System.err.println("Size: " + baseList.size());

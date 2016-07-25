@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.web.test;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeCommentMini;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
@@ -123,7 +123,7 @@ public final class Util {
     public static String getKnowledgeComment(long KnowledgeId, int columnId, String content)
     {
         columnId = columnId == 0 ? 2 : columnId;
-        KnowledgeCommentMini KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content);
+        KnowledgeComment KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content);
         return KnowledgeUtil.writeObjectToJson(KnowledgeComment);
     }
 

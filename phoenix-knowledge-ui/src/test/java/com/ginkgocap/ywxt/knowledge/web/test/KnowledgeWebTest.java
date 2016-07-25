@@ -673,21 +673,7 @@ public class KnowledgeWebTest extends BaseTestCase
     	LogMethod();
         createDirectory();
     }
-    
-    public void testSeparate()
-    {
-    	LogMethod();
-        try {
-        	for (int type = 1; type <12; type ++) {
-	            String subUrl = "home/separate/" + type;  ///home/separate/{type}
-	            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-	            Util.checkRequestResultSuccess(result);
-	        	}
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
+        
     private String collectKnowledge(String title)
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"
