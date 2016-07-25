@@ -64,6 +64,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //知识详细信息插入
         Knowledge savedDetail = null;
         try {
+            detail.setStatus(4);
             savedDetail = this.knowledgeMongoDao.insert(detail);
         } catch (Exception ex) {
             logger.error("Create knowledge detail failed: error:  {}", ex.getMessage());

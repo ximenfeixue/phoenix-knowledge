@@ -156,6 +156,7 @@ public class DataCollect implements Serializable {
             knowledgeBase.setModifyDate(modifyTime);
             knowledgeBase.setIsOld((short) 0);
             knowledgeBase.setUserStar((short) 0);
+            knowledgeBase.setStatus((short)detail.getStatus());
             //knowledge.setPublicDate(System.currentTimeMillis());
             //knowledge.setReportStatus(reportStatus);
         }

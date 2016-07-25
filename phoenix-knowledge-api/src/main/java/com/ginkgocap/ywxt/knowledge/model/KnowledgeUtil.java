@@ -17,6 +17,8 @@ import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.user.model.User;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +31,7 @@ import java.util.*;
  */
 public final class KnowledgeUtil {
 
+    private final static Logger logger = LoggerFactory.getLogger(KnowledgeUtil.class);
     private static final boolean writeNumberAsString = false;;
 
     public static Class getKnowledgeClassType(int columnId)
@@ -240,8 +243,7 @@ public final class KnowledgeUtil {
             JsonNode node = objectMapper.readTree(jsonObject);
             dataCollection = objectMapper.readValue(jsonObject, DataCollect.class);
         } catch (Exception e) {
-            //logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
-            System.out.println(e);
+            logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
         }
         return dataCollection;
     }

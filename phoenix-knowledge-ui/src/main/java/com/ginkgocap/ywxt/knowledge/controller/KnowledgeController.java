@@ -122,6 +122,9 @@ public class KnowledgeController extends BaseController {
 
         String requestJson = this.getBodyParam(request);
         DataCollect data = KnowledgeUtil.getDataCollect(requestJson);
+        if (data == null || data.getKnowledgeDetail() == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情错误");
+        }
         initKnowledgeTime(data);
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
