@@ -243,7 +243,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Map<String, Object> model = new HashMap<String, Object>();
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
 
-        return getMongoIds(columnId, columnPath, 0, collectionName, (page - 1) * size, size);
+        return getMongoIds(columnId, columnPath, 0, collectionName, page, size);
     }
 
     @Override
@@ -310,11 +310,16 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return null;
     }
 
-    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, final int size) {
+    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int page, final int size) {
+        if (page < 0 || size < 0) {
+            logger.error("paramter is invalidated. page: {}, size: {}", page, size);
+            return null;
+        }
         String key = getKey(columnId, userId,  tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         List<Knowledge> result = new ArrayList<Knowledge>(size);
         int skip = 0;
+        int start = page * size;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
         if (knowledgeIds == null && !bLoading) {
             try {
@@ -354,17 +359,15 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 loadingMap.remove(key);
             }
         } else {
+            int fromIndex = start;
+            int toIndex = start + size;
+            if (toIndex > knowledgeIds.size() - 1) {
+                toIndex = knowledgeIds.size() - 1;
+            }
         	List<Long> ids = null;
-            if (knowledgeIds != null && knowledgeIds.size() > 0 && knowledgeIds.size() > start ) {
-                logger.info("start: {} size: {}", start, size);
-                int toIndex = (start + size);
-                if (toIndex > knowledgeIds.size() - 1) {
-                    toIndex= knowledgeIds.size() - 1;
-                }
-                ids = new ArrayList<Long>(toIndex-start);
-                for (int index = start; index < toIndex; index++) {
-                    ids.add(knowledgeIds.get(index));
-                }
+            if (knowledgeIds != null && fromIndex < toIndex) {
+                logger.info("fromIndex: {} toIndex: {} size: {}", fromIndex, toIndex, knowledgeIds.size());
+        		ids = knowledgeIds.subList(fromIndex, toIndex);
         	} 
         	if (ids != null && ids.size() > 0) {
 	            for (Long id : ids) {
