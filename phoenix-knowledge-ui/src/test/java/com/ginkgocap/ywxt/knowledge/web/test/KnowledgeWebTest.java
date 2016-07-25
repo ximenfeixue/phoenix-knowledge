@@ -7,6 +7,8 @@ import java.util.Random;
 import com.ginkgocap.parasol.directory.model.Directory;
 import junit.framework.Assert;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
@@ -360,8 +362,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/allNoDirectory/0/12";  ///allNoDirectory/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            //JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
+            //Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -840,7 +842,13 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            IdList = convertDirectoryIdList(result);
+            String directoryId = Util.getResponseData(result);
+            if (directoryId != null && directoryId.trim().length() > 0) {
+            	long id = Long.parseLong(directoryId);
+            	IdList = new ArrayList<Long>(1);
+            	IdList.add(id);
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -859,7 +867,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         Util.checkResponseWithData(result);
         String idsJson = Util.getResponseData(result);
-        List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
+        //List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
+        TypeReference javaType = new TypeReference<List<Tag>>(){};
+        List<Tag> tagList = KnowledgeUtil.readValue(javaType, idsJson);
         if (tagList != null && tagList.size() > 0) {
             List<Long> tagIds  = new ArrayList<Long>(tagList.size());
             for (Tag tag : tagList) {

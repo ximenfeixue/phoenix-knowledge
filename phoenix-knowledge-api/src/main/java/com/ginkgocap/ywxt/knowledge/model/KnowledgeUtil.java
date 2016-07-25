@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,8 +135,9 @@ public final class KnowledgeUtil {
             throw new IllegalArgumentException("Content is null");
         }
         try {
-            TypeReference javaType = new TypeReference<List<T>>(){};
-            ObjectMapper objectMapper = new ObjectMapper();
+            //TypeReference javaType = new TypeReference<List<T>>(){};
+        	 ObjectMapper objectMapper = new ObjectMapper();
+            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, valueType);
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
