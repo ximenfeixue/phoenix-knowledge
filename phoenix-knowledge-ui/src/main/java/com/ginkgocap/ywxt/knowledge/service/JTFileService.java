@@ -12,17 +12,17 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.JTFile;
 import com.ginkgocap.ywxt.knowledge.service.JTFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.file.model.FileIndex;
 import com.ginkgocap.ywxt.file.service.FileIndexService;
 
-@Service("jtFileService")
-public class JTFileServiceImpl implements JTFileService {
+@Repository("jtFileService")
+public class JTFileService {
     @Autowired
     private FileIndexService fileIndexService;
 
-    @Override
     public List<JTFile> getJTFileByTaskId(String taskId) {
         List<JTFile> jtFileList=new ArrayList<JTFile>();
         if (StringUtils.isNotBlank(taskId)) {
@@ -39,7 +39,6 @@ public class JTFileServiceImpl implements JTFileService {
         return jtFileList;
     }
 
-    @Override
     public void deleteJTFileById(long id){
         fileIndexService.delete(id);
     }
