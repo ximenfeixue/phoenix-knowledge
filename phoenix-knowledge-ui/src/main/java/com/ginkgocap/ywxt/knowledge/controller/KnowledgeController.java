@@ -1600,10 +1600,10 @@ public class KnowledgeController extends BaseController {
                 mini.setUserId(ownerId);
                 mini.setTitle(map.get("ktitle") == null ? "" : map.get("ktitle").toString());
 
-                Object kcolumnId = map.get("kcolumnid");
-                if (kcolumnId != null) {
-                    short newType = KnowledgeUtil.parserShortType(kcolumnId.toString());
-                    mini.setType((short)newType);
+                Object kcolumnType = map.get("kcolumntype");
+                if (kcolumnType != null) {
+                    short newType = KnowledgeUtil.parserShortType(kcolumnType.toString());
+                    mini.setType(newType);
                 }
 
                 Object kcreateTime = map.get("kcreatetime");
@@ -1613,7 +1613,7 @@ public class KnowledgeController extends BaseController {
                 }
 
                 // check if need this
-                //Object columnType = map.get("columntype");
+                //Object columnType = map.get("kcolumnid");
                 //if (columnType != null) {
                 //    int newType = KnowledgeUtil.parserColumnId(columnType.toString());
                 //    mini.setColumnType(newType);
