@@ -782,13 +782,4 @@ public class KnowledgeWebTestV1 extends BaseTestCase {
         }
         return tagIdList;
     }
-
-    private int getNextNum()
-    {
-        int max=50;
-        int min=1;
-        Random random = new Random();
-
-        return random.nextInt(max)%(max-min+1) + min;
-    }
 }

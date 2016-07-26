@@ -19,7 +19,7 @@ public class TagWebTest extends BaseTestCase {
 	public void testCreateTag()
 	{
 		LogMethod();
-		String path = "/tags/tags/createTag?tagType=8&tagName=咳咳咳";
+		String path = "/tags/tags/createTag?tagType=8&tagName=Tag" + this.getNextNum();
 
 		try {
 			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, null);
