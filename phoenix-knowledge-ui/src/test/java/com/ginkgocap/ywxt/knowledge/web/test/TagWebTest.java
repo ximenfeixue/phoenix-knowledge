@@ -14,14 +14,16 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 public class TagWebTest extends BaseTestCase {
 
-	private final String tagHost = "http:\\192.168.101.131:8088";
+	private final String tagHost = "http://localhost:8088";
 	
 	public void testCreateTag()
 	{
 		LogMethod();
-		String path = "/tags/tags/createTag";
+		String path = "/tags/tags/createTag?tagType=8&tagName=咳咳咳";
+
 		try {
-			JsonNode jsonNode = Util.HttpRequestFull(Util.HttpMethod.POST, tagHost+path, null);
+			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, null);
+			System.out.println(jsonNode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
