@@ -1606,6 +1606,12 @@ public class KnowledgeController extends BaseController {
                     mini.setType((short)newType);
                 }
 
+                Object kcreateTime = map.get("kcreatetime");
+                if (kcreateTime != null) {
+                    long newTime = KnowledgeUtil.parserTimeToLong(kcreateTime.toString());
+                    mini.setTime(newTime);
+                }
+
                 // check if need this
                 //Object columnType = map.get("columntype");
                 //if (columnType != null) {
@@ -1621,11 +1627,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> userKnowledgeBase = null;
         List<KnowledgeMini> userKnowledge = null;
         int start = page * size;
-        if ("null".equals(keyword) || keyword == null) {
-            userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
-        } else {
-            userKnowledgeBase = knowledgeService.getBaseByKeyWord(user.getId(), start, size, keyword);
-        }
+        userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
             userKnowledge = convertKnowledgeBaseToMini(userKnowledgeBase);

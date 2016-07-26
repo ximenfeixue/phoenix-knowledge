@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -328,7 +329,7 @@ public final class KnowledgeUtil {
         for (String id : idStr) {
             try {
                 if (id == null) {
-                    System.err.println("id is null.");
+                    logger.error("id is null.");
                     continue;
                 }
                 long newId =  Long.parseLong(id.trim());
@@ -337,8 +338,7 @@ public final class KnowledgeUtil {
                     idList.add(newId);
                 }
             } catch (NumberFormatException ex) {
-                //TODO: will add log
-                System.out.println("parse String to long error: " + ids);
+                logger.error("parse String to long error: " + ids);
                 ex.printStackTrace();
             }
         }
@@ -350,8 +350,7 @@ public final class KnowledgeUtil {
         try {
             return Long.parseLong(number);
         } catch (NumberFormatException ex) {
-            //TODO: will add log
-            System.out.println("parse String to long error: " + number);
+            logger.error("parse String to long error: " + number);
             ex.printStackTrace();
             return -1;
         }
@@ -448,20 +447,23 @@ public final class KnowledgeUtil {
         }
 
         long newTime = 0L;
-        try {
-            newTime = Long.valueOf(time);
-        } catch (NumberFormatException ex) {
-            ex.printStackTrace();
-        }
-
-        if (newTime > 0) {
-            return newTime;
-        } else {
+        if (time.indexOf("-") > 0 && time.indexOf(":") > 0) {
             try {
-                newTime = new Date(time).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = sdf.parse(time);
+                if (date != null) {
+                    newTime = date.getTime();
+                    return newTime;
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+
+        try {
+            newTime = Long.valueOf(time);
+        } catch (NumberFormatException ex) {
+            logger.error("Convert String to long error :"+ex.getMessage());
         }
         return newTime;
     }
