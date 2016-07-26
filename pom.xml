@@ -37,7 +37,7 @@
         <parasol-directory.version>1.0.2-SNAPSHOT</parasol-directory.version>
         <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
         <parasol-column.version>1.0.2-SNAPSHOT</parasol-column.version>
-        <dynamic.version>1.0.0</dynamic.version>
+        <dynamic.version>1.0.0-SNAPSHOT</dynamic.version>
         <slf4j-api.version>1.7.2</slf4j-api.version>
         <slf4j-log4j12.version>1.7.2</slf4j-log4j12.version>
         <log4j.version>1.2.16</log4j.version>

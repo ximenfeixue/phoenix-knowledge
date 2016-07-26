@@ -12,6 +12,7 @@ import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
+import org.parasol.column.entity.ColumnSelf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 public abstract class BaseController {
 
@@ -122,6 +124,23 @@ public abstract class BaseController {
         return requestJson;
     }
 
+    protected String [] getColumnIds(List<ColumnSelf> columnList,int columnId)
+    {
+        String [] idList = null;
+        if (columnList != null && columnList.size() > 0) {
+            idList =  new String[columnList.size()];
+            int index = 0;
+            for (ColumnSelf column : columnList) {
+                idList[index++] = column.getId().toString();
+            }
+        }
+        if (idList == null) {
+            idList = new String[1];
+            idList[0]= String.valueOf(columnId);
+        }
+
+        return idList;
+    }
 
     protected InterfaceResult checkColumn(int column)
     {

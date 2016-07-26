@@ -160,10 +160,11 @@ public class KnowledgeController extends BaseController {
         //save asso information
 
         //TODO: If this step failed, how to do ?
+        Map<Long, List<Associate>> assoMap = null;
         try {
             List<Associate> as  = data.getAsso();
             if (as != null) {
-                createAssociate(as, knowledgeId, userId);
+                assoMap = createAssociate(as, knowledgeId, userId);
             } else {
                 logger.error("associate it null or converted failed, so skip to save!");
             }
@@ -188,7 +189,7 @@ public class KnowledgeController extends BaseController {
         //Sync to dynamic news
         if (syncToDynamic) {
             String dynamicNews = createDynamicNews(detail);
-            dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId);
+            dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId, assoMap);
             /*
             DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail);
             if (dataSyncTask != null) {
@@ -886,19 +887,8 @@ public class KnowledgeController extends BaseController {
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
             //First get total;
             userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-            String [] idList = null;
             List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
-            if (columnList != null && columnList.size() > 0) {
-                idList =  new String[columnList.size()];
-                int index = 0;
-                for (ColumnSelf column : columnList) {
-                    idList[index++] = column.getId().toString();
-                }
-            }
-            if (idList == null) {
-                idList = new String[1];
-                idList[0]= String.valueOf(columnId);
-            }
+            String [] idList = getColumnIds(columnList, columnId);
             if (total == -1) {
                 total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
             }
@@ -1944,14 +1934,14 @@ public class KnowledgeController extends BaseController {
         return str;
     }
 
-    private List<Long> createAssociate(List<Associate> as, long knowledgeId, long userId)
+    private Map<Long, List<Associate>> createAssociate(List<Associate> as, long knowledgeId, long userId)
     {
         if (as == null || as.size() <= 0) {
             return null;
         }
 
-        List<Long> assoIdList = new ArrayList<Long>();
-
+        //now only 4 type asso
+        Map<Long, List<Associate>> assoMap = new HashMap<Long, List<Associate>>(4);
         for (int index = 0; index < as.size(); index++) {
             Associate associate = as.get(index);
             associate.setSourceId(knowledgeId);
@@ -1961,8 +1951,12 @@ public class KnowledgeController extends BaseController {
             associate.setAppId(APPID);
             try {
                 long assoId = associateService.createAssociate(APPID, userId, associate);
-                assoIdList.add(assoId);
-            logger.info("assoid:" + assoId);
+                if (assoMap.get(associate.getAssocTypeId()) == null) {
+                    List<Associate> assoList = new ArrayList<Associate>(2);
+                    assoMap.put(associate.getAssocTypeId(), assoList);
+                }
+                assoMap.get(associate.getAssocTypeId()).add(associate);
+                logger.info("assoid:" + assoId);
             }catch (AssociateServiceException e) {
                 logger.error("update Asso failed！reason：" + e.getMessage());
             } catch (Throwable e) {
@@ -1970,7 +1964,7 @@ public class KnowledgeController extends BaseController {
             }
         }
 
-        return assoIdList;
+        return assoMap;
     }
 
     private InterfaceResult deleteAssociate(long knowledgeId, long userId)

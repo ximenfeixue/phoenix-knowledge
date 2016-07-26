@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
@@ -87,7 +88,8 @@ public class DynamicNewsServiceLocal
         return;
     }
 
-    public boolean addDynamicToAll(String newsContent, long userId) throws IOException {
+    public boolean addDynamicToAll(String newsContent, long userId, Map<Long,List<Associate>> assoMap) throws IOException
+    {
         try{
             List<Long> receiverIds = null;
             long user_id = userId > 0 ? userId : 1l;
@@ -107,7 +109,7 @@ public class DynamicNewsServiceLocal
 
             Map<String, Object> news = new HashMap<String,Object>();
             news = KnowledgeUtil.readValue(Map.class, newsContent);
-            //news.put("asso", "{}");
+            news.put("asso", assoMap != null ? assoMap : "{}");
             long dynamicId = dynamicNewsService.insertNewsAndRelation(news, receiverIds);
             for(long id : receiverIds){
                 //this.setEtagStatus(id, "1");

@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
+import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class KnowledgeHomeController extends BaseController {
     @Autowired
     KnowledgeCountService knowledgeCountService;
 
+    private final String  KNOWLEDGE_QUERY_HOT_URL = "knowledgeQueryHotUrl";
     private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 
     @ResponseBody
@@ -100,6 +102,9 @@ public class KnowledgeHomeController extends BaseController {
 
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryTagUrl");
+            if (url == null) {
+                url = "http://192.168.101.53:8090";
+            }
             Map<String, String> params = new HashMap<String, String>();
             params.put("num", String.valueOf(count));
             String str = HttpClientHelper.post(url + "/user/tags/search.json", params);
@@ -137,9 +142,16 @@ public class KnowledgeHomeController extends BaseController {
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryHotUrl");
+            if (StringUtils.isEmpty(url)) {
+                //url = resourceBundle.getString();
+            }
+            url = "http://192.168.101.41:8090";
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
             String str = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
+            if (StringUtils.isEmpty(str)) {
+                InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
+            }
             model.put("list", getKnowledgeList(str));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());
@@ -165,6 +177,7 @@ public class KnowledgeHomeController extends BaseController {
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryCommentUrl");
+            url = "http://192.168.101.41:8090";
             //List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
             //pairs.add(new BasicNameValuePair("type", String.valueOf(type)));
 
@@ -193,7 +206,8 @@ public class KnowledgeHomeController extends BaseController {
         }
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            String[] columnIds = null; //columnKnowledgeService.getAllColumnByColumnId(columnId);
+            List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)type,userId);
+            String [] columnIds = getColumnIds(columnList, type);
             if (columnIds.length > 0) {
                 model = knowledgeHomeService.getAggregationRead(userId, columnIds, page, size);
             }
@@ -203,7 +217,6 @@ public class KnowledgeHomeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(model);
     }
 
-    // 获取大数据知识对接
     @ResponseBody
     @RequestMapping(value = "/home/getDockingKnowledge/{targetType}/{targetId}/{page}/{size}/{scope}")
     public InterfaceResult getDockingKnowledge(HttpServletRequest request, HttpServletResponse response,
@@ -259,6 +272,7 @@ public class KnowledgeHomeController extends BaseController {
         //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
         ResourceBundle resource = ResourceBundle.getBundle("application");
         String url = resource.getString("knowledge.newQueryHost");
+        url = "http://192.168.101.41:8090";
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
         pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
         pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));

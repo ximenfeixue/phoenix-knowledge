@@ -27,21 +27,21 @@ public enum KnowledgeType {
     // 文章
     EArticle(11,"KnowledgeArticle",KnowledgeArticle.class),
     //互联网
-    EInternet(5001, "KnowledgeInternet", KnowledgeInternet.class),
+    EInternet(12, "KnowledgeInternet", KnowledgeInternet.class),
     //大数据
-    EBigData(5002, "KnowledgeBigData", KnowledgeBigData.class),
+    EBigData(13, "KnowledgeBigData", KnowledgeBigData.class),
     //金融
-    EFinance(5003, "KnowledgeFinance", KnowledgeFinance.class),
+    EFinance(14, "KnowledgeFinance", KnowledgeFinance.class),
     //教育
-    EEducation(5004, "KnowledgeEducation", KnowledgeEducation.class),
+    EEducation(15, "KnowledgeEducation", KnowledgeEducation.class),
     //医疗
-    EMedical(5005, "KnowledgeMedical", KnowledgeMedical.class),
+    EMedical(16, "KnowledgeMedical", KnowledgeMedical.class),
     //O2O
-    EO2O(5006, "KnowledgeO2O", KnowledgeO2O.class),
+    EO2O(17, "KnowledgeO2O", KnowledgeO2O.class),
     //游戏
-    EGame(5007, "KnowledgeGame", KnowledgeGame.class),
+    EGame(18, "KnowledgeGame", KnowledgeGame.class),
     //智能硬件
-    ESmartHardware(5008, "KnowledgeSmartHardware", KnowledgeSmartHardware.class);
+    ESmartHardware(19, "KnowledgeSmartHardware", KnowledgeSmartHardware.class);
 
     int code;
     String dec;
@@ -69,12 +69,6 @@ public enum KnowledgeType {
         return cls;
     }
 
-    /**
-     * Method: knowledgeEnumFactory <br>
-     * Description: 一个简单的工厂，根据传入的类型构造不同的知识枚举 <br>
-     * Creator: xutianlong@gingtong.com <br>
-     * Date: 2016/1/25 23:13
-     */
     public static KnowledgeType knowledgeType(int type){
         switch (type){
             case 1:
