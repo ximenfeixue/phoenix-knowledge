@@ -867,15 +867,17 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         Util.checkResponseWithData(result);
         String idsJson = Util.getResponseData(result);
-        //List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
-        TypeReference javaType = new TypeReference<List<Tag>>(){};
-        List<Tag> tagList = KnowledgeUtil.readValue(javaType, idsJson);
-        if (tagList != null && tagList.size() > 0) {
-            List<Long> tagIds  = new ArrayList<Long>(tagList.size());
-            for (Tag tag : tagList) {
-                tagIds.add(tag.getId());
-            }
-            return tagIds;
+        if (idsJson != null && idsJson.trim().length() > 0) {
+	        //List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
+	        TypeReference javaType = new TypeReference<List<Tag>>(){};
+	        List<Tag> tagList = KnowledgeUtil.readValue(javaType, idsJson);
+	        if (tagList != null && tagList.size() > 0) {
+	            List<Long> tagIds  = new ArrayList<Long>(tagList.size());
+	            for (Tag tag : tagList) {
+	                tagIds.add(tag.getId());
+	            }
+	            return tagIds;
+	        }
         }
         return null;
     }
