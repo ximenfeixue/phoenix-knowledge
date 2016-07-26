@@ -15,6 +15,8 @@ public class KnowledgeMini implements Serializable {
 
     private short type;
 
+    private int columnType;
+
     private String url;//知识对应url
 
     private String title;//知识标题
@@ -43,6 +45,14 @@ public class KnowledgeMini implements Serializable {
 
     public void setType(short type) {
         this.type = type;
+    }
+
+    public int getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(int columnType) {
+        this.columnType = columnType;
     }
 
     public String getUrl() {

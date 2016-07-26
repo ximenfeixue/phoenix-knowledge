@@ -9,6 +9,8 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
@@ -1554,9 +1556,9 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/knowledgeRelated/{type}/{start}/{size}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/knowledgeRelated/{type}/{page}/{size}/{keyword}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeRelatedResources(HttpServletRequest request, HttpServletResponse response,
-                                                        @PathVariable short type,@PathVariable int start,
+                                                        @PathVariable short type,@PathVariable int page,
                                                         @PathVariable int size, @PathVariable String keyword) throws Exception {
 
         User user = getUser(request);
@@ -1564,90 +1566,53 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-//        String jsonContent =  this.getJsonParamStr(request);
-//        if (StringUtils.isEmpty(jsonContent)) {
-//            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"查询内容为空！");
-//        }
-
-        //"keyword": "知识标题或关键字", "type": "1-关联需求；2-关联人脉；3-关联组织；4-关联知识"
-        /** 关键字 */
-        //JSONObject json = JSONObject.fromObject(jsonContent);
-        //String keywordSRC = StringUtils.trim(json.optString("keyword"));
-        //String keyword = java.net.URLEncoder.encode(keywordSRC);
-
         long userId = user.getId();
-        // 金桐网推荐的相关“知识”数据
-        ResourceBundle resource = ResourceBundle.getBundle("application");
-        String knowledgeBigDataSearchUrl = resource.getString("knowledge.data.search.url");
-        String durl = knowledgeBigDataSearchUrl + "/bigdata/query"; //request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
-        System.out.println("------durl: "+durl);
-        logger.info("------durl: "+durl);
-        durl = durl + "?scope=4&title=" + keyword + "&userid=" + userId;
-
-        //String bigDataQueryHost = "http://192.168.101.9:8090"; //TODO: This need to read from configure file.
-        //String durl = request.getSession().getServletContext().getAttribute("bigdataQueryHost") + "/bigdata/query";
-
-        String djson = "";
-        try {
-            djson = HttpClientHelper.get(durl);
-        } catch (java.net.ConnectException e) {
-            logger.error("knowledge /getKnowledgeRelatedResources.json");
-        } catch (java.net.SocketTimeoutException ste) {
-            logger.error("knowledge /getKnowledgeRelatedResources.json");
-        }
-
-        int recommend_count = 5;
-        JsonNode jsonNode = null;
-        List<KnowledgeMini> platformKnowledge = null; // 金桐脑推荐的知识
-        if (null != djson && djson.trim().length() > 0 ) {
-            jsonNode = KnowledgeUtil.readTree(djson);
-            int status = jsonNode.get("status").intValue();
-            if (status != 0) {
-                if (jsonNode.get("k") != null) {
-                    List<JsonNode> tempList = jsonNode.findValues("k");
-                    if (tempList.size() > 0) {
-                        KnowledgeMini mini = null;
-                        recommend_count = recommend_count < tempList.size() ? recommend_count : tempList.size();
-                        platformKnowledge = new ArrayList<KnowledgeMini>(recommend_count);
-                        for (int i = 0; i < recommend_count; i++) {
-                            JsonNode knowNode = tempList.get(i);
-                            Object kId = knowNode.get("id");
-                            Object ownerId = knowNode.get("ownerid");
-                            Object columnType = knowNode.get("columntype");
-                            if (null == kId || ownerId == null || columnType == null) {
-                                continue;
-                            }
-
-                            long knowledgeId = KnowledgeUtil.parserStringIdToLong(kId.toString());
-                            if (knowledgeId <= 0) {
-                                logger.error("this knowledge is invalidated, knowledgeId: {}", kId);
-                                continue;
-                            }
-
-                            long uid = KnowledgeUtil.parserStringIdToLong(ownerId.toString());
-                            if (uid <= 0) {
-                                logger.error("this knowledge is invalidated, ownerId: {}", ownerId);
-                                continue;
-                            }
-
-                            short ctype = KnowledgeUtil.parserShortType(columnType.toString());
-                            if (ctype <= 0) {
-                                logger.error("this knowledge is invalidated, columnType: {}", columnType);
-                                continue;
-                            }
-
-                            mini = new KnowledgeMini();
-                            mini.setId(knowledgeId);
-                            mini.setUserId(uid);
-                            JsonNode titleNode = knowNode.get("title");
-                            if (titleNode != null) {
-                                mini.setTitle(knowNode.get("title").textValue());
-                            }
-                            mini.setType(ctype);
-                            platformKnowledge.add(mini);
-                        }
-                    }
+        final String queryType ="knowledge";
+        /** 金桐网推荐的相关“知识”数据 */
+        List<KnowledgeMini> platformKnowledge = null;
+        List<JSONObject> list = getSearchList(request, userId, page, size, keyword, queryType, null);
+        if(list != null && list.size() > 0){
+            int recommend_count = 5;
+            recommend_count = recommend_count < list.size() ? recommend_count : list.size();
+            platformKnowledge = new ArrayList<KnowledgeMini>(recommend_count);
+            for (int i = 0; i < recommend_count; i++) {
+                Map<String, Object> map = list.get(i);
+                Object tempId = map.get("kid");
+                Object uid = map.get("kcid");
+                if (null == tempId || uid == null ) {
+                    continue;
                 }
+                String kId = tempId.toString();
+                long knowledgeId = KnowledgeUtil.parserStringIdToLong(kId.toString());
+                if (knowledgeId <= 0) {
+                    logger.error("this knowledge is invalidated, knowledgeId: {}", kId);
+                    continue;
+                }
+
+                long ownerId = KnowledgeUtil.parserStringIdToLong(uid.toString());
+                if (ownerId < 0) {
+                    logger.error("this knowledge is invalidated, ownerId: {}", uid);
+                    continue;
+                }
+
+                KnowledgeMini mini = new KnowledgeMini();
+                mini.setId(knowledgeId);
+                mini.setUserId(ownerId);
+                mini.setTitle(map.get("ktitle") == null ? "" : map.get("ktitle").toString());
+
+                Object ctype = map.get("kcolumntype");
+                if (ctype != null) {
+                    short newType = KnowledgeUtil.parserShortType(ctype.toString());
+                    mini.setType((short)newType);
+                }
+
+                // check if need this
+                //Object columnType = map.get("columntype");
+                //if (columnType != null) {
+                //    int newType = KnowledgeUtil.parserColumnId(columnType.toString());
+                //    mini.setColumnType(newType);
+                //}
+                platformKnowledge.add(mini);
             }
         }
 
@@ -1655,6 +1620,7 @@ public class KnowledgeController extends BaseController {
         Map<String, Object> responseDataMap = new HashMap<String, Object>(2);
         List<KnowledgeBase> userKnowledgeBase = null;
         List<KnowledgeMini> userKnowledge = null;
+        int start = page * size;
         if ("null".equals(keyword) || keyword == null) {
             userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
         } else {
@@ -1669,6 +1635,54 @@ public class KnowledgeController extends BaseController {
         responseDataMap.put("listUserKnowledge", userKnowledge);
         responseDataMap.put("type", type);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+    }
+
+    @SuppressWarnings({ "deprecation", "unchecked" })
+    private List<JSONObject>  getSearchList(HttpServletRequest request,long userId, int pno, int psize, String keyword, String module,Map<String, String> conditions) throws Exception {
+
+        List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>(11);
+        pairs.add(new BasicNameValuePair("userid", String.valueOf(userId)));
+        pairs.add(new BasicNameValuePair("pno", String.valueOf(pno)));
+        pairs.add(new BasicNameValuePair("psize", String.valueOf(psize)));
+        pairs.add(new BasicNameValuePair("keyword", keyword));
+        pairs.add(new BasicNameValuePair("module", module));
+        pairs.add(new BasicNameValuePair("hlpre", null));
+        pairs.add(new BasicNameValuePair("hlext", null));
+        String url = (String) request.getSession().getServletContext().getAttribute("newSearchQueryHost");
+        if (StringUtils.isEmpty(url)) {
+            ResourceBundle resource = ResourceBundle.getBundle("application");
+            url = resource.getString("knowledge.data.search.url");
+        }
+        // 多条件筛选集
+        if (conditions != null) {
+
+            Iterator<String> conditionIterator = conditions.keySet().iterator();
+
+            while (conditionIterator.hasNext()) {
+                String key = conditionIterator.next();
+                pairs.add(new BasicNameValuePair(key, conditions.get(key)));
+            }
+
+        }
+        String resultJson = null;
+        JSONObject jo = null;
+        logger.info("开始调用大数据接口,url是{},参数是{}", url + "/keyword/search", pairs.toString());
+        try {
+            resultJson = HttpClientHelper.post(url + "/keyword/search", pairs);
+            logger.info("调用大数据搜索接口,返回信息是{}", resultJson);
+            jo = JSONObject.fromObject(resultJson);
+            JSONArray tempList = jo.getJSONArray("datas");
+            List<JSONObject> list = null;
+            if (tempList.size() > 0) {
+                list = (List<JSONObject>) JSONArray.toCollection(tempList, JSONObject.class);
+                list.removeAll(Collections.singleton(null));
+            }
+            return list;
+        } catch (Exception e) {
+            logger.error("调用大数据搜索发生错误,错误原因", e);
+            logger.error("调用大数据搜索发生错误,url是{},message是{}", url + "/keyword/search", e.getMessage());
+            return null;
+        }
     }
 
     private Map<String, Object> putKnowledge(Map<String, Object> model, short type, int columnId, Long userId, int page, int size) {

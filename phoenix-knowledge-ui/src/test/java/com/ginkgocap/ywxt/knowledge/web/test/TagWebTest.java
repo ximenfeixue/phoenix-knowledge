@@ -14,15 +14,27 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 public class TagWebTest extends BaseTestCase {
 
-	private final String tagHost = "http://localhost:8088";
+	private final String tagHost = "http://192.168.130.200:8088";
 	
 	public void testCreateTag()
 	{
 		LogMethod();
 		String path = "/tags/tags/createTag?tagType=8&tagName=Tag" + this.getNextNum();
-
 		try {
 			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, null);
+			System.out.println(jsonNode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGetTagList()
+	{
+		LogMethod();
+		String path = "/tags/tags/getTagList?tagType=8";
+		try {
+			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.GET, tagHost+path, null);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

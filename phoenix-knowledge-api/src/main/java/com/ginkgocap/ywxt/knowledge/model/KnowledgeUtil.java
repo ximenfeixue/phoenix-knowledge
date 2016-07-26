@@ -402,6 +402,7 @@ public final class KnowledgeUtil {
         try {
             newColumnId = Short.parseShort(columnType);
         } catch (NumberFormatException ex) {
+            ex.printStackTrace();
             return -1;
         }
 

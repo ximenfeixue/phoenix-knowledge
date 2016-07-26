@@ -273,7 +273,7 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
     
-    public void testAllCollectedByPageKnowledge()
+    public void testAllCollectedKnowledgeByPage()
     {
         LogMethod();
         try {
@@ -641,7 +641,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/2/0/12/test";  //user/{columnId}/{start}/{size}
+            String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
