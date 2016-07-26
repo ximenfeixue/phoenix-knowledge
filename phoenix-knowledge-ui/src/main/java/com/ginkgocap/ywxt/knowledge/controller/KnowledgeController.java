@@ -1600,9 +1600,9 @@ public class KnowledgeController extends BaseController {
                 mini.setUserId(ownerId);
                 mini.setTitle(map.get("ktitle") == null ? "" : map.get("ktitle").toString());
 
-                Object ctype = map.get("kcolumntype");
-                if (ctype != null) {
-                    short newType = KnowledgeUtil.parserShortType(ctype.toString());
+                Object kcolumnId = map.get("kcolumnid");
+                if (kcolumnId != null) {
+                    short newType = KnowledgeUtil.parserShortType(kcolumnId.toString());
                     mini.setType((short)newType);
                 }
 
