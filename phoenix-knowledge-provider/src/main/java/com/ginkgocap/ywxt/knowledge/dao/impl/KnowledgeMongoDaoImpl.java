@@ -46,6 +46,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     private Cache cache;
 
     private final int maxSize = 20;
+    private final int maxQuerySize = 200;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
@@ -309,13 +310,14 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return null;
     }
 
-    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, final int size) {
+    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
             logger.error("paramter is invalidated. start: {}, size: {}", start, size);
             return null;
         }
         String key = getKey(columnId, userId,  tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
+        size = size > maxSize ? maxSize : size;
         List<Knowledge> result = new ArrayList<Knowledge>(size);
         int skip = 0;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
@@ -332,7 +334,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 criteria.and("cpathid").regex("^" + reful + ".*$");
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                query.limit(100);
+                query.limit(maxQuerySize);
                 query.skip(0);
 
                 List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
@@ -513,7 +515,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                     criteria.and("cpathid").regex("^" + reful + ".*$");
                     Query query = new Query(criteria);
                     query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                    query.limit(300);
+                    query.limit(maxQuerySize);
                     query.skip(0);
 
                     List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, name);
