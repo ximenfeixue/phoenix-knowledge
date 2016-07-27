@@ -319,7 +319,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         String key = getKey(columnId, userId,  tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         size = size > maxSize ? maxSize : size;
-        List<Knowledge> result = new ArrayList<Knowledge>(size);
+        List<Knowledge> result = null;
         int skip = 0;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
         if (knowledgeIds == null && !bLoading) {
@@ -341,6 +341,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
                 List<Long> ids = new CopyOnWriteArrayList<Long>();
                 if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                    result = new ArrayList<Knowledge>(size);
                     for (Knowledge knowledge : knowledgeList) {
                         if (knowledge != null) {
                             ids.add(knowledge.getId());
@@ -376,6 +377,12 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 criteria.and("_id").in(ids);
                 Query query = new Query(criteria);
                 result = mongoTemplate.find(query, Knowledge.class, tableName);
+                if (result != null && result.size() > 0) {
+                    logger.info("get Knowledge size: {}", result.size());
+                }
+                else {
+                    logger.info("can't get Knowledge by Ids: {}", ids.toString());
+                }
 //	            for (Long id : ids) {
 //	                Knowledge vo = mongoTemplate.findById(id, KnowledgeNews.class, tableName);
 //	                if (vo != null) {
