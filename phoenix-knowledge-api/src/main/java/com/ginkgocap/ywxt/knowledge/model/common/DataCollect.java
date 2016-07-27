@@ -141,8 +141,8 @@ public class DataCollect implements Serializable {
                 knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
-            if (StringUtils.isNotEmpty(detail.getTags())) {
-                String tags = KnowledgeUtil.convertTagsToBase(detail.getTags());
+            if (detail.getTagList() != null && detail.getTagList().size() > 0) {
+                String tags = KnowledgeUtil.convertLongListToBase(detail.getTagList());
                 System.out.println("create tags for base: " + tags);
                 knowledgeBase.setTags(tags);
             }
