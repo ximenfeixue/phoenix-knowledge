@@ -37,8 +37,8 @@ public class KnowledgeHomeServiceTest extends TestBase {
     @Test
     public void testGetAllByParam()
     {
-        List<Knowledge> knowledgeList = knowledgeHomeService.getAllByParam((short)1, "资讯", 1, 1234567L, 0, 30);
-        System.out.println("---knowledgeList: "+knowledgeList);
+        List<Knowledge> knowledgeList = knowledgeHomeService.getAllByParam((short) 1, "资讯", 1, 0, 0, 30);
+        System.out.println("---knowledgeList: "+knowledgeList.size());
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
     }
 }
