@@ -21,9 +21,7 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 	private static final long serialVersionUID = 6269965672863016722L;
 	// 老知识ID
 	private long oid;
-	
-	//同义词
-	private String synonyms;
+
 	//引用
 	private String refrenceData;
 	//图册
@@ -125,13 +123,4 @@ public class KnowledgeInvestment extends Knowledge implements Serializable {
 		this.setHideDesc(vo.getHideDesc());
 		return this;
 	}
-
-	public String getSynonyms() {
-		return synonyms;
-	}
-
-	public void setSynonyms(String synonyms) {
-		this.synonyms = synonyms;
-	}
-	
 }

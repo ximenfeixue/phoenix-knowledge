@@ -237,7 +237,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     @Override
     public List<Knowledge> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int start, int size)
     {
-        logger.info("columnType:{} columnId:{} userId:{}", columnType, columnId, userId);
+        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
 
         Map<String, Object> model = new HashMap<String, Object>();
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
@@ -332,7 +332,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 criteria.and("cpathid").regex("^" + reful + ".*$");
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                query.limit(300);
+                query.limit(100);
                 query.skip(0);
 
                 List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);

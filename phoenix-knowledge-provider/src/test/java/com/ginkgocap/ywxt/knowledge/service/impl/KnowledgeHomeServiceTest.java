@@ -29,7 +29,15 @@ public class KnowledgeHomeServiceTest extends TestBase {
     public void testGetKnowledge()
     {
         String[] columnIds = new String[]{"12", "13", "14"};
-        List<Knowledge> knowledgeList = knowledgeHomeService.getKnowledge(columnIds, 0, (short)1, 0, 30);
+        List<Knowledge> knowledgeList = knowledgeHomeService.getKnowledge(columnIds, 0, (short)1, 0, 20);
+        System.out.println("---knowledgeList: "+knowledgeList);
+        TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
+    }
+
+    @Test
+    public void testGetAllByParam()
+    {
+        List<Knowledge> knowledgeList = knowledgeHomeService.getAllByParam((short)1, "资讯", 1, 1234567L, 0, 30);
         System.out.println("---knowledgeList: "+knowledgeList);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
     }

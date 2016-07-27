@@ -892,11 +892,16 @@ public class KnowledgeController extends BaseController {
             List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
             String [] idList = getColumnIds(columnList, columnId);
             if (total == -1) {
+                logger.info("begin to get knowledge count:");
                 total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
+                logger.info("end to get knowledge count:" + total);
             }
             if (total > 0 && start < total) {
+                logger.info("start to get knowledge:" + total);
                 List<Knowledge> detailList = this.knowledgeHomeService.getKnowledge(idList, userId, type, start, size);
+                logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
                 knowledgeList = convertKnowledgeDetailListToBase(detailList);
+                logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
             } else {
                 return queryKnowledgeEnd();
             }
@@ -906,7 +911,10 @@ public class KnowledgeController extends BaseController {
             if (total == -1) {
                 total = 9999L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
-            if (total > 0 && start < total) {
+            if (column == null) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
+            }
+            else if (total > 0 && start < total) {
                 List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList);
             } else {
