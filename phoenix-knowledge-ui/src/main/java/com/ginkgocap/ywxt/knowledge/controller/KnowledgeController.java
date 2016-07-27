@@ -879,7 +879,7 @@ public class KnowledgeController extends BaseController {
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        if(columnId <= 0 || page < 0 || size <= 0) {
+        if(type <= 0 || columnId <= 0 || page < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
