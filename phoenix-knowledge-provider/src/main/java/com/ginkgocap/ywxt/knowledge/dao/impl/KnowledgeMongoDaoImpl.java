@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -370,15 +371,22 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         		ids = knowledgeIds.subList(fromIndex, toIndex);
         	} 
         	if (ids != null && ids.size() > 0) {
-	            for (Long id : ids) {
-	                Knowledge vo = mongoTemplate.findById(id, Knowledge.class, tableName);
-	                if (vo != null) {
-	                    result.add(vo);
-	                }
-	            }
+                long begin = System.currentTimeMillis();
+                Criteria criteria = new Criteria();
+                criteria.and("_id").in(ids);
+                Query query = new Query(criteria);
+                result = mongoTemplate.find(query, Knowledge.class, tableName);
+//	            for (Long id : ids) {
+//	                Knowledge vo = mongoTemplate.findById(id, KnowledgeNews.class, tableName);
+//	                if (vo != null) {
+//	                    result.add(vo);
+//	                }
+//	            }
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end-begin));
         	}
             // 执行更新
-            executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath));
+            //executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath,));
         }
         return result;
     }
@@ -489,14 +497,16 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         private String name;
         private String key;
         private String columnPath;
+        private int start;
 
-        public TakeRecordTask(int columnId, short status, long uid, String name,String columnPath) {
+        public TakeRecordTask(int columnId, short status, long uid, String name,String columnPath,int start) {
             this.columnId = columnId;
             this.status = status;
             this.uid = uid;
             this.name = name;
             this.columnPath = columnPath;
-            this.key = getKey(columnId, status, uid, name);
+            this.key = getKey(columnId, status, uid, name, start);
+            this.start = start;
         }
 
         @Override

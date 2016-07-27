@@ -19,12 +19,12 @@ public class TagWebTest extends BaseTestCase {
 	public void testCreateTag()
 	{
 		LogMethod();
-		String path = "/tags/tags/createTag?tagType=8&tagName=Tag" + this.getNextNum();
+		String path = "/tags/tags/createTag?tagType=8&tagName=Tag345" + this.getNextNum();
 		try {
 			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, null);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
