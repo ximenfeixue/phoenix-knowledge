@@ -393,7 +393,8 @@ public final class KnowledgeUtil {
 
     public static short parserShortType(String columnType)
     {
-        short newColumnId = -1;
+        //Default is 1
+        short newColumnId = 1;
         if (StringUtils.isEmpty(columnType)) {
             return newColumnId;
         }
@@ -402,7 +403,7 @@ public final class KnowledgeUtil {
             newColumnId = Short.parseShort(columnType);
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
-            return -1;
+            return newColumnId;
         }
 
         return newColumnId;
@@ -410,15 +411,16 @@ public final class KnowledgeUtil {
 
     public static int parserColumnId(String columnId)
     {
+        int newColumnId = 1;
         if (StringUtils.isEmpty(columnId)) {
-            return -1;
+            return newColumnId;
         }
 
-        int newColumnId = 0;
         try {
             newColumnId = Integer.parseInt(columnId);
         } catch (NumberFormatException ex) {
-            return -1;
+            logger.error("the convert columnId is invalidated. :" + columnId);
+            return newColumnId;
         }
 
         return newColumnId;

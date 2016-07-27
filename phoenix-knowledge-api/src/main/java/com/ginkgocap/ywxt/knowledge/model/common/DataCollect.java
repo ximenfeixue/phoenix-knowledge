@@ -146,7 +146,8 @@ public class DataCollect implements Serializable {
                 System.out.println("create tags for base: " + tags);
                 knowledgeBase.setTags(tags);
             }
-            knowledgeBase.setColumnId(Integer.valueOf(detail.getColumnid()));
+            knowledgeBase.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));;
+            knowledgeBase.setColumnId(KnowledgeUtil.parserColumnId(detail.getColumnid()));
             knowledgeBase.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author
             knowledgeBase.setCreateUserName(detail.getCname());

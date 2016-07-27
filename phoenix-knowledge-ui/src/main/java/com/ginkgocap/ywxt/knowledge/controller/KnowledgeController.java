@@ -904,7 +904,7 @@ public class KnowledgeController extends BaseController {
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
             ColumnCustom column = columnCustomService.queryByCid((long) type);
             if (total == -1) {
-                total = this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
+                total = 9999L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (total > 0 && start < total) {
                 List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);

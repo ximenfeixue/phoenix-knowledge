@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
+import java.util.Random;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.associate.model.Associate;
@@ -19,8 +21,8 @@ public abstract class BaseTestCase extends TestCase
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
     protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
-    //private static String testEnv = "testOnline";
-    private static String testEnv = "dev";
+    private static String testEnv = "testOnline";
+    //private static String testEnv = "dev";
     //private static String testEnv = "local";
     
     static {
@@ -29,11 +31,11 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            loginUrl = "http://192.168.120.234:3322/login/loginConfiguration.json";
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+            loginUrl = "http://192.168.120.234:3322/login/loginConfiguration.json";
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
@@ -108,6 +110,15 @@ public abstract class BaseTestCase extends TestCase
             System.out.println("======= "+methodName+" ========");
         }
         return methodName;
+    }
+    
+    protected int getNextNum()
+    {
+        int max=50;
+        int min=1;
+        Random random = new Random();
+
+        return random.nextInt(max)%(max-min+1) + min;
     }
     //end
 }
