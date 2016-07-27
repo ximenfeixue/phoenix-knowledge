@@ -46,7 +46,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 200;
+    private final int maxQuerySize = 300;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
