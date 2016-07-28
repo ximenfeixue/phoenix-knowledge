@@ -5,6 +5,7 @@ package com.ginkgocap.ywxt.knowledge.utils;
  */
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -23,13 +24,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+import org.apache.http.entity.ContentType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,6 +39,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -177,6 +179,143 @@ public class HttpClientHelper {
             if (get != null) {
                 get.releaseConnection();
             }
+        }
+
+        return null;
+    }
+
+    public static String GET(String url,  Map<String,String> headers)
+    {
+        HttpGet get = new HttpGet(url);
+        try {
+            logger.info("开始以GET方式访问路径{}", get.getRequestLine().toString());
+            for(String key:headers.keySet()){
+                get.addHeader(key, headers.get(key));
+            }
+            HttpClient httpClient = httpClient();
+            HttpResponse response = httpClient.execute(get);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                HttpEntity entity = response.getEntity();
+                String respJson = EntityUtils.toString(entity);
+                logger.info("访问路径{}成功", url);
+                return respJson;
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (get != null) {
+                get.releaseConnection();
+            }
+        }
+
+        return null;
+    }
+
+    public static String POST(String url, String content, Map<String,String> headers) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        HttpPost post = new HttpPost(url);
+        List<NameValuePair> list = new ArrayList<NameValuePair>();
+        try {
+            for(String key:headers.keySet()){
+                post.addHeader(key, headers.get(key));
+            }
+            if (content != null) {
+                StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
+                post.setEntity(stringEntry);
+            }
+            logger.info("开始以POST方式访问路径{}，参数为{}", url, content);
+            HttpClient httpClient = httpClient();
+            HttpResponse response = httpClient.execute(post);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result.put("status", response.getStatusLine().getStatusCode());
+                String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
+                logger.info("访问路径{}成功", url);
+                EntityUtils.consume(response.getEntity());
+                return respJson;
+            }
+            EntityUtils.consume(response.getEntity());
+        } catch (UnsupportedEncodingException e) {
+            logger.error("编码错误", e);
+        } catch (ClientProtocolException e) {
+            logger.error("协议错误", e);
+        } catch (IOException e) {
+            logger.error("IO错误", e);
+        } finally {
+            post.releaseConnection();
+        }
+
+
+        return null;
+    }
+
+    public static String PUT(String url, String params,Map<String,String> headers) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        HttpPut put = new HttpPut(url);
+        if (params != null) {
+            try {
+            	StringEntity stringEntry = new StringEntity(params, ContentType.APPLICATION_JSON);
+                put.setEntity(stringEntry);
+                for(String key:headers.keySet()){
+                    put.addHeader(key, headers.get(key));
+                }
+                logger.info("开始以POST方式访问路径{}，参数为{}", url, params);
+                HttpClient httpClient = httpClient();
+                HttpResponse response = httpClient.execute(put);
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    result.put("status", response.getStatusLine().getStatusCode());
+                    HttpEntity entity = response.getEntity();
+                    String respJson = EntityUtils.toString(entity);
+                    logger.info("访问路径{}成功", url);
+                    EntityUtils.consume(response.getEntity());
+                    return respJson;
+                }
+                EntityUtils.consume(response.getEntity());
+            } catch (UnsupportedEncodingException e) {
+                logger.error("编码错误", e);
+            } catch (ClientProtocolException e) {
+                logger.error("协议错误", e);
+            } catch (IOException e) {
+                logger.error("IO错误", e);
+            } finally {
+                put.releaseConnection();
+            }
+        }
+
+        return null;
+    }
+
+    public static String DELETE(String url, Map<String,String> headers) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        HttpDelete delete = new HttpDelete(url);
+
+        try {
+            for(String key:headers.keySet()){
+                delete.addHeader(key, headers.get(key));
+            }
+            HttpClient httpClient = httpClient();
+            HttpResponse response = httpClient.execute(delete);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result.put("status", response.getStatusLine().getStatusCode());
+                HttpEntity entity = response.getEntity();
+                String respJson = EntityUtils.toString(entity);
+                logger.info("访问路径{}成功", url);
+                EntityUtils.consume(response.getEntity());
+                return respJson;
+            }
+            EntityUtils.consume(response.getEntity());
+        } catch (UnsupportedEncodingException e) {
+            logger.error("编码错误", e);
+        } catch (ClientProtocolException e) {
+            logger.error("协议错误", e);
+        } catch (IOException e) {
+            logger.error("IO错误", e);
+        } finally {
+            delete.releaseConnection();
         }
 
         return null;

@@ -1,19 +1,18 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
-import junit.framework.Assert;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import junit.framework.Assert;
 
 /**
  * Created by Chen Peifeng on 2016/1/27.
@@ -177,6 +176,31 @@ public final class Util {
 
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
+        System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
+        Map<String,String> headers = new HashMap<String, String>(2);
+        System.out.println("sessionID: " + sessionID);
+        headers.put("s", "web");
+        headers.put("sessionID", sessionID);
+        headers.put("Content-type", "application/json");
+        if (HttpMethod.GET.equals(httpMethod)) {
+            return HttpClientHelper.GET(urlString, headers);
+        }
+        else if (HttpMethod.POST.equals(httpMethod)) {
+            return HttpClientHelper.POST(urlString, jsonContent, headers);
+        }
+        else if (HttpMethod.PUT.equals(httpMethod)) {
+            return HttpClientHelper.PUT(urlString, jsonContent, headers);
+        }
+        else if (HttpMethod.DELETE.equals(httpMethod)) {
+            return HttpClientHelper.DELETE(urlString, headers);
+        }
+        return "Unknow http method";
+    }
+
+    /*
+    public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
+    {
+
     	System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         if (jsonContent != null) {
             System.err.print("request Content: " + jsonContent + "\r\n");
@@ -220,7 +244,7 @@ public final class Util {
         }
 
         return inputLine;
-    }
+    }*/
 
     public static JsonNode getJsonNode(String jsonStr, String... values)
             throws Exception {

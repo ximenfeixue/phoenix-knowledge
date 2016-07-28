@@ -21,7 +21,7 @@ public class TagWebTest extends BaseTestCase {
 		LogMethod();
 		String path = "/tags/tags/createTag?tagType=8&tagName=Tag345" + this.getNextNum();
 		try {
-			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, null);
+			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, tagHost+path, "{\"pid\":\"0\"}");
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			//TODO Auto-generated catch block
@@ -41,4 +41,5 @@ public class TagWebTest extends BaseTestCase {
 			e.printStackTrace();
 		}
 	}
+	
 }

@@ -770,7 +770,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, start, size, keyword);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
-        logger.info(".......get all collected knowledge success. size: {}", collectedKnowledgeList.size());
+        logger.info(".......get all collected knowledge success. size: {}", collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0);
         return result;
     }
 
