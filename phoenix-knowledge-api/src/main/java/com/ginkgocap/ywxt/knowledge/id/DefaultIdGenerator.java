@@ -19,7 +19,7 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  
 	  private AtomicInteger value;
 	  
-	  private static final DateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmss");
+	  private static final DateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHH");
 	  
 	  private IdGeneratorConfig config;
 	  
