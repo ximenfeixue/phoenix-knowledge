@@ -177,12 +177,15 @@ public final class Util {
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
         System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
-        Map<String,String> headers = new HashMap<String, String>(2);
+        Map<String,String> headers = new HashMap<String, String>(5);
         System.out.println("sessionID: " + sessionID);
         sessionID = "eXNzLTM0MzQtZHNmNTUtMjIyNTY1MTcwMTQ2OTY4OTk5MzQzOQ==";
         headers.put("s", "web");
         headers.put("sessionID", sessionID);
         headers.put("Content-type", "application/json");
+        headers.put("Cache-Control", "no-cache");
+        headers.put("Accept", "*/*");
+        headers.put("Cookie", "JSESSIONID=fnzgfrdxyvp6a2lmjtc2ky0u");
         if (HttpMethod.GET.equals(httpMethod)) {
             return HttpClientHelper.GET(urlString, headers);
         }
