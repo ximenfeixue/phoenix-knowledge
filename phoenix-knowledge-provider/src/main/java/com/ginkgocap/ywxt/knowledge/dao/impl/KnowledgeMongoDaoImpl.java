@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
@@ -94,7 +95,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
-        Query query = knowledgeColumnIdQuery(knowledge.getId(), knowledge.getColumnid());
+        Query query = knowledgeColumnIdQuery(knowledge.getId());
         int columnType = parserColumnId(knowledge.getColumnType());
         String currCollectionName = getCollectionName(columnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, currCollectionName);
@@ -111,9 +112,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
 
     @Override
-    public int deleteByIdAndColumnId(long id,int columnId)
+    public int deleteByIdAndColumnId(long knowledgeId,int columnId)
     {
-        Query query = knowledgeColumnIdQuery(id, columnId);
+        Query query = knowledgeColumnIdQuery(knowledgeId);
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
         if (result.getN() <=0 ) {
             return -1;
@@ -165,10 +166,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge getByIdAndColumnId(long id,int columnId)
+    public Knowledge getByIdAndColumnId(long knowledgeId,int columnId)
     {
-        Query query = knowledgeColumnIdQuery(id, columnId);
-        return mongoTemplate.findOne(query,Knowledge.class, getCollectionName(columnId));
+        Query query = knowledgeColumnIdQuery(knowledgeId);
+        return mongoTemplate.findOne(query, Knowledge.class, getCollectionName(columnId));
     }
 
     @Override
@@ -435,18 +436,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return update;
     }
 
-    private Query knowledgeColumnIdQuery(long knowledgeId,String columnId)
-    {
-        int newColumnId = parserColumnId(columnId);
-        return knowledgeColumnIdQuery(knowledgeId, newColumnId);
-    }
-
-    private Query knowledgeColumnIdQuery(long knowledgeId,int columnId)
+    private Query knowledgeColumnIdQuery(long knowledgeId)
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant._ID).is(knowledgeId));
         //columnId < 0, it means we query knowledge only by knowledgeId
-        addColumnIdToQuery(query, columnId);
         return query;
     }
 

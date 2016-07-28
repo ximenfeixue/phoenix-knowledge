@@ -1,10 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -19,7 +22,7 @@ import java.util.List;
 public class KnowledgeServiceTest extends TestBase {
 
     @Autowired
-	private KnowledgeServiceV1 knowledgeService;
+	private KnowledgeService knowledgeService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
@@ -40,19 +43,19 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testUpdate() {
         System.out.println("===testUpdate===");
         try {
-            DataCollection dataCollection = createKnowledge("Update-KnowledgeServiceTest");
-            KnowledgeBase knowledge = dataCollection.generateKnowledge();
+            DataCollect dataCollect = createKnowledge("Update-KnowledgeServiceTest");
+            KnowledgeBase knowledge = dataCollect.generateKnowledge();
 
             knowledge.setContent("Update-Content-KnowledgeServiceTest");
             knowledge.setModifyDate(System.currentTimeMillis());
-            KnowledgeReference reference = dataCollection.getReference();
+            KnowledgeReference reference = dataCollect.getReference();
             if (reference != null) {
                 reference.setKnowledgeId(knowledgeIdupdate);
                 reference.setArticleName("update_article_name");
                 reference.setModifyDate(System.currentTimeMillis());
             }
-            dataCollection.serUserId(userId);
-            InterfaceResult<DataCollection> updateData = knowledgeService.update(dataCollection);
+            dataCollect.serUserId(userId);
+            InterfaceResult<DataCollect> updateData = knowledgeService.update(dataCollect);
             assertResponseNoRetData(updateData);
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +67,7 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testDeleteByKnowledgeId() {
         System.out.println("===testDeleteByKnowledgeId===");
         try {
-            DataCollection dataCollection = this.createKnowledge("test-delete-KnowledgeServiceTest");
+            DataCollect dataCollection = this.createKnowledge("test-delete-KnowledgeServiceTest");
             KnowledgeBase knowledge = dataCollection.getKnowledge();
             InterfaceResult result = knowledgeService.deleteByKnowledgeId(knowledge.getKnowledgeId(), knowledge.getColumnId());
             assertResponseWithData(result);
@@ -78,13 +81,13 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testDeleteByKnowledgeIds() {
         System.out.println("===testDeleteByKnowledgeIds===");
 
-        DataCollection data = null;
+        DataCollect data = null;
         List<Long> knowledgeIds = new ArrayList<Long>(5);
         for (int index = 1; index <= 5; index++) {
             data = this.createKnowledge("test-delete-KnowledgeServiceTest_"+index);
             knowledgeIds.add(data.getKnowledgeDetail().getId());
         }
-        int columnId = data != null ? data.getKnowledgeDetail().getColumnId() :  2;
+        int columnId = data != null ? Integer.valueOf(data.getKnowledgeDetail().getColumnid()) :  2;
         try {
             InterfaceResult result = knowledgeService.batchDeleteByKnowledgeIds(knowledgeIds, columnId);
             assertResponseWithData(result);
@@ -98,10 +101,10 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testGetDetailById() {
         System.out.println("===testGetDetailById===");
         try {
-            DataCollection data = this.createKnowledge("KnowledgeServiceTest_testGetDetailById");
-            long knowledgeId = data.getKnowledgeDetail().getId();
-            int columnId = data.getKnowledgeDetail().getColumnId();
-            KnowledgeDetail result = knowledgeService.getDetailById(knowledgeId, columnId);
+            //DataCollect data = this.createKnowledge("KnowledgeServiceTest_testGetDetailById");
+            long knowledgeId = 2971163; //data.getKnowledgeDetail().getId();
+            int columnId = 1; //Integer.valueOf(data.getKnowledgeDetail().getColumnid());
+            Knowledge result = knowledgeService.getDetailById(knowledgeId, columnId);
             TestCase.assertNotNull(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,9 +115,9 @@ public class KnowledgeServiceTest extends TestBase {
     @Test
 	public void testGetBaseById() {
         System.out.println("===testGetBaseById===");
-        DataCollection data = this.createKnowledge("KnowledgeServiceTest_"+ "testGetBaseById");
+        DataCollect data = this.createKnowledge("KnowledgeServiceTest_"+ "testGetBaseById");
         try {
-            InterfaceResult<DataCollection> result = knowledgeService.getBaseById(data.getKnowledgeDetail().getId());
+            InterfaceResult<DataCollect> result = knowledgeService.getBaseById(data.getKnowledgeDetail().getId());
             assertResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +129,7 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testGetBaseByIds() {
         System.out.println("===testGetBaseByIds===");
         List<Long> knowledgeIds = new ArrayList<Long>(1);
-        DataCollection data = this.createKnowledge("KnowledgeServiceTest_"+ "testGetBaseById");
+        DataCollect data = this.createKnowledge("KnowledgeServiceTest_"+ "testGetBaseById");
         try {
             knowledgeIds.add(data.getKnowledgeDetail().getId());
             System.out.println("----knowledgeIds :"+knowledgeIds.toString());
@@ -248,7 +251,7 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testGetBaseByColumnIdAndType===");
         try {
-            InterfaceResult<List<DataCollection>> result = knowledgeService.getBaseByColumnIdAndType(columnId, type, start, size);
+            InterfaceResult<List<DataCollect>> result = knowledgeService.getBaseByColumnIdAndType(columnId, type, start, size);
             //checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -297,21 +300,21 @@ public class KnowledgeServiceTest extends TestBase {
     }*/
 
 
-    private DataCollection createKnowledge(String title)
+    private DataCollect createKnowledge(String title)
     {
-        DataCollection dataCollection = null;
+        DataCollect dataCollect = null;
         try {
-            dataCollection = TestData.dataCollection(userId, title);
-            InterfaceResult result = knowledgeService.insert(dataCollection);
+            dataCollect = TestData.getDataCollect(userId, 1, title);
+            InterfaceResult result = knowledgeService.insert(dataCollect);
             assertResponseWithData(result);
             long knowledgeId = (Long)result.getResponseData();
-            dataCollection.getKnowledgeDetail().setId(knowledgeId);
+            dataCollect.getKnowledgeDetail().setId(knowledgeId);
         } catch (Exception e) {
             e.printStackTrace();
             TestCase.fail();
         }
 
-        return dataCollection;
+        return dataCollect;
     }
 	
 }

@@ -2,22 +2,19 @@ package com.ginkgocap.ywxt.knowledge.web.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import com.ginkgocap.parasol.directory.model.Directory;
-import junit.framework.Assert;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
-import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
+
+import junit.framework.Assert;
 
 public class KnowledgeWebTest extends BaseTestCase
 {
@@ -198,11 +195,11 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
     
-    public void testAllKnowledgeByPage()
+    public void testAllByPage()
     {
         LogMethod();
         try {
-            String subUrl = "/allByPage/0/100/369/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
+            String subUrl = "/allByPage/0/20/369/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
             Util.checkResponseWithData(result);

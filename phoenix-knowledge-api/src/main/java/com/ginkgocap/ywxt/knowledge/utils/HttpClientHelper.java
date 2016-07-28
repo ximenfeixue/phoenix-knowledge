@@ -197,7 +197,8 @@ public class HttpClientHelper {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("访问路径{}成功", url);
+                logger.info("访问路径 {} 成功", url);
+                logger.info("Reponse: {}", respJson);
                 return respJson;
             }
 
@@ -219,7 +220,6 @@ public class HttpClientHelper {
     public static String POST(String url, String content, Map<String,String> headers) {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpPost post = new HttpPost(url);
-        List<NameValuePair> list = new ArrayList<NameValuePair>();
         try {
             for(String key:headers.keySet()){
                 post.addHeader(key, headers.get(key));

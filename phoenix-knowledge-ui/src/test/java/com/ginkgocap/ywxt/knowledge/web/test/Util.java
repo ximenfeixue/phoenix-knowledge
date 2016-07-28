@@ -179,6 +179,7 @@ public final class Util {
         System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         Map<String,String> headers = new HashMap<String, String>(2);
         System.out.println("sessionID: " + sessionID);
+        sessionID = "eXNzLTM0MzQtZHNmNTUtMjIyNTY1MTcwMTQ2OTY4OTk5MzQzOQ==";
         headers.put("s", "web");
         headers.put("sessionID", sessionID);
         headers.put("Content-type", "application/json");
