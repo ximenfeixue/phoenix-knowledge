@@ -909,12 +909,13 @@ public class KnowledgeController extends BaseController {
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
             ColumnCustom column = columnCustomService.queryByCid((long) type);
             if (total == -1) {
-                total = 9999L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
+                total = 300L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (column == null) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
             }
             else if (total > 0 && start < total) {
+                userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList);
             } else {
@@ -945,7 +946,9 @@ public class KnowledgeController extends BaseController {
                 return queryKnowledgeEnd();
             }
         }
-
+        if (knowledgeList == null && knowledgeList.size() <= 0) {
+            return queryRunning();
+        }
         return knowledgeListPage(total, page, size, knowledgeList);
     }
 

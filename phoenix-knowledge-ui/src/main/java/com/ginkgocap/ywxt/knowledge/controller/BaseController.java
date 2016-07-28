@@ -219,4 +219,9 @@ public abstract class BaseController {
     {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"到达最后一页，知识已经取完。");
     }
+
+    protected InterfaceResult queryRunning()
+    {
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"正在努力查询，或无符合条件的知识，请稍后再试。");
+    }
 }

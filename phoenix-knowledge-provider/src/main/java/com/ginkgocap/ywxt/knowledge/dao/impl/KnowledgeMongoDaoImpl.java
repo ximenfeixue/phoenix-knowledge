@@ -244,7 +244,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         Map<String, Object> model = new HashMap<String, Object>();
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
 
-        return getMongoIds(columnId, columnPath, 0, collectionName, start, size);
+        return getMongoIds(columnId, columnPath, userId, collectionName, start, size);
     }
 
     @Override
@@ -322,9 +322,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         List<Knowledge> result = null;
         int skip = 0;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-        if (knowledgeIds == null && !bLoading) {
+        if (!bLoading) {
             try {
                 loadingMap.put(key, Boolean.TRUE);
+                logger.info("First query begin... key: {}", key);
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
@@ -357,10 +358,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             catch(Exception ex) {
             	ex.printStackTrace();
             }
-            finally {
-                loadingMap.remove(key);
-            }
-        } else {
+        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
             int fromIndex = start;
             int toIndex = start + size;
             if (toIndex > knowledgeIds.size() - 1) {
