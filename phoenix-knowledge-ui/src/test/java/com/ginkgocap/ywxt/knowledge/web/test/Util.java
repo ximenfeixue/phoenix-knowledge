@@ -222,6 +222,7 @@ public final class Util {
         	httpConn.setRequestProperty( "Content-Length",String.valueOf( jsonContent.length() ) );
         }
         httpConn.setRequestProperty("s","api");
+        //sessionID = "61699318-02aa-4fbe-b689-4b28e8944e8e";
         if (sessionID != null) {
         	httpConn.setRequestProperty("sessionID", sessionID);
         }

@@ -8,6 +8,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -23,6 +24,9 @@ public class KnowledgeServiceTest extends TestBase {
 
     @Autowired
 	private KnowledgeService knowledgeService;
+
+    @Autowired
+    KnowledgeCommonService knowledgeCommonService;
 
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
@@ -267,6 +271,15 @@ public class KnowledgeServiceTest extends TestBase {
             System.out.println("Count: " + size);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetKnowledgeSequenceId()
+    {
+        for (int index = 0; index <10000; index++) {
+           long sequenceId = knowledgeCommonService.getKnowledgeSequenceId();
+            System.out.println("sequenceId: " + sequenceId);
         }
     }
 

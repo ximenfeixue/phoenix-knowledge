@@ -35,7 +35,7 @@ public class KnowledgeWebTest extends BaseTestCase
     	}
     }
     
-    public void testCreateKnowledgeWithDirectoy()
+    public void testCreateKnowledgeWithDirectory()
     {
     	LogMethod();
     	List<Long> idList = getDirectoryList();
@@ -545,12 +545,12 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/tagCount";
-            List<Long> tags = this.getTagList();
-            if (tags == null || tags.size() <= 0) {
-                System.err.println("can't get tags");
-                fail();
-            }
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3973605390287002, 3973607483244706]");
+//            List<Long> tags = this.getTagList();
+//            if (tags == null || tags.size() <= 0) {
+//                System.err.println("can't get tags");
+//                fail();
+//            }
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[4001931509105137, 4002283256021508, 4002283268604423]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
