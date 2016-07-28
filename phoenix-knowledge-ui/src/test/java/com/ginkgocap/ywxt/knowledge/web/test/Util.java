@@ -1,5 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -174,18 +179,18 @@ public final class Util {
         return response != null ? mapper.readTree(response) : null;
     }
 
+    /*
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
         System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         Map<String,String> headers = new HashMap<String, String>(5);
         System.out.println("sessionID: " + sessionID);
-        sessionID = "eXNzLTM0MzQtZHNmNTUtMjIyNTY1MTcwMTQ2OTY4OTk5MzQzOQ==";
         headers.put("s", "web");
         headers.put("sessionID", sessionID);
-        headers.put("Content-type", "application/json");
-        headers.put("Cache-Control", "no-cache");
-        headers.put("Accept", "*/*");
-        headers.put("Cookie", "JSESSIONID=fnzgfrdxyvp6a2lmjtc2ky0u");
+//        headers.put("Content-type", "application/json");
+//        headers.put("Cache-Control", "no-cache");
+//        headers.put("Cookie", "JSESSIONID=fnzgfrdxyvp6a2lmjtc2ky0u");
+//        headers.put("Postman-Token", "44e59996-3bbc-64dc-f967-f1df41463bd1");
         if (HttpMethod.GET.equals(httpMethod)) {
             return HttpClientHelper.GET(urlString, headers);
         }
@@ -199,9 +204,9 @@ public final class Util {
             return HttpClientHelper.DELETE(urlString, headers);
         }
         return "Unknow http method";
-    }
+    }*/
 
-    /*
+    
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
 
@@ -248,7 +253,7 @@ public final class Util {
         }
 
         return inputLine;
-    }*/
+    }
 
     public static JsonNode getJsonNode(String jsonStr, String... values)
             throws Exception {

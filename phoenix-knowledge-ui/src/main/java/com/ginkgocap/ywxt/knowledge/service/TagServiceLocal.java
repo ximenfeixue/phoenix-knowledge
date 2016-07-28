@@ -241,8 +241,12 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         }
         Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(tagIds.size());
         for (long tagId : tagIds) {
-            int count = tagSourceService.countTagSourcesByAppIdTagId(APPID, tagId);
-            sourceMap.put(tagId, count);
+            try {
+                int count = tagSourceService.countTagSourcesByAppIdTagId(APPID, tagId);
+                sourceMap.put(tagId, count);
+            } catch (TagSourceServiceException ex) {
+                logger.error("get tag count failed. error: {}", ex.getMessage());
+            }
         }
 
         logger.info(".......Get Tag count success......");
@@ -258,20 +262,24 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             return false;
         }
 
-        try {
-            for (int index = 0; index < tagsList.size(); index++) {
-                logger.info("tagId: {}", tagsList.get(index));
-                Long tagId = Long.valueOf(tagsList.get(index));
+
+        for (int index = 0; index < tagsList.size(); index++) {
+            logger.info("tagId: {}", tagsList.get(index));
+            Long tagId = Long.valueOf(tagsList.get(index));
+            try {
                 if (tagId > 0) {
                     TagSource tagSource = newTagSourceObject(userId, tagId, knowledgeDetail);
                     tagSourceService.createTagSource(tagSource);
                 }
                 logger.info("Save tag success tagId:" + tagId);
+            } catch (TagSourceServiceException ex) {
+                logger.error("Save Tag info failed: {}" + ex.getMessage());
+                ex.printStackTrace();
             }
-        }
-        catch (Exception ex) {
-            logger.error("Save Tag info failed: {}" + ex.getMessage());
-            ex.printStackTrace();
+            catch (Exception ex) {
+                logger.error("Save Tag info failed: {}" + ex.getMessage());
+                ex.printStackTrace();
+            }
         }
 
         return true;

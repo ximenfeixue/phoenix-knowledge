@@ -228,14 +228,15 @@ public class HttpClientHelper {
                 StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
                 post.setEntity(stringEntry);
             }
-            logger.info("开始以POST方式访问路径{}，参数为{}", url, content);
+            logger.info("开始以POST方式访问路径 {}，参数为 {}", url, content);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 result.put("status", response.getStatusLine().getStatusCode());
                 String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
-                logger.info("访问路径{}成功", url);
+                logger.info("访问路径 {} 成功", url);
                 EntityUtils.consume(response.getEntity());
+                logger.info("respJson: {}", respJson);
                 return respJson;
             }
             EntityUtils.consume(response.getEntity());

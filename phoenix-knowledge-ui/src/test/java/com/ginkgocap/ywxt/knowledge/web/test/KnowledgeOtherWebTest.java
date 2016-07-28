@@ -66,7 +66,6 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         }
     }
 
-    
     /*
     public void testGetHotKnowledge()
     {
