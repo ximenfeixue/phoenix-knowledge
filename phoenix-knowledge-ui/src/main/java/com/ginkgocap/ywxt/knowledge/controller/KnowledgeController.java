@@ -900,7 +900,7 @@ public class KnowledgeController extends BaseController {
                 logger.info("start to get knowledge:" + total);
                 List<Knowledge> detailList = this.knowledgeHomeService.getKnowledge(idList, userId, type, start, size);
                 logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
-                knowledgeList = convertKnowledgeDetailListToBase(detailList);
+                knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
             } else {
                 return queryKnowledgeEnd();
@@ -917,7 +917,7 @@ public class KnowledgeController extends BaseController {
             else if (total > 0 && start < total) {
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
-                knowledgeList = convertKnowledgeDetailListToBase(detailList);
+                knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
             } else {
                 return queryKnowledgeEnd();
             }
@@ -1785,7 +1785,8 @@ public class KnowledgeController extends BaseController {
         km.setUserId(base.getCreateUserId());
         km.setUserName(base.getCreateUserName());
         km.setTime(base.getCreateDate());
-
+        km.setType(base.getType());
+        km.setColumnId(base.getColumnId());
         return km;
     }
 
@@ -2285,7 +2286,7 @@ public class KnowledgeController extends BaseController {
         }
     }
 
-    private List<KnowledgeBase> convertKnowledgeDetailListToBase(List<Knowledge> detailList)
+    private List<KnowledgeBase> convertKnowledgeDetailListToBase(List<Knowledge> detailList,short type)
     {
         if (detailList == null || detailList.size() <=0) {
             return null;
@@ -2293,7 +2294,7 @@ public class KnowledgeController extends BaseController {
 
         List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
         for (Knowledge detail : detailList) {
-            KnowledgeBase base = DataCollect.generateKnowledge(detail);
+            KnowledgeBase base = DataCollect.generateKnowledge(detail, type);
             if (base != null) {
                 baseList.add(base);
             }

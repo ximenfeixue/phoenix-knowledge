@@ -588,7 +588,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if (detailList != null && detailList.size() >0) {
             List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
             for (Knowledge detail : detailList) {
-                KnowledgeBase base = DataCollect.generateKnowledge(detail);
+                KnowledgeBase base = DataCollect.generateKnowledge(detail, (short)0);
                 baseList.add(base);
             }
             return baseList;

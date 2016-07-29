@@ -119,13 +119,13 @@ public class DataCollect implements Serializable {
 
     public KnowledgeBase generateKnowledge() {
         if (this.knowledgeDetail != null) {
-            return this.knowledge = generateKnowledge(knowledgeDetail);
+            return this.knowledge = generateKnowledge(knowledgeDetail, (short)0);
         }
 
         return this.knowledge;
     }
 
-    public static KnowledgeBase generateKnowledge(Knowledge detail) {
+    public static KnowledgeBase generateKnowledge(Knowledge detail,short type) {
         KnowledgeBase knowledgeBase = null;
         if (detail != null) {
             knowledgeBase = new KnowledgeBase();
@@ -146,7 +146,11 @@ public class DataCollect implements Serializable {
                 System.out.println("create tags for base: " + tags);
                 knowledgeBase.setTags(tags);
             }
-            knowledgeBase.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));;
+            if (type > 0) {
+                knowledgeBase.setType(type);
+            } else {
+                knowledgeBase.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));
+            }
             knowledgeBase.setColumnId(KnowledgeUtil.parserColumnId(detail.getColumnid()));
             knowledgeBase.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author

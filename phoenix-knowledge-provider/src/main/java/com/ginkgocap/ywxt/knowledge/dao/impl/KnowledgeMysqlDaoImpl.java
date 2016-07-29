@@ -240,20 +240,20 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate, Date endDate,int start,int size) throws Exception
 	{
-		return this.getSubEntitys("get_by_beginDate_endDate", start, size, new Object[]{getDate(beginDate,true),getDate(endDate,false)});
+		return this.getSubEntitys("get_by_beginDate_endDate", start, size, getDate(beginDate,true), getDate(endDate,false));
 	}
 
 	@Override
 	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,Date beginDate, Date endDate,int start,int size) throws Exception
 	{
-		return this.getSubEntitys("get_by_type_beginDate_endDate", start, size, new Object[]{type,getDate(beginDate,true),getDate(endDate,false)});
+		return this.getSubEntitys("get_by_type_beginDate_endDate", start, size, type,getDate(beginDate,true), getDate(endDate,false));
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(
 			long createUserId, Date beginDate, Date endDate,int start,int size) throws Exception {
 		
-		return this.getSubEntitys("get_by_createUserId_beginDate_endDate", start, size, new Object[]{createUserId,getDate(beginDate,true),getDate(endDate,false)});
+		return this.getSubEntitys("get_by_createUserId_beginDate_endDate", start, size, createUserId,getDate(beginDate,true),getDate(endDate,false));
 	}
 
 	@Override
@@ -288,14 +288,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,
 			short status,int start,int size) throws Exception {
 		
-		return this.getSubEntitys("get_by_createUserId_status", start, size, new Object[]{createUserId, status});
+		return this.getSubEntitys("get_by_createUserId_status", start, size, createUserId, status);
 	}
 
 	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(
 			long createUserId, short auditStatus,int start,int size) throws Exception {
 		
-		return this.getSubEntitys("get_by_createUserId_auditStatus", start, size, new Object[]{createUserId,auditStatus});
+		return this.getSubEntitys("get_by_createUserId_auditStatus", start, size, createUserId, auditStatus);
 	}
 
 	@Override
