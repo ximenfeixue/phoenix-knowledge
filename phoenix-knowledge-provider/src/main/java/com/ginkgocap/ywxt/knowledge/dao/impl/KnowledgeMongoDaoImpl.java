@@ -321,7 +321,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         size = size > maxSize ? maxSize : size;
         List<Knowledge> result = null;
-        int skip = 0;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
         if (!bLoading) {
             try {
@@ -341,20 +340,20 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 query.skip(0);
 
                 List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
-                List<Long> ids = new CopyOnWriteArrayList<Long>();
                 if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                    List<Long> ids = new CopyOnWriteArrayList<Long>();
                     result = new ArrayList<Knowledge>(size);
+                    int index = 0;
                     for (Knowledge knowledge : knowledgeList) {
                         if (knowledge != null) {
                             ids.add(knowledge.getId());
-                            if (skip >= start && skip < skip + size) {
+                            if (index++ < size) {
                                 result.add(knowledge);
                             }
                         }
-                        skip++;
                     }
+                    cache.set(key, ids);
                 }
-                cache.set(key, ids);
             } 
             catch(Exception ex) {
             	ex.printStackTrace();
