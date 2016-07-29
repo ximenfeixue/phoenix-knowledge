@@ -165,7 +165,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
     private CloudConfig saveCloudConfig(int id,String ipAddress,String collectionName)
     {
         CloudConfig cloud = new CloudConfig(id, ipAddress);
-        mongoTemplate.save(cloud, collectionName);
+        mongoTemplate.insert(cloud, collectionName);
         return cloud;
     }
 
