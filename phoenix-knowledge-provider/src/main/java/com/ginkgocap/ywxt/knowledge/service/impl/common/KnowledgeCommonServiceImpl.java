@@ -140,7 +140,8 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
                     cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
                     defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
                 } else {
-                    cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
+                    logger.error("Can't get exist cloud configure, please check..");
+                    cloud = saveCloudConfig(getNextNum(), ipAddress, collectionName);
                     defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
                 }
             }
