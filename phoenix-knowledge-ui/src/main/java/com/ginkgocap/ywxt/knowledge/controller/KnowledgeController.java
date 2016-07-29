@@ -9,12 +9,12 @@ import com.ginkgocap.parasol.associate.service.AssociateService;
 import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
+import com.ginkgocap.ywxt.dynamic.model.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
-import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.common.*;
@@ -2251,7 +2251,7 @@ public class KnowledgeController extends BaseController {
     private String createDynamicNews(Knowledge detail)
     {
         DynamicNews dynamic = new DynamicNews();
-        dynamic.setType("10"); //创建知识
+        dynamic.setType("11"); //创建知识
         dynamic.setLowType(detail.getColumnType());
         dynamic.setTargetId(detail.getId());
         dynamic.setTitle(detail.getTitle());
@@ -2271,6 +2271,11 @@ public class KnowledgeController extends BaseController {
         String createType = detail.getVirtual() == 1 ? "1" : "2";
         dynamic.setCreateType(createType);
         dynamic.setScope(String.valueOf(0));
+        Location location = new Location();
+        dynamic.setLocation(location);
+        dynamic.setPeopleRelation(new ArrayList<RelationUserInfo>(0));
+        dynamic.setComments(new ArrayList<DynamicComment>(0));
+        dynamic.setPicturePaths(new ArrayList<Picture>(0));
         //dynamic.setVirtual(knowledge.getVirtual());
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }

@@ -110,7 +110,9 @@ public class DynamicNewsServiceLocal
             Map<String, Object> news = new HashMap<String,Object>();
             news = KnowledgeUtil.readValue(Map.class, newsContent);
             //news.put("asso", assoMap != null ? assoMap : "{}");
-            news.put("asso", new HashMap<String,Object>(1));
+            news.put("asso", new HashMap<String,Object>(0));
+            String json = KnowledgeUtil.writeObjectToJson(news);
+            logger.info("The dynamic Content: " + json);
             long dynamicId = dynamicNewsService.insertNewsAndRelation(news, receiverIds);
             for(long id : receiverIds){
                 //this.setEtagStatus(id, "1");
