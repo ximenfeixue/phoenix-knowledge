@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -27,8 +28,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
 	@Resource
     private MongoTemplate mongoTemplate;
 
-    private static ResourceBundle resourceBundle =  ResourceBundle.getBundle("conf/dubbo");
-    private static DefaultIdGenerator defaultIdGenerator = null;
+    private static volatile DefaultIdGenerator defaultIdGenerator = null;
 
     /*
 	@Override
@@ -116,7 +116,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
 
     private void checkSequence()
     {
-        String ipAddress = CommonUtil.getHostIp();
+        String ipAddress = getHostIp();
         if (ipAddress == null) {
             logger.error("Can't get host Ip address, please check the host configure..");
             //Dummy a address
@@ -166,5 +166,23 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
         CloudConfig cloud = new CloudConfig(id, ipAddress);
         mongoTemplate.save(cloud, collectionName);
         return cloud;
+    }
+
+    private String getHostIp()
+    {
+        String ip = null;
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            if (addr != null) {
+                ip = addr.getHostAddress().toString();
+                logger.info("Ip: {}", ip);
+            }
+            else {
+                logger.error("get localhost failed...");
+            }
+        } catch (IOException e) {// TODO Auto-generated catch
+            logger.error("get localhost failed... error: {}", e.getMessage());
+        }
+        return ip;
     }
 }

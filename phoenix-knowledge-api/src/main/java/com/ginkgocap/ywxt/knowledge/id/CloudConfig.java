@@ -7,9 +7,10 @@ import java.io.Serializable;
  */
 public class CloudConfig implements Serializable {
 
-    public CloudConfig(int seq,String ip)
+	private static final long serialVersionUID = 4314936704325545146L;
+	public CloudConfig(int id,String ip)
     {
-        this.id = seq;
+        this.id = id;
         this.ip = ip;
     }
 
