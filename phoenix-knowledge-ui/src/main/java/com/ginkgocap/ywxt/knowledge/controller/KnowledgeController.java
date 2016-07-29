@@ -2272,6 +2272,12 @@ public class KnowledgeController extends BaseController {
         dynamic.setCreateType(createType);
         dynamic.setScope(String.valueOf(0));
         Location location = new Location();
+        location.setDetailName("");
+        location.setDimension("");
+        location.setMobile("");
+        location.setName("");
+        location.setSecondLevel("");
+        location.setType("");
         dynamic.setLocation(location);
         dynamic.setPeopleRelation(new ArrayList<RelationUserInfo>(0));
         dynamic.setComments(new ArrayList<DynamicComment>(0));
