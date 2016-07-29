@@ -463,6 +463,9 @@ public class KnowledgeController extends BaseController {
         hContent = hContent.substring(0, maxLen);
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
+        if (StringUtils.isEmpty(detail.getColumnType())) {
+        	detail.setColumnType(String.valueOf(columnId));
+        }
         DataCollect data = new DataCollect(null, detail);
 
         boolean isCollected = false;
@@ -2267,7 +2270,7 @@ public class KnowledgeController extends BaseController {
         //dynamic.setDemandCount());
         //dynamic.setId();
         dynamic.setImgPath(detail.getPic());
-        dynamic.setKnowledgeCount(1);
+        dynamic.setKnowledgeCount(0);
         String createType = detail.getVirtual() == 1 ? "1" : "2";
         dynamic.setCreateType(createType);
         dynamic.setScope(String.valueOf(0));
