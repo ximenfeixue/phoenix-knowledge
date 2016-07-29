@@ -41,7 +41,7 @@ public class KnowledgeOtherControl extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     @Autowired
-    KnowledgeService knowledgeServiceV1;
+    KnowledgeService knowledgeService;
 
     @Autowired
     KnowledgeCountService knowledgeCountService;
@@ -361,7 +361,7 @@ public class KnowledgeOtherControl extends BaseController {
         DataCollect data = new DataCollect(null, vo);
         data.serUserId(user.getId());
         data.generateKnowledge();
-        return this.knowledgeServiceV1.insert(data);
+        return this.knowledgeService.insert(data);
     }
 
 
