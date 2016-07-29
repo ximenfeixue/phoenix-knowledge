@@ -873,7 +873,7 @@ public class KnowledgeController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/allKnowledgeByColumnAndSource/{type}/{columnId}/{source}/{page}/{size}/{total}", method = RequestMethod.GET)
-    public InterfaceResult<Page<KnowledgeBase>> getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult getKnowledgeByColumnAndSource(HttpServletRequest request, HttpServletResponse response,
                                                                               @PathVariable short type,@PathVariable int columnId,
                                                                               @PathVariable short source, @PathVariable int page,
                                                                               @PathVariable int size, @PathVariable long total) throws Exception
@@ -921,6 +921,9 @@ public class KnowledgeController extends BaseController {
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
+                if (knowledgeList == null || knowledgeList.size() <= 0) {
+                    return InterfaceResult.getSuccessInterfaceResultInstance("暂时没有符合条件的知识!");
+                }
             } else {
                 return queryKnowledgeEnd();
             }
