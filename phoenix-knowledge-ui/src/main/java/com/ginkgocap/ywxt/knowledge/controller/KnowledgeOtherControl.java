@@ -48,9 +48,9 @@ public class KnowledgeOtherControl extends BaseController {
 
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
 
+    @ResponseBody
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
-    public @ResponseBody
-    InterfaceResult FetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
+    public InterfaceResult FetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
         logger.info("into /FetchExternalKnowledgeUrl");
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
@@ -239,28 +239,30 @@ public class KnowledgeOtherControl extends BaseController {
                         // 大数据错误
                         setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                         // 错误反馈
-                        responseDataMap.put("knowledge2", null);
+                        responseDataMap.put("knowledge", null);
                         // 跳出
-                        return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+                        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
                     }
                 } else {
                     // 大数据错误
                     setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                     // 错误反馈
-                    responseDataMap.put("knowledge2", null);
+                    responseDataMap.put("knowledge", null);
                     // 跳出
-                    return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
                 }
             }
         } catch (IOException e) {
             setSessionAndErr(request, response, "-1", "输入参数不合法");
             e.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "输入参数不合法");
         } catch (Exception q) {
             setSessionAndErr(request, response, "-1", "未知异常");
             logger.warn(q.toString());
             logger.warn(q.getMessage());
             logger.info(q.toString());
             logger.info(q.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
         responseDataMap.put("knowledge", knowledge);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
