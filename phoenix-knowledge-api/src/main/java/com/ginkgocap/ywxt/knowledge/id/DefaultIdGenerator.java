@@ -16,6 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  
 	  private String time;
+
 	  
 	  private AtomicInteger value;
 	  

@@ -1,11 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
+import com.ginkgocap.ywxt.knowledge.id.CloudConfig;
 import com.ginkgocap.ywxt.knowledge.id.DefaultIdGenerator;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.Ids;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.InetAddress;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -52,6 +57,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
     @Override
     public Long getKnowledgeSequenceId()
     {
+        /*
         if (defaultIdGenerator == null) {
             if (resourceBundle == null) {
                 exit("dubbo.properties 必须存在!");
@@ -71,6 +77,9 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
                 exit("knowledge.provider.sequence. 必须是数字 :" + sequence);
             }
             defaultIdGenerator = new DefaultIdGenerator(sequence);
+        }*/
+        if (defaultIdGenerator == null) {
+            checkSequence();
         }
 
         try {
@@ -105,4 +114,57 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
         return random.nextInt(max)%(max-min+1) + min;
     }
 
+    private void checkSequence()
+    {
+        String ipAddress = CommonUtil.getHostIp();
+        if (ipAddress == null) {
+            logger.error("Can't get host Ip address, please check the host configure..");
+            //Dummy a address
+            ipAddress = "127.0.0.101";
+        }
+        int sequence = 1;
+        String collectionName = CloudConfig.class.getSimpleName();
+        if (!mongoTemplate.collectionExists(collectionName)) {
+            saveCloudConfig(sequence, ipAddress, collectionName);
+            defaultIdGenerator = new DefaultIdGenerator(String.valueOf(sequence));
+        } else {
+            Query query = ipQuery(ipAddress);
+            CloudConfig cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
+            if (cloud != null) {
+                defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
+            }
+            else {
+                query = idQuery();
+                cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
+                if (cloud != null) {;
+                    cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
+                    defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
+                } else {
+                    cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
+                    defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
+                }
+            }
+        }
+    }
+
+    private Query ipQuery(String ipAddress){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("ip").is(ipAddress));
+        return query;
+    }
+
+    private Query idQuery()
+    {
+        Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        query.limit(1);
+        return query;
+    }
+
+    private CloudConfig saveCloudConfig(int id,String ipAddress,String collectionName)
+    {
+        CloudConfig cloud = new CloudConfig(id, ipAddress);
+        mongoTemplate.save(cloud, collectionName);
+        return cloud;
+    }
 }
