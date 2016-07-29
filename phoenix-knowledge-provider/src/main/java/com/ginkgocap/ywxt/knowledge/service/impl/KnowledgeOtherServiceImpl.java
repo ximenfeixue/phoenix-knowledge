@@ -55,6 +55,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             KnowledgeCollect collect = new KnowledgeCollect();
             collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
             collect.setKnowledgeId(knowledgeId);
+            collect.setType((short)columnId);
             collect.setColumnId(columnId);
             collect.setCreateTime(System.currentTimeMillis());
             collect.setKnowledgeTitle(detail.getTitle());

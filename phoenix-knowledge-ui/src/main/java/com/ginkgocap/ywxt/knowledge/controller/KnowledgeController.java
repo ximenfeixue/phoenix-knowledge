@@ -2052,13 +2052,16 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1, start, size);
         if (collectItems != null && collectItems.size() > 0) {
             List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
+            collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
             for (KnowledgeCollect collect : collectItems) {
                 if (!knowledgeIds.contains(collect.getKnowledgeId())) {
-                    knowledgeIds.add(collect.getKnowledgeId());
+                    Knowledge detail = knowledgeService.getDetailById(collect.getKnowledgeId(), collect.getColumnId());
+                    KnowledgeBase base = DataCollect.generateKnowledge(detail, (short)collect.getColumnId());
+                    collectedKnowledgeItems.add(base);
                 }
             }
             logger.info(" knowledgeIds: {}, keyword: {}", knowledgeIds, keyword);
-            collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
+            //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
         }
 
         return collectedKnowledgeItems;
@@ -2249,6 +2252,7 @@ public class KnowledgeController extends BaseController {
     {
         DynamicNews dynamic = new DynamicNews();
         dynamic.setType("10"); //创建知识
+        dynamic.setLowType(detail.getColumnType());
         dynamic.setTargetId(detail.getId());
         dynamic.setTitle(detail.getTitle());
         //dynamic.setContent(knowledge.getContent());
