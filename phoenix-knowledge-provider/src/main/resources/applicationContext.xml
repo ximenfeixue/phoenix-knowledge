@@ -45,7 +45,8 @@
 
     <import resource="classpath:metadata-directory-consumer.xml"/>
     <import resource="classpath:tags-dubbo-consumer.xml"/>
-	
+
+    <bean id="knowledgeCommonService" class="com.ginkgocap.ywxt.knowledge.service.impl.common.KnowledgeCommonServiceImpl" ></bean>
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
