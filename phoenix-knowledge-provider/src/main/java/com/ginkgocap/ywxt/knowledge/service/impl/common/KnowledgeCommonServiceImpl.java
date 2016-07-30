@@ -122,31 +122,26 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
         int sequence = 1;
         String collectionName = CloudConfig.class.getSimpleName();
         logger.info("ipAddress: {} collectionName: {}",ipAddress, collectionName);
-        if (!mongoTemplate.collectionExists(collectionName)) {
-            logger.info("collectionName not exist, so create it");
-            saveCloudConfig(sequence, ipAddress, collectionName);
-            defaultIdGenerator = new DefaultIdGenerator(String.valueOf(sequence));
-        } else {
-            Query query = ipQuery(ipAddress);
-            CloudConfig cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
+        Query query = ipQuery(ipAddress);
+        CloudConfig cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
+        if (cloud != null) {
+            logger.info("find ip: {} in collectionName id: {}",ipAddress, cloud.getId());
+            defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
+        }
+        else {
+            query = idQuery();
+            cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
             if (cloud != null) {
-                logger.info("find ip: {} in collectionName id: {}",ipAddress, cloud.getId());
+                logger.info("find the max ip: {} in collectionName id: {}",ipAddress, cloud.getId());
+                cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
+                defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
+            } else {
+                logger.error("Can't get exist cloud configure, please check..");
+                cloud = saveCloudConfig(sequence, ipAddress, collectionName);
                 defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
             }
-            else {
-                query = idQuery();
-                cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
-                if (cloud != null) {
-                    logger.info("find the max ip: {} in collectionName id: {}",ipAddress, cloud.getId());
-                    cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
-                    defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
-                } else {
-                    logger.error("Can't get exist cloud configure, please check..");
-                    cloud = saveCloudConfig(getNextNum(), ipAddress, collectionName);
-                    defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
-                }
-            }
         }
+
     }
 
     private Query ipQuery(String ipAddress){
