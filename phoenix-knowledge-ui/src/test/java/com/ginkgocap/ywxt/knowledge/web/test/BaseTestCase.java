@@ -21,8 +21,8 @@ public abstract class BaseTestCase extends TestCase
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
     protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
-    //private static String testEnv = "testOnline";
-    private static String testEnv = "dev";
+    private static String testEnv = "testOnline";
+    //private static String testEnv = "dev";
     //private static String testEnv = "local";
     
     static {
@@ -39,7 +39,7 @@ public abstract class BaseTestCase extends TestCase
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
-            loginUrl = "http://test.online.gintong.com/cross/login/loginConfiguration.json";
+            loginUrl = "http://test.online.gintong.com/cross/web/login.json";
             hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");

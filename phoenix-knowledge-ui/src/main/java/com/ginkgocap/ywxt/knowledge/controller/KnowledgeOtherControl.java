@@ -5,12 +5,14 @@ import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.PermissionServiceLocal;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class KnowledgeOtherControl extends BaseController {
 
     @Autowired
     KnowledgeCountService knowledgeCountService;
+
+    @Autowired
+    private PermissionServiceLocal permissionServiceLocal;
 
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
 
@@ -295,6 +300,16 @@ public class KnowledgeOtherControl extends BaseController {
 
         logger.debug("collectCount request, userId: {} type: {}, knowledgeId: {}", userId, type, knowledgeId);
         knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+    
+    @ResponseBody
+    @RequestMapping(value="/update/{userId}/{password}", method = RequestMethod.GET)
+    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response,
+            @PathVariable long userId,@PathVariable String password) throws Exception {
+        logger.info("update userId: {} password: {}", userId, password);
+        permissionServiceLocal.updatePassword(userId, password);
+        logger.info("update userId: {} password: {}", userId, password);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 

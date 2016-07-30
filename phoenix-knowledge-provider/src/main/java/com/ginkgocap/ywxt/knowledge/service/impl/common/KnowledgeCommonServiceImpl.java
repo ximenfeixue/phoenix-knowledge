@@ -2,34 +2,32 @@ package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
 import com.ginkgocap.ywxt.knowledge.id.CloudConfig;
 import com.ginkgocap.ywxt.knowledge.id.DefaultIdGenerator;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.model.common.Ids;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service("knowledgeCommonService")
-public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
+public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, InitializingBean {
     private final static Logger logger = LoggerFactory.getLogger(KnowledgeCommonServiceImpl.class);
 	@Resource
     private MongoTemplate mongoTemplate;
 
-    private static volatile DefaultIdGenerator defaultIdGenerator = null;
+    private static DefaultIdGenerator defaultIdGenerator = null;
 
+    private AtomicInteger autoIncrease = new AtomicInteger(1);
     /*
 	@Override
 	public Long getKnowledgeSequenceId() {
@@ -78,20 +76,19 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
             }
             defaultIdGenerator = new DefaultIdGenerator(sequence);
         }*/
-        if (defaultIdGenerator == null) {
-            checkSequence();
+        if (defaultIdGenerator != null) {
+            try {
+                long sequenceId = Long.parseLong(defaultIdGenerator.next());
+                logger.info("generated  sequenceId： {}", sequenceId);
+                return sequenceId;
+            } catch (NumberFormatException ex) {
+                logger.error("生成唯一Id不是数字 ： " + ex.getMessage());
+                return tempId();
+            } catch (Throwable ex) {
+                return tempId();
+            }
         }
-
-        try {
-            long sequenceId = Long.parseLong(defaultIdGenerator.next());
-            logger.info("generated  sequenceId： {}", sequenceId);
-            return sequenceId;
-        } catch (NumberFormatException ex) {
-            logger.error("生成唯一Id不是数字 ： " + ex.getMessage());
-            return tempId();
-        } catch (Throwable ex) {
-            return tempId();
-        }
+        return tempId();
     }
 
     private static void exit(String message)
@@ -103,7 +100,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
     private long tempId()
     {
         logger.error("唯一I的生成器出问题，请赶快排查");
-        return System.currentTimeMillis() + getNextNum();
+        return System.currentTimeMillis() + autoIncrease.getAndIncrement();
     }
 
     private static int getNextNum()
@@ -114,7 +111,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
         return random.nextInt(max)%(max-min+1) + min;
     }
 
-    private void checkSequence()
+    private void initUniqueIdGenerator()
     {
         String ipAddress = getHostIp();
         if (ipAddress == null) {
@@ -185,5 +182,11 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService {
             logger.error("get localhost failed... error: {}", e.getMessage());
         }
         return ip;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        initUniqueIdGenerator();
+        logger.info("Unique Id Generator init complete...");
     }
 }

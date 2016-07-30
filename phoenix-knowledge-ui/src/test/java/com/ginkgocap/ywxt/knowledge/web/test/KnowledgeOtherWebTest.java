@@ -51,8 +51,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
             e.printStackTrace();
         }
     }
-   
-    
+
+    @Test
     public void testPush()
     {
         LogMethod();
@@ -60,6 +60,19 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         	String JsonContent = "";
             String subUrl = "/fetchExternalKnowledgeUrl";
             JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, "http://192.168.130.106:8080/dynamicNews/push", JsonContent);
+            Util.checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testUpdatePass()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/update/7/MTExMTEx";
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
