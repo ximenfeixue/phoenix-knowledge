@@ -65,7 +65,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge savedDetail = null;
         try {
             detail.setStatus(4);
+            logger.info("Begin insert knowledge to mongo. knowledgeId: {}",detail.getId());
             savedDetail = this.knowledgeMongoDao.insert(detail);
+            logger.info("End insert knowledge to mongo. knowledgeId: {}",detail.getId());
         } catch (Exception ex) {
             logger.error("Create knowledge detail failed: error:  {}", ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -80,7 +82,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
+            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
             this.knowledgeMysqlDao.insert(knowledgeBase);
+            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
         } catch (Exception e) {
             logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
