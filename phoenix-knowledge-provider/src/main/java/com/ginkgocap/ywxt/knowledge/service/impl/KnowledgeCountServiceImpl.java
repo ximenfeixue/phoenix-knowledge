@@ -24,6 +24,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
 
     private final int defaultLimit = 50;
     private final int MAX_NUM = 500;
+    private final int defaultBatchSize = 50;
 
     private ConcurrentMap<Long, KnowledgeCount> hotCountMap = new ConcurrentHashMap<Long, KnowledgeCount>(MAX_NUM);
     /**知识简表*/
@@ -126,7 +127,6 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return knowledgeCount;
         }
 
         hotCountMap.put(knowledgeId, knowledgeCount);
@@ -135,28 +135,34 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
 
     private void batchSaveCountResult()
     {
-        List<KnowledgeCount> KnowledgeCountList = new ArrayList<KnowledgeCount>(20);
+        List<KnowledgeCount> KnowledgeCountList = null;
+        if (hotCountMap.size() > defaultBatchSize) {
+            KnowledgeCountList = new ArrayList<KnowledgeCount>(defaultBatchSize);
+        } else {
+            KnowledgeCountList = new ArrayList<KnowledgeCount>(hotCountMap.size());
+        }
         Set<Map.Entry<Long,KnowledgeCount>> knowledgeCountEntry = hotCountMap.entrySet();
         for (Map.Entry<Long,KnowledgeCount> knowledgeCount : knowledgeCountEntry) {
             KnowledgeCountList.add(knowledgeCount.getValue());
             //Batch save 20
-            if (KnowledgeCountList.size() >= 20) {
-                KnowledgeCountList = saveToDB(KnowledgeCountList);
+            if (KnowledgeCountList.size() >= defaultBatchSize) {
+                KnowledgeCountList = saveToDB(KnowledgeCountList, false);
             }
         }
-        saveToDB(KnowledgeCountList);
+        saveToDB(KnowledgeCountList, true);
     }
 
-    private List<KnowledgeCount> saveToDB(List<KnowledgeCount> knowledgeCountList)
+    private List<KnowledgeCount> saveToDB(List<KnowledgeCount> knowledgeCountList, boolean complete)
     {
-        try {
-            knowledgeCountDao.saveKnowledgeCountList(knowledgeCountList);
-        } catch (Exception e) {
-            logger.error("Save knowledge Count info failed: error: {}", e.getMessage());
-            e.printStackTrace();
-        } 
-        return new ArrayList<KnowledgeCount>(20);
-        
+        if (knowledgeCountList != null && knowledgeCountList.size() > 0) {
+            try {
+                knowledgeCountDao.saveKnowledgeCountList(knowledgeCountList);
+            } catch (Exception e) {
+                logger.error("Save knowledge Count info failed: error: {}", e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return complete ? null : new ArrayList<KnowledgeCount>(defaultBatchSize);
     }
 
     private void startTimer() {
