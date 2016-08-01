@@ -101,6 +101,6 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
     @Override
     public void afterPropertiesSet() throws Exception {
     	defaultIdGenerator = IdGeneratorFactory.idGenerator(mongoTemplate);
-        logger.info("Unique Id Generator init complete...");
+        logger.info("Unique Id Generator init complete.");
     }
 }

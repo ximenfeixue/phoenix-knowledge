@@ -188,7 +188,39 @@ public class KnowledgeWebTest extends BaseTestCase
             fail();
         }
     }
+
+    public void testGetKnowledgeByColumnAndSourceOne()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑1");
+            //createKnowledge("考虑,考虑2");
+            String subUrl = "/allKnowledgeByColumnAndSource/6/6/1/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
     
+    public void testGetKnowledgeByColumnAndSourceTwo()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑1");
+            //createKnowledge("考虑,考虑2");
+            String subUrl = "/allKnowledgeByColumnAndSource/6/6/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            //String urlStr =
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            Util.checkResponseWithData(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     public void testGetKnowledgeByColumnAndSource()
     {
         LogMethod();

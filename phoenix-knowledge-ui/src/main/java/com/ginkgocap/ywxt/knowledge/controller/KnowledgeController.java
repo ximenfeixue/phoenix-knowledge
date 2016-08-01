@@ -434,13 +434,13 @@ public class KnowledgeController extends BaseController {
     /**
      * 提取知识详细信息，一般用在详细查看界面、编辑界面
      * @param knowledgeId 知识Id
-     * @param columnId 栏目主键
+     * @param type 栏目主键
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/{knowledgeId}/{columnId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{knowledgeId}/{type}", method = RequestMethod.GET)
     @ResponseBody
     public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
-                                      @PathVariable long knowledgeId,@PathVariable int columnId) throws Exception {
+                                      @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
@@ -454,14 +454,14 @@ public class KnowledgeController extends BaseController {
         Knowledge detail = null;
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
-            detail = this.knowledgeService.getDetailById(knowledgeId, columnId);
+            detail = this.knowledgeService.getDetailById(knowledgeId, type);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
         }
 
         //数据为空则直接返回异常给前端
         if(detail == null) {
-            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("get knowledge failed: knowledgeId: {}, columnType: {}", knowledgeId, type);
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
             return mappingJacksonValue(result);
         }
@@ -471,16 +471,16 @@ public class KnowledgeController extends BaseController {
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
         if (StringUtils.isEmpty(detail.getColumnType())) {
-        	detail.setColumnType(String.valueOf(columnId));
+        	detail.setColumnType(String.valueOf(type));
         }
         DataCollect data = new DataCollect(null, detail);
 
         boolean isCollected = false;
         long userId = user.getId();
         try {
-            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnId);
+            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, type);
         } catch (Exception ex) {
-            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
+            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, type);
         }
         detail.setCollected(isCollected ? (short) 1 : (short) 0);
 
@@ -491,10 +491,10 @@ public class KnowledgeController extends BaseController {
                 data.setPermission(ret.getResponseData());
             }
             else {
-                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, type);
             }
         }catch (Exception ex) {
-            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
         }
 
@@ -502,7 +502,7 @@ public class KnowledgeController extends BaseController {
             List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
             data.setAsso(associateList);
         } catch (Exception ex) {
-            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
         }
 
@@ -511,9 +511,9 @@ public class KnowledgeController extends BaseController {
 
         //Click count this should be in queue
         try {
-            //knowledgeCountService.updateClickCount(knowledgeId);
+            knowledgeCountService.updateClickCount(userId, knowledgeId, (short)type);
         } catch (Exception ex) {
-            logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
         }
 
@@ -523,15 +523,15 @@ public class KnowledgeController extends BaseController {
     /**
      * 提取知识详细信息，一般用在详细查看界面、编辑界面
      * @param knowledgeId 知识Id
-     * @param columnId 栏目主键
+     * @param type 栏目主键
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/web/{knowledgeId}/{columnId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/web/{knowledgeId}/{type}", method = RequestMethod.GET)
     @ResponseBody
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
-                                         @PathVariable long knowledgeId,@PathVariable int columnId) throws Exception {
+                                         @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getUser(request);
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, columnId);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if (result != null) {
             DataCollect data = result.getResponseData();

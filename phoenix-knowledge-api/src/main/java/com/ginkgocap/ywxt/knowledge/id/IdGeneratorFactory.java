@@ -66,7 +66,7 @@ public class IdGeneratorFactory {
     private static CloudConfig saveCloudConfig(MongoTemplate mongoTemplate,int id,String ipAddress,String collectionName)
     {
         CloudConfig cloud = new CloudConfig(id, ipAddress);
-        mongoTemplate.insert(cloud, collectionName);
+        mongoTemplate.save(cloud, collectionName);
         return cloud;
     }
     
