@@ -37,21 +37,14 @@ import java.util.concurrent.Executors;
 @Repository("knowledgeMongoDao")
 public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
-    private Logger logger = LoggerFactory.getLogger(KnowledgeMongoDaoImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeMongoDaoImpl.class);
     @Resource
     private MongoTemplate mongoTemplate;
 
     @Autowired
     private KnowledgeCommonService knowledgeCommonService;
 
-    @Resource
-    private Cache cache;
-
     private final int maxSize = 20;
-    private final int maxQuerySize = 300;
-
-    private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
-    private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     @Override
     public Knowledge insert(Knowledge knowledge) throws Exception {
@@ -224,53 +217,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return mongoTemplate.find(query, classType, collectName);
     }
 
-    @Override
-    public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size)
-    {
-        String collectionName = this.getCollectionName(type);
-        List<String> list = new ArrayList<String>(columnIds.length);
-        for(int i = 0; i < columnIds.length; i++) {
-            list.add(String.valueOf(columnIds[i]));
-        }
-        Query query = new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        return mongoTemplate.find(query, Knowledge.class, collectionName);
-    }
-
-    @Override
-    public List<Knowledge> getAllByParam(short columnType,String columnPath, int columnId, Long userId, int start, int size)
-    {
-        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
-
-        Map<String, Object> model = new HashMap<String, Object>();
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-
-        return getMongoIds(columnId, columnPath, userId, collectionName, start, size);
-    }
-
-    @Override
-    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type)
-    {
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        List<String> list = new ArrayList<String>(columnID.length);
-        for(int i = 0; i < columnID.length; i++) {
-            list.add(columnID[i]);
-        }
-        return mongoTemplate.count(new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)), collectionName);
-    }
-
-    @Override
-    public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size) {
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        List<String> list = new ArrayList<String>(columnID.length);
-        for(int i = 0; i < columnID.length; i++) {
-            list.add(columnID[i]);
-        }
-        Query query = new Query(Criteria.where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        return mongoTemplate.find(query, Knowledge.class, collectionName);
-    }
-
     // 首页主页
     @SuppressWarnings("unchecked")
     @Override
@@ -310,101 +256,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
-        if (start < 0 || size < 0) {
-            logger.error("paramter is invalidated. start: {}, size: {}", start, size);
-            return null;
-        }
-        String key = getKey(columnId, userId,  tableName);
-        List<Long> knowledgeIds = (List<Long>) cache.get(key);
-        size = size > maxSize ? maxSize : size;
-        List<Knowledge> result = null;
-        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-        if (!bLoading) {
-            try {
-                loadingMap.put(key, Boolean.TRUE);
-                logger.info("First query begin... key: {}", key);
-                // 查询栏目类型
-                Criteria criteria = Criteria.where("status").is(4);
-                // 金桐脑知识条件
-                criteria.and("uid").is(userId);
-                // 查询栏目目录为当前分类下的所有数据
-                String reful = columnPath;
-                // 该栏目路径下的所有文章条件
-                criteria.and("cpathid").regex("^" + reful + ".*$");
-                Query query = new Query(criteria);
-                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                query.limit(maxQuerySize);
-                query.skip(0);
-
-                List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                    List<Long> ids = new CopyOnWriteArrayList<Long>();
-                    result = new ArrayList<Knowledge>(size);
-                    int index = 0;
-                    for (Knowledge knowledge : knowledgeList) {
-                        if (knowledge != null) {
-                            ids.add(knowledge.getId());
-                            if (index++ < size) {
-                                result.add(knowledge);
-                            }
-                        }
-                    }
-                    cache.set(key, ids);
-                }
-            } 
-            catch(Exception ex) {
-            	ex.printStackTrace();
-            }
-        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
-            int fromIndex = start;
-            int toIndex = start + size;
-            if (toIndex > knowledgeIds.size() - 1) {
-                toIndex = knowledgeIds.size() - 1;
-            }
-        	List<Long> ids = null;
-            if (knowledgeIds != null && fromIndex < toIndex) {
-                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
-        		ids = knowledgeIds.subList(fromIndex, toIndex);
-        	} 
-        	if (ids != null && ids.size() > 0) {
-                long begin = System.currentTimeMillis();
-                Criteria criteria = new Criteria();
-                criteria.and("_id").in(ids);
-                Query query = new Query(criteria);
-                result = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (result != null && result.size() > 0) {
-                    logger.info("get Knowledge size: {}", result.size());
-                }
-                else {
-                    logger.info("can't get Knowledge by Ids: {}", ids.toString());
-                }
-//	            for (Long id : ids) {
-//	                Knowledge vo = mongoTemplate.findById(id, KnowledgeNews.class, tableName);
-//	                if (vo != null) {
-//	                    result.add(vo);
-//	                }
-//	            }
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end-begin));
-        	}
-            // 执行更新
-            //executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath,));
-        }
-        return result;
-    }
-
-    private static String getKey(Object... params) {
-        if (ArrayUtils.isEmpty(params)) {
-            return null;
-        }
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < params.length; i++) {
-            sb.append(i > 0 ? "_" : "").append(params[i]);
-        }
-        return sb.toString();
     }
 
     private String getCollectionName(String columnId) {
@@ -488,59 +339,4 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return KnowledgeUtil.parserColumnId(columnId);
     }
 
-    private class TakeRecordTask implements Runnable {
-        private int columnId;
-        private short status;
-        private long uid;
-        private String name;
-        private String key;
-        private String columnPath;
-        private int start;
-
-        public TakeRecordTask(int columnId, short status, long uid, String name,String columnPath,int start) {
-            this.columnId = columnId;
-            this.status = status;
-            this.uid = uid;
-            this.name = name;
-            this.columnPath = columnPath;
-            this.key = getKey(columnId, status, uid, name, start);
-            this.start = start;
-        }
-
-        @Override
-        public void run() {
-            boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-            if (!bLoading) {
-                try {
-                    loadingMap.put(key, Boolean.TRUE);
-                    // 查询栏目类型
-                    Criteria criteria = Criteria.where("status").is(4);
-                    // 金桐脑知识条件
-                    criteria.and("uid").is(uid);
-                    // 查询栏目目录为当前分类下的所有数据
-                    String reful = columnPath;
-                    // 该栏目路径下的所有文章条件
-                    criteria.and("cpathid").regex("^" + reful + ".*$");
-                    Query query = new Query(criteria);
-                    query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                    query.limit(maxQuerySize);
-                    query.skip(0);
-
-                    List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, name);
-                    List<Long> ids = new CopyOnWriteArrayList<Long>();
-                    if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                        for (Knowledge knowledge : knowledgeList) {
-                            if (knowledge != null) {
-                                ids.add(knowledge.getId());
-                            }
-                        }
-                    }
-                    cache.set(key, ids);
-                } finally {
-                    loadingMap.remove(key);
-                }
-            }
-
-        }
-    }
 }

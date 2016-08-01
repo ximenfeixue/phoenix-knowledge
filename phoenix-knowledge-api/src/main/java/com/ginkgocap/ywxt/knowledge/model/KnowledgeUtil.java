@@ -71,6 +71,11 @@ public final class KnowledgeUtil {
         return KnowledgeType.knowledgeType(columnId).tableName();
     }
 
+    public static String getKnowledgeTypeName(int columnId)
+    {
+        return KnowledgeType.knowledgeType(columnId).typeName();
+    }
+
     //This is just for test, need do knowledge test but real user not exist
     public static User getDummyUser()
     {

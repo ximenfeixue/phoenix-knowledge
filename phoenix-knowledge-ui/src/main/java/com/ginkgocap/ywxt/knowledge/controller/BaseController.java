@@ -13,6 +13,7 @@ import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
 import org.parasol.column.entity.ColumnSelf;
+import org.parasol.column.service.ColumnCustomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -122,6 +123,12 @@ public abstract class BaseController {
         JSONObject requestJson = JSONObject.fromObject(requestString == null ? "" : requestString);
 
         return requestJson;
+    }
+
+    protected String [] getChildIdListByColumnId(ColumnCustomService columnCustomService, int columnId, long userId)
+    {
+        List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId, userId);
+        return getColumnIds(columnList, columnId);
     }
 
     protected String [] getColumnIds(List<ColumnSelf> columnList,int columnId)

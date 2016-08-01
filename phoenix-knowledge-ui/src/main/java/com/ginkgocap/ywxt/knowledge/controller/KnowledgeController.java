@@ -72,7 +72,7 @@ public class KnowledgeController extends BaseController {
     ColumnCustomService columnCustomService;
 
     @Autowired
-    private UserService userService;
+    private KnowledgeBatchQueryService knowledgeBatchQueryService;
 
     @Autowired
     private AssociateService associateService;
@@ -127,6 +127,15 @@ public class KnowledgeController extends BaseController {
         if (data == null || data.getKnowledgeDetail() == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情错误");
         }
+        Knowledge detail = data.getKnowledgeDetail();
+        if (StringUtils.isEmpty(detail.getColumnType())) {
+            logger.warn("column type is null, so set a default value");
+            detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
+        }
+        if (StringUtils.isEmpty(detail.getCpathid())) {
+            logger.warn("column path is null, so set a default value");
+            detail.setCpathid(KnowledgeType.ENews.typeName());
+        }
         initKnowledgeTime(data);
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -143,8 +152,6 @@ public class KnowledgeController extends BaseController {
             return result;
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
-
-        Knowledge detail = data.getKnowledgeDetail();
         detail.setId(knowledgeId);
 
         if (!tagServiceLocal.saveTagSource(userId, detail)) {
@@ -892,16 +899,15 @@ public class KnowledgeController extends BaseController {
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
             //First get total;
             userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-            List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId,userId);
-            String [] idList = getColumnIds(columnList, columnId);
+            String [] idList = getChildIdListByColumnId(columnCustomService, columnId, userId);
             if (total == -1) {
                 logger.info("begin to get knowledge count:");
-                total = knowledgeHomeService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
+                total = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
                 logger.info("end to get knowledge count:" + total);
             }
             if (total > 0 && start < total) {
                 logger.info("start to get knowledge:" + total);
-                List<Knowledge> detailList = this.knowledgeHomeService.getKnowledge(idList, userId, type, start, size);
+                List<Knowledge> detailList = knowledgeBatchQueryService.getKnowledge(idList, userId, type, start, size);
                 logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
                 knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
@@ -919,7 +925,7 @@ public class KnowledgeController extends BaseController {
             }
             else if (total > 0 && start < total) {
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-                List<Knowledge> detailList = this.knowledgeHomeService.getAllByParam(type, column.getPathName(), columnId, userId, page, size);
+                List<Knowledge> detailList = this.knowledgeBatchQueryService.getAllByParam(type, columnId, column.getPathName(), userId, page, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 if (knowledgeList == null || knowledgeList.size() <= 0) {
                     return InterfaceResult.getSuccessInterfaceResultInstance("暂时没有符合条件的知识!");
@@ -942,6 +948,7 @@ public class KnowledgeController extends BaseController {
         else if (source == KnowledgeConstant.SOURCE_MY_FRIEND) {
 
         }
+        //All SOURCE_ALL_PLATFORM
         else {
             if (total == -1) {
                 total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
@@ -1709,7 +1716,7 @@ public class KnowledgeController extends BaseController {
         Map<Long, Object> plr = new HashMap<Long, Object>(size);
         Map<Long, Object> plcontent = new HashMap<Long, Object>(size);
 
-        List<Knowledge> knowledgeList = knowledgeHomeService.getAllByParam(type, null, columnId, userId, page, size);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.getAllByParam(type, columnId, null, userId, page, size);
         if (model != null) {
             model.put("list", knowledgeList);
         }

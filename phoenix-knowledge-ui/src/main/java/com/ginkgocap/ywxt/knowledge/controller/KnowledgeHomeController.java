@@ -45,6 +45,9 @@ public class KnowledgeHomeController extends BaseController {
     private KnowledgeService knowledgeService;
 
     @Autowired
+    KnowledgeBatchQueryService knowledgeBatchQueryService;
+
+    @Autowired
     KnowledgeHomeService knowledgeHomeService;
 
     @Autowired

@@ -14,28 +14,6 @@ import java.util.HashMap;
 public interface KnowledgeHomeService
 {
     /**
-     * 查询分类
-     * @param userId 用户id
-     * @param column 栏目id
-     * @return
-     */
-    //public List<Column>getTypeList(Long userId,Long columnId);
-
-    /**
-     * 查询知识
-     * @param columnId 栏目id
-     * @param userId 用户id
-     * @param start 起始实记录
-     * @param size 每页大小
-     * @return
-     */
-    public List<Knowledge> getAllByParam(short type,String columnPath,int columnId, long userId, int start, int size);
-
-    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type);
-
-    public List<Knowledge> getKnowledge(String[] columnID, long user_id, short type, int start, int size);
-
-    /**
      * 查询目录知识
      * @param tid 11种类型
      * @param lid 6种来源
@@ -120,17 +98,6 @@ public interface KnowledgeHomeService
      * @param keyword 关键词
      */
     public int countKnowledgeIds(String tid,String lId, int state, String sortId, long userId, String keyword);
-
-    /**
-     * 登录用户查询全平台的知识
-     * @param columnId 类型
-     * @param columnId 栏目id
-     * @param userId 用户id
-     * @param page
-     * @param size
-     * @return
-     */
-    public List<KnowledgeBase> selectPlatform(int columnId, long userId, int page, int size);
 
     /**
      * 根据定制的栏目读取聚合信息

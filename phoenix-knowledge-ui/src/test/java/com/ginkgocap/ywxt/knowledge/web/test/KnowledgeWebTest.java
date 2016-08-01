@@ -53,7 +53,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledgeMore() throws InterruptedException
     {
         LogMethod();
-        for (int index = 0; index <5; index++) {
+        for (int index = 0; index <100; index++) {
             createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的");
             System.out.print("Index: "+index);
             Thread.sleep(5);
