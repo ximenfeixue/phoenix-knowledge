@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
 import com.ginkgocap.ywxt.knowledge.id.CloudConfig;
 import com.ginkgocap.ywxt.knowledge.id.DefaultIdGenerator;
+import com.ginkgocap.ywxt.knowledge.id.IdGeneratorFactory;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
@@ -91,101 +92,15 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
         return tempId();
     }
 
-    private static void exit(String message)
-    {
-        logger.error(message);
-        System.exit(0);;
-    }
-
     private long tempId()
     {
         logger.error("唯一I的生成器出问题，请赶快排查");
         return System.currentTimeMillis() + autoIncrease.getAndIncrement();
     }
 
-    private static int getNextNum()
-    {
-        int max=1500000;
-        int min=1;
-        Random random = new Random();
-        return random.nextInt(max)%(max-min+1) + min;
-    }
-
-    private void initUniqueIdGenerator()
-    {
-        String ipAddress = getHostIp();
-        if (ipAddress == null) {
-            logger.error("Can't get host Ip address, please check the host configure..");
-            //Dummy a address
-            ipAddress = "127.0.0.101";
-        }
-        int sequence = 1;
-        String collectionName = CloudConfig.class.getSimpleName();
-        logger.info("ipAddress: {} collectionName: {}",ipAddress, collectionName);
-        Query query = ipQuery(ipAddress);
-        CloudConfig cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
-        if (cloud != null) {
-            logger.info("find ip: {} in collectionName id: {}",ipAddress, cloud.getId());
-            defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
-        }
-        else {
-            query = idQuery();
-            cloud = mongoTemplate.findOne(query, CloudConfig.class, collectionName);
-            if (cloud != null) {
-                logger.info("find the max ip: {} in collectionName id: {}",ipAddress, cloud.getId());
-                cloud = saveCloudConfig(cloud.getId()+1, ipAddress, collectionName);
-                defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
-            } else {
-                logger.error("Can't get exist cloud configure, please check..");
-                cloud = saveCloudConfig(sequence, ipAddress, collectionName);
-                defaultIdGenerator = new DefaultIdGenerator(String.valueOf(cloud.getId()));
-            }
-        }
-
-    }
-
-    private Query ipQuery(String ipAddress){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("ip").is(ipAddress));
-        return query;
-    }
-
-    private Query idQuery()
-    {
-        Query query = new Query();
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        query.limit(1);
-        return query;
-    }
-
-    private CloudConfig saveCloudConfig(int id,String ipAddress,String collectionName)
-    {
-        CloudConfig cloud = new CloudConfig(id, ipAddress);
-        mongoTemplate.insert(cloud, collectionName);
-        return cloud;
-    }
-
-    private String getHostIp()
-    {
-        String ip = null;
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            if (addr != null) {
-                ip = addr.getHostAddress().toString();
-                logger.info("Ip: {}", ip);
-            }
-            else {
-                logger.error("get localhost failed...");
-            }
-        } catch (IOException e) {// TODO Auto-generated catch
-            logger.error("get localhost failed... error: {}", e.getMessage());
-        }
-        return ip;
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        initUniqueIdGenerator();
+    	defaultIdGenerator = IdGeneratorFactory.idGenerator(mongoTemplate);
         logger.info("Unique Id Generator init complete...");
     }
 }

@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -473,6 +475,24 @@ public final class KnowledgeUtil {
             logger.error("Convert String to long error :"+ex.getMessage());
         }
         return newTime;
+    }
+    
+    public static InetAddress getInetAddress(){
+        try{
+            return InetAddress.getLocalHost();
+        }catch(UnknownHostException e){
+            System.out.println("unknown host!");
+        }
+        return null;
+    }
+
+    public static String getHostIp(){
+        InetAddress netAddress = getInetAddress();
+        if(null == netAddress){
+            return null;
+        }
+        String ip = netAddress.getHostAddress(); //get the ip address
+        return ip;
     }
 
 

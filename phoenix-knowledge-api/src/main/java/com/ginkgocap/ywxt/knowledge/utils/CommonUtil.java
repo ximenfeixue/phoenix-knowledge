@@ -138,24 +138,6 @@ public class CommonUtil {
         }
     }
 
-    public static InetAddress getInetAddress(){
-        try{
-            return InetAddress.getLocalHost();
-        }catch(UnknownHostException e){
-            System.out.println("unknown host!");
-        }
-        return null;
-    }
-
-    public static String getHostIp(){
-        InetAddress netAddress = getInetAddress();
-        if(null == netAddress){
-            return null;
-        }
-        String ip = netAddress.getHostAddress(); //get the ip address
-        return ip;
-    }
-
     private static final ThreadLocal<Boolean> REQUEST_IS_FROM_WEB = new ThreadLocal<Boolean>(){
         protected Boolean initialValue() {
             return false;
