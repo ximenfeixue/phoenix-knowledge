@@ -17,7 +17,6 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 public class KnowledgeWebDemo {
 
     private String requestJson;
-    private String response;
 
     private static long KnowledgeId = 123456789L;
     private static boolean debugModel = false;
@@ -26,7 +25,6 @@ public class KnowledgeWebDemo {
     private static String baseUrl = null;
     private static String commentBaseUrl = null;
     private static String commentListUrl = null;
-    private static String sessionId = null;
     private static ObjectMapper mapper = null;
     private static SimpleFilterProvider assoFilter = null;
     static {
@@ -82,7 +80,7 @@ public class KnowledgeWebDemo {
         LogMethod("创建知识", 2);
         requestJson = createKnowledgeRequestJson("testCreateKnowledge");
         try {
-            response = HttpRequestFullJson(HttpMethod.POST, baseUrl, requestJson);
+            HttpRequestFullJson(HttpMethod.POST, baseUrl, requestJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +94,7 @@ public class KnowledgeWebDemo {
         data.getKnowledgeDetail().setTitle("updateKnowledge_update");
         requestJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
         try {
-            response = HttpRequestFullJson(HttpMethod.PUT, baseUrl, requestJson);
+            HttpRequestFullJson(HttpMethod.PUT, baseUrl, requestJson);
         } catch (Exception e) {
             e.printStackTrace();
         }

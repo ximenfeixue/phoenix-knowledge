@@ -51,7 +51,7 @@ public abstract class BaseTestCase extends TestCase
         }
         else if ("dev".equals(testEnv)) {
             loginUrl = "http://192.168.120.234:3322/login/loginConfiguration.json";
-            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.130.200:8080");
         }
         else if ("testOnline".equals(testEnv)) {
             loginUrl = "http://test.online.gintong.com/cross/web/login.json";
@@ -60,12 +60,13 @@ public abstract class BaseTestCase extends TestCase
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
-        login(loginUrl);
+        
     }
 
     @Override
     protected void runTest() throws Throwable
     {
+    	login(loginUrl);
         if (runTestCase) {
             super.runTest();
         }
@@ -138,7 +139,7 @@ public abstract class BaseTestCase extends TestCase
     //end
 
     private static User user = KnowledgeUtil.getDummyUser();;
-    public static String sessionID = null;
+    private static String sessionID = null;
 
     public static class HttpMethod
     {
@@ -375,7 +376,7 @@ public abstract class BaseTestCase extends TestCase
     }
 
 
-    public static void login(String loginUrl)
+    public void login(String loginUrl)
     {
         //final String loginJson = "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}";
         final String loginJson = "{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
