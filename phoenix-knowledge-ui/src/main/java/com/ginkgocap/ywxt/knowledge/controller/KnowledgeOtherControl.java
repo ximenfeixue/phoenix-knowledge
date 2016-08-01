@@ -139,7 +139,7 @@ public class KnowledgeOtherControl extends BaseController {
                     // title = getSping(title);
                     /** 以下条件，则大数据异常 */
                     if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
-                        content.replace("\\", "");
+                        content = content.replace("\\", "");
                         knowledge = new Knowledge2();
 
                         // 指定来源

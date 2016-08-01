@@ -17,10 +17,10 @@ public class KnowledgeOtherWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	String JsonContent = "{\"externalUrl\":\"http://sports.china.com/sportsnews/nba/11172837/20160704/22984107.html\",\"isCreate\":\"true\"}";
+        	String JsonContent = "{\"externalUrl\":\"http://sports.china.com/sportsnews/nba/11172837/20160704/22984107.html\",\"isCreate\":\"false\"}";
             String subUrl = "/fetchExternalKnowledgeUrl";
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, JsonContent);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, JsonContent);
+            Util.checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
