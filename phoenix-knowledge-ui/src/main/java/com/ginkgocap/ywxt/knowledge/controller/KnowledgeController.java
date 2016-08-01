@@ -144,12 +144,12 @@ public class KnowledgeController extends BaseController {
             result = this.knowledgeService.insert(data);
         } catch (Exception e) {
             logger.error("Insert knowledge failed : " + e.getMessage());
-            return result;
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
 
         if (result == null || result.getNotification()== null || result.getResponseData() == null) {
             logger.error("Insert knowledge failed!");
-            return result;
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
         detail.setId(knowledgeId);
@@ -249,12 +249,12 @@ public class KnowledgeController extends BaseController {
             result = this.knowledgeService.update(data);
         } catch (Exception e) {
             logger.error("知识更新失败！失败原因："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
         if (result == null || !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
             logger.error("知识更新失败！");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
         try {
@@ -322,14 +322,14 @@ public class KnowledgeController extends BaseController {
         InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
         if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
             logger.error("permission validate failed, please check if user have permission!");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"permission validate failed.");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         try {
             result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"删除知识失败!");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70003);
         }
 
         //delete tags

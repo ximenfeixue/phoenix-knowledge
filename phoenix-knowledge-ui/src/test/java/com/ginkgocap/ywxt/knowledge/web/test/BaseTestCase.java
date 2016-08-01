@@ -286,7 +286,7 @@ public abstract class BaseTestCase extends TestCase
         return response != null ? KnowledgeUtil.readTree(response) : null;
     }
 
-
+    /*
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
         System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
@@ -294,10 +294,7 @@ public abstract class BaseTestCase extends TestCase
         System.out.println("sessionID: " + sessionID);
         headers.put("s", "api");
         headers.put("sessionID", sessionID);
-//        headers.put("Content-type", "application/json");
-//        headers.put("Cache-Control", "no-cache");
-//        headers.put("Cookie", "JSESSIONID=fnzgfrdxyvp6a2lmjtc2ky0u");
-//        headers.put("Postman-Token", "44e59996-3bbc-64dc-f967-f1df41463bd1");
+        headers.put("Content-type", "application/json");
         if (HttpMethod.GET.equals(httpMethod)) {
             return HttpClientHelper.GET(urlString, headers);
         }
@@ -311,9 +308,9 @@ public abstract class BaseTestCase extends TestCase
             return HttpClientHelper.DELETE(urlString, headers);
         }
         return "Unknow http method";
-    }
+    }*/
 
-    /*
+    
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
 
@@ -360,7 +357,7 @@ public abstract class BaseTestCase extends TestCase
             in.close();
         }
         return inputLine;
-    }*/
+    }
 
     public static JsonNode getJsonNode(String jsonStr, String... values)
             throws Exception {
