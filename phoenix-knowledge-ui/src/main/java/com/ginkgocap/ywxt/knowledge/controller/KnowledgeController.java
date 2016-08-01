@@ -1070,7 +1070,7 @@ public class KnowledgeController extends BaseController {
         if(tagId <= 0 || start < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
-        List<Long> knowledgeIds = tagServiceLocal.getKnowlegeIdsByTagId(tagId, start, size);
+        List<Long> knowledgeIds = tagServiceLocal.getKnowledgeIdsByTagId(tagId, start, size);
         if (knowledgeIds == null || knowledgeIds.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"No result.");
         }
@@ -1416,7 +1416,7 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
+        List<Long> tagIds = KnowledgeUtil.readListValue(Long.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("No tag list send.");

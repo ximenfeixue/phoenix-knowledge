@@ -240,7 +240,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             return InterfaceResult.getSuccessInterfaceResultInstance("TagId List is null or size is 0!");
         }
         Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(tagIds.size());
-        for (long tagId : tagIds) {
+        for (Long tagId : tagIds) {
             try {
                 int count = tagSourceService.countTagSourcesByAppIdTagId(APPID, tagId);
                 sourceMap.put(tagId, count);
@@ -359,7 +359,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         return InterfaceResult.getSuccessInterfaceResultInstance(successIds);
     }
 
-    public List<Long> getKnowlegeIdsByTagId(long tagId, int start, int size)
+    public List<Long> getKnowledgeIdsByTagId(long tagId, int start, int size)
     {
         try {
             List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagIdAndType(APPID, tagId, (long)sourceType, start, size );
