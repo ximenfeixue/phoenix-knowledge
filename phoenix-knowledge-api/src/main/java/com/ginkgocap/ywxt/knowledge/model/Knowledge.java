@@ -1,12 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.user.model.User;
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
 
 /**
  * 知识javaBean （资讯，资产管理,宏观，观点，文章）
@@ -541,4 +545,57 @@ public class Knowledge implements Serializable {
 		this.setKnowledgeMainId(vo.getKnowledgeMainId());
 		return this;
 	}
+
+	/*
+	public void setKnowlgeBasicInfo()
+	{
+
+	}
+
+	public List<? extends Knowledge> setValue(JsonNode node,List<Long> idList) {
+		List<Knowledge> list = new ArrayList<Knowledge>();
+		KnowledgeArticle knowledge = null;
+		String columnIds = node.path("columnid").asText();
+		String[] columnIdArray = columnIds.split(",");
+		String cpathIds = node.path("cpathid").asText();
+		String[] cpathIdArray = cpathIds.split(",");
+
+		for (int i = 0; i < columnIdArray.length; i++) {
+			knowledge = new KnowledgeArticle();
+
+			String title = node.path("title").asText();
+			String source = node.path("source").asText();
+			String s_addr = node.path("s_addr").asText();
+			String pic = node.path("pic").asText();
+			String desc = node.path("desc").asText();
+			String content = node.path("content").asText();
+			String essence = node.path("essence").asText();
+			String tags = node.path("tags").asText();
+			String publishTime = node.path("publishTime").asText();
+			knowledge.setColumnid(columnIdArray[i]);
+			knowledge.setCpathid(cpathIdArray[i]);
+
+			knowledge.setId(idList.get(i));
+			knowledge.setUid(KnowledgeConstant.UserType.jinTN.v());
+			knowledge.setUname(KnowledgeConstant.UserType.jinTN.c());
+			knowledge.setTags(tags.replace(",", " "));
+			knowledge.setTitle(title);
+			knowledge.setCid(KnowledgeConstant.UserType.jinTN.v());
+			knowledge.setCname(KnowledgeConstant.UserType.jinTN.c());
+			knowledge.setSource(source);
+			knowledge.setS_addr(s_addr);
+			knowledge.setPic(pic);
+			knowledge.setDesc(desc);
+			knowledge.setContent(content);
+			knowledge.setEssence(Integer.parseInt(StringUtils.isBlank(essence) ? "0" : essence));
+			knowledge.setCreatetime(DateUtil.currentTime());
+			knowledge.setSysTime(StringUtils.isBlank(publishTime) ? DateUtil.currentTime() : publishTime);
+			knowledge.setStatus(KnowledgeConstant.Status.checked.v());
+			knowledge.setReport_status(KnowledgeConstant.ReportStatus.unreport.v());
+			knowledge.setIsh(KnowledgeConstant.HighLight.unlight.v());
+			knowledge.setModifytime(DateUtil.currentTime());
+			list.add(knowledge);
+		}
+		return list;
+	}*/
 }

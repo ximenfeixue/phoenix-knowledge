@@ -147,7 +147,7 @@
                   sqlitem="select id from tb_knowledge_base where create_user_id = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="create_user_id" update="true" />
 
-            <list name="get_id__list_by_type"
+            <list name="get_id_list_by_type"
                   sqlitem="select id from tb_knowledge_base where type = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 

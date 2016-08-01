@@ -13,7 +13,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
     private long knowledgeId = 12345678L;
 
     @Test
-    public void testfetchExternalKnowledgeUrlByUrl()
+    public void testFetchExternalKnowledgeUrl()
     {
         LogMethod();
         try {

@@ -221,7 +221,7 @@ public final class Util {
         if (jsonContent != null) {
         	httpConn.setRequestProperty( "Content-Length",String.valueOf( jsonContent.length() ) );
         }
-        httpConn.setRequestProperty("s","api");
+        httpConn.setRequestProperty("s","web");
         //sessionID = "61699318-02aa-4fbe-b689-4b28e8944e8e";
         if (sessionID != null) {
         	httpConn.setRequestProperty("sessionID", sessionID);
@@ -293,13 +293,17 @@ public final class Util {
 
     public static void login(String loginUrl)
     {
-    	//final String loginJson = "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}";
-        final String loginJson = "{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
+    	final String loginJson = "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}";
+        //final String loginJson = "{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
         try {
             JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
             if (retNode != null) {
                 JsonNode jsonNode = retNode.get("responseData");
-                sessionID = jsonNode != null ? jsonNode.get("sessionID").asText() : null;
+                JsonNode sessionIDNode = jsonNode.get("sessionID");
+                if (sessionIDNode == null) {
+                    sessionIDNode = jsonNode.get("sessionId");
+                }
+                sessionID = jsonNode != null ? sessionIDNode.asText() : null;
                 System.err.println("......sessionID: "+sessionID);
 	            }
   

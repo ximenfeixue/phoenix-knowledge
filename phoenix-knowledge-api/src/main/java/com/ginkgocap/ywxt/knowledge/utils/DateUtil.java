@@ -39,7 +39,6 @@ public class DateUtil {
     	}
     	
     	return date;
-    	
     }
     
     public static Date parseWithYYYYMMDD(String dateStr){
@@ -52,10 +51,13 @@ public class DateUtil {
     		} catch (ParseException e) {
     		}
     	}
-    	
     	return date;
-    	
     }
+
+	public static String currentTime()
+	{
+		return String.valueOf(System.currentTimeMillis());
+	}
     
     public static String formatWithYYYYMMDD(Date date){
     	if(date == null){

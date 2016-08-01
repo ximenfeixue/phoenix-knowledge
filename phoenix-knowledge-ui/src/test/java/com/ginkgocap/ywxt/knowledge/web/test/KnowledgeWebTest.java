@@ -560,7 +560,7 @@ public class KnowledgeWebTest extends BaseTestCase
 //                System.err.println("can't get tags");
 //                fail();
 //            }
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[4001931509105137, 4002283256021508, 4002283268604423]");
+            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[113, 177, 178]");
             Util.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();

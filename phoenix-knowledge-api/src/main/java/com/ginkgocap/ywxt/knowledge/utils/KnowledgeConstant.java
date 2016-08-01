@@ -56,36 +56,6 @@ public class KnowledgeConstant {
         return list;
     }
 
-    // 1-资讯，2-投融工具，3-行业，4-经典案例，5-新材料，6-资产管理，7-宏观，8-观点，9-判例，10-法律法规，11-文章
-    public enum KnowledgeType {
-        News(1, "资讯"), Investment(2, "投融工具"), Industry(3, "行业"), Case(4, "经典案例"), NewMaterials(
-                5, "新材料"), Asset(6, "资产管理"), Macro(7, "宏观"), Opinion(8, "观点"), Example(
-                9, "判例"), Law(10, "法律法规"), Article(11, "文章");
-
-        private int v;
-
-        private String c;
-
-        private KnowledgeType(int v, String c) {
-            this.v = v;
-            this.c = c;
-        }
-
-        public int v() {
-            return v;
-        }
-
-        public String c() {
-            return c;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(v);
-        }
-
-    }
-
     public enum Status {
         draft(1), waitcheck(2), checking(3), checked(4), uncheck(5), recycle(6), foreverdelete(
                 7), forbid(8);
@@ -100,6 +70,26 @@ public class KnowledgeConstant {
             return v;
         }
 
+    }
+
+    public enum UserType {
+        jinTN(0, "金桐脑"), platform(-1, "全平台");
+
+        private int v;
+        private String c;
+
+        private UserType(int v, String c) {
+            this.v = v;
+            this.c = c;
+        }
+
+        public int v() {
+            return v;
+        }
+
+        public String c() {
+            return c;
+        }
     }
 
     public enum KnowledgeSource {
@@ -530,17 +520,6 @@ public class KnowledgeConstant {
         public String c() {
             return c;
         }
-    }
-    public static String getKnowledgeTypeName(String v) {
-        if (StringUtils.isBlank(v))
-            return null;
-        KnowledgeType[] type = KnowledgeType.values();
-        for (KnowledgeType t : type) {
-            if (t.v == Integer.parseInt(v)) {
-                return t.c;
-            }
-        }
-        return null;
     }
 
     public static Integer MATERIAL_REQUIREMENT = 1;

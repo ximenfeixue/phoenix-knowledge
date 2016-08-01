@@ -246,6 +246,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 sourceMap.put(tagId, count);
             } catch (TagSourceServiceException ex) {
                 logger.error("get tag count failed. error: {}", ex.getMessage());
+                ex.printStackTrace();
             }
         }
 

@@ -55,7 +55,7 @@ public class KnowledgeOtherControl extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
-    public InterfaceResult FetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
+    public InterfaceResult fetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
         logger.info("into /FetchExternalKnowledgeUrl");
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
