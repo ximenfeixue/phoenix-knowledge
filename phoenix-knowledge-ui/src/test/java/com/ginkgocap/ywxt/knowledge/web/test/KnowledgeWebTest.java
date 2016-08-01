@@ -69,8 +69,8 @@ public class KnowledgeWebTest extends BaseTestCase
             data.getKnowledgeDetail().setTagList(getTagList());
             data.getKnowledgeDetail().setDirectorys(getDirectoryList());
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl, knowledgeJson);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl, knowledgeJson);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -84,8 +84,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             Knowledge detail = createKnowledge("KnowledgeWebTest_testDeleteKnowledge").getKnowledgeDetail();
             String subUrl = "/" + detail.getId() + "/" + detail.getColumnid(); ///delete/{id}/{columnId}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.DELETE, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -100,8 +100,8 @@ public class KnowledgeWebTest extends BaseTestCase
             Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
             String knowledgeIds = "[" + detail1.getId() + "," + detail2.getId() + "]";
             String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.PUT, baseUrl+subUrl, knowledgeIds);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -181,8 +181,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑");
             String subUrl = "/all/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -197,8 +197,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑2");
             String subUrl = "/allKnowledgeByColumnAndSource/6/6/1/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -213,8 +213,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑2");
             String subUrl = "/allKnowledgeByColumnAndSource/6/6/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -229,8 +229,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑2");
             String subUrl = "/allKnowledgeByColumnAndSource/6/6/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -243,8 +243,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/allByPage/0/20/369/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -256,8 +256,8 @@ public class KnowledgeWebTest extends BaseTestCase
 		LogMethod();
 		try {
 			String subUrl = "/my/count";
-			JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl+subUrl, null);
-			Util.checkResponseWithData(result);
+			JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+			checkResponseWithData(result);
 		} catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -272,8 +272,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑");
             String subUrl = "/allCreated/0/10/test"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -288,8 +288,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑");
             String subUrl = "/allCreatedByPage/0/10/-1/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -304,8 +304,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑");
             String subUrl = "/allCollected/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -320,8 +320,8 @@ public class KnowledgeWebTest extends BaseTestCase
             //createKnowledge("考虑,考虑");
             String subUrl = "/allCollectedByPage/1/10/-1/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             //String urlStr =
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -333,8 +333,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/allByColumn/2/0/20"; ///all/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -347,8 +347,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/allByKeyword/考虑/0/3"; ///all/{keyWord}/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -360,8 +360,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/allByColumnAndKeyword/2/考虑/0/3"; ////allByKeywordAndColumn/test/2/1/12"
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -374,8 +374,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/user/0/10"; ///user/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -388,8 +388,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/user/2/0/12";  //user/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -401,8 +401,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/allNoDirectory/0/12";  ///allNoDirectory/{start}/{size}
-            //JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            //Util.checkRequestResultSuccess(result);
+            //JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            //checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -421,8 +421,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = collectKnowledge("KnowledgeWebTest_testCancelCollectedKnowledge");// "/collect/{knowledgeId/{columnId}"
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.DELETE, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.DELETE, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -441,8 +441,8 @@ public class KnowledgeWebTest extends BaseTestCase
             String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
             KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, knowledgeJson);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, knowledgeJson);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -476,7 +476,7 @@ public class KnowledgeWebTest extends BaseTestCase
             ObjectMapper mapper = new ObjectMapper();
             TypeReference javaType = new TypeReference<List<ResItem>>() {};
 
-            List<ResItem> tagItems =  KnowledgeUtil.readValue(javaType, requestJson);
+            List<ResItem> tagItems =  KnowledgereadValue(javaType, requestJson);
             //List<ResItem> beanList = mapper.readValue(requestJson, new TypeReference<List<ResItem>>() {});
 
             for (ResItem tagItem : tagItems) {
@@ -488,8 +488,8 @@ public class KnowledgeWebTest extends BaseTestCase
                 }
             }*/
             //System.out.print(beanList);
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -522,8 +522,8 @@ public class KnowledgeWebTest extends BaseTestCase
             ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
             resItems.add(resItem1);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -554,8 +554,8 @@ public class KnowledgeWebTest extends BaseTestCase
             resItems.add(resItem1);
             //resItems.add(resItem2);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + "/batchCatalogs", requestJson);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + "/batchCatalogs", requestJson);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -573,8 +573,8 @@ public class KnowledgeWebTest extends BaseTestCase
                 System.err.println("can't get tags");
                 fail();
             }
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl + subUrl, "[3973605390287002, 3973607483244706]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3973605390287002, 3973607483244706]");
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -592,8 +592,8 @@ public class KnowledgeWebTest extends BaseTestCase
 //                System.err.println("can't get tags");
 //                fail();
 //            }
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[113, 177, 178]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[113, 177, 178]");
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -615,8 +615,8 @@ public class KnowledgeWebTest extends BaseTestCase
         		tagId = idList.get(0);
         	}*/
             String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -637,8 +637,8 @@ public class KnowledgeWebTest extends BaseTestCase
                 fail();
             }
             String subUrl = "/byDirectory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -651,8 +651,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/directoryList";
             Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933423765028884, 3933423777611801]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3933423765028884, 3933423777611801]");
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -667,8 +667,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/directoryCount";
             Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933423765028884, 3933423777611801]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3933423765028884, 3933423777611801]");
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -681,8 +681,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -695,8 +695,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	//type: 1,推荐 2,发现
             String subUrl = "/getRecommendedKnowledge/2/0/12";  //getRecommendedKnowledge/{type}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -719,8 +719,8 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"
         try {
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -772,9 +772,9 @@ public class KnowledgeWebTest extends BaseTestCase
                 data.getKnowledgeDetail().setDirectorys(directoryIds);
                 //data.getKnowledgeDetail().setContent(content);
                 String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
-                JsonNode response = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl, knowledgeJson);
-                Util.checkResponseWithData(response);
-                String retData = Util.getResponseData(response);
+                JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
+                checkResponseWithData(response);
+                String retData = getResponseData(response);
                 Assert.assertFalse("null".equals(retData));
                 if (retData != null && !"null".equals(retData)) {
 	                long knowledgeId = Long.parseLong(retData);
@@ -796,17 +796,17 @@ public class KnowledgeWebTest extends BaseTestCase
     private void knowledgeDetail(final String baseUrl, long knowledgeId,int columnId) throws Exception
     {
         String subUrl = "/" + knowledgeId + "/" + columnId;  //{id}/{columnId}
-        JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+        JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
         System.out.println("Result: " + result);
-        Util.checkResponseWithData(result);
+        checkResponseWithData(result);
     }
     
     private void knowledgeDetailWeb(final String baseUrl, long knowledgeId,int columnId) throws Exception
     {
         String subUrl = "/web/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
-        JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+        JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
         System.out.println("Result: " + result);
-        Util.checkResponseWithData(result);
+        checkResponseWithData(result);
     }
 
     private long createTag()
@@ -814,8 +814,8 @@ public class KnowledgeWebTest extends BaseTestCase
         long tagId = 0L;
         try {
             String subUrl = "/createTag/Tag" + getNextNum(); ///createTag/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            String retData = Util.getResponseData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            String retData = getResponseData(result);
             Assert.assertFalse("null".equals(retData));
             System.out.println("tagId: " + retData);
             tagId = Long.parseLong(retData);
@@ -831,8 +831,8 @@ public class KnowledgeWebTest extends BaseTestCase
     	long id = 0L;
         try {
             String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            String retData = Util.getResponseData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            String retData = getResponseData(result);
             Assert.assertFalse("null".equals(retData));
             System.out.println("tagId: " + retData);
             id = Long.parseLong(retData);
@@ -851,8 +851,8 @@ public class KnowledgeWebTest extends BaseTestCase
         String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
         JsonNode result;
 		try {
-			result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + "/batchTags", requestJson);
-			Util.checkResponseWithData(result);
+			result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);
+			checkResponseWithData(result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -865,7 +865,7 @@ public class KnowledgeWebTest extends BaseTestCase
         List<Long> IdList = null;
         try {
             String subUrl = "/getTagList"; ///createTag/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             IdList = convertTagIdList(result);
             Assert.assertTrue(IdList != null && IdList.size() > 0);
         } catch (Exception e) {
@@ -880,8 +880,8 @@ public class KnowledgeWebTest extends BaseTestCase
         List<Long> IdList = null;
         try {
             String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.GET, baseUrl + subUrl, null);
-            String directoryId = Util.getResponseData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            String directoryId = getResponseData(result);
             if (directoryId != null && directoryId.trim().length() > 0) {
             	long id = Long.parseLong(directoryId);
             	IdList = new ArrayList<Long>(1);
@@ -897,17 +897,17 @@ public class KnowledgeWebTest extends BaseTestCase
 
     private List<Long> getIdList(JsonNode result)
     {
-        Util.checkResponseWithData(result);
-        String idsJson = Util.getResponseData(result);
+        checkResponseWithData(result);
+        String idsJson = getResponseData(result);
         return (List<Long>)KnowledgeUtil.readValue(List.class, idsJson);
     }
     
     private List<Long> convertTagIdList(JsonNode result)
     {
-        Util.checkResponseWithData(result);
-        String idsJson = Util.getResponseData(result);
+        checkResponseWithData(result);
+        String idsJson = getResponseData(result);
         if (idsJson != null && idsJson.trim().length() > 0) {
-	        //List<Tag> tagList = KnowledgeUtil.readListValue(Tag.class, idsJson);
+	        //List<Tag> tagList = KnowledgereadListValue(Tag.class, idsJson);
 	        TypeReference javaType = new TypeReference<List<Tag>>(){};
 	        List<Tag> tagList = KnowledgeUtil.readValue(javaType, idsJson);
 	        if (tagList != null && tagList.size() > 0) {
@@ -923,8 +923,8 @@ public class KnowledgeWebTest extends BaseTestCase
     
     private List<Long> convertDirectoryIdList(JsonNode result)
     {
-        Util.checkResponseWithData(result);
-        String idsJson = Util.getResponseData(result);
+        checkResponseWithData(result);
+        String idsJson = getResponseData(result);
         List<Directory> directoryList = KnowledgeUtil.readListValue(Directory.class, idsJson);
         if (directoryList != null && directoryList.size() > 0) {
             List<Long> ids  = new ArrayList<Long>(directoryList.size());

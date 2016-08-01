@@ -130,7 +130,7 @@ public class HttpClientHelper {
                     result.put("status", response.getStatusLine().getStatusCode());
                     HttpEntity entity = response.getEntity();
                     String respJson = EntityUtils.toString(entity);
-                    logger.info("访问路径{}成功", url);
+                    logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
                     return respJson;
                 }
@@ -165,7 +165,7 @@ public class HttpClientHelper {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("访问路径{}成功", url);
+                logger.info("request {} success", url);
                 return respJson;
             }
 
@@ -188,7 +188,7 @@ public class HttpClientHelper {
     {
         HttpGet get = new HttpGet(url);
         try {
-            logger.info("开始以GET方式访问路径{}", get.getRequestLine().toString());
+            logger.info("httpMethod: GET, url: {}, body: {}", get.getRequestLine().toString());
             for(String key:headers.keySet()){
                 get.addHeader(key, headers.get(key));
             }
@@ -197,8 +197,8 @@ public class HttpClientHelper {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("访问路径 {} 成功", url);
-                logger.info("Reponse: {}", respJson);
+                logger.info("request {} success", url);
+                logger.info("Response: {}", respJson);
                 return respJson;
             }
 
@@ -228,24 +228,24 @@ public class HttpClientHelper {
                 StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
                 post.setEntity(stringEntry);
             }
-            logger.info("开始以POST方式访问路径 {}，参数为 {}", url, content);
+            logger.info("httpMethod: POST, url: {}，body {}", url, content);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 result.put("status", response.getStatusLine().getStatusCode());
                 String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
-                logger.info("访问路径 {} 成功", url);
+                logger.info("request {} success", url);
                 EntityUtils.consume(response.getEntity());
                 logger.info("respJson: {}", respJson);
                 return respJson;
             }
             EntityUtils.consume(response.getEntity());
         } catch (UnsupportedEncodingException e) {
-            logger.error("编码错误", e);
+            logger.error("error:", e);
         } catch (ClientProtocolException e) {
-            logger.error("协议错误", e);
+            logger.error("protocol:", e);
         } catch (IOException e) {
-            logger.error("IO错误", e);
+            logger.error("IO Error:", e);
         } finally {
             post.releaseConnection();
         }
@@ -264,24 +264,24 @@ public class HttpClientHelper {
                 for(String key:headers.keySet()){
                     put.addHeader(key, headers.get(key));
                 }
-                logger.info("开始以POST方式访问路径{}，参数为{}", url, params);
+                logger.info("httpMethod: PUT, url: {}，body: {}{}", url, params);
                 HttpClient httpClient = httpClient();
                 HttpResponse response = httpClient.execute(put);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     result.put("status", response.getStatusLine().getStatusCode());
                     HttpEntity entity = response.getEntity();
                     String respJson = EntityUtils.toString(entity);
-                    logger.info("访问路径{}成功", url);
+                    logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
                     return respJson;
                 }
                 EntityUtils.consume(response.getEntity());
             } catch (UnsupportedEncodingException e) {
-                logger.error("编码错误", e);
+                logger.error("Encoding Error:", e);
             } catch (ClientProtocolException e) {
-                logger.error("协议错误", e);
+                logger.error("Protocol Error:", e);
             } catch (IOException e) {
-                logger.error("IO错误", e);
+                logger.error("IO Error", e);
             } finally {
                 put.releaseConnection();
             }
@@ -301,20 +301,20 @@ public class HttpClientHelper {
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(delete);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result.put("status", response.getStatusLine().getStatusCode());
+                result.put("httpMethod: DELETE, status", response.getStatusLine().getStatusCode());
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("访问路径{}成功", url);
+                logger.info("url: {}, body: {}", url);
                 EntityUtils.consume(response.getEntity());
                 return respJson;
             }
             EntityUtils.consume(response.getEntity());
         } catch (UnsupportedEncodingException e) {
-            logger.error("编码错误", e);
+            logger.error("Encoding Error:", e);
         } catch (ClientProtocolException e) {
-            logger.error("协议错误", e);
+            logger.error("Protocol Error:", e);
         } catch (IOException e) {
-            logger.error("IO错误", e);
+            logger.error("IO Error:", e);
         } finally {
             delete.releaseConnection();
         }
@@ -325,8 +325,8 @@ public class HttpClientHelper {
     private static HttpClient httpClient()
     {
         HttpClient httpClient = new DefaultHttpClient();
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000);
-        httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 100000);
+        httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 100000);
         return httpClient;
     }
 

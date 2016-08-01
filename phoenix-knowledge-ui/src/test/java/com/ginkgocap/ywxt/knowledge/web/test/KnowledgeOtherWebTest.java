@@ -19,8 +19,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         try {
         	String JsonContent = "{\"externalUrl\":\"http://sports.china.com/sportsnews/nba/11172837/20160704/22984107.html\",\"isCreate\":\"false\"}";
             String subUrl = "/fetchExternalKnowledgeUrl";
-            JsonNode result = Util.HttpRequestFull(Util.HttpMethod.POST, baseUrl + subUrl, JsonContent);
-            Util.checkResponseWithData(result);
+            JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + subUrl, JsonContent);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,8 +32,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/shareCount/1/111111"; // /shareCount/{type}/{knowledgeId}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,8 +45,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/collectCount/1/111111"; // /shareCount/{type}/{knowledgeId}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,8 +59,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         try {
         	String JsonContent = "";
             String subUrl = "/fetchExternalKnowledgeUrl";
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, "http://192.168.130.106:8080/dynamicNews/push", JsonContent);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, "http://192.168.130.106:8080/dynamicNews/push", JsonContent);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,8 +72,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/update/7/MTExMTEx";
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,8 +85,8 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "hot/"+10;
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }

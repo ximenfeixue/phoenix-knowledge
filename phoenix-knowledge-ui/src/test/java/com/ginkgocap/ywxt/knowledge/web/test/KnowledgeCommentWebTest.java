@@ -27,20 +27,20 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     public void testKnowledgeCommentCreate()
     {
         CommentForCreate = LogMethod();
-        String comment = Util.getKnowledgeComment(KnowledgeId, CommentForCreate+"_1");
+        String comment = getKnowledgeComment(KnowledgeId, CommentForCreate +"_1");
         createKnowledgeComment(comment);
 
-        comment = Util.getKnowledgeComment(KnowledgeId, CommentForUpdate+"_2");
+        comment = getKnowledgeComment(KnowledgeId, CommentForUpdate +"_2");
         createKnowledgeComment(comment);
 
-        comment = Util.getKnowledgeComment(KnowledgeId, CommentForDelete+"_3");
+        comment = getKnowledgeComment(KnowledgeId, CommentForDelete +"_3");
         createKnowledgeComment(comment);
     }
 
     public void testKnowledgeCommentUpdate()
     {
         CommentForUpdate = LogMethod();
-        createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForUpdate));
+        createKnowledgeComment(getKnowledgeComment(KnowledgeId, CommentForUpdate));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
             tryFail();
@@ -58,7 +58,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = baseUrl + commentId.longValue();
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.PUT, URL, CommentForUpdate+"--Update");
+            notifNode = HttpRequestResult(HttpMethod.PUT, URL, CommentForUpdate + "--Update");
         } catch (Exception e) {
             writeException(e);
         }
@@ -72,7 +72,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = baseUrl + commentId.longValue();
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.PUT, URL, CommentForUpdate+"_failed");
+            notifNode = HttpRequestResult(HttpMethod.PUT, URL, CommentForUpdate + "_failed");
         } catch (Exception e) {
             writeException(e);
         }
@@ -85,7 +85,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = listUrl + KnowledgeId;
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestFull(Util.HttpMethod.GET, URL, null);
+            notifNode = HttpRequestFull(HttpMethod.GET, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
@@ -98,11 +98,11 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = baseUrl + "count/" + KnowledgeId;
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestFull(Util.HttpMethod.GET, URL, null);
+            notifNode = HttpRequestFull(HttpMethod.GET, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
-        LOG("Get Knowledge Comment Count: " + Util.getResponseData(notifNode));
+        LOG("Get Knowledge Comment Count: " + getResponseData(notifNode));
         checkResultWithData(notifNode);
     }
 
@@ -110,7 +110,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
     {
         CommentForDelete = LogMethod();
         long commentId = 0L;
-        createKnowledgeComment(Util.getKnowledgeComment(KnowledgeId, CommentForDelete));
+        createKnowledgeComment(getKnowledgeComment(KnowledgeId, CommentForDelete));
         List<KnowledgeComment> comments = getKnowledgeCommentList();
         if(comments == null || comments.size() <= 0) {
             tryFail();
@@ -130,7 +130,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         JsonNode notifNode = null;
         try {
             LOG("Knowledge Comment for delete, commentId: " + commentId);
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.DELETE, URL, null);
+            notifNode = HttpRequestResult(HttpMethod.DELETE, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
@@ -145,7 +145,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         JsonNode notifNode = null;
         try {
             LOG("Knowledge Comment for delete: "+commentId);
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.DELETE, URL, null);
+            notifNode = HttpRequestResult(HttpMethod.DELETE, URL, null);
         } catch (Exception e) {
             writeException(e);
         }
@@ -158,7 +158,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = listUrl + KnowledgeId;
         JsonNode retNode = null;
         try {
-            retNode = Util.HttpRequestFull(Util.HttpMethod.GET, URL, null);
+            retNode = HttpRequestFull(HttpMethod.GET, URL, null);
             JsonNode retData = retNode.get("responseData");
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
@@ -185,8 +185,8 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String URL = baseUrl + KnowledgeId;
         JsonNode notifNode = null;
         try {
-            notifNode = Util.HttpRequestResult(Util.HttpMethod.POST, URL, jsonContent);
-            Util.checkRequestResultSuccess(notifNode);
+            notifNode = HttpRequestResult(HttpMethod.POST, URL, jsonContent);
+            checkRequestResultSuccess(notifNode);
         } catch (Exception e) {
             writeException(e);
         }

@@ -228,7 +228,7 @@ public class KnowledgeOtherControl extends BaseController {
                                 // 弹窗提示
                                 setSessionAndErr(request, response, "-1", createResult.getNotification() + " ：" + createResult.getResponseData());
                                 // 错误反馈
-                                responseDataMap.put("knowledge2", null);
+                                responseDataMap.put("knowledge", null);
                                 // 跳出
                                 return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
                             }
@@ -238,7 +238,7 @@ public class KnowledgeOtherControl extends BaseController {
                             // 知识ID
                             knowledge.setId(kId);
                         } else {
-                            logger.warn("isCreate is not existing, so skip to create knowledge!");
+                            logger.warn("isCreate is not existing or false, so skip to create knowledge!");
                         }
                     } else {
                         // 大数据错误

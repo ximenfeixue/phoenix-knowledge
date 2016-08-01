@@ -82,7 +82,7 @@ public class KnowledgeWebDemo {
         LogMethod("创建知识", 2);
         requestJson = createKnowledgeRequestJson("testCreateKnowledge");
         try {
-            response = Util.HttpRequestFullJson(HttpMethod.POST, baseUrl, requestJson);
+            response = HttpRequestFullJson(HttpMethod.POST, baseUrl, requestJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +96,7 @@ public class KnowledgeWebDemo {
         data.getKnowledgeDetail().setTitle("updateKnowledge_update");
         requestJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
         try {
-            response = Util.HttpRequestFullJson(HttpMethod.PUT, baseUrl, requestJson);
+            response = HttpRequestFullJson(HttpMethod.PUT, baseUrl, requestJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class KnowledgeWebDemo {
         try {
             KnowledgeDetail data = createKnowledge("deleteKnowledge", null).getKnowledgeDetail();
             String subUrl = "/" + data.getId() + "/" + data.getColumnId(); ///{id}/{columnId}
-            Util.HttpRequestFullJson(HttpMethod.DELETE, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.DELETE, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,7 +124,7 @@ public class KnowledgeWebDemo {
             long knowledgeId = data.getId();
             int columnId = data.getColumnId();
             String subUrl = "/" + knowledgeId + "/" + columnId;  ///{knowledgeId}/{columnId}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,7 +136,7 @@ public class KnowledgeWebDemo {
         LogMethod("所有知识: /all/{start}/{size}/{keyword}", 2);
         try {
             String subUrl = "/all/0/10/null"; ////all/{start}/{size}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,7 +147,7 @@ public class KnowledgeWebDemo {
     	LogMethod("所有创建知识: /allCreated/{start}/{size}/{keyword}", 2);
         try {
             String subUrl = "/allCreated/0/10/null";
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,7 +158,7 @@ public class KnowledgeWebDemo {
     	LogMethod("所有收藏知识: /allCollected/{start}/{size}/{keyword}", 2);
         try {
             String subUrl = "/allCollected/0/10/null"; ////all/{start}/{size}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,7 +169,7 @@ public class KnowledgeWebDemo {
         LogMethod("根据栏目提取知识: /allByColumn/{columnId}/{start}/{size}", 2);
         try {
             String subUrl = "/all/2/0/12"; ///all/{columnId}/{start}/{size}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,7 +180,7 @@ public class KnowledgeWebDemo {
         LogMethod("根据关键字提取知识: /allByKeyword/{keyWord}/{start}/{size}", 2);
         try {
             String subUrl = "/allByKeyword/test/0/3"; //
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,7 +191,7 @@ public class KnowledgeWebDemo {
         LogMethod("根据栏目关键字提取知识: /allByColumnAndKeyword/{columnId}/{keyWord}/{start}/{size}", 2);
         try {
             String subUrl = "/allByKeywordAndColumn/test/2/0/12"; ///all/{columnId}/{start}/{size}/{keyWord}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +202,7 @@ public class KnowledgeWebDemo {
         LogMethod("提取当前用户的所有知识: /user/{start}/{size}", 2);
         try {
             String subUrl = "/user/0/2"; ///user/{start}/{size}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,7 +214,7 @@ public class KnowledgeWebDemo {
         LogMethod("根据栏目提取当前用户的知识: /user/{columnId}/{start}/{size}", 2);
         try {
             String subUrl = "/user/2/0/12";  //user/{columnId}/{start}/{size}
-            Util.HttpRequestFullJson(HttpMethod.GET, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,7 +233,7 @@ public class KnowledgeWebDemo {
         LogMethod("取消收藏: /collect/{knowledgeId/{columnId}", 2);
         try {
             String subUrl = collectKnowledge("cancelCollectedKnowledge");// "/collect/{knowledgeId/{columnId}"
-            Util.HttpRequestFullJson(HttpMethod.DELETE, baseUrl+subUrl, null);
+            HttpRequestFullJson(HttpMethod.DELETE, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -251,7 +251,7 @@ public class KnowledgeWebDemo {
             String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
             KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
-            Util.HttpRequestFullJson(HttpMethod.POST, baseUrl + subUrl, knowledgeJson);
+            HttpRequestFullJson(HttpMethod.POST, baseUrl + subUrl, knowledgeJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -264,8 +264,8 @@ public class KnowledgeWebDemo {
         try {
             String subUrl = "/tagList";
             Long[] tagIds = new Long [] {3956219358478388L, 3956238736162890L, 3956186739376159L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3956219358478388, 3956238736162890, 3956186739376159]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3956219358478388, 3956238736162890, 3956186739376159]");
+            BaseTestCase.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,8 +277,8 @@ public class KnowledgeWebDemo {
         try {
             String subUrl = "/directoryList";
             Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.POST, baseUrl+subUrl, "[3933417670705167, 3933423765028884, 3933423777611801]");
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3933417670705167, 3933423765028884, 3933423777611801]");
+            BaseTestCase.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,8 +289,8 @@ public class KnowledgeWebDemo {
         LogMethod("获取推荐知识", 2);
         try {
             String subUrl = "/knowledgeRelated/4/1/12/test";  //user/{columnId}/{start}/{size}
-            JsonNode result = Util.HttpRequestResult(Util.HttpMethod.GET, baseUrl+subUrl, null);
-            Util.checkRequestResultSuccess(result);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            BaseTestCase.checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -301,7 +301,7 @@ public class KnowledgeWebDemo {
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"
         try {
-        	Util.HttpRequestFullJson(HttpMethod.POST, baseUrl + subUrl, null);
+        	HttpRequestFullJson(HttpMethod.POST, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -328,8 +328,8 @@ public class KnowledgeWebDemo {
         DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
         try {
             knowledgeJson = knowledgeJson == null ? KnowledgeUtil.writeObjectToJson(assoFilter, data) : knowledgeJson;
-            JsonNode response = Util.HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
-            String retData = Util.getResponseData(response);
+            JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
+            String retData = BaseTestCase.getResponseData(response);
             if (retData == null || "null".equals(retData) || retData.trim().isEmpty()) {
             	System.err.println("Create Knowledge failed....");
             }
@@ -349,7 +349,7 @@ public class KnowledgeWebDemo {
         String response = null;
         try {
             knowledgeJson = knowledgeJson == null ? createKnowledgeRequestJson(title) : knowledgeJson;
-            response = Util.HttpRequestFullJson(HttpMethod.POST, baseUrl, knowledgeJson);
+            response = HttpRequestFullJson(HttpMethod.POST, baseUrl, knowledgeJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -377,7 +377,7 @@ public class KnowledgeWebDemo {
             createKnowledgeComment("knowledgeCommentGetList", false);
 
             String URL = commentListUrl + KnowledgeId;
-            Util.HttpRequestFullJson(Util.HttpMethod.GET, URL, null);
+            HttpRequestFullJson(HttpMethod.GET, URL, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -390,7 +390,7 @@ public class KnowledgeWebDemo {
             createKnowledgeComment("knowledgeCommentGetCount", false);
 
             String URL = commentBaseUrl + "count/" + KnowledgeId;
-            Util.HttpRequestFullJson(Util.HttpMethod.GET, URL, null);
+            HttpRequestFullJson(HttpMethod.GET, URL, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -408,7 +408,7 @@ public class KnowledgeWebDemo {
             }
 
             String URL = commentBaseUrl + commentId;
-            Util.HttpRequestFullJson(Util.HttpMethod.DELETE, URL, null);
+            HttpRequestFullJson(HttpMethod.DELETE, URL, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -418,8 +418,8 @@ public class KnowledgeWebDemo {
     {
         try {
             String URL = commentBaseUrl + KnowledgeId;
-            String jsonContent = Util.getKnowledgeComment(KnowledgeId, content);
-            return Util.HttpRequestFullJson(Util.HttpMethod.POST, URL, jsonContent);
+            String jsonContent = BaseTestCase.getKnowledgeComment(KnowledgeId, content);
+            return HttpRequestFullJson(HttpMethod.POST, URL, jsonContent);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -463,5 +463,26 @@ public class KnowledgeWebDemo {
         System.out.println("\r\n======= "+methodName+" ========");
         return methodName;
     }
+
+    private String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent)
+    {
+        try {
+            return BaseTestCase.HttpRequestFullJson(httpMethod, urlString, jsonContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public JsonNode HttpRequestResult(String httpMethod,String urlString,String jsonContent) throws Exception
+    {
+        return HttpRequestResult(httpMethod, urlString, jsonContent);
+    }
+
+    public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent) throws Exception
+    {
+        return HttpRequestFull(httpMethod, urlString, jsonContent);
+    }
+
 
 }

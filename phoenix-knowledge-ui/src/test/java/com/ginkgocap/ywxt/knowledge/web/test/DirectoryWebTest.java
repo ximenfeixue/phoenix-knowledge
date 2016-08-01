@@ -9,7 +9,7 @@ public class DirectoryWebTest extends BaseTestCase {
 		LogMethod();
 		String path = "/directory/directory/createRootDirectory?rootType=8&name=Directory" + this.getNextNum();
 		try {
-			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, directoryHost+path, "fsdff");
+			String jsonNode = HttpRequestFullJson(HttpMethod.POST, directoryHost+path, "fsdff");
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			//TODO Auto-generated catch block
@@ -23,7 +23,7 @@ public class DirectoryWebTest extends BaseTestCase {
 		LogMethod();
 		String path = "/tags/tags/createTag?tagType=8&tagName=Tag345" + this.getNextNum();
 		try {
-			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.POST, directoryHost+path, null);
+			String jsonNode = HttpRequestFullJson(HttpMethod.POST, directoryHost+path, null);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			//TODO Auto-generated catch block
@@ -36,7 +36,7 @@ public class DirectoryWebTest extends BaseTestCase {
 		LogMethod();
 		String path = "/directory/type/getTypeList";
 		try {
-			String jsonNode = Util.HttpRequestFullJson(Util.HttpMethod.GET, directoryHost+path, null);
+			String jsonNode = HttpRequestFullJson(HttpMethod.GET, directoryHost+path, null);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
