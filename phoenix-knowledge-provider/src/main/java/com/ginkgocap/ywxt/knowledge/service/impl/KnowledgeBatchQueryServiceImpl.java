@@ -203,6 +203,11 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
         return knowledgeBatchQueryDao.getKnowledge(columnID, userIdd, type, start, size);
     }
 
+    public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size)
+    {
+        return knowledgeBatchQueryDao.selectPlatform(type, columnId, columnPath, userId, start, size);
+    }
+
     @Override
     public List<Knowledge> getAllByParam(short type, int columnId, String columnPath, long userId, int start, int size)
     {
@@ -210,10 +215,8 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     }
 
     @Override
-    public <T> Map<String, Object> selectAllByParam(int classType, int state, String columnid, Long userid, int page, int size) {
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},", state);
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},", columnid);
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService.selectAllByParam:{},", userid);
+    public <T> Map<String, Object> selectAllByParam(int classType, int state, String columnPath, long userId, int page, int size) {
+        logger.info("state: {}, columnPath :{}, userId: {} ", state, columnPath, userId);
         Map<String, Object> model = new HashMap<String, Object>();
 
         /*

@@ -202,15 +202,15 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     {
         logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-        return getMongoIds(columnId, columnPath, userId, collectionName, start, size);
+        return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
-    private List<Knowledge> getMongoIds(final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
+    private List<Knowledge> getMongoIds(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
             logger.error("paramter is invalidated. start: {}, size: {}", start, size);
             return null;
         }
-        String key = getKey(columnId, userId,  tableName);
+        String key = getKey(columnType, columnId, userId, tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         size = size > maxSize ? maxSize : size;
         List<Knowledge> result = null;
@@ -222,7 +222,9 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
-                criteria.and("uid").is(userId);
+                if (userId >= 0) {
+                    criteria.and("uid").is(userId);
+                }
                 // 查询栏目目录为当前分类下的所有数据
                 String reful = columnPath;
                 // 该栏目路径下的所有文章条件
