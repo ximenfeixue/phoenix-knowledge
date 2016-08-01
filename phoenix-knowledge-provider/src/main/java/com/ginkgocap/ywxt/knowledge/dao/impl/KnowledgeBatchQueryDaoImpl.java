@@ -242,8 +242,9 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                     for (Knowledge knowledge : knowledgeList) {
                         if (knowledge != null) {
                             ids.add(knowledge.getId());
-                            if (index++ < size) {
-                                result.add(knowledge);
+                            result.add(knowledge);
+                            if (++index >= size) {
+                                break;
                             }
                         }
                     }
