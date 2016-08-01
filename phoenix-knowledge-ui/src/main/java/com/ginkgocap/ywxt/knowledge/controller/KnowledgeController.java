@@ -2069,8 +2069,10 @@ public class KnowledgeController extends BaseController {
             for (KnowledgeCollect collect : collectItems) {
                 if (!knowledgeIds.contains(collect.getKnowledgeId())) {
                     Knowledge detail = knowledgeService.getDetailById(collect.getKnowledgeId(), collect.getColumnId());
-                    KnowledgeBase base = DataCollect.generateKnowledge(detail, (short)collect.getColumnId());
-                    collectedKnowledgeItems.add(base);
+                    if (detail != null) {
+                        KnowledgeBase base = DataCollect.generateKnowledge(detail, (short) collect.getColumnId());
+                        collectedKnowledgeItems.add(base);
+                    }
                 }
             }
             logger.info(" knowledgeIds: {}, keyword: {}", knowledgeIds, keyword);
