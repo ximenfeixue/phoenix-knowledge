@@ -571,11 +571,11 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        System.err.println("----keyWord: " + keyword+"\n");
+        System.err.println("1----keyWord: " + keyword+"\n");
         byte[] byteWord = keyword.getBytes("ISO-8859-1"); //以"ISO-8859-1"方式解析name字符串
         String keyWord1= new String(byteWord, "UTF-8");
-        logger.info("---keyWord: {}", keyWord1);
-        System.err.println("----keyWord: " + keyWord1+"\n");
+        logger.info("2---keyWord: {}", keyWord1);
+        System.err.println("3----keyWord: " + keyWord1+"\n");
 
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
