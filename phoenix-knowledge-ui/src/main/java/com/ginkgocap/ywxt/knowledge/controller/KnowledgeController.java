@@ -173,7 +173,7 @@ public class KnowledgeController extends BaseController {
         try {
             List<Associate> as  = data.getAsso();
             if (as != null) {
-                assoMap = createAssociate(as, knowledgeId, userId);
+                assoMap = createAssociate(as, knowledgeId, user);
             } else {
                 logger.error("associate it null or converted failed, so skip to save!");
             }
@@ -293,7 +293,7 @@ public class KnowledgeController extends BaseController {
         }
 
         List<Associate> as = data.getAsso();
-        createAssociate(as, knowledgeId, userId);
+        createAssociate(as, knowledgeId, user);
 
         logger.info(".......update knowledge success......");
         return result;
@@ -1975,16 +1975,19 @@ public class KnowledgeController extends BaseController {
         return str;
     }
 
-    private Map<Long, List<Associate>> createAssociate(List<Associate> as, long knowledgeId, long userId)
+    private Map<Long, List<Associate>> createAssociate(List<Associate> as, long knowledgeId, User user)
     {
         if (as == null || as.size() <= 0) {
             return null;
         }
 
         //now only 4 type asso
+        long userId = this.getUserId(user);
         Map<Long, List<Associate>> assoMap = new HashMap<Long, List<Associate>>(4);
         for (int index = 0; index < as.size(); index++) {
             Associate associate = as.get(index);
+            associate.setUserId(userId);
+            associate.setUserName(user.getName());
             associate.setSourceId(knowledgeId);
             associate.setSourceTypeId(KnowledgeBaseService.sourceType);
             //associate.setAssocTypeId(assoType.getId());
