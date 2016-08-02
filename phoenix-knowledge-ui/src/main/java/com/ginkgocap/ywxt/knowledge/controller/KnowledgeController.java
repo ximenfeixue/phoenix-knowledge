@@ -571,9 +571,7 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        System.err.println("1----keyWord: " + keyword+"\n");
-        logger.info("2---keyWord: {}", keyword);
-
+        logger.info("---keyWord: {}", keyword);
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
         List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
