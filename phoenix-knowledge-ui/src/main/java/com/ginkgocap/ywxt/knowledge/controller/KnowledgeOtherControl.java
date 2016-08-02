@@ -314,26 +314,6 @@ public class KnowledgeOtherControl extends BaseController {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-
-    /*
-    @ResponseBody
-    @RequestMapping(value="/hot/{limit}", method = RequestMethod.GET)
-    public InterfaceResult commentCount(HttpServletRequest request,HttpServletResponse response,
-                                        @PathVariable int limit) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        List<KnowledgeCount> knowledgeCountList = knowledgeCountService.getHotKnowledge(limit);
-        if (knowledgeCountList != null && knowledgeCountList.size() > 0)
-        {
-            return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeCountList);
-        }
-
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }*/
-
     @SuppressWarnings("static-access")
     private String externalException(String url, String jsonContent) {
         if (StringUtils.isEmpty(url) || StringUtils.isEmpty(jsonContent)) {
@@ -355,17 +335,6 @@ public class KnowledgeOtherControl extends BaseController {
         return result;
     }
 
-//    private InterfaceResult createKnowledge(Knowledge2 knowledge2, User user, String url) {
-//
-//        KnowledgeNewsVO detail = getKnowledgeNewsVO(knowledge2, user, url);
-//        detail.setColumnid(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));// 手机端创建的知识默认栏目类型和栏目id都是1
-//        //vo.setColumnType(DEFAULT_KNOWLEDGE_TYPE);// 设置默认类型为咨询，目前手机端只支持咨询
-//        // 调用平台层插入知识
-//        DataCollection data = new DataCollection(null, detail);
-//        data.generateKnowledge();
-//        data.serUserId(this.getUserId(user));
-//        return knowledgeService.insert(data);
-//    }
 
     /**
      * 创建知识抽离
@@ -391,7 +360,7 @@ public class KnowledgeOtherControl extends BaseController {
 
         vo.setAsso(jsonAsso.toString());*/
 
-        logger.info("KnowledgeNewsVO :: " + vo);
+        logger.info("Knowledge : " + vo);
 
         return vo;
     }

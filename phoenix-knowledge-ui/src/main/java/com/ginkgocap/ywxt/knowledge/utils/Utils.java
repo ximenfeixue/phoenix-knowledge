@@ -136,18 +136,22 @@ public class Utils {
 		StringBuffer htmlsb = new StringBuffer("<!DOCTYPE html><html><head><meta charset='utf-8' /><style>.gtrelated img{margin-top:10px;max-width:96%;margin-left:2%;height:auto;}.gtrelated{word-break: break-all;word-wrap: break-word; overflow-x: hidden; overflow-y:auto; } body { letter-spacing: 0.1em; line-height: 1.5em;} table{ width:100%; border-top: #bbb solid 1px;border-left: #bbb solid 1px; text-align: center;}table td{ border-right: #bbb solid 1px; border-bottom: #bbb solid 1px;} </style></head><body><div class='gtrelated'>");
 		
 		String[] lines = content.split("\n");
-		for(String line : lines){
-			htmlsb.append("<p>" + line.replace("\r", "") + "</p>");
+		if (lines != null && lines.length >0) {
+			for (String line : lines) {
+				htmlsb.append("<p>" + line.replace("\r", "") + "</p>");
+			}
 		}
-		for(String url : urls){
-			htmlsb.append("<img src='" + url + "'/> <br/> <br/>");
+		if (urls != null && urls.size() > 0) {
+			for (String url : urls) {
+				htmlsb.append("<img src='" + url + "'/> <br/> <br/>");
+			}
 		}
-		if (null != listImageUrl) {
+		if (null != listImageUrl && listImageUrl.length > 0) {
 			for (String img : listImageUrl) {
 				htmlsb.append("<img src='" + img + "'/> <br/> <br/>");
 			}
 		}
-		if(!neturl.equals("")) {
+		if(neturl != null && !neturl.equals("")) {
 			htmlsb.append("<a href='"+ neturl + "'>原网址</a>");	
 		}
 		htmlsb.append("</div></body></html>");
