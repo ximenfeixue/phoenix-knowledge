@@ -81,6 +81,7 @@ public class KnowledgeOtherControl extends BaseController {
                 }
                 // 原始链接
                 String srcExternalUrl = externalUrl;
+                logger.info("srcExternalUrl: {}", srcExternalUrl);
                 externalUrl = URLEncoder.encode(externalUrl, "UTF-8");
 
                 // 配置大数据地址
