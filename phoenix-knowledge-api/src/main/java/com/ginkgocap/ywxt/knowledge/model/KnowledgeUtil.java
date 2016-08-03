@@ -452,21 +452,20 @@ public final class KnowledgeUtil {
 
     public static long parserTimeToLong(String time)
     {
+        long newTime = System.currentTimeMillis();
         if (StringUtils.isEmpty(time)) {
-            return System.currentTimeMillis();
+            return newTime;
         }
 
-        long newTime = 0L;
         if (time.indexOf("-") > 0 && time.indexOf(":") > 0) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = sdf.parse(time);
                 if (date != null) {
-                    newTime = date.getTime();
-                    return newTime;
+                    return date.getTime();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error("Convert String to long error :"+ex.getMessage());
             }
         }
 
