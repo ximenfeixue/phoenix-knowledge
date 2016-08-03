@@ -231,13 +231,13 @@ public class KnowledgeOtherControl extends BaseController {
                                 // 错误反馈
                                 responseDataMap.put("knowledge", null);
                                 // 跳出
-                                return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+                                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
 
-                            logger.info("/fetchExternalKnowledgeUrl.json createKnowledge result: {}", createResult);
                             Long kId = (Long) createResult.getResponseData();
                             // 知识ID
                             knowledge.setId(kId);
+                            logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: {}", kId);
                         } else {
                             logger.warn("isCreate is not existing or false, so skip to create knowledge!");
                         }
