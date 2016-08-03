@@ -29,6 +29,7 @@ import junit.framework.TestCase;
  */
 public abstract class BaseTestCase extends TestCase
 {
+	protected static boolean web = true;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -36,9 +37,9 @@ public abstract class BaseTestCase extends TestCase
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
     protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
-    //private static String testEnv = "testOnline";
-    //private static String testEnv = "dev";
-    private static String testEnv = "local";
+    private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
+    
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -46,15 +47,15 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://192.168.120.234:3322/login/loginConfiguration.json";
+            loginUrl = "http://192.168.130.200:8088/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            loginUrl = "http://192.168.120.234:3322/login/loginConfiguration.json";
-            hostUrl = System.getProperty("hostUrl", "http://192.168.130.200:8080");
+            loginUrl = "http://192.168.130.200:8088/cross" + getLoginUrl(web);
+            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
-            loginUrl = "http://test.online.gintong.com/cross/web/login.json";
+            loginUrl = "http://test.online.gintong.com/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/knowledge");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
@@ -181,51 +182,6 @@ public abstract class BaseTestCase extends TestCase
         return fileName + "Delete.json";
     }
 
-    /*
-    public static String getRequestContent(KnowledgeServicesType KnowledgeType, KnowledgeDealType KnowledgeDealType, String resPath)
-    {
-        String jsonPath = null;
-        Class KnowledgeClass = KnowledgeUtil.getKnowledgeClass(KnowledgeType);
-        resPath += KnowledgeClass.getSimpleName() + KnowledgeType.getTypeId();
-        if (KnowledgeDealType == KnowledgeDealType.ECreate) {
-            jsonPath = Util.getJsonFile(resPath);
-        }
-        else if(KnowledgeDealType == KnowledgeDealType.EUpdate)
-        {
-            jsonPath = Util.getUpdateJsonFile(resPath);
-        }
-        else if(KnowledgeDealType == KnowledgeDealType.EDelete)
-        {
-            jsonPath = Util.getDeleteJsonFile(resPath);
-        }
-        return KnowledgeUtil.getJsonContentFromFile(jsonPath);
-    }
-
-    public static String getKnowledgeCommentForUpdate(Long KnowledgeId)
-    {
-        return getKnowledgeComment(KnowledgeId, "CommentForUpdate");
-       //return "{\"id\":0,\"KnowledgeId\":56687899,\"ownerId\":12344567,\"ownerName\":\"DummyUserName\",\"createTime\":1454306782624,\"content\":\"CommentForUpdate\",\"isVisible\":1}";
-        //return convertKnowledgeCommentFromString(KnowledgeComment);
-    }
-
-    public static String getKnowledgeCommentForDelete(Long KnowledgeId)
-    {
-        return getKnowledgeComment(KnowledgeId, "CommentForDelete");
-        //return "{\"id\":0,\"KnowledgeId\":56687899,\"ownerId\":12344567,\"ownerName\":\"DummyUserName\",\"createTime\":1454306782624,\"content\":\"CommentForDelete\",\"isVisible\":1}";
-        //return convertKnowledgeCommentFromString(KnowledgeComment);
-    }
-
-
-    //private static KnowledgeComment convertKnowledgeCommentFromString(String KnowledgeComment)
-    {
-        KnowledgeComment comment = null;
-        try {
-            comment = objectMapper.readValue(KnowledgeComment, KnowledgeComment.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return comment;
-    }*/
 
     public static String getKnowledgeComment(long KnowledgeId, String content)
     {
@@ -326,8 +282,7 @@ public abstract class BaseTestCase extends TestCase
         if (jsonContent != null) {
             httpConn.setRequestProperty( "Content-Length",String.valueOf( jsonContent.length() ) );
         }
-        httpConn.setRequestProperty("s","api");
-        //sessionID = "61699318-02aa-4fbe-b689-4b28e8944e8e";
+        httpConn.setRequestProperty("s", (web ? "web" : "api"));
         if (sessionID != null) {
             httpConn.setRequestProperty("sessionID", sessionID);
         }
@@ -378,22 +333,35 @@ public abstract class BaseTestCase extends TestCase
 
     public void login(String loginUrl)
     {
-        //final String loginJson = "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}";
-        final String loginJson = "{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"liubang\",\"password\":\"MTExMTEx\"}";
-        try {
+       final String loginJson = getLogiJson(web);
+       try{
             JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
             if (retNode != null) {
                 JsonNode jsonNode = retNode.get("responseData");
-                JsonNode sessionIDNode = jsonNode.get("sessionID");
-                if (sessionIDNode == null) {
-                    sessionIDNode = jsonNode.get("sessionId");
+                if (jsonNode != null) {
+	                JsonNode sessionIDNode = jsonNode.get("sessionID");
+	                if (sessionIDNode == null) {
+	                	sessionIDNode = jsonNode.get("sessionId");
+	                }
+	                sessionID = jsonNode != null ? sessionIDNode.asText() : null;
                 }
-                sessionID = jsonNode != null ? sessionIDNode.asText() : null;
                 System.err.println("......sessionID: "+sessionID);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private static String getLoginUrl(boolean web)
+    {
+    	return web ? "/web/login.json" : "/login/loginConfiguration.json";
+    }
+    
+    private static String getLogiJson(boolean web)
+    {
+    	return web ? "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}" :
+    		"{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"18211081791\",\"password\":\"MTExMTEx\"}";
+        
     }
 }
