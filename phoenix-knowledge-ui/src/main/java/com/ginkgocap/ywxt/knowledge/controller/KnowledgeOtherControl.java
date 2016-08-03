@@ -158,18 +158,8 @@ public class KnowledgeOtherControl extends BaseController {
                         // 带样式标签内容
                         knowledge.setContent(content);
                         knowledge.setTitle(title);
-                        Date date = null;
-                        if (StringUtils.isNotBlank(time)) {
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            try {
-                                date = formatter.parse(time);
-                            } catch (ParseException e) {
-                                date = new Date();
-                            }
-                        } else {
-                            date = new Date();
-                        }
-                        knowledge.setCreateTime(date.getTime());
+                        long createTime = KnowledgeUtil.parserTimeToLong(time);
+                        knowledge.setCreateTime(createTime);
 
                         @SuppressWarnings("unchecked")
                         List<String> imgs = null;
