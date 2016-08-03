@@ -53,7 +53,7 @@ public class KnowledgeWebTest extends BaseTestCase
     public void testCreateKnowledgeMore() throws InterruptedException
     {
         LogMethod();
-        for (int index = 0; index <100; index++) {
+        for (int index = 0; index <50; index++) {
             createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的");
             System.out.print("Index: "+index);
             Thread.sleep(5);
@@ -113,10 +113,10 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
             //data.setContent("");
-            long knowledgeId = detail.getId();
-            int columnId = Integer.valueOf(detail.getColumnid());
+            long knowledgeId = 11608021848391L; //detail.getId();
+            int columnId = 1; //Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -178,8 +178,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //createKnowledge("考虑,考虑");
-            //createKnowledge("考虑,考虑");
-            String subUrl = "/all/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            createKnowledge("考虑,考虑");
+            String subUrl = "/all/0/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
@@ -269,8 +269,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //createKnowledge("考虑,考虑");
-            //createKnowledge("考虑,考虑");
-            String subUrl = "/allCreated/0/10/test"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            createKnowledge("考虑,考虑");
+            String subUrl = "/allCreated/0/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
