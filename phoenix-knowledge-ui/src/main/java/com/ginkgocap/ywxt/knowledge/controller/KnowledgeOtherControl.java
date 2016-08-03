@@ -57,11 +57,14 @@ public class KnowledgeOtherControl extends BaseController {
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
     public InterfaceResult fetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
+        User user = getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
         logger.info("into /FetchExternalKnowledgeUrl");
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
         Knowledge2 knowledge = null;
-
-        User user = getUser(request);
         String requestJson = "";
         try {
             requestJson = getBodyParam(request);
