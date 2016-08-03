@@ -154,6 +154,7 @@ public class KnowledgeOtherControl extends BaseController {
                             knowledge.setS_addr(srcExternUrl.substring(0, 250));
                         }*/
 
+                        knowledge.setType(DEFAULT_KNOWLEDGE_TYPE);
                         knowledge.setColumnId(DEFAULT_KNOWLEDGE_TYPE);
                         // 带样式标签内容
                         knowledge.setContent(content);
@@ -332,22 +333,23 @@ public class KnowledgeOtherControl extends BaseController {
     /**
      * 创建知识抽离
      * */
-    private InterfaceResult createKnowledge(Knowledge2 knowledge2, User user, String url) {
+    private InterfaceResult createKnowledge(Knowledge2 knowledge, User user, String url) {
 
-        Knowledge vo = getKnowledgeNewsVO(knowledge2, user, url);
+        Knowledge vo = getKnowledgeNewsVO(knowledge, url);
+        vo.setCid(this.getUserId(user));
+        vo.setCname(user.getName());
         vo.setColumnid(String.valueOf(KnowledgeType.ENews.value()));
         vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));// 设置默认类型为咨询，目前手机端只支持咨询
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, vo);
-        data.serUserId(user.getId());
         data.generateKnowledge();
         return this.knowledgeService.insert(data);
     }
 
 
-    private Knowledge getKnowledgeNewsVO(Knowledge2 knowledge2, User user, String url) {
+    private Knowledge getKnowledgeNewsVO(Knowledge2 knowledge, String url) {
 
-        Knowledge vo = genVo(knowledge2, url);
+        Knowledge vo = genVo(knowledge, url);
         /*
         JSONObject jsonAsso = JSONObject.fromObject(vo.getAsso());
 
@@ -358,34 +360,34 @@ public class KnowledgeOtherControl extends BaseController {
         return vo;
     }
 
-    private Knowledge genVo(Knowledge2 knowledge2, String url) {
+    private Knowledge genVo(Knowledge2 knowledge, String url) {
 
         Knowledge vo = new Knowledge();
 
-        if (knowledge2.getId() != 0) {
-            vo.setId(knowledge2.getId());
-            vo.setKnowledgeMainId(knowledge2.getId());
+        if (knowledge.getId() != 0) {
+            vo.setId(knowledge.getId());
+            vo.setKnowledgeMainId(knowledge.getId());
         }
-        if (knowledge2.getType() == KnowledgeType.ELaw.value()) {
-            vo.setTitanic(knowledge2.getTitanic());
-            vo.setPostUnit(knowledge2.getPostUnit());
-            vo.setSubmitTime(knowledge2.getSubmitTime());
-            vo.setPerformTime(knowledge2.getPerformTime());
+        if (knowledge.getType() == KnowledgeType.ELaw.value()) {
+            vo.setTitanic(knowledge.getTitanic());
+            vo.setPostUnit(knowledge.getPostUnit());
+            vo.setSubmitTime(knowledge.getSubmitTime());
+            vo.setPerformTime(knowledge.getPerformTime());
         }
-        if (knowledge2.getType() == KnowledgeType.EInvestment.value()) {
-            vo.setSynonyms(knowledge2.getSynonyms());
+        if (knowledge.getType() == KnowledgeType.EInvestment.value()) {
+            vo.setSynonyms(knowledge.getSynonyms());
         }
-        vo.setTaskid(knowledge2.getTaskId());
-        vo.setTitle(knowledge2.getTitle());
+        vo.setTaskid(knowledge.getTaskId());
+        vo.setTitle(knowledge.getTitle());
         try {
             List<String> listImageUrl = new ArrayList<String>();
 
             // 测试指定taskid的文件
-            // knowledge2.setTaskId("taskId-123456");
+            // knowledge.setTaskId("taskId-123456");
 
             // 根据taskid获取到附件列表
             /* this position we don't need it
-            List<JTFile> listAttachFile = mJTFileService.getJTFileByTaskId(knowledge2.getTaskId() + "");
+            List<JTFile> listAttachFile = mJTFileService.getJTFileByTaskId(knowledge.getTaskId() + "");
             if (listAttachFile != null) {
                 for (JTFile jt : listAttachFile) {
                     if (jt.getType() != null) {
@@ -397,10 +399,10 @@ public class KnowledgeOtherControl extends BaseController {
                 }
             }*/
             // 区分APP和WEB
-            if (knowledge2.getWeb() > 0) {
-                vo.setContent(knowledge2.getContent());
+            if (knowledge.getWeb() > 0) {
+                vo.setContent(knowledge.getContent());
             } else {
-                String htmlContent = Utils.txt2Html(knowledge2.getContent(), listImageUrl, knowledge2.getListImageUrl(), url);
+                String htmlContent = Utils.txt2Html(knowledge.getContent(), listImageUrl, knowledge.getListImageUrl(), url);
                 // htmlContent =
                 // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
                 vo.setContent(htmlContent);
@@ -409,11 +411,11 @@ public class KnowledgeOtherControl extends BaseController {
             ex.printStackTrace();
         }
 
-        vo.setPic(knowledge2.getPic());
+        vo.setPic(knowledge.getPic());
 
         String contentDes;
-        if ((knowledge2.getContent() != null) && (knowledge2.getContent().length() > 0)) {
-            String content = knowledge2.getContent();
+        if ((knowledge.getContent() != null) && (knowledge.getContent().length() > 0)) {
+            String content = knowledge.getContent();
             contentDes = filterHtml(content).length() < 40 ? filterHtml(content) : filterHtml(content).substring(0, 35) + "...";
 
         } else {
@@ -421,47 +423,42 @@ public class KnowledgeOtherControl extends BaseController {
         }
         vo.setDesc(contentDes);
 
-        if (knowledge2.getTags() != null && knowledge2.getTags().size() > 0) {
-            String tags = knowledge2.getTags().toString();
+        if (knowledge.getTags() != null && knowledge.getTags().size() > 0) {
+            String tags = knowledge.getTags().toString();
             vo.setTags(tags.substring(1, tags.length()-1));
         }
 
-        vo.setSource(knowledge2.getSource());
+        vo.setSource(knowledge.getSource());
         // 知识所在目录
         /*
         String strUc = "";
-        if (knowledge2.getListUserCategory() != null) {
-            for (int i = 0; i < knowledge2.getListUserCategory().size(); i++) {
-                UserCategory uc = knowledge2.getListUserCategory().get(i);
+        if (knowledge.getListUserCategory() != null) {
+            for (int i = 0; i < knowledge.getListUserCategory().size(); i++) {
+                UserCategory uc = knowledge.getListUserCategory().get(i);
                 strUc += uc.getId();
-                if (i < (knowledge2.getListUserCategory().size() - 1))
+                if (i < (knowledge.getListUserCategory().size() - 1))
                     strUc += ",";
             }
             vo.setDirectorys(strUc);
         }*/
 
-        vo.setEssence(knowledge2.getEssence());
+        vo.setEssence(knowledge.getEssence());
         //vo.setShareMessage("");// 分享消息内容
 
-        if (knowledge2.getColumnId() > 0) {
-            vo.setColumnid(String.valueOf(knowledge2.getColumnId()));
-            vo.setColumnType(String.valueOf(knowledge2.getColumnId()));
-            vo.setCpathid(knowledge2.getCpathid());
-            //vo.setColumnName(knowledge2.getco);
-        } else {
-            // 如果没指定栏目， 默认为资讯
-            vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
-        }
+        vo.setColumnid(String.valueOf(knowledge.getColumnId()));
+        vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
+        vo.setCpathid(knowledge.getCpathid());
+        vo.setCpathid(KnowledgeType.ENews.typeName());
 
         // 关联管理器
         /*
-        vo.setAsso(EntityFactory.genAsso(knowledge2.getListRelatedConnectionsNode(), knowledge2.getListRelatedOrganizationNode(),
-                knowledge2.getListRelatedKnowledgeNode(), knowledge2.getListRelatedAffairNode()));
+        vo.setAsso(EntityFactory.genAsso(knowledge.getListRelatedConnectionsNode(), knowledge.getListRelatedOrganizationNode(),
+                knowledge.getListRelatedKnowledgeNode(), knowledge.getListRelatedAffairNode()));
 
         logger.info(vo.getAsso());
         // 权限管理器
-        vo.setSelectedIds(EntityFactory.genSelectIds(knowledge2.getListHightPermission(), knowledge2.getListMiddlePermission(),
-                knowledge2.getListLowPermission()));*/
+        vo.setSelectedIds(EntityFactory.genSelectIds(knowledge.getListHightPermission(), knowledge.getListMiddlePermission(),
+                knowledge.getListLowPermission()));*/
 
         return vo;
     }
