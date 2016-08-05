@@ -2151,7 +2151,7 @@ public class KnowledgeController extends BaseController {
         try {
             InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
             Notification noti = ret.getNotification();
-            if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())) {
+            if (noti != null && CommonResultCode.SUCCESS.getCode().equals(noti.getNotifCode())) {
                 data.setPermission(ret.getResponseData());
             }
             else {
