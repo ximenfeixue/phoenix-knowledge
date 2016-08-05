@@ -95,13 +95,20 @@ public class KnowledgeHomeWebTest extends BaseTestCase
         }
     }
 
-    /*
-    public void test ()
+    
+    public void testGetRecommendedKnowledge ()
     {
-
+    	LogMethod();
+        try {
+        	String subUrl = "/home/getRecommendedKnowledge/1/0/20";  ///home/getRecommendedKnowledge/{type}/{start}/{size}
+	    	 JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+	         checkRequestResultSuccess(result);
+	     } catch (Exception e) {
+	         e.printStackTrace();
+	     }
     }
 
-
+    /*
     public void test ()
     {
 

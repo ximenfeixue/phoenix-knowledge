@@ -274,7 +274,7 @@ public class KnowledgeHomeController extends BaseController {
 
         //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
         ResourceBundle resource = ResourceBundle.getBundle("application");
-        String url = resource.getString("knowledge.newQueryHost");
+        String url = resource.getString("knowledge.query.url");
         url = "http://192.168.101.41:8090";
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
         pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
