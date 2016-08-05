@@ -105,9 +105,14 @@ public class KnowledgeHomeController extends BaseController {
 
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryTagUrl");
-            if (url == null) {
-                url = "http://192.168.101.53:8090";
+            if (StringUtils.isEmpty(url)) {
+                ResourceBundle resource = ResourceBundle.getBundle("application");
+                url = resource.getString("knowledge.url.query.tag");
             }
+            if (StringUtils.isEmpty(url)) {
+                url = "http://192.168.101.41:8090";
+            }
+
             Map<String, String> params = new HashMap<String, String>();
             params.put("num", String.valueOf(count));
             String str = HttpClientHelper.post(url + "/user/tags/search.json", params);
@@ -140,15 +145,17 @@ public class KnowledgeHomeController extends BaseController {
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        long userId = this.getUserId(user);
 
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryHotUrl");
             if (StringUtils.isEmpty(url)) {
-                //url = resourceBundle.getString();
+                ResourceBundle resource = ResourceBundle.getBundle("application");
+                url = resource.getString("knowledge.url.query.hot");
             }
-            url = "http://192.168.101.41:8090";
+            if (StringUtils.isEmpty(url)) {
+                url = "http://192.168.101.41:8090";
+            }
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
             String str = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
@@ -236,6 +243,14 @@ public class KnowledgeHomeController extends BaseController {
 
         if (1 == targetType) {// 知识
             String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+            if (StringUtils.isEmpty(url)) {
+                ResourceBundle resource = ResourceBundle.getBundle("application");
+                url = resource.getString("knowledge.new.query.host");
+            }
+            if (StringUtils.isEmpty(url)) {
+                url = "http://192.168.101.41:8090";
+            }
+
             List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
             pairs.add(new BasicNameValuePair("userid", String.valueOf(userId)));
             pairs.add(new BasicNameValuePair("targetType", String.valueOf(targetType)));
@@ -275,7 +290,6 @@ public class KnowledgeHomeController extends BaseController {
         //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
         ResourceBundle resource = ResourceBundle.getBundle("application");
         String url = resource.getString("knowledge.url.query");
-        url = "http://192.168.101.41:8090";
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
         pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
         pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
