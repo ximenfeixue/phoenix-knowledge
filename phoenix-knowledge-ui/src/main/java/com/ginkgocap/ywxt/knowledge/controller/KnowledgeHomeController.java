@@ -278,9 +278,9 @@ public class KnowledgeHomeController extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(value = "/home/getRecommendedKnowledge/{type}/{start}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value = "/home/getRecommendedKnowledge/{type}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response,
-                                                                        @PathVariable short type,@PathVariable int start, @PathVariable int size) throws Exception {
+                                                                        @PathVariable short type,@PathVariable int page, @PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -291,7 +291,7 @@ public class KnowledgeHomeController extends BaseController {
         ResourceBundle resource = ResourceBundle.getBundle("application");
         String url = resource.getString("knowledge.url.query");
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
-        pairs.add(new BasicNameValuePair("page", String.valueOf(start)));
+        pairs.add(new BasicNameValuePair("page", String.valueOf(page)));
         pairs.add(new BasicNameValuePair("rows", String.valueOf(size)));
         pairs.add(new BasicNameValuePair("type", String.valueOf(type)));// 1,推荐 2,发现
         Map<String, Object> model = new HashMap<String, Object>();
