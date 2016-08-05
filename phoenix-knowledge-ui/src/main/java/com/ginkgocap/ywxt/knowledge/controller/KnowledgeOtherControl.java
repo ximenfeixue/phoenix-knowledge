@@ -136,7 +136,7 @@ public class KnowledgeOtherControl extends BaseController {
 
                 logger.warn(bigDataResponse);
                 if (bigDataResponse.indexOf("<!DOCTYPE html>") == -1 && bigDataResponse.startsWith("{")) {
-                    String time = dataJson.get("publish_time").toString();
+                    String time = dataJson.get("publish_time").textValue();
 
                     // 测试条件
                     // content = getSping(content);
