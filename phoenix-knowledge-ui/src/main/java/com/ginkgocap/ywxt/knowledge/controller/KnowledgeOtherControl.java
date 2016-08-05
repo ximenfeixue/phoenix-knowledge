@@ -57,7 +57,7 @@ public class KnowledgeOtherControl extends BaseController {
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
     public InterfaceResult fetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
-        User user = getUser(request);
+        User user = KnowledgeUtil.getDummyUser(); //getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
@@ -223,7 +223,7 @@ public class KnowledgeOtherControl extends BaseController {
                                 // 弹窗提示
                                 setSessionAndErr(request, response, "-1", createResult.getNotification() + " ：" + createResult.getResponseData());
                                 // 错误反馈
-                                responseDataMap.put("knowledge", null);
+                                responseDataMap.put("knowledge2", null);
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
@@ -239,7 +239,7 @@ public class KnowledgeOtherControl extends BaseController {
                         // 大数据错误
                         setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                         // 错误反馈
-                        responseDataMap.put("knowledge", null);
+                        responseDataMap.put("knowledge2", null);
                         // 跳出
                         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
                     }
@@ -247,7 +247,7 @@ public class KnowledgeOtherControl extends BaseController {
                     // 大数据错误
                     setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                     // 错误反馈
-                    responseDataMap.put("knowledge", null);
+                    responseDataMap.put("knowledge2", null);
                     // 跳出
                     return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
                 }
@@ -264,7 +264,7 @@ public class KnowledgeOtherControl extends BaseController {
             logger.info(q.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
-        responseDataMap.put("knowledge", knowledge);
+        responseDataMap.put("knowledge2", knowledge);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
