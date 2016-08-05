@@ -100,7 +100,7 @@ public class KnowledgeHomeWebTest extends BaseTestCase
     {
     	LogMethod();
         try {
-        	String subUrl = "/home/getRecommendedKnowledge/1/0/20";  ///home/getRecommendedKnowledge/{type}/{start}/{size}
+        	String subUrl = "/home/getRecommendedKnowledge/1/1/20";  ///home/getRecommendedKnowledge/{type}/{page}/{size}
 	    	 JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
 	         checkRequestResultSuccess(result);
 	     } catch (Exception e) {
