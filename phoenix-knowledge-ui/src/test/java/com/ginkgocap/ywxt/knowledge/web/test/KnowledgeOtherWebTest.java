@@ -58,7 +58,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
         	String JsonContent = "";
-            String subUrl = "/fetchExternalKnowledgeUrl";
+            //String subUrl = "/fetchExternalKnowledgeUrl";
             JsonNode result = HttpRequestResult(HttpMethod.POST, "http://192.168.130.106:8080/dynamicNews/push", JsonContent);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
