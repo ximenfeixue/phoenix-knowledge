@@ -499,10 +499,9 @@
                 <dubbo.registry.address>zookeeper://127.0.0.1:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
-                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.53:8090</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.query.url>http://192.168.101.14:8090</knowledge.query.url>
+                <knowledge.url.query>http://192.168.101.14:8090</knowledge.url.query>
             </properties>
         </profile>
         <profile>
@@ -540,10 +539,9 @@
                 <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
                 <!-- 访问大数据接口地址 -->
-                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.53:8090</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.query.url>http://192.168.101.41:8090</knowledge.query.url>
+                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
             </properties>
         </profile>
         <profile>
@@ -586,10 +584,9 @@
                 <memcached.object_1.port>11211</memcached.object_1.port>
 
                 <!-- 访问大数据接口地址 -->
-                <knowledge.data.searchUrl>http://192.168.101.53:8090/keyword/search/test</knowledge.data.searchUrl>
                 <bigData.url>http://192.168.101.53:8090</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.query.url>http://192.168.101.41:8090</knowledge.query.url>
+                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
             </properties>
         </profile>
     </profiles>
