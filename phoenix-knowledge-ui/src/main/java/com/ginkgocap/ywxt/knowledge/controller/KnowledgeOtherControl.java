@@ -57,7 +57,7 @@ public class KnowledgeOtherControl extends BaseController {
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
     public InterfaceResult fetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
-        User user = KnowledgeUtil.getDummyUser(); //getUser(request);
+        User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
