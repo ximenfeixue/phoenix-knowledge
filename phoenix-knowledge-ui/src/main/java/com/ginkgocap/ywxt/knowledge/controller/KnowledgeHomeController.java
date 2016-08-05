@@ -109,7 +109,7 @@ public class KnowledgeHomeController extends BaseController {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
                 url = resource.getString("knowledge.url.query.tag");
             }
-            if (StringUtils.isEmpty(url)) {
+            if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = "http://192.168.101.53:8090";
             }
 
@@ -153,7 +153,7 @@ public class KnowledgeHomeController extends BaseController {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
                 url = resource.getString("knowledge.url.query.hot");
             }
-            if (StringUtils.isEmpty(url)) {
+            if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = "http://192.168.101.53:8090";
             }
             Map<String, String> params = new HashMap<String, String>();
@@ -187,7 +187,7 @@ public class KnowledgeHomeController extends BaseController {
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryCommentUrl");
-            if (StringUtils.isEmpty(url)) {
+            if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = "http://192.168.101.53:8090";
             }
             //List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
@@ -249,8 +249,8 @@ public class KnowledgeHomeController extends BaseController {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
                 url = resource.getString("knowledge.new.query.host");
             }
-            if (StringUtils.isEmpty(url)) {
-                url = "http://192.168.101.41:8090";
+            if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
+                url = "http://192.168.101.53:8090";
             }
 
             List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
