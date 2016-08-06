@@ -14,7 +14,7 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 public class TagWebTest extends BaseTestCase {
 
-	private final String tagHost = "http://localhost:8088";
+	private final String tagHost = openHostUrl;
 	
 	public void testCreateTag()
 	{

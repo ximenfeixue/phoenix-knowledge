@@ -36,7 +36,8 @@ public abstract class BaseTestCase extends TestCase
     protected static long userId;
     protected static String hostUrl = null;
     protected static SimpleFilterProvider assofilterProvider = null;
-    protected static String loginUrl = "http://dev.gintong.com/cross/login/loginConfiguration.json";
+    protected static String loginUrl = null;
+    protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
     private final static String testEnv = envArray[2];
@@ -47,16 +48,17 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://192.168.130.200:8088/cross" + getLoginUrl(web);
+            loginUrl = "http://192.168.130.200:8008/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            loginUrl = "http://192.168.130.200:8088/cross" + getLoginUrl(web);
+            loginUrl = "http://192.168.130.200:8008/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
             loginUrl = "http://test.online.gintong.com/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross/newknowledge");
+            openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
@@ -243,14 +245,16 @@ public abstract class BaseTestCase extends TestCase
         return response != null ? KnowledgeUtil.readTree(response) : null;
     }
 
-    /*
+    
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
         System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         Map<String,String> headers = new HashMap<String, String>(5);
         System.out.println("sessionID: " + sessionID);
-        headers.put("s", "api");
-        headers.put("sessionID", sessionID);
+        headers.put("s", web ? "web" : "api");
+        if (sessionID != null) {
+        	headers.put("sessionID", sessionID);
+        }
         headers.put("Content-type", "application/json");
         if (HttpMethod.GET.equals(httpMethod)) {
             return HttpClientHelper.GET(urlString, headers);
@@ -265,9 +269,9 @@ public abstract class BaseTestCase extends TestCase
             return HttpClientHelper.DELETE(urlString, headers);
         }
         return "Unknow http method";
-    }*/
+    }
 
-    
+    /*
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
 
@@ -313,7 +317,7 @@ public abstract class BaseTestCase extends TestCase
             in.close();
         }
         return inputLine;
-    }
+    }*/
 
     public static JsonNode getJsonNode(String jsonStr, String... values)
             throws Exception {

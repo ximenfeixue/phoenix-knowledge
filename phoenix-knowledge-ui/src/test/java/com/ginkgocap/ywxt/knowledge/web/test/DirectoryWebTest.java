@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.web.test;
 
 public class DirectoryWebTest extends BaseTestCase {
 
-	private final String directoryHost = "http://192.168.130.200:8081";
+	private final String directoryHost = openHostUrl;
 
 	public void testCreateDirectoryRoot()
 	{
