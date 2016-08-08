@@ -7,8 +7,6 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService;
-import com.ginkgocap.ywxt.user.service.FriendsRelationService;
-import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +22,6 @@ public class KnowledgeShareServiceImpl implements KnowledgeShareService {
 
     @Autowired
     private KnowledgeShareDao knowledgeShareDao;
-    @Autowired
-    private FriendsRelationService friendsRelationService;
-
-    @Autowired
-    private UserService userService;
 
     private Logger logger = LoggerFactory.getLogger(KnowledgeShareServiceImpl.class) ;
 

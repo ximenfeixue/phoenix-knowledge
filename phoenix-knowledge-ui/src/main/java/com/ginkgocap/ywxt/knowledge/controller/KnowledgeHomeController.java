@@ -113,7 +113,7 @@ public class KnowledgeHomeController extends BaseController {
                 url = "http://192.168.101.53:8090";
             }
 
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, String> params = new HashMap<String, String>(1);
             params.put("num", String.valueOf(count));
             String str = HttpClientHelper.post(url + "/user/tags/search.json", params);
             String tags = "";

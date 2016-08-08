@@ -18,10 +18,12 @@ import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by gintong on 2016/8/6.
  */
+@Repository("knowledgeShareDao")
 public class KnowledgeShareDaoImpl implements KnowledgeShareDao {
 
     @Autowired
