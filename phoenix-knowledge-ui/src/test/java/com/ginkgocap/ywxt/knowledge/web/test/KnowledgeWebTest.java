@@ -204,16 +204,19 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
     
-    public void testGetKnowledgeByColumnAndSourceTwo()
+    public void testGetKnowledgeByColumnAndSource_All()
     {
         LogMethod();
         try {
-            //createKnowledge("考虑,考虑1");
-            //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/6/6/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
-            //String urlStr =
-            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
-            checkResponseWithData(result);
+            for (int index = 1; index <12; index++) {
+            	if (index == 9) {
+            		continue;
+            	}
+            	System.out.println("type: " + index);
+	            String subUrl = "/allKnowledgeByColumnAndSource" + String.format("/%d/%d/2/0/20/-1", index, index); ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+	            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+	            checkResponseWithData(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -224,8 +227,6 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            //createKnowledge("考虑,考虑1");
-            //createKnowledge("考虑,考虑2");
             String subUrl = "/allKnowledgeByColumnAndSource/11/11/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
