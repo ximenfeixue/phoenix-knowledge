@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.ChangePwdService;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
@@ -38,8 +39,11 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         RandomNumberGenerator saltGenerator = new SecureRandomNumberGenerator();
 
         String salt = saltGenerator.nextBytes().toHex();
-        String newPass = new Sha256Hash(password, salt,
-                hashIterations).toHex();
+        //Base64
+        byte[] bt = Base64.decode(password);
+        password = new String(bt);
+
+        String newPass = new Sha256Hash(password, salt, hashIterations).toHex();
         String updateSQL = String .format("update tb_user set password='%s' salt='%s' where id=%d", newPass, salt, userId);
         System.out.println("Update SQL: " + updateSQL);
         user.setId(userId);
