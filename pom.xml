@@ -501,7 +501,7 @@
                 <!-- 访问大数据接口地址 -->
                 <bigData.url>http://192.168.101.53:8090</bigData.url>
                 <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://192.168.101.14:8090</knowledge.url.query>
+                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
             </properties>
         </profile>
         <profile>
