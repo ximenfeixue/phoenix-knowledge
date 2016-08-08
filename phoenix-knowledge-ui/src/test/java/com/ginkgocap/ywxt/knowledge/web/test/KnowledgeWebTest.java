@@ -879,7 +879,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         List<Long> IdList = null;
         try {
-            String subUrl = "/createDirectory/Directory" + getNextNum(); ///createTag/(tagType)/{tagName}
+            String subUrl = "/getDirectoryList" + getNextNum(); ///createTag/(tagType)/{tagName}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             String directoryId = getResponseData(result);
             if (directoryId != null && directoryId.trim().length() > 0) {

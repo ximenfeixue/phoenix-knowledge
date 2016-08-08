@@ -26,7 +26,7 @@ public class KnowledgeHomeWebTest extends BaseTestCase
     {
     	LogMethod();
         try {
-        	for (int type = 1; type <2; type ++) {
+        	for (int type = 1; type <8; type ++) {
 	            String subUrl = "/home/separate/" + type;  ///home/separate/{type}
 	            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
 	            checkRequestResultSuccess(result);

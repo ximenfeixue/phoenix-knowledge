@@ -3,33 +3,29 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.ginkgocap.ywxt.knowledge.model.common.IdName;
 import org.springframework.data.annotation.Transient;
 
 import com.ginkgocap.ywxt.knowledge.form.Friends;
 
-/**
- * 知识分享
- * @author liuyang
- *
- */
 public class KnowledgeShare implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private String id;
+	private long id;
 	private long userId;//分享人
 	@Transient
 	private String userName;
 	private long knowledgeId;//对应的知识id
-	private List<Long> receiverId;//接收人
-	private List<String> receiverName;//接收人名称
+
+	private List<IdName> receivers;//接收人Id,名称
 	private String ctime;//分享时间
 	private String title;
 	private List<Friends> friends;
 	
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public long getUserId() {
@@ -44,18 +40,14 @@ public class KnowledgeShare implements Serializable {
 	public void setKnowledgeId(long knowledgeId) {
 		this.knowledgeId = knowledgeId;
 	}
-	public List<Long> getReceiverId() {
-		return receiverId;
+	public List<IdName> getReceivers() {
+		return receivers;
 	}
-	public void setReceiverId(List<Long> receiverId) {
-		this.receiverId = receiverId;
+
+	public void setReceivers(List<IdName> receivers) {
+		this.receivers = receivers;
 	}
-	public List<String> getReceiverName() {
-		return receiverName;
-	}
-	public void setReceiverName(List<String> receiverName) {
-		this.receiverName = receiverName;
-	}
+
 	public String getCtime() {
 		return ctime;
 	}
