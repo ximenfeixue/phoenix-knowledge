@@ -238,15 +238,16 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 if (knowledgeList != null && knowledgeList.size() > 0 ) {
                     List<Long> ids = new CopyOnWriteArrayList<Long>();
                     result = new ArrayList<Knowledge>(size);
-                    int index = 0;
+                    int skip = 0;
+                    int toIndex = start + size;
                     for (Knowledge knowledge : knowledgeList) {
                         if (knowledge != null) {
                             ids.add(knowledge.getId());
-                            result.add(knowledge);
-                            if (++index >= size) {
-                                break;
+                            if (skip >= start && skip < toIndex) {
+                                result.add(knowledge);
                             }
                         }
+                        skip++;
                     }
                     cache.set(key, ids);
                 }
