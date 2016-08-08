@@ -15,6 +15,7 @@ public class KnowledgeLaw extends Knowledge
 	// 老知识ID
 	private long oid;
 
+	/*
 	// 法律法规-发文单位
 	private String postUnit;
 
@@ -57,7 +58,7 @@ public class KnowledgeLaw extends Knowledge
 
 	public void setPerformTime(String performTime) {
 		this.performTime = performTime;
-	}
+	}*/
 
 	public long getOid() {
 		return oid;
@@ -66,8 +67,6 @@ public class KnowledgeLaw extends Knowledge
 	public void setOid(long oid) {
 		this.oid = oid;
 	}
-
-	
 
 	@Override
 	public <T> Knowledge setValue(KnowledgeNewsVO vo, User user) {

@@ -363,7 +363,6 @@ public class KnowledgeOtherControl extends BaseController {
     private Knowledge genVo(Knowledge2 knowledge, String url) {
 
         Knowledge vo = new Knowledge();
-
         if (knowledge.getId() != 0) {
             vo.setId(knowledge.getId());
             vo.setKnowledgeMainId(knowledge.getId());

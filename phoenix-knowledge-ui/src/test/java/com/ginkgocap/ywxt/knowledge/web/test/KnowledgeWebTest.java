@@ -219,17 +219,39 @@ public class KnowledgeWebTest extends BaseTestCase
             fail();
         }
     }
-
+    
     public void testGetKnowledgeByColumnAndSource()
     {
         LogMethod();
         try {
             //createKnowledge("考虑,考虑1");
             //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/11/11/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+
+    public void testGetKnowledgeByColumnAndSource_TestAllColumn()
+    {
+        LogMethod();
+        try {
+            //createKnowledge("考虑,考虑1");
+            //createKnowledge("考虑,考虑2");
+        	for (int index = 1; index < 12; index++ ) {
+        		if (index != 9) {
+		            String subUrl = "/allKnowledgeByColumnAndSource/" + index + "/" + index + "/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+		            //String urlStr =
+		            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+		            checkResponseWithData(result);
+        		}
+        	}
         } catch (Exception e) {
             e.printStackTrace();
             fail();
