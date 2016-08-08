@@ -1426,66 +1426,6 @@ public class KnowledgeController extends BaseController {
         }
     }
 
-    /**
-     * 目录
-     * @throws IOException
-     */
-    @ResponseBody
-    @RequestMapping(value = "/directoryList", method = RequestMethod.POST)
-    public MappingJacksonValue getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        User user = this.getUser(request);
-        if (user == null) {
-            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
-        }
-
-        String requestJson = this.getBodyParam(request);
-        List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
-        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (directoryIds == null || directoryIds.size() <= 0) {
-            logger.error("No any directory id send!");
-            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory id send!"));
-        }
-        try {
-            return this.directoryServiceLocal.getDirectoryListByIds(user.getId(), directoryIds);
-        }
-        catch (Exception ex) {
-            logger.error("Get directory list failed！reason："+ex.getMessage());
-            ex.printStackTrace();
-            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Get directory list failed！"));
-        }
-    }
-
-    /**
-     * 目录
-     * @throws IOException
-     */
-    @ResponseBody
-    @RequestMapping(value = "/directoryCount", method = RequestMethod.POST)
-    public InterfaceResult getDirectoryCountByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        String requestJson = this.getBodyParam(request);
-        List<Long> directoryIds = KnowledgeUtil.readValue(List.class, requestJson);
-        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (directoryIds == null || directoryIds.size() <= 0) {
-            logger.error("No any directory Id send..");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory Id send..");
-        }
-
-        try {
-            return this.directoryServiceLocal.getDirectorySourceCountByIds(user.getId(), directoryIds);
-        } catch (Exception e) {
-            logger.error("Get directory count failed！reason："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Not any directory get");
-        }
-
-    }
-
     @ResponseBody
     @RequestMapping(value = "/createTag/{tagName}", method = RequestMethod.GET)
     public InterfaceResult createTag(HttpServletRequest request, HttpServletResponse response,@PathVariable String tagName) throws Exception {
@@ -1568,6 +1508,66 @@ public class KnowledgeController extends BaseController {
         }
 
         return this.mappingJacksonValue(InterfaceResult.getSuccessInterfaceResultInstance("get Directory list failed or is empty "));
+    }
+
+    /**
+     * 目录
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/directoryList", method = RequestMethod.POST)
+    public MappingJacksonValue getDirectoryListByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION));
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> directoryIds = KnowledgeUtil.readListValue(Long.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (directoryIds == null || directoryIds.size() <= 0) {
+            logger.error("No any directory id send!");
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory id send!"));
+        }
+        try {
+            return this.directoryServiceLocal.getDirectoryListByIds(user.getId(), directoryIds);
+        }
+        catch (Exception ex) {
+            logger.error("Get directory list failed！reason："+ex.getMessage());
+            ex.printStackTrace();
+            return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Get directory list failed！"));
+        }
+    }
+
+    /**
+     * 目录
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/directoryCount", method = RequestMethod.POST)
+    public InterfaceResult getDirectoryCountByIds(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> directoryIds = KnowledgeUtil.readListValue(Long.class, requestJson);
+        //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
+        if (directoryIds == null || directoryIds.size() <= 0) {
+            logger.error("No any directory Id send..");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory Id send..");
+        }
+
+        try {
+            return this.directoryServiceLocal.getDirectorySourceCountByIds(user.getId(), directoryIds);
+        } catch (Exception e) {
+            logger.error("Get directory count failed！reason："+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Not any directory get");
+        }
+
     }
 
     /**

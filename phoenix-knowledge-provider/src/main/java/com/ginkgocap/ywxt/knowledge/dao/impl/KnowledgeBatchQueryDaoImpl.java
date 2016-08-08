@@ -289,6 +289,10 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             // 执行更新
             //executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath,));
         }
+        else {
+            //if no data got need query again.
+            loadingMap.remove(key);
+        }
         return result;
     }
 

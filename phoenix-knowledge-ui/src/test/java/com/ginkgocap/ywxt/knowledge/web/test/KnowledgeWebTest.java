@@ -113,10 +113,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            //data.setContent("");
-            long knowledgeId = 11608021848391L; //detail.getId();
-            int columnId = 1; //Integer.valueOf(detail.getColumnid());
+            Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = detail.getId();
+            int columnId = Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -227,7 +226,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             //createKnowledge("考虑,考虑1");
             //createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/6/6/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
@@ -622,6 +621,12 @@ public class KnowledgeWebTest extends BaseTestCase
             fail();
         }
     }
+    
+    public void testGetDirectoryList()
+    {
+    	LogMethod();
+    	this.getDirectoryList();
+    }
 
     public void testGetAllByDirectoryId()
     {
@@ -666,9 +671,13 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/directoryCount";
-            Long[] directoryIds = new Long [] {3933417670705167L, 3933423765028884L, 3933423777611801L};
-            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3933423765028884, 3933423777611801]");
-            checkRequestResultSuccess(result);
+            List<Long> ids = this.getDirectoryList();
+            if (ids != null && ids.size() > 0) {
+	            String directoryIds = this.getDirectoryList().toString();
+	            directoryIds = "[" + directoryIds.substring(1, directoryIds.length()-1) + "]";
+	            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, "[3933423765028884, 3933423777611801]");
+	            checkRequestResultSuccess(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -680,8 +689,21 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
+            String subUrl = "/knowledgeRelated.json";  //user/{columnId}/{start}/{size}
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, null);
+            checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+    
+    public void testGetKnowledgeRelatedResourcesOld()
+    {
+        LogMethod();
+        try {
             String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, "http://test.online.gintong.com/cross/knowledge" + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -879,7 +901,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         List<Long> IdList = null;
         try {
-            String subUrl = "/getDirectoryList" + getNextNum(); ///createTag/(tagType)/{tagName}
+            String subUrl = "/getDirectoryList"; ///directoryList
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             String directoryId = getResponseData(result);
             if (directoryId != null && directoryId.trim().length() > 0) {

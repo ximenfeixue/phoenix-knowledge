@@ -7,7 +7,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import com.ginkgocap.ywxt.knowledge.service.v1.KnowledgeServiceV1;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
 import junit.framework.TestCase;

@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import junit.framework.TestCase;
@@ -46,8 +47,10 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     @Test
     public void testGetAllPlatform()
     {
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 5, 5, "新材料", 0, 0, 30);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 1, 1, "资讯", 0, 0, 30);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: "+knowledgeList.size());
+        String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);
+        System.out.println("---jsonContent: " + jsonContent);
     }
 }
