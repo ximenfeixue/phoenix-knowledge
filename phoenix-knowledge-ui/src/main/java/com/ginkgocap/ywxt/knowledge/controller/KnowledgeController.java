@@ -920,7 +920,7 @@ public class KnowledgeController extends BaseController {
             }
             else if (total > 0 && start < total) {
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-                List<Knowledge> detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, page, size);
+                List<Knowledge> detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
                 knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 if (knowledgeList == null || knowledgeList.size() <= 0) {
                     return InterfaceResult.getSuccessInterfaceResultInstance("暂时没有符合条件的知识!");
