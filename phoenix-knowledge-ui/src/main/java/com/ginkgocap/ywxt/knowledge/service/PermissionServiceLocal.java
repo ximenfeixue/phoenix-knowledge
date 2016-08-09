@@ -40,8 +40,8 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
 
         String salt = saltGenerator.nextBytes().toHex();
         //Base64
-        byte[] bt = Base64.decode(password);
-        password = new String(bt);
+        //byte[] bt = Base64.decode(password);
+        //password = new String(bt);
 
         String newPass = new Sha256Hash(password, salt, hashIterations).toHex();
         String updateSQL = String .format("update tb_user set password='%s' salt='%s' where id=%d", newPass, salt, userId);
