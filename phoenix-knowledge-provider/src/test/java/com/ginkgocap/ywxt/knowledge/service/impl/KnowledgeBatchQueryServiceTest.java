@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
@@ -47,10 +48,27 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     @Test
     public void testGetAllPlatform()
     {
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 10, 10, "法律法规", 0, 0, 30);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 4, 4, "经典案例", 0, 0, 30);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: "+knowledgeList.size());
         String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);
         System.out.println("---jsonContent: " + jsonContent);
+    }
+
+    @Test
+    public void testGetAllPlatform_All()
+    {
+        for (int index = 1; index < 12; index++) {
+            if (index ==9) {
+                continue;
+            }
+            KnowledgeType type = KnowledgeType.knowledgeType(index);
+            System.out.println("Index: "+index + " type: "+type);
+            List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) type.value(), type.value(), type.typeName(), 0, 0, 30);
+            TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
+            System.out.println("---knowledgeList: " + knowledgeList.size());
+            //String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);
+            //System.out.println("---jsonContent: " + jsonContent);
+        }
     }
 }

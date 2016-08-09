@@ -21,9 +21,6 @@ public class KnowledgeCase extends Knowledge {
 	// 价格
 	private float price;
 
-	// 转换状态
-	private int tranStatus;
-
 	public float getPrice() {
 		return price;
 	}
@@ -113,13 +110,5 @@ public class KnowledgeCase extends Knowledge {
 		this.setTranStatus(0);
 		this.setHideDesc(vo.getHideDesc());
 		return this;
-	}
-
-	public int getTranStatus() {
-		return tranStatus;
-	}
-
-	public void setTranStatus(int tranStatus) {
-		this.tranStatus = tranStatus;
 	}
 }

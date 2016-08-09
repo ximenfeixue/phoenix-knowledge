@@ -50,8 +50,8 @@ public enum KnowledgeType {
 
     private KnowledgeType(int code,Class cls, String dec, String typeName) {
         this.code = code;
-        this.dec = dec;
         this.cls = cls;
+        this.dec = dec;
         this.typeName = typeName;
     }
 
