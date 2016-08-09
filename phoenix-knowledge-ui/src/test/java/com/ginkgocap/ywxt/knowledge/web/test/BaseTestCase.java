@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.shiro.codec.Base64;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +19,10 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -29,7 +31,7 @@ import junit.framework.TestCase;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = true;
+	protected static boolean web = false;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -63,7 +65,6 @@ public abstract class BaseTestCase extends TestCase
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
-        
     }
 
     @Override
@@ -364,8 +365,13 @@ public abstract class BaseTestCase extends TestCase
     
     private static String getLogiJson(boolean web)
     {
-    	return web ? "{\"username\":\"18211081791\",\"password\":\"MTExMTEx\",\"vCode\":\"\",\"index\":0}" :
-    		"{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"18211081791\",\"password\":\"MTExMTEx\"}";
+    	final String userName = "18211081791";
+    	final String passWord = "MTExMTEx";
+    	String newPassWord = new String(Base64.encode(passWord.getBytes()));
+    	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
+    	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
+    	return web ? webLoginJson : apiLoginJson;
+    		
         
     }
 }
