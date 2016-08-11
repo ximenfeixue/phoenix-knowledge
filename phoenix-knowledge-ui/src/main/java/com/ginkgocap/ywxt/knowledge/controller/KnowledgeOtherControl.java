@@ -103,7 +103,7 @@ public class KnowledgeOtherControl extends BaseController {
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalException(url, jsonNode.textValue());
+                    bigDataResponse = externalException(url, jsonNode.toString());
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
