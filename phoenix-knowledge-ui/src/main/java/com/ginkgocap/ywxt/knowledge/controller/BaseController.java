@@ -14,6 +14,7 @@ import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
 import org.slf4j.Logger;
@@ -232,11 +233,15 @@ public abstract class BaseController {
 
     protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, String[] listImageUrl2, String orgUrl, boolean isWeb)
     {
+        if (StringUtils.isEmpty(content)) {
+            logger.error("Knowledge Content is null, please check the knowledge..");
+            return;
+        }
         // 区分APP和WEB
         if (isWeb) {
             knowledge.setContent(content);
         } else {
-            String htmlContent = Utils.txt2Html(knowledge.getContent(), listImageUrl, listImageUrl2, orgUrl);
+            String htmlContent = Utils.txt2Html(content, listImageUrl, listImageUrl2, orgUrl);
             // htmlContent =
             // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
             knowledge.setContent(htmlContent);
