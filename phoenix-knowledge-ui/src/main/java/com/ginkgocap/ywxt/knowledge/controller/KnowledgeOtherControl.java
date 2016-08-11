@@ -142,7 +142,7 @@ public class KnowledgeOtherControl extends BaseController {
                     // title = getSping(title);
                     /** 以下条件，则大数据异常 */
                     if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
-                        content.replace("\\", "");
+                        //content.replace("\\", "");
                         knowledge = new Knowledge2();
 
                         // 指定来源
@@ -158,12 +158,11 @@ public class KnowledgeOtherControl extends BaseController {
 
                         @SuppressWarnings("unchecked")
                         List<String> imgs = null;
-                        List<JsonNode> imgNodes = dataJson.findValues("imgs");
-                        if (imgNodes != null && imgNodes.size() > 0) {
-                            int size = imgNodes.size();
-                            imgs = new ArrayList<String>(size);
-                            for (JsonNode imgNode : imgNodes) {
-                                imgs.add(imgNode.textValue());
+                        JsonNode imgNodes = dataJson.findValue("imgs");
+                        if (imgNodes != null) {
+                            String imgContent = imgNodes.toString();
+                            if (StringUtils.isNotEmpty(imgContent)) {
+                                imgs = KnowledgeUtil.readListValue(String.class, imgContent);
                             }
                         }
                         if (imgs != null && imgs.size() > 0) {
