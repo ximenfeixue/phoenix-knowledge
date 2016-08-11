@@ -131,7 +131,6 @@ public class KnowledgeOtherControl extends BaseController {
                     responseDataMap.put("knowledgeDetail", null);
                     // 跳出
                     return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
-
                 }
 
                 logger.warn(bigDataResponse);
@@ -143,16 +142,11 @@ public class KnowledgeOtherControl extends BaseController {
                     // title = getSping(title);
                     /** 以下条件，则大数据异常 */
                     if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
-                        content = content.replace("\\", "");
+                        content.replace("\\", "");
                         knowledge = new Knowledge2();
 
                         // 指定来源
-                        knowledge.setS_addr(srcExternalUrl);
-                        /*
-                        String srcExternUrl = knowledge.getS_addr();
-                        if (srcExternUrl.length() > 250) {
-                            knowledge.setS_addr(srcExternUrl.substring(0, 250));
-                        }*/
+                        knowledge.setKnowledgeUrl(srcExternalUrl);
 
                         knowledge.setType(DEFAULT_KNOWLEDGE_TYPE);
                         knowledge.setColumnId(DEFAULT_KNOWLEDGE_TYPE);
@@ -169,7 +163,7 @@ public class KnowledgeOtherControl extends BaseController {
                             int size = imgNodes.size();
                             imgs = new ArrayList<String>(size);
                             for (JsonNode imgNode : imgNodes) {
-                                imgs.add(imgNode.toString());
+                                imgs.add(imgNode.textValue());
                             }
                         }
                         if (imgs != null && imgs.size() > 0) {
@@ -191,7 +185,7 @@ public class KnowledgeOtherControl extends BaseController {
                                 knowledge.setListImageUrl(strs);
                                 if (tempPic.size() > 0)
                                     // 设置封面图片
-                                    knowledge.setPic(tempPic.get((int) (tempPic.size() / 2)));
+                                    knowledge.setPic(tempPic.get(0));
                             }
                         }
                         // 附件ID
