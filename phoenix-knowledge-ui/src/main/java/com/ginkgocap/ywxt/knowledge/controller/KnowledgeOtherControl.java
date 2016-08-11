@@ -165,28 +165,7 @@ public class KnowledgeOtherControl extends BaseController {
                                 imgs = KnowledgeUtil.readListValue(String.class, imgContent);
                             }
                         }
-                        if (imgs != null && imgs.size() > 0) {
-                            int tempSize = imgs.size();
-                            if (tempSize > 0) {
-                                String[] strs = new String[tempSize];
-                                // 临时存储
-                                List<String> tempPic = new ArrayList<String>(tempSize);
-                                for (int i = 0; i < tempSize; i++) {
-                                    String tempStr = imgs.get(i);
-                                    // 2015-1-29 start
-                                    if (tempStr.length() < 255) {
-                                        // 将符合标准长度的图片地址存放在list中,防止在插入数据库中时报错
-                                        tempPic.add(tempStr);
-                                    }
-                                    strs[i] = tempStr;
-                                    // 2015-1-29 end
-                                }
-                                knowledge.setListImageUrl(strs);
-                                if (tempPic.size() > 0)
-                                    // 设置封面图片
-                                    knowledge.setPic(tempPic.get(0));
-                            }
-                        }
+                        setCoverPic(imgs, knowledge);
                         // 附件ID
                         knowledge.setTaskId(null);
                         // 摘除html底部图片
@@ -509,6 +488,45 @@ public class KnowledgeOtherControl extends BaseController {
         if (knowledge2.getColumnId() <= 0) {
             // 如果没指定栏目， 默认为资讯
             detail.setColumnid(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));
+        }
+    }
+
+    private void setCoverPic(List<String> imgs,Knowledge2 knowledge)
+    {
+        /* old method
+        if (imgs != null && imgs.size() > 0) {
+            int tempSize = imgs.size();
+            if (tempSize > 0) {
+                String[] strs = new String[tempSize];
+                // 临时存储
+                List<String> tempPic = new ArrayList<String>(tempSize);
+                for (int i = 0; i < tempSize; i++) {
+                    String tempStr = imgs.get(i);
+                    // 2015-1-29 start
+                    if (tempStr.length() < 255) {
+                        // 将符合标准长度的图片地址存放在list中,防止在插入数据库中时报错
+                        tempPic.add(tempStr);
+                    }
+                    strs[i] = tempStr;
+                    // 2015-1-29 end
+                }
+                knowledge.setListImageUrl(strs);
+                if (tempPic.size() > 0)
+                    // 设置封面图片
+                    knowledge.setPic(tempPic.get(0));
+            }
+        }*/
+        //New
+        if (imgs != null && imgs.size() > 0) {
+            for (String img : imgs) {
+                if (StringUtils.isEmpty(img) && img.length() < 255) {
+                    knowledge.setPic(img);
+                    break;
+                }
+            }
+            if (knowledge.getPic() == null || "null".equals(knowledge.getPic()) || knowledge.getPic().trim().length() <= 0) {
+                knowledge.setPic(imgs.get(0));
+            }
         }
     }
 
