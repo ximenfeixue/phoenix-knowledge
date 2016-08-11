@@ -351,7 +351,7 @@ public class KnowledgeHomeController extends BaseController {
     public List<RecommendResult> getKnowledge(String str) throws Exception {
         List<RecommendResult> maps = new ArrayList<RecommendResult>();
         if (StringUtils.isNotBlank(str)) {
-            JsonNode knowNode = getJsonNode(str, "knos");
+            JsonNode knowNode = KnowledgeUtil.getJsonNode(str, "knos");
             if (knowNode != null) {
                 JsonNode datasNode = knowNode.get("datas");
                 if (datasNode != null) {
