@@ -103,7 +103,7 @@ public class KnowledgeOtherControl extends BaseController {
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalException(url, jsonNode.toString());
+                    bigDataResponse = externalException(url, jsonNode.textValue());
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
@@ -115,8 +115,8 @@ public class KnowledgeOtherControl extends BaseController {
                             logger.error("no responseData in return json content..");
                             continue;
                         }
-                        content = dataJson.get("content").toString();
-                        title = dataJson.get("title").toString();
+                        content = dataJson.get("content").textValue();
+                        title = dataJson.get("title").textValue();
                         if (StringUtils.isNotEmpty(content) && StringUtils.isNotEmpty(title)) {
                             break;
                         }
