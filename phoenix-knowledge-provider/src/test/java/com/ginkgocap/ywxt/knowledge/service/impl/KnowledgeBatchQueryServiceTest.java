@@ -59,7 +59,7 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     public void testGetAllPlatform_All()
     {
         for (int index = 1; index < 12; index++) {
-            if (index ==9) {
+            if (index == 9) {
                 continue;
             }
             KnowledgeType type = KnowledgeType.knowledgeType(index);

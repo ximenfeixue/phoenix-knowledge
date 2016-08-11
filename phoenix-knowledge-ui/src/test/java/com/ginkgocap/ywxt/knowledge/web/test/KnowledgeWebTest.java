@@ -708,7 +708,7 @@ public class KnowledgeWebTest extends BaseTestCase
         //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
-    public void testGetKnowledgeRelatedResources()
+    public void testGetKnowledgeRelatedResourcesOld()
     {
         LogMethod();
         try {
@@ -721,12 +721,12 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
     
-    public void testGetKnowledgeRelatedResourcesOld()
+    public void testGetKnowledgeRelatedResources()
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
-            JsonNode result = HttpRequestResult(HttpMethod.GET, "http://test.online.gintong.com/cross/knowledge" + subUrl, null);
+            String subUrl = "/knowledgeRelated/2/1/12/科技";  //user/{columnId}/{start}/{size}
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
