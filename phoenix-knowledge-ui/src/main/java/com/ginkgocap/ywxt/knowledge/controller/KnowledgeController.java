@@ -138,6 +138,8 @@ public class KnowledgeController extends BaseController {
         }
         initKnowledgeTime(data);
 
+        convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
+
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             data.serUserInfo(user);
@@ -243,6 +245,8 @@ public class KnowledgeController extends BaseController {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"No permission to update!");
         }
+
+        convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         try {
             data.serUserInfo(user);

@@ -17,7 +17,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	String JsonContent = "{\"externalUrl\":\"http://china.huanqiu.com/article/2016-08/9292069.html?from=bdwz\",\"isCreate\":\"false\"}";
+        	String JsonContent = "{\"externalUrl\":\"http://china.huanqiu.com/article/2016-08/9292069.html?from=bdwz\",\"isCreate\":\"true\"}";
             String subUrl = "/fetchExternalKnowledgeUrl";
             JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + subUrl, JsonContent);
             checkResponseWithData(result);
@@ -31,7 +31,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	String JsonContent = "{\"externalUrl\":\"http://china.huanqiu.com/article/2016-08/9292069.html?from=bdwz\",\"isCreate\":\"true\"}";
+        	String JsonContent = "{\"externalUrl\":\"http://china.huanqiu.com/article/2016-08/9292069.html?from=bdwz\",\"isCreate\":\"false\"}";
             String subUrl = "http://test.online.gintong.com/cross/knowledge/fetchExternalKnowledgeUrl.json";
             JsonNode result = HttpRequestFull(HttpMethod.POST, subUrl, JsonContent);
             checkResponseWithData(result);

@@ -146,6 +146,7 @@ public class KnowledgeOtherControl extends BaseController {
                         knowledge = new Knowledge2();
 
                         // 指定来源
+                        knowledge.setWeb(isWeb(request));
                         knowledge.setKnowledgeUrl(srcExternalUrl);
 
                         knowledge.setType(DEFAULT_KNOWLEDGE_TYPE);
@@ -370,14 +371,7 @@ public class KnowledgeOtherControl extends BaseController {
                 }
             }*/
             // 区分APP和WEB
-            if (knowledge.getWeb() > 0) {
-                vo.setContent(knowledge.getContent());
-            } else {
-                String htmlContent = Utils.txt2Html(knowledge.getContent(), listImageUrl, knowledge.getListImageUrl(), url);
-                // htmlContent =
-                // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
-                vo.setContent(htmlContent);
-            }
+            convertKnowledgeContent(vo, knowledge.getContent(), listImageUrl, knowledge.getListImageUrl(), url, knowledge.getWeb());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -443,7 +437,7 @@ public class KnowledgeOtherControl extends BaseController {
 
     private void setKnowledgeContent(Knowledge2 knowledge2, Knowledge detail, List<String> urls, String url)
     {
-        if (knowledge2.getWeb() > 0) {
+        if (knowledge2.getWeb()) {
             detail.setContent(knowledge2.getContent());
         } else {
             String htmlContent = Utils.txt2Html(knowledge2.getContent(), urls, knowledge2.getListImageUrl(), url);

@@ -58,8 +58,8 @@ public abstract class BaseTestCase extends TestCase
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
-            loginUrl = "http://test.online.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross/newknowledge");
+            loginUrl = "http://hotfix.online.gintong.com/cross" + getLoginUrl(web);
+            hostUrl = System.getProperty("hostUrl", "http://hotfix.online.gintong.com/cross/newknowledge");
             openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");

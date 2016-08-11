@@ -90,7 +90,7 @@ public class Knowledge2 {
     private String selectedIds;
 
     // WEB端和APP分开
-    private int web;
+    private boolean web;
 
     public int getColumnId() {
         return columnId;
@@ -108,11 +108,11 @@ public class Knowledge2 {
         this.isZhongLeForMe = isZhongLeForMe;
     }
 
-    public int getWeb() {
+    public boolean getWeb() {
         return web;
     }
 
-    public void setWeb(int web) {
+    public void setWeb(boolean web) {
         this.web = web;
     }
 
@@ -371,7 +371,7 @@ public class Knowledge2 {
         self.content = getString(knowledge2Json.optString("content"));
         self.hcontent = knowledge2Json.optString("hcontent");
         self.essence = Short.parseShort(knowledge2Json.optString("essence"));
-        self.web = knowledge2Json.optInt("web");
+        self.web = knowledge2Json.optInt("web") > 0;
         self.createtime = DateUtil.convertStringToDateTimeForChina(knowledge2Json.optString("createtime")).getTime();
         self.modifytime = DateUtil.convertStringToDateTimeForChina(knowledge2Json.optString("modifytime")).getTime();
         self.status = knowledge2Json.optInt("status");

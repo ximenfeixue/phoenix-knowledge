@@ -2,9 +2,11 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
 import com.gintong.frame.cache.redis.RedisCacheService;
@@ -86,10 +88,6 @@ public abstract class BaseController {
         return user.getName();
     }
 
-    protected JsonNode getJsonNode(String jsonStr, String... values)
-            throws Exception {
-        return KnowledgeUtil.getJsonNode(jsonStr, values);
-    }
 
     protected String getJsonIn(HttpServletRequest request) throws IOException {
         String requestJson=(String)request.getAttribute("requestJson");
@@ -99,10 +97,10 @@ public abstract class BaseController {
         return requestJson;
     }
 
-    protected String getJsonParamStr(HttpServletRequest request)
-            throws IOException {
-        String result = getJsonIn(request);
-        return result;
+    protected boolean isWeb(HttpServletRequest request)
+    {
+        String s = (String)request.getAttribute("s");
+        return "web".equals(s);
     }
 
     protected User getJTNUser(HttpServletRequest request) throws Exception {
@@ -230,5 +228,18 @@ public abstract class BaseController {
     protected InterfaceResult queryRunning()
     {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"正在努力查询，或无符合条件的知识，请稍后再试。");
+    }
+
+    protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, String[] listImageUrl2, String orgUrl, boolean isWeb)
+    {
+        // 区分APP和WEB
+        if (isWeb) {
+            knowledge.setContent(content);
+        } else {
+            String htmlContent = Utils.txt2Html(knowledge.getContent(), listImageUrl, listImageUrl2, orgUrl);
+            // htmlContent =
+            // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
+            knowledge.setContent(htmlContent);
+        }
     }
 }
