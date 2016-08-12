@@ -34,15 +34,17 @@ public class TagWebTest extends BaseTestCase {
 	public void testDeleteTagSource()
 	{
 		LogMethod();
-		long userId = 000L;
-		long sourceId = 0000L;
-		String path = String.format("/tags/source/deleteTagSource?userId=%d&id=%d",userId, sourceId);
-		try {
-			String jsonNode = HttpRequestFullJson(HttpMethod.DELETE, tagHost+path, "{\"pid\":\"0\"}");
-			System.out.println(jsonNode);
-		} catch (Exception e) {
-			//TODO Auto-generated catch block
-			e.printStackTrace();
+		long userId = 441813L;
+		Long [] ids = new Long[] {};
+		for (long sourceId : ids) {
+			String path = String.format("/tags/source/deleteTagSource?userId=%d&id=%d",userId, sourceId);
+			try {
+				String jsonNode = HttpRequestFullJson(HttpMethod.DELETE, tagHost+path, "{\"pid\":\"0\"}");
+				System.out.println(jsonNode);
+			} catch (Exception e) {
+				//TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
