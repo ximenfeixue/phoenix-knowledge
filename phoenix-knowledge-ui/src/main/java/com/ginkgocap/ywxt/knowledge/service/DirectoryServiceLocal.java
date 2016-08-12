@@ -138,7 +138,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance("create directory success.");
+        return InterfaceResult.getSuccessInterfaceResultInstance("创建目录成功.");
     }
 
     public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
@@ -208,7 +208,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         if (directoryIds == null || directoryIds.size() <= 0) {
             logger.error("directory List is null or size is 0.");
-            return InterfaceResult.getSuccessInterfaceResultInstance("directory List is null or size is 0!");
+            return InterfaceResult.getSuccessInterfaceResultInstance("目录Id列表是空，请仔细检查!");
         }
         Map<Long,Integer> sourceMap = new HashMap<Long,Integer>(directoryIds.size());
         for (long directoryId : directoryIds) {

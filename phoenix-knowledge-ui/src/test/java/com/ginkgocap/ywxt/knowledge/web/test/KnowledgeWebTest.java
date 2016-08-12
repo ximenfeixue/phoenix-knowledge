@@ -129,9 +129,9 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
         	
-            Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = detail.getId();
-            int columnId = Integer.valueOf(detail.getColumnid());
+            //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = 51608121144091L; //detail.getId();
+            int columnId = 1; // Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -628,17 +628,18 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	long tagId = 3995008890044562L;
-        	List<Long> idList = new ArrayList<Long>(); //createTag();
-        	idList.add(tagId);
-        	createKnowledgeWithTag("testGetAllByDirectoryId", idList);
+        	long tagId = 3992501715469144L;
+        	//List<Long> idList = new ArrayList<Long>(); //createTag();
+        	//idList.add(tagId);
+        	//createKnowledgeWithTag("testGetAllByDirectoryId", idList);
         	/*if ((idList != null && idList.size() > 0)) {
         		createKnowledgeWithTag("testGetAllByDirectoryId", idList.subList(0, 1));
         		tagId = idList.get(0);
         	}*/
-            String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
-            checkRequestResultSuccess(result);
+            String subUrl = "/tag/" +tagId + "/15/10";  ///tag/{tagId}/{start}/{size}
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            checkResponseWithData(result);
+            //String jsonContent = getResponseData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -926,11 +927,19 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/getDirectoryList"; ///directoryList
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
-            String directoryId = getResponseData(result);
-            if (directoryId != null && directoryId.trim().length() > 0) {
-            	long id = Long.parseLong(directoryId);
-            	IdList = new ArrayList<Long>(1);
-            	IdList.add(id);
+            String directoryContent = getResponseData(result);
+            if (directoryContent != null && directoryContent.trim().length() > 0) {
+            	List<JsonNode> directoryList  = KnowledgeUtil.readListValue(JsonNode.class, directoryContent);
+            	if (directoryList != null && directoryList.size() > 0) {
+	            	IdList = new ArrayList<Long>(directoryList.size());
+	            	for (JsonNode node : directoryList) {
+	            		JsonNode idNode = node.get("id");
+	            		if (idNode != null) {
+			            	long id = idNode.asLong();	            	
+			            	IdList.add(id);
+	            		}
+	            	}
+            	}
             }
             
         } catch (Exception e) {

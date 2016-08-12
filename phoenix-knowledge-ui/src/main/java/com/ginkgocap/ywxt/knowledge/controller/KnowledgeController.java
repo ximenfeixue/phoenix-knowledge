@@ -1071,7 +1071,7 @@ public class KnowledgeController extends BaseController {
         }
         List<Long> knowledgeIds = tagServiceLocal.getKnowledgeIdsByTagId(tagId, start, size);
         if (knowledgeIds == null || knowledgeIds.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"No result.");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"该标签下无知识.");
         }
 
         List<KnowledgeBase> knowledgeBaseList = null;
@@ -1103,13 +1103,13 @@ public class KnowledgeController extends BaseController {
             List<Long> knowledgeIds = directoryServiceLocal.getKnowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
             if (knowledgeIds == null || knowledgeIds.size() <= 0) {
                 logger.error("get knowledge list is null by directoryId: " + directoryId);
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"get knowledge list is null this directoryId");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"该目录下的知识为空！");
             }
 
             knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"Query knowledge failed");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"查询知识失败！");
         }
         logger.info(".......get all knowledge by columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
@@ -2338,7 +2338,11 @@ public class KnowledgeController extends BaseController {
     {
         long id = KnowledgeUtil.parserStringIdToLong(columnId);
         if (id > 0) {
-            return columnCustomService.queryByCid(id);
+            try {
+                return columnCustomService.queryByCid(id);
+            } catch (Exception ex) {
+                logger.error("Get column failed: error {}", ex.getMessage());
+            }
         }
         logger.error("ColumnId is invalidated. columnId: "+columnId);
         return null;
