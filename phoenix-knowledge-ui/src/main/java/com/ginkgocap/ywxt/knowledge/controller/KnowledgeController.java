@@ -93,6 +93,9 @@ public class KnowledgeController extends BaseController {
     private DirectoryServiceLocal directoryServiceLocal;
 
     @Autowired
+    PermissionServiceLocal permissionServiceLocal;
+
+    @Autowired
     DynamicNewsServiceLocal dynamicNewsServiceLocal;
 
     @Autowired
@@ -450,7 +453,7 @@ public class KnowledgeController extends BaseController {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-
+        /*
         if(knowledgeId <= 0) {
             return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"知识Id无效");
         }
@@ -502,20 +505,30 @@ public class KnowledgeController extends BaseController {
             ex.printStackTrace();
         }
 
+        //set a default value
+        if (data.getPermission() == null) {
+            data.setPermission(permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId));
+        }
+
         try {
             List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
             data.setAsso(associateList);
         } catch (Exception ex) {
             logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
+        }*/
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type);
+        if (result == null || result.getResponseData() == null) {
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
+            return mappingJacksonValue(result);
         }
-
+        DataCollect data = result.getResponseData();
         logger.info(".......get knowledge detail complete......");
         MappingJacksonValue jacksonValue = knowledgeDetail(data);
 
         //Click count this should be in queue
         try {
-            knowledgeCountService.updateClickCount(userId, knowledgeId, (short)type);
+            knowledgeCountService.updateClickCount(this.getUserId(user), knowledgeId, (short)type);
         } catch (Exception ex) {
             logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
@@ -915,7 +928,7 @@ public class KnowledgeController extends BaseController {
             }
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
-            ColumnCustom column = columnCustomService.queryByCid((long) type);
+            ColumnCustom column = columnCustomService.queryByCid((long)columnId);
             if (total == -1) {
                 total = 300L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
@@ -2141,7 +2154,9 @@ public class KnowledgeController extends BaseController {
         hContent = hContent.substring(0, maxLen);
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
-        DataCollect data = new DataCollect(null, detail);
+        if (StringUtils.isEmpty(detail.getColumnType())) {
+            detail.setColumnType(String.valueOf(columnId));
+        }
 
         boolean isCollected = false;
         long userId = user.getId();
@@ -2151,11 +2166,12 @@ public class KnowledgeController extends BaseController {
             logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
         }
         detail.setCollected(isCollected ? (short) 1 : (short) 0);
+        DataCollect data = new DataCollect(null, detail);
 
         try {
             InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
-            Notification noti = ret.getNotification();
-            if (noti != null && CommonResultCode.SUCCESS.getCode().equals(noti.getNotifCode())) {
+            Notification notif = ret.getNotification();
+            if (notif != null && CommonResultCode.SUCCESS.getCode().equals(notif.getNotifCode())) {
                 data.setPermission(ret.getResponseData());
             }
             else {
@@ -2164,6 +2180,10 @@ public class KnowledgeController extends BaseController {
         }catch (Exception ex) {
             logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             ex.printStackTrace();
+        }
+        //set a default value
+        if (data.getPermission() == null) {
+            data.setPermission(permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId));
         }
 
         try {

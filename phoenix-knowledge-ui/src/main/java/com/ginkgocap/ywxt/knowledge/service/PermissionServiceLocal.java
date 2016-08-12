@@ -9,6 +9,7 @@ import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,17 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         user.setSalt(salt);
         user.setPassword(newPass);
         passwdService.updateUserPassWord(user);
+    }
+
+    public Permission defaultPrivatePermission(long userId,long resId)
+    {
+        Permission permission = new Permission();
+        permission.setAppId(APPID);
+        permission.setResId(resId);
+        permission.setResOwnerId(userId);
+        permission.setConnectFlag(0);
+        permission.setPublicFlag(0);
+        permission.setResType((short)sourceType);
+        return permission;
     }
 }
