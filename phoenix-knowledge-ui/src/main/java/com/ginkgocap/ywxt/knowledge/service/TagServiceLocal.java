@@ -362,9 +362,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public List<Long> getKnowledgeIdsByTagId(long tagId, int start, int size)
     {
         try {
-            return tagSourceService.getTagSourceIdListByAppIdTagIdAndType(APPID, tagId, (long) sourceType, start, size);
-            /*
-            if (knowledgeIds != null && knowledgeIds.size() > 0) {
+            List<TagSource> tagSources = tagSourceService.getTagSourcesByAppIdTagIdAndType(APPID, tagId, (long)sourceType, start, size);
+            if (tagSources != null && tagSources.size() > 0) {
                 List<Long> knowledgeIds = new ArrayList<Long>(tagSources.size());
                 for (TagSource tag : tagSources) {
                     knowledgeIds.add(tag.getSourceId());
@@ -373,7 +372,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
             else {
                 logger.error("There is no any resource add this tag, tagId: {}", tagId);
-            }*/
+            }
         } catch (TagSourceServiceException ex) {
             logger.error("Get related resource failed. tagId: {} error: ", tagId, ex.getMessage());
         }

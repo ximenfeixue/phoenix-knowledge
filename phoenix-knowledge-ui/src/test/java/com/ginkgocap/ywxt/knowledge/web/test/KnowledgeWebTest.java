@@ -636,7 +636,7 @@ public class KnowledgeWebTest extends BaseTestCase
         		createKnowledgeWithTag("testGetAllByDirectoryId", idList.subList(0, 1));
         		tagId = idList.get(0);
         	}*/
-            String subUrl = "/tag/" +tagId + "/15/10";  ///tag/{tagId}/{start}/{size}
+            String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
             //String jsonContent = getResponseData(result);
