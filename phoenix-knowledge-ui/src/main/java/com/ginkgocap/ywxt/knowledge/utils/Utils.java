@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.utils;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -157,6 +159,15 @@ public class Utils {
 		htmlsb.append("</div></body></html>");
 		return htmlsb.toString();
 	}
-	
+
+	public static String replaceSpecial(String source) {
+		String dest = "";
+		if (source != null) {
+			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+			Matcher m = p.matcher(source);
+			dest = m.replaceAll("");
+		}
+		return dest;
+	}
 	
 }

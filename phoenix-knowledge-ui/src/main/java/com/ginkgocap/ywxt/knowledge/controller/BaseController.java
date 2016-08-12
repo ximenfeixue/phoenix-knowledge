@@ -1,11 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
@@ -100,8 +100,7 @@ public abstract class BaseController {
 
     protected boolean isWeb(HttpServletRequest request)
     {
-        String s = (String)request.getAttribute("s");
-        return "web".equals(s);
+        return CommonUtil.isWeb(request);
     }
 
     protected User getJTNUser(HttpServletRequest request) throws Exception {
@@ -219,6 +218,11 @@ public abstract class BaseController {
         }
         response.setHeader("errorCode", errCode);
         response.setHeader("errorMessage", Encodes.encodeBase64(errMessage.getBytes()));
+    }
+
+    protected InterfaceResult errorResult(CommonResultCode code, String message)
+    {
+        return InterfaceResult.getInterfaceResultInstance(code, message);
     }
 
     protected InterfaceResult queryKnowledgeEnd()

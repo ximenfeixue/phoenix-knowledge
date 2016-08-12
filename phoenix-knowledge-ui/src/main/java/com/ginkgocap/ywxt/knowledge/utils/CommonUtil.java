@@ -1,37 +1,51 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
-/**
- * Created by gintong on 2016/7/6.
- */
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.LongSerializationPolicy;
-import com.google.gson.TypeAdapter;
+import com.ginkgocap.ywxt.user.model.User;
+import com.gintong.frame.cache.redis.RedisCacheService;
+import com.gintong.frame.util.UserUtil;
+import com.google.gson.*;
 import com.google.gson.internal.LazilyParsedNumber;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class CommonUtil {
+import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ResourceBundle;
 
+/**
+ * Created by gintong on 2016/8/11.
+ */
+public class CommonUtil
+{
+    private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
     public static final String JTMOBILE_SERVER_ROOT = ResourceBundle.getBundle("application").getString("jtmobileserver.root");
-    static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+    @Resource
+    private static RedisCacheService redisCacheService;
+
+    public static boolean isWeb(HttpServletRequest request)
+    {
+        String s = request.getHeader("s");
+        return "web".equals(s);
+    }
+
+    public static User getUser(HttpServletRequest request) {
+        String key = UserUtil.getUserSessionKey(request);
+        User user = (User) redisCacheService.getRedisCacheByKey(key);
+        if (user != null) {
+            logger.info("login userId: {}, userName: {}", user.getId(), user.getName());
+        }
+        return user;
+    }
+
     /**
      * 获取本机地址，格式为：http://www.gingont.com:4445/，或者为:http://192.168.101.41:4445/
      * @param request

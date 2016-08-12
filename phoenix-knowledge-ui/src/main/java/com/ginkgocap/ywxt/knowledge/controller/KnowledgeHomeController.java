@@ -66,10 +66,6 @@ public class KnowledgeHomeController extends BaseController {
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
     public InterfaceResult separate(HttpServletRequest request, HttpServletResponse response,@PathVariable short type)
             throws IOException {
-        User user = getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
 
         Map<String, Object> model = new HashMap<String, Object>(2);
         List<Knowledge> knowledgeList = null;
@@ -94,11 +90,6 @@ public class KnowledgeHomeController extends BaseController {
     public InterfaceResult getHotTag(final HttpServletRequest request, final HttpServletResponse response,
                                      @PathVariable int count) throws Exception
     {
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
         if (count <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"请求参数不合法");
         }
@@ -141,11 +132,6 @@ public class KnowledgeHomeController extends BaseController {
     public InterfaceResult getHotList(HttpServletRequest request, HttpServletResponse response,@PathVariable int type)
             throws Exception {
 
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryHotUrl");
@@ -175,14 +161,8 @@ public class KnowledgeHomeController extends BaseController {
     // 获取评论排行
     @ResponseBody
     @RequestMapping(value = "/home/getCommentList/{type}")
-    public InterfaceResult getCommentList(HttpServletRequest request, HttpServletResponse response,@PathVariable int type)
+    public InterfaceResult getCommentList(HttpServletRequest request,HttpServletResponse response,@PathVariable int type)
             throws Exception {
-
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-        long userId = this.getUserId(user);
 
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
@@ -284,14 +264,11 @@ public class KnowledgeHomeController extends BaseController {
     public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                                         @PathVariable short type,@PathVariable int page, @PathVariable int size) throws Exception {
 
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
+        if (StringUtils.isEmpty(url)) {
+            ResourceBundle resource = ResourceBundle.getBundle("application");
+            url = resource.getString("knowledge.url.query");
         }
-
-        //String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
-        ResourceBundle resource = ResourceBundle.getBundle("application");
-        String url = resource.getString("knowledge.url.query");
         if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
             url = "http://192.168.101.41:8090";
         }
@@ -324,7 +301,6 @@ public class KnowledgeHomeController extends BaseController {
 
     private List<Map<String, Object>> getKnowledgeList(String str) throws Exception {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        // 转换bsn为MAP
         Map<String, Object> returnParams = KnowledgeUtil.readValue(Map.class, str);
         String bsn = returnParams.get("bsn") + "";
         JSONObject bsnObjects = JSONObject.fromObject(bsn);

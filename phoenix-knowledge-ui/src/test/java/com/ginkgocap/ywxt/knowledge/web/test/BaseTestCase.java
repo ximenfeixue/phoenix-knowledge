@@ -42,7 +42,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
-    private final static String testEnv = envArray[2];
+    private final static String testEnv = envArray[0];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -55,7 +55,7 @@ public abstract class BaseTestCase extends TestCase
         }
         else if ("dev".equals(testEnv)) {
             loginUrl = "http://192.168.130.200:8008/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.130.200:8080");
         }
         else if ("testOnline".equals(testEnv)) {
             loginUrl = "http://hotfix.online.gintong.com/cross" + getLoginUrl(web);

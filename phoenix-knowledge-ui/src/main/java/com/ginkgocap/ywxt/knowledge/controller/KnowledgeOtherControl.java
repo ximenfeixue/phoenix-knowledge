@@ -126,11 +126,11 @@ public class KnowledgeOtherControl extends BaseController {
                 if (StringUtils.isBlank(bigDataResponse) || StringUtils.isBlank(title) ||
                         StringUtils.isBlank(HtmlToText.html2Text(content))) {
                     // 大数据解析超时
-                    setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
+                    //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                     // 错误反馈
-                    responseDataMap.put("knowledgeDetail", null);
+                    //responseDataMap.put("knowledgeDetail", null);
                     // 跳出
-                    return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+                    return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
 
                 logger.warn(bigDataResponse);
@@ -210,27 +210,29 @@ public class KnowledgeOtherControl extends BaseController {
                         }
                     } else {
                         // 大数据错误
-                        setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
+                        //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                         // 错误反馈
-                        responseDataMap.put("knowledge2", null);
+                        //responseDataMap.put("knowledge2", "请输入合法地址,请确保为新闻格式网址");
                         // 跳出
-                        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
+                        return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                     }
                 } else {
                     // 大数据错误
-                    setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
+                    //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
                     // 错误反馈
-                    responseDataMap.put("knowledge2", null);
+                    //responseDataMap.put("knowledge2", null);
                     // 跳出
-                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, responseDataMap);
+                    return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
             }
         } catch (IOException e) {
-            setSessionAndErr(request, response, "-1", "输入参数不合法");
+            //setSessionAndErr(request, response, "-1", "输入参数不合法");
+            logger.error("Generate knowledge failed: error: {}", e.getMessage());
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "输入参数不合法");
         } catch (Exception q) {
             setSessionAndErr(request, response, "-1", "未知异常");
+            logger.error("Generate knowledge failed: error: {}", q.getMessage());
             logger.warn(q.toString());
             logger.warn(q.getMessage());
             logger.info(q.toString());
