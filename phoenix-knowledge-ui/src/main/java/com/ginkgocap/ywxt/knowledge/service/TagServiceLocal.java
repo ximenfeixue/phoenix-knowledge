@@ -30,7 +30,7 @@ import java.util.*;
 @Repository("tagServiceLocal")
 public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
-    private Logger logger = LoggerFactory.getLogger(TagServiceLocal.class);
+    private final Logger logger = LoggerFactory.getLogger(TagServiceLocal.class);
 
     @Resource
     private TagService tagService;
@@ -39,7 +39,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     private TagSourceService tagSourceService;
 
     //TODO: this just test interface, need to delete before deploy to online system
-    public long createTag(long userId,String tagName) throws Exception
+    public long createTag(final long userId, final String tagName) throws Exception
     {
         Tag tag = new Tag();
         tag.setAppId(APPID);
@@ -55,7 +55,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         return -1L;
     }
 
-    public List<Tag> getTagList(long userId) throws Exception
+    public List<Tag> getTagList(final long userId) throws Exception
     {
         try {
             return this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
@@ -67,7 +67,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     }
     //End
 
-    public InterfaceResult batchTags(KnowledgeService knowledgeService,long userId, List<ResItem> tagItems) throws Exception
+    public InterfaceResult batchTags(KnowledgeService knowledgeService,final long userId, final List<ResItem> tagItems) throws Exception
     {
         if (tagItems == null || tagItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "tagItems is null");

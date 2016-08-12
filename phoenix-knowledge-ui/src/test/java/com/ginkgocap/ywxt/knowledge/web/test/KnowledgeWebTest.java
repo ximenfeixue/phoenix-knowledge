@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -194,7 +195,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             //createKnowledge("考虑,考虑1");
             createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/4/4/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+            String subUrl = "/allKnowledgeByColumnAndSource/17/3023/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
@@ -208,12 +209,13 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            for (int index = 1; index <12; index++) {
-            	if (index == 9) {
+        	List<Integer> coulmnIds = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 3018, 3019, 3020, 3021, 3022, 3023, 3024, 3025);
+            for (int index = 0; index <coulmnIds.size(); index++) {
+            	if (index == 8) {
             		continue;
             	}
             	System.out.println("type: " + index);
-	            String subUrl = "/allKnowledgeByColumnAndSource" + String.format("/%d/%d/2/0/20/-1", index, index); ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+	            String subUrl = "/allKnowledgeByColumnAndSource" + String.format("/%d/%d/2/0/20/-1", index+1, coulmnIds.get(index)); ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
 	            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
 	            checkResponseWithData(result);
             }
@@ -636,7 +638,7 @@ public class KnowledgeWebTest extends BaseTestCase
         		createKnowledgeWithTag("testGetAllByDirectoryId", idList.subList(0, 1));
         		tagId = idList.get(0);
         	}*/
-            String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
+            String subUrl = "/tag/" +tagId + "/10/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
             //String jsonContent = getResponseData(result);

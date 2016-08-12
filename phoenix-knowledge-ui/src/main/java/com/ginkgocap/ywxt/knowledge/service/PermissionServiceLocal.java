@@ -4,12 +4,18 @@ import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.ChangePwdService;
+import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import com.gintong.common.phoenix.permission.service.PermissionCheckService;
+import com.gintong.frame.util.dto.CommonResultCode;
+import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.annotations.SourceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Repository("permissionServiceLocal")
 public class PermissionServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
+    private final Logger logger = LoggerFactory.getLogger(PermissionServiceLocal.class);
+
+    @Autowired
+    private PermissionCheckService permissionCheckService;
+
     @Autowired
     private ChangePwdService passwdService;
 
@@ -33,7 +44,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         return permissionQueue.offer(permission);
     }
 
-    public void updatePassword(long userId,String password) {
+    public void updatePassword(final long userId, final String password) {
         // 生成salt
         User user = new User();
         int hashIterations = 5000;
@@ -53,7 +64,37 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         passwdService.updateUserPassWord(user);
     }
 
-    public Permission defaultPrivatePermission(long userId,long resId)
+    public boolean canUpdate(final long knowledgeId, final long userId)
+    {
+        boolean canUpdate = false;
+        try {
+            InterfaceResult<Boolean> result = permissionCheckService.isUpdatable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
+            if (result == null || result.getResponseData() == null) {
+                logger.error("permission validate failed, please check if user have permission!");
+            }
+            canUpdate = result.getResponseData().booleanValue();
+        } catch (Throwable ex) {
+            logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
+        }
+        return canUpdate;
+    }
+
+    public boolean canDelete(final long knowledgeId, final long userId)
+    {
+        boolean canDelete = false;
+        try {
+            InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
+            if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
+                logger.error("permission validate failed, please check if user have permission!");
+            }
+            canDelete = result.getResponseData().booleanValue();
+        } catch (Throwable ex) {
+            logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
+        }
+        return canDelete;
+    }
+
+    public Permission defaultPrivatePermission(final long userId,final long resId)
     {
         Permission permission = new Permission();
         permission.setAppId(APPID);

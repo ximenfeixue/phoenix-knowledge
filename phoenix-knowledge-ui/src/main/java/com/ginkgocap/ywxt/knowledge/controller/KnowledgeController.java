@@ -241,16 +241,16 @@ public class KnowledgeController extends BaseController {
             logger.error("request knowledgeDetail is null or incorrect");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
-
         long knowledgeId = detail.getId();
-        InterfaceResult<Boolean> result = permissionCheckService.isUpdatable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
-        if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
+
+        if (!permissionServiceLocal.canUpdate(knowledgeId, userId)) {
             logger.error("permission validate failed, please check if user have permission!");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"No permission to update!");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
 
         convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
+        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
             data.serUserInfo(user);
             result = this.knowledgeService.update(data);
@@ -325,13 +325,12 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
-        long userId = user.getId();
-        InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
-        if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
-            logger.error("permission validate failed, please check if user have permission!");
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        long userId = this.getUserId(user);
+        if (!permissionServiceLocal.canDelete(knowledgeId, userId)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"没有权限删除知识!");
         }
 
+        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
             result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
         } catch (Exception e) {
