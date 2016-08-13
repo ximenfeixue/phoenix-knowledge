@@ -36,7 +36,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
         if (knowledgeComment != null) {
             knowledgeComment.setId(knowledgeCommonService.getKnowledgeSequenceId());
             if (knowledgeComment.getCreateTime() <= 0) {
-                knowledgeComment.setCreateTime(System.currentTimeMillis());
+                knowledgeComment.setCreateTime(new Date().getTime());
             }
             mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);
             return knowledgeComment.getId();
@@ -89,7 +89,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 
         Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
         Query query = new Query(c);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
 
         return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
     }
