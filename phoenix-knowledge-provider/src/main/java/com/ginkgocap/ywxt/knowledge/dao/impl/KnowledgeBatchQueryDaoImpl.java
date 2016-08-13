@@ -68,7 +68,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return mongoTemplate.find(query, Knowledge.class, collectionName);
     }
 
-    @Override//{"uid":0,"status":4,"columnid": 1212}
+    @Override
     public long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id, short type) {
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
         List<String> list = new ArrayList<String>(columnID.length);
@@ -109,8 +109,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return result;
     }
 
-    //{ "$or" : [ { "uid" : 13511} , { "uid" : 0}] , "$and" : [ { "cpathid" : { "$regex" : "^投融工具.*$" , "$options" : ""}} , { "status" : 4}]}
-    //{"$or":[{"_id" : { "$in" : [ 166475 , 316198]}}], "$and" : [ { "cpathid" : { "$regex" : "^投融工具.*$" } , { "status" : 4}]}
     @Override
     public List<Knowledge> fetchFriendKw(long[] kid, short type,int offset,int limit) {
         String collectionName = getCollectionName(type);

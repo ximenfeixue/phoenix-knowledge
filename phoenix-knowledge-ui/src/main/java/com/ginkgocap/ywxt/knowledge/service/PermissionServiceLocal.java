@@ -84,7 +84,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         boolean canDelete = false;
         try {
             InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
-            if (result == null || result.getResponseData() == null || !result.getResponseData().booleanValue()) {
+            if (result == null || result.getResponseData() == null) {
                 logger.error("permission validate failed, please check if user have permission!");
             }
             canDelete = result.getResponseData().booleanValue();
