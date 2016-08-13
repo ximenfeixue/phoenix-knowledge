@@ -10,6 +10,7 @@ import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.dynamic.model.*;
+import com.ginkgocap.ywxt.knowledge.utils.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.parasol.column.entity.ColumnCustom;
@@ -22,12 +23,8 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
-import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
-import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.service.PermissionCheckService;
@@ -141,7 +138,7 @@ public class KnowledgeController extends BaseController {
         }
         initKnowledgeTime(data);
 
-        convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
+        //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
@@ -248,7 +245,7 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
 
-        convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
+        //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
@@ -516,7 +513,7 @@ public class KnowledgeController extends BaseController {
             logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
             ex.printStackTrace();
         }*/
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         if (result == null || result.getResponseData() == null) {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
             return mappingJacksonValue(result);
@@ -547,7 +544,7 @@ public class KnowledgeController extends BaseController {
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getUser(request);
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if (result != null) {
             DataCollect data = result.getResponseData();
@@ -2126,7 +2123,7 @@ public class KnowledgeController extends BaseController {
         return true;
     }
 
-    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnId) {
+    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnId,boolean isWeb) {
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
@@ -2147,6 +2144,10 @@ public class KnowledgeController extends BaseController {
         if(detail == null) {
             logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
+        }
+        if (!isWeb) {
+            String convertContent =  Utils.txt2Html(detail.getContent(), null, null, detail.getS_addr());
+            detail.setContent(convertContent);
         }
         String hContent = HtmlToText.htmlToText(detail.getContent());
         int maxLen = hContent.length() >= 250 ? 250 : hContent.length();

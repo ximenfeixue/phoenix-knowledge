@@ -353,6 +353,7 @@ public class KnowledgeOtherControl extends BaseController {
         }
         vo.setTaskid(knowledge.getTaskId());
         vo.setTitle(knowledge.getTitle());
+        vo.setS_addr(knowledge.getKnowledgeUrl());
         try {
             List<String> listImageUrl = new ArrayList<String>();
 
