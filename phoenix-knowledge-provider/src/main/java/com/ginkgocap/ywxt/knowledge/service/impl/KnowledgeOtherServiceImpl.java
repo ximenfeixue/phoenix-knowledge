@@ -28,8 +28,6 @@ import java.util.*;
 public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
 {
     private Logger logger = LoggerFactory.getLogger(KnowledgeOtherServiceImpl.class);
-    @Autowired
-    private KnowledgeMysqlDao knowledgeMysqlDao;
 
     @Resource
     private MongoTemplate mongoTemplate;
