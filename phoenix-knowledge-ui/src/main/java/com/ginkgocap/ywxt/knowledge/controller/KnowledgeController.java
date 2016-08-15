@@ -927,7 +927,13 @@ public class KnowledgeController extends BaseController {
             }
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
-            ColumnCustom column = columnCustomService.queryByCid((long)columnId);
+            ColumnCustom column = null;
+            try {
+                column = columnCustomService.queryByCid((long) columnId);
+            } catch (Exception ex) {
+                logger.error("Get column failed: error: {}", ex.getMessage());
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
+            }
             if (total == -1) {
                 total = 300L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
@@ -935,8 +941,14 @@ public class KnowledgeController extends BaseController {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
             }
             else if (total > 0 && start < total) {
+                List<Knowledge> detailList = null;
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-                List<Knowledge> detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
+                try {
+                    detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
+                } catch (Exception ex) {
+                    logger.error("invoke selectPlatform() failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
+                            ,type, columnId, column.getPathName(), userId, ex.getMessage());
+                }
                 knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 if (knowledgeList == null || knowledgeList.size() <= 0) {
                     return InterfaceResult.getSuccessInterfaceResultInstance("暂时没有符合条件的知识!");
@@ -2063,7 +2075,6 @@ public class KnowledgeController extends BaseController {
         try {
             if (keyWord == null || "null".equals(keyWord)) {
                 createdKnowledgeItems = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
-
             }
             else {
                 createdKnowledgeItems = this.knowledgeService.getBaseByKeyWord(userId, start, size, keyWord);
@@ -2075,14 +2086,25 @@ public class KnowledgeController extends BaseController {
     }
 
     private List<KnowledgeBase> getCollectedKnowledge(long userId, int start, int size,String keyword) throws Exception {
+        List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
-        List<KnowledgeCollect> collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short)-1, start, size);
+        try {
+            collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, start, size);
+        } catch (Exception ex) {
+            logger.error("invoke myCollectKnowledge failed. userId: {} error: {}", userId, ex.getMessage());
+        }
         if (collectItems != null && collectItems.size() > 0) {
             List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
             collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
             for (KnowledgeCollect collect : collectItems) {
                 if (!knowledgeIds.contains(collect.getKnowledgeId())) {
-                    Knowledge detail = knowledgeService.getDetailById(collect.getKnowledgeId(), collect.getColumnId());
+                    Knowledge detail = null;
+                    try {
+                        detail = knowledgeService.getDetailById(collect.getKnowledgeId(), collect.getColumnId());
+                    } catch (Exception ex) {
+                        logger.error("invoke getDetailById failed. knowledgeId: {}, columnId: {} error: {}",
+                                collect.getKnowledgeId(), collect.getColumnId(), ex.getMessage());
+                    }
                     if (detail != null) {
                         KnowledgeBase base = DataCollect.generateKnowledge(detail, (short) collect.getColumnId());
                         collectedKnowledgeItems.add(base);
