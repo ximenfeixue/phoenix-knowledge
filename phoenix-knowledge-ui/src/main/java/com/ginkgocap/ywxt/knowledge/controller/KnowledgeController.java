@@ -932,7 +932,7 @@ public class KnowledgeController extends BaseController {
                 column = columnCustomService.queryByCid((long) columnId);
             } catch (Exception ex) {
                 logger.error("Get column failed: error: {}", ex.getMessage());
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，栏目服务当前不可用!");
             }
             if (total == -1) {
                 total = 300L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
@@ -974,10 +974,18 @@ public class KnowledgeController extends BaseController {
         //All SOURCE_ALL_PLATFORM
         else {
             if (total == -1) {
-                total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
+                try {
+                    total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
+                } catch (Exception ex) {
+                    logger.error("invoke getBaseAllPublicCount failed: error: {}", ex.getMessage());
+                }
             }
             if (total > 0 && start < total) {
-                knowledgeList = this.knowledgeService.getBaseAllPublic(start, size, KnowledgeConstant.PRIVATED);
+                try {
+                    knowledgeList = this.knowledgeService.getBaseAllPublic(start, size, KnowledgeConstant.PRIVATED);
+                } catch (Exception ex) {
+                    logger.error("invoke getBaseAllPublic failed: error: {}", ex.getMessage());
+                }
             } else {
                 return queryKnowledgeEnd();
             }
