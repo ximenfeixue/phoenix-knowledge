@@ -116,10 +116,11 @@ public interface KnowledgeMongoDao
      */
     public List<Knowledge> getNoDirectory(long userId,int start,int size);
 
-
     public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids);
 
     public void backupKnowledgeBase(KnowledgeBaseSync knowledge);
 
-    public List<KnowledgeBaseSync> getKnowledgeBase(int start, int size);
+    public void deleteBackupKnowledgeBase(long knowledgeId);
+
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
 }

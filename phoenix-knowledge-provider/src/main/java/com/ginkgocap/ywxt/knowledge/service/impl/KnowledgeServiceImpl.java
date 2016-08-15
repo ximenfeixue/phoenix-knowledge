@@ -88,7 +88,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             this.knowledgeMysqlDao.insert(knowledgeBase);
             logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
         } catch (Exception e) {
-            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
+            short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
             logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -172,7 +173,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         Long knowledgeId = knowledgeDetail.getId();
         long userId = knowledgeDetail.getCid();
-        int columnId = KnowledgeUtil.parserColumnId(knowledgeDetail.getColumnid());
+        short columnType = KnowledgeUtil.parserShortType(knowledgeDetail.getColumnType());
 
         //knowledgeMongo.createContendDesc();
 
@@ -186,7 +187,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             knowledge.setPrivated(permissionValue(DataCollect));
             this.knowledgeMysqlDao.update(knowledge);
         } catch (Exception e) {
-            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
             logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -326,7 +327,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
         } catch (Exception e) {
-            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)0, EActionType.EDelete.getValue()));
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)columnId, (short)0, EActionType.EDelete.getValue()));
             logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识删除失败!");
         }
@@ -444,6 +445,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return knowledgeDetail;
     }
 
+    @Override
     public DataCollect getKnowledge(long knowledgeId,int columnId) throws Exception
     {
         Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
@@ -605,7 +607,78 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return null;
     }
 
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size)
+    {
+        return knowledgeMongoDao.getBackupKnowledgeBase(start, size);
+    }
 
+    public boolean syncKnowledgeBase(final KnowledgeBaseSync knowledgeSync)
+    {
+        if (knowledgeSync == null) {
+            logger.error("knowledgeSync is null, please check again..");
+            return false;
+        }
+        switch (knowledgeSync.getAction()) {
+            case 1:
+                return syncKnowledgeBase(knowledgeSync, true);
+            case 2:
+                return syncKnowledgeBase(knowledgeSync, false);
+            case 3:
+            {
+                try {
+                    return knowledgeMysqlDao.deleteByKnowledgeId(knowledgeSync.getId()) > 0;
+                } catch (Exception e) {
+                    logger.error("delete Knowledge base failed:  knowledgeId: {} type: {}",knowledgeSync.getId(), knowledgeSync.getType());
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            default:
+            {
+                logger.error("Unknown Knowledge Sync Action..");
+                return false;
+            }
+        }
+    }
+
+    private boolean syncKnowledgeBase(final KnowledgeBaseSync knowledgeSync, final boolean isAdd)
+    {
+        boolean result = false;
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeSync.getId(), knowledgeSync.getType());
+        if (detail != null) {
+            KnowledgeBase base = DataCollect.generateKnowledge(detail, knowledgeSync.getType());
+            base.setPrivated(knowledgeSync.getPrivated());
+            KnowledgeBase newBase = null;
+            try {
+                if (isAdd) {
+                    newBase = knowledgeMysqlDao.insert(base);
+                }
+                else {
+                    newBase = knowledgeMysqlDao.update(base);
+                }
+            } catch (Exception e) {
+                logger.error("Sync knowledge base failed, error: {}", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+
+            //Make sure insert success;
+            try {
+                if (newBase != null) {
+                    knowledgeMongoDao.deleteBackupKnowledgeBase(knowledgeSync.getId());
+                }
+                else {
+                    return false;
+                }
+            } catch (Exception e) {
+                logger.error("delete backup knowledge base failed, error: {}", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+            result = true;
+        }
+        return result;
+    }
     /**
      * 返回数据包装方法
      * @param knowledgeList

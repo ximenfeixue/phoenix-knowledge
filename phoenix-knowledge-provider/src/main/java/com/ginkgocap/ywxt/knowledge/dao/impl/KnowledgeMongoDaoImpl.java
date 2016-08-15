@@ -263,7 +263,16 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         mongoTemplate.save(knowledgeSync, Constant.Collection.KnowledgeBaseSync);
     }
 
-    public List<KnowledgeBaseSync> getKnowledgeBase(int start, int size)
+    public void deleteBackupKnowledgeBase(long knowledgeId)
+    {
+        if (knowledgeId < 0) {
+            return;
+        }
+        Query query = new Query(Criteria.where(Constant._ID).is(knowledgeId));
+        mongoTemplate.remove(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
+    }
+
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size)
     {
         Query query = new Query();
         long count = mongoTemplate.count(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);

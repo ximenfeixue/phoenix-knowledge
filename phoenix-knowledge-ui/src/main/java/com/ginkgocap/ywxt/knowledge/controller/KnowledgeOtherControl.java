@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
@@ -16,6 +17,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +34,8 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +58,9 @@ public class KnowledgeOtherControl extends BaseController {
     private PermissionServiceLocal permissionServiceLocal;
 
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
+    private final String knowledgeSyncTaskKey = "knowledgeSync";
+
+    private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
 
     @ResponseBody
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
@@ -280,6 +289,25 @@ public class KnowledgeOtherControl extends BaseController {
         logger.info("update userId: {} password: {}", userId, password);
         permissionServiceLocal.updatePassword(userId, password);
         logger.info("update userId: {} password: {}", userId, password);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/knowledgeSync", method = RequestMethod.GET)
+    public InterfaceResult knowledgeSync(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        boolean started = syncTaskMap.get(knowledgeSyncTaskKey) == null ? false : syncTaskMap.get(knowledgeSyncTaskKey);
+        if (started)
+        {
+            logger.info("Knowledge base sync task have started...");
+        } else {
+            syncTaskMap.put(knowledgeSyncTaskKey, true);
+            new Thread(new KnowledgeSyncTask(0, 20)).start();
+        }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -537,4 +565,36 @@ public class KnowledgeOtherControl extends BaseController {
         return filterStr;
     }
 
+    private class KnowledgeSyncTask implements Runnable {
+        private int start;
+        private int size;
+        public KnowledgeSyncTask(int start, int size) {
+            this.start = start;
+            this.size  = size;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    logger.info("get backup knowledge base, start: {}, size: {}", start, size);
+                    List<KnowledgeBaseSync> baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
+                    if (baseSyncList == null || baseSyncList.size() <= 0) {
+                        syncTaskMap.put(knowledgeSyncTaskKey, false);
+                        return;
+                    }
+                    else {
+                        logger.info("got backup knowledge base size: {}", baseSyncList.size());
+                        for (KnowledgeBaseSync baseSync : baseSyncList) {
+                            knowledgeService.syncKnowledgeBase(baseSync);
+                            Thread.sleep(1000);
+                        }
+                        start += size;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

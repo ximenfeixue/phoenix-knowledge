@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -330,4 +331,17 @@ public interface KnowledgeService
      * @throws Exception
      */
     public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
+
+    /**
+     * 获取未分组知识数量：
+     * <p>1、知识基础表信息</P>
+     * @date 2016年1月15日 上午10:14:59
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size) throws Exception;
+
+    public boolean syncKnowledgeBase(KnowledgeBaseSync knowledgeSync) throws Exception;
 }
