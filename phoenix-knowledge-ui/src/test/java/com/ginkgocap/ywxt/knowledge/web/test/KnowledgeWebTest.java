@@ -265,7 +265,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            String subUrl = "/allByPage/0/20/369/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
+            String subUrl = "/allByPage/0/20/-1/null"; // /page/allCollected/{num}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);

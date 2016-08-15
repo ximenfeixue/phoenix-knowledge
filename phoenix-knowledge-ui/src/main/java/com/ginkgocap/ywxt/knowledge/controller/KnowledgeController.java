@@ -642,8 +642,11 @@ public class KnowledgeController extends BaseController {
         if (createdKnowledgeList != null && createdKnowledgeList.size() > 0) {
             int restSize = size - createdKnowledgeList.size();
             List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, keyword);
-            logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedKnowledgeList.size());
-            createdKnowledgeList.addAll(collectedKnowledgeList);
+            int collectedSize = collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0;
+            logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedSize);
+            if (collectedSize > 0) {
+                createdKnowledgeList.addAll(collectedKnowledgeList);
+            }
             return knowledgeListPage(total, page, createdKnowledgeList.size(), createdKnowledgeList);
         }
 
