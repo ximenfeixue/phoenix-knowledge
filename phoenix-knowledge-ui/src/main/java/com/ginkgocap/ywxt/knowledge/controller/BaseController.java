@@ -125,7 +125,12 @@ public abstract class BaseController {
 
     protected String [] getChildIdListByColumnId(ColumnCustomService columnCustomService, int columnId, long userId)
     {
-        List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)columnId, userId);
+        List<ColumnSelf> columnList = null;
+        try {
+            columnList = columnCustomService.queryListByPidAndUserId((long) columnId, userId);
+        } catch (Exception ex) {
+            logger.error("invoke queryListByPidAndUserId failed: error: {}", ex.getMessage());
+        }
         return getColumnIds(columnList, columnId);
     }
 

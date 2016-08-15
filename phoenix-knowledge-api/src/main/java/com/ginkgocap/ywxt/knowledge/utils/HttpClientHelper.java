@@ -249,8 +249,6 @@ public class HttpClientHelper {
         } finally {
             post.releaseConnection();
         }
-
-
         return null;
     }
 

@@ -1,9 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.List;
@@ -42,7 +41,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
-    private final static String testEnv = envArray[1];
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -320,6 +319,73 @@ public abstract class BaseTestCase extends TestCase
         return inputLine;
     }*/
 
+    public static String HttpUpLoad(final String requestUrl, final String filePath) throws IOException {
+        //分割符
+        String boundary1="-----------------------------32034106127045";
+        String boundary2="-------------------------------32034106127045";
+        //换行符
+        String enter="\r\n";
+        URL url = new URL(requestUrl);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.print("file not existing.");
+            return null;
+        }
+        HttpURLConnection httpUrlConn = (HttpURLConnection)url.openConnection();
+        httpUrlConn.setDoOutput(true);
+        httpUrlConn.setDoInput(true);
+        //设置请求头
+        httpUrlConn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+boundary1);
+        httpUrlConn.setRequestMethod(HttpMethod.POST);
+        OutputStream outputStream = httpUrlConn.getOutputStream();
+
+        StringBuilder sb=new StringBuilder();
+        sb.append(boundary2);
+        sb.append(enter);
+        String disposition="Content-Disposition: form-data; name=\"file\"; filename=\""+file.getName()+"\"";
+        sb.append(disposition);
+        sb.append(enter);
+        //更具不同的类型经行设置
+        sb.append("Content-Type: image/jpeg");
+        sb.append(enter);
+        sb.append(enter);
+        outputStream.write(sb.toString().getBytes());
+        byte[] b=new byte[1024];
+        BufferedInputStream in=new  BufferedInputStream(new FileInputStream(file)) ;
+        int c=-1;
+        while((c=in.read(b))!=-1){
+            outputStream.write(b,0,c);
+        }
+        in.close();
+        outputStream.write(enter.getBytes());
+        outputStream.write((boundary2+"--").getBytes());
+        outputStream.close();
+
+
+        StringBuffer buffer = new StringBuffer();
+        InputStream inputStream = httpUrlConn.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        String inputLine = null;
+        String errorCode = httpUrlConn.getHeaderField("errorCode");
+        String errorMessage = httpUrlConn.getHeaderField("errorMessage");
+        if ((errorCode != null && Integer.valueOf(errorCode) > 0 )|| (errorMessage!= null && errorMessage.trim().length() > 0)) {
+            buffer.append("{\"notification\":{\"notifCode\":" + errorCode + ",\"notifInfo\":\"" + errorMessage + "\"}}");
+        } else {
+            String str = null;
+            while ((str = bufferedReader.readLine()) != null) {
+                buffer.append(str);
+            }
+            bufferedReader.close();
+            inputStreamReader.close();
+            // 释放资源
+            inputStream.close();
+            inputStream = null;
+            httpUrlConn.disconnect();
+        }
+        return buffer.toString();
+    }
     public static JsonNode getJsonNode(String jsonStr, String... values)
             throws Exception {
         ObjectMapper mapper = new ObjectMapper();
