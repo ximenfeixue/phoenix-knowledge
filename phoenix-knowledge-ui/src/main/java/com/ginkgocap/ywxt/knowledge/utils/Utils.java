@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.ginkgocap.ywxt.knowledge.model.InvestKeyword;
 import com.ginkgocap.ywxt.knowledge.model.MoneyType;
-/** @Description:  工具类   
+import org.apache.commons.lang.StringUtils;
+
+/** @Description:  工具类
  * @Author:       qinguochao  
  * @CreateDate:  2014-4-18   
  * @Version:      [v1.0]
@@ -135,6 +137,11 @@ public class Utils {
 	 * @return html内容字符串
 	 */
 	public static String txt2Html(String content, List<String> urls,String[] listImageUrl,String neturl) {
+		//If have the web style, return directly
+		if (StringUtils.isEmpty(content) || content.startsWith("<!DOCTYPE html>") || content.indexOf("<!DOCTYPE html>") > 0) {
+			return content;
+		}
+
 		StringBuffer htmlsb = new StringBuffer("<!DOCTYPE html><html><head><meta charset='utf-8' /><style>.gtrelated img{margin-top:10px;max-width:96%;margin-left:2%;height:auto;}.gtrelated{word-break: break-all;word-wrap: break-word; overflow-x: hidden; overflow-y:auto; } body { letter-spacing: 0.1em; line-height: 1.5em;} table{ width:100%; border-top: #bbb solid 1px;border-left: #bbb solid 1px; text-align: center;}table td{ border-right: #bbb solid 1px; border-bottom: #bbb solid 1px;} </style></head><body><div class='gtrelated'>");
 		
 		String[] lines = content.split("\n");
