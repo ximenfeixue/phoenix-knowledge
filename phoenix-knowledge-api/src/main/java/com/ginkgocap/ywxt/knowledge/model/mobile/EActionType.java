@@ -4,9 +4,10 @@ package com.ginkgocap.ywxt.knowledge.model.mobile;
  * Created by gintong on 2016/7/9.
  */
 public enum EActionType {
-    EAddDynamic((short)1),
+    EAdd((short)1),
     EUpdate((short)2),
     EDelete((short)3),
+    EAddDynamic((short)6),
     EDeleteKnowledgeTag((short)7),
     EDeleteKnowledgeDirectory((short)8);
 

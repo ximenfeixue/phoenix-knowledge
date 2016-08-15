@@ -9,6 +9,7 @@ public class Constant {
         public final static String KnowledgeComment = "KnowledgeComment";
         public final static String KnowledgeCollect = "KnowledgeCollect";
         public final static String KnowledgeReport = "KnowledgeReport";
+        public final static String KnowledgeBaseSync = "KnowledgeBaseSync";
     }
 
     public static class JsonNode {

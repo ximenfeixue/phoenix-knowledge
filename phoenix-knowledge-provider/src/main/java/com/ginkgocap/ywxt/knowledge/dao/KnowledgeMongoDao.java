@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 
 import java.util.List;
 import java.util.Map;
@@ -117,4 +118,8 @@ public interface KnowledgeMongoDao
 
 
     public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids);
+
+    public void backupKnowledgeBase(KnowledgeBaseSync knowledge);
+
+    public List<KnowledgeBaseSync> getKnowledgeBase(int start, int size);
 }

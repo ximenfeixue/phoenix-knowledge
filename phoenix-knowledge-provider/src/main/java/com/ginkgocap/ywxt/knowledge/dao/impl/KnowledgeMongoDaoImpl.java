@@ -2,11 +2,8 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeArticle;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.mongodb.BasicDBObject;
@@ -222,7 +219,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     @Override
     public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids)
     {
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService", type);
+        logger.info("type: {} page: {} size: {}", type, page, size);
         String collectionName = getCollectionName(type);
         Criteria criteria = Criteria.where("status").is(4);
         Criteria criteriaPj = new Criteria();
@@ -256,6 +253,33 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void backupKnowledgeBase(KnowledgeBaseSync knowledgeSync)
+    {
+        if (knowledgeSync == null) {
+            return;
+        }
+        mongoTemplate.save(knowledgeSync, Constant.Collection.KnowledgeBaseSync);
+    }
+
+    public List<KnowledgeBaseSync> getKnowledgeBase(int start, int size)
+    {
+        Query query = new Query();
+        long count = mongoTemplate.count(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
+        if (start >= count) {
+            return null;
+        }
+        if (size > maxSize) {
+            size = maxSize;
+        }
+        if (start+size > count) {
+            size = (int)(count - (long)start);
+        }
+
+        query.skip(start);
+        query.limit(size);
+        return mongoTemplate.find(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
     }
 
     private String getCollectionName(String columnId) {

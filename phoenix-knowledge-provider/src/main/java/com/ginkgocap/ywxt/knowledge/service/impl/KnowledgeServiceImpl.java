@@ -5,9 +5,11 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -86,6 +88,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             this.knowledgeMysqlDao.insert(knowledgeBase);
             logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
         } catch (Exception e) {
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
             logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -183,6 +186,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             knowledge.setPrivated(permissionValue(DataCollect));
             this.knowledgeMysqlDao.update(knowledge);
         } catch (Exception e) {
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
             logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -322,6 +326,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
         } catch (Exception e) {
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)0, EActionType.EDelete.getValue()));
             logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识删除失败!");
         }
