@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant.Collection;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 import junit.framework.Assert;
@@ -67,8 +68,8 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             DataCollect data = createKnowledge("KnowledgeWebTest_create");
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
-            data.getKnowledgeDetail().setTagList(getTagList());
-            data.getKnowledgeDetail().setDirectorys(getDirectoryList());
+            //data.getKnowledgeDetail().setTagList(getTagList());
+            //data.getKnowledgeDetail().setDirectorys(getDirectoryList());
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl, knowledgeJson);
             checkRequestResultSuccess(result);
@@ -231,7 +232,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/allKnowledgeByColumnAndSource/11/11/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, "http://192.168.120.135:8080/knowledge" + subUrl, null);
             checkResponseWithData(result);
 
         } catch (Exception e) {
@@ -630,15 +631,18 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	long tagId = 3992501715469144L;
-        	//List<Long> idList = new ArrayList<Long>(); //createTag();
-        	//idList.add(tagId);
-        	//createKnowledgeWithTag("testGetAllByDirectoryId", idList);
-        	/*if ((idList != null && idList.size() > 0)) {
+        	long tagId = 0L;
+        	List<Long> idList = getTagList();
+        	if (idList == null || idList.size() <= 0) {
+	            tagId = createTag();
+	        	idList = Arrays.asList(tagId);
+	        	createKnowledgeWithTag("testGetAllByDirectoryId", idList);
+        	}
+        	else {
         		createKnowledgeWithTag("testGetAllByDirectoryId", idList.subList(0, 1));
         		tagId = idList.get(0);
-        	}*/
-            String subUrl = "/tag/" +tagId + "/10/10";  ///tag/{tagId}/{start}/{size}
+        	}
+            String subUrl = "/tag/" +tagId + "/0/10";  ///tag/{tagId}/{start}/{size}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
             //String jsonContent = getResponseData(result);
