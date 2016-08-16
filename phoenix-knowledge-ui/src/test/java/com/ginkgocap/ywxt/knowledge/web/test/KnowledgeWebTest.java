@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.directory.model.Directory;
@@ -13,10 +15,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
-import com.ginkgocap.ywxt.knowledge.model.common.Constant.Collection;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
-
-import junit.framework.Assert;
 
 public class KnowledgeWebTest extends BaseTestCase
 {
@@ -178,7 +177,6 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            //createKnowledge("考虑,考虑");
             createKnowledge("考虑,考虑");
             String subUrl = "/all/0/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
@@ -479,40 +477,18 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	//DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
-            List<ResItem> resItems = new ArrayList<ResItem>(2);
+        	int batchSize = 2;
             List<Long> tagIds = getTagList();
             if (tagIds == null || tagIds.size() <= 0) {
-                System.out.println("No tag to added");
-                fail();
+            	for (int index = 0; index < batchSize; index++) {
+            		tagIds = new ArrayList<Long>(batchSize);
+	            	long tagId = createDirectory();
+	            	tagIds.add(tagId);
+            	}
             }
-            long [] tagIdList = convertList(tagIds);
-            long knowledgeId = createKnowledge("testBatchTags").getKnowledgeDetail().getId();
-//            if (data != null ) {
-//            	knowledgeId = data.getKnowledgeDetail().getId();
-//            }
-            ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
-            //ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, tagIdList);
-            resItems.add(resItem1);
-            //resItems.add(resItem2);
+ 
+            List<ResItem> resItems = createBatchItem("KnowledgeWebTest_testBatchDirectorys", batchSize, tagIds);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
-
-            /*
-            ObjectMapper mapper = new ObjectMapper();
-            TypeReference javaType = new TypeReference<List<ResItem>>() {};
-
-            List<ResItem> tagItems =  KnowledgereadValue(javaType, requestJson);
-            //List<ResItem> beanList = mapper.readValue(requestJson, new TypeReference<List<ResItem>>() {});
-
-            for (ResItem tagItem : tagItems) {
-                String title = tagItem.getTitle();
-                long knowledgeId = tagItem.getId();
-                List<Long> tagIds = tagItem.getTagIds();
-                for (Long tagId : tagIds) {
-                    System.out.print(tagId);
-                }
-            }*/
-            //System.out.print(beanList);
             JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);
             checkResponseWithData(result);
         } catch (Exception e) {
@@ -522,62 +498,21 @@ public class KnowledgeWebTest extends BaseTestCase
 
     }
     
-    public void testMutilBatchTags()
+    public void testBatchDirectorys()
     {
         LogMethod();
         try {
-        	DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
-            List<ResItem> resItems = new ArrayList<ResItem>(2);
-            List<Long> tagIds = getTagList();
-            if (tagIds == null || tagIds.size() <= 0) {
-                System.err.println("No tag added");
-                fail();
-            }
-            long [] tagIdList = convertList(tagIds);
-            long knowledgeId = 0L;
-            if (data != null ) {
-            	knowledgeId = data.getKnowledgeDetail().getId();
-            }
-            
-            for (int index = 0; index < 1; index ++) {
-                long tagId = tagIds.get(index);
-            	createBatchTag(knowledgeId, new long[]{tagId});
-                Thread.sleep(3);
-            }
-            ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIdList);
-            resItems.add(resItem1);
-            String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
-            JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);
-            checkResponseWithData(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-
-    }
-
-
-    public void testBatchCatalogs()
-    {
-        LogMethod();
-        try {
-        	DataCollect data = createKnowledge("KnowledgeWebTest_testBatchTags");
-            List<ResItem> resItems = new ArrayList<ResItem>(2);
+        	int batchSize = 2;
             List<Long> directoryIds = getDirectoryList();
             if (directoryIds == null || directoryIds.size() <= 0) {
-                System.err.println("No directory added");
-                fail();
+            	for (int index = 0; index < batchSize; index++) {
+	            	directoryIds = new ArrayList<Long>(batchSize);
+	            	long directoryId = createDirectory();
+	            	directoryIds.add(directoryId);
+            	}
             }
-            long [] IdList = convertList(directoryIds);
-
-            long knowledgeId = 0L;
-            if (data != null ) {
-            	knowledgeId = data.getKnowledgeDetail().getId();
-            }
-            ResItem resItem1 = TestData.getResItems("testBatchCatalogs", knowledgeId, IdList);
-            //ResItem resItem2 = TestData.getResItems("testBatchCatalogs", 1112345L, IdList);
-            resItems.add(resItem1);
-            //resItems.add(resItem2);
+ 
+            List<ResItem> resItems = createBatchItem("KnowledgeWebTest_testBatchDirectorys", batchSize, directoryIds);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
             JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + "/batchCatalogs", requestJson);
             checkRequestResultSuccess(result);
@@ -881,11 +816,9 @@ public class KnowledgeWebTest extends BaseTestCase
         return id;
     }
     
-    private void createBatchTag(long knowledgeId,long [] tagIds)
+    private void createBatchTag(long knowledgeId,List<Long> tagIds)
     {
-    	List<ResItem> resItems = new ArrayList<ResItem>(1);
-        ResItem resItem1 = TestData.getResItems("testBatchTags", knowledgeId, tagIds);
-        resItems.add(resItem1);
+    	List<ResItem> resItems = createBatchItem("testBatchTags", 2, tagIds);
         String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
         JsonNode result;
 		try {
@@ -895,7 +828,22 @@ public class KnowledgeWebTest extends BaseTestCase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+    }
+    
+    private List<ResItem> createBatchItem(String title, int size, List<Long> tagIds)
+    {
+    	if (size > 5) {
+    		size = 5;
+    	}
+    	List<ResItem> resItems = new ArrayList<ResItem>(size);
+    	for (int index = 0; index < 5; index++) {
+    		Knowledge detail =  createKnowledge(title).getKnowledgeDetail();
+    		long knowledgeId = detail.getId();
+    		short type = KnowledgeUtil.parserShortType(detail.getColumnType());
+    		ResItem item = TestData.getResItems(knowledgeId, type, tagIds);
+    		resItems.add(item);
+    	}
+    	return resItems;
     }
     
     private List<Long> getTagList()

@@ -81,14 +81,11 @@ public class TestData {
         return data;
     }
 
-    public static ResItem getResItems(String title,long resId,long [] ids)
+    public static ResItem getResItems(long resId, short type, List<Long> tagIds)
     {
         ResItem resItem = new ResItem();
         resItem.setResId(resId);
-        List<Long> tagIds = new ArrayList<Long>(ids.length);
-        for (long id : ids) {
-            tagIds.add(id);
-        }
+        resItem.setType(type);
         resItem.setIds(tagIds);
 
         return resItem;
