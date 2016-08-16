@@ -108,8 +108,10 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception
     {
+		return this.getEntity(knowledgeId);
+		/*
         List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id", knowledgeId);
-        return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;
+        return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;*/
 	}
 
     @Override

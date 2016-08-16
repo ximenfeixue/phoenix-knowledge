@@ -1135,7 +1135,11 @@ public class KnowledgeController extends BaseController {
             List<Long> knowledgeIds = directoryServiceLocal.getKnowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
             if (knowledgeIds == null || knowledgeIds.size() <= 0) {
                 logger.error("get knowledge list is null by directoryId: " + directoryId);
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"该目录下的知识为空！");
+                if (start == 0) {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识为空！");
+                } else {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识已经取完！");
+                }
             }
 
             knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);

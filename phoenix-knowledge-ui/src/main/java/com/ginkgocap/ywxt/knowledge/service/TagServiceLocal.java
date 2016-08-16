@@ -22,6 +22,7 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import javax.xml.ws.Service;
 import java.util.*;
 
 /**
@@ -406,6 +407,30 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             logger.error("Get related resource failed. tagId: {} error: ", tagId, ex.getMessage());
         }
         return null;
+    }
+
+    public void tagCleanUp(long userId)
+    {
+        List<Tag> tagList = null;
+        try {
+            tagList = tagService.getTagsByUserIdAppidTagType(userId, APPID, (long)sourceType);
+        } catch (TagServiceException e) {
+            logger.info("Get Tag failed: error: {}", e.getMessage());
+        }
+
+        if (tagList != null && tagList.size() > 0) {
+            logger.info("Get Tag Size: {}", tagList.size());
+            for (Tag tag : tagList) {
+                try {
+                    boolean ret = tagSourceService.removeTagSourcesByTagId(APPID, tag.getId());
+                    if (!ret) {
+                        logger.info("Get Tag failed: tagid: {}", tag.getId());
+                    }
+                } catch (TagSourceServiceException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private TagSource newTagSourceObject(long userId, Long tagId, Knowledge knowledge)

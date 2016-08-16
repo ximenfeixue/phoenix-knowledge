@@ -597,7 +597,8 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	long directoryId = 3990305410121740L;
+        	long directoryId = 3991724208947840L;
+        	/*
         	List<Long> idList = getDirectoryList();
         	if ((idList != null && idList.size() > 0)) {
         		createKnowledgeWithDirectoy("testGetAllByDirectoryId", idList.subList(0, 1));
@@ -605,8 +606,8 @@ public class KnowledgeWebTest extends BaseTestCase
         	} else {
                 System.err.println("can't get directory");
                 fail();
-            }
-            String subUrl = "/byDirectory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
+            }*/
+            String subUrl = "/byDirectory/" + directoryId + "/10/15";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
