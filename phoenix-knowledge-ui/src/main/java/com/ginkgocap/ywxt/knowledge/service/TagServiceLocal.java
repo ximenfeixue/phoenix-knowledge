@@ -236,8 +236,6 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         return batchResult(successResult, failedResult, overMaxLimit);
     }
 
-
-
     public MappingJacksonValue getTagListByIds(long userId,List<Long> tagIds) throws Exception
     {
         logger.error("tag list is: " + tagIds.toString());
