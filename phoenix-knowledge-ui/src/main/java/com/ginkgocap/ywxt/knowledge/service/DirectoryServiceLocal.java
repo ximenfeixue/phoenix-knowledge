@@ -118,6 +118,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 data = knowledgeService.getKnowledge(knowledgeId, columnType);
             } catch (Exception ex) {
                 logger.error("find knowledge failed, knowledgeId: {} error: {}", knowledgeId, ex.getMessage());
+                continue;
             }
             if (data == null) {
                 logger.error("can't knowledge, so skip add directory, knowledgeId: {}", knowledgeId);

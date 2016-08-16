@@ -84,6 +84,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 data = knowledgeService.getKnowledge(knowledgeId, type);
             } catch (Exception ex) {
                 logger.error("find knowledge failed. knowledgeId: {}, error: {}", knowledgeId, ex.getMessage());
+                continue;
             }
 
             Knowledge knowledgeDetail = data.getKnowledgeDetail();
