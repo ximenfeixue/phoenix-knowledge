@@ -580,6 +580,7 @@ public class KnowledgeOtherControl extends BaseController {
                     logger.info("get backup knowledge base, start: {}, size: {}", start, size);
                     List<KnowledgeBaseSync> baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
                     if (baseSyncList == null || baseSyncList.size() <= 0) {
+                        logger.info("reset knowledge base sync");
                         syncTaskMap.put(knowledgeSyncTaskKey, false);
                         return;
                     }
