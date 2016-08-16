@@ -1397,7 +1397,7 @@ public class KnowledgeController extends BaseController {
 
         try {
             //return this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), batchItems);
-            return this.directoryServiceLocal.batchCatalogs(knowledgeService, user.getId(), requestJson);
+            return this.directoryServiceLocal.batchDirectory(knowledgeService, user.getId(), requestJson);
         } catch (Exception e) {
             logger.error("Batch catalogs failed！reason："+e.getMessage());
             e.printStackTrace();

@@ -96,7 +96,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return true;
     }
 
-    public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,List<ResItem> directoryItems) throws Exception
+    public InterfaceResult batchDirectory(KnowledgeService knowledgeService,long userId,List<ResItem> directoryItems) throws Exception
     {
         logger.info("batchDirectory: {}", directoryItems );
         if(directoryItems == null || directoryItems.size() <= 0) {
@@ -112,9 +112,15 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
 
             //Update knowledge Detail
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId,(short)-1);
+            DataCollect data = null;
+            try {
+                short columnType = item.getType();
+                data = knowledgeService.getKnowledge(knowledgeId, columnType);
+            } catch (Exception ex) {
+                logger.error("find knowledge failed, knowledgeId: {} error: {}", knowledgeId, ex.getMessage());
+            }
             if (data == null) {
-                logger.error("can't find this knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
+                logger.error("can't knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
                 continue;
             }
 
@@ -141,7 +147,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return InterfaceResult.getSuccessInterfaceResultInstance("创建目录成功.");
     }
 
-    public InterfaceResult batchCatalogs(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
+    public InterfaceResult batchDirectory(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
         logger.info("batchDirectory: {}", requestJson );
         if(StringUtils.isEmpty(requestJson)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
@@ -158,8 +164,26 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         boolean overMaxLimit = false;
         for (int index = 0; index < directoryItems.size(); index++) {
             Map<String, Object> map = directoryItems.get(index);
-            long knowledgeId = Long.parseLong(map.get("resId").toString());
-            List<Object> directoryIds = (List<Object>)map.get("ids");
+            Object resId = map.get("resId");
+            if (resId == null) {
+                logger.error("Can't get knowledge Id, so skip..");
+                continue;
+            }
+            Object type = map.get("type");
+            if (type == null) {
+                logger.error("Can't get knowledge type, so skip..");
+                //continue;
+                //TODO: need remove
+                type = "1";
+            }
+            Object ids = map.get("ids");
+            if (ids == null) {
+                logger.error("Can't get tag ids, so skip..");
+                continue;
+            }
+
+            long knowledgeId = KnowledgeUtil.parserStringIdToLong(resId.toString());
+            List<Object> directoryIds = (List<Object>)ids;
 
             List<Long> newDirectoryIds = convertObjectListToLongList(directoryIds);
             if (newDirectoryIds == null || newDirectoryIds.size() <= 0) {
@@ -167,9 +191,16 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 continue;
             }
 
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId, (short)-1);
+            DataCollect data = null;
+            try {
+                short columnType = KnowledgeUtil.parserShortType(type.toString());
+                data = knowledgeService.getKnowledge(knowledgeId, columnType);
+            } catch (Exception ex) {
+                logger.error("find knowledge failed, knowledgeId: {} error: {}", knowledgeId, ex.getMessage());
+                continue;
+            }
             if (data == null) {
-                logger.error("can't find this knowledge info, so skip add directory, knowledgeId: {}", knowledgeId);
+                logger.error("can't get knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
                 continue;
             }
 
