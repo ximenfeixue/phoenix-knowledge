@@ -180,6 +180,11 @@ public class TestData {
 
     public static Associate assoObject()
     {
+        return assoObject("Asso Desction");
+    }
+
+    public static Associate assoObject(String name)
+    {
         long System_AppId = 1L;
         long assocId = 2L; //,
         long sourceTypeId = 2L;
@@ -193,7 +198,7 @@ public class TestData {
         associate.setSourceId(1l);
         associate.setSourceTypeId(sourceTypeId);
 
-        associate.setAssocDesc("Asso Desction");
+        associate.setAssocDesc(name);
         associate.setAssocId(assocId);
         associate.setAssocMetadata("Asso meta Data");
         associate.setAssocTitle("Asso Title");
@@ -206,7 +211,8 @@ public class TestData {
     public static List<Associate> assoList()
     {
         List<Associate> associateList = new ArrayList<Associate>(1);
-        associateList.add(assoObject());
+        associateList.add(assoObject("assoList_1"));
+        associateList.add(assoObject("assoList_2"));
 
         return associateList;
     }
