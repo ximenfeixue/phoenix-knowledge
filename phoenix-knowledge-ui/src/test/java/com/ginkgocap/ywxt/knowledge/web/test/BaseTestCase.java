@@ -41,7 +41,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
-    private final static String testEnv = envArray[1];
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -325,6 +325,7 @@ public abstract class BaseTestCase extends TestCase
         String boundary2="-------------------------------32034106127045";
         //换行符
         String enter="\r\n";
+        System.out.println("Upload url: "+requestUrl);
         URL url = new URL(requestUrl);
         File file = new File(filePath);
         if (!file.exists()) {

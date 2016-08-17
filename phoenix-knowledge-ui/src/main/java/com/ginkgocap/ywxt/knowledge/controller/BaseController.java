@@ -246,7 +246,9 @@ public abstract class BaseController {
             logger.error("Knowledge Content is null, please check the knowledge..");
             return;
         }
+        knowledge.setContent(content);
         // 区分APP和WEB
+        /*
         if (isWeb) {
             knowledge.setContent(content);
         } else {
@@ -254,6 +256,6 @@ public abstract class BaseController {
             // htmlContent =
             // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
             knowledge.setContent(htmlContent);
-        }
+        }*/
     }
 }

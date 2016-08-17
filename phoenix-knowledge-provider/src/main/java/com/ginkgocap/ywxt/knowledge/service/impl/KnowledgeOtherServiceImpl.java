@@ -57,20 +57,13 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     @Override
     public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int columnId) throws Exception
     {
-        Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, columnId);
-        KnowledgeCollect collect = mongoTemplate.findAndRemove(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-        if (collect == null) {
-            logger.error("delete knowledge collect error, no this knowledge collect or no permission to delete: ownerId: "+ ownerId+ " knowledgeId: " + knowledgeId + " columnId: "+columnId);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-        }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return knowledgeCollectDao.deleteCollectedKnowledge(ownerId, knowledgeId, columnId);
     }
 
     @Override
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
     {
-        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
-        return mongoTemplate.exists(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        return isCollectedKnowledge(userId, knowledgeId, columnId);
     }
 
     @Override

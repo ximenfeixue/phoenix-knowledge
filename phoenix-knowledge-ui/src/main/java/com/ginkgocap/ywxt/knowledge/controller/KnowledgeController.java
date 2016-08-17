@@ -2182,10 +2182,11 @@ public class KnowledgeController extends BaseController {
             logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
         }
+        /*
         if (!isWeb) {
             String convertContent =  Utils.txt2Html(detail.getContent(), null, null, detail.getS_addr());
             detail.setContent(convertContent);
-        }
+        }*/
         String hContent = HtmlToText.htmlToText(detail.getContent());
         int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
         hContent = hContent.substring(0, maxLen);
