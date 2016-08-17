@@ -1,12 +1,10 @@
-package com.ginkgocap.ywxt.knowledge.service.impl;
+package com.ginkgocap.ywxt.knowledge.dao.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReportDao;
-import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -16,19 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
 
 /**
- * Created by Chen Peifeng on 2016/4/15.
+ * Created by gintong on 2016/8/17.
  */
-
-@Service("knowledgeOtherService")
-public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
+@Repository("knowledgeCollectDao")
+public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollectDao
 {
-    private Logger logger = LoggerFactory.getLogger(KnowledgeOtherServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(KnowledgeCollectDaoImpl.class);
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -38,9 +35,6 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
 
     @Autowired
     KnowledgeMongoDao knowledgeMongoDao;
-
-    @Autowired
-    KnowledgeReportDao knowledgeReportDao;
 
     private int maxCount = 100;
     private int maxSize = 10;
@@ -67,7 +61,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance("Have collected this knowledge!");
+        return InterfaceResult.getSuccessInterfaceResultInstance("该知识已经被收藏");
 
     }
 
@@ -123,22 +117,5 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
 
         return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-    }
-
-    @Override
-    public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
-    {
-        return knowledgeReportDao.reportKnowledge(report);
-    }
-
-    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,int columnId)
-    {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
-        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        if (columnId != -1) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
-        return query;
     }
 }

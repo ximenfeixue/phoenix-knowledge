@@ -361,13 +361,11 @@ public abstract class BaseTestCase extends TestCase
         outputStream.write((boundary2+"--").getBytes());
         outputStream.close();
 
-
         StringBuffer buffer = new StringBuffer();
         InputStream inputStream = httpUrlConn.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-        String inputLine = null;
         String errorCode = httpUrlConn.getHeaderField("errorCode");
         String errorMessage = httpUrlConn.getHeaderField("errorMessage");
         if ((errorCode != null && Integer.valueOf(errorCode) > 0 )|| (errorMessage!= null && errorMessage.trim().length() > 0)) {
@@ -431,8 +429,8 @@ public abstract class BaseTestCase extends TestCase
     
     private static String getLogiJson(boolean web)
     {
-    	final String userName = "18211081791";
-    	final String passWord = "MTExMTEx";
+    	final String userName = "18501719543";
+    	final String passWord = "hcz13651156253";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
