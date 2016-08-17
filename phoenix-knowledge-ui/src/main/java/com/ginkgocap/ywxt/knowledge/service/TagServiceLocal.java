@@ -418,17 +418,30 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             logger.info("Get Tag failed: error: {}", e.getMessage());
         }
 
+        //remove tag source
         if (tagList != null && tagList.size() > 0) {
             logger.info("Get Tag Size: {}", tagList.size());
             for (Tag tag : tagList) {
                 try {
                     boolean ret = tagSourceService.removeTagSourcesByTagId(APPID, tag.getId());
                     if (!ret) {
-                        logger.info("Get Tag failed: tagid: {}", tag.getId());
+                        logger.info("remove Tag source failed: tagid: {}", tag.getId());
                     }
-                } catch (TagSourceServiceException e) {
-                    e.printStackTrace();
+                } catch (TagSourceServiceException ex) {
+                    logger.info("remove Tag source failed: tagId: {} error: {}", tag.getId(), ex.getMessage());
                 }
+            }
+        }
+
+        //remove tag
+        for (Tag tag : tagList) {
+            try {
+                boolean ret = tagService.removeTag(userId, tag.getId());
+                if (!ret) {
+                    logger.info("remove Tag failed: tagid: {}", tag.getId());
+                }
+            } catch (Exception ex) {
+                logger.info("remove Tag failed: tagId: {} error: {}", tag.getId(), ex.getMessage());
             }
         }
     }
