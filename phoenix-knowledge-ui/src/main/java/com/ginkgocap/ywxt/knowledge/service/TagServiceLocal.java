@@ -425,7 +425,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 try {
                     boolean ret = tagSourceService.removeTagSourcesByTagId(APPID, tag.getId());
                     if (!ret) {
-                        logger.info("remove Tag source failed: tagid: {}", tag.getId());
+                        logger.info("remove Tag source failed: tagId: {}", tag.getId());
                     }
                 } catch (TagSourceServiceException ex) {
                     logger.info("remove Tag source failed: tagId: {} error: {}", tag.getId(), ex.getMessage());
@@ -438,7 +438,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             try {
                 boolean ret = tagService.removeTag(userId, tag.getId());
                 if (!ret) {
-                    logger.info("remove Tag failed: tagid: {}", tag.getId());
+                    logger.info("remove Tag failed: tagId: {}", tag.getId());
                 }
             } catch (Exception ex) {
                 logger.info("remove Tag failed: tagId: {} error: {}", tag.getId(), ex.getMessage());
