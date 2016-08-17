@@ -29,25 +29,11 @@ import java.util.*;
 @Service("knowledgeOtherService")
 public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
 {
-    private Logger logger = LoggerFactory.getLogger(KnowledgeOtherServiceImpl.class);
-
-    @Resource
-    private MongoTemplate mongoTemplate;
-
-    @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
-
-    @Autowired
-    private KnowledgeMongoDao knowledgeMongoDao;
-
     @Autowired
     private KnowledgeReportDao knowledgeReportDao;
 
     @Autowired
     private KnowledgeCollectDao knowledgeCollectDao;
-
-    private int maxCount = 100;
-    private int maxSize = 10;
 
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception {
@@ -63,58 +49,24 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     @Override
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
     {
-        return isCollectedKnowledge(userId, knowledgeId, columnId);
+        return knowledgeCollectDao.isCollectedKnowledge(userId, knowledgeId, columnId);
     }
 
     @Override
     public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size) throws Exception
     {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
-        long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-        if (start >= count) {
-            start = 0;
-        }
-        if (size > maxSize) {
-            size = maxSize;
-        }
-        if (start+size > count) {
-            size = (int)count - start;
-        }
-
-        query.skip(start);
-        query.limit(size);
-        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-
-        return collectedItem;
+        return knowledgeCollectDao.myCollectKnowledge(userId, columnId, start, size);
     }
 
     @Override
     public long myCollectKnowledgeCount(long userId) throws Exception
     {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
-
-        return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        return knowledgeCollectDao.myCollectKnowledgeCount(userId);
     }
 
     @Override
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
     {
         return knowledgeReportDao.reportKnowledge(report);
-    }
-
-    private Query knowledgeColumnIdAndOwnerId(long ownerId,long knowledgeId,int columnId)
-    {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
-        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        if (columnId != -1) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
-        }
-        return query;
     }
 }
