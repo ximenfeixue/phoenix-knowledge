@@ -13,19 +13,19 @@ public class KnowledgeCollect implements Serializable {
      */
     private long id;
     /**
-     * 需求服务类型
+     * 知识Id
      */
     private long knowledgeId;
     /**
-     * 关系用户id
+     * 创建人id
      */
     private long ownerId;
     /**
-     * 需求服务标题
+     * 知识标题
      */
     private String knowledgeTitle;
     /**
-     * 需求服务类型id
+     * 知识栏目Id
      */
     private int columnId;
 
@@ -34,9 +34,12 @@ public class KnowledgeCollect implements Serializable {
      */
     private long createTime;
     /**
-     * 拥有者类型（0创建者，1收藏者）
+     * 知识栏目类型
      */
     private short type;
+
+    //来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
+    private short source;
 
     public long getId() {
         return id;
@@ -81,4 +84,13 @@ public class KnowledgeCollect implements Serializable {
     public void setOwnerId(long userId) {
         this.ownerId = userId;
     }
+
+    public short getSource() {
+        return source;
+    }
+
+    public void setSource(short source) {
+        this.source = source;
+    }
+
 }
