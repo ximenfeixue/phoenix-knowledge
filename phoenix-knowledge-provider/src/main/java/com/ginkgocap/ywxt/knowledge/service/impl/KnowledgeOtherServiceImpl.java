@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReportDao;
@@ -37,38 +38,20 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private KnowledgeCommonService knowledgeCommonService;
 
     @Autowired
-    KnowledgeMongoDao knowledgeMongoDao;
+    private KnowledgeMongoDao knowledgeMongoDao;
 
     @Autowired
-    KnowledgeReportDao knowledgeReportDao;
+    private KnowledgeReportDao knowledgeReportDao;
+
+    @Autowired
+    private KnowledgeCollectDao knowledgeCollectDao;
 
     private int maxCount = 100;
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int columnId) throws Exception {
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
-        if (detail == null) {
-            InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-        }
-
-        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
-        if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
-            KnowledgeCollect collect = new KnowledgeCollect();
-            collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
-            collect.setKnowledgeId(knowledgeId);
-            collect.setType((short)columnId);
-            collect.setColumnId(columnId);
-            collect.setCreateTime(System.currentTimeMillis());
-            collect.setKnowledgeTitle(detail.getTitle());
-            collect.setOwnerId(userId);
-
-            mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-        }
-
-        return InterfaceResult.getSuccessInterfaceResultInstance("Have collected this knowledge!");
-
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception {
+        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, type);
     }
 
     @Override

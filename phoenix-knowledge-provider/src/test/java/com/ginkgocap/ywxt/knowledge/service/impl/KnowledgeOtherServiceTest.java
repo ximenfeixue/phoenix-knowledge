@@ -4,6 +4,7 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.gintong.frame.util.dto.InterfaceResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -22,6 +23,18 @@ public class KnowledgeOtherServiceTest extends TestBase
 
     private final long userId = 7L;
 
+    @Test
+    public void testCollectKnowledge()
+    {
+        long knowledgeId = System.currentTimeMillis();
+        try {
+            InterfaceResult result = knowledgeOtherService.collectKnowledge(userId, knowledgeId, 1);
+            Assert.assertTrue("0".equals(result.getNotification().getNotifCode()));
+            System.out.println(result.getResponseData());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void testGetCollectKnowledgeList()
     {

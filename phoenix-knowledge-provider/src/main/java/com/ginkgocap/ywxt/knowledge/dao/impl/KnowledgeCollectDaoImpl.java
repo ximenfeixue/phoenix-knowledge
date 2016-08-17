@@ -25,7 +25,7 @@ import java.util.List;
 @Repository("knowledgeCollectDao")
 public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollectDao
 {
-    private Logger logger = LoggerFactory.getLogger(KnowledgeCollectDaoImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeCollectDaoImpl.class);
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -40,19 +40,20 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int columnId) throws Exception {
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception {
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, type);
         if (detail == null) {
-            InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            logger.error("can't get knowledge detail. userId: {} knowledgeId: {} type: {}", userId, knowledgeId, type);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
-        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
+        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, type);
         if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
             collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
             collect.setKnowledgeId(knowledgeId);
-            collect.setType((short)columnId);
-            collect.setColumnId(columnId);
+            collect.setType((short)type);
+            collect.setColumnId(type);
             collect.setCreateTime(System.currentTimeMillis());
             collect.setKnowledgeTitle(detail.getTitle());
             collect.setOwnerId(userId);

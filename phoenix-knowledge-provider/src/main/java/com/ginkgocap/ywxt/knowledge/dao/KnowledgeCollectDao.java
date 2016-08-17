@@ -9,7 +9,7 @@ import java.util.List;
  * Created by gintong on 2016/8/17.
  */
 public interface KnowledgeCollectDao {
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int columnId) throws Exception;
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception;
 
     public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int columnId) throws Exception;
 

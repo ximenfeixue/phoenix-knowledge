@@ -156,7 +156,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge getByIdAndColumnId(long knowledgeId,int columnId)
+    public Knowledge getByIdAndColumnId(long knowledgeId, int columnId)
     {
         Query query = knowledgeColumnIdQuery(knowledgeId);
         return mongoTemplate.findOne(query, Knowledge.class, getCollectionName(columnId));
