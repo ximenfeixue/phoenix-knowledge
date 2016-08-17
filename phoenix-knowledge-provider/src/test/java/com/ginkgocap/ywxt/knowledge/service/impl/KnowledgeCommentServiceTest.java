@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by gintong on 2016/8/13.
  */
-public class KnowledgeCommentServiceTest  extends TestBase {
+public class KnowledgeCommentServiceTest extends TestBase {
 
     @Autowired
     KnowledgeCommentService knowledgeCommentService;

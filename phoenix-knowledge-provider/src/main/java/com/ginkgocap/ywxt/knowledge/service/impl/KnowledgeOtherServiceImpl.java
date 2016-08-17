@@ -95,7 +95,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
-        if (columnId != -1) {
+        if (columnId > 0) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }
         long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
