@@ -9,6 +9,7 @@ import com.ginkgocap.ywxt.knowledge.utils.TestDataUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,8 +66,9 @@ public class GenerateJsonTest extends BaseTestCase {
     public void testBatchTags()
     {
         List<ResItem> resItems = new ArrayList<ResItem>(2);
-        ResItem resItem1 = TestData.getResItems("testBatchTags", 1112323L, new long[] {3933811561988102L, 3933811356467203L} );
-        ResItem resItem2 = TestData.getResItems("testBatchTags", 1112345L, new long[] {3933811561988102L, 3933811356467203L} );
+        List<Long> tagIds = Arrays.asList(3933811561988102L, 3933811356467203L);
+        ResItem resItem1 = TestData.getResItems(1112323L, (short) 1, tagIds);
+        ResItem resItem2 = TestData.getResItems(1112345L, (short)1, tagIds);
         resItems.add(resItem1);
         resItems.add(resItem2);
         String requestJson = KnowledgeUtil.writeObjectToJson(resItems);

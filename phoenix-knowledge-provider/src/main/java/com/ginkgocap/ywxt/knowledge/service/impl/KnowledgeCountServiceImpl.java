@@ -19,8 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 @Service("knowledgeCountService")
 public class KnowledgeCountServiceImpl implements KnowledgeCountService, InitializingBean
 {
-
-    private final static Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);
 
     private final int defaultLimit = 50;
     private final int MAX_NUM = 500;

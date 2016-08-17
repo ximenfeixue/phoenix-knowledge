@@ -136,7 +136,7 @@ public class Utils {
 	 * @param urls 图片url
 	 * @return html内容字符串
 	 */
-	public static String txt2Html(String content, List<String> urls,String[] listImageUrl,String neturl) {
+	public static String txt2Html(String content, List<String> urls,String[] listImageUrl,String netUrl) {
 		//If have the web style, return directly
 		if (StringUtils.isEmpty(content) || content.startsWith("<!DOCTYPE html>") || content.indexOf("<!DOCTYPE html>") > 0) {
 			return content;
@@ -160,8 +160,8 @@ public class Utils {
 				htmlsb.append("<img src='" + img + "'/> <br/> <br/>");
 			}
 		}
-		if(neturl != null && !neturl.equals("")) {
-			htmlsb.append("<a href='"+ neturl + "'>原网址</a>");	
+		if(netUrl != null && !netUrl.equals("")) {
+			htmlsb.append("<a href='"+ netUrl + "'>原网址</a>");
 		}
 		htmlsb.append("</div></body></html>");
 		return htmlsb.toString();
