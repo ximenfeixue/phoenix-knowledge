@@ -52,9 +52,10 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
 
     private final int maxSize = 20;
     private final int maxQuerySize = 150;
+    private final int cacheTTL = 60 * 60 * 24;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
-    private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    //private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     @Override
     public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int offset,int limit) {
@@ -222,7 +223,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                         }
                         skip++;
                     }
-                    cache.set(key, ids);
+                    cache.set(key, cacheTTL, ids);
                     String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
                     saveKnowledgeToCache(result, knowledgeKey);
                 }
@@ -234,7 +235,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
             result = (List<Knowledge>)cache.get(knowledgeKey);
             if (result != null) {
-                logger.info("This list have searched before, so return it directly..");
+                logger.info("This list have cached before, so return it directly..");
                 return result;
             }
 
@@ -357,7 +358,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             logger.error("The knowledge key is null, so skip..");
         }
         logger.error("Save the query result to catch, key: {}", key);
-        cache.set(key, 60*60*24, result);
+        cache.set(key, cacheTTL, result);
     }
 
     private Knowledge filterKnowledge(Knowledge detail)
