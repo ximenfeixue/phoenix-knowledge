@@ -1130,24 +1130,37 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        List<Long> knowledgeIds = directoryServiceLocal.getKnowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
+        if (knowledgeIds == null || knowledgeIds.size() <= 0) {
+            logger.error("get knowledge list is null by directoryId: " + directoryId);
+            if (start == 0) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识为空！");
+            } else {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识已经取完！");
+            }
+        }
+
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            List<Long> knowledgeIds = directoryServiceLocal.getKnowledgeIdListByDirectoryId(user.getId(), directoryId, start, size);
-            if (knowledgeIds == null || knowledgeIds.size() <= 0) {
-                logger.error("get knowledge list is null by directoryId: " + directoryId);
-                if (start == 0) {
-                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识为空！");
-                } else {
-                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "该目录下的知识已经取完！");
-                }
-            }
-
             knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"查询知识失败！");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "查询知识失败！");
         }
-        logger.info(".......get all knowledge by columnId success......");
+
+        if (knowledgeBaseList != null && knowledgeBaseList.size() > 0) {
+            logger.info(".......get all knowledge by directory  success......");
+            //check the corrupt knowledge, and log it.
+            if (knowledgeIds.size() != knowledgeBaseList.size()) {
+                for (KnowledgeBase base : knowledgeBaseList) {
+                    if (!knowledgeIds.contains(base.getId())) {
+                        logger.error("DirectorySource: corrupted knowledge, id: {}",base.getId());
+                    }
+                }
+            }
+        } else {
+            logger.info(".......no knowledge under this directory, id: {}", directoryId);
+        }
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeBaseList);
     }
 

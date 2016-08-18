@@ -308,7 +308,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return true;
     }
 
-    public List<Long> getKnowledgeIdListByDirectoryId(long userId,long directoryId,int start,int size)
+    public List<Long> getKnowledgeIdListByDirectoryId(final long userId, final long directoryId, final int start, final int size)
     {
         Object[] parameter = new Object[]{userId, APPID, sourceType, directoryId};
         List<DirectorySource> directorySources = null;
@@ -318,12 +318,22 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             logger.error("get directory Source failed: "+e.getMessage());
             e.printStackTrace();
         }
-        List<Long> knowledgeIds = new ArrayList<Long>(directorySources.size());
-        if (directorySources != null && directorySources.size() > 0) {
-            for (DirectorySource source : directorySources) {
-                knowledgeIds.add(source.getSourceId());
-                logger.info("add knowledge source: "+source.getSourceId());
+
+        List<Long> knowledgeIds = null;
+        if (directorySources == null && directorySources.size() >0) {
+            knowledgeIds = new ArrayList<Long>(directorySources.size());
+            if (directorySources != null && directorySources.size() > 0) {
+                for (DirectorySource source : directorySources) {
+                    if (source != null) {
+                        knowledgeIds.add(source.getSourceId());
+                        logger.info("add knowledge source: " + source.getSourceId());
+                    } else {
+                        logger.error("these is a directory Source is null, please check the reason..");
+                    }
+                }
             }
+        } else {
+            logger.error("no knowledge under the directory: id: {}", directoryId);
         }
 
         return knowledgeIds;
