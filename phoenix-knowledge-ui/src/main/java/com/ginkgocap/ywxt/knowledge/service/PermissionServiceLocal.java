@@ -39,29 +39,9 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
 
     private BlockingQueue<Permission> permissionQueue = new LinkedBlockingQueue<Permission>();
 
-    public boolean addAssociate(Permission permission)
+    public boolean addPermission(Permission permission)
     {
         return permissionQueue.offer(permission);
-    }
-
-    public void updatePassword(final long userId, final String password) {
-        // 生成salt
-        User user = new User();
-        int hashIterations = 5000;
-        RandomNumberGenerator saltGenerator = new SecureRandomNumberGenerator();
-
-        String salt = saltGenerator.nextBytes().toHex();
-        //Base64
-        //byte[] bt = Base64.decode(password);
-        //password = new String(bt);
-
-        String newPass = new Sha256Hash(password, salt, hashIterations).toHex();
-        String updateSQL = String .format("update tb_user set password='%s' salt='%s' where id=%d", newPass, salt, userId);
-        System.out.println("Update SQL: " + updateSQL);
-        user.setId(userId);
-        user.setSalt(salt);
-        user.setPassword(newPass);
-        passwdService.updateUserPassWord(user);
     }
 
     public boolean canUpdate(final long knowledgeId, final long userId)

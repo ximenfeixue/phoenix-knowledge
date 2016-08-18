@@ -329,7 +329,6 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return knowledgeIds;
     }
 
-
     private DirectorySource newDirectorySourceObject(long userId, long directoryId,Knowledge knowledge)
     {
         DirectorySource directorySource = new DirectorySource();

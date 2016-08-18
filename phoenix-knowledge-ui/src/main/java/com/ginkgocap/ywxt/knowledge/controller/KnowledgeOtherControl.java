@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.PermissionServiceLocal;
+import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
@@ -36,18 +37,18 @@ import java.util.regex.Pattern;
  */
 @Controller
 @RequestMapping("/knowledgeOther")
-public class KnowledgeOtherControl extends BaseController {
-
+public class KnowledgeOtherControl extends BaseController
+{
     private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     @Autowired
-    KnowledgeService knowledgeService;
+    private KnowledgeService knowledgeService;
 
     @Autowired
-    KnowledgeCountService knowledgeCountService;
+    private KnowledgeCountService knowledgeCountService;
 
     @Autowired
-    private PermissionServiceLocal permissionServiceLocal;
+    private TagServiceLocal tagServiceLocal;
 
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
     private final String knowledgeSyncTaskKey = "knowledgeSync";
@@ -273,16 +274,6 @@ public class KnowledgeOtherControl extends BaseController {
         knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
-    
-    @ResponseBody
-    @RequestMapping(value="/update/{userId}/{password}", method = RequestMethod.GET)
-    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response,
-            @PathVariable long userId,@PathVariable String password) throws Exception {
-        logger.info("update userId: {} password: {}", userId, password);
-        permissionServiceLocal.updatePassword(userId, password);
-        logger.info("update userId: {} password: {}", userId, password);
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
 
     @ResponseBody
     @RequestMapping(value="/knowledgeSync", method = RequestMethod.GET)
@@ -300,6 +291,18 @@ public class KnowledgeOtherControl extends BaseController {
             syncTaskMap.put(knowledgeSyncTaskKey, true);
             new Thread(new KnowledgeSyncTask(0, 20)).start();
         }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/tagCleanup", method = RequestMethod.GET)
+    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        tagServiceLocal.tagCleanUp(this.getUserId(user));
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
