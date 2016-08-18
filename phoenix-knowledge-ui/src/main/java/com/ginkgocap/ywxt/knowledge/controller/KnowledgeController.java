@@ -1222,6 +1222,7 @@ public class KnowledgeController extends BaseController {
         try {
             KnowledgeBaseList = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
         } catch (Exception e) {
+            logger.error("Query knowledge by userId and columnId failed. error: {}", e.getMessage());
         }
         logger.info(".......get all knowledge by create userId and columnId success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(KnowledgeBaseList);
@@ -1699,7 +1700,11 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> userKnowledgeBase = null;
         List<KnowledgeMini> userKnowledge = null;
         int start = page * size;
-        userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
+        try {
+            userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
+        } catch (Exception ex) {
+            logger.error("Query knowledge of self created failed. uerId: {}, error: {}", user.getId(), ex.getMessage());
+        }
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
             userKnowledge = convertKnowledgeBaseToMini(userKnowledgeBase);
