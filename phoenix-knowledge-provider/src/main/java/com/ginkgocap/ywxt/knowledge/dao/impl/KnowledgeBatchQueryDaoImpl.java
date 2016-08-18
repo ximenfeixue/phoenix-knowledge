@@ -21,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeBatchQueryDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import net.sf.json.JSONArray;
 
@@ -216,18 +217,27 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                         if (knowledge != null) {
                             ids.add(knowledge.getId());
                             if (skip >= start && skip < toIndex) {
-                                result.add(knowledge);
+                                result.add(filterKnowledge(knowledge));
                             }
                         }
                         skip++;
                     }
                     cache.set(key, ids);
+                    String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
+                    saveKnowledgeToCache(result, knowledgeKey);
                 }
             }
             catch(Exception ex) {
                 ex.printStackTrace();
             }
         } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
+            String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
+            result = (List<Knowledge>)cache.get(knowledgeKey);
+            if (result != null) {
+                logger.info("This list have searched before, so return it directly..");
+                return result;
+            }
+
             int fromIndex = start;
             int toIndex = start + size;
             if (toIndex > knowledgeIds.size() - 1) {
@@ -246,6 +256,10 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 result = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (result != null && result.size() > 0) {
                     logger.info("get Knowledge size: {}", result.size());
+                    for(Knowledge detail : result) {
+                        filterKnowledge(detail);
+                    }
+                    saveKnowledgeToCache(result, knowledgeKey);
                 }
                 else {
                     logger.info("can't get Knowledge by Ids: {}", ids.toString());
@@ -333,6 +347,33 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         }
         return null;
     }
+
+    private void saveKnowledgeToCache(final List<Knowledge> result, final String key)
+    {
+        if (result == null || result.size() <= 0) {
+            logger.error("The knowledge is null, so skip..");
+        }
+        if (StringUtils.isEmpty(key)) {
+            logger.error("The knowledge key is null, so skip..");
+        }
+        logger.error("Save the query result to catch, key: {}", key);
+        cache.set(key, 60*60*24, result);
+    }
+
+    private Knowledge filterKnowledge(Knowledge detail)
+    {
+        if (detail == null) {
+            logger.error("Knowledge detail is null, please check it again...");
+            return null;
+        }
+        String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
+        int contentLen = knowledgeContent.length();
+        int maxLen = contentLen > 250 ? 250 : contentLen;
+        knowledgeContent = knowledgeContent.substring(0, maxLen);
+        detail.setContent(knowledgeContent);
+        return detail;
+    }
+
 
     private List<String> fillList(List<Long> cls) {
         List<String> clstr = new ArrayList<String>();
