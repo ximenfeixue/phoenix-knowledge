@@ -407,7 +407,8 @@ public class KnowledgeOtherControl extends BaseController
         String contentDes;
         if ((knowledge.getContent() != null) && (knowledge.getContent().length() > 0)) {
             String content = knowledge.getContent();
-            contentDes = filterHtml(content).length() < 40 ? filterHtml(content) : filterHtml(content).substring(0, 35) + "...";
+            content = HtmlToText.htmlToText(content);
+            contentDes = content.length() < 40 ? content : content.substring(0, 40) + "...";
 
         } else {
             contentDes = " ";
