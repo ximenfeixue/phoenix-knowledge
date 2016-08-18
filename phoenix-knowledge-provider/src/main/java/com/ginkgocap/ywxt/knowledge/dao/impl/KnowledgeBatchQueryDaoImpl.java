@@ -119,12 +119,12 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             return null;
         }
 
-		/*	List<Long> list = new ArrayList<Long>(kid.length);
-			for(int i = 0; i < kid.length; i++) {
-				list.add(kid[i]);
-			}
-			Criteria ctri = new Criteria("cpathid");
-			ctri.regex("^" + column + ".*$").and("status").is("4");*/
+       /*List<Long> list = new ArrayList<Long>(kid.length);
+        for(int i = 0; i < kid.length; i++) {
+            list.add(kid[i]);
+        }
+        Criteria ctri = new Criteria("cpathid");
+        ctri.regex("^" + column + ".*$").and("status").is("4");*/
         if(kid == null || kid.length == 0) return null;
         List<Long> list = new ArrayList<Long>(kid.length);
         for(int i = 0; i < kid.length; i++) {
