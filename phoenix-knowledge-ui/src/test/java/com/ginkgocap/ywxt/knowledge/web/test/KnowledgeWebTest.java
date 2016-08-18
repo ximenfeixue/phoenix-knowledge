@@ -193,9 +193,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //createKnowledge("考虑,考虑1");
-            createKnowledge("考虑,考虑2");
-            String subUrl = "/allKnowledgeByColumnAndSource/17/3023/2/0/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
-            //String urlStr =
+            //createKnowledge("考虑,考虑2");
+            String subUrl = "/allKnowledgeByColumnAndSource/1/1/2/0/20/-1"; //allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
         } catch (Exception e) {
@@ -604,7 +603,7 @@ public class KnowledgeWebTest extends BaseTestCase
                 System.err.println("can't get directory");
                 fail();
             }*/
-            String subUrl = "/byDirectory/" + directoryId + "/10/15";  ///directory/{directoryId}/{start}/{size}
+            String subUrl = "/byDirectory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -625,7 +624,6 @@ public class KnowledgeWebTest extends BaseTestCase
             e.printStackTrace();
             fail();
         }
-        //ResItem resItem = TestData.getResItems("testBatchCatalogs", );
     }
 
 

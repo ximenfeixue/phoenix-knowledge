@@ -50,7 +50,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 300;
+    private final int maxQuerySize = 100;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
@@ -166,32 +166,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     @Override
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size)
     {
-        /*
-        // 栏目id
-        Criteria criteria = Criteria.where("status").is(4);
-        // 权限条件过滤
-        Criteria criteriaUp = null;
-        // 路径过滤
-        Criteria criteriaPath = new Criteria();
-        // 查询栏目目录为当前分类下的所有数据
-        String reful = columnPath;
-        // 该栏目路径下的所有文章条件
-        criteriaPath.and("cpathid").regex("^" + reful + ".*$");
-        // 汇总条件
-        Criteria criteriaAll = new Criteria();
-        if (criteriaUp == null) {
-            return null;
-        } else {
-            criteriaAll.andOperator(criteriaUp, criteriaPath, criteria);
-        }
-
-        // 查询知识
-        Query query = new Query(criteriaAll);
-        if (type == 10) {
-            query.sort().on("createtime", Order.DESCENDING);
-        } else {
-            query.sort().on("_id", Order.DESCENDING);
-        }*/
         return getAllByParam(type, columnId, columnPath, -1, start, size);
     }
 
