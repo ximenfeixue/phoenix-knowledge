@@ -41,6 +41,8 @@ public class HtmlToText {
 			htmlStr = htmlStr.replaceAll("&emsp;", "");
 			htmlStr = htmlStr.replaceAll("&emsp;", "");
 			htmlStr = StringUtils.replace(htmlStr, "\n", "");
+			htmlStr = StringUtils.replace(htmlStr, "\t", "");
+			htmlStr = StringUtils.replace(htmlStr, " ", "");
 			htmlStr = htmlStr.replaceAll("<span>", "")
 					.replaceAll("</span>", "");
 
