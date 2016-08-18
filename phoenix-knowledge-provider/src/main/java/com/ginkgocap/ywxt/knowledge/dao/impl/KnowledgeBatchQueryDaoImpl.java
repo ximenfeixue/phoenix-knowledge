@@ -50,7 +50,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 100;
+    private final int maxQuerySize = 150;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
@@ -179,7 +179,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
 
     private List<Knowledge> getMongoIds(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
-            logger.error("paramter is invalidated. start: {}, size: {}", start, size);
+            logger.error("param is invalidated. start: {}, size: {}", start, size);
             return null;
         }
         String key = getKey(columnType, columnId, userId, tableName);
