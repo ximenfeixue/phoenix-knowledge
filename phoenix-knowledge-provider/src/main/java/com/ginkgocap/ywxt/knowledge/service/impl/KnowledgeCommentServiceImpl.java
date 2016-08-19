@@ -73,9 +73,9 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
         }
 
         Query query = commentIdAndOwnerId(commentId, ownerId);
-        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
-        if (result.getN() < 0) {
-            logger.error("delete knowledge comment error, no this comment or no permission to delete: ownerId:"+ ownerId+ " knowledgeId:" + commentId);
+        KnowledgeComment result = mongoTemplate.findAndRemove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        if (result == null) {
+            logger.error("delete knowledge comment error, no this comment or no permission to delete: ownerId: {}, commentId: {}", ownerId, commentId);
             return false;
         }
         return true;
