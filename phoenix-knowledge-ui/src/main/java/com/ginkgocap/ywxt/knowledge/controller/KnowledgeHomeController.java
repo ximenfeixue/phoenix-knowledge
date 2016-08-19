@@ -122,7 +122,7 @@ public class KnowledgeHomeController extends BaseController {
 
     // 获取热点排行
     @ResponseBody
-    @RequestMapping(value = "/home/getHotList/{type}")
+    @RequestMapping(value = "/home/getHotList/{type}", method = RequestMethod.GET)
     public InterfaceResult<Map<String,Object>> getHotList(HttpServletRequest request, HttpServletResponse response,@PathVariable int type)
             throws Exception {
 
@@ -154,7 +154,7 @@ public class KnowledgeHomeController extends BaseController {
 
     // 获取评论排行
     @ResponseBody
-    @RequestMapping(value = "/home/getCommentList/{type}")
+    @RequestMapping(value = "/home/getCommentList/{type}", method = RequestMethod.GET)
     public InterfaceResult getCommentList(HttpServletRequest request,HttpServletResponse response,@PathVariable int type)
             throws Exception {
 
@@ -181,7 +181,7 @@ public class KnowledgeHomeController extends BaseController {
 
     // 获取聚合阅读
     @ResponseBody
-    @RequestMapping(value = "/home/getAggregationRead/{type}/{page}/{size}")
+    @RequestMapping(value = "/home/getAggregationRead/{type}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult<Map<String,Object>> getAggregationRead(HttpServletRequest request, HttpServletResponse response, @PathVariable int type,
                                               @PathVariable int page, @PathVariable int size) throws Exception {
 
@@ -204,7 +204,7 @@ public class KnowledgeHomeController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/home/getDockingKnowledge/{targetType}/{targetId}/{page}/{size}/{scope}")
+    @RequestMapping(value = "/home/getDockingKnowledge/{targetType}/{targetId}/{page}/{size}/{scope}", method = RequestMethod.GET)
     public InterfaceResult getDockingKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                @PathVariable short targetType,@PathVariable int targetId,
                                                @PathVariable int page, @PathVariable int size,
