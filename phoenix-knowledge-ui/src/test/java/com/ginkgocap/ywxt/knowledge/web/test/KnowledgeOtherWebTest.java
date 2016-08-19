@@ -81,19 +81,6 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         }
     }
 
-    @Test
-    public void testUpdatePass()
-    {
-        LogMethod();
-        try {
-            String subUrl = "/update/7/MTExMTEx";
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
-            checkRequestResultSuccess(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /*
     public void testGetHotKnowledge()
     {
