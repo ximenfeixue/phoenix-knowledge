@@ -575,7 +575,7 @@
 
                 <!-- mongo地址, 数据库  -->
                 <mongodb.address>192.168.120.133:27017</mongodb.address>
-                <mongodb.database>knowledge-new</mongodb.database>
+                <mongodb.database>knowledge</mongodb.database>
 
                 <!-- memcached configure-->
                 <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
