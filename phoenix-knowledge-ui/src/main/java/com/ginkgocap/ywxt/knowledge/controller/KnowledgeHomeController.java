@@ -64,7 +64,7 @@ public class KnowledgeHomeController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
-    public InterfaceResult separate(HttpServletRequest request, HttpServletResponse response,@PathVariable short type)
+    public InterfaceResult<Map<String, Object>> separate(HttpServletRequest request, HttpServletResponse response,@PathVariable short type)
             throws IOException {
 
         Map<String, Object> model = new HashMap<String, Object>(2);
@@ -87,11 +87,11 @@ public class KnowledgeHomeController extends BaseController {
     }
     @ResponseBody
     @RequestMapping(value = "/home/getHotTag/{count}", method = RequestMethod.GET)
-    public InterfaceResult getHotTag(final HttpServletRequest request, final HttpServletResponse response,
+    public InterfaceResult<Map<String,Object>> getHotTag(final HttpServletRequest request, final HttpServletResponse response,
                                      @PathVariable int count) throws Exception
     {
         if (count <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"请求参数不合法");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         try {
@@ -129,7 +129,7 @@ public class KnowledgeHomeController extends BaseController {
     // 获取热点排行
     @ResponseBody
     @RequestMapping(value = "/home/getHotList/{type}")
-    public InterfaceResult getHotList(HttpServletRequest request, HttpServletResponse response,@PathVariable int type)
+    public InterfaceResult<Map<String,Object>> getHotList(HttpServletRequest request, HttpServletResponse response,@PathVariable int type)
             throws Exception {
 
         Map<String, Object> model = new HashMap<String, Object>(1);
@@ -146,7 +146,7 @@ public class KnowledgeHomeController extends BaseController {
             params.put("type", String.valueOf(type));
             String str = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
             if (StringUtils.isEmpty(str)) {
-                InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
             }
             model.put("list", getKnowledgeList(str));
         } catch (Exception e) {
@@ -188,7 +188,7 @@ public class KnowledgeHomeController extends BaseController {
     // 获取聚合阅读
     @ResponseBody
     @RequestMapping(value = "/home/getAggregationRead/{type}/{page}/{size}")
-    public InterfaceResult getAggregationRead(HttpServletRequest request, HttpServletResponse response, @PathVariable int type,
+    public InterfaceResult<Map<String,Object>> getAggregationRead(HttpServletRequest request, HttpServletResponse response, @PathVariable int type,
                                               @PathVariable int page, @PathVariable int size) throws Exception {
 
         User user = this.getUser(request);
@@ -196,7 +196,7 @@ public class KnowledgeHomeController extends BaseController {
         if (user != null) {
             userId = this.getUserId(user);
         }
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             List<ColumnSelf> columnList = columnCustomService.queryListByPidAndUserId((long)type,userId);
             String [] columnIds = getColumnIds(columnList, type);
