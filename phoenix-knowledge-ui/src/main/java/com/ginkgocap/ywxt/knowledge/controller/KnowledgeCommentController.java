@@ -120,12 +120,12 @@ public class KnowledgeCommentController extends BaseController
      * des:删除评论
      * @param commentId
      * @param request
-     * @param reponse
+     * @param response
      * @return
      */
     @RequestMapping(value="/{commentId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public InterfaceResult deleteKnowledgeComment(@PathVariable Long commentId, HttpServletRequest request, HttpServletResponse reponse)
+    public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response,@PathVariable Long commentId)
     {
         try{
             if (commentId == null) {
