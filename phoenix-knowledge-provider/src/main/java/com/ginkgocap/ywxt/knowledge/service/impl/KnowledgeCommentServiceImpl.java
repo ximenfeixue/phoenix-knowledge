@@ -4,6 +4,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.mongodb.WriteResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +73,8 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
         }
 
         Query query = commentIdAndOwnerId(commentId, ownerId);
-        KnowledgeComment comment = mongoTemplate.findAndRemove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
-        if (comment == null) {
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        if (result.getN() < 0) {
             logger.error("delete knowledge comment error, no this comment or no permission to delete: ownerId:"+ ownerId+ " knowledgeId:" + commentId);
             return false;
         }

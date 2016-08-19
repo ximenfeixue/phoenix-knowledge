@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -160,20 +161,8 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         try {
             retNode = HttpRequestFull(HttpMethod.GET, URL, null);
             JsonNode retData = retNode.get("responseData");
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-            JsonNode jsonNode = objectMapper.readTree(retData.asText());
-            if (jsonNode != null && jsonNode.isArray()) {
-                knowledgeCommentList = new ArrayList<KnowledgeComment>();
-                Iterator<JsonNode> fields = jsonNode.iterator();
-                while (fields.hasNext()) {
-                    JsonNode node = fields.next();
-                    if (node.getNodeType() == JsonNodeType.OBJECT) {
-                        KnowledgeComment comment = (KnowledgeComment) objectMapper.readValue(node.toString(), KnowledgeComment.class);
-                        knowledgeCommentList.add(comment);
-                    }
-                }
-            }
+            this.assertNotNull(retData);
+            knowledgeCommentList = KnowledgeUtil.readListValue(KnowledgeComment.class, retData.toString());
         } catch (Exception e) {
             writeException(e);
         }
