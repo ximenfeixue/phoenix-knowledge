@@ -78,12 +78,6 @@ public class KnowledgeController extends BaseController {
     private AssociateTypeService assoTypeService;
 
     @Autowired
-    private PermissionRepositoryService permissionRepositoryService;
-
-    @Autowired
-    private PermissionCheckService permissionCheckService;
-
-    @Autowired
     private TagServiceLocal tagServiceLocal;
 
     @Autowired
@@ -186,15 +180,10 @@ public class KnowledgeController extends BaseController {
         }
 
         boolean syncToDynamic = false;
-        try {
-            Permission permission = permissionInfo(data.getPermission(), knowledgeId, userId);
-            if (permission != null) {
-                syncToDynamic = (permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
-                permissionRepositoryService.insert(permission);
-            }
-        } catch (Exception e) {
-            logger.error("Insert knowledge permission failed : " + e.getMessage());
-            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        Permission permission = permissionServiceLocal.savePermissionInfo(userId, knowledgeId, data.getPermission());
+        if (permission != null) {
+            logger.debug("save knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
+            syncToDynamic = (permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
         }
 
         //Sync to dynamic news
@@ -261,14 +250,9 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
-        try {
-            Permission permission = permissionInfo(data.getPermission(), knowledgeId, userId);
-            if (permission != null) {
-                permissionRepositoryService.update(permission);
-            }
-        } catch (Exception e) {
-            logger.error("Update knowledge permission failed : " + e.getMessage());
-            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        Permission permission = permissionServiceLocal.updatePermissionInfo(userId, knowledgeId, data.getPermission());
+        if (permission != null) {
+            logger.debug("update knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
         }
 
         //Update tag info
@@ -364,7 +348,9 @@ public class KnowledgeController extends BaseController {
         }
 
         //delete permission info
-        deletePermissionInfo(userId, knowledgeId);
+        if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
+            logger.debug("delete knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
+        }
 
         logger.info(".......delete knowledge success......");
         return result;
@@ -395,8 +381,8 @@ public class KnowledgeController extends BaseController {
         List<Long> failedIds = new ArrayList<Long>();
         for (String id : konwledgeIds) {
             long knowledgeId = Long.parseLong(id);
-            InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
-            if (result == null || !result.getResponseData().booleanValue()) {
+            boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, userId);
+            if (!isCanDelete) {
                 failedIds.add(knowledgeId);
                 logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
             }
@@ -425,7 +411,7 @@ public class KnowledgeController extends BaseController {
             directoryServiceLocal.deleteDirectory(userId, knowledgeId);
 
             //delete permission information
-            deletePermissionInfo(userId, knowledgeId);
+            permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
         }
         String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
         logger.info("delete knowledge success: {}", resp);
@@ -2162,22 +2148,6 @@ public class KnowledgeController extends BaseController {
         return permission;
     }
 
-    private boolean deletePermissionInfo(long userId,long knowledgeId)
-    {
-        try {
-            Permission permission = permissionInfo(new Permission(), knowledgeId, userId);
-            InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
-            if (ret == null || !ret.getResponseData()) {
-                logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
-            }
-        }catch (Exception ex) {
-            logger.error("Delete Permission failed, knowledgeId: " + knowledgeId + " Reason: "+ex.getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
     private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnId,boolean isWeb) {
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -2224,23 +2194,13 @@ public class KnowledgeController extends BaseController {
         detail.setCollected(isCollected ? (short) 1 : (short) 0);
         DataCollect data = new DataCollect(null, detail);
 
-        try {
-            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
-            Notification notif = ret.getNotification();
-            if (notif != null && CommonResultCode.SUCCESS.getCode().equals(notif.getNotifCode())) {
-                data.setPermission(ret.getResponseData());
-            }
-            else {
-                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
-            }
-        }catch (Exception ex) {
-            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
-            ex.printStackTrace();
-        }
+        Permission permission = permissionServiceLocal.getPermissionInfo(knowledgeId);
         //set a default value
-        if (data.getPermission() == null) {
-            data.setPermission(permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId));
+        if (permission == null) {
+            logger.info("Can't get knowledge permission, so set a default value. knowledgeId: {}", knowledgeId);
+            permission = permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId);
         }
+        data.setPermission(permission);
 
         try {
             List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);

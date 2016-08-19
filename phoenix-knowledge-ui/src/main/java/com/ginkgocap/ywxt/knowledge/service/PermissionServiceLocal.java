@@ -7,8 +7,10 @@ import com.ginkgocap.ywxt.user.service.ChangePwdService;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.service.PermissionCheckService;
+import com.gintong.common.phoenix.permission.service.PermissionRepositoryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.frame.util.dto.Notification;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -33,6 +36,9 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
 
     @Autowired
     private PermissionCheckService permissionCheckService;
+
+    @Autowired
+    private PermissionRepositoryService permissionRepositoryService;
 
     @Autowired
     private ChangePwdService passwdService;
@@ -72,6 +78,94 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
         }
         return canDelete;
+    }
+
+    public Permission savePermissionInfo(final long userId, final long knowledgeId, final Permission permission)
+    {
+        if (permission == null) {
+            logger.error("No permission info give, so skip to save");
+            return null;
+        }
+        Permission newPermission = null;
+        try {
+            newPermission = permissionInfo(permission, knowledgeId, userId);
+            if (newPermission != null) {
+                permissionRepositoryService.insert(newPermission);
+            }
+        } catch (Exception e) {
+            logger.error("Insert knowledge permission failed : error: {}", e.getMessage());
+            return null;
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        return newPermission;
+    }
+
+    public Permission updatePermissionInfo(final long userId, final long knowledgeId, final Permission permission)
+    {
+        if (permission == null) {
+            logger.error("No permission info give, so skip to update");
+            return null;
+        }
+        Permission newPermission = null;
+        try {
+            newPermission = permissionInfo(permission, knowledgeId, userId);
+            if (newPermission != null) {
+                permissionRepositoryService.update(newPermission);
+            }
+        } catch (Exception e) {
+            logger.error("Update knowledge permission failed : error: {}", e.getMessage());
+            return null;
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        return newPermission;
+    }
+
+    public boolean deletePermissionInfo(long userId,long knowledgeId)
+    {
+        try {
+            Permission permission = permissionInfo(new Permission(), knowledgeId, userId);
+            InterfaceResult<Boolean> ret = permissionRepositoryService.delete(permission);
+            if (ret == null || !ret.getResponseData()) {
+                logger.error("Delete Permission failed, knowledgeId: " + knowledgeId);
+            }
+        }catch (Exception ex) {
+            logger.error("Delete Permission failed, knowledgeId: " + knowledgeId + " Reason: "+ex.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public Permission getPermissionInfo(long knowledgeId)
+    {
+        try {
+            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
+            Notification notif = ret.getNotification();
+            if (notif != null && CommonResultCode.SUCCESS.getCode().equals(notif.getNotifCode())) {
+                return ret.getResponseData();
+            }
+            else {
+                logger.error("can't get knowledge permission failed: knowledgeId: {}, errorMsg: {}", knowledgeId, notif.getNotifInfo());
+            }
+        }catch (Exception ex) {
+            logger.error("get knowledge permission failed: knowledgeId: {}, error: {}", knowledgeId, ex.getMessage());
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    private Permission permissionInfo(Permission permission,long knowledgeId,long userId)
+    {
+        if (permission != null) {
+            permission.setAppId(APPID);
+            permission.setResId(knowledgeId);
+            permission.setResOwnerId(userId);
+            permission.setResType(ResourceType.KNOW.getVal());
+            if (permission.getPerTime() == null) {
+                permission.setPerTime(new Date());
+            }
+        }
+        return permission;
     }
 
     public Permission defaultPrivatePermission(final long userId,final long resId)
