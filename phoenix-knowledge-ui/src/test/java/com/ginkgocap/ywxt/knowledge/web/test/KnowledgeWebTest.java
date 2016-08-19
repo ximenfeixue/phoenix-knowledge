@@ -483,6 +483,9 @@ public class KnowledgeWebTest extends BaseTestCase
             	}
             }
  
+            if (tagIds.size() > 2) {
+            	tagIds = tagIds.subList(0, 1);
+            }
             List<ResItem> resItems = createBatchItem("KnowledgeWebTest_testBatchDirectorys", batchSize, tagIds);
             String requestJson = KnowledgeUtil.writeObjectToJson(resItems);
             JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + "/batchTags", requestJson);

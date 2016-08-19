@@ -51,7 +51,7 @@ public class HttpClientHelper {
     private final static String CONTENT_TYPE = "application/x-www-form-urlencoded";
     private final static String ENCODING = "utf-8";
 
-    public static String post(String url, List<BasicNameValuePair> pairs) throws Exception {
+    public static String post(final String url, final List<BasicNameValuePair> pairs) throws Exception {
         HttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000);
         client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
@@ -110,7 +110,7 @@ public class HttpClientHelper {
         return result;
     }
 
-    public static String post(String url, Map<String, String> params) {
+    public static String post(final String url, final Map<String, String> params) {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpPost post = new HttpPost(url);
 
@@ -149,7 +149,7 @@ public class HttpClientHelper {
         return null;
     }
 
-    public static  String get(String url, Map<String, String> params) {
+    public static  String get(final String url, final Map<String, String> params) {
 
         HttpGet get = null;
         try {
@@ -184,7 +184,7 @@ public class HttpClientHelper {
         return null;
     }
 
-    public static String GET(String url,  Map<String,String> headers)
+    public static String GET(final String url, final Map<String,String> headers)
     {
         HttpGet get = new HttpGet(url);
         try {
@@ -217,7 +217,7 @@ public class HttpClientHelper {
         return null;
     }
 
-    public static String POST(String url, String content, Map<String,String> headers) {
+    public static String POST(final String url, final String content, final Map<String,String> headers) {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpPost post = new HttpPost(url);
         try {
@@ -252,7 +252,7 @@ public class HttpClientHelper {
         return null;
     }
 
-    public static String PUT(String url, String params,Map<String,String> headers) {
+    public static String PUT(final String url, final String params, final Map<String,String> headers) {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpPut put = new HttpPut(url);
         if (params != null) {
@@ -288,7 +288,7 @@ public class HttpClientHelper {
         return null;
     }
 
-    public static String DELETE(String url, Map<String,String> headers) {
+    public static String DELETE(final String url, final Map<String,String> headers) {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpDelete delete = new HttpDelete(url);
 

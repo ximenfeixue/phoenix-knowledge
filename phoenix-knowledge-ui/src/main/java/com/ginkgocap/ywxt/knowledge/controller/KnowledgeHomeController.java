@@ -175,7 +175,7 @@ public class KnowledgeHomeController extends BaseController {
 
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String str = HttpClientHelper.post(url + "knowledge/hot/comment.json", params);
+            String str = HttpClientHelper.post(url + "/knowledge/hot/comment.json", params);
             model.put("list", getKnowledgeList(str));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());

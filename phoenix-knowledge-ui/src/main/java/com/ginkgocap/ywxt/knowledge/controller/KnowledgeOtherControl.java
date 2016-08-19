@@ -358,7 +358,7 @@ public class KnowledgeOtherControl extends BaseController
         return vo;
     }
 
-    private Knowledge genVo(Knowledge2 knowledge, String url) {
+    private Knowledge genVo(final Knowledge2 knowledge,final String url) {
 
         Knowledge vo = new Knowledge();
         if (knowledge.getId() != 0) {
