@@ -42,9 +42,6 @@ public class KnowledgeHomeController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeHomeController.class);
 
     @Autowired
-    private KnowledgeService knowledgeService;
-
-    @Autowired
     KnowledgeBatchQueryService knowledgeBatchQueryService;
 
     @Autowired
@@ -58,9 +55,6 @@ public class KnowledgeHomeController extends BaseController {
 
     @Autowired
     KnowledgeCountService knowledgeCountService;
-
-    private final String  KNOWLEDGE_QUERY_HOT_URL = "knowledgeQueryHotUrl";
-    private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
 
     @ResponseBody
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
@@ -106,11 +100,11 @@ public class KnowledgeHomeController extends BaseController {
 
             Map<String, String> params = new HashMap<String, String>(1);
             params.put("num", String.valueOf(count));
-            String str = HttpClientHelper.post(url + "/user/tags/search.json", params);
+            String jsonContent = HttpClientHelper.post(url + "/user/tags/search.json", params);
             String tags = "";
             try {
-                if (!org.apache.commons.lang.StringUtils.isBlank(str)) {
-                    tags = str.replace("[", "").replace("]", "");
+                if (!org.apache.commons.lang.StringUtils.isBlank(jsonContent)) {
+                    tags = jsonContent.replace("[", "").replace("]", "");
                 }
             } catch (Exception e) {
                 logger.error("搜索首页热门标签请求查询失败,{}", e.toString());
@@ -144,11 +138,11 @@ public class KnowledgeHomeController extends BaseController {
             }
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String getKnowledgeList = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
-            if (StringUtils.isBlank(getKnowledgeList)) {
+            String jsonContent = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
+            if (StringUtils.isBlank(jsonContent)) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
             }
-            model.put("list", getKnowledgeList(getKnowledgeList));
+            model.put("list", getKnowledgeList(jsonContent));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());
             e.printStackTrace();
@@ -175,8 +169,8 @@ public class KnowledgeHomeController extends BaseController {
 
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String str = HttpClientHelper.post(url + "/knowledge/hot/comment.json", params);
-            model.put("list", getKnowledgeList(str));
+            String jsonContent = HttpClientHelper.post(url + "/knowledge/hot/comment.json", params);
+            model.put("list", getKnowledgeList(jsonContent));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());
             e.printStackTrace();
