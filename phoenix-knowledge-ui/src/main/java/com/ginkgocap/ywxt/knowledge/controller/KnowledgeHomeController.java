@@ -144,11 +144,11 @@ public class KnowledgeHomeController extends BaseController {
             }
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String str = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
-            if (StringUtils.isEmpty(str)) {
+            String getKnowledgeList = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
+            if (StringUtils.isBlank(getKnowledgeList)) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
             }
-            model.put("list", getKnowledgeList(str));
+            model.put("list", getKnowledgeList(getKnowledgeList));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());
             e.printStackTrace();
@@ -299,9 +299,9 @@ public class KnowledgeHomeController extends BaseController {
         return m;
     }
 
-    private List<Map<String, Object>> getKnowledgeList(String str) throws Exception {
+    private List<Map<String, Object>> getKnowledgeList(String jsonContent) throws Exception {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> returnParams = KnowledgeUtil.readValue(Map.class, str);
+        Map<String, Object> returnParams = KnowledgeUtil.readValue(Map.class, jsonContent);
         String bsn = returnParams.get("bsn") + "";
         JSONObject bsnObjects = JSONObject.fromObject(bsn);
         Map<String, Object> bsnMaps = (Map<String, Object>) bsnObjects;
