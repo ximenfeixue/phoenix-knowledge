@@ -54,4 +54,18 @@ public class KnowledgeMysqlDaoTest extends TestBase {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testGetCreatedByUserId()
+    {
+        try {
+            long userId = 200562;
+            List<KnowledgeBase> baseList = knowledgeMysqlDao.getByCreateUserId(userId, 0, 10);
+            System.out.println(baseList);
+            TestCase.assertTrue(baseList != null && baseList.size() > 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

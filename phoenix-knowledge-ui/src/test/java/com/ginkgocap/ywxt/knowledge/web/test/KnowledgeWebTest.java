@@ -131,7 +131,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	
             //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 51608121144091L; //detail.getId();
+            long knowledgeId = 11608191638474L; //detail.getId();
             int columnId = 1; // Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
@@ -178,7 +178,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             createKnowledge("考虑,考虑");
-            String subUrl = "/all/0/10/考虑"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
+            String subUrl = "/all/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{keyword}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
@@ -213,7 +213,7 @@ public class KnowledgeWebTest extends BaseTestCase
             		continue;
             	}
             	System.out.println("type: " + index);
-	            String subUrl = "/allKnowledgeByColumnAndSource" + String.format("/%d/%d/2/0/20/-1", index+1, coulmnIds.get(index)); ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
+	            String subUrl = "/allKnowledgeByColumnAndSource" + String.format("/%d/%d/2/0/10/-1", index+1, coulmnIds.get(index)); ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
 	            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
 	            checkResponseWithData(result);
             }
@@ -666,7 +666,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/2/1/12/科技";  //user/{columnId}/{start}/{size}
+            String subUrl = "/knowledgeRelated/2/1/12/null";  //user/{columnId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
