@@ -56,7 +56,7 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 
         Update update = new Update();
         update.set(Constant.Content, comment);
-        update.addToSet(Constant.createTime, new Date().getTime());
+        update.set(Constant.createTime, new Date().getTime());
         KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
         if (knowledgeComment == null) {
             logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + commentId);
