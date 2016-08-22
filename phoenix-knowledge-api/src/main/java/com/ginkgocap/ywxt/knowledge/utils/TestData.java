@@ -187,7 +187,7 @@ public class TestData {
     {
         long System_AppId = 1L;
         long assocId = 2L; //,
-        long sourceTypeId = 2L;
+        long sourceTypeId = KnowledgeConstant.DEFAULT_SOURCE_TYPE;
         long typeId = 8L;
 
         Associate associate = new Associate();

@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class KnowledgeConstant {
 
+    public static final long DEFAULT_APP_ID = 1L;
+    public static final int DEFAULT_SOURCE_TYPE = 8;
+
     public static final String USER_DEFAULT_PIC_PATH_FAMALE = "/web/pic/user/default.jpeg";//个人默认头像：女
     public static final String USER_DEFAULT_PIC_PATH_MALE = "/web/pic/people/original/default.jpeg";//个人默认头像：男
     public static final String ORGAN_DEFAULT_PIC_PATH = "/web1/organ/avatar/default.jpeg";//组织、客户默认头像

@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
@@ -34,7 +35,7 @@ public abstract class BaseController {
     @Resource
     private RedisCacheService redisCacheService;
 
-    protected static final long APPID = 1l;
+    protected static final long APPID = KnowledgeConstant.DEFAULT_APP_ID;
 
     protected final static short KNOWLEDGE_MYCOLLECT = 1;
     protected final static short KNOWLEDGE_SHAREME = 2;
