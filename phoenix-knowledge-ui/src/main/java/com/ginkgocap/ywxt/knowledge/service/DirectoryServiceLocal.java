@@ -320,7 +320,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
 
         List<Long> knowledgeIds = null;
-        if (directorySources == null && directorySources.size() >0) {
+        if (directorySources != null && directorySources.size() >0) {
+            logger.debug("directorySources size: {}", directorySources.size());
             knowledgeIds = new ArrayList<Long>(directorySources.size());
             if (directorySources != null && directorySources.size() > 0) {
                 for (DirectorySource source : directorySources) {

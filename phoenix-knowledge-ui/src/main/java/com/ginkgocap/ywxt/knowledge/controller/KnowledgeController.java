@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
 import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
@@ -24,14 +23,10 @@ import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.model.User;
-import com.ginkgocap.ywxt.user.service.UserService;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
-import com.gintong.common.phoenix.permission.service.PermissionCheckService;
-import com.gintong.common.phoenix.permission.service.PermissionRepositoryService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
-import com.gintong.frame.util.dto.Notification;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -886,8 +881,11 @@ public class KnowledgeController extends BaseController {
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        if(type <= 0 || columnId <= 0 || page < 0 || size <= 0) {
+        if(columnId <= 0 || page < 0 || size <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+        if (type <= 0) {
+            type = (short)KnowledgeType.ENews.value();
         }
 
         long userId = this.getUserId(user);
@@ -1693,13 +1691,14 @@ public class KnowledgeController extends BaseController {
         }
 
         //If query by keyword failed, query again
+        /*
         if (userKnowledgeBase == null || userKnowledgeBase.size() <= 0) {
             try {
                 userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
             } catch (Exception ex) {
                 logger.error("Query knowledge of self created failed. uerId: {}, error: {}", user.getId(), ex.getMessage());
             }
-        }
+        }*/
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
             userKnowledge = convertKnowledgeBaseToMini(userKnowledgeBase);
