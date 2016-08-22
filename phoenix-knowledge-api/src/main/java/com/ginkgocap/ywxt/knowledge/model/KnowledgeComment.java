@@ -35,7 +35,10 @@ public class KnowledgeComment implements Serializable{
     private String pic;
 
     /** 是否可见 0 不可见， 1 可见**/
-    private Integer visible;
+    private int visible;
+
+    //评论状态(0：已删除，1：正常)
+    private short status;
 
     public String getContent() {
         return content;
@@ -117,11 +120,19 @@ public class KnowledgeComment implements Serializable{
         this.pic = pic;
     }
 
-    public Integer getVisible() {
+    public int getVisible() {
         return visible;
     }
 
-    public void setVisible(Integer visible) {
+    public void setVisible(int visible) {
         this.visible = visible;
+    }
+
+    public short getStatus() {
+        return status;
+    }
+
+    public void setStatus(short status) {
+        this.status = status;
     }
 }
