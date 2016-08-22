@@ -1687,9 +1687,18 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeMini> userKnowledge = null;
         int start = page * size;
         try {
-            userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
+            userKnowledgeBase = knowledgeService.getBaseByKeyWord(user.getId(), start, size, keyword);
         } catch (Exception ex) {
-            logger.error("Query knowledge of self created failed. uerId: {}, error: {}", user.getId(), ex.getMessage());
+            logger.error("Query knowledge of self created by keyword failed. uerId: {}, keyword: {}, error: {}", user.getId(), keyword, ex.getMessage());
+        }
+
+        //If query by keyword failed, query again
+        if (userKnowledgeBase == null || userKnowledgeBase.size() <= 0) {
+            try {
+                userKnowledgeBase = knowledgeService.getBaseByCreateUserId(user.getId(), start, size);
+            } catch (Exception ex) {
+                logger.error("Query knowledge of self created failed. uerId: {}, error: {}", user.getId(), ex.getMessage());
+            }
         }
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
