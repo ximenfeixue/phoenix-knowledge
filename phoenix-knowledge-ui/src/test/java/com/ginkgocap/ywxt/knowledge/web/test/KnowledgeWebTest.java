@@ -666,8 +666,8 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-        	createKnowledge("科技首页");
-        	createKnowledge("科技首页,科技首页");
+        	//createKnowledge("科技首页");
+        	//createKnowledge("科技首页,科技首页");
             String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
