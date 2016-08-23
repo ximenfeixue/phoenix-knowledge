@@ -10,14 +10,14 @@ import java.util.Map;
  */
 public interface KnowledgeBatchQueryDao {
 
-    long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id,short type) ;
+    long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId,short type) ;
 
     /**
      * 获取 金桐和自己  混合
      */
-    List<Knowledge> getMixKnowledge(String columnID,long user_id,short type,int offset,int limit);
+    List<Knowledge> getMixKnowledge(String columnID,long userId,short type,int offset,int limit);
 
-    long getMixKnowledgeCount(String columnID,long user_id,short type);
+    long getMixKnowledgeCount(String columnID,long userId,short type);
 
 
 

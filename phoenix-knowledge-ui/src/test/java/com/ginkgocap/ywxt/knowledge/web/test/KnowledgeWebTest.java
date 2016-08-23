@@ -115,8 +115,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 2971560L; //detail.getId();
-            int columnId = 3; //Integer.valueOf(detail.getColumnid());
+            long knowledgeId = 2964815L; //detail.getId();
+            int columnId = 4; //Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -606,7 +606,7 @@ public class KnowledgeWebTest extends BaseTestCase
                 System.err.println("can't get directory");
                 fail();
             }*/
-            String subUrl = "/byDirectory/" + directoryId + "/0/10";  ///directory/{directoryId}/{start}/{size}
+            String subUrl = "/byDirectory/" + directoryId + "/0/5";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -666,7 +666,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            String subUrl = "/knowledgeRelated/2/0/12/null";  //user/{columnId}/{start}/{size}
+        	createKnowledge("科技首页");
+        	createKnowledge("科技首页,科技首页");
+            String subUrl = "/knowledgeRelated/2/0/12/科技";  //user/{columnId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {

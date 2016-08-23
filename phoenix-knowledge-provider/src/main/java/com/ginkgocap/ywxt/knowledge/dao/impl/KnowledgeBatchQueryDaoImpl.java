@@ -71,19 +71,19 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     }
 
     @Override
-    public long getKnowledgeByUserIdAndColumnID(String[] columnID,long user_id, short type) {
+    public long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId, short type) {
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
         List<String> list = new ArrayList<String>(columnID.length);
         for(int i = 0; i < columnID.length; i++) {
             list.add(columnID[i]);
         }
-        return mongoTemplate.count(query(where("uid").is(user_id).and("columnid").in(list).and("status").is(4)), collectionName);
+        return mongoTemplate.count(query(where("uid").is(userId).and("columnid").in(list).and("status").is(4)), collectionName);
     }
 
     @Override
-    public List<Knowledge> getMixKnowledge(String columnID, long user_id, short type, int offset, int limit) {
+    public List<Knowledge> getMixKnowledge(String columnID, long userId, short type, int offset, int limit) {
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        return mongoTemplate.find(query(where("columnid").is(columnID).and("uid").in(Arrays.asList(new Long[]{0L,user_id}))).skip(offset).limit(limit), Knowledge.class,collectionName);
+        return mongoTemplate.find(query(where("columnid").is(columnID).and("uid").in(Arrays.asList(new Long[]{0L,userId}))).skip(offset).limit(limit), Knowledge.class,collectionName);
 
     }
 
@@ -175,7 +175,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     public List<Knowledge> getAllByParam(short columnType, int columnId, String columnPath, long userId, int start, int size)
     {
         logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
         return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
@@ -184,7 +184,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             logger.error("param is invalidated. start: {}, size: {}", start, size);
             return null;
         }
-        String key = getKey(columnType, columnId, userId, tableName);
+        final String key = getKey(columnType, columnId, userId, tableName);
         List<Long> knowledgeIds = (List<Long>) cache.get(key);
         size = size > maxSize ? maxSize : size;
         List<Knowledge> result = null;
@@ -200,7 +200,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                     criteria.and("uid").is(userId);
                 }
                 // 查询栏目目录为当前分类下的所有数据
-                String reful = columnPath;
+                final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
                 criteria.and("cpathid").regex("^" + reful + ".*$");
                 Query query = new Query(criteria);
@@ -208,7 +208,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 query.limit(maxQuerySize);
                 query.skip(0);
 
-                List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (knowledgeList != null && knowledgeList.size() > 0 ) {
                     List<Long> ids = new CopyOnWriteArrayList<Long>();
                     result = new ArrayList<Knowledge>(size);
@@ -224,7 +224,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                         skip++;
                     }
                     cache.set(key, cacheTTL, ids);
-                    String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
+                    final String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
                     saveKnowledgeToCache(result, knowledgeKey);
                 }
             }
@@ -232,7 +232,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 ex.printStackTrace();
             }
         } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
-            String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
+            final String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
             result = (List<Knowledge>)cache.get(knowledgeKey);
             if (result != null) {
                 logger.info("This list have cached before, so return it directly..");
@@ -287,8 +287,8 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     @Override
     public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size)
     {
-        String collectionName = this.getCollectionName(type);
-        List<String> list = new ArrayList<String>(columnIds.length);
+        final String collectionName = this.getCollectionName(type);
+        final List<String> list = new ArrayList<String>(columnIds.length);
         for(int i = 0; i < columnIds.length; i++) {
             list.add(String.valueOf(columnIds[i]));
         }
@@ -300,8 +300,8 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     @Override
     public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type)
     {
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        List<String> list = new ArrayList<String>(columnID.length);
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        final List<String> list = new ArrayList<String>(columnID.length);
         for(int i = 0; i < columnID.length; i++) {
             list.add(columnID[i]);
         }

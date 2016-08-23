@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository("knowledgeMysqlDao")
 public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements KnowledgeMysqlDao {
-	private Logger logger = LoggerFactory.getLogger(KnowledgeMysqlDaoImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(KnowledgeMysqlDaoImpl.class);
 	@Override
 	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception
     {
@@ -315,7 +315,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 	@Override
 	public List<KnowledgeBase> getByColumnIdAndReportStatus(int columnId,
-			short reportStatus,int start,int size) throws Exception {
+			short reportStatus,final int start,final int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_columnId_reportStatus", start, size, columnId, reportStatus);
 	}
