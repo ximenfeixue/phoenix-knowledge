@@ -2026,11 +2026,11 @@ public class KnowledgeController extends BaseController {
                     assoMap.put(associate.getAssocTypeId(), assoList);
                 }
                 assoMap.get(associate.getAssocTypeId()).add(associate);
-                logger.info("assoid:" + assoId);
+                logger.info("assoId:" + assoId);
             }catch (AssociateServiceException e) {
-                logger.error("update Asso failed！reason：" + e.getMessage());
+                logger.error("create Asso failed！reason：" + e.getMessage());
             } catch (Throwable e) {
-                logger.error("update Asso failed！reason：" + e.getMessage());
+                logger.error("create Asso failed！reason：" + e.getMessage());
             }
         }
 
