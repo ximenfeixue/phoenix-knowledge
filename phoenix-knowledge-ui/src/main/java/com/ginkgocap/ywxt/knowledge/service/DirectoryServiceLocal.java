@@ -340,14 +340,14 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return knowledgeIds;
     }
 
-    private DirectorySource newDirectorySourceObject(long userId, long directoryId,Knowledge knowledge)
+    private DirectorySource newDirectorySourceObject(long userId, long directoryId,Knowledge detail)
     {
         DirectorySource directorySource = new DirectorySource();
         directorySource.setUserId(userId);
         directorySource.setDirectoryId(directoryId);
         directorySource.setAppId(APPID);
-        directorySource.setSourceId(knowledge.getId());
-        directorySource.setSourceTitle(knowledge.getTitle());
+        directorySource.setSourceId(detail.getId());
+        directorySource.setSourceTitle(detail.getTitle());
         directorySource.setSourceType(sourceType);
         directorySource.setCreateAt(new Date().getTime());//source type 为定义的类型id:exp(用户为1,人脉为2,需求为7,知识为8,事务为5)
         return directorySource;
@@ -367,18 +367,26 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         return true;
     }
 
-    private List<Long> createDirectorySource(long userId, final List<Long> directoryIds, final Knowledge knowledgeDetail)
+    private List<Long> createDirectorySource(final long userId, final List<Long> directoryIds, final Knowledge detail)
     {
-        long knowledgeId = knowledgeDetail.getId();
-        List<Long> successIds = new ArrayList<Long>(directoryIds.size());
-        for (Long directoryId : directoryIds) {
-            DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
+        long knowledgeId = detail.getId();
+        int size = directoryIds.size();
+        List<Long> successIds = new ArrayList<Long>(size);
+        for (int index = 0; index < size; index++) {
+            logger.info("directoryId: {}", directoryIds.get(index));
+            if (directoryIds.get(index) == null || !(directoryIds.get(index) instanceof Long)) {
+                logger.error("directoryId: {} is invalidated, so skip to add to knowledge, id: {}", directoryIds.get(index), detail.getId());
+                continue;
+            }
+
+            Long directoryId = directoryIds.get(index);
             try {
+                DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, detail);
                 logger.info("before create directory source. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
                 directorySourceService.createDirectorySources(directorySource);
                 successIds.add(directoryId);
                 logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
-            } catch (DirectorySourceServiceException ex) {
+            } catch (Exception ex) {
                 logger.info("create directory source, failed. userId: {}, knowledgeId: {}, directoryId: {} error: {}",
                         userId, knowledgeId, directoryId, ex.getMessage());
             }

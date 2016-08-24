@@ -285,21 +285,25 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
     }
 
-    public boolean saveTagSource(long userId, Knowledge knowledgeDetail)
+    public boolean saveTagSource(long userId, Knowledge detail)
     {
-        List<Long> tagsList = knowledgeDetail.getTagList();
+        List<Long> tagsList = detail.getTagList();
         if (tagsList == null || tagsList.size() <= 0) {
             logger.error("tag List is empty, so skip to save..");
             return false;
         }
 
-
         for (int index = 0; index < tagsList.size(); index++) {
             logger.info("tagId: {}", tagsList.get(index));
-            Long tagId = Long.valueOf(tagsList.get(index));
+            if (tagsList.get(index) == null || !(tagsList.get(index) instanceof Long)){
+                logger.error("tagId: {} is invalidated, so skip to add to knowledge, id: {}", tagsList.get(index), detail.getId());
+                continue;
+            }
+
             try {
+                Long tagId = tagsList.get(index);
                 if (tagId > 0) {
-                    TagSource tagSource = newTagSourceObject(userId, tagId, knowledgeDetail);
+                    TagSource tagSource = newTagSourceObject(userId, tagId, detail);
                     tagSourceService.createTagSource(tagSource);
                 }
                 logger.info("Save tag success tagId:" + tagId);

@@ -117,16 +117,9 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情错误");
         }
         Knowledge detail = data.getKnowledgeDetail();
-        if (StringUtils.isEmpty(detail.getColumnType())) {
-            logger.warn("column type is null, so set a default value");
-            detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
-        }
-        if (StringUtils.isEmpty(detail.getCpathid())) {
-            logger.warn("column path is null, so set a default value");
-            detail.setCpathid(KnowledgeType.ENews.typeName());
-        }
-        initKnowledgeTime(data);
+        columnTypeAndIdFaultTolerant(detail);
 
+        initKnowledgeTime(data);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -228,7 +221,7 @@ public class KnowledgeController extends BaseController {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
-
+        columnTypeAndIdFaultTolerant(detail);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
@@ -2362,6 +2355,54 @@ public class KnowledgeController extends BaseController {
             }
         }
         return baseList;
+    }
+
+    private Knowledge columnTypeAndIdFaultTolerant(Knowledge detail)
+    {
+        if (StringUtils.isBlank(detail.getColumnType())) {
+            logger.warn("column type is null, so set a default value");
+            detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
+        } else {
+            int columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
+            if (columnType != KnowledgeType.knowledgeType(columnType).value()) {
+                logger.warn("column type is invalidated, so set a default value");
+                columnType = KnowledgeType.ENews.value();
+                detail.setColumnType(String.valueOf(columnType));
+            }
+        }
+
+        if (StringUtils.isBlank(detail.getColumnid())) {
+            logger.warn("column Id is null, so set a default value");
+            detail.setColumnid(String.valueOf(KnowledgeType.ENews.value()));
+        } else {
+            long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+            if (columnId <= 0) {
+                logger.warn("column id: {} is invalidated, so set a default value. ", detail.getColumnid());
+                columnId = KnowledgeType.ENews.value();
+                detail.setColumnid(String.valueOf(columnId));
+            }
+        }
+
+        if (StringUtils.isBlank(detail.getCpathid())) {
+            String columnPath = null;
+            try {
+                long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+                ColumnCustom column = columnCustomService.queryByCid(columnId);
+                if (column != null) {
+                    columnPath = column.getPathName();
+                }
+            } catch (Throwable ex) {
+                logger.error("Query column failed. columnId: {}, error: {}", detail.getColumnid(), ex.getMessage());
+            }
+
+            if (columnPath == null) {
+                logger.error("column path is null, so set a default value");
+                columnPath =  KnowledgeType.ENews.typeName();
+            }
+            detail.setCpathid(columnPath);
+        }
+
+        return detail;
     }
 
     private ColumnCustom getColumn(String columnId)

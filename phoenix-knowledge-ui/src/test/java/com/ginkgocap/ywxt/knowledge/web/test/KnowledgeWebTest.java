@@ -131,7 +131,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	
             //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 11608191638474L; //detail.getId();
+            long knowledgeId = 11608241757391L; //detail.getId();
             int columnId = 1; // Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
