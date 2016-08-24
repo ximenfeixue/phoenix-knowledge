@@ -307,13 +307,9 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                     tagSourceService.createTagSource(tagSource);
                 }
                 logger.info("Save tag success tagId:" + tagId);
-            } catch (TagSourceServiceException ex) {
-                logger.error("Save Tag info failed: {}" + ex.getMessage());
-                ex.printStackTrace();
             }
-            catch (Exception ex) {
+            catch (Throwable ex) {
                 logger.error("Save Tag info failed: {}" + ex.getMessage());
-                ex.printStackTrace();
             }
         }
 
