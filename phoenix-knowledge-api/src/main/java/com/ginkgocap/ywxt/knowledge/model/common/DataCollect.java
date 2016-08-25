@@ -155,10 +155,12 @@ public class DataCollect implements Serializable {
             knowledgeBase.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author
             knowledgeBase.setCreateUserName(detail.getCname());
-            long createTime = StringUtils.isNotEmpty(detail.getCreatetime()) ? KnowledgeUtil.parserTimeToLong(detail.getCreatetime()) : System.currentTimeMillis();
-            long modifyTime = StringUtils.isNotEmpty(detail.getModifytime()) ? KnowledgeUtil.parserTimeToLong(detail.getModifytime()) : System.currentTimeMillis();;
+            long createTime = StringUtils.isNotBlank(detail.getCreatetime()) ? KnowledgeUtil.parserTimeToLong(detail.getCreatetime()) : System.currentTimeMillis();
+            long modifyTime = StringUtils.isNotBlank(detail.getModifytime()) ? KnowledgeUtil.parserTimeToLong(detail.getModifytime()) : System.currentTimeMillis();
+            long publicTime = StringUtils.isNotBlank(detail.getSubmitTime()) ? KnowledgeUtil.parserTimeToLong(detail.getSubmitTime()) : System.currentTimeMillis();;
             knowledgeBase.setCreateDate(createTime);
             knowledgeBase.setModifyDate(modifyTime);
+            knowledgeBase.setPublicDate(publicTime);
             knowledgeBase.setIsOld((short) 0);
             knowledgeBase.setUserStar((short) 0);
             knowledgeBase.setStatus((short)detail.getStatus());
