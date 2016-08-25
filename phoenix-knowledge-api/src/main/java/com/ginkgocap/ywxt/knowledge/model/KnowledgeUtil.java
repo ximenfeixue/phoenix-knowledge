@@ -147,7 +147,7 @@ public final class KnowledgeUtil {
         }
         try {
             //TypeReference javaType = new TypeReference<List<T>>(){};
-        	 ObjectMapper objectMapper = new ObjectMapper();
+        	ObjectMapper objectMapper = new ObjectMapper();
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, valueType);
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             return objectMapper.readValue(content, javaType);
