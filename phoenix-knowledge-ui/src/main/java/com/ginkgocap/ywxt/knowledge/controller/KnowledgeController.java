@@ -1690,8 +1690,8 @@ public class KnowledgeController extends BaseController {
     }
 
     @SuppressWarnings({ "deprecation", "unchecked" })
-    private List<JSONObject>  getSearchList(HttpServletRequest request,long userId, int pno, int psize, String keyword, String module,Map<String, String> conditions) throws Exception {
-
+    private List<JSONObject>  getSearchList(HttpServletRequest request,long userId, int pno, int psize, String keyword, String module,Map<String, String> conditions) throws Exception
+    {
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>(11);
         pairs.add(new BasicNameValuePair("userid", String.valueOf(userId)));
         pairs.add(new BasicNameValuePair("pno", String.valueOf(pno)));
@@ -1707,14 +1707,11 @@ public class KnowledgeController extends BaseController {
         }
         // 多条件筛选集
         if (conditions != null) {
-
             Iterator<String> conditionIterator = conditions.keySet().iterator();
-
             while (conditionIterator.hasNext()) {
                 String key = conditionIterator.next();
                 pairs.add(new BasicNameValuePair(key, conditions.get(key)));
             }
-
         }
         String resultJson = null;
         JSONObject jo = null;
