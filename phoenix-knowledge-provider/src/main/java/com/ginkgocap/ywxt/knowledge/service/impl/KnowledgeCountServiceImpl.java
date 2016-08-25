@@ -142,7 +142,9 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         }
         Set<Map.Entry<Long,KnowledgeCount>> knowledgeCountEntry = hotCountMap.entrySet();
         for (Map.Entry<Long,KnowledgeCount> knowledgeCount : knowledgeCountEntry) {
-            KnowledgeCountList.add(knowledgeCount.getValue());
+            if (knowledgeCount.getValue() != null && knowledgeCount.getValue() instanceof  KnowledgeCount) {
+                KnowledgeCountList.add(knowledgeCount.getValue());
+            }
             //Batch save 20
             if (KnowledgeCountList.size() >= defaultBatchSize) {
                 KnowledgeCountList = saveToDB(KnowledgeCountList, false);
@@ -161,7 +163,13 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
                 e.printStackTrace();
             }
         }
-        return complete ? null : new ArrayList<KnowledgeCount>(defaultBatchSize);
+        if (complete) {
+            hotCountMap.clear();
+            return null;
+        }
+        else {
+            return new ArrayList<KnowledgeCount>(defaultBatchSize);
+        }
     }
 
     private void startTimer() {
