@@ -2181,6 +2181,32 @@ public class KnowledgeController extends BaseController {
         detail.setCollected(isCollected ? (short) 1 : (short) 0);
         DataCollect data = new DataCollect(null, detail);
 
+        //Convert the time to long
+        if (StringUtils.isNotBlank(detail.getCreatetime())) {
+            final String newTime = KnowledgeUtil.parserTimeToUCT(detail.getCreatetime());
+            detail.setCreatetime(newTime);
+        }
+
+        if (StringUtils.isNotBlank(detail.getModifytime())) {
+            final String newTime = KnowledgeUtil.parserTimeToUCT(detail.getModifytime());
+            detail.setModifytime(newTime);
+        }
+
+        if (StringUtils.isNotBlank(detail.getPerformTime())) {
+            final String newTime = KnowledgeUtil.parserTimeToUCT(detail.getPerformTime());
+            detail.setPerformTime(newTime);
+        }
+
+        if (StringUtils.isNotBlank(detail.getSysTime())) {
+            final String newTime = KnowledgeUtil.parserTimeToUCT(detail.getSysTime());
+            detail.setSysTime(newTime);
+        }
+
+        if (StringUtils.isNotBlank(detail.getSubmitTime())) {
+            final String newTime = KnowledgeUtil.parserTimeToUCT(detail.getSubmitTime());
+            detail.setSubmitTime(newTime);
+        }
+
         Permission permission = permissionServiceLocal.getPermissionInfo(knowledgeId);
         //set a default value
         if (permission == null) {

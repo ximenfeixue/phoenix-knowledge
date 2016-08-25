@@ -453,7 +453,7 @@ public final class KnowledgeUtil {
     public static long parserTimeToLong(String time)
     {
         long newTime = System.currentTimeMillis();
-        if (StringUtils.isEmpty(time)) {
+        if (StringUtils.isBlank(time)) {
             return newTime;
         }
 
@@ -475,6 +475,28 @@ public final class KnowledgeUtil {
             logger.error("Convert String to long error :"+ex.getMessage());
         }
         return newTime;
+    }
+
+    public static String parserTimeToUCT(String time)
+    {
+        if (StringUtils.isBlank(time)) {
+            return String.valueOf(System.currentTimeMillis());
+        }
+
+        if (time.indexOf("-") > 0 && time.indexOf(":") > 0) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = sdf.parse(time);
+                if (date != null) {
+                    return String.valueOf(date.getTime());
+                }
+            } catch (Exception ex) {
+                logger.error("Convert String to long error :"+ex.getMessage());
+            }
+        }
+
+        logger.info("The final UCT time: {}", time);
+        return time;
     }
     
     public static InetAddress getInetAddress(){
