@@ -518,7 +518,7 @@
                 <!-- redis端口 -->
                 <redis.port>6379</redis.port>
                 <!-- mongo地址 -->
-                <mongodb.address>192.168.120.135:27017</mongodb.address>
+                <mongodb.address>192.168.101.131:27017</mongodb.address>
                 <!-- mongo中数据库 -->
                 <mongodb.database>knowledge-test</mongodb.database>
                 <!-- 数据库访问帐号 -->
