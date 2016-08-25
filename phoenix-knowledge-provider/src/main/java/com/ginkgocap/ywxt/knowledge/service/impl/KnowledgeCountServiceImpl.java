@@ -134,6 +134,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
 
     private void batchSaveCountResult()
     {
+        logger.info("Knowledge Count batch save starting...");
         List<KnowledgeCount> KnowledgeCountList = null;
         if (hotCountMap.size() > defaultBatchSize) {
             KnowledgeCountList = new ArrayList<KnowledgeCount>(defaultBatchSize);
@@ -151,6 +152,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             }
         }
         saveToDB(KnowledgeCountList, true);
+        logger.info("Knowledge Count batch save end...");
     }
 
     private List<KnowledgeCount> saveToDB(List<KnowledgeCount> knowledgeCountList, boolean complete)
