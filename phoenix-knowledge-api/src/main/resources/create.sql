@@ -14,7 +14,7 @@ CREATE TABLE `tb_knowledge_base` (
   `visible` tinyint(2) NOT NULL DEFAULT '0' COMMENT '可见范围，默认0：为全平台可见，1：为自己可见，2：好友可见',
   `public_date` bigint(20) NOT NULL DEFAULT '0' COMMENT '发布时间',
   `modify_date` bigint(20) NOT NULL DEFAULT '0' COMMENT '修改时间',
-  `audit_status` tinyint(1) DEFAULT '1' COMMENT '审核状态(0：未通过，1：审核中，2：审核通过)',
+  `audit_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '审核状态(0：未通过，1：审核中，2：审核通过)',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（0为无效/删除，1为有效，2为草稿，3,：回收站）',
   `report_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '举报状态(3：举报审核未通过，即无非法现象，2：举报审核通过，1:未被举报，0：已被举报)',
   `create_date` bigint(20) NOT NULL COMMENT '创建时间',
@@ -48,7 +48,7 @@ CREATE TABLE `tb_knowledge_reference` (
  
 CREATE TABLE `tb_knowledge_count` (
   `id` bigint(20) NOT NULL COMMENT 'id',
-  `type` smallint(6) DEFAULT '1' COMMENT '栏目类型',
+  `type` smallint(6) NOT NULL DEFAULT '1' COMMENT '栏目类型',
   `title` varchar(255) DEFAULT NULL COMMENT '知识标题',
   `userId` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户id',
   `commentCount` bigint(20) NOT NULL DEFAULT '0' COMMENT '评论数',
