@@ -49,10 +49,9 @@ public abstract class BaseController {
      * @throws Exception
      */
     protected String getBodyParam(HttpServletRequest request) {
-        BufferedReader reader = null;
         StringBuffer jsonIn = new StringBuffer();
         try {
-            reader = request.getReader();
+        	BufferedReader reader = request.getReader();
             String line = null;
             while ((line = reader.readLine()) != null) {
                 jsonIn.append(line);
