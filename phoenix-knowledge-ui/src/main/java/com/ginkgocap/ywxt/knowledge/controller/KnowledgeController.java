@@ -1616,7 +1616,7 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        long userId = user.getId();
+        long userId = this.getUserId(user);
         final String queryType ="knowledge";
         /** 金桐网推荐的相关“知识”数据 */
         List<KnowledgeMini> platformKnowledge = null;
@@ -1677,7 +1677,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeBase> userKnowledgeBase = null;
         List<KnowledgeMini> userKnowledge = null;
         int start = page * size;
-        userKnowledgeBase = getCreatedKnowledge(user.getId(), start, size, keyword);
+        userKnowledgeBase = getCreatedKnowledge(userId, start, size, keyword);
 
         if (userKnowledgeBase != null && userKnowledgeBase.size() > 0) {
             userKnowledge = convertKnowledgeBaseToMini(userKnowledgeBase);
