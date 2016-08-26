@@ -16,9 +16,6 @@ import java.io.Serializable;
 public class KnowledgeBase implements Serializable {
 
 	private static final long serialVersionUID = 9167004345845581253L;
-	
-	public static final int CONTENT_DESC_LENGTH = 50;
-	
 	/**主键*/
 	private long id;
 
