@@ -80,7 +80,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
         if (defaultIdGenerator != null) {
             try {
                 long sequenceId = Long.parseLong(defaultIdGenerator.next());
-                logger.info("generated  sequenceId： {}", sequenceId);
+                logger.info("generated  sequenceId： " + sequenceId);
                 return sequenceId;
             } catch (NumberFormatException ex) {
                 logger.error("生成唯一Id不是数字 ： " + ex.getMessage());
