@@ -25,7 +25,7 @@ CREATE TABLE `tb_knowledge_base` (
   `modify_user_id` bigint(20) NOT NULL DEFAULT '0',
   `modify_user_name` varchar(255) DEFAULT NULL,
   `userStar` tinyint(4) NOT NULL DEFAULT '0' COMMENT '星标(1:是,0:否(默认))',
-  `isOld` tinyint(1) DEFAULT '0' COMMENT '是否是旧数据 (1:是,0:否)',
+  `isOld` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否是旧数据 (1:是,0:否)',
   `cpath` varchar(255) DEFAULT NULL,
   `privated` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否私密 (1:是,0:否)',
   `taskId` varchar(255) DEFAULT NULL,
