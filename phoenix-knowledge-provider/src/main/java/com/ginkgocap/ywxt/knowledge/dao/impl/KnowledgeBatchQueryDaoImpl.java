@@ -210,7 +210,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
 
                 final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                    List<Long> ids = new CopyOnWriteArrayList<Long>();
+                    List<Long> ids = new ArrayList<Long>(maxQuerySize);
                     result = new ArrayList<Knowledge>(size);
                     int skip = 0;
                     int toIndex = start + size;
