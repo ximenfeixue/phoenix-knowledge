@@ -12,7 +12,9 @@ public class FileWebTest extends BaseTestCase {
 		LogMethod();
 		try {
 			final String subUrl = "/file/upload?" + "taskId=" + getTaskId();
-			final String filePath = "E:\\111111.jpg";
+			final String usrHome = System.getProperty("user.home");
+			final String fileSeparator = System.getProperty("file.separator");
+			final String filePath = usrHome + fileSeparator + "111111.jpg";
 			String jsonNode = HttpUpLoad(fileHost+subUrl, filePath);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
