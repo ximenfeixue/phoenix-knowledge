@@ -229,7 +229,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/allKnowledgeByColumnAndSource/11/11/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = HttpRequestFull(HttpMethod.GET, "http://192.168.120.135:8080/knowledge" + subUrl, null);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
 
         } catch (Exception e) {
