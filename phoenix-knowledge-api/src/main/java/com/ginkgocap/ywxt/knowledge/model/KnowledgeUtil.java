@@ -579,8 +579,6 @@ public final class KnowledgeUtil {
         return buffer.toString();
     }
 
-
-
     /**
      * 返回数据包装方法
      * @param knowledgeList
