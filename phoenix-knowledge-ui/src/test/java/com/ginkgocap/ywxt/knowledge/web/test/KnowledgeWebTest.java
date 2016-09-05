@@ -115,8 +115,8 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 2964815L; //detail.getId();
-            int columnId = 4; //Integer.valueOf(detail.getColumnid());
+            long knowledgeId = 11609011030511L; //detail.getId();
+            int columnId = 1; //Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -131,7 +131,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
         	
             //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 11608241757391L; //detail.getId();
+            long knowledgeId = 11609011030511L; //detail.getId();
             int columnId = 1; // Integer.valueOf(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
@@ -229,7 +229,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             String subUrl = "/allKnowledgeByColumnAndSource/11/11/2/1/20/-1"; ///allKnowledgeByColumnAndSource/{type}{columnId}/{source}/{page}/{size}/{total}
             //String urlStr =
-            JsonNode result = HttpRequestFull(HttpMethod.GET, "http://192.168.120.135:8080/knowledge" + subUrl, null);
+            JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
 
         } catch (Exception e) {
@@ -597,7 +597,6 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
         	long directoryId = 3991724208947840L;
-        	/*
         	List<Long> idList = getDirectoryList();
         	if ((idList != null && idList.size() > 0)) {
         		createKnowledgeWithDirectoy("testGetAllByDirectoryId", idList.subList(0, 1));
@@ -605,7 +604,7 @@ public class KnowledgeWebTest extends BaseTestCase
         	} else {
                 System.err.println("can't get directory");
                 fail();
-            }*/
+            }
             String subUrl = "/byDirectory/" + directoryId + "/0/5";  ///directory/{directoryId}/{start}/{size}
             JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);

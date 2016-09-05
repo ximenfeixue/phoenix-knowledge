@@ -16,6 +16,7 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -114,7 +115,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
             //Update knowledge Detail
             List<Long> existTags = knowledgeDetail.getTagList();
-            if (existTags == null || existTags.size() <= 0) {
+            if (CollectionUtils.isEmpty(existTags)) {
                 existTags = successIds;
             }
             else {

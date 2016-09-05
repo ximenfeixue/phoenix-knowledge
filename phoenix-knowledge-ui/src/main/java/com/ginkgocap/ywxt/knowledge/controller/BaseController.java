@@ -73,7 +73,7 @@ public abstract class BaseController {
         String key = UserUtil.getUserSessionKey(request);
         User user = (User) redisCacheService.getRedisCacheByKey(key);
         if (user != null) {
-            logger.info("login userId: {}, userName: {}", user.getId(), user.getName());
+            logger.info("login userId: " + user.getId() + " userName: " + user.getName());
         }
         return user;
         //return KnowledgeUtil.getDummyUser();

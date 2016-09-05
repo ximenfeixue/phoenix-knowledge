@@ -17,11 +17,6 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.ginkgocap.parasol</groupId>
-			<artifactId>parasol-common-provider</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>com.gintong.frame</groupId>
 			<artifactId>phoenix-frame-util</artifactId>
 		</dependency>
@@ -41,7 +36,6 @@
             </exclusions>
 		</dependency>
 
-		<!-- JPA分布式存储 begin -->
 		<dependency>
 			<groupId>com.ginkgocap.parasol</groupId>
 			<artifactId>parasol-common-provider</artifactId>
