@@ -50,6 +50,9 @@ public class KnowledgeOtherControl extends BaseController
     @Autowired
     private TagServiceLocal tagServiceLocal;
 
+    @Autowired
+    private PermissionServiceLocal permissionServiceLocal;
+
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
@@ -274,6 +277,17 @@ public class KnowledgeOtherControl extends BaseController
         knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
+
+    /*
+    @ResponseBody
+    @RequestMapping(value="/update/{userId}/{password}", method = RequestMethod.GET)
+    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response,
+            @PathVariable long userId,@PathVariable String password) throws Exception {
+        logger.info("update userId: {} password: {}", userId, password);
+        permissionServiceLocal.updatePassword(userId, password);
+        logger.info("update userId: {} password: {}", userId, password);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }*/
 
     @ResponseBody
     @RequestMapping(value="/knowledgeSync", method = RequestMethod.GET)

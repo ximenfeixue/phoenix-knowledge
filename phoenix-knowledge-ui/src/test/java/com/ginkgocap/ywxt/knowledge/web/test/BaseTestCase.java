@@ -1,13 +1,21 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Random;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.shiro.codec.Base64;
 
@@ -21,9 +29,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Created by Chen Peifeng on 2016/2/16.
@@ -49,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://192.168.130.200:8008/cross" + getLoginUrl(web);
+            loginUrl = "http://192.168.120.135:8008/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
