@@ -50,6 +50,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         return permissionQueue.offer(permission);
     }
 
+    /*
     public void updatePassword(final long userId, final String password) {
         // 生成salt
         User user = new User();
@@ -57,9 +58,6 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         RandomNumberGenerator saltGenerator = new SecureRandomNumberGenerator();
 
         String salt = saltGenerator.nextBytes().toHex();
-        //Base64
-        //byte[] bt = Base64.decode(password);
-        //password = new String(bt);
 
         String newPass = new Sha256Hash(password, salt, hashIterations).toHex();
         String updateSQL = String .format("update tb_user set password='%s' salt='%s' where id=%d", newPass, salt, userId);
@@ -68,7 +66,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         user.setSalt(salt);
         user.setPassword(newPass);
         passwdService.updateUserPassWord(user);
-    }
+    }*/
 
     public boolean canUpdate(final long knowledgeId, final long userId)
     {
