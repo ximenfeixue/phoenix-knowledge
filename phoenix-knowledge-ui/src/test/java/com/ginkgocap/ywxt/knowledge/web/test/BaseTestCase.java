@@ -35,7 +35,7 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = false;
+	protected static boolean web = true;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -46,7 +46,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
-    private final static String testEnv = envArray[2];
+    private final static String testEnv = envArray[1];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -407,23 +407,25 @@ public abstract class BaseTestCase extends TestCase
 
     public void login(String loginUrl)
     {
-       final String loginJson = getLogiJson(web);
-       try{
-            JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
-            if (retNode != null) {
-                JsonNode jsonNode = retNode.get("responseData");
-                if (jsonNode != null) {
-	                JsonNode sessionIDNode = jsonNode.get("sessionID");
-	                if (sessionIDNode == null) {
-	                	sessionIDNode = jsonNode.get("sessionId");
-	                }
-	                sessionID = jsonNode != null ? sessionIDNode.asText() : null;
+        if (sessionID == null || sessionID.trim().isEmpty()) {
+            final String loginJson = getLoginJson(web);
+            try {
+                JsonNode retNode = HttpRequestFull(HttpMethod.POST, loginUrl, loginJson);
+                if (retNode != null) {
+                    JsonNode jsonNode = retNode.get("responseData");
+                    if (jsonNode != null) {
+                        JsonNode sessionIDNode = jsonNode.get("sessionID");
+                        if (sessionIDNode == null) {
+                            sessionIDNode = jsonNode.get("sessionId");
+                        }
+                        sessionID = jsonNode != null ? sessionIDNode.asText() : null;
+                    }
+                    System.err.println("......sessionID: " + sessionID);
                 }
-                System.err.println("......sessionID: "+sessionID);
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -432,7 +434,7 @@ public abstract class BaseTestCase extends TestCase
     	return web ? "/web/login.json" : "/login/loginConfiguration.json";
     }
     
-    private static String getLogiJson(boolean web)
+    private static String getLoginJson(boolean web)
     {
     	final String userName = "18211081791";
     	final String passWord = "MTExMTEx";
