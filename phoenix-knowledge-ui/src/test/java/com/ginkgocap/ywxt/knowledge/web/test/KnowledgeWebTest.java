@@ -20,11 +20,12 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 public class KnowledgeWebTest extends BaseTestCase
 {
     public final String baseUrl =  hostUrl + "/knowledge";
+    private final String testTitle = "世界就是数据，一切皆可相连，人与人、人与物、物与物互联互通";
 
     public void testCreateKnowledge() throws InterruptedException
     {
         LogMethod();
-        createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的");
+        createKnowledge(testTitle);
     }
     
     public void testCreateKnowledgeWithTag()
@@ -56,7 +57,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         long begin = System.currentTimeMillis();
         for (int index = 0; index <100; index++) {
-            createKnowledge("如果谷歌是对的，苹果将在劫难逃！如果谷歌是对的");
+            createKnowledge(testTitle);
             System.out.print("Index: "+index);
         }
         long end = System.currentTimeMillis();

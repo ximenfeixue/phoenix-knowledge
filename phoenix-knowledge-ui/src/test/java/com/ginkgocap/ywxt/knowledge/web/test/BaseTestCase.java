@@ -253,7 +253,6 @@ public abstract class BaseTestCase extends TestCase
     
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
-        System.err.print("httpMethod: " + httpMethod + " Url: "+urlString+"\r\n");
         Map<String,String> headers = new HashMap<String, String>(5);
         System.out.println("sessionID: " + sessionID);
         headers.put("s", web ? "web" : "api");
