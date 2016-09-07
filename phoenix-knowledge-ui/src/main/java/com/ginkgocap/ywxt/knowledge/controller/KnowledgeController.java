@@ -1414,7 +1414,7 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        List<Long> tagIds = KnowledgeUtil.readValue(List.class, requestJson);
+        List<Long> tagIds = KnowledgeUtil.readListValue(Long.class, requestJson);
         if (tagIds == null || tagIds.size() <= 0) {
             logger.error("tag list is null...");
             return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"tag list is null...");
@@ -1825,110 +1825,6 @@ public class KnowledgeController extends BaseController {
         km.setColumnId(base.getColumnId());
         return km;
     }
-
-    /*
-        private List<KnowledgeMini2> changeKnowledgeMini2(List<DataCollection> data) {
-        List<KnowledgeMini2> kbds = new ArrayList<KnowledgeMini2>();
-        for (DataCollection collection : data) {
-            KnowledgeBase kbd = collection.getKnowledge();
-            if (kbd != null) {
-                changeKnowledgeToMini2(kbd);
-            }
-        }
-        return kbds;
-    }
-
-    public List<KnowledgeMini2> convertKnowledgeBaseList(List<KnowledgeBase> baseList)
-    {
-        if (baseList == null || baseList.size() <= 0) {
-            return null;
-        }
-
-        List<KnowledgeMini2> km2List =  new ArrayList<KnowledgeMini2>(baseList.size());
-        for(KnowledgeBase base : baseList) {
-            km2List.add(changeKnowledgeToMini2(base));
-        }
-
-        return km2List;
-    }
-
-    public KnowledgeMini2 changeKnowledgeToMini2(KnowledgeBase knowledgeBase)
-    {
-        KnowledgeMini2 km2 = new KnowledgeMini2();
-
-        //分享给我的知识专用
-        //km2.setShareMeId(knowledgeBase.getShareMeId());
-
-        Connections connections = new Connections();
-        // 作者id
-        long userId = knowledgeBase.getCreateUserId();
-        if(userId>0) {//判断是否传过来知识作者id - 剔除 全平台与金桐网
-            User detailUser = userService.selectByPrimaryKey(userId);
-            if(null != detailUser) {
-                connections.setType(detailUser.getType());
-                connections.setId(userId);//存在隐患
-                if(detailUser.getType()==1) {
-                    JTContactMini mini = new JTContactMini();//参考loginConfiguration 175 ConnectionsController 1909
-                    mini.setId(userId+"");
-                    mini.setName(detailUser.getName());
-                    mini.setLastName("");
-                    mini.setNameChar(detailUser.getNameFirst());
-                    mini.setImage(detailUser.getPicPath());
-                    mini.setCompany(detailUser.getCompanyName());
-                    List<String> emials = new ArrayList<String>();
-                    emials.add(detailUser.getEmail());
-                    mini.setListEmail(emials);
-
-                    mini.setOwnerid(userId);
-                    mini.setOwnername(detailUser.getName());
-                    connections.setJtContactMini(mini);
-                } else {
-                    OrganizationMini mini = new OrganizationMini();
-                    mini.setId("" + userId);
-                    mini.setOwnerid(userId);
-                    mini.setIsOnline(true);
-                    mini.setFullName(detailUser.getName());
-                    mini.setOwnername(detailUser.getName());
-                    mini.setShortName(detailUser.getShortName());
-                    connections.setOrganizationMini(mini);
-                }
-            }
-            km2.setConnections(connections);// 关系对象
-        }
-        km2.setUrl("");//知识链接
-        km2.setType(knowledgeBase.getColumnId());//知识类型
-        km2.setColumntype(knowledgeBase.getColumnId());
-        km2.setId(knowledgeBase.getKnowledgeId());// 知识id
-        km2.setTag(knowledgeBase.getTags());// 标签
-
-        Knowledge kn = null;
-        if(knowledgeBase.getKnowledgeId() !=0 && knowledgeBase.getColumnId() != 0) {
-            try {
-                kn = knowledgeService.getDetailById(knowledgeBase.getKnowledgeId(), knowledgeBase.getColumnId());
-            } catch (Exception ex) {
-                logger.error("Get Knowledge Detail failed: KnowledgeId: {}, ColumnId: {}, error: {}",
-                        knowledgeBase.getKnowledgeId(), knowledgeBase.getColumnId(), ex.getMessage());
-            }
-        }
-        if(kn!=null) {
-            km2.setListTag(kn.getTagList());//标签
-            km2.setSource(kn.getSource());// 来源
-            km2.setTitle(kn.getTitle());// 标题
-            km2.setPic(changeImage(kn.getPic()));// 封面地址
-            km2.setDesc(getDesc(kn.getDesc()));// 描述
-            km2.setModifytime(Long.parseLong(kn.getModifytime()));// 最后修改时间
-        } else {
-            List<Long> tags = KnowledgeUtil.convertStringToLongList(knowledgeBase.getTags());
-            km2.setListTag(tags);//标签
-            km2.setSource(knowledgeBase.getSource());// 来源
-            km2.setTitle(knowledgeBase.getTitle());// 标题
-            km2.setPic(changeImage(knowledgeBase.getCoverPic()));// 封面地址
-            km2.setDesc(knowledgeBase.getContentDesc());// 描述
-            km2.setModifytime(knowledgeBase.getModifyDate());// 最后修改时间
-        }
-        km2.setColumnpath(getDisposeString(knowledgeBase.getCpath()));
-        return km2;
-    }*/
 
     // 图片头部信息拼接
     private String changeImage(String image) {
