@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.ginkgocap.ywxt.user.model.User;
@@ -41,12 +43,17 @@ public abstract class BaseTestCase extends TestCase
     protected static boolean runTestCase = false;
     protected static long userId;
     protected static String hostUrl = null;
-    protected static SimpleFilterProvider assofilterProvider = null;
+    protected static SimpleFilterProvider assoFilter = null;
     protected static String loginUrl = null;
+    protected static String baseUrl =  null;
+    protected static String baseOrtherUrl = null;
+    protected static String baseHomeUrl = null;
+    protected static String baseCommentUrl = null;
+    
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
     
-    private final static String testEnv = envArray[1];
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -68,7 +75,12 @@ public abstract class BaseTestCase extends TestCase
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
-        assofilterProvider = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
+        baseUrl = hostUrl + "/knowledge";
+        baseOrtherUrl = hostUrl + "/knowledgeOther";
+        baseHomeUrl = hostUrl + "/webknowledge";
+        baseCommentUrl = hostUrl + "/knowledgeComment/";
+        
+        assoFilter = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
 
     @Override
@@ -403,9 +415,60 @@ public abstract class BaseTestCase extends TestCase
         }
         return node;
     }
+    
+    protected DataCollect createKnowledge(String title, String knowledgeJson)
+    {
+        DataCollect data = TestData.getDataCollect(userId, (short)2, title);
+        try {
+            knowledgeJson = knowledgeJson == null ? KnowledgeUtil.writeObjectToJson(assoFilter, data) : knowledgeJson;
+            JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
+            String retData = BaseTestCase.getResponseData(response);
+            if (retData == null || "null".equals(retData) || retData.trim().isEmpty()) {
+            	System.err.println("Create Knowledge failed....");
+            }
+            else {
+	            long knowledgeId = Long.parseLong(retData);
+	            data.getKnowledgeDetail().setId(knowledgeId);
+	            data.getReference().setKnowledgeId(knowledgeId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 
 
-    public void login(String loginUrl)
+    protected DataCollect createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)
+    {
+        DataCollect data = TestData.getDataCollect(userId, 1, title);
+        try {
+            if (data != null && data.getKnowledgeDetail() != null) {
+                data.getKnowledgeDetail().setTagList(tagIds);
+                data.getKnowledgeDetail().setDirectorys(directoryIds);
+                //data.getKnowledgeDetail().setContent(content);
+                String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
+                JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
+                checkResponseWithData(response);
+                String retData = getResponseData(response);
+                Assert.assertFalse("null".equals(retData));
+                if (retData != null && !"null".equals(retData)) {
+	                long knowledgeId = Long.parseLong(retData);
+	                data.getKnowledgeDetail().setId(knowledgeId);
+	                data.getReference().setKnowledgeId(knowledgeId);
+                }
+            }
+            else {
+                fail();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+        return data;
+    }
+    
+    protected static void login(String loginUrl)
     {
         if (sessionID == null || sessionID.trim().isEmpty()) {
             final String loginJson = getLoginJson(web);

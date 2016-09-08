@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class KnowledgeOtherWebTest extends BaseTestCase
 {
-    private static String baseUrl = hostUrl + "/knowledgeOther";
     private long knowledgeId = 12345678L;
 
     @Test
@@ -19,7 +18,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         try {
         	String JsonContent = "{\"externalUrl\":\"http://china.huanqiu.com/article/2016-08/9292069.html?from=bdwz\",\"isCreate\":\"true\"}";
             String subUrl = "/fetchExternalKnowledgeUrl";
-            JsonNode result = HttpRequestFull(HttpMethod.POST, baseUrl + subUrl, JsonContent);
+            JsonNode result = HttpRequestFull(HttpMethod.POST, baseOrtherUrl + subUrl, JsonContent);
             checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +46,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/shareCount/1/111111"; // /shareCount/{type}/{knowledgeId}
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseOrtherUrl+subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +59,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "/collectCount/1/111111"; // /shareCount/{type}/{knowledgeId}
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseOrtherUrl+subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +86,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         LogMethod();
         try {
             String subUrl = "hot/"+10;
-            JsonNode result = HttpRequestResult(HttpMethod.GET, baseUrl+subUrl, null);
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseOrtherUrl+subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();

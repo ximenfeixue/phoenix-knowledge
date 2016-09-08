@@ -19,7 +19,6 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 public class KnowledgeWebTest extends BaseTestCase
 {
-    public final String baseUrl =  hostUrl + "/knowledge";
     private final String testTitle = "世界就是数据，一切皆可相连，人与人、人与物、物与物互联互通";
 
     public void testCreateKnowledge() throws InterruptedException
@@ -72,7 +71,7 @@ public class KnowledgeWebTest extends BaseTestCase
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
             //data.getKnowledgeDetail().setTagList(getTagList());
             //data.getKnowledgeDetail().setDirectorys(getDirectoryList());
-            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl, knowledgeJson);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -736,36 +735,6 @@ public class KnowledgeWebTest extends BaseTestCase
     private DataCollect createKnowledgeWithTagAndDirectory(String title)
     {
         return createKnowledge(title, getTagList(), getDirectoryList());
-    }
-
-    private DataCollect createKnowledge(String title,List<Long> tagIds,List<Long> directoryIds)
-    {
-        DataCollect data = TestData.getDataCollect(userId, 1, title);
-        try {
-            if (data != null && data.getKnowledgeDetail() != null) {
-                data.getKnowledgeDetail().setTagList(tagIds);
-                data.getKnowledgeDetail().setDirectorys(directoryIds);
-                //data.getKnowledgeDetail().setContent(content);
-                String knowledgeJson = KnowledgeUtil.writeObjectToJson(assofilterProvider, data);
-                JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
-                checkResponseWithData(response);
-                String retData = getResponseData(response);
-                Assert.assertFalse("null".equals(retData));
-                if (retData != null && !"null".equals(retData)) {
-	                long knowledgeId = Long.parseLong(retData);
-	                data.getKnowledgeDetail().setId(knowledgeId);
-	                data.getReference().setKnowledgeId(knowledgeId);
-                }
-            }
-            else {
-                fail();
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-        return data;
     }
     
     private void knowledgeDetail(final String baseUrl, long knowledgeId,int columnId) throws Exception
