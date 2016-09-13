@@ -54,7 +54,6 @@ public class BigDataService
 
 	public void sendMessage(String optionType, List<KnowledgeBase> knowledgeBaseList, long userId) {
 		if(knowledgeBaseList != null && !knowledgeBaseList.isEmpty()) {
-			
 			for (KnowledgeBase base : knowledgeBaseList) {
 				if (base != null) {
 					this.sendMessage(optionType, base, userId);
