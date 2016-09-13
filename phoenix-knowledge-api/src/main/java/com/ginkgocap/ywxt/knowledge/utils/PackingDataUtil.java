@@ -39,11 +39,11 @@ public class PackingDataUtil {
 		json.put("title", base.getTitle());
 		json.put("cpathid", /*knowledgeMongo.getColumnId()*/"");
 		json.put("pic", base.getCoverPic());
-		json.put("selectedIds", /*vo.getSelectedIds()*/"");
+		json.put("selectedIds", /*base.getSelectedIds()*/"");
 		json.put("status", base.getStatus());
-		json.put("tags", /*vo.getTags()*/"");
+		json.put("tags", /*base.getTags()*/"");
 		json.put("columnid", base.getColumnId());
-		json.put("columnType", /*vo.getColumnType()*/"");
+		json.put("columnType", base.getType());
 		json.put("content", base.getContent());
 		json.put("desc", base.getContentDesc());
 		json.put("createtime", base.getCreateDate());

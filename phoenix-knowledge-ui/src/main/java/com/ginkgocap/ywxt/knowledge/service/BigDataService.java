@@ -33,7 +33,11 @@ public class BigDataService
 	private DefaultMessageService defaultMessageService;
 
 	public void sendMessage(String optionType, KnowledgeBase base, long userId) {
-		logger.info("通知大数据，发送请求 请求用户{}", userId);
+        if (base == null) {
+            logger.error("Knowledge base is null, so skip to send..");
+            return;
+        }
+		logger.info("通知大数据，发送请求 请求用户: " + userId);
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {

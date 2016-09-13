@@ -186,7 +186,8 @@ public class KnowledgeController extends BaseController {
         }
 
         //send new knowledge to bigdata
-        bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, data.getKnowledge(), userId);
+        KnowledgeBase base = data.generateKnowledge();
+        bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, base, userId);
 
         logger.info(".......create knowledge success......");
         return result;
@@ -275,7 +276,8 @@ public class KnowledgeController extends BaseController {
         createAssociate(as, knowledgeId, user);
 
         //send new knowledge to bigdata
-        bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, data.getKnowledge(), userId);
+        KnowledgeBase base = data.generateKnowledge();
+        bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, base, userId);
 
         logger.info(".......update knowledge success......");
         return result;
