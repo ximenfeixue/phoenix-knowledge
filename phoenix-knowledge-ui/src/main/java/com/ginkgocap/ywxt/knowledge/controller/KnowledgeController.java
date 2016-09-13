@@ -88,7 +88,7 @@ public class KnowledgeController extends BaseController {
     KnowledgeCountService knowledgeCountService;
 
     @Autowired
-    JTFileService jtFileService;
+    BigDataService bigDataService;
 
     //@Autowired
     //private Cache cache;
@@ -185,6 +185,9 @@ public class KnowledgeController extends BaseController {
             }*/
         }
 
+        //send new knowledge to bigdata
+        bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, data.getKnowledge(), userId);
+
         logger.info(".......create knowledge success......");
         return result;
     }
@@ -271,6 +274,9 @@ public class KnowledgeController extends BaseController {
         List<Associate> as = data.getAsso();
         createAssociate(as, knowledgeId, user);
 
+        //send new knowledge to bigdata
+        bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, data.getKnowledge(), userId);
+
         logger.info(".......update knowledge success......");
         return result;
     }
@@ -339,6 +345,9 @@ public class KnowledgeController extends BaseController {
         if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
             logger.debug("delete knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
         }
+
+        //send new knowledge to bigdata
+        bigDataService.deleteMessage(knowledgeId, columnId, userId);
 
         logger.info(".......delete knowledge success......");
         return result;
@@ -423,70 +432,6 @@ public class KnowledgeController extends BaseController {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        /*
-        if(knowledgeId <= 0) {
-            return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"知识Id无效");
-        }
-
-        Knowledge detail = null;
-        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-        try {
-            detail = this.knowledgeService.getDetailById(knowledgeId, type);
-        } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：" + e.getMessage());
-        }
-
-        //数据为空则直接返回异常给前端
-        if(detail == null) {
-            logger.error("get knowledge failed: knowledgeId: {}, columnType: {}", knowledgeId, type);
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
-            return mappingJacksonValue(result);
-        }
-        String hContent = HtmlToText.htmlToText(detail.getContent());
-        int maxLen = hContent.length() >= 250 ? 250 : hContent.length();
-        hContent = hContent.substring(0, maxLen);
-        detail.setHcontent(hContent);
-        detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
-        if (StringUtils.isEmpty(detail.getColumnType())) {
-        	detail.setColumnType(String.valueOf(type));
-        }
-        DataCollect data = new DataCollect(null, detail);
-
-        boolean isCollected = false;
-        long userId = user.getId();
-        try {
-            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, type);
-        } catch (Exception ex) {
-            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, type);
-        }
-        detail.setCollected(isCollected ? (short) 1 : (short) 0);
-
-        try {
-            InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);
-            Notification noti = ret.getNotification();
-            if (noti != null && noti.getNotifCode().equals(CommonResultCode.SUCCESS.getCode())) {
-                data.setPermission(ret.getResponseData());
-            }
-            else {
-                logger.error("can't get knowledge permission info: knowledgeId: {}, columnId: {}", knowledgeId, type);
-            }
-        }catch (Exception ex) {
-            logger.error("get knowledge permission info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
-            ex.printStackTrace();
-        }
-
-        //set a default value
-        if (data.getPermission() == null) {
-            data.setPermission(permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId));
-        }
-
-        try {
-            List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
-            data.setAsso(associateList);
-        } catch (Exception ex) {
-            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
-            ex.printStackTrace();
-        }*/
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         if (result == null || result.getResponseData() == null) {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");

@@ -18,7 +18,6 @@ import java.util.List;
 @Repository("bigDataService")
 public class BigDataService
 {
-
 	/**知识MQ插入*/
 	public final static String KNOWLEDGE_INSERT = FlagTypeUtils.createKnowledgeFlag();
 
@@ -67,8 +66,9 @@ public class BigDataService
 		KnowledgeBase base = new KnowledgeBase();
 		base.setId(knowledgeId);
 		base.setColumnId(columnId);
+        base.setType((short)columnId);
 		
-		this.sendMessage(KNOWLEDGE_UPDATE, base, userId);
+		this.sendMessage(KNOWLEDGE_DELETE, base, userId);
 	}
 
 }

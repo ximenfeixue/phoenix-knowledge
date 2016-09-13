@@ -23,7 +23,7 @@ public class KnowledgeShareServiceImpl implements KnowledgeShareService {
     @Autowired
     private KnowledgeShareDao knowledgeShareDao;
 
-    private Logger logger = LoggerFactory.getLogger(KnowledgeShareServiceImpl.class) ;
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeShareServiceImpl.class) ;
 
     @Override
     public KnowledgeShare save(long userId, long knowledgeId, String receiverId, String receiverName) {
