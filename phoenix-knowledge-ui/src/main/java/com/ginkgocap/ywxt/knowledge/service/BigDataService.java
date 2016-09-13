@@ -11,10 +11,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public class BigDataServiceImpl
+@Repository("bigDataService")
+public class BigDataService
 {
 
 	/**知识MQ插入*/
@@ -26,20 +28,20 @@ public class BigDataServiceImpl
 	/**知识MQ删除*/
 	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.createKnowledgeFlag();
 
-	private static final Logger logger = LoggerFactory.getLogger(BigDataServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(BigDataService.class);
 
 	@Autowired(required = true)
 	private DefaultMessageService defaultMessageService;
 
-	public void sendMessage(String optionType, KnowledgeMongo knowledgeMongo, long userId) {
+	public void sendMessage(String optionType, KnowledgeBase base, long userId) {
 		logger.info("通知大数据，发送请求 请求用户{}", userId);
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {
-				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(knowledgeMongo,userId));
+				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(base,userId));
 				logger.info("返回参数{}", result.getSendResult());
 			} else {
-				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(knowledgeMongo,userId));
+				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(base,userId));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -47,13 +49,13 @@ public class BigDataServiceImpl
 		}
 	}
 
-	public void sendMessage(String optionType, List<KnowledgeMongo> knowledgeMongoList, long userId) {
-		if(knowledgeMongoList != null && !knowledgeMongoList.isEmpty()) {
+	public void sendMessage(String optionType, List<KnowledgeBase> knowledgeBaseList, long userId) {
+		if(knowledgeBaseList != null && !knowledgeBaseList.isEmpty()) {
 			
-			for (KnowledgeMongo data : knowledgeMongoList) {
-				
-				this.sendMessage(optionType, data, userId);
-				
+			for (KnowledgeBase base : knowledgeBaseList) {
+				if (base != null) {
+					this.sendMessage(optionType, base, userId);
+				}
 			}
 			
 		}
@@ -62,12 +64,11 @@ public class BigDataServiceImpl
 	public void deleteMessage(long knowledgeId, int columnId, long userId)
 			throws Exception {
 		
-		KnowledgeBase data = new KnowledgeBase();
+		KnowledgeBase base = new KnowledgeBase();
+		base.setId(knowledgeId);
+		base.setColumnId(columnId);
 		
-		data.setId(knowledgeId);
-		data.setColumnId(columnId);
-		
-		this.sendMessage(KNOWLEDGE_UPDATE, KnowledgeMongo.clone(data), userId);
+		this.sendMessage(KNOWLEDGE_UPDATE, base, userId);
 	}
 
 }

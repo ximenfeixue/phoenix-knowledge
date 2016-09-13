@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
@@ -25,27 +26,27 @@ public class PackingDataUtil {
 	/**
 	 * 包装发送给MQ的数据
 	 * @date 2016年1月14日 下午4:33:26
-	 * @param knowledgeMongo
+	 * @param base
 	 * @param userId
 	 * @return
 	 */
-	public static String packingSendBigData(KnowledgeMongo knowledgeMongo,long userId) {
+	public static String packingSendBigData(KnowledgeBase base, long userId) {
 		
 		JSONObject json = new JSONObject();
-		json.put("kid", knowledgeMongo.getId());
+		json.put("kid", base.getId());
 		json.put("cid", userId);
-		json.put("cname", null);
-		json.put("title", knowledgeMongo.getTitle());
+		json.put("cname", base.getCreateUserName());
+		json.put("title", base.getTitle());
 		json.put("cpathid", /*knowledgeMongo.getColumnId()*/"");
-		json.put("pic", knowledgeMongo.getCoverPic());
+		json.put("pic", base.getCoverPic());
 		json.put("selectedIds", /*vo.getSelectedIds()*/"");
-		json.put("status", knowledgeMongo.getStatus());
+		json.put("status", base.getStatus());
 		json.put("tags", /*vo.getTags()*/"");
-		json.put("columnid", knowledgeMongo.getColumnId());
+		json.put("columnid", base.getColumnId());
 		json.put("columnType", /*vo.getColumnType()*/"");
-		json.put("content", knowledgeMongo.getContent());
-		json.put("desc", knowledgeMongo.getContentDesc());
-		json.put("createtime", knowledgeMongo.getCreateDate());
+		json.put("content", base.getContent());
+		json.put("desc", base.getContentDesc());
+		json.put("createtime", base.getCreateDate());
 		
 		return json.toString();
 		
@@ -54,28 +55,28 @@ public class PackingDataUtil {
 	/**
 	 * 动态推送数据包装
 	 * @date 2016年1月14日 下午5:04:52
-	 * @param knowledgeMongo
+	 * @param base
 	 * @param user
 	 * @param diaryService
 	 * @return
 	 */
-	public static UserFeed packingSendFeedData(KnowledgeMongo knowledgeMongo,User user,DiaryService diaryService) {
-		if (knowledgeMongo.getColumnId() == 8) {
+	public static UserFeed packingSendFeedData(KnowledgeBase base,User user,DiaryService diaryService) {
+		if (base.getColumnId() == 8) {
 			UserFeed feed = new UserFeed();
-			feed.setContent(knowledgeMongo.getContent());
+			feed.setContent(base.getContent());
 			feed.setCreatedBy(user.getName());
 			feed.setCreatedById(user.getId());
-            String cTime = DateUtil.formatWithYYYYMMDDHHMMSS(new Date(knowledgeMongo.getCreateDate()));
+            String cTime = DateUtil.formatWithYYYYMMDDHHMMSS(new Date(base.getCreateDate()));
 			feed.setCtime(cTime);
 			feed.setGroupName("仅好友可见");
 			feed.setScope(1);// 设置可见级别
 			feed.setGroupName("");
-			feed.setTargetId(knowledgeMongo.getId());
-			feed.setTitle(knowledgeMongo.getTitle());
+			feed.setTargetId(base.getId());
+			feed.setTitle(base.getTitle());
 			feed.setType(1);
 			feed.setImgPath("");// 长观点地址
 			feed.setDelstatus(0);// 删除状态
-			List<ReceiversInfo> receivers = diaryService.getReceiversInfo(knowledgeMongo.getContent(), -1, user.getId());
+			List<ReceiversInfo> receivers = diaryService.getReceiversInfo(base.getContent(), -1, user.getId());
 			feed.setReceivers(receivers);// 获取接收人信息
 			feed.setDiaryType(1);
 			List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
