@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.associate.model.Associate;
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
@@ -14,42 +15,24 @@ import com.ginkgocap.ywxt.knowledge.utils.TestData;
 /**
  * Created by Admin on 2016/5/3.
  */
-public class KnowledgeWebDemo {
+public class KnowledgeWebDemo extends BaseTestCase {
 
     private String requestJson;
 
     private static long KnowledgeId = 123456789L;
-    private static boolean debugModel = false;
-    private static long userId;
-    private static String hostUrl = null;
-    private static String baseUrl = null;
-    private static String commentBaseUrl = null;
     private static String commentListUrl = null;
     private static ObjectMapper mapper = null;
-    private static SimpleFilterProvider assoFilter = null;
+    
     static {
-        userId = KnowledgeUtil.getDummyUser().getId();
-        //debugModel = System.getProperty("debugModel", "false").equals("true");
-        hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
-        baseUrl =  hostUrl + "/knowledge";
-
-        commentBaseUrl = hostUrl + "/knowledgeComment/";
-        commentListUrl = commentBaseUrl + "list/";
+        commentListUrl = baseCommentUrl + "list/";
 
         mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true) ;
         assoFilter = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
 
-    public static class HttpMethod
-    {
-        public static final String GET = "GET";
-        public static final String POST = "POST";
-        public static final String PUT = "PUT";
-        public static final String DELETE = "DELETE";
-    }
-
     public static void main(String[] args) throws Exception {
+    	login(loginUrl);
         KnowledgeWebDemo demo = new KnowledgeWebDemo();
         demo.createKnowledge();
         demo.updateKnowledge();
@@ -90,7 +73,7 @@ public class KnowledgeWebDemo {
     public void updateKnowledge()
     {
         LogMethod("更新知识", 2);
-        DataCollection data = createKnowledge("updateKnowledge", null);
+        DataCollect data = createKnowledge("updateKnowledge", null);
         data.getKnowledgeDetail().setTitle("updateKnowledge_update");
         requestJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
         try {
@@ -105,8 +88,8 @@ public class KnowledgeWebDemo {
     {
         LogMethod("删除知识: /{knowledgeId}/{columnId}", 2);
         try {
-            KnowledgeDetail data = createKnowledge("deleteKnowledge", null).getKnowledgeDetail();
-            String subUrl = "/" + data.getId() + "/" + data.getColumnId(); ///{id}/{columnId}
+            Knowledge detail = createKnowledge("deleteKnowledge", null).getKnowledgeDetail();
+            String subUrl = "/" + detail.getId() + "/" + detail.getColumnType(); ///{id}/{columnId}
             HttpRequestFullJson(HttpMethod.DELETE, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,10 +101,10 @@ public class KnowledgeWebDemo {
     {
         LogMethod("知识详情: /{knowledgeId}/{columnId}", 2);
         try {
-            KnowledgeDetail data = createKnowledge("knowledgeDetail", null).getKnowledgeDetail();
-            long knowledgeId = data.getId();
-            int columnId = data.getColumnId();
-            String subUrl = "/" + knowledgeId + "/" + columnId;  ///{knowledgeId}/{columnId}
+            Knowledge detail = createKnowledge("knowledgeDetail", null).getKnowledgeDetail();
+            long knowledgeId = detail.getId();
+            String columnType = detail.getColumnType();
+            String subUrl = "/" + knowledgeId + "/" + columnType;  ///{knowledgeId}/{columnId}
             HttpRequestFullJson(HttpMethod.GET, baseUrl + subUrl, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,11 +226,12 @@ public class KnowledgeWebDemo {
         LogMethod("举报知识: /report/{knowledgeId}/{columnId}", 2);
         // "/report/{knowledgeId}/{columnId}"
         try {
-            DataCollection data = createKnowledge("reportKnowledge", null);
-            long knowledgeId = data.getKnowledgeDetail().getId();
-            int columnId = data.getKnowledgeDetail().getColumnId();
-            String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnId);
-            KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnId);
+            DataCollect data = createKnowledge("reportKnowledge", null);
+            Knowledge detail = data.getKnowledgeDetail();
+            long knowledgeId = detail.getId();
+            int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+            String subUrl = "/report" + knowledAndColumnIdUrl(knowledgeId, columnType);
+            KnowledgeReport report = TestData.knowledgeReport(userId, knowledgeId, columnType);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(report);
             HttpRequestFullJson(HttpMethod.POST, baseUrl + subUrl, knowledgeJson);
         } catch (Exception e) {
@@ -309,37 +293,16 @@ public class KnowledgeWebDemo {
 
     private String knowledAndColumnIdUrl(String testCase)
     {
-        DataCollection data = createKnowledge(testCase, null);
+        DataCollect data = createKnowledge(testCase, null);
         long knowledgeId = data.getKnowledgeDetail().getId();
-        int columnId = data.getKnowledgeDetail().getColumnId();
+        int columnId = KnowledgeUtil.parserColumnId(data.getKnowledgeDetail().getColumnType());
 
         return "/" + knowledgeId + "/" + columnId;
     }
 
-    private String knowledAndColumnIdUrl(long knowledgeId, int columnId)
+    private String knowledAndColumnIdUrl(long knowledgeId, int columnType)
     {
-        return  "/" + knowledgeId + "/" + columnId;
-    }
-
-    private DataCollection createKnowledge(String title, String knowledgeJson)
-    {
-        DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
-        try {
-            knowledgeJson = knowledgeJson == null ? KnowledgeUtil.writeObjectToJson(assoFilter, data) : knowledgeJson;
-            JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
-            String retData = BaseTestCase.getResponseData(response);
-            if (retData == null || "null".equals(retData) || retData.trim().isEmpty()) {
-            	System.err.println("Create Knowledge failed....");
-            }
-            else {
-	            long knowledgeId = Long.parseLong(retData);
-	            data.getKnowledgeDetail().setId(knowledgeId);
-	            data.getReference().setKnowledgeId(knowledgeId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
+        return  "/" + knowledgeId + "/" + columnType;
     }
 
     private String createKnowledgeRetJson(String title, String knowledgeJson)
@@ -356,7 +319,7 @@ public class KnowledgeWebDemo {
 
     private String createKnowledgeRequestJson(String title)
     {
-        DataCollection data = TestData.getDataCollection(userId, (short) 2, title);
+        DataCollect data = TestData.getDataCollect(userId, (short) 2, title);
         String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
         return knowledgeJson;
     }
@@ -387,7 +350,7 @@ public class KnowledgeWebDemo {
         try {
             createKnowledgeComment("knowledgeCommentGetCount", false);
 
-            String URL = commentBaseUrl + "count/" + KnowledgeId;
+            String URL = baseCommentUrl + "count/" + KnowledgeId;
             HttpRequestFullJson(HttpMethod.GET, URL, null);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -405,7 +368,7 @@ public class KnowledgeWebDemo {
                 commentId = jsonNode.get("responseData").longValue();
             }
 
-            String URL = commentBaseUrl + commentId;
+            String URL = baseCommentUrl + commentId;
             HttpRequestFullJson(HttpMethod.DELETE, URL, null);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -415,7 +378,7 @@ public class KnowledgeWebDemo {
     private String createKnowledgeComment(String content,boolean debug)
     {
         try {
-            String URL = commentBaseUrl + KnowledgeId;
+            String URL = baseCommentUrl + KnowledgeId;
             String jsonContent = BaseTestCase.getKnowledgeComment(KnowledgeId, content);
             return HttpRequestFullJson(HttpMethod.POST, URL, jsonContent);
         } catch (Exception ex) {
@@ -426,28 +389,6 @@ public class KnowledgeWebDemo {
     }
 
     ///////////////////////=======Log Request/Response Message=======//////////////////////
-    private static void Debug(String message)
-    {
-        if (debugModel) {
-            System.out.print(message);
-        }
-    }
-
-    private static void Info(String message)
-    {
-        System.out.print(message);
-    }
-
-    private static void LogRequest(String message)
-    {
-        System.err.print("Request: " + message + "\r\n");
-    }
-
-    private static void LogResponse(String message)
-    {
-        System.err.print("Response: " + message);
-    }
-
     private static String LogMethod(String content, int stackLevel)
     {
         String methodName = Thread.currentThread().getStackTrace()[stackLevel].getMethodName();
@@ -455,31 +396,24 @@ public class KnowledgeWebDemo {
         return methodName;
     }
 
-    private static String LogMethod(int stackLevel)
-    {
-        String methodName = Thread.currentThread().getStackTrace()[stackLevel].getMethodName();
-        System.out.println("\r\n======= "+methodName+" ========");
-        return methodName;
-    }
-
-    private String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent)
-    {
-        try {
-            return BaseTestCase.HttpRequestFullJson(httpMethod, urlString, jsonContent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public JsonNode HttpRequestResult(String httpMethod,String urlString,String jsonContent) throws Exception
-    {
-        return HttpRequestResult(httpMethod, urlString, jsonContent);
-    }
+//    private String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent)
+//    {
+//        try {
+//            return BaseTestCase.HttpRequestFullJson(httpMethod, urlString, jsonContent);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    public JsonNode HttpRequestResult(String httpMethod,String urlString,String jsonContent) throws Exception
+//    {
+//        return BaseTestCase.HttpRequestResult(httpMethod, urlString, jsonContent);
+//    }
 
     public static JsonNode HttpRequestFull(String httpMethod,String urlString,String jsonContent) throws Exception
     {
-        return HttpRequestFull(httpMethod, urlString, jsonContent);
+        return BaseTestCase.HttpRequestFull(httpMethod, urlString, jsonContent);
     }
 
 
