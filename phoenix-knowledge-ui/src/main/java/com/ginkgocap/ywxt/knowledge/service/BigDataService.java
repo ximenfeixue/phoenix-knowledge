@@ -37,18 +37,18 @@ public class BigDataService
             logger.error("Knowledge base is null, so skip to send..");
             return;
         }
-		logger.info("通知大数据，发送请求 请求用户: " + userId);
+		logger.info("notify bigdata， userId: " + userId);
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {
 				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(base,userId));
-				logger.info("返回参数{}", result.getSendResult());
+				logger.info("response: " + result.getSendResult());
 			} else {
 				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(base,userId));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("发送失败  返回参数{}", result.getSendResult());
+			logger.info("send failed.  response: " + result.getSendResult());
 		}
 	}
 
