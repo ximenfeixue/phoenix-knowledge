@@ -22,7 +22,8 @@ import java.util.regex.Pattern;
  * @version V1.0.0
  */
 public class PackingDataUtil {
-	
+
+	final static String selectedIds = "\"selectedIds\":{\"dales\":[],\"modelType\":[],\"mento\":\"\",\"zhongles\":[],\"xiaoles\":[],\"dule\":true}";
 	/**
 	 * 包装发送给MQ的数据
 	 * @date 2016年1月14日 下午4:33:26
@@ -39,7 +40,7 @@ public class PackingDataUtil {
 		json.put("title", base.getTitle());
 		json.put("cpathid", /*knowledgeMongo.getColumnId()*/"");
 		json.put("pic", base.getCoverPic());
-		json.put("selectedIds", /*base.getSelectedIds()*/"");
+		json.put("selectedIds", selectedIds);
 		json.put("status", base.getStatus());
 		json.put("tags", /*base.getTags()*/"");
 		json.put("columnid", base.getColumnId());
