@@ -589,6 +589,51 @@
                 <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
             </properties>
         </profile>
+        <profile>
+            <id>online</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <user.imageUrl>http://www.baidu.com</user.imageUrl>
+                <user.cache.expiredTime>86400</user.cache.expiredTime>
+                <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
+
+                <!-- 数据库访问帐号 -->
+                <jdbc.url>jdbc:mysql://192.168.101.42:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
+                <jdbc.username>ph_newknowledge</jdbc.username>
+                <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
+
+                <!-- redis地址, 端口 -->
+                <redis.host>192.168.101.42</redis.host>
+                <redis.port>6379</redis.port>
+
+                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
+                <log4j.level>debug</log4j.level>
+                <log4j.path>./logs</log4j.path>
+
+                <!-- dubbo configure -->
+                <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
+                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
+                <dubbo.registry.address>zookeeper://192.168.101.15:2181?client=zkclient</dubbo.registry.address>
+                <dubbo.protocol.port>7788</dubbo.protocol.port>
+
+                <!-- mongo地址, 数据库  -->
+                <mongodb.address>192.168.120.133:27017</mongodb.address>
+                <mongodb.database>knowledge</mongodb.database>
+
+                <!-- memcached configure-->
+                <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
+                <memcached.list_1.port>11211</memcached.list_1.port>
+                <memcached.object_1.ip>192.168.101.22</memcached.object_1.ip>
+                <memcached.object_1.port>11211</memcached.object_1.port>
+
+                <!-- 访问大数据接口地址 -->
+                <bigData.url>http://192.168.101.53:8090</bigData.url>
+                <knowledge.url.create>http://192.168.101.110:2001/depoapp/</knowledge.url.create>
+                <knowledge.url.query>http://10.10.85.16:8090</knowledge.url.query>
+            </properties>
+        </profile>
     </profiles>
 	<scm>
 		<connection>scm:git:ssh://git@192.168.101.89/phoenix-knowledge.git</connection>

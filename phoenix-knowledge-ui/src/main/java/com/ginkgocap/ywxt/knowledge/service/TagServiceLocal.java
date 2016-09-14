@@ -1,5 +1,21 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.stereotype.Repository;
+
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.parasol.tags.exception.TagServiceException;
 import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
@@ -15,16 +31,6 @@ import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.util.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.stereotype.Repository;
-
-import javax.annotation.Resource;
-import javax.xml.ws.Service;
-import java.util.*;
 
 /**
  * Created by gintong on 2016/7/19.
@@ -283,7 +289,6 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         logger.info(".......Get Tag count success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(sourceMap);
-
     }
 
     public boolean saveTagSource(long userId, Knowledge detail)
@@ -319,7 +324,6 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
     public boolean updateTagSource(long userId, Knowledge knowledgeDetail)
     {
-
         List<Long> tagsList = knowledgeDetail.getTagList();
         if(tagsList == null || tagsList.size() <= 0) {
             return false;
@@ -351,11 +355,11 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     {
         try{
             int removeTagsFlag = tagSourceService.removeTagSourceBySourceId(APPID, userId, knowledgeId, (long)sourceType);
-            if(removeTagsFlag <= 0){
+            if (removeTagsFlag <= 0) {
                 logger.error("delete tags failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
                 return false;
             }
-        }catch(TagSourceServiceException ex){
+        }catch (TagSourceServiceException ex) {
             logger.error("delete tag failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
             return false;
         }

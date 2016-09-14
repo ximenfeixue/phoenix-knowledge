@@ -1,5 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.model.common;
 
+import java.io.Serializable;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
@@ -7,17 +12,12 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by gintong on 2016/7/18.
  */
-public class DataCollect implements Serializable {
-
+public class DataCollect implements Serializable 
+{
     // 知识简略信息
     private KnowledgeBase knowledge;
 

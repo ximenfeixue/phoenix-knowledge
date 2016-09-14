@@ -66,11 +66,11 @@ public abstract class BaseTestCase extends TestCase
         }
         else if ("dev".equals(testEnv)) {
             loginUrl = "http://192.168.120.135:8008/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/cross");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
         }
         else if ("testOnline".equals(testEnv)) {
             loginUrl = "http://hotfix.online.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://hotfix.online.gintong.com/cross/newknowledge");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
             openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
@@ -137,6 +137,12 @@ public abstract class BaseTestCase extends TestCase
 	    	//Just for show the message
 	    	System.err.println("======= "+logMesage+" ========");
     	}
+    }
+    
+    protected static void LOGINFO(Object logMesage)
+    {
+    	//Just for show the message
+    	System.out.println(logMesage);
     }
 
     protected String LogMethod()
