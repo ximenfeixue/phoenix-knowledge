@@ -20,13 +20,6 @@ public class IdType implements Serializable
         this.id = id;
     }
 
-
-    public IdType(long id, int type)
-    {
-        this.id = id;
-        this.type = type;
-    }
-
     public int getType() {
         return type;
     }
@@ -34,4 +27,11 @@ public class IdType implements Serializable
     public void setType(int type) {
         this.type = type;
     }
+
+    public IdType(long id, int type)
+    {
+        this.id = id;
+        this.type = type;
+    }
+
 }
