@@ -600,13 +600,14 @@
                 <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
 
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.101.42:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
+                <jdbc.url>jdbc:mysql://10.10.134.229:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>ph_newknowledge</jdbc.username>
                 <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
 
                 <!-- redis地址, 端口 -->
-                <redis.host>192.168.101.42</redis.host>
+                <redis.host>10.10.140.124</redis.host>
                 <redis.port>6379</redis.port>
+                <user.cache.expiredTime>86400</user.cache.expiredTime>
 
                 <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
                 <log4j.level>debug</log4j.level>
@@ -615,23 +616,25 @@
                 <!-- dubbo configure -->
                 <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
                 <dubbo.protocol.name>dubbo</dubbo.protocol.name>
-                <dubbo.registry.address>zookeeper://192.168.101.15:2181?client=zkclient</dubbo.registry.address>
+                <dubbo.registry.address>zookeeper://zk.gintong.local:2181?client=zkclient</dubbo.registry.address>
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
 
                 <!-- mongo地址, 数据库  -->
-                <mongodb.address>192.168.120.133:27017</mongodb.address>
+                <mongodb.address>10.10.136.156:27017</mongodb.address>
                 <mongodb.database>knowledge</mongodb.database>
 
                 <!-- memcached configure-->
-                <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
+                <memcached.list_1.ip>10.10.140.124</memcached.list_1.ip>
                 <memcached.list_1.port>11211</memcached.list_1.port>
-                <memcached.object_1.ip>192.168.101.22</memcached.object_1.ip>
+                <memcached.object_1.ip>10.10.140.124</memcached.object_1.ip>
                 <memcached.object_1.port>11211</memcached.object_1.port>
+                <memcached.map_1.ip>10.10.140.124</memcached.map_1.ip>
+                <memcached.map_1.port>11211</memcached.map_1.port>
 
                 <!-- 访问大数据接口地址 -->
-                <bigData.url>http://123.59.50.85:8090</bigData.url>
-                <knowledge.url.create>http://123.59.50.85:2001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://123.59.50.85:8090</knowledge.url.query>
+                <bigData.url>http://10.10.85.16:8090</bigData.url>
+                <knowledge.url.create>http://10.10.85.16:2001/depoapp/</knowledge.url.create>
+                <knowledge.url.query>http://10.10.85.16:8090</knowledge.url.query>
             </properties>
         </profile>
     </profiles>

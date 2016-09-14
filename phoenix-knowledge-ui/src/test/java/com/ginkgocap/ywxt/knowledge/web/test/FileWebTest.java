@@ -1,11 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
+import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class FileWebTest extends BaseTestCase {
 

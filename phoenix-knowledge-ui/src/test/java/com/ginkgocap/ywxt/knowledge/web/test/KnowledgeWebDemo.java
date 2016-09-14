@@ -1,5 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.message.BasicNameValuePair;
+import org.junit.Test;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +16,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
 /**
@@ -32,6 +39,9 @@ public class KnowledgeWebDemo extends BaseTestCase {
     }
 
     public static void main(String[] args) throws Exception {
+    	bigData();
+    	
+    	/*
     	login(loginUrl);
         KnowledgeWebDemo demo = new KnowledgeWebDemo();
         demo.createKnowledge();
@@ -54,10 +64,26 @@ public class KnowledgeWebDemo extends BaseTestCase {
         demo.knowledgeCommentCreate();
         demo.knowledgeCommentGetList();
         demo.knowledgeCommentGetCount();
-        demo.knowledgeCommentDelete();
+        demo.knowledgeCommentDelete();*/
     }
 
-
+	public static void bigData()
+	{
+		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
+		pairs.add(new BasicNameValuePair("page", String.valueOf(0)));
+		pairs.add(new BasicNameValuePair("rows", String.valueOf(20)));
+		pairs.add(new BasicNameValuePair("type", String.valueOf(1)));// 1,推荐 2,发现
+		//Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			String responseJson = HttpClientHelper.post("http://123.59.50.85:8090" + "/API/hotKno.do", pairs);
+			System.err.println("responseJson："+responseJson);
+			//model.put("list", PackingDataUtil.getRecommendResult(responseJson));
+		} catch (Exception e) {
+			System.err.println("connect big data service failed！");
+			e.printStackTrace();
+		}
+	}
+	
     public void createKnowledge()
     {
         LogMethod("创建知识", 2);
