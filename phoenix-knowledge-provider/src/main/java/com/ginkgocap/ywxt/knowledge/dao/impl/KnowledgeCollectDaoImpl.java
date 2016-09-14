@@ -87,7 +87,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int columnId,final int start, final int size,final String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int columnId,int start, int size,final String keyword) throws Exception
     {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
