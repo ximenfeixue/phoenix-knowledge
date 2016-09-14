@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.gintong.frame.cache.redis.StringUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.slf4j.Logger;
@@ -86,10 +87,15 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int columnId,final int start, final int size,final String keyword) throws Exception
     {
         Query query = new Query();
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
+        Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            criteria.and("knowledgeTitle").regex("^" + keyword + ".*$");
+        }
+        query.addCriteria(criteria);
+
         if (columnId != -1) {
             query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
         }

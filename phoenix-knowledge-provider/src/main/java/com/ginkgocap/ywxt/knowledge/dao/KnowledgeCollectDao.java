@@ -15,7 +15,7 @@ public interface KnowledgeCollectDao {
 
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size) throws Exception;
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size, String keyword) throws Exception;
 
     public long myCollectKnowledgeCount(long userId) throws Exception;
 }

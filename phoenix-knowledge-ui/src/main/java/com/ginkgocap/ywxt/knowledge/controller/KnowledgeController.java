@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.dynamic.model.*;
 import com.ginkgocap.ywxt.knowledge.utils.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.util.*;
 
@@ -368,35 +370,56 @@ public class KnowledgeController extends BaseController {
         }
 
         String requestJson = this.getBodyParam(request);
-        requestJson = requestJson.substring(1, requestJson.length()-1);
-        String[] konwledgeIds = requestJson.split(",");
-        //List<Integer> konwledgeIds = KnowledgeUtil.readValue(List.class, requestJson);
-        if (konwledgeIds == null || konwledgeIds.length <= 0) {
+        //requestJson = requestJson.substring(1, requestJson.length()-1);
+        //String[] konwledgeIds = requestJson.split(",");
+        List<IdType> idTypeList = KnowledgeUtil.readListValue(IdType.class, requestJson);
+        if (CollectionUtils.isEmpty(idTypeList)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
+        final int maxDeleteSize = 20;
+        if (idTypeList.size() > maxDeleteSize) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"");
+        }
+
+        int toDeleteSize = idTypeList.size();
         long userId = user.getId();
-        List<Long> permDeleteIds = new ArrayList<Long>();
-        List<Long> failedIds = new ArrayList<Long>();
-        for (String id : konwledgeIds) {
-            long knowledgeId = Long.parseLong(id);
-            boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, userId);
-            if (!isCanDelete) {
-                failedIds.add(knowledgeId);
-                logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
-            }
-            else {
-                permDeleteIds.add(knowledgeId);
+        Map<Integer,List<Long>> permDeleteMap = new HashMap<Integer,List<Long>>(toDeleteSize);
+        List<Long> permDeleteIds = new ArrayList<Long>(toDeleteSize);
+        List<Long> failedIds = new ArrayList<Long>(toDeleteSize);
+        for (IdType idType : idTypeList) {
+            if (idType != null) {
+                long knowledgeId = idType.getId();
+                boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, userId);
+                if (!isCanDelete) {
+                    failedIds.add(knowledgeId);
+                    logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
+                } else {
+                    if (permDeleteMap.get(idType.getType()) == null) {
+                        List<Long> ids = new ArrayList<Long>();
+                        permDeleteMap.put(idType.getType(), ids);
+                    }
+                    permDeleteIds.add(knowledgeId);
+                    permDeleteMap.get(idType.getType()).add(knowledgeId);
+                }
+            } else {
+                logger.error("null of idType, so skip it.");
             }
         }
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-        try {
-            result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, (short)-1);
-
-        } catch (Exception e) {
-            logger.error("knowledge delete failed！reason："+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        for (Map.Entry<Integer, List<Long>> keyValue : permDeleteMap.entrySet()) {
+            try {
+                int type = keyValue.getKey();
+                List<Long> deleIds = keyValue.getValue();
+                result = this.knowledgeService.batchDeleteByKnowledgeIds(deleIds, (short)type);
+                if (result == null || result.getNotification() == null || !"0".equals(result.getNotification().getNotifCode())) {
+                    logger.error("delete knowledge failed. knowledgeId: " + deleIds + " type: " + type);
+                }
+            } catch (Exception e) {
+                logger.error("knowledge delete failed！reason："+e.getMessage());
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            }
         }
 
         //This need to change to batch delete
@@ -1932,7 +1955,7 @@ public class KnowledgeController extends BaseController {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
         try {
-            collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, start, size);
+            collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, start, size, keyword);
         } catch (Exception ex) {
             logger.error("invoke myCollectKnowledge failed. userId: {} error: {}", userId, ex.getMessage());
         }

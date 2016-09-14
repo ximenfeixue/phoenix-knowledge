@@ -17,31 +17,10 @@ public interface KnowledgeOtherService
 
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int columnId,int start, int size) throws Exception;
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, int columnId,int start, int size,String keyword) throws Exception;
 
     public long myCollectKnowledgeCount(long userId) throws Exception;
 
     public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
 
-     /*
-    //TODO: this just test interface, need to delete before deploy to online system
-    public List<Long> createTag(long userId,short type,String tagName) throws Exception;
-
-    public List<Long> createDirectory(long userId,short type,String tagName) throws Exception;
-    //End
-
-    //Common component will remove from knowledge
-
-    public InterfaceResult batchTags(long userId,String requestJson) throws Exception;
-
-    public InterfaceResult batchCatalogs(long userId,String requestJson) throws Exception;
-
-    public InterfaceResult getTagListByIds(long userId,List<Long> tagIds) throws Exception;
-
-    public InterfaceResult getTagSourceCountByIds(long userId, List<Long> tagIds) throws Exception;
-
-    public InterfaceResult getDirectoryListByIds(long userId,List<Long> directoryIds) throws Exception;
-
-    public InterfaceResult getDirectorySourceCountByIds(long userId,List<Long> directoryIds) throws Exception;
-    */
 }
