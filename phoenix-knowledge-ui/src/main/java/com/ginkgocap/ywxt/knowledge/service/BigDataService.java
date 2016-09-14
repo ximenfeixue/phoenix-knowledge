@@ -48,7 +48,7 @@ public class BigDataService
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("send failed.  response: " + result.getSendResult());
+			logger.info("send failed.  response: " + (result != null ? result.getSendResult() : ""));
 		}
 	}
 
