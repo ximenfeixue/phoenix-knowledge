@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class PackingDataUtil {
 
-	final static String selectedIds = "\"selectedIds\":{\"dales\":[],\"modelType\":[],\"mento\":\"\",\"zhongles\":[],\"xiaoles\":[],\"dule\":true}";
+	final static String selectedIds = "{\"dales\":[],\"modelType\":[],\"mento\":\"\",\"zhongles\":[],\"xiaoles\":[],\"dule\":true}";
 	/**
 	 * 包装发送给MQ的数据
 	 * @date 2016年1月14日 下午4:33:26
