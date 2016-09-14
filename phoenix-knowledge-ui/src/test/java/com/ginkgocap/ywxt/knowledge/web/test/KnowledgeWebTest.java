@@ -105,14 +105,14 @@ public class KnowledgeWebTest extends BaseTestCase
             String knowledgeIds = "[" + detail1.getId() + "," + detail2.getId() + "]";
             String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
-            checkRequestResultSuccess(result);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
     }
 
-    public void testBatchDeleteKowKnowledge()
+    public void testBatchDeleteKnowKnowledge()
     {
         LogMethod();
         try {
@@ -123,9 +123,9 @@ public class KnowledgeWebTest extends BaseTestCase
             batchIds.add(new IdType(detail2.getId(), KnowledgeUtil.parserColumnId(detail2.getColumnType())));
             final String knowledgeIds = KnowledgeUtil.writeObjectToJson(batchIds);
             
-            String subUrl = "/batchDeleteKow"; ///delete/{id}/{columnId}
+            String subUrl = "/batchDeleteKnow"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
-            checkRequestResultSuccess(result);
+            checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();

@@ -426,7 +426,7 @@ public class KnowledgeController extends BaseController {
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value="/batchDeleteKnow", method = RequestMethod.PUT)
+    @RequestMapping(value="/batchDeleteKnow", method = RequestMethod.POST)
     public InterfaceResult batchDeleteKnow(HttpServletRequest request,HttpServletResponse response) throws Exception {
         User user = this.getUser(request);
         if(user == null) {
