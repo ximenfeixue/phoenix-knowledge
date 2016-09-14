@@ -39,12 +39,17 @@ public class KnowledgeOtherServiceTest extends TestBase
     public void testGetCollectKnowledgeList()
     {
         try {
-            List<KnowledgeCollect> collectList = knowledgeOtherService.myCollectKnowledge(userId, 0, 0, 10);
+            final String keyWord = "一切皆可";
+            List<KnowledgeCollect> collectList = knowledgeOtherService.myCollectKnowledge(userId, -1, 0, 10, keyWord);
             Assert.assertTrue(collectList != null && collectList.size() >0);
             for (KnowledgeCollect collect : collectList) {
-                String content = new StringBuffer().append("collect: Id: ").append(collect.getId()).append(" ownerId: ")
-                        .append(collect.getOwnerId()).append("source: ").append(collect.getSource()).toString();
-                System.out.println(String.format(content));
+                StringBuffer content = new StringBuffer();
+                content.append("collect: Id: ").append(collect.getId());
+                content.append(" ownerId: ").append(collect.getOwnerId());
+                content.append("KnowledgeId: ").append(collect.getKnowledgeId());
+                content.append("columnType: ").append(collect.getColumnId());
+                content.append("title: ").append(collect.getKnowledgeTitle());
+                System.out.println(String.format(content.toString()));
             }
         } catch (Exception e) {
             e.printStackTrace();
