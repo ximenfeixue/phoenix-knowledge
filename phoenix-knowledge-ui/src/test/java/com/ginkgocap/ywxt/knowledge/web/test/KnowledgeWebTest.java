@@ -14,6 +14,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.IdType;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 
@@ -101,7 +102,11 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             Knowledge detail1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
             Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
-            String knowledgeIds = "[" + detail1.getId() + "," + detail2.getId() + "]";
+            List<IdType> batchIds = new ArrayList<IdType>();
+            batchIds.add(new IdType(detail1.getId(), KnowledgeUtil.parserColumnId(detail1.getColumnType())));
+            batchIds.add(new IdType(detail2.getId(), KnowledgeUtil.parserColumnId(detail2.getColumnType())));
+            final String knowledgeIds = KnowledgeUtil.writeObjectToJson(batchIds);
+            
             String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
             checkRequestResultSuccess(result);
