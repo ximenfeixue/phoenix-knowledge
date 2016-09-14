@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 public class IdType implements Serializable
 {
-    private static final long serialVersionUID = -4719512970628605310L;
+	private static final long serialVersionUID = 6447603915975611883L;
 
-    private long id;
+	private long id;
     private int type;
 
     public long getId() {
