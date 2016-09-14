@@ -161,6 +161,10 @@ public class KnowledgeHomeController extends BaseController {
         Map<String, Object> model = new HashMap<String, Object>(1);
         try {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryCommentUrl");
+            if (StringUtils.isEmpty(url)) {
+                ResourceBundle resource = ResourceBundle.getBundle("application");
+                url = resource.getString("knowledge.url.query");
+            }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = "http://192.168.101.53:8090";
             }
@@ -294,6 +298,10 @@ public class KnowledgeHomeController extends BaseController {
     }
 
     private List<Map<String, Object>> getKnowledgeList(String jsonContent) throws Exception {
+        if (StringUtils.isBlank(jsonContent)) {
+            return null;
+        }
+
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> returnParams = KnowledgeUtil.readValue(Map.class, jsonContent);
         String bsn = returnParams.get("bsn") + "";
