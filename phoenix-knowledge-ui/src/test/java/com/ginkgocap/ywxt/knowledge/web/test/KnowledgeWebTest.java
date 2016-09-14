@@ -105,7 +105,7 @@ public class KnowledgeWebTest extends BaseTestCase
             String knowledgeIds = "[" + detail1.getId() + "," + detail2.getId() + "]";
             String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
-            checkResponseWithData(result);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -125,7 +125,7 @@ public class KnowledgeWebTest extends BaseTestCase
             
             String subUrl = "/batchDeleteKnow"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
-            checkResponseWithData(result);
+            checkRequestResultSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
