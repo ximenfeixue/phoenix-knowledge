@@ -629,9 +629,9 @@
                 <memcached.object_1.port>11211</memcached.object_1.port>
 
                 <!-- 访问大数据接口地址 -->
-                <bigData.url>http://10.10.85.16:8090</bigData.url>
-                <knowledge.url.create>http://10.10.85.16:2001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://10.10.85.16:8090</knowledge.url.query>
+                <bigData.url>http://123.59.50.85:8090</bigData.url>
+                <knowledge.url.create>http://123.59.50.85:2001/depoapp/</knowledge.url.create>
+                <knowledge.url.query>http://123.59.50.85:8090</knowledge.url.query>
             </properties>
         </profile>
     </profiles>
