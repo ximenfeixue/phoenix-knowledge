@@ -457,9 +457,14 @@ public final class KnowledgeUtil {
             return newTime;
         }
 
-        if (time.indexOf("-") > 0 && time.indexOf(":") > 0) {
+        if (time.indexOf("-") > 0) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf = null;
+                if ( time.indexOf(":") > 0) {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                } else {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd");
+                }
                 Date date = sdf.parse(time);
                 if (date != null) {
                     return date.getTime();
