@@ -28,10 +28,11 @@ public class IdType implements Serializable
         this.type = type;
     }
 
+    public IdType() { }
+
     public IdType(long id, int type)
     {
         this.id = id;
         this.type = type;
     }
-
 }
