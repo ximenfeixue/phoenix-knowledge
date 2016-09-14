@@ -178,10 +178,10 @@ public class KnowledgeController extends BaseController {
 
         //Sync to dynamic news
         if (syncToDynamic) {
-            String dynamicNews = createDynamicNews(detail);
+            String dynamicNews = createDynamicNews(detail, user.isVirtual());
             dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId, assoMap);
             /*
-            DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail);
+            DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail, user.isVirtual());
             if (dataSyncTask != null) {
                 dataSyncTask.saveDataNeedSync(dataSync);
             }*/
@@ -2230,18 +2230,18 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(page);
     }
 
-    private DataSync createDynamicNewsDataSync(Knowledge detail)
+    private DataSync createDynamicNewsDataSync(Knowledge detail,boolean isVirtual)
     {
         DataSync data = new DataSync();
         data.setIdType((short)5);
         data.setResId(detail.getId());
         data.setUserId(detail.getCid());
         data.setAction(EActionType.EAddDynamic.getValue());
-        data.setContent(createDynamicNews(detail));
+        data.setContent(createDynamicNews(detail,isVirtual));
         return data;
     }
 
-    private String createDynamicNews(Knowledge detail)
+    private String createDynamicNews(Knowledge detail,boolean isVirtual)
     {
         DynamicNews dynamic = new DynamicNews();
         dynamic.setType("11"); //创建知识
@@ -2261,7 +2261,7 @@ public class KnowledgeController extends BaseController {
         //dynamic.setId();
         dynamic.setImgPath(detail.getPic());
         dynamic.setKnowledgeCount(0);
-        String createType = detail.getVirtual() == 1 ? "1" : "2";
+        String createType = isVirtual ? "2" : "1";
         dynamic.setCreateType(createType);
         dynamic.setScope(String.valueOf(0));
         Location location = new Location();
