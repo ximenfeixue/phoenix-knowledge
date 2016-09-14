@@ -271,6 +271,7 @@ public class HttpClientHelper {
                     String respJson = EntityUtils.toString(entity);
                     logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
+                    logger.info("respJson: {}", respJson);
                     return respJson;
                 }
                 EntityUtils.consume(response.getEntity());

@@ -124,7 +124,7 @@ public class KnowledgeWebTest extends BaseTestCase
             final String knowledgeIds = KnowledgeUtil.writeObjectToJson(batchIds);
             
             String subUrl = "/batchDeleteKnow"; ///delete/{id}/{columnId}
-            JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
+            JsonNode result = HttpRequestResult(HttpMethod.POST, baseUrl + subUrl, knowledgeIds);
             checkResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
