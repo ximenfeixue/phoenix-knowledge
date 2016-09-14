@@ -102,12 +102,28 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             Knowledge detail1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
             Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
+            String knowledgeIds = "[" + detail1.getId() + "," + detail2.getId() + "]";
+            String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
+            JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
+            checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testBatchDeleteKowKnowledge()
+    {
+        LogMethod();
+        try {
+            Knowledge detail1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
+            Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
             List<IdType> batchIds = new ArrayList<IdType>();
             batchIds.add(new IdType(detail1.getId(), KnowledgeUtil.parserColumnId(detail1.getColumnType())));
             batchIds.add(new IdType(detail2.getId(), KnowledgeUtil.parserColumnId(detail2.getColumnType())));
             final String knowledgeIds = KnowledgeUtil.writeObjectToJson(batchIds);
             
-            String subUrl = "/batchDelete"; ///delete/{id}/{columnId}
+            String subUrl = "/batchDeleteKow"; ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl + subUrl, knowledgeIds);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
