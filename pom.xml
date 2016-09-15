@@ -600,12 +600,12 @@
                 <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
 
                 <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://10.10.134.229:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
+                <jdbc.url>jdbc:mysql://mysql.gintong.local:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>ph_newknowledge</jdbc.username>
                 <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
 
                 <!-- redis地址, 端口 -->
-                <redis.host>10.10.140.124</redis.host>
+                <redis.host>redis.gintong.local</redis.host>
                 <redis.port>6379</redis.port>
                 <user.cache.expiredTime>86400</user.cache.expiredTime>
 
@@ -620,7 +620,7 @@
                 <dubbo.protocol.port>7788</dubbo.protocol.port>
 
                 <!-- mongo地址, 数据库  -->
-                <mongodb.address>10.10.136.156:27017</mongodb.address>
+                <mongodb.address>mongodb.gintong.local:27017</mongodb.address>
                 <mongodb.database>knowledge</mongodb.database>
 
                 <!-- memcached configure-->
