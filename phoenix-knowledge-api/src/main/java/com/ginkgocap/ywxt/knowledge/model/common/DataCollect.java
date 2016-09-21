@@ -1,8 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model.common;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.ginkgocap.parasol.associate.model.Associate;
@@ -169,4 +170,34 @@ public class DataCollect implements Serializable
         }
         return knowledgeBase;
     }
+
+    public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList,boolean desc)
+    {
+        if (CollectionUtils.isEmpty(detailList)) {
+            return null;
+        }
+
+        Map<Long,KnowledgeBase> baseMap = new TreeMap<Long, KnowledgeBase>(desc ? descComparator : null);
+        for (Knowledge detail : detailList) {
+            if (detail != null) {
+                short columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
+                KnowledgeBase base = DataCollect.generateKnowledge(detail, columnType);
+                if (base != null) {
+                    baseMap.put(base.getCreateDate(), base);
+                }
+            }
+        }
+
+        List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
+        for (Map.Entry<Long,KnowledgeBase> keyValue : baseMap.entrySet()) {
+            baseList.add(keyValue.getValue());
+        }
+        return baseList;
+    }
+
+    private static Comparator descComparator = new Comparator<Long>(){
+        public int compare(Long a,Long b){
+            return (int)(b.intValue() - a.longValue());
+        }
+    };
 }

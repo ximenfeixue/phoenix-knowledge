@@ -931,7 +931,7 @@ public class KnowledgeController extends BaseController {
                 logger.info("start to get knowledge:" + total);
                 List<Knowledge> detailList = knowledgeBatchQueryService.getKnowledge(idList, userId, type, start, size);
                 logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
-                knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
+                knowledgeList = DataCollect.convertDetailToBaseList(detailList, true);
                 logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
             } else {
                 return queryKnowledgeEnd();
@@ -946,7 +946,7 @@ public class KnowledgeController extends BaseController {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，栏目服务当前不可用!");
             }
             if (total == -1) {
-                total = 150L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
+                total = 200L; //default value//this.knowledgeService.getBasePublicCountByColumnId(type, KnowledgeConstant.PRIVATED);
             }
             if (column == null) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，请检查栏目Id是否正确!");
@@ -955,12 +955,13 @@ public class KnowledgeController extends BaseController {
                 List<Knowledge> detailList = null;
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 try {
-                    detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
+                    //detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
+                    knowledgeList = this.knowledgeBatchQueryService.selectPlatformBase(type, columnId, column.getPathName(), userId, start, size);
                 } catch (Exception ex) {
                     logger.error("invoke selectPlatform() failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
                             ,type, columnId, column.getPathName(), userId, ex.getMessage());
                 }
-                knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
+                //knowledgeList = convertKnowledgeDetailListToBase(detailList, type);
                 if (knowledgeList == null || knowledgeList.size() <= 0) {
                     return InterfaceResult.getSuccessInterfaceResultInstance("暂时没有符合条件的知识!");
                 }

@@ -26,6 +26,7 @@ import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import net.sf.json.JSONArray;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -285,7 +286,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     }
 
     @Override
-    public List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size)
+    public List<KnowledgeBase> getAllByParamBase(final short columnType, final int columnId, final String columnPath, final long userId, final int start, int size)
     {
         logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
         final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
@@ -467,38 +468,19 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         cache.set(key, cacheTTL, result);
     }
 
-    private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> result, final String key)
+    private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> detailList, final String key)
     {
-        if (result == null || result.size() <= 0) {
+        if (CollectionUtils.isEmpty(detailList)) {
             logger.error("The knowledge is null, so skip..");
         }
         if (StringUtils.isEmpty(key)) {
             logger.error("The knowledge key is null, so skip..");
         }
         logger.error("Save the query result to catch, key: {}", key);
-        Map<Long,KnowledgeBase> baseMap = new TreeMap<Long, KnowledgeBase>(descComparator);
-        for (Knowledge detail : result) {
-            if (detail != null) {
-                short columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
-                KnowledgeBase base = DataCollect.generateKnowledge(detail, columnType);
-                baseMap.put(base.getCreateDate(), base);
-            }
-        }
-
-        List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(result.size());
-        for (Entry<Long,KnowledgeBase> keyValue : baseMap.entrySet()) {
-            baseList.add(keyValue.getValue());
-        }
-
+        List<KnowledgeBase> baseList = DataCollect.convertDetailToBaseList(detailList, true);
         cache.set(key, cacheTTL, baseList);
         return baseList;
     }
-
-    private Comparator descComparator = new Comparator<Long>(){
-        public int compare(Long a,Long b){
-            return (int)(b.intValue() - a.longValue());
-        }
-    };
 
     private Knowledge filterKnowledge(Knowledge detail)
     {
