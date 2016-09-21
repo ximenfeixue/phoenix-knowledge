@@ -21,6 +21,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeBatchQueryDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import net.sf.json.JSONArray;
@@ -149,15 +150,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             logger.error("column : {}, type: {}", column,type);
             return 0L;
         }
-		/*
-		List<Long> list = new ArrayList<Long>(kid.length);
-		for(int i = 0; i < kid.length; i++) {
-			list.add(kid[i]);
-		}
 
-		Criteria ctri = new Criteria("cpathid");
-		ctri.regex("^" + column + ".*$").and("status").is("4");
-		return mongoTemplate.count(query(where("_id").in(list).andOperator(ctri)), collection_name);*/
         String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
         String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
         BasicQuery query = new BasicQuery(result);
@@ -169,6 +162,14 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size)
     {
         return getAllByParam(type, columnId, columnPath, -1, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getAllBaseByParam(short columnType, int columnId, String columnPath, long userId, int start, int size)
+    {
+        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+        return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
     @Override
@@ -254,6 +255,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 Criteria criteria = new Criteria();
                 criteria.and("_id").in(ids);
                 Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 result = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (result != null && result.size() > 0) {
                     logger.info("get Knowledge size: {}", result.size());
@@ -276,6 +278,104 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             }
             // 执行更新
             //executorService.execute(new TakeRecordTask(columnId, (short) 4, userId, tableName, columnPath,));
+        }
+        else {
+            //if no data got need query again.
+            loadingMap.remove(key);
+        }
+        return result;
+    }
+
+    private List<KnowledgeBase> getKnowledgeBase(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
+        if (start < 0 || size < 0) {
+            logger.error("param is invalidated. start: {}, size: {}", start, size);
+            return null;
+        }
+        final String key = getBaseKey(columnType, columnId, userId, tableName);
+        List<Long> knowledgeIds = (List<Long>) cache.get(key);
+        size = size > maxSize ? maxSize : size;
+        List<KnowledgeBase> result = null;
+        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
+        if (!bLoading) {
+            try {
+                loadingMap.put(key, Boolean.TRUE);
+                logger.info("First query begin... key: {}", key);
+                // 查询栏目类型
+                Criteria criteria = Criteria.where("status").is(4);
+                // 金桐脑知识条件
+                if (userId >= 0) {
+                    criteria.and("uid").is(userId);
+                }
+                // 查询栏目目录为当前分类下的所有数据
+                final String reful = columnPath;
+                // 该栏目路径下的所有文章条件
+                criteria.and("cpathid").regex("^" + reful + ".*$");
+                Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                query.limit(maxQuerySize);
+                query.skip(0);
+
+                final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                    List<Long> ids = new ArrayList<Long>(maxQuerySize);
+                    List<Knowledge> detailList = new ArrayList<Knowledge>(size);
+                    int skip = 0;
+                    int toIndex = start + size;
+                    for (Knowledge knowledge : knowledgeList) {
+                        if (knowledge != null) {
+                            ids.add(knowledge.getId());
+                            if (skip >= start && skip < toIndex) {
+                                detailList.add(filterKnowledge(knowledge));
+                            }
+                        }
+                        skip++;
+                    }
+                    cache.set(key, cacheTTL, ids);
+                    final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
+                    result = saveKnowledgeBaseToCache(detailList, knowledgeKey);
+                }
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
+            final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
+            result = (List<KnowledgeBase>)cache.get(knowledgeKey);
+            if (result != null) {
+                logger.info("This list have cached before, so return it directly..");
+                return result;
+            }
+
+            int fromIndex = start;
+            int toIndex = start + size;
+            if (toIndex > knowledgeIds.size() - 1) {
+                toIndex = knowledgeIds.size() - 1;
+            }
+            List<Long> ids = null;
+            if (knowledgeIds != null && fromIndex < toIndex) {
+                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
+                ids = knowledgeIds.subList(fromIndex, toIndex);
+            }
+            if (ids != null && ids.size() > 0) {
+                long begin = System.currentTimeMillis();
+                Criteria criteria = new Criteria();
+                criteria.and("_id").in(ids);
+                Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
+                if (detailList != null && detailList.size() > 0) {
+                    logger.info("get Knowledge size: {}", result.size());
+                    for(Knowledge detail : detailList) {
+                        filterKnowledge(detail);
+                    }
+                    result = saveKnowledgeBaseToCache(detailList, knowledgeKey);
+                }
+                else {
+                    logger.info("can't get Knowledge by Ids: {}", ids.toString());
+                }
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end-begin));
+            }
         }
         else {
             //if no data got need query again.
@@ -361,6 +461,39 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         cache.set(key, cacheTTL, result);
     }
 
+    private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> result, final String key)
+    {
+        if (result == null || result.size() <= 0) {
+            logger.error("The knowledge is null, so skip..");
+        }
+        if (StringUtils.isEmpty(key)) {
+            logger.error("The knowledge key is null, so skip..");
+        }
+        logger.error("Save the query result to catch, key: {}", key);
+        Map<Long,KnowledgeBase> baseMap = new TreeMap<Long, KnowledgeBase>(descComparator);
+        for (Knowledge detail : result) {
+            if (detail != null) {
+                short columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
+                KnowledgeBase base = DataCollect.generateKnowledge(detail, columnType);
+                baseMap.put(base.getCreateDate(), base);
+            }
+        }
+
+        List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(result.size());
+        for (Entry<Long,KnowledgeBase> keyValue : baseMap.entrySet()) {
+            baseList.add(keyValue.getValue());
+        }
+
+        cache.set(key, cacheTTL, baseList);
+        return baseList;
+    }
+
+    private Comparator descComparator = new Comparator<Long>(){
+        public int compare(Long a,Long b){
+            return (int)(b.intValue() - a.longValue());
+        }
+    };
+
     private Knowledge filterKnowledge(Knowledge detail)
     {
         if (detail == null) {
@@ -396,6 +529,17 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < params.length; i++) {
             sb.append(i > 0 ? "_" : "").append(params[i]);
+        }
+        return sb.toString();
+    }
+
+    private static String getBaseKey(Object... params) {
+        if (ArrayUtils.isEmpty(params)) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < params.length; i++) {
+            sb.append(i > 0 ? "-" : "").append(params[i]);
         }
         return sb.toString();
     }

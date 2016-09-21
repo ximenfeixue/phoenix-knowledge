@@ -33,6 +33,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         createKnowledgeComment(comment);
     }
 
+    /*
     public void testKnowledgeCommentUpdate()
     {
         CommentForUpdate = LogMethod();
@@ -59,7 +60,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
             writeException(e);
         }
         checkResult(notifNode);
-    }
+    }*/
     
     public void testKnowledgeCommentUpdateFail()
     {

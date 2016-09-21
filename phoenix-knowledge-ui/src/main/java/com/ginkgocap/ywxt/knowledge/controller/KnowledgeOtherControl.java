@@ -205,11 +205,12 @@ public class KnowledgeOtherControl extends BaseController
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
-
-                            Long kId = (Long) createResult.getResponseData();
-                            // 知识ID
-                            knowledge.setId(kId);
-                            logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: {}", kId);
+                            if (createResult.getResponseData() instanceof Long) {
+	                            Long kId = (Long)createResult.getResponseData();
+	                            // 知识ID
+	                            knowledge.setId(kId.longValue());
+	                            logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
+                            }
                         } else {
                             logger.warn("isCreate is not existing or false, so skip to create knowledge!");
                         }

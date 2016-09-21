@@ -21,7 +21,7 @@ public class DirectoryWebTest extends BaseTestCase {
 	public void testCreateDirectory()
 	{
 		LogMethod();
-		String path = "/tags/tags/createTag?tagType=8&tagName=Tag345" + this.getNextNum();
+		String path = "/directory/directory/createSubDirectory?pId=0&name=Tag345" + this.getNextNum();
 		try {
 			String jsonNode = HttpRequestFullJson(HttpMethod.POST, directoryHost+path, null);
 			System.out.println(jsonNode);

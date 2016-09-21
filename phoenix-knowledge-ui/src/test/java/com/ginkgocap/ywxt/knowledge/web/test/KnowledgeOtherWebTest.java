@@ -24,7 +24,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
             e.printStackTrace();
         }
     }
-    
+    /*
     @Test
     public void testFetchExternalKnowledgeUrl_Old()
     {
@@ -37,8 +37,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
+    }*/
 
     @Test
     public void testShareCount()
@@ -66,6 +65,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         }
     }
 
+    /*
     @Test
     public void testPush()
     {
@@ -78,7 +78,7 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /*
     public void testGetHotKnowledge()

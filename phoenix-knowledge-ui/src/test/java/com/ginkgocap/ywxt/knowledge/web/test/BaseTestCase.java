@@ -51,9 +51,9 @@ public abstract class BaseTestCase extends TestCase
     protected static String baseCommentUrl = null;
     
     protected static String openHostUrl = null;
-    private final static String [] envArray = new String[] {"local", "dev", "testOnline", };
+    private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    private final static String testEnv = envArray[2];
+    private final static String testEnv = envArray[3];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -70,8 +70,15 @@ public abstract class BaseTestCase extends TestCase
         }
         else if ("testOnline".equals(testEnv)) {
             loginUrl = "http://hotfix.online.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080");
+            hostUrl = System.getProperty("hostUrl", "http://hotfix.online.gintong.com/cross/newknowledge");
             openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
+            //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
+            //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
+        }
+        else if ("online".equals(testEnv)) {
+            loginUrl = "http://www.gintong.com/cross" + getLoginUrl(web);
+            hostUrl = System.getProperty("hostUrl", "http://www.gintong.com/cross/newknowledge");
+            openHostUrl = System.getProperty("openHostUrl", "http://api.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
@@ -476,6 +483,7 @@ public abstract class BaseTestCase extends TestCase
     
     protected static void login(String loginUrl)
     {
+    	sessionID = "917398f7-b215-48d1-acd8-40e89db59ecd";
         if (sessionID == null || sessionID.trim().isEmpty()) {
             final String loginJson = getLoginJson(web);
             try {
@@ -505,8 +513,8 @@ public abstract class BaseTestCase extends TestCase
     
     private static String getLoginJson(boolean web)
     {
-    	final String userName = "18211081791";
-    	final String passWord = "MTExMTEx";
+    	final String userName = "18611386946";
+    	final String passWord = "sa#123";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
