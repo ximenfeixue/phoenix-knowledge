@@ -114,15 +114,6 @@ public abstract class BaseController {
         return user;
     }
 
-    public JSONObject getRequestJson(HttpServletRequest request) throws IOException {
-
-        String requestString = (String)request.getAttribute("requestJson");
-
-        JSONObject requestJson = JSONObject.fromObject(requestString == null ? "" : requestString);
-
-        return requestJson;
-    }
-
     protected String [] getChildIdListByColumnId(ColumnCustomService columnCustomService, int columnId, long userId)
     {
         List<ColumnSelf> columnList = null;
