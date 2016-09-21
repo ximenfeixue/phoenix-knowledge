@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeBatchQueryDao;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import net.sf.json.JSONObject;
 
@@ -37,69 +38,6 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
 
 
     private final String dataUrl = "http://192.168.130.119:8090";
-
-
-    @Override
-    public Map<String, Object> selectKnowledgeByTagsAndkeywords(Long userid, String keywords, String scope, String tag, int page, int size) {
-        logger.info("userid:{},", userid);
-        logger.info("keywords:{},", keywords);
-        logger.info("scope:{},", scope);
-        logger.info("tag:{},", tag);
-        logger.info("page:{},", page);
-        logger.info("size:{},", size);
-        int start = (page - 1) * size;
-        // 判断是否传的是默认值
-        start = start < 0 ? 0 : start;
-        int count = 0; //mobileKnowledgeMapper.selectCountKnowledgeByTagsAndKeyWords(userid, tag, keywords);
-        List<?> kcl = null; //mobileKnowledgeMapper.selectKnowledgeByTagsAndKeyWords(userid, tag, keywords, start, size);
-        Map<String, Object> m = new HashMap<String, Object>();
-
-        if (size != 0) {
-            PageUtil p = new PageUtil(count, page, size);
-            m.put("page", p);
-        }
-
-        m.put("list", kcl);
-        return m;
-    }
-
-    // 已作废
-    @Override
-    public Map<String, Object> selectKnowledgeByMyCollectionAndkeywords(Long userid, String keywords, String scope, int page, int size) {
-        logger.info(":{},", userid);
-        logger.info(":{},", keywords);
-        logger.info(":{},", scope);
-        logger.info(":{},", page);
-        logger.info(":{},", size);
-        int start = (page - 1) * size;
-        /** 判断是否传的是默认值 */
-        start = start < 0 ? 0 : start;
-        int count = 0; //mobileKnowledgeMapper.selectCountKnowledgeByMyCollectionAndKeyWords(userid, keywords);
-        List<?> kcl = null; //mobileKnowledgeMapper.selectKnowledgeByMyCollectionAndKeyWords(userid, keywords, start, size);
-        PageUtil p = new PageUtil(count, page, size);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("page", p);
-        m.put("list", kcl);
-        return m;
-    }
-
-    @Override
-    public Map<String, Object> selectMyFriendknowledgeByColumnId(long columnId, long userId, String scope, int page, int size) {
-        logger.info(":{},", columnId);
-        logger.info(":{},", userId);
-        logger.info(":{},", scope);
-        logger.info(":{},", page);
-        logger.info(":{},", size);
-        int start = (page - 1) * size;
-        /** 判断是否传的是默认值 */
-        int count = 0; //mobileKnowledgeMapper.selectCountForMyFriendKnowledgeByColumnId(columnId, userId);
-        List<?> kcl = null; //mobileKnowledgeMapper.selectMyFriendKnowledgeByColumnId(columnId, userId, start, size);
-        PageUtil p = new PageUtil(count, page, size);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("page", p);
-        m.put("list", kcl);
-        return m;
-    }
 
     @Override
     public JSONObject searchKnowledge(long userId, String keyword, String tag, int scope, int pno, int psize, String qf, short type, String sort)
@@ -174,26 +112,6 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     }
 
     @Override
-    public int selectKnowledgeCountByPermission(long userId, long columnId) {
-        return 0;//mobileKnowledgeMapper.selectKnowledgeCountByPermission(userId, columnId);
-    }
-
-    @Override
-    public List<Knowledge> getMixKnowledge(String columnID, long user_id, short type, int offset, int limit) {
-        return null; //mobileKnowledgeDAO.getMixKnowledge(columnID, user_id, type, offset, limit);
-    }
-
-    @Override
-    public long getMixKnowledgeCount(String columnID, long user_id, short type) {
-        return knowledgeBatchQueryDao.getMixKnowledgeCount(columnID, user_id, type);
-    }
-
-    @Override
-    public List<Knowledge> fileKnowledge(Map<Long, Integer> map) {
-        return knowledgeBatchQueryDao.fileKnowledge(map);
-    }
-
-    @Override
     public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type) {
         return knowledgeBatchQueryDao.getKnowledgeByUserIdAndColumnID(columnID, userId, type);
     }
@@ -214,103 +132,15 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
         return knowledgeBatchQueryDao.getAllByParam(type, columnId, columnPath, userId, start, size);
     }
 
-    @Override
-    public <T> Map<String, Object> selectAllByParam(int classType, int state, String columnPath, long userId, int page, int size) {
-        logger.info("state: {}, columnPath :{}, userId: {} ", state, columnPath, userId);
-        Map<String, Object> model = new HashMap<String, Object>();
-
-        /*
-        EnumSet<Constants.Type> enumSet = EnumSet.allOf(Constants.Type.class);
-        Iterator<Constants.Type> it = enumSet.iterator();
-
-        String class_name = null;
-        while (it.hasNext()) {
-            Constants.Type t = (Constants.Type) it.next();
-            if (t.v() == classType) {
-                class_name = t.obj();
-                break;
-            }
-        }
-
-        if (class_name == null) {
-            return null;
-        }
-        Class<?> testTypeForName;
-        try {
-            testTypeForName = Class.forName(class_name);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-
-        String[] names = class_name.split("\\.");
-        int length = names.length;
-        // 栏目id
-        Long cid = Long.parseLong(columnid);
-        // 查询栏目类型
-        Column column = columnMapper.selectByPrimaryKey(cid);
-        String ty = column.getColumnLevelPath().substring(0, 9);
-        int leng = column.getColumnLevelPath().length();
-        long type = Long.parseLong(ty);
-        Criteria criteria = Criteria.where("status").is(state);
-        Criteria criteriaUp = new Criteria();
-        Criteria criteriaMy = new Criteria();
-        Criteria criteriaGt = new Criteria();
-        List<Long> ids = new ArrayList<Long>();
-        String reful = column.getPathName();
-        // 栏目类型过滤
-        ids = userPermissionValueMapper.selectByParamsSingle(userid, type);
-
-        if (ids != null) {
-            criteriaUp.and("_id").in(ids);
-        }
-        Criteria child = new Criteria().and("cpathid").regex(reful + "/.*$");
-        Criteria parent = new Criteria().and("cpathid").is(reful);
-        criteriaGt.and("cid").is(Constants.gtnid);
-        if (cid > 11) { // 一级栏目为自定义的情形
-            criteria.and("cid").is(userid).and("cpathid").is(reful);
-        } else { // 一级栏目为预定义的
-            criteriaMy.and("cid").is(userid);
-            if (leng >= 10) {
-                criteriaMy.orOperator(parent, child);
-                criteriaUp.orOperator(parent, child);
-                criteriaGt.orOperator(parent, child);
-            }
-            Criteria criteriaPG = new Criteria().orOperator(criteriaMy, criteriaUp, criteriaGt);
-            criteria.andOperator(criteriaPG);
-        }
-        // 查询知识
-        String str = "" + JSONObject.fromObject(criteria);
-        logger.info("MongoObject:" + class_name + ",Query:" + str);
-
-        // 好友知识
-        List<Long> list = new ArrayList<Long>();
-        list.add(-1L);
-        list.add(0L);
-        list.add(userid);
-        criteria.and("uid").nin(list);
-
-        Query query = new Query(criteria);
-        query.sort().on("createtime", Order.DESCENDING);
-        long count = mongoTemplate.count(query, names[length - 1]);
-        PageUtil p = new PageUtil((int) count, page, size);
-        query.limit(size);
-        query.skip(p.getPageStartRow() - 1);
-        model.put("page", p);
-        model.put("list", (List) mongoTemplate.find(query, testTypeForName, names[length - 1]));*/
-        return model;
-    }
-
-    private List<String> fillList(List<Long> cls) {
-        List<String> clstr = new ArrayList<String>();
-        for (Long l : cls) {
-            clstr.add(l + "");
-        }
-        return clstr;
+    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath, long userId, int start, int size)
+    {
+        return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
     }
 
     @Override
-    public int getCountForMyKnowledgeTag(long userId, String keyword) {
-        return 0;// mobileKnowledgeMapper.selectMyKnowledgeCountByTag(userId, keyword);
+    public List<KnowledgeBase> getAllByParamBase(short type, int columnId, String columnPath, long userId, int start, int size)
+    {
+        return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
     }
 
     @Override

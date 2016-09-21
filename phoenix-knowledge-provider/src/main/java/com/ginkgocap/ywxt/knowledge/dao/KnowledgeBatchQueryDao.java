@@ -30,9 +30,11 @@ public interface KnowledgeBatchQueryDao {
 
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size);
 
-    public List<KnowledgeBase> getAllBaseByParam(short columnType, int columnId, String columnPath, long userId, int start, int size);
-
     public List<Knowledge> getAllByParam(short type, int columnId, String columnPath, long userId, int page, int size);
+
+    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size);
+
+    public List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size);
 
     public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type);
 

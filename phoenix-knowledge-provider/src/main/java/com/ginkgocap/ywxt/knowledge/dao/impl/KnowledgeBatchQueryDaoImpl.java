@@ -165,14 +165,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     }
 
     @Override
-    public List<KnowledgeBase> getAllBaseByParam(short columnType, int columnId, String columnPath, long userId, int start, int size)
-    {
-        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
-        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-        return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
-    }
-
-    @Override
     public List<Knowledge> getAllByParam(short columnType, int columnId, String columnPath, long userId, int start, int size)
     {
         logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
@@ -284,6 +276,20 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             loadingMap.remove(key);
         }
         return result;
+    }
+
+    @Override
+    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size)
+    {
+        return getAllByParamBase(type, columnId, columnPath, -1, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size)
+    {
+        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+        return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
     private List<KnowledgeBase> getKnowledgeBase(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
