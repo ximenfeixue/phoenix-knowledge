@@ -1,6 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.web.test;
 
 
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+
 public class TagWebTest extends BaseTestCase {
 
 	private final String tagHost = openHostUrl;
@@ -68,5 +71,12 @@ public class TagWebTest extends BaseTestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void testTest()
+	{
+		String IP = KnowledgeUtil.getHostIp();
+		System.out.println("Host IP1: " + IP);
+		System.out.println("Host IP2: " + KnowledgeUtil.getLocalAddress());
 	}
 }
