@@ -904,7 +904,7 @@ public class KnowledgeController extends BaseController {
                                                                               @PathVariable short source, @PathVariable int page,
                                                                               @PathVariable int size, @PathVariable long total) throws Exception
     {
-        User user = getUser(request);
+        User user = getJTNUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }

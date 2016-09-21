@@ -48,7 +48,7 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     @Test
     public void testGetAllPlatform()
     {
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 1, 1, "资讯", 0, 0, 10);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 1, 1, "资讯", 0, 1, 10);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: "+knowledgeList.size());
         String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);
