@@ -75,8 +75,11 @@ public class TagWebTest extends BaseTestCase {
 
 	public void testTest()
 	{
-		String IP = KnowledgeUtil.getHostIp();
-		System.out.println("Host IP1: " + IP);
+		String ipList = KnowledgeUtil.getLocalIp();
+		String[] ips = ipList.split("\n");
+		for (String IP : ips) {
+			System.out.println("Host IP1: " + IP);
+		}
 		System.out.println("Host IP2: " + KnowledgeUtil.getLocalAddress());
 	}
 }
