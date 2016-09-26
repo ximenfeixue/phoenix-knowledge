@@ -69,10 +69,7 @@ public class KnowledgeController extends BaseController {
     private KnowledgeBatchQueryService knowledgeBatchQueryService;
 
     @Autowired
-    private AssociateService associateService;
-
-    @Autowired
-    private AssociateTypeService assoTypeService;
+    AssociateServiceLocal associateServiceLocal;
 
     @Autowired
     private TagServiceLocal tagServiceLocal;
@@ -152,17 +149,12 @@ public class KnowledgeController extends BaseController {
         else {
             logger.error("Save Directory info failed, userId: {} knowledgeId: {}", userId, knowledgeId);
         }
-        //save asso information
 
+        //save asso information
         //TODO: If this step failed, how to do ?
         Map<Long, List<Associate>> assoMap = null;
         try {
-            List<Associate> as  = data.getAsso();
-            if (as != null) {
-                assoMap = createAssociate(as, knowledgeId, user);
-            } else {
-                logger.error("associate it null or converted failed, so skip to save!");
-            }
+            assoMap = associateServiceLocal.createAssociate(data.getAsso(), knowledgeId, user);
 
         }catch (Throwable e) {
             logger.error("Insert associate failed : " + e.getMessage());
@@ -256,26 +248,7 @@ public class KnowledgeController extends BaseController {
         directoryServiceLocal.updateDirectorySource(userId, detail);
 
         //Update Assso info
-        try {
-            Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, (long) KnowledgeBaseService.sourceType, knowledgeId);
-            if (assomap == null) {
-                logger.error("asso it null or converted failed...");
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
-            }
-            //TODO: If this step failed, how to do ?
-            for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
-                List<Associate> associateList = (List) i.next();
-                for (int j = 0; j < associateList.size(); j++) {
-                    associateService.removeAssociate(APPID, user.getId(), associateList.get(j).getId());
-                }
-            }
-        }
-        catch (Exception e) {
-            logger.error("Asso update failed！reason：" + e.getMessage());
-        }
-
-        List<Associate> as = data.getAsso();
-        createAssociate(as, knowledgeId, user);
+        associateServiceLocal.updateAssociate(knowledgeId, user, data);
 
         //send new knowledge to bigdata
         KnowledgeBase base = data.generateKnowledge();
@@ -316,34 +289,21 @@ public class KnowledgeController extends BaseController {
             logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70003);
         }
+        if (result != null && result.getNotification() != null && "0".equals(result.getNotification().getNotifCode())) {
+            logger.error("delete knowledge base and detail info success!");
+        }
+        else {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"删除知识失败!");
+        }
 
         //delete tags
         tagServiceLocal.deleteTags(userId, knowledgeId);
 
         //delete directory
         directoryServiceLocal.deleteDirectory(userId, knowledgeId);
+
         //delete Assso info
-        AssociateType assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
-        Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, 7L, knowledgeId);
-        if (assomap == null) {
-            logger.error("asso id is null or converted failed...");
-            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
-        }
-        //TODO: If this step failed, how to do ?
-        try {
-            for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
-                List<Associate> associateList = (List) i.next();
-                for (int j = 0; j < associateList.size(); j++) {
-                    associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
-                }
-            }
-        } catch (AssociateServiceException ex) {
-            logger.error("delete Associate failed: {}", ex.getMessage());
-        }
-        catch (Exception ex) {
-            logger.error("delete Associate failed: {}", ex.getMessage());
-            ex.printStackTrace();
-        }
+        associateServiceLocal.deleteAssociate(knowledgeId, userId);
 
         //delete permission info
         if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
@@ -404,7 +364,7 @@ public class KnowledgeController extends BaseController {
         //This need to change to batch delete
         for (long knowledgeId : permDeleteIds) {
             //delete Assso info
-            deleteAssociate(knowledgeId, user.getId());
+            associateServiceLocal.deleteAssociate(knowledgeId, user.getId());
             //delete tags
             tagServiceLocal.deleteTags(userId, knowledgeId);
 
@@ -489,7 +449,7 @@ public class KnowledgeController extends BaseController {
         //This need to change to batch delete
         for (long knowledgeId : permDeleteIds) {
             //delete Assso info
-            deleteAssociate(knowledgeId, user.getId());
+            associateServiceLocal.deleteAssociate(knowledgeId, user.getId());
             //delete tags
             tagServiceLocal.deleteTags(userId, knowledgeId);
 
@@ -1929,77 +1889,6 @@ public class KnowledgeController extends BaseController {
         return str;
     }
 
-    private Map<Long, List<Associate>> createAssociate(List<Associate> as, long knowledgeId, User user)
-    {
-        if (as == null || as.size() <= 0) {
-            return null;
-        }
-
-        //now only 4 type asso
-        long userId = this.getUserId(user);
-        Map<Long, List<Associate>> assoMap = new HashMap<Long, List<Associate>>(4);
-        for (int index = 0; index < as.size(); index++) {
-            Associate associate = as.get(index);
-            associate.setUserId(userId);
-            associate.setUserName(user.getName());
-            associate.setSourceId(knowledgeId);
-            associate.setSourceTypeId(KnowledgeBaseService.sourceType);
-            //associate.setAssocTypeId(assoType.getId());
-            associate.setUserId(userId);
-            associate.setAppId(APPID);
-            try {
-                long assoId = associateService.createAssociate(APPID, userId, associate);
-                if (assoMap.get(associate.getAssocTypeId()) == null) {
-                    List<Associate> assoList = new ArrayList<Associate>(2);
-                    assoMap.put(associate.getAssocTypeId(), assoList);
-                }
-                assoMap.get(associate.getAssocTypeId()).add(associate);
-                logger.info("assoId:" + assoId);
-            }catch (AssociateServiceException e) {
-                logger.error("create Asso failed！reason：" + e.getMessage());
-            } catch (Throwable e) {
-                logger.error("create Asso failed！reason：" + e.getMessage());
-            }
-        }
-
-        return assoMap;
-    }
-
-    private InterfaceResult deleteAssociate(long knowledgeId, long userId)
-    {
-        AssociateType assoType = null;
-        try {
-            assoType = assoTypeService.getAssociateTypeByName(APPID,"知识");
-            if (assoType == null) {
-                logger.error("can't get assoType for knowledge...");
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-            }
-            Map<AssociateType, List<Associate>> assomap =  associateService.getAssociatesBy(APPID, assoType.getId(), knowledgeId);
-            if (assomap == null) {
-                logger.error("asso item null or converted failed...");
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_EXCEPTION_60008);
-            }
-            //TODO: If this step failed, how to do ?
-            for (Iterator i =  assomap.values().iterator(); i.hasNext();) {
-                List<Associate> associateList = (List)i.next();
-                for (int j = 0; j < associateList.size(); j++) {
-                    try {
-                        associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
-                    }catch (Exception ex) {
-                        logger.error("delete Associate failed, reason: {}", ex.getMessage());
-                    }
-                }
-            }
-        } catch (AssociateTypeServiceException ex) {
-            logger.error("delete Associate failed, reason: {}", ex.getMessage());
-        }
-        catch (AssociateServiceException ex) {
-            logger.error("delete Associate failed, reason: {}", ex.getMessage());
-        }
-
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
-
     private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
     {
         List<KnowledgeBase> createdKnowledgeItems = null;
@@ -2144,7 +2033,7 @@ public class KnowledgeController extends BaseController {
         data.setPermission(permission);
 
         try {
-            List<Associate> associateList = associateService.getAssociatesBySourceId(APPID, user.getId(), knowledgeId);
+            List<Associate> associateList = associateServiceLocal.getAssociateList(user.getId(), knowledgeId);
             data.setAsso(associateList);
         } catch (Exception ex) {
             logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);

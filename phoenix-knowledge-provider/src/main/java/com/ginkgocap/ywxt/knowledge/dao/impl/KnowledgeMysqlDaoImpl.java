@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -84,24 +85,24 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public int deleteByKnowledgeId(long knowledgeId) throws Exception {
-
-        return this.deleteList("delete_knowledge_by_knowledgeId", new Object[]{knowledgeId});
+	public int deleteByKnowledgeId(long knowledgeId) throws Exception
+	{
+        return this.deleteList("delete_knowledge_by_knowledgeId", knowledgeId);
 	}
 
 	@Override
-	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception {
-            for (long knowledId : knowledgeIds) {
-                deleteByKnowledgeId(knowledId);
-            }
-        return knowledgeIds.size();
+	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception
+	{
+		if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+			return this.deleteEntityByIds(knowledgeIds) ? knowledgeIds.size() : 0;
+		}
+		return 0;
 	}
 
 	@Override
-	public int deleteByCreateUserId(long createUserId) throws Exception {
-		
+	public int deleteByCreateUserId(long createUserId) throws Exception
+	{
 		int deleteStatus = this.deleteList("delete_by_createUserId", createUserId);
-		
 		return deleteStatus;
 	}
 

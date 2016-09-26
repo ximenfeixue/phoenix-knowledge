@@ -317,7 +317,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识详细表删除
         try {
-            this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
+            int reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
+            if (reslut <= 0) {
+                logger.error("知识详细表删除失败！\n");
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
+            }
         } catch (Exception ex) {
             logger.error("知识详细表删除失败！失败原因：\n"+ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");

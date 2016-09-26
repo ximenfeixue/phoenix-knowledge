@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.slf4j.Logger;
@@ -14,8 +15,14 @@ import java.util.List;
  */
 public abstract class BaseServiceLocal {
 
-    private Logger logger = LoggerFactory.getLogger(BaseServiceLocal.class);
+    private final Logger logger = LoggerFactory.getLogger(BaseServiceLocal.class);
     protected String tagLimitErrorMsg = "，标签数量超过限制，最多添加10个 ；";
+
+    protected long getUserId(User user)
+    {
+        //This return Id or Uid
+        return user.getId();
+    }
 
     protected List<Long> convertObjectListToLongList(List<Object> idList)
     {

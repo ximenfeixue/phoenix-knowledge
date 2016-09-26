@@ -33,7 +33,7 @@ public class KnowledgeCount implements Serializable {
 
     private String title;
 
-    private String source;
+    private int source;
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -117,11 +117,11 @@ public class KnowledgeCount implements Serializable {
     }
 
     @Column(name = "source")
-    public String getSource() {
+    public int getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(int source) {
         this.source = source;
     }
 }
