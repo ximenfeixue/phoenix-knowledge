@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -22,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by Chen Peifeng on 2016/6/21.
  */
+@Repository("associateServiceLocal")
 public class AssociateServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
     private Logger logger = LoggerFactory.getLogger(AssociateServiceLocal.class);
