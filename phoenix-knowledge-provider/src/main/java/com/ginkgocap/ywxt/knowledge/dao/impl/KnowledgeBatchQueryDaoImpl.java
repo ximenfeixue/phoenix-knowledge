@@ -363,7 +363,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
                 ids = knowledgeIds.subList(fromIndex, toIndex);
             }
-            if (ids != null && ids.size() > 0) {
+            if (CollectionUtils.isNotEmpty(ids)) {
                 long begin = System.currentTimeMillis();
                 Criteria criteria = new Criteria();
                 criteria.and("_id").in(ids);
@@ -371,14 +371,14 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (detailList != null && detailList.size() > 0) {
-                    logger.info("get Knowledge size: {}", result.size());
                     for(Knowledge detail : detailList) {
                         filterKnowledge(detail);
                     }
                     result = saveKnowledgeBaseToCache(detailList, knowledgeKey);
+                    logger.info("get Knowledge size: " + (result != null ? result.size() : 0));
                 }
                 else {
-                    logger.info("can't get Knowledge by Ids: {}", ids.toString());
+                    logger.info("can't get Knowledge by Ids: +", ids.toString());
                 }
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end-begin));
