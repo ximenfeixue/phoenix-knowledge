@@ -53,9 +53,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge savedDetail = null;
         try {
             detail.setStatus(4);
-            logger.info("Begin insert knowledge to mongo. knowledgeId: {}",detail.getId());
+            logger.info("Begin insert knowledge to mongo. knowledgeId: + ",detail.getId());
             this.knowledgeMongoDao.insert(detail);
-            logger.info("End insert knowledge to mongo. knowledgeId: {}",detail.getId());
+            logger.info("End insert knowledge to mongo. knowledgeId:  + ",detail.getId());
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
@@ -65,6 +65,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         if (savedDetail == null) {
+            logger.error("Create knowledge detail failed, knowledgeId:  + ",detail.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = savedDetail.getId();
