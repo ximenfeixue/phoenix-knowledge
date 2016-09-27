@@ -74,9 +74,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
-            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
+            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: +",knowledgeBase.getId());
             this.knowledgeMysqlDao.insert(knowledgeBase);
-            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: {}",knowledgeBase.getId());
+            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: +",knowledgeBase.getId());
         } catch (Exception e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
