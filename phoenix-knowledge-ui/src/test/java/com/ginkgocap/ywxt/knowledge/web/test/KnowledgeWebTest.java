@@ -88,7 +88,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             Knowledge detail = createKnowledge("KnowledgeWebTest_testDeleteKnowledge").getKnowledgeDetail();
-            String subUrl = "/" + detail.getId() + "/" + detail.getColumnid(); ///delete/{id}/{columnId}
+            String subUrl = "/" + detail.getId() + "/" + detail.getColumnType(); ///delete/{id}/{columnId}
             JsonNode result = HttpRequestResult(HttpMethod.DELETE, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {
@@ -139,7 +139,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 11609191123471L; //detail.getId();
+            long knowledgeId = 31609271655371L; //detail.getId();
             int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
@@ -154,7 +154,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 11609191123471L; //detail.getId();
+            long knowledgeId = 31609271655371L; //detail.getId();
             int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);

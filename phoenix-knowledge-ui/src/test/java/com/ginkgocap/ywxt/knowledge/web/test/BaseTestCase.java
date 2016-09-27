@@ -53,7 +53,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    private final static String testEnv = envArray[1];
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -69,8 +69,8 @@ public abstract class BaseTestCase extends TestCase
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/cross");
         }
         else if ("testOnline".equals(testEnv)) {
-            loginUrl = "http://hotfix.online.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://hotfix.online.gintong.com/cross/newknowledge");
+            loginUrl = "http://test.online.gintong.com/cross" + getLoginUrl(web);
+            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross/newknowledge");
             openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
@@ -483,7 +483,7 @@ public abstract class BaseTestCase extends TestCase
     
     protected static void login(String loginUrl)
     {
-    	sessionID = "917398f7-b215-48d1-acd8-40e89db59ecd";
+    	sessionID = "4915fc9c-5598-4e6c-8630-bd24e46eceed";
         if (sessionID == null || sessionID.trim().isEmpty()) {
             final String loginJson = getLoginJson(web);
             try {
