@@ -130,7 +130,7 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
 
-        if (result == null || result.getNotification()== null || result.getResponseData() == null) {
+        if (result == null || result.getNotification()== null || !"0".equals(result.getNotification().getNotifCode())) {
             logger.error("Insert knowledge failed!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
