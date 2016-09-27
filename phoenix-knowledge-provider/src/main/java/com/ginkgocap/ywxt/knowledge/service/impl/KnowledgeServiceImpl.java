@@ -307,9 +307,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnId) throws Exception {
+    public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnType) throws Exception {
 
-        Knowledge oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+        Knowledge oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
         if (oldKnowledgeDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, "要删除的知识不存在!");
         }
@@ -317,9 +317,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识详细表删除
         try {
-            int reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnId);
+            int reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
             if (reslut <= 0) {
-                logger.error("知识详细表删除失败！\n");
+                logger.error("知识详细表删除失败: knowledgeId: " + knowledgeId + " columnType: " + columnType);
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
             }
         } catch (Exception ex) {
@@ -331,7 +331,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
         } catch (Exception e) {
-            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)columnId, (short)0, EActionType.EDelete.getValue()));
+            //knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)columnType, (short)0, EActionType.EDelete.getValue()));
             logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识删除失败!");
         }
