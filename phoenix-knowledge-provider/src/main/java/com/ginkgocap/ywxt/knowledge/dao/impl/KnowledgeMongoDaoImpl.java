@@ -139,9 +139,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId)
+    public boolean deleteKnowledgeDirectory(long knowledgeId,int columnType,long directoryId)
     {
-        Knowledge detail = getByIdAndColumnId(knowledgeId, columnId);
+        Knowledge detail = getByIdAndColumnId(knowledgeId, columnType);
         List<Long> directoryIds = detail.getDirectorys();
         if (directoryIds != null && directoryIds.contains(directoryId)) {
             directoryIds.remove(directoryId);
@@ -150,16 +150,16 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return true;
         }
         else {
-            logger.error("can't find the knowledge by, knowledgeId: {} columnId: {}", knowledgeId, columnId);
+            logger.error("can't find the knowledge by, knowledgeId: {} columnType: {}", knowledgeId, columnType);
             return false;
         }
     }
 
     @Override
-    public Knowledge getByIdAndColumnId(long knowledgeId, int columnId)
+    public Knowledge getByIdAndColumnId(long knowledgeId, int columnType)
     {
         Query query = knowledgeColumnIdQuery(knowledgeId);
-        return mongoTemplate.findOne(query, Knowledge.class, getCollectionName(columnId));
+        return mongoTemplate.findOne(query, Knowledge.class, getCollectionName(columnType));
     }
 
     @Override

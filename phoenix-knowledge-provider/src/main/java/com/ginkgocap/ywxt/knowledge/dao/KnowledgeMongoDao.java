@@ -91,21 +91,21 @@ public interface KnowledgeMongoDao
      * 根据主键以及栏目提取数据
      * @date 2016年1月13日 上午10:54:56
      * @param id
-     * @param columnId
+     * @param columnType
      * @return
      * @throws Exception
      */
-    public Knowledge getByIdAndColumnId(long id,int columnId);
+    public Knowledge getByIdAndColumnId(long id,int columnType);
 
     /**
      * 根据主键list以及栏目提取数据
      * @date 2016年1月13日 上午10:54:58
      * @param ids
-     * @param columnId
+     * @param columnType
      * @return
      * @throws Exception
      */
-    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
+    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception;
 
     /**
      * @date 2016年1月13日 上午10:54:58

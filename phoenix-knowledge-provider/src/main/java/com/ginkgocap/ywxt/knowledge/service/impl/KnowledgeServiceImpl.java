@@ -42,20 +42,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Autowired
     private KnowledgeReferenceDao knowledgeReferenceDao;
 
-    /**MQ大数据服务*/
-    //@Autowired
-    //private BigDataService bigDataService;
-    // 动态推送服务
-    //@Autowired
-    //private UserFeedService userFeedService;
-
-    /**心情日记*/
-    //@Autowired
-    //private DiaryService diaryService;
-
-    boolean isBigData = false;
-    boolean isUserFeed = false;
-
     @Override
     public InterfaceResult insert(DataCollect DataCollect) {
 
@@ -68,8 +54,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             detail.setStatus(4);
             logger.info("Begin insert knowledge to mongo. knowledgeId: {}",detail.getId());
-            savedDetail = this.knowledgeMongoDao.insert(detail);
+            this.knowledgeMongoDao.insert(detail);
             logger.info("End insert knowledge to mongo. knowledgeId: {}",detail.getId());
+            //Get from mongo, make sure save success..
+            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
         } catch (Exception ex) {
             logger.error("Create knowledge detail failed: error:  {}", ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
