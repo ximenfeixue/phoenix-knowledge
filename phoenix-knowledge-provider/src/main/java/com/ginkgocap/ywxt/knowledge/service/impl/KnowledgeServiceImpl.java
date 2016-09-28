@@ -53,7 +53,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge savedDetail = null;
         try {
             detail.setStatus(4);
-            logger.info("Begin insert knowledge to mongo. knowledgeId: " + detail.getId());
             this.knowledgeMongoDao.insert(detail);
             logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
             //Get from mongo, make sure save success..
@@ -74,7 +73,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
-            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: " + knowledgeBase.getId());
             this.knowledgeMysqlDao.insert(knowledgeBase);
             logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: " + knowledgeBase.getId());
         } catch (Exception e) {
