@@ -293,7 +293,7 @@ public class KnowledgeController extends BaseController {
             logger.error("delete knowledge base and detail info success!");
         }
         else {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"删除知识失败!");
+            return InterfaceResult.getInterfaceResultInstance(result.getNotification().getNotifCode(),"删除知识失败!");
         }
 
         //delete tags
