@@ -168,14 +168,14 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     @Override
     public List<Knowledge> getAllByParam(short columnType, int columnId, String columnPath, long userId, int start, int size)
     {
-        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
+        logger.info("columnType: " + columnType + " columnId: " + columnId + " userId: " + userId + " columnPath： " + columnPath);
         final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
         return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
     private List<Knowledge> getMongoIds(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
-            logger.error("param is invalidated. start: {}, size: {}", start, size);
+            logger.error("param is invalidated. start: " + start + ", size: {}" + size);
             return null;
         }
         final String key = getKey(columnType, columnId, userId, tableName);
@@ -186,7 +186,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         if (!bLoading) {
             try {
                 loadingMap.put(key, Boolean.TRUE);
-                logger.info("First query begin... key: {}", key);
+                logger.info("First query begin... key: " + key);
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
@@ -251,21 +251,15 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 result = mongoTemplate.find(query, Knowledge.class, tableName);
                 if (result != null && result.size() > 0) {
-                    logger.info("get Knowledge size: {}", result.size());
+                    logger.info("get Knowledge size: " + result.size());
                     for(Knowledge detail : result) {
                         filterKnowledge(detail);
                     }
                     saveKnowledgeToCache(result, knowledgeKey);
                 }
                 else {
-                    logger.info("can't get Knowledge by Ids: {}", ids.toString());
+                    logger.info("can't get Knowledge by Ids: " + ids.toString());
                 }
-//	            for (Long id : ids) {
-//	                Knowledge vo = mongoTemplate.findById(id, KnowledgeNews.class, tableName);
-//	                if (vo != null) {
-//	                    result.add(vo);
-//	                }
-//	            }
                 long end = System.currentTimeMillis();
                 System.out.println("Time: " + (end-begin));
             }
@@ -288,14 +282,14 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     @Override
     public List<KnowledgeBase> getAllByParamBase(final short columnType, final int columnId, final String columnPath, final long userId, final int start, int size)
     {
-        logger.info("columnType:{} columnId:{} userId:{} columnPath： {}", columnType, columnId, userId, columnPath);
+        logger.info("columnType: " + columnType + " columnId: " + columnId + " userId: " + userId + " columnPath： " + columnPath);
         final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
         return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
     private List<KnowledgeBase> getKnowledgeBase(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
-            logger.error("param is invalidated. start: {}, size: {}", start, size);
+            logger.error("param is invalidated. start: " + start + ", size: " + size);
             return null;
         }
         final String key = getBaseKey(columnType, columnId, userId, tableName);

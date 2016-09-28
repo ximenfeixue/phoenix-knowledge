@@ -665,7 +665,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                     return false;
                 }
             } catch (Exception e) {
-                logger.error("delete backup knowledge base failed, error: {}", e.getMessage());
+                logger.error("delete backup knowledge base failed, error: " + e.getMessage());
                 e.printStackTrace();
                 return false;
             }
