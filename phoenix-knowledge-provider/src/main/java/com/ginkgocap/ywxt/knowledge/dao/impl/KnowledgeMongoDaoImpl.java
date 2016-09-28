@@ -283,12 +283,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     private String getCollectionName(String columnId) {
-        int type = 1;
-        try {
-            type = Integer.parseInt(columnId);
-        }catch (NumberFormatException ex) {
-            logger.error("Can't parser this columnId to number. columnId: {} error: ",columnId, ex.getMessage());
-        }
+        int type = KnowledgeUtil.parserColumnId(columnId);
         return KnowledgeUtil.getKnowledgeCollectionName(type);
     }
 
