@@ -44,7 +44,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
         knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
-        mongoTemplate.save(knowledge,currCollectionName);
+        mongoTemplate.save(knowledge, currCollectionName);
 
         return knowledge;
     }
@@ -109,7 +109,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     public boolean deleteByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, getCollectionName(columnType));
+        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
         if (CollectionUtils.isEmpty(delKnowledgeList)) {
             logger.error("delete knowledge failed. knowledgeIds: " + ids + " columnType: " + columnType);
             return false;
@@ -124,7 +124,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         addColumnIdToQuery(query, columnId);
 
         WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
-        if (result.getN() <=0 ) {
+        if (result.getError() != null ) {
             return -1;
         }
         return 0;
