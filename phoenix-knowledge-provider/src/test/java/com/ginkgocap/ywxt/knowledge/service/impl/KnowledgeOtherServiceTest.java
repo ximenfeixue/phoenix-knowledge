@@ -35,6 +35,20 @@ public class KnowledgeOtherServiceTest extends TestBase
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testGetCollectKnowledgeCount()
+    {
+        try {
+            long collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
+            Assert.assertTrue(collectedCount > 0);
+            System.out.println("collectedCount : "+collectedCount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Test
     public void testGetCollectKnowledgeList()
     {
@@ -46,9 +60,9 @@ public class KnowledgeOtherServiceTest extends TestBase
                 StringBuffer content = new StringBuffer();
                 content.append("collect: Id: ").append(collect.getId());
                 content.append(" ownerId: ").append(collect.getOwnerId());
-                content.append("KnowledgeId: ").append(collect.getKnowledgeId());
-                content.append("columnType: ").append(collect.getColumnId());
-                content.append("title: ").append(collect.getKnowledgeTitle());
+                content.append(" KnowledgeId: ").append(collect.getKnowledgeId());
+                content.append(" columnType: ").append(collect.getColumnId());
+                content.append(" title: ").append(collect.getKnowledgeTitle());
                 System.out.println(String.format(content.toString()));
             }
         } catch (Exception e) {

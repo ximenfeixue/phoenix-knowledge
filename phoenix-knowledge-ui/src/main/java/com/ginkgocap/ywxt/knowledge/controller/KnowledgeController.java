@@ -2077,7 +2077,7 @@ public class KnowledgeController extends BaseController {
         }catch (Exception ex) {
             logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
         }
-        logger.info("collectedCount: {}", collectedCount);
+        logger.info("collectedCount: " + collectedCount);
 
         return collectedCount;
     }
