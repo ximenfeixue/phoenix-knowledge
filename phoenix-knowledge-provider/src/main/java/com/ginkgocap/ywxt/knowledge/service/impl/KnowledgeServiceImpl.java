@@ -297,14 +297,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnType) throws Exception {
-
-        Knowledge oldKnowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
-        if (oldKnowledgeDetail == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, "要删除的知识不存在!");
-        }
-        long userId = oldKnowledgeDetail.getCid();
-
+    public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnType) throws Exception
+    {
         //知识详细表删除
         try {
             boolean reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
