@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
-            logger.error("can't find this knowledge, so skip update. knowledgeId: {}",knowledge.getId());
+            logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId());
             return null;
         }
 
@@ -93,24 +94,25 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
 
     @Override
-    public int deleteByIdAndColumnId(long knowledgeId,int columnId)
+    public int deleteByIdAndColumnId(long knowledgeId,int columnType)
     {
         Query query = knowledgeIdQuery(knowledgeId);
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
-        if (result.getN() <=0 ) {
+        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, getCollectionName(columnType));
+        if (CollectionUtils.isEmpty(delKnowledgeList)) {
+            logger.error("delete knowledge failed. knowledgeId: " + knowledgeId + " columnType: " + columnType);
             return -1;
         }
         return 0;
     }
 
     @Override
-    public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
+    public int deleteByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        addColumnIdToQuery(query, columnId);
 
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
-        if (result.getN() <=0 ) {
+        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, getCollectionName(columnType));
+        if (CollectionUtils.isEmpty(delKnowledgeList)) {
+            logger.error("delete knowledge failed. knowledgeIds: " + ids + " columnType: " + columnType);
             return -1;
         }
         return 0;
@@ -317,13 +319,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     {
         if (columnId > 0) {
             query.addCriteria(Criteria.where(Constant.columnid).is(String.valueOf(columnId)));
-        }
-    }
-
-    private void addColumnIdToQuery(Query query,String columnId)
-    {
-        if (validateColumnId(columnId)) {
-            query.addCriteria(Criteria.where(Constant.columnid).is(columnId));
         }
     }
 
