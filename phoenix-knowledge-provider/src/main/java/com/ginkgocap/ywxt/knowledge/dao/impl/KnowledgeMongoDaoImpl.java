@@ -94,28 +94,27 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
 
     @Override
-    public int deleteByIdAndColumnId(long knowledgeId,int columnType)
+    public boolean deleteByIdAndColumnId(long knowledgeId,int columnType)
     {
         Query query = knowledgeIdQuery(knowledgeId);
         List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
         if (CollectionUtils.isEmpty(delKnowledgeList)) {
             logger.error("delete knowledge failed. knowledgeId: " + knowledgeId + " columnType: " + columnType);
-            return -1;
+            return false;
         }
-        return 0;
+        return true;
     }
 
     @Override
-    public int deleteByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
+    public boolean deleteByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-
         List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, getCollectionName(columnType));
         if (CollectionUtils.isEmpty(delKnowledgeList)) {
             logger.error("delete knowledge failed. knowledgeIds: " + ids + " columnType: " + columnType);
-            return -1;
+            return false;
         }
-        return 0;
+        return true;
     }
 
     @Override

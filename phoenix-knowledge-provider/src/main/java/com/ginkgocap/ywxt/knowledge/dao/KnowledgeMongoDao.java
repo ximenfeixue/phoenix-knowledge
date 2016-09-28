@@ -55,7 +55,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public int deleteByIdAndColumnId(long id,int columnId);
+    public boolean deleteByIdAndColumnId(long id,int columnId);
 
     /**
      * 根据主键list以及栏目批量删除数据
@@ -65,7 +65,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public int deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
+    public boolean deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
 
     /**
      * 根据用户Id以及栏目删除数据
