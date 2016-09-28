@@ -117,11 +117,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            Knowledge detail1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
-            Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
-            List<IdType> batchIds = new ArrayList<IdType>();
-            batchIds.add(new IdType(detail1.getId(), KnowledgeUtil.parserColumnId(detail1.getColumnType())));
-            batchIds.add(new IdType(detail2.getId(), KnowledgeUtil.parserColumnId(detail2.getColumnType())));
+            List<IdType> batchIds = getIdTypeList();
             final String knowledgeIds = KnowledgeUtil.writeObjectToJson(batchIds);
             
             String subUrl = "/batchDeleteKnow"; ///delete/{id}/{columnId}
@@ -139,7 +135,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 31609281629003L; //detail.getId();
+            long knowledgeId = 31609281734212L; //detail.getId();
             int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
@@ -154,7 +150,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 31609281629003L; //detail.getId();
+            long knowledgeId = 31609281734212L; //detail.getId();
             int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
@@ -930,5 +926,22 @@ public class KnowledgeWebTest extends BaseTestCase
             tagIdList[index] = tagIds.get(index);
         }
         return tagIdList;
+    }
+
+    private List<IdType> getIdTypeList()
+    {
+        List<IdType> batchIds = new ArrayList<IdType>();
+        Knowledge detail1 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge1").getKnowledgeDetail();
+        Knowledge detail2 = createKnowledge("KnowledgeWebTest_testBatchDeleteKnowledge2").getKnowledgeDetail();
+        batchIds.add(new IdType(detail1.getId(), KnowledgeUtil.parserColumnId(detail1.getColumnType())));
+        batchIds.add(new IdType(detail2.getId(), KnowledgeUtil.parserColumnId(detail2.getColumnType())));
+
+        this.testAllCreatedKnowledgeByPage();
+        /*batchIds.add(new IdType(31609281629011L, 1));
+        batchIds.add(new IdType(31609281629004L, 1));
+        batchIds.add(new IdType(31609281629003L, 1));
+        batchIds.add(new IdType(31609281629002L, 1));*/
+
+        return batchIds;
     }
 }
