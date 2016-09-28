@@ -139,7 +139,7 @@ public class KnowledgeWebTest extends BaseTestCase
         LogMethod();
         try {
             //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 31609271655371L; //detail.getId();
+            long knowledgeId = 31609271742351L; //detail.getId();
             int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);

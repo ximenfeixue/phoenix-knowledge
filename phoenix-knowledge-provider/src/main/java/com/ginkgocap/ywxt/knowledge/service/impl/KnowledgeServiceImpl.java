@@ -53,9 +53,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge savedDetail = null;
         try {
             detail.setStatus(4);
-            logger.info("Begin insert knowledge to mongo. knowledgeId: + ",detail.getId());
+            logger.info("Begin insert knowledge to mongo. knowledgeId: " + detail.getId());
             this.knowledgeMongoDao.insert(detail);
-            logger.info("End insert knowledge to mongo. knowledgeId:  + ",detail.getId());
+            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
@@ -65,7 +65,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         if (savedDetail == null) {
-            logger.error("Create knowledge detail failed, knowledgeId:  + ",detail.getId());
+            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = savedDetail.getId();
@@ -74,9 +74,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
-            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: +", knowledgeBase.getId());
+            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: " + knowledgeBase.getId());
             this.knowledgeMysqlDao.insert(knowledgeBase);
-            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: +", knowledgeBase.getId());
+            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: " + knowledgeBase.getId());
         } catch (Exception e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
