@@ -310,7 +310,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             boolean reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
             if (!reslut) {
                 logger.error("知识详细表删除失败: knowledgeId: " + knowledgeId + " columnType: " + columnType);
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
+                Knowledge detail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+                if (detail == null) {
+                    logger.info("Maybe some reason, this knowledge had been deleted, so continue delete other info regards this knowledge. knowledgeId: " + knowledgeId + " columnType: " + columnType);
+                } else {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
+                }
             }
         } catch (Exception ex) {
             logger.error("知识详细表删除失败！失败原因：\n"+ex.getMessage());
@@ -319,7 +324,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识简表删除
         try {
-            this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
+            int reslut = this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
+            if (reslut <= 0) {
+                logger.error("delete knowledge base failed. knowledgeId: " + knowledgeId);
+            }
         } catch (Exception e) {
             //knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)columnType, (short)0, EActionType.EDelete.getValue()));
             logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
