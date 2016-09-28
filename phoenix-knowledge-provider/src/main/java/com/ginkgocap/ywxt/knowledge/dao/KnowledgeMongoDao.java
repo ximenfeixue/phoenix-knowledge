@@ -65,20 +65,19 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteByIdsAndColumnId(List<Long> ids,int columnId) throws Exception;
+    public boolean deleteByIdsAndColumnType(List<Long> ids,int columnId) throws Exception;
 
     /**
      * 根据用户Id以及栏目删除数据
      * @date 2016年1月13日 上午10:54:53
      * @param createUserId
-     * @param columnId
+     * @param columnType
      * @return
      * @throws Exception
      */
-    public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception;
+    public boolean deleteByUserIdAndColumnType(long createUserId,int columnType) throws Exception;
 
     /**
-     *
      * @date 2016年1月13日 上午10:54:53
      * @param knowledgeId
      * @param directoryId

@@ -97,37 +97,25 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     public boolean deleteByIdAndColumnId(long knowledgeId,int columnType)
     {
         Query query = knowledgeIdQuery(knowledgeId);
-        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
-        if (CollectionUtils.isEmpty(delKnowledgeList)) {
-            logger.error("delete knowledge failed. knowledgeId: " + knowledgeId + " columnType: " + columnType);
-            return false;
-        }
-        return true;
+        return remove(query, getCollectionName(columnType));
+        //return findAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
     }
 
     @Override
-    public boolean deleteByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
+    public boolean deleteByIdsAndColumnType(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        List<Knowledge> delKnowledgeList = mongoTemplate.findAllAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
-        if (CollectionUtils.isEmpty(delKnowledgeList)) {
-            logger.error("delete knowledge failed. knowledgeIds: " + ids + " columnType: " + columnType);
-            return false;
-        }
-        return true;
+        return remove(query, getCollectionName(columnType));
+        //return findAndRemove(query, KnowledgeType.knowledgeType(columnType).cls(), getCollectionName(columnType));
     }
 
     @Override
-    public int deleteByCreateUserIdAndColumnId(long createUserId,int columnId) throws Exception
+    public boolean deleteByUserIdAndColumnType(long createUserId,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant.cid).is(createUserId));
-        addColumnIdToQuery(query, columnId);
+        //addColumnIdToQuery(query, columnType);
 
-        WriteResult result = mongoTemplate.remove(query, getCollectionName(columnId));
-        if (result.getError() != null ) {
-            return -1;
-        }
-        return 0;
+        return remove(query, getCollectionName(columnType));
     }
 
     @Override
@@ -341,4 +329,21 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return KnowledgeUtil.parserColumnId(columnId);
     }
 
+    private boolean remove(Query query, final String collectionName)
+    {
+        WriteResult result = mongoTemplate.remove(query, collectionName);
+        if (result.getError() != null) {
+            return false;
+        }
+        return true;
+    }
+
+    private <T> boolean findAndRemove(Query query, Class<T> entityClass, final String collectionName)
+    {
+        List<T> deletedItems = mongoTemplate.findAllAndRemove(query, entityClass, collectionName);
+        if (CollectionUtils.isEmpty(deletedItems)) {
+            return false;
+        }
+        return true;
+    }
 }

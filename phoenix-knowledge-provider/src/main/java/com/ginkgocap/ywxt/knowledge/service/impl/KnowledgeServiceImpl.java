@@ -388,7 +388,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         //知识详细表删除
-        boolean result = this.knowledgeMongoDao.deleteByIdsAndColumnId(knowledgeIds, columnType);
+        boolean result = this.knowledgeMongoDao.deleteByIdsAndColumnType(knowledgeIds, columnType);
         if (!result) {
             logger.error("delete knowledge detail failed. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
         }
