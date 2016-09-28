@@ -57,19 +57,19 @@ public class KnowledgeController extends BaseController {
     private KnowledgeService knowledgeService;
 
     @Autowired
-    KnowledgeHomeService knowledgeHomeService;
+    private KnowledgeHomeService knowledgeHomeService;
 
     @Autowired
-    KnowledgeOtherService knowledgeOtherService;
+    private KnowledgeOtherService knowledgeOtherService;
 
     @Autowired
-    ColumnCustomService columnCustomService;
+    private ColumnCustomService columnCustomService;
 
     @Autowired
     private KnowledgeBatchQueryService knowledgeBatchQueryService;
 
     @Autowired
-    AssociateServiceLocal associateServiceLocal;
+    private AssociateServiceLocal associateServiceLocal;
 
     @Autowired
     private TagServiceLocal tagServiceLocal;
@@ -78,16 +78,16 @@ public class KnowledgeController extends BaseController {
     private DirectoryServiceLocal directoryServiceLocal;
 
     @Autowired
-    PermissionServiceLocal permissionServiceLocal;
+    private PermissionServiceLocal permissionServiceLocal;
 
     @Autowired
-    DynamicNewsServiceLocal dynamicNewsServiceLocal;
+    private DynamicNewsServiceLocal dynamicNewsServiceLocal;
 
     @Autowired
-    KnowledgeCountService knowledgeCountService;
+    private KnowledgeCountService knowledgeCountService;
 
     @Autowired
-    BigDataService bigDataService;
+    private BigDataService bigDataService;
 
     //@Autowired
     //private Cache cache;
