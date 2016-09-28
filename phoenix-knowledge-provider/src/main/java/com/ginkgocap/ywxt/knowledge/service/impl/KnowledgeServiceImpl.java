@@ -60,7 +60,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
         } catch (Exception ex) {
-            logger.error("Create knowledge detail failed: error:  {}", ex.getMessage());
+            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
@@ -74,9 +74,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
-            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: +",knowledgeBase.getId());
+            logger.info("Begin insert knowledge to tb_knowledge_base. knowledgeId: +", knowledgeBase.getId());
             this.knowledgeMysqlDao.insert(knowledgeBase);
-            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: +",knowledgeBase.getId());
+            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: +", knowledgeBase.getId());
         } catch (Exception e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
@@ -169,7 +169,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识详细表更新
         Knowledge ret = this.knowledgeMongoDao.update(knowledgeDetail);
-        logger.info("update knowledgeDetail: {}", ret);
+        logger.info("update knowledgeDetail: " + ret);
         KnowledgeBase knowledge = DataCollect.generateKnowledge();
 
         //知识简表更新
@@ -433,7 +433,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         if (knowledgeDetail == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
         }
 
         return knowledgeDetail;
@@ -444,12 +444,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
         if (knowledgeDetail == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
         }
 
         KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
         if (knowledgeBase == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
         }
 
         if (knowledgeBase != null && knowledgeDetail != null) {
