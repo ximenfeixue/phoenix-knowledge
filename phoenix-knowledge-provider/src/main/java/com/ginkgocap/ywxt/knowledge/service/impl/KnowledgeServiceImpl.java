@@ -301,8 +301,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         //知识详细表删除
         try {
-            boolean reslut = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
-            if (!reslut) {
+            boolean result = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
+            if (!result) {
                 logger.error("知识详细表删除失败: knowledgeId: " + knowledgeId + " columnType: " + columnType);
                 Knowledge detail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
                 if (detail == null) {
@@ -318,8 +318,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识简表删除
         try {
-            int reslut = this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
-            if (reslut <= 0) {
+            int result = this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
+            if (result <= 0) {
                 logger.error("delete knowledge base failed. knowledgeId: " + knowledgeId);
             }
         } catch (Exception e) {
