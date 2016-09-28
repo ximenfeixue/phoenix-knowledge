@@ -140,7 +140,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public List<Associate> getAssociateList(long knowledgeId, long userId) throws AssociateServiceException {
+    public List<Associate> getAssociateList(long userId, long knowledgeId) throws AssociateServiceException {
         return associateService.getAssociatesBySourceId(APPID, userId, knowledgeId);
     }
 }
