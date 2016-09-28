@@ -176,12 +176,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnId) throws Exception
+    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
-        addColumnIdToQuery(query, columnId);
 
-        return mongoTemplate.find(query,Knowledge.class, getCollectionName(columnId));
+        return mongoTemplate.find(query,Knowledge.class, getCollectionName(columnType));
     }
 
     public List<Knowledge> getNoDirectory(long userId,int start,int size)
