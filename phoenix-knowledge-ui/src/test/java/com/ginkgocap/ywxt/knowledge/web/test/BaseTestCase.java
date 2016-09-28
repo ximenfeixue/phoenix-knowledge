@@ -18,6 +18,7 @@ import java.util.Random;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.codec.Base64;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -436,7 +437,7 @@ public abstract class BaseTestCase extends TestCase
             knowledgeJson = knowledgeJson == null ? KnowledgeUtil.writeObjectToJson(assoFilter, data) : knowledgeJson;
             JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);
             String retData = BaseTestCase.getResponseData(response);
-            if (retData == null || "null".equals(retData) || retData.trim().isEmpty()) {
+            if (StringUtils.isBlank(retData)) {
             	System.err.println("Create Knowledge failed....");
             }
             else {
