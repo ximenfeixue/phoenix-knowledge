@@ -6,9 +6,9 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import com.gintong.frame.cache.redis.StringUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
-        if (keyword != null && !keyword.trim().isEmpty()) {
+        if (StringUtils.isNotBlank(keyword) && !"null".equals(keyword)) {
             criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
         }
         query.addCriteria(criteria);

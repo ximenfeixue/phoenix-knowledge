@@ -1911,7 +1911,7 @@ public class KnowledgeController extends BaseController {
             logger.error("invoke myCollectKnowledge failed. userId: {} error: {}", userId, ex.getMessage());
         }
         final int collectedSize  = collectItems != null ? collectItems.size() : 0;
-        logger.info("get collected knowledge size : " + collectedSize + " , keyword: {}" + keyword);
+        logger.info("get collected knowledge size : " + collectedSize + " , keyword: " + keyword);
         collectedKnowledgeItems = convertCollectedKnowledge(collectItems);
         //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
 
