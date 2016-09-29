@@ -521,7 +521,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         }
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < params.length; i++) {
-            sb.append(i > 0 ? "-" : "").append(params[i]);
+            sb.append(i > 0 ? "_" : "").append(params[i]);
         }
         return sb.toString();
     }
