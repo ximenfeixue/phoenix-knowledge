@@ -42,6 +42,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Autowired
     private KnowledgeReferenceDao knowledgeReferenceDao;
 
+    private static final String suffix = "\r\n版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+
     @Override
     public InterfaceResult insert(DataCollect DataCollect) {
 
@@ -97,41 +99,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //save directory
         /* move to web control to save these info
-        List<Long> categorysList = knowledgeDetail.getCategoryIds();
-        if(categorysList != null && categorysList.size() > 0){
-            try {
-                for (int index = 0; index < categorysList.size(); index++) {
-                    logger.info("directoryId: {}", categorysList.get(index));
-                    long directoryId = Long.valueOf(categorysList.get(index));
-                    if (directoryId > 0) {
-                        DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
-                        directorySourceService.createDirectorySources(directorySource);
-                    }
-                    logger.info("directoryId:" + directoryId);
-                }
-            } catch (DirectorySourceServiceException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-        //save tags
-        List<Long> tagsList = knowledgeDetail.getTags();
-        if (tagsList != null && tagsList.size() > 0) {
-            try {
-                for (int index = 0; index < tagsList.size(); index++) {
-                    logger.info("directoryId: {}", tagsList.get(index));
-                    Long tagId = Long.valueOf(tagsList.get(index));
-                    if (tagId > 0) {
-                        TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
-                        tagSourceService.createTagSource(tagSource);
-                    }
-                    logger.info("tagId:" + tagId);
-                }
-            } catch (TagSourceServiceException ex) {
-                ex.printStackTrace();
-            }
-        }*/
-
         //大数据MQ推送
         /*
 		try {
@@ -139,14 +106,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		} catch (Exception e) {
 			this.insertRollBack(knowledgeId, columnId, userId, true, true, true, false, false);
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
-
-        //动态推送（仅推送观点）
-		/*try {
-			userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(afterSaveKnowledgeMongo, diaryService));
-		} catch (Exception e) {
-			logger.error("动态推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 
@@ -195,64 +154,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //Update directory
         /* move to web control
-        try{
-            boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
-            if(removeDirectoryFlag){
-                List<Long> categoryList = knowledgeDetail.getCategoryIds();
-                if(categoryList != null && categoryList.size() > 0){
-                    for(Long directoryId : categoryList){
-                        if(directoryId >= 0) {
-                            DirectorySource directorySource = createDirectorySource(userId, directoryId, knowledgeDetail);
-                            directorySourceService.createDirectorySources(directorySource);
-                        }
-                        logger.info("directoryId:" + directoryId);
-                    }
-                }
-            }
-            else{
-                logger.error("update category remove failed...userId=" + userId+ ", knowledgeId=" + knowledgeId);
-            }
-        }catch(DirectorySourceServiceException e1){
-            logger.error("update category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
-        }
-        //Update tags
-        try{
-            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
-            if(removeTagsFlag){
-                List<Long> tagsList = knowledgeDetail.getTags();
-                if(tagsList != null){
-                    for(Long tagId : tagsList){
-                        if(tagId > 0){
-                            TagSource tagSource = createTagSource(userId, tagId, knowledgeDetail);
-                            tagSourceService.createTagSource(tagSource);
-                            logger.info("tagId:"+tagId);
-                        }
-                    }
-                }
-            }
-            else{
-                logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
-            }
-        }catch(TagSourceServiceException ex){
-            logger.error("update tags remove failed...userid=" + userId + ", knowledgeId=" +knowledgeId);
-        }*/
-
         //大数据MQ推送更新
 		/*
         try {
 			bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, KnowledgeMongo.clone(knowledge), knowledge.getCreateUserId());
 		} catch (Exception e) {
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
-
-		//动态推送更新（仅推送观点）
-
-		try {
-			userFeedService.saveOrUpdate(PackingDataUtil.packingSendFeedData(afterSaveKnowledgeMongo, diaryService));
-		} catch (Exception e) {
-			this.updateRollBack(knowledgeId, columnId,oldKnowledgeMongo,oldKnowledgeDetail,oldKnowledgeReference, true, true, true, true, false);
-			logger.error("动态推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 
@@ -337,40 +244,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //delete directory
         /* move to web control do these operation
-        try{
-            boolean removeDirectoryFlag = directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId);
-            if(!removeDirectoryFlag){
-                logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
-            }
-        }catch(DirectorySourceServiceException ex){
-            logger.error("category remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
-        }
-        //delete tags
-        try{
-            boolean removeTagsFlag = tagSourceService.removeTagSource(APPID, userId, knowledgeId);
-            if(!removeTagsFlag){
-                logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
-            }
-        }catch(TagSourceServiceException ex){
-            logger.error("tags remove failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
-        }*/
-
         //大数据MQ推送删除
         /*
 		try {
 			bigDataService.deleteMessage(knowledgeId, columnId, userId);
 		} catch (Exception e) {
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
-
-
-		//动态推送删除（仅推送观点）
-		try {
-			userFeedService.deleteDynamicKnowledge(knowledgeId);
-		} catch (Exception e) {
-			this.deleteRollBack(knowledgeId, columnId,oldKnowledgeMongo,oldKnowledgeDetail,oldKnowledgeReference, true, true, true, true, false);
-			logger.error("动态推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 
@@ -415,44 +294,36 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		} catch (Exception e) {
 			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
 			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}
-
-
-		//动态推送删除（仅推送观点）
-		try {
-			for(long knowledgeId : knowledgeIds)
-				userFeedService.deleteDynamicKnowledge(knowledgeId);
-		} catch (Exception e) {
-			this.deleteListRollBack(oldKnowledgeMongoList,oldKnowledgeDetailList,oldKnowledgeReferenceList, true, true, true, true, false);
-			logger.error("动态推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
 		}*/
 
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeIds);
     }
 
     @Override
-    public Knowledge getDetailById(long knowledgeId, int columnId) throws Exception {
+    public Knowledge getDetailById(long knowledgeId, int columnType) throws Exception {
 
-        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
         if (knowledgeDetail == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
         }
+        //Add knowledge property
+        final String knowledgeContent = knowledgeDetail.getContent() + suffix;
+        knowledgeDetail.setContent(knowledgeContent);
 
         return knowledgeDetail;
     }
 
     @Override
-    public DataCollect getKnowledge(long knowledgeId,int columnId) throws Exception
+    public DataCollect getKnowledge(long knowledgeId,int columnType) throws Exception
     {
-        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnId);
+        Knowledge knowledgeDetail = getDetailById(knowledgeId, columnType);
         if (knowledgeDetail == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
         }
 
         KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
         if (knowledgeBase == null) {
-            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnId);
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnType);
         }
 
         if (knowledgeBase != null && knowledgeDetail != null) {
