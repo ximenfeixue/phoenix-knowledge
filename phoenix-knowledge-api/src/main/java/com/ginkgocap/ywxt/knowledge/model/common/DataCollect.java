@@ -171,7 +171,7 @@ public class DataCollect implements Serializable
         return knowledgeBase;
     }
 
-    public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList,boolean desc)
+    public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList, short columnType, boolean desc)
     {
         if (CollectionUtils.isEmpty(detailList)) {
             return null;
@@ -180,7 +180,6 @@ public class DataCollect implements Serializable
         Map<Long,KnowledgeBase> baseMap = new TreeMap<Long, KnowledgeBase>(desc ? descComparator : null);
         for (Knowledge detail : detailList) {
             if (detail != null) {
-                short columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
                 KnowledgeBase base = DataCollect.generateKnowledge(detail, columnType);
                 if (base != null) {
                     baseMap.put(base.getCreateDate(), base);

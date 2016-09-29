@@ -333,7 +333,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                     }
                     cache.set(key, cacheTTL, ids);
                     final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
-                    result = saveKnowledgeBaseToCache(detailList, knowledgeKey);
+                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
                 }
             }
             catch(Exception ex) {
@@ -368,7 +368,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                     for(Knowledge detail : detailList) {
                         filterKnowledge(detail);
                     }
-                    result = saveKnowledgeBaseToCache(detailList, knowledgeKey);
+                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
                     logger.info("get Knowledge size: " + (result != null ? result.size() : 0));
                 }
                 else {
@@ -462,7 +462,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         cache.set(key, cacheTTL, result);
     }
 
-    private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> detailList, final String key)
+    private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> detailList, short columnType, final String key)
     {
         if (CollectionUtils.isEmpty(detailList)) {
             logger.error("The knowledge is null, so skip..");
@@ -471,7 +471,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             logger.error("The knowledge key is null, so skip..");
         }
         logger.error("Save the query result to catch, key: {}", key);
-        List<KnowledgeBase> baseList = DataCollect.convertDetailToBaseList(detailList, true);
+        List<KnowledgeBase> baseList = DataCollect.convertDetailToBaseList(detailList, columnType, true);
         cache.set(key, cacheTTL, baseList);
         return baseList;
     }
