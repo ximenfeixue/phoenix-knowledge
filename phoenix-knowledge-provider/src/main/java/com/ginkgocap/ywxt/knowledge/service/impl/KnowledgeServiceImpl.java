@@ -305,10 +305,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
         if (knowledgeDetail == null) {
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
+
+        } else {
+            //Add knowledge property
+            final String knowledgeContent = knowledgeDetail.getContent() + suffix;
+            knowledgeDetail.setContent(knowledgeContent);
         }
-        //Add knowledge property
-        final String knowledgeContent = knowledgeDetail.getContent() + suffix;
-        knowledgeDetail.setContent(knowledgeContent);
 
         return knowledgeDetail;
     }

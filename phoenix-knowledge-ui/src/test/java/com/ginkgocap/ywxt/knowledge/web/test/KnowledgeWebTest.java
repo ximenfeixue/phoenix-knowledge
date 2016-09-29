@@ -134,9 +134,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            //Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 31609281734212L; //detail.getId();
-            int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
+            Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = detail.getId();
+            int columnId = KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///{id}/{columnId}
             knowledgeDetail(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {
@@ -341,7 +341,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            String subUrl = "/allCollected/0/10/一切皆可"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
+            String subUrl = "/allCollected/0/10/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);
         } catch (Exception e) {
@@ -356,7 +356,7 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             //createKnowledge("考虑,考虑");
             //createKnowledge("考虑,考虑");
-            String subUrl = "/allCollectedByPage/0/10/-1/null"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
+            String subUrl = "/allCollectedByPage/0/10/-1/一切皆可"; // + URLEncoder.encode("考虑", "UTF-8"); ////all/{start}/{size}/{total}/{keyword}
             //String urlStr =
             JsonNode result = HttpRequestFull(HttpMethod.GET, baseUrl + subUrl, null);
             checkResponseWithData(result);

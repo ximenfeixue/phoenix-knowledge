@@ -561,9 +561,7 @@ public class KnowledgeController extends BaseController {
         }
 
         List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyword);
-        if (collectedKnowledgeItems != null && collectedKnowledgeItems.size() > 0) {
-            resultMap.put("collected", collectedKnowledgeItems);
-        }
+        resultMap.put("collected", collectedKnowledgeItems);
 
         logger.info(".......get all knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(resultMap);
@@ -617,7 +615,6 @@ public class KnowledgeController extends BaseController {
             }
             return knowledgeListPage(total, page, createdKnowledgeList.size(), createdKnowledgeList);
         }
-
 
         page = gotTotal - createCount;
         List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, page, size, keyword);
@@ -691,7 +688,7 @@ public class KnowledgeController extends BaseController {
         long userId = this.getUserId(user);
         if (total == -1) {
             //TODO: need to check if long to int
-            total = getCollectedKnowledgeCount(userId);
+            total = getCreatedKnowledgeCount(userId);
         }
 
         int start = page * size;
@@ -1913,27 +1910,10 @@ public class KnowledgeController extends BaseController {
         } catch (Exception ex) {
             logger.error("invoke myCollectKnowledge failed. userId: {} error: {}", userId, ex.getMessage());
         }
-        if (collectItems != null && collectItems.size() > 0) {
-            List<Long> knowledgeIds =  new ArrayList<Long>(collectItems.size());
-            collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
-            for (KnowledgeCollect collect : collectItems) {
-                if (!knowledgeIds.contains(collect.getKnowledgeId())) {
-                    Knowledge detail = null;
-                    try {
-                        detail = knowledgeService.getDetailById(collect.getKnowledgeId(), collect.getColumnId());
-                    } catch (Exception ex) {
-                        logger.error("invoke getDetailById failed. knowledgeId: {}, columnId: {} error: {}",
-                                collect.getKnowledgeId(), collect.getColumnId(), ex.getMessage());
-                    }
-                    if (detail != null) {
-                        KnowledgeBase base = DataCollect.generateKnowledge(detail, (short) collect.getColumnId());
-                        collectedKnowledgeItems.add(base);
-                    }
-                }
-            }
-            logger.info(" knowledgeIds: {}, keyword: {}", knowledgeIds, keyword);
-            //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
-        }
+        final int collectedSize  = collectItems != null ? collectItems.size() : 0;
+        logger.info("get collected knowledge size : " + collectedSize + " , keyword: {}" + keyword);
+        collectedKnowledgeItems = convertCollectedKnowledge(collectItems);
+        //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
 
         return collectedKnowledgeItems;
     }
@@ -2260,5 +2240,25 @@ public class KnowledgeController extends BaseController {
         }
         logger.error("ColumnId is invalidated. columnId: "+columnId);
         return null;
+    }
+
+    private List<KnowledgeBase> convertCollectedKnowledge(List<KnowledgeCollect> collectItems)
+    {
+        List<KnowledgeBase> collectedKnowledgeItems = null;
+        if (CollectionUtils.isNotEmpty(collectItems)) {
+            collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
+            for (KnowledgeCollect collect : collectItems) {
+                if (collect != null) {
+                    KnowledgeBase base = new KnowledgeBase();
+                    base.setType((short)collect.getColumnId());
+                    base.setId(collect.getKnowledgeId());
+                    base.setKnowledgeId(collect.getKnowledgeId());
+                    base.setTitle(collect.getKnowledgeTitle());
+                    base.setCreateUserId(collect.getOwnerId());
+                    collectedKnowledgeItems.add(base);
+                }
+            }
+        }
+        return collectedKnowledgeItems;
     }
 }
