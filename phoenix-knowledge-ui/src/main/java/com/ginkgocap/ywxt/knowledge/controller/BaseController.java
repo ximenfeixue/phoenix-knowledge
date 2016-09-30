@@ -231,6 +231,18 @@ public abstract class BaseController {
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"正在努力查询，或无符合条件的知识，请稍后再试。");
     }
 
+    protected boolean Success(InterfaceResult result)
+    {
+        return (result != null && result.getNotification() != null &&
+                CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
+    }
+
+    protected boolean Failed(InterfaceResult result)
+    {
+        return (result == null || result.getNotification() == null ||
+                !CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
+    }
+
     protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, String[] listImageUrl2, String orgUrl, boolean isWeb)
     {
         if (StringUtils.isEmpty(content)) {

@@ -17,7 +17,7 @@ public class IdGeneratorFactory {
     public static DefaultIdGenerator idGenerator(MongoTemplate mongoTemplate)
     {
     	DefaultIdGenerator defaultIdGenerator = null;
-        String ipAddress = KnowledgeUtil.getLocalIp();
+        String ipAddress = KnowledgeUtil.getHostIp();
         if (ipAddress == null) {
             logger.error("Can't get host Ip address, please check the host configure..");
             //Dummy a address

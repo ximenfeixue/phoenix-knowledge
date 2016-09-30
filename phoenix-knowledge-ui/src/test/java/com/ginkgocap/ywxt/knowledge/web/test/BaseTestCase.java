@@ -54,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    private final static String testEnv = envArray[2];
+    private final static String testEnv = envArray[3];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -484,7 +484,7 @@ public abstract class BaseTestCase extends TestCase
     
     protected static void login(String loginUrl)
     {
-    	sessionID = "4915fc9c-5598-4e6c-8630-bd24e46eceed";
+    	sessionID = "d64406fe-a860-490e-913a-519236a775a3";
         if (sessionID == null || sessionID.trim().isEmpty()) {
             final String loginJson = getLoginJson(web);
             try {
