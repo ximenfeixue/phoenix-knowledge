@@ -45,11 +45,11 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
         }*/
         if (zookeeperHost == null) {
             ResourceBundle resource = ResourceBundle.getBundle("dubbo");
-            String zookeeperHost = resource.getString("dubbo.registry.address");
-            int start = zookeeperHost.indexOf("//") + 2;
-            int end = zookeeperHost.indexOf("?") - 1;
-            if (start > 0 && end > 0 && end < zookeeperHost.length()) {
-                zookeeperHost = zookeeperHost.substring(start, end);
+            String zookeeperConfig = resource.getString("dubbo.registry.address");
+            int start = zookeeperConfig.indexOf("//") + 2;
+            int end = zookeeperConfig.indexOf("?") - 1;
+            if (start > 0 && end > 0 && end < zookeeperConfig.length()) {
+                zookeeperHost = zookeeperConfig.substring(start, end);
             }
         }
 
