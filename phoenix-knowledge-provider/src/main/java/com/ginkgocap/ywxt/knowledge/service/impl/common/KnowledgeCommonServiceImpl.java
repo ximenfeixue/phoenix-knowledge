@@ -5,6 +5,8 @@ import com.ginkgocap.ywxt.knowledge.id.DefaultIdGenerator;
 import com.ginkgocap.ywxt.knowledge.id.IdGeneratorFactory;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service("knowledgeCommonService")
@@ -29,6 +32,8 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
     private static DefaultIdGenerator defaultIdGenerator = null;
 
     private AtomicInteger autoIncrease = new AtomicInteger(1);
+
+    private DistributedLock lock = null;
 
     @Override
     public Long getKnowledgeSequenceId()
@@ -54,9 +59,32 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
             }
             defaultIdGenerator = new DefaultIdGenerator(sequence);
         }*/
+        if (lock == null) {
+            ResourceBundle resource = ResourceBundle.getBundle("dubbo");
+            String zookeeperHost = resource.getString("dubbo.registry.address");
+            if (zookeeperHost != null) {
+                int start = zookeeperHost.indexOf("//") + 1;
+                int end = zookeeperHost.indexOf("?") - 1;
+                if (start > 0 && end > 0 && end < zookeeperHost.length()) {
+                    zookeeperHost = zookeeperHost.substring(start, end);
+                }
+                if (StringUtils.isNotBlank(zookeeperHost)) {
+                    lock = new DistributedLock(zookeeperHost, "id_locknode_");
+                    logger.info("create Distributed Lock success...");
+                }
+            }
+        }
+
         if (defaultIdGenerator != null) {
             try {
-                long sequenceId = Long.parseLong(defaultIdGenerator.next());
+                long sequenceId = 0;
+                if (lock != null) {
+                    lock.acquire();
+                    sequenceId = Long.parseLong(defaultIdGenerator.next());
+                    lock.release();
+                } else {
+                    sequenceId = Long.parseLong(defaultIdGenerator.next());
+                }
                 logger.debug("generated  sequenceId： " + sequenceId);
                 return sequenceId;
             } catch (NumberFormatException ex) {
