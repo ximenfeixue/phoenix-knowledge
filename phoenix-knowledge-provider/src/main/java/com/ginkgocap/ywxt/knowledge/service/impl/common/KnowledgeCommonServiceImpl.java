@@ -25,7 +25,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
 
     private AtomicInteger autoIncrease = new AtomicInteger(1);
 
-    private DistributedLock lock = null;
+    private static String zookeeperHost = null;
 
     @Override
     public Long getKnowledgeSequenceId()
@@ -43,26 +43,22 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
                 return tempId();
             }
         }*/
-        if (lock == null) {
+        if (zookeeperHost == null) {
             ResourceBundle resource = ResourceBundle.getBundle("dubbo");
             String zookeeperHost = resource.getString("dubbo.registry.address");
-            if (zookeeperHost != null) {
-                int start = zookeeperHost.indexOf("//") + 2;
-                int end = zookeeperHost.indexOf("?") - 1;
-                if (start > 0 && end > 0 && end < zookeeperHost.length()) {
-                    zookeeperHost = zookeeperHost.substring(start, end);
-                }
-                if (StringUtils.isNotBlank(zookeeperHost)) {
-                    lock = new DistributedLock(zookeeperHost, "id_locknode_");
-                    logger.info("create Distributed Lock success...");
-                }
+            int start = zookeeperHost.indexOf("//") + 2;
+            int end = zookeeperHost.indexOf("?") - 1;
+            if (start > 0 && end > 0 && end < zookeeperHost.length()) {
+                zookeeperHost = zookeeperHost.substring(start, end);
             }
         }
 
         if (defaultIdGenerator != null) {
             try {
                 long sequenceId = 0;
-                if (lock != null) {
+                if (zookeeperHost != null) {
+                    DistributedLock lock = new DistributedLock(zookeeperHost, "/id_locknode_");
+                    logger.info("create Distributed Lock success...");
                     lock.acquire();
                     sequenceId = Long.parseLong(defaultIdGenerator.next());
                     lock.release();
