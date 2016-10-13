@@ -308,8 +308,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         } else {
             //Add knowledge property
-            final String knowledgeContent = knowledgeDetail.getContent() + suffix;
-            knowledgeDetail.setContent(knowledgeContent);
+            //final String knowledgeContent = knowledgeDetail.getContent() + suffix;
+            //knowledgeDetail.setContent(knowledgeContent);
         }
 
         return knowledgeDetail;
