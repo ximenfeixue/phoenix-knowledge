@@ -57,7 +57,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
             try {
                 long sequenceId = 0;
                 if (zookeeperHost != null) {
-                    DistributedLock lock = new DistributedLock(zookeeperHost, "/id_locknode_");
+                    DistributedLock lock = new DistributedLock(zookeeperHost, "/_idlocknode_");
                     logger.info("create Distributed Lock success...");
                     lock.acquire();
                     sequenceId = Long.parseLong(defaultIdGenerator.next());
