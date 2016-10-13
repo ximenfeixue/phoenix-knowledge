@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.impl.common;
+package com.ginkgocap.ywxt.knowledge.id;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;

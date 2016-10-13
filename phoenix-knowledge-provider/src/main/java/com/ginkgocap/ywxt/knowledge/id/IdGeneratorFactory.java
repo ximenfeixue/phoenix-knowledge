@@ -49,6 +49,11 @@ public class IdGeneratorFactory {
         return defaultIdGenerator;
     }
 
+    public static DefaultIdGenerator idGenerator(final String prefix)
+    {
+        return new DefaultIdGenerator(prefix);
+    }
+
     private static Query ipQuery(String ipAddress){
         Query query = new Query();
         query.addCriteria(Criteria.where("ip").is(ipAddress));
