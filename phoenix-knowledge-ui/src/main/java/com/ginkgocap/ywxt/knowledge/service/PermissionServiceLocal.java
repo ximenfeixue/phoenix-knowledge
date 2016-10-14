@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.ChangePwdService;
@@ -41,7 +43,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
     private PermissionRepositoryService permissionRepositoryService;
 
     @Autowired
-    private ChangePwdService passwdService;
+    private KnowledgeService knowledgeService;
 
     private BlockingQueue<Permission> permissionQueue = new LinkedBlockingQueue<Permission>();
 
@@ -68,34 +70,51 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         passwdService.updateUserPassWord(user);
     }*/
 
-    public boolean canUpdate(final long knowledgeId, final long userId)
+    public boolean canUpdate(final long knowledgeId, final String type, final long userId)
     {
         boolean canUpdate = false;
         try {
             InterfaceResult<Boolean> result = permissionCheckService.isUpdatable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
             if (result == null || result.getResponseData() == null) {
-                logger.error("permission validate failed, please check if user have permission!");
+                logger.error("permission info is null, please check if user have permission!");
+                return isKnowledgeOwner(knowledgeId, type, userId);
+            }else {
+                canUpdate = result.getResponseData().booleanValue();
             }
-            canUpdate = result.getResponseData().booleanValue();
         } catch (Throwable ex) {
             logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
         }
         return canUpdate;
     }
 
-    public boolean canDelete(final long knowledgeId, final long userId)
+    public boolean canDelete(final long knowledgeId, final String type, final long userId)
     {
         boolean canDelete = false;
         try {
             InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
             if (result == null || result.getResponseData() == null) {
-                logger.error("permission validate failed, please check if user have permission!");
+                logger.error("permission info is null, please check if user have permission!");
+                return isKnowledgeOwner(knowledgeId, type, userId);
             }
-            canDelete = result.getResponseData().booleanValue();
+            else {
+                canDelete = result.getResponseData().booleanValue();
+            }
         } catch (Throwable ex) {
             logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
         }
         return canDelete;
+    }
+
+    public boolean isKnowledgeOwner(final long knowledgeId, final String type, final long userId)
+    {
+        try {
+            int ctype = KnowledgeUtil.parserColumnId(type);
+            DataCollect data = knowledgeService.getKnowledge(knowledgeId, ctype);
+            return (data != null && data.getKnowledgeDetail() != null && (data.getKnowledgeDetail().getCid()==userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Permission savePermissionInfo(final long userId, final long knowledgeId, final Permission permission)

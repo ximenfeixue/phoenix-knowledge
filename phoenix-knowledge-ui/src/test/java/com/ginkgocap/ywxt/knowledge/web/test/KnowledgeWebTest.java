@@ -52,7 +52,7 @@ public class KnowledgeWebTest extends BaseTestCase
     	createKnowledgeWithTagAndDirectory("testCreateKnowledgeWithTagAndDirectory");
     }
 
-    /*
+    
     public void testCreateKnowledgeMore() throws InterruptedException
     {
         LogMethod();
@@ -63,7 +63,7 @@ public class KnowledgeWebTest extends BaseTestCase
         }
         long end = System.currentTimeMillis();
         System.out.println("Total Time: " + (end-begin));
-    }*/
+    }
 
     public void testUpdateKnowledge()
     {
@@ -87,8 +87,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            Knowledge detail = createKnowledge("KnowledgeWebTest_testDeleteKnowledge").getKnowledgeDetail();
-            String subUrl = "/" + detail.getId() + "/" + detail.getColumnType(); ///delete/{id}/{columnId}
+            //Knowledge detail = createKnowledge("KnowledgeWebTest_testDeleteKnowledge").getKnowledgeDetail();
+            //String subUrl = "/" + detail.getId() + "/" + detail.getColumnType(); ///delete/{id}/{columnId}
+            String subUrl = "/" + 11609151600013L + "/" + 1;
             JsonNode result = HttpRequestResult(HttpMethod.DELETE, baseUrl + subUrl, null);
             checkRequestResultSuccess(result);
         } catch (Exception e) {

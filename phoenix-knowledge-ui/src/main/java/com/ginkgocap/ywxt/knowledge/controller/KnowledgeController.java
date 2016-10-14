@@ -215,7 +215,7 @@ public class KnowledgeController extends BaseController {
         }
         long knowledgeId = detail.getId();
 
-        if (!permissionServiceLocal.canUpdate(knowledgeId, userId)) {
+        if (!permissionServiceLocal.canUpdate(knowledgeId, detail.getColumnType(), userId)) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
@@ -261,30 +261,30 @@ public class KnowledgeController extends BaseController {
     /**
      * 删除数据
      * @param knowledgeId 知识主键
-     * @param columnId 栏目主键
+     * @param columnType 栏目主键
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value="/{knowledgeId}/{columnId}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/{knowledgeId}/{columnType}", method = RequestMethod.DELETE)
     public InterfaceResult delete(HttpServletRequest request, HttpServletResponse response,
-                                  @PathVariable long knowledgeId,@PathVariable int columnId) throws Exception {
+                                  @PathVariable long knowledgeId,@PathVariable int columnType) throws Exception {
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if(knowledgeId <= 0 || columnId <= 0){
+        if(knowledgeId <= 0 || columnType <= 0){
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         long userId = this.getUserId(user);
-        if (!permissionServiceLocal.canDelete(knowledgeId, userId)) {
+        if (!permissionServiceLocal.canDelete(knowledgeId, String.valueOf(columnType), userId)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"没有权限删除知识!");
         }
 
         InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
-            result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnId);
+            result = this.knowledgeService.deleteByKnowledgeId(knowledgeId, columnType);
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70003);
@@ -311,7 +311,7 @@ public class KnowledgeController extends BaseController {
         }
 
         //send new knowledge to bigdata
-        bigDataService.deleteMessage(knowledgeId, columnId, userId);
+        bigDataService.deleteMessage(knowledgeId, columnType, userId);
 
         logger.info(".......delete knowledge success......");
         return result;
@@ -342,7 +342,7 @@ public class KnowledgeController extends BaseController {
         List<Long> failedIds = new ArrayList<Long>();
         for (String id : konwledgeIds) {
             long knowledgeId = Long.parseLong(id);
-            boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, userId);
+            boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, "1", userId);
             if (!isCanDelete) {
                 failedIds.add(knowledgeId);
                 logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
@@ -414,7 +414,7 @@ public class KnowledgeController extends BaseController {
         for (IdType idType : idTypeList) {
             if (idType != null) {
                 long knowledgeId = idType.getId();
-                boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, userId);
+                boolean isCanDelete = permissionServiceLocal.canDelete(knowledgeId, String.valueOf(idType.getType()), userId);
                 if (!isCanDelete) {
                     failedIds.add(knowledgeId);
                     logger.error("permission validate failed, please check if user have permission, knowledgeId: " + knowledgeId);
