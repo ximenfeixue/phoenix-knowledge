@@ -44,7 +44,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Autowired
     private KnowledgeReferenceDao knowledgeReferenceDao;
 
-    private static final String suffix = "\r\n版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+    private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
 
     @Override
     public InterfaceResult insert(DataCollect DataCollect) {
@@ -331,11 +331,10 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
         if (knowledgeDetail == null) {
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
-
         } else {
             //Add knowledge property
-            //final String knowledgeContent = knowledgeDetail.getContent() + suffix;
-            //knowledgeDetail.setContent(knowledgeContent);
+            final String knowledgeContent = knowledgeDetail.getContent() + suffix;
+            knowledgeDetail.setContent(knowledgeContent);
         }
 
         return knowledgeDetail;
