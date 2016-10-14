@@ -51,23 +51,24 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public List<Knowledge> insertList(List<Knowledge> KnowledgeList) throws Exception {
-        List<Knowledge> savedList = null;
+    public List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception {
+        List<Knowledge> batchToSave = null;
         if(KnowledgeList != null && KnowledgeList.size() > 0) {
-            savedList = new ArrayList<Knowledge>(KnowledgeList.size());
+        	batchToSave = new ArrayList<Knowledge>(KnowledgeList.size());
+            final String collectionName = getCollectionName(type);
             for(Knowledge detail : KnowledgeList) {
                 if (detail != null) {
                     detail.setId(knowledgeCommonService.getKnowledgeSequenceId());
-                    savedList.add(detail);
+                    batchToSave.add(detail);
                 }
                 else {
                     logger.error("One knowledge is null...");
                 }
             }
-            mongoTemplate.insert(savedList, Knowledge.class);
+            mongoTemplate.insert(batchToSave, collectionName);
         }
 
-        return savedList;
+        return batchToSave;
     }
 
     @Override

@@ -33,7 +33,15 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult insert(List<Knowledge> knowledgeList);
+    public Knowledge insert(Knowledge detail);
+
+    /**
+     * 插入，承担以下任务：
+     * <p>1、知识详细表插入</P>
+     * @return
+     * @throws Exception
+     */
+    public InterfaceResult insert(List<Knowledge> knowledgeList,final int type);
 
     /**
      * 更新，承担以下任务：

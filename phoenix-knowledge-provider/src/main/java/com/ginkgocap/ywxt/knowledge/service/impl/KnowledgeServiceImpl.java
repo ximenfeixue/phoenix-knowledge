@@ -54,21 +54,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //knowledgeDetail.createContendDesc();
         //知识详细信息插入
-        Knowledge savedDetail = null;
-        try {
-            detail.setStatus(4);
-            this.knowledgeMongoDao.insert(detail);
-            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
-            //Get from mongo, make sure save success..
-            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
-            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
-        } catch (Exception ex) {
-            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
-        }
-
+        Knowledge savedDetail = insert(detail);
         if (savedDetail == null) {
-            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = savedDetail.getId();
@@ -115,7 +102,32 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult insert(List<Knowledge> knowledgeList)
+    public Knowledge insert(Knowledge detail)
+    {
+        //知识详细信息插入
+        Knowledge savedDetail = null;
+        try {
+            detail.setStatus(4);
+            this.knowledgeMongoDao.insert(detail);
+            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
+            //Get from mongo, make sure save success..
+            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
+        } catch (Exception ex) {
+            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
+            return null;
+        }
+
+        if (savedDetail == null) {
+            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
+            return null;
+        }
+
+        return savedDetail;
+    }
+
+    @Override
+    public InterfaceResult insert(List<Knowledge> knowledgeList, final int type)
     {
         if (CollectionUtils.isEmpty(knowledgeList)) {
             logger.error("Knowledge list is empty, so skip to save..");
@@ -123,7 +135,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         try {
-            List<Knowledge> savedList = this.knowledgeMongoDao.insertList(knowledgeList);
+            List<Knowledge> savedList = this.knowledgeMongoDao.insertList(knowledgeList, type);
             if (CollectionUtils.isNotEmpty(savedList)) {
                 logger.info("End insert knowledge List to mongo success. size: " + savedList.size());
             }

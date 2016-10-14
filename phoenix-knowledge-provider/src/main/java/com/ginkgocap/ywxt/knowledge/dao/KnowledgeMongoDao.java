@@ -27,7 +27,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public List<Knowledge> insertList(List<Knowledge> KnowledgeList) throws Exception;
+    public List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception;
 
     /**
      * 更新
