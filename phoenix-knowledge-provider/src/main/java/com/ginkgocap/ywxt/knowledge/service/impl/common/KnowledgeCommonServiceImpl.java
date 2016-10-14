@@ -1,10 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service.impl.common;
 
 import com.ginkgocap.ywxt.knowledge.id.DefaultIdGenerator;
-import com.ginkgocap.ywxt.knowledge.id.DistributedLock;
 import com.ginkgocap.ywxt.knowledge.id.IdGeneratorFactory;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -12,7 +10,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service("knowledgeCommonService")
