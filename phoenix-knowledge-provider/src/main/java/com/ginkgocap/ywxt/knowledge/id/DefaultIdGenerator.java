@@ -17,7 +17,6 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  
 	  private String time;
 
-	  
 	  private AtomicInteger value;
 	  
 	  private static final DateFormat FORMATTER = new SimpleDateFormat("yyMMddHHmmss");
@@ -51,7 +50,8 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  @Override
 	  public String next() {
 	    lock.readLock().lock();
-	    StringBuffer sb = new StringBuffer(config.getPrefix()).append(config.getSplitString()).append(time).append(config.getSplitString()).append(value.getAndIncrement());
+	    //StringBuffer sb = new StringBuffer(config.getPrefix()).append(config.getSplitString()).append(time).append(config.getSplitString()).append(value.getAndIncrement());
+	    StringBuffer sb = new StringBuffer(time).append(config.getSplitString()).append(value.getAndIncrement());
 	    lock.readLock().unlock();
 	    return sb.toString();
 	  }

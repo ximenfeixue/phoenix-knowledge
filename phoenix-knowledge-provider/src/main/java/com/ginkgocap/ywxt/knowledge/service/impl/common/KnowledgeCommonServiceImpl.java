@@ -25,12 +25,10 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
 
     private AtomicInteger autoIncrease = new AtomicInteger(1);
 
-    private static String zookeeperHost = null;
-
     @Override
     public Long getKnowledgeSequenceId()
     {
-        /*
+
         if (defaultIdGenerator == null) {
              try {
                 long sequenceId = Long.parseLong(defaultIdGenerator.next());
@@ -42,7 +40,8 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
             } catch (Throwable ex) {
                 return tempId();
             }
-        }*/
+        }
+        /*
         if (zookeeperHost == null) {
             ResourceBundle resource = ResourceBundle.getBundle("dubbo");
             String zookeeperConfig = resource.getString("dubbo.registry.address");
@@ -73,11 +72,11 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
             } catch (Throwable ex) {
                 return tempId();
             }
-        }
+        }*/
         return tempId();
     }
 
-    private long tempId()
+    private synchronized long tempId()
     {
         logger.error("唯一I的生成器出问题，请赶快排查");
         return System.currentTimeMillis() + autoIncrease.getAndIncrement();
@@ -85,8 +84,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-    	//defaultIdGenerator = IdGeneratorFactory.idGenerator(mongoTemplate);
-        defaultIdGenerator = IdGeneratorFactory.idGenerator("1");
+    	defaultIdGenerator = IdGeneratorFactory.idGenerator(mongoTemplate);
         logger.info("Unique Id Generator init complete.");
     }
 }
