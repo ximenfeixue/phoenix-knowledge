@@ -77,9 +77,12 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             InterfaceResult<Boolean> result = permissionCheckService.isUpdatable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
             if (result == null || result.getResponseData() == null) {
                 logger.error("permission info is null, please check if user have permission!");
-                return isKnowledgeOwner(knowledgeId, type, userId);
+                return canUpdate;
             }else {
                 canUpdate = result.getResponseData().booleanValue();
+                if (!canUpdate) {
+                    return isKnowledgeOwner(knowledgeId, type, userId);
+                }
             }
         } catch (Throwable ex) {
             logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
@@ -94,10 +97,13 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             InterfaceResult<Boolean> result = permissionCheckService.isDeletable(ResourceType.KNOW.getVal(), knowledgeId, userId, APPID);
             if (result == null || result.getResponseData() == null) {
                 logger.error("permission info is null, please check if user have permission!");
-                return isKnowledgeOwner(knowledgeId, type, userId);
+                return canDelete;
             }
             else {
                 canDelete = result.getResponseData().booleanValue();
+                if (!canDelete) {
+                    return isKnowledgeOwner(knowledgeId, type, userId);
+                }
             }
         } catch (Throwable ex) {
             logger.error("permission query failed, knowledgeId: {}, userId: {} error: {}", knowledgeId, userId, ex.getMessage());
