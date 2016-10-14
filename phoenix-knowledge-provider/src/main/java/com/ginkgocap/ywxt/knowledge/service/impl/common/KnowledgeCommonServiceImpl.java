@@ -29,7 +29,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
     public Long getKnowledgeSequenceId()
     {
 
-        if (defaultIdGenerator == null) {
+        if (defaultIdGenerator != null) {
              try {
                 long sequenceId = Long.parseLong(defaultIdGenerator.next());
                 logger.debug("generated  sequenceId： " + sequenceId);
