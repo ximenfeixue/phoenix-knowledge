@@ -36,8 +36,9 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	public List<KnowledgeReference> insertList(List<KnowledgeReference> knowledgeReferenceList)
 			throws Exception {
 		
-		if(knowledgeReferenceList == null || knowledgeReferenceList.isEmpty())
+		if(knowledgeReferenceList == null || knowledgeReferenceList.isEmpty()) {
 			return null;
+		}
 
         long currentDate = new Date().getTime();
 		for (KnowledgeReference date : knowledgeReferenceList) {

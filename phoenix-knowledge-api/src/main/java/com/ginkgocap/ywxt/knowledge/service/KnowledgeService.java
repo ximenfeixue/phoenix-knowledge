@@ -19,8 +19,6 @@ public interface KnowledgeService
      * <p>1、知识详细表插入</P>
      * <p>2、知识基础表插入</P>
      * <p>3、知识来源表插入</P>
-     * <p>4、大数据MQ推送</P>
-     * <p>5、动态推送</P>
      * @date 2016年1月15日 上午9:41:03
      * @param DataCollect
      * @return
@@ -28,13 +26,20 @@ public interface KnowledgeService
      */
     public InterfaceResult insert(DataCollect DataCollect);
 
+
+    /**
+     * 插入，承担以下任务：
+     * <p>1、知识详细表插入</P>
+     * @return
+     * @throws Exception
+     */
+    public InterfaceResult insert(List<Knowledge> knowledgeList);
+
     /**
      * 更新，承担以下任务：
      * <p>1、知识详细表更新</P>
      * <p>2、知识基础表更新</P>
      * <p>3、知识来源表更新</P>
-     * <p>4、大数据MQ推送更新</P>
-     * <p>5、动态推送更新</P>
      * @date 2016年1月15日 上午9:41:16
      * @param DataCollect
      * @return

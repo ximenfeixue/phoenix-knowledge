@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,14 +52,22 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     @Override
     public List<Knowledge> insertList(List<Knowledge> KnowledgeList) throws Exception {
+        List<Knowledge> savedList = null;
         if(KnowledgeList != null && KnowledgeList.size() > 0) {
-            for(Knowledge Knowledge : KnowledgeList) {
-                Knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
+            savedList = new ArrayList<Knowledge>(KnowledgeList.size());
+            for(Knowledge detail : KnowledgeList) {
+                if (detail != null) {
+                    detail.setId(knowledgeCommonService.getKnowledgeSequenceId());
+                    savedList.add(detail);
+                }
+                else {
+                    logger.error("One knowledge is null...");
+                }
             }
+            mongoTemplate.insert(savedList, Knowledge.class);
         }
-        mongoTemplate.insert(KnowledgeList, Knowledge.class);
 
-        return KnowledgeList;
+        return savedList;
     }
 
     @Override

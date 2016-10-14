@@ -14,6 +14,8 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +112,30 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		}*/
 
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
+    }
+
+    @Override
+    public InterfaceResult insert(List<Knowledge> knowledgeList)
+    {
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            logger.error("Knowledge list is empty, so skip to save..");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        try {
+            List<Knowledge> savedList = this.knowledgeMongoDao.insertList(knowledgeList);
+            if (CollectionUtils.isNotEmpty(savedList)) {
+                logger.info("End insert knowledge List to mongo success. size: " + savedList.size());
+            }
+            else {
+                logger.info("End insert knowledge List to mongo failed." );
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
+            }
+        } catch (Exception ex) {
+            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @Override
