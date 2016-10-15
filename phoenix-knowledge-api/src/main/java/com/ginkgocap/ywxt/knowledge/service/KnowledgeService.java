@@ -46,6 +46,15 @@ public interface KnowledgeService
     /**
      * 更新，承担以下任务：
      * <p>1、知识详细表更新</P>
+     * @param detail
+     * @return
+     * @throws Exception
+     */
+    public Knowledge update(Knowledge detail) throws Exception;
+
+    /**
+     * 更新，承担以下任务：
+     * <p>1、知识详细表更新</P>
      * <p>2、知识基础表更新</P>
      * <p>3、知识来源表更新</P>
      * @date 2016年1月15日 上午9:41:16

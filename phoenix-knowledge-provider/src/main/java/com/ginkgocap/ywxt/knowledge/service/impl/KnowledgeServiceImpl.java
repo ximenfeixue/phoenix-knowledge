@@ -151,6 +151,20 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
+    public Knowledge update(Knowledge detail) throws Exception
+    {
+        //知识详细表更新
+        if (detail == null) {
+            return null;
+        }
+        Knowledge updateDetail = this.knowledgeMongoDao.update(detail);
+        if (updateDetail != null) {
+            logger.info("update knowledgeDetail: " + updateDetail);
+        }
+        return updateDetail;
+    }
+
+    @Override
     public InterfaceResult update(DataCollect DataCollect) throws Exception {
 
         Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
