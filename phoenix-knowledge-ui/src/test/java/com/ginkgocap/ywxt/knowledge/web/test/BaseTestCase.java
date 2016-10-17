@@ -54,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    private final static String testEnv = envArray[1];
+    private final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -484,7 +484,7 @@ public abstract class BaseTestCase extends TestCase
     
     protected static void login(String loginUrl)
     {
-    	sessionID = "d64406fe-a860-490e-913a-519236a775a3";
+    	//sessionID = "d64406fe-a860-490e-913a-519236a775a3";
         if (sessionID == null || sessionID.trim().isEmpty()) {
             final String loginJson = getLoginJson(web);
             try {
@@ -514,8 +514,8 @@ public abstract class BaseTestCase extends TestCase
     
     private static String getLoginJson(boolean web)
     {
-    	final String userName = "18611386946";
-    	final String passWord = "sa#123";
+    	final String userName = "18211081791";
+    	final String passWord = "MTExMTEx";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
