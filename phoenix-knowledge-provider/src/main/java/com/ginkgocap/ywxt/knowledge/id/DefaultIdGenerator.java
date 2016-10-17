@@ -51,7 +51,7 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  public String next() {
 	    lock.readLock().lock();
 	    //StringBuffer sb = new StringBuffer(config.getPrefix()).append(config.getSplitString()).append(time).append(config.getSplitString()).append(value.getAndIncrement());
-	    StringBuffer sb = new StringBuffer(time).append(config.getPrefix()).append(value.getAndIncrement());
+	    StringBuffer sb = new StringBuffer("3").append(time).append(config.getPrefix()).append(value.getAndIncrement());
 		lock.readLock().unlock();
 	    return sb.toString();
 	  }
