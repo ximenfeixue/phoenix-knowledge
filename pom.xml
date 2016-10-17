@@ -56,7 +56,7 @@
         <spring-data-mongodb.version>1.8.0.RELEASE</spring-data-mongodb.version>
         <rocketmq.version>1.0.0-SNAPSHOT</rocketmq.version>
         <commons-pool2.version>2.0</commons-pool2.version>
-        <skip_maven_deploy>true</skip_maven_deploy>
+        <skip_maven_deploy>false</skip_maven_deploy>
     </properties>
 
     <distributionManagement>
