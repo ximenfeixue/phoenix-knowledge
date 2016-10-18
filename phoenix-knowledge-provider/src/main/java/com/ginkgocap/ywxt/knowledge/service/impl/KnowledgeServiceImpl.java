@@ -44,6 +44,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Autowired
     private KnowledgeReferenceDao knowledgeReferenceDao;
 
+    private static final String endContent = "若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+    private static final int endLength = endContent.length();
     private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
 
     @Override
@@ -652,10 +654,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private void filterKnowledge(Knowledge detail)
     {
-        final String content = detail.getContent();
-        final int targetIndex = content.indexOf("</br>版权归原作者所有");
-        if (targetIndex > 0) {
-            final String filterContent = content.substring(0, targetIndex-1);
+        StringBuilder sb = new StringBuilder(detail.getContent());
+        final int startIndex = sb.indexOf("版权归原作者所有，金桐网依法保护版权");
+        final int endIndex = sb.indexOf(endContent) + endLength;
+        if (startIndex > 0) {
+            final String filterContent = sb.replace(startIndex, endIndex, "").toString();
             detail.setContent(filterContent);
         }
     }
