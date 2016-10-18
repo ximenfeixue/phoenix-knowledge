@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
@@ -114,9 +116,21 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
     public boolean isKnowledgeOwner(final long knowledgeId, final String type, final long userId)
     {
         try {
-            int ctype = KnowledgeUtil.parserColumnId(type);
-            DataCollect data = knowledgeService.getKnowledge(knowledgeId, ctype);
-            return (data != null && data.getKnowledgeDetail() != null && (data.getKnowledgeDetail().getCid()==userId));
+            int columnType = KnowledgeUtil.parserColumnId(type);
+            DataCollect data = knowledgeService.getKnowledge(knowledgeId, columnType);
+            if (data != null) {
+                Knowledge detail = data.getKnowledgeDetail();
+                if (detail != null) {
+                    logger.debug("check owner by detail info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
+                    return (detail.getCid() == userId);
+                }
+                KnowledgeBase base = data.getKnowledge();
+                if (base != null) {
+                    logger.debug("check owner by base info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
+                    return (base.getCreateUserId() == userId);
+                }
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

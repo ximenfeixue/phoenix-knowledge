@@ -13,7 +13,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
  */
 public interface KnowledgeBatchQueryService
 {
-    public List<Knowledge> getKnowledge(String[] columnID,long user_id,short type,int offset,int limit);
+    public List<Knowledge> getKnowledgeDetailList(String[] columnID,long user_id,short type,int offset,int limit);
 
     long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long user_id,short type);
 

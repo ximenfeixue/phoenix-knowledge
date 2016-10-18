@@ -316,7 +316,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnType);
         }
 
-        if (knowledgeBase != null && knowledgeDetail != null) {
+        if (knowledgeBase != null || knowledgeDetail != null) {
             return new DataCollect(knowledgeBase, knowledgeDetail);
         }
 

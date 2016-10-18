@@ -44,7 +44,7 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     }
 
     @Override
-    public List<Knowledge> getKnowledge(String[] columnID, long userIdd, short type, int start, int size) {
+    public List<Knowledge> getKnowledgeDetailList(String[] columnID, long userIdd, short type, int start, int size) {
         return knowledgeBatchQueryDao.getKnowledge(columnID, userIdd, type, start, size);
     }
 

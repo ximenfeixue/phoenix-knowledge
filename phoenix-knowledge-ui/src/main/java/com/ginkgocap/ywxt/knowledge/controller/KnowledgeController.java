@@ -886,7 +886,7 @@ public class KnowledgeController extends BaseController {
             }
             if (total > 0 && start < total) {
                 logger.info("start to get knowledge:" + total);
-                List<Knowledge> detailList = knowledgeBatchQueryService.getKnowledge(idList, userId, type, start, size);
+                List<Knowledge> detailList = knowledgeBatchQueryService.getKnowledgeDetailList(idList, userId, type, start, size);
                 logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
                 knowledgeList = DataCollect.convertDetailToBaseList(detailList, type, true);
                 logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
