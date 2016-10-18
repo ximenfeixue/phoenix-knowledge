@@ -246,14 +246,15 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnType) throws Exception {
 
         List<Knowledge> oldKnowledgeMongoList = this.knowledgeMongoDao.getByIdsAndColumnId(knowledgeIds, columnType);
-        if (oldKnowledgeMongoList == null || oldKnowledgeMongoList.size() <= 0) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        if (CollectionUtils.isEmpty(oldKnowledgeMongoList)) {
+            logger.warn("get knowledge detail list failed, maybe these knowledge have been deleted. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
         }
-
-        //知识详细表删除
-        boolean result = this.knowledgeMongoDao.deleteByIdsAndColumnType(knowledgeIds, columnType);
-        if (!result) {
-            logger.error("delete knowledge detail failed. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
+        else {
+            //知识详细表删除
+            boolean result = this.knowledgeMongoDao.deleteByIdsAndColumnType(knowledgeIds, columnType);
+            if (!result) {
+                logger.error("delete knowledge detail failed. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
+            }
         }
 
         //知识简表删除
