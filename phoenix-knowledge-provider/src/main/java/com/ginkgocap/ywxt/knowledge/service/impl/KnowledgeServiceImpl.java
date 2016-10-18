@@ -54,7 +54,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //knowledgeDetail.createContendDesc();
         //知识详细信息插入
-        Knowledge savedDetail = insert(detail);
+        Knowledge savedDetail = insertKnowledgeDetail(detail);
         if (savedDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -70,33 +70,20 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
             logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         //知识来源表插入
-        KnowledgeReference savedKnowledgeReference = null;
         if (knowledgeReference != null) {
             try {
                 knowledgeReference.setId(knowledgeId);
                 knowledgeReference.setKnowledgeId(knowledgeId);
-                savedKnowledgeReference = this.knowledgeReferenceDao.insert(knowledgeReference);
+                this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
                 logger.error("知识引用表插入失败！失败原因：\n" + e.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
             }
         }
-
-        //save directory
-        /* move to web control to save these info
-        //大数据MQ推送
-        /*
-		try {
-			bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, KnowledgeMongo.clone(knowledge), savedKnowledgeDetail.getOwnerId());
-		} catch (Exception e) {
-			this.insertRollBack(knowledgeId, columnId, userId, true, true, true, false, false);
-			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
 
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
     }
@@ -104,26 +91,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public Knowledge insert(Knowledge detail)
     {
-        //知识详细信息插入
-        Knowledge savedDetail = null;
-        try {
-            detail.setStatus(4);
-            this.knowledgeMongoDao.insert(detail);
-            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
-            //Get from mongo, make sure save success..
-            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
-            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
-        } catch (Exception ex) {
-            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
-            return null;
-        }
-
-        if (savedDetail == null) {
-            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
-            return null;
-        }
-
-        return savedDetail;
+        return insertKnowledgeDetail(detail);
     }
 
     @Override
@@ -153,15 +121,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public Knowledge update(Knowledge detail) throws Exception
     {
-        //知识详细表更新
-        if (detail == null) {
-            return null;
-        }
-        Knowledge updateDetail = this.knowledgeMongoDao.update(detail);
-        if (updateDetail != null) {
-            logger.info("update knowledgeDetail: " + updateDetail);
-        }
-        return updateDetail;
+        return updateKnowledgeDetail(detail);
     }
 
     @Override
@@ -171,14 +131,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         KnowledgeReference knowledgeReference = DataCollect.getReference();
 
         Long knowledgeId = knowledgeDetail.getId();
-        long userId = knowledgeDetail.getCid();
         short columnType = KnowledgeUtil.parserShortType(knowledgeDetail.getColumnType());
 
         //knowledgeMongo.createContendDesc();
 
         //知识详细表更新
-        Knowledge ret = this.knowledgeMongoDao.update(knowledgeDetail);
-        logger.info("update knowledgeDetail: " + ret);
+        Knowledge updatedKnow = updateKnowledgeDetail(knowledgeDetail);
+        logger.info("update knowledgeDetail: " + updatedKnow);
         KnowledgeBase knowledge = DataCollect.generateKnowledge();
 
         //知识简表更新
@@ -204,46 +163,21 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             }
         }
 
-        //Update directory
-        /* move to web control
-        //大数据MQ推送更新
-		/*
-        try {
-			bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, KnowledgeMongo.clone(knowledge), knowledge.getCreateUserId());
-		} catch (Exception e) {
-			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
-
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @Override
     public boolean updateKnowledge(DataCollect DataCollect) throws Exception {
 
-        KnowledgeBase knowledge = DataCollect.getKnowledge();
+        KnowledgeBase base = DataCollect.getKnowledge();
         Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
 
-        Knowledge update = null;
-        try {
-            //知识详细表更新
-            if (knowledgeDetail != null) {
-                update = this.knowledgeMongoDao.update(knowledgeDetail);
-            }
-            if (update == null) {
-                logger.error("知识详细表更新失败！\n");
-                return false;
-            }
-        }
-        catch (Exception e) {
-            logger.error("知识详细表更新失败！失败原因：\n"+e.getMessage());
-            return false;
-        }
+        updateKnowledgeDetail(knowledgeDetail);
 
         //知识简表更新
         try {
-            if (knowledge != null) {
-                this.knowledgeMysqlDao.update(knowledge);
+            if (base != null) {
+                this.knowledgeMysqlDao.update(base);
             }
         } catch (Exception e) {
             logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
@@ -577,6 +511,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 else {
                     newBase = knowledgeMysqlDao.update(base);
                 }
+                logger.error("sync knowledge base success. knowledgeId: " + detail.getId() + ", columnType: "+detail.getColumnType() + ", isAdd: "+isAdd);
             } catch (Exception e) {
                 logger.error("Sync knowledge base failed, error: {}", e.getMessage());
                 e.printStackTrace();
@@ -587,6 +522,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             try {
                 if (newBase != null) {
                     knowledgeMongoDao.deleteBackupKnowledgeBase(knowledgeSync.getId());
+                    logger.error("delete backup knowledge. knowledgeId: " + detail.getId() + ", columnType: "+detail.getColumnType());
                 }
                 else {
                     return false;
@@ -671,5 +607,55 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             privated = data.getPermission().getPublicFlag().shortValue();
         }
         return privated;
+    }
+
+    private Knowledge insertKnowledgeDetail(Knowledge detail)
+    {
+        //知识详细信息插入
+        Knowledge savedDetail = null;
+        try {
+            filterKnowledge(detail);
+            detail.setStatus(4);
+            this.knowledgeMongoDao.insert(detail);
+            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
+            //Get from mongo, make sure save success..
+            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
+        } catch (Exception ex) {
+            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
+            return null;
+        }
+
+        if (savedDetail == null) {
+            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
+            return null;
+        }
+
+        return savedDetail;
+    }
+
+    private Knowledge updateKnowledgeDetail(Knowledge detail)
+    {
+        //知识详细表更新
+        if (detail == null) {
+            logger.info("Knowledge Detail is null, so skip to save.");
+            return null;
+        }
+        filterKnowledge(detail);
+        Knowledge updateDetail = this.knowledgeMongoDao.update(detail);
+        if (updateDetail != null) {
+            logger.info("update knowledgeDetail: " + updateDetail);
+        }
+        return updateDetail;
+    }
+
+    private void filterKnowledge(Knowledge detail)
+    {
+        final String content = detail.getContent();
+        final int targetIndex = content.indexOf("</br>版权归原作者所有");
+        if (targetIndex > 0) {
+            final String filterContent = content.substring(0, targetIndex-1);
+            detail.setContent(filterContent);
+        }
     }
 }
