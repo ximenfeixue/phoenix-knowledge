@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -590,16 +591,18 @@ public class KnowledgeOtherControl extends BaseController
                 try {
                     logger.info("get backup knowledge base, start: {}, size: {}", start, size);
                     List<KnowledgeBaseSync> baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
-                    if (baseSyncList == null || baseSyncList.size() <= 0) {
+                    if (CollectionUtils.isEmpty(baseSyncList)) {
                         logger.info("reset knowledge base sync");
                         syncTaskMap.put(knowledgeSyncTaskKey, false);
-                        return;
+                        break;
                     }
                     else {
                         logger.info("got backup knowledge base size: {}", baseSyncList.size());
                         for (KnowledgeBaseSync baseSync : baseSyncList) {
-                            knowledgeService.syncKnowledgeBase(baseSync);
-                            Thread.sleep(1000);
+                            if (baseSync != null) {
+                                knowledgeService.syncKnowledgeBase(baseSync);
+                                Thread.sleep(1000);
+                            }
                         }
                         start += size;
                     }
