@@ -65,6 +65,20 @@ public class KnowledgeOtherWebTest extends BaseTestCase
         }
     }
 
+    @Test
+    public void testKnowledgeSync()
+    {
+        LogMethod();
+        try {
+            String subUrl = "/knowledgeSync"; // /shareCount/{type}/{knowledgeId}
+            JsonNode result = HttpRequestResult(HttpMethod.GET, baseOrtherUrl+subUrl, null);
+            checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     /*
     @Test
     public void testPush()

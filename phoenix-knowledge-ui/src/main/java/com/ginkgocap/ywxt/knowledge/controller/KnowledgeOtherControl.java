@@ -588,26 +588,33 @@ public class KnowledgeOtherControl extends BaseController
         @Override
         public void run() {
             while (true) {
+                List<KnowledgeBaseSync> baseSyncList = null;
+                logger.info("get backup knowledge base, start: {}, size: {}", start, size);
                 try {
-                    logger.info("get backup knowledge base, start: {}, size: {}", start, size);
-                    List<KnowledgeBaseSync> baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
-                    if (CollectionUtils.isEmpty(baseSyncList)) {
-                        logger.info("reset knowledge base sync");
-                        syncTaskMap.put(knowledgeSyncTaskKey, false);
-                        break;
-                    }
-                    else {
-                        logger.info("got backup knowledge base size: {}", baseSyncList.size());
-                        for (KnowledgeBaseSync baseSync : baseSyncList) {
-                            if (baseSync != null) {
+                    baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
+                }
+                catch (Throwable e) {
+                    logger.error("get knowledge sync base list failed. error: " + e.getMessage());
+                }
+                if (CollectionUtils.isEmpty(baseSyncList)) {
+                    logger.info("reset knowledge base sync");
+                    syncTaskMap.put(knowledgeSyncTaskKey, false);
+                    break;
+                }
+                else {
+                    logger.info("got backup knowledge base size: {}", baseSyncList.size());
+                    for (KnowledgeBaseSync baseSync : baseSyncList) {
+                        if (baseSync != null) {
+                            try {
                                 knowledgeService.syncKnowledgeBase(baseSync);
                                 Thread.sleep(1000);
                             }
+                            catch (Throwable e) {
+                                logger.error("sync knowledge failed. knowledgeId: " + baseSync.getId() + ", type: " + baseSync.getType());
+                            }
                         }
-                        start += size;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    start += size;
                 }
             }
         }
