@@ -296,6 +296,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
         } else {
             //Add knowledge property
+            filterKnowledge(knowledgeDetail);
             final String knowledgeContent = knowledgeDetail.getContent() + suffix;
             knowledgeDetail.setContent(knowledgeContent);
         }
