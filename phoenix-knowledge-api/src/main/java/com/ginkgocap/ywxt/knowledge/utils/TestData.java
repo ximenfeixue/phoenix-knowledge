@@ -200,7 +200,7 @@ public class TestData {
 
         associate.setAssocDesc(name);
         associate.setAssocId(assocId);
-        associate.setAssocMetadata("Asso meta Data");
+        associate.setAssocMetadata("{\"userPicPath\":\"test.online.gintong.com/cross/img/user/image/?module=customer&uId=21&userId=21\",\"columnType\":1,\"type\":2}");
         associate.setAssocTitle("Asso Title");
         associate.setAssocTypeId(typeId);
         associate.setCreateAt(System.currentTimeMillis());
