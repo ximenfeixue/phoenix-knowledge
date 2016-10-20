@@ -476,6 +476,10 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
+        if (isWeb(request)) {
+            return detailWeb(request, response, knowledgeId, type);
+        }
+
         User user = this.getUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);

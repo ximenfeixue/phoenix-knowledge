@@ -317,5 +317,4 @@ public class HttpClientHelper {
         httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 100000);
         return httpClient;
     }
-
 }
