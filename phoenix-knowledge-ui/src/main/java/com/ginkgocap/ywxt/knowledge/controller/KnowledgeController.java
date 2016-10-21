@@ -527,7 +527,7 @@ public class KnowledgeController extends BaseController {
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
             logger.info("get minTags: " + minTags + " minDirectoryList: " + minDirectoryList);
             ColumnCustom columnCustom = getColumn(detail.getColumnid());
-            IdName column = columnCustom != null ? new IdName(columnCustom.getId(), columnCustom.getColumnname()) : null;
+            IdName column = columnCustom != null ? new IdName(columnCustom.getCid(), columnCustom.getColumnname()) : null;
             logger.info("get column info: " + column);
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);

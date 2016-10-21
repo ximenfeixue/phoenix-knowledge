@@ -61,6 +61,6 @@ public class KnowledgeWeb extends Knowledge
     @JsonIgnore
     public void setDirectorys(List<Long> categoryIds){}
 
-    @JsonIgnore
-    public void setColumnid(String columnId) {}
+    //@JsonIgnore
+    //public void setColumnid(String columnId) {}
 }
