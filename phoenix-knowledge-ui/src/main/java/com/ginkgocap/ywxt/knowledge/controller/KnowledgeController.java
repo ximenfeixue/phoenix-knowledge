@@ -515,7 +515,7 @@ public class KnowledgeController extends BaseController {
     @ResponseBody
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
-        User user = this.getUser(request);
+        User user = this.getJTNUser(request);
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if (result != null) {
