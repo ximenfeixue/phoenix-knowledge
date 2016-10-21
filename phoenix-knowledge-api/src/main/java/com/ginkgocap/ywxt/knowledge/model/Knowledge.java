@@ -444,26 +444,6 @@ public class Knowledge implements Serializable {
 		this.knowledgeMainId = knowledgeMainId;
 	}
 
-	public static Map<String,Object> setMapVO(Object bean){
-		Map<String, Object> map = new HashMap<String, Object>();
-		Knowledge k = (Knowledge) bean;
-		map.put("kid", k.getId());
-		map.put("cid", k.getCid());
-		map.put("cname", k.getCname());
-		map.put("title", k.getTitle());
-		map.put("cpathid", k.getCpathid());
-		map.put("pic", k.getPic());
-		map.put("selectedIds", k.getSelectedIds());
-		map.put("status", k.getStatus());
-		map.put("tags", k.getTags());
-		map.put("columnid", k.getColumnid());
-		map.put("columnType", k.getColumnType());
-		map.put("content", k.getContent());
-		map.put("desc", k.getDesc());
-		map.put("createtime", k.getCreatetime());
-		return map;
-	}
-
 	public List<String> getMultiUrls() {
 		return multiUrls;
 	}
@@ -488,61 +468,29 @@ public class Knowledge implements Serializable {
 		this.collected = collected;
 	}
 
-	public <T> Knowledge setValue(KnowledgeNewsVO vo, User user) {
-		this.setColumnid(String.valueOf(vo.getColumnid()));
-		this.setUid(user.getId());
-		this.setUname(user.getName());
-		this.setTags(vo.getTags());
-		this.setId(vo.getkId());
-		this.setTitle(vo.getTitle());
-		this.setCid(user.getId());
-		this.setCname(user.getName());
-		this.setSource(vo.getSource());
-		this.setS_addr("");
-		this.setCpathid(vo.getColumnPath());
-		this.setPic(vo.getPic());
-		this.setDesc(vo.getDesc());
-		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(vo.getEssence()));
-		this.setCreatetime(vo.getCreatetime());
-		this.setStatus(vo.getSelectedIds().equals(KnowledgeConstant.Ids.EPlatform.v()) ? KnowledgeConstant.Status.checking
-				.v() : KnowledgeConstant.Status.checked.v());
-		this.setReport_status(KnowledgeConstant.ReportStatus.unreport.v());
-		this.setIsh(KnowledgeConstant.HighLight.unlight.v());
-		this.setHcontent("");
-		this.setAsso(vo.getAsso());
-		this.setSelectedIds(vo.getSelectedIds());
-		this.setTaskid(vo.getTaskId());
-		this.setKnowledgeMainId(vo.getKnowledgeMainId());
-		this.setFileType(vo.getFileType());
-		return this;
-	}
+	public void clone(Knowledge detail)
+	{
+		this.setId(detail.getId());
+		this.setColumnid(detail.getColumnid());
+		this.setColumnType(detail.getColumnType());
 
-	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo, User user) {
-		this.setColumnid(String.valueOf(vo.getColumnid()));
-		this.setUid(user.getId());
-		this.setUname(user.getName());
-		this.setTags(vo.getTags());
-		this.setId(vo.getkId());
-		this.setTitle(vo.getTitle());
-		this.setCid(user.getId());
-		this.setCname(user.getName());
-		this.setSource(vo.getSource());
-		this.setS_addr("");
-		this.setCpathid(vo.getColumnPath());
-		this.setPic(vo.getPic());
-		this.setDesc(vo.getDesc());
-		this.setContent(vo.getContent());
-		this.setEssence(Integer.parseInt(vo.getEssence()));
-		this.setCreatetime(vo.getCreatetime());
-		this.setStatus(KnowledgeConstant.Status.draft.v());
-		this.setReport_status(KnowledgeConstant.ReportStatus.unreport.v());
-		this.setIsh(KnowledgeConstant.HighLight.unlight.v());
-		this.setHcontent("");
-		this.setAsso(vo.getAsso());
-		this.setSelectedIds(vo.getSelectedIds());
-		this.setTaskid(vo.getTaskId());
-		this.setKnowledgeMainId(vo.getKnowledgeMainId());
-		return this;
+		this.setCid(detail.getCid());
+		this.setCname(detail.getCname());
+		this.setTitle(detail.getTitle());
+		this.setContent(detail.getContent());
+		this.setMultiUrls(detail.getMultiUrls());
+		this.setAttachUrls(detail.getAttachUrls());
+		this.setModifytime(detail.getModifytime());
+		this.setCreatetime(detail.getCreatetime());
+		this.setS_addr(detail.getS_addr());
+		this.setDirectorys(null);
+		this.setTags(null);
+		this.setVirtual(detail.getVirtual());
+		this.setPic(detail.getPic());
+		this.setHcontent(detail.getHcontent());
+		this.setCollected(detail.getCollected());
+		this.setCpathid(detail.getCpathid());
+		this.setDesc(detail.getDesc());
+		this.setSource(detail.getSource());
 	}
 }

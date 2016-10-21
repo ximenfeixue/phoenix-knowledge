@@ -21,30 +21,7 @@ public class KnowledgeWeb extends Knowledge
 
     public KnowledgeWeb(Knowledge detail,List<IdName> minTags,List<IdNameType> minDirectory,IdName column)
     {
-        this.setId(detail.getId());
-        this.setColumnid(detail.getColumnid());
-
-        this.setCid(detail.getCid());
-        this.setCname(detail.getCname());
-        this.setCid(detail.getCid());
-        this.setCname(detail.getCname());
-        this.setTitle(detail.getTitle());
-        this.setContent(detail.getContent());
-        this.setMultiUrls(detail.getMultiUrls());
-        this.setAttachUrls(detail.getAttachUrls());
-        this.setModifytime(detail.getModifytime());
-        this.setCreatetime(detail.getCreatetime());
-        this.setS_addr(detail.getS_addr());
-        this.setDirectorys(null);
-        this.setTags(null);
-        this.setVirtual(detail.getVirtual());
-        this.setPic(detail.getPic());
-        this.setHcontent(detail.getHcontent());
-        this.setCollected(detail.getCollected());
-        this.setCpathid(detail.getCpathid());
-        this.setDesc(detail.getDesc());
-        this.setSource(detail.getSource());
-
+        this.clone(detail);
         //Web data
         this.setColumn(column);
         this.setMinTags(minTags);
