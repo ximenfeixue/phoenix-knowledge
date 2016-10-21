@@ -2235,6 +2235,7 @@ public class KnowledgeController extends BaseController {
         long id = KnowledgeUtil.parserStringIdToLong(columnId);
         if (id > 0) {
             try {
+                logger.info("Query column by Id. columnId: "+columnId);
                 return columnCustomService.queryByCid(id);
             } catch (Exception ex) {
                 logger.error("Get column failed: error {}", ex.getMessage());
