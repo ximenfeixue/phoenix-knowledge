@@ -1,36 +1,31 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.ginkgocap.parasol.associate.exception.AssociateServiceException;
-import com.ginkgocap.parasol.associate.exception.AssociateTypeServiceException;
 import com.ginkgocap.parasol.associate.model.Associate;
-import com.ginkgocap.parasol.associate.model.AssociateType;
-import com.ginkgocap.parasol.associate.service.AssociateService;
-import com.ginkgocap.parasol.associate.service.AssociateTypeService;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.dynamic.model.*;
-import com.ginkgocap.ywxt.knowledge.utils.*;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.collections.CollectionUtils;
-import org.parasol.column.entity.ColumnCustom;
-import org.parasol.column.entity.ColumnSelf;
-import org.parasol.column.service.ColumnCustomService;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.common.*;
-import com.ginkgocap.ywxt.knowledge.model.mobile.*;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
+import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.*;
-import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
-
+import org.parasol.column.entity.ColumnCustom;
+import org.parasol.column.entity.ColumnSelf;
+import org.parasol.column.service.ColumnCustomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +38,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.util.*;
 
@@ -477,6 +471,7 @@ public class KnowledgeController extends BaseController {
     public MappingJacksonValue detail(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         if (isWeb(request)) {
+            logger.info("Query knowledge from web....");
             return detailWeb(request, response, knowledgeId, type);
         }
 
@@ -530,12 +525,15 @@ public class KnowledgeController extends BaseController {
             List<Long> directoryIds = detail.getDirectorys();
             List<IdName> minTags = this.getMinTagList(userId, tags);
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
-            logger.debug("get minTags: {} minDirectoryList: {}", minTags, minDirectoryList);
+            logger.info("get minTags: " + minTags + " minDirectoryList: " + minDirectoryList);
             ColumnCustom columnCustom = getColumn(detail.getColumnid());
             IdName column = columnCustom != null ? new IdName(columnCustom.getId(), columnCustom.getColumnname()) : null;
+            logger.info("get column info: " + column);
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
             jacksonValue = knowledgeDetail(data);
+        } else {
+            logger.info("Query knowledge detail failed.");
         }
         return jacksonValue;
     }
