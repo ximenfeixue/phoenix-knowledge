@@ -1937,6 +1937,10 @@ public class KnowledgeController extends BaseController {
     }
 
     private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnId,boolean isWeb) {
+        if (user != null) {
+            logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + user.getId());
+        }
+
         if(knowledgeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION, "知识Id无效");
         }
