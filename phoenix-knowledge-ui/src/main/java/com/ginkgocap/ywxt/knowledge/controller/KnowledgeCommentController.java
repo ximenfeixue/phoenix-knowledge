@@ -159,10 +159,9 @@ public class KnowledgeCommentController extends BaseController
     public InterfaceResult getKnowledgeCommentList(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse)
     {
         try{
-            User user = getUser(request);
-            if (user == null) {
-                logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+            User user = getJTNUser(request);
+            if (user != null) {
+                logger.info("Query knowledge comment list. knowledgeId: " + knowledgeId + " userId: " + user.getId());
             }
 
             if (knowledgeId == null) {
