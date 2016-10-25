@@ -132,11 +132,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
         KnowledgeReference knowledgeReference = DataCollect.getReference();
 
-        Long knowledgeId = knowledgeDetail.getId();
-        short columnType = KnowledgeUtil.parserShortType(knowledgeDetail.getColumnType());
-
         //knowledgeMongo.createContendDesc();
-
         //知识详细表更新
         Knowledge updatedKnow = updateKnowledgeDetail(knowledgeDetail);
         if (updatedKnow == null) {
@@ -146,6 +142,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //Update knowledge detail
         DataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = DataCollect.generateKnowledge();
+        Long knowledgeId = knowledgeDetail.getId();
+        short columnType = knowledge.getType();
 
         //知识简表更新
         try {
