@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GB2312"?>
 <root>
 	<datasources>
-		<ds name="idCenterDS" 
+		<ds name="idCenterDS"
 			driverClassName="com.mysql.jdbc.Driver"
             url="${jdbc.url}"
             username="${jdbc.username}"
@@ -9,12 +9,9 @@
 			maxActive=""
 			maxIdle=""
 			maxWait=""
-			testOnBorrow="true"
-			testOnReturn="true"
-			testWhileIdle="true"
 		/>
         
-		<ds name="master" 
+		<ds name="master"
 			driverClassName="com.mysql.jdbc.Driver"
             url="${jdbc.url}"
 			username="${jdbc.username}"
