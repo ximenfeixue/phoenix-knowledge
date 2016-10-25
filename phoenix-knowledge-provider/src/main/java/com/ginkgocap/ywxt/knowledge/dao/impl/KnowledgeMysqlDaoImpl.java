@@ -22,8 +22,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
             throw new IllegalArgumentException("knowledgeBase is null!");
         }
 		
-		long id = (Long) this.saveEntity(knowledgeBase);
-		
+		this.saveEntity(knowledgeBase);
 		return knowledgeBase;
 	}
 	
