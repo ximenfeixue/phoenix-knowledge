@@ -240,7 +240,7 @@ public class KnowledgeController extends BaseController {
 
         Permission permission = permissionServiceLocal.updatePermissionInfo(userId, knowledgeId, data.getPermission());
         if (permission != null) {
-            logger.debug("update knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
+            logger.debug("update knowledge permission success. userId: " + userId + ", knowledgeId: " + knowledgeId);
         }
 
         //Update tag info
