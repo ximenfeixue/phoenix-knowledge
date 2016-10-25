@@ -614,7 +614,6 @@ public class KnowledgeOtherControl extends BaseController
                             }
                         }
                     }
-                    start += size;
                 }
             }
         }
