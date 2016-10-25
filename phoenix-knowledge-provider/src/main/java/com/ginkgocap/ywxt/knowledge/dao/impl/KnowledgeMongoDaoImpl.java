@@ -271,8 +271,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         if (size > maxSize) {
             size = maxSize;
         }
-        if (start+size > count) {
-            size = (int)(count - (long)start);
+        if (size > count) {
+            size = (int)count;
         }
 
         query.skip(start);
