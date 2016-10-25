@@ -96,7 +96,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         int newColumnType = 1;
         int oldColumnType = 1;
-        int[] columnTypes = getColumnType(knowledge.getColumnType());
+        int[] columnTypes = KnowledgeUtil.getColumnType(knowledge.getColumnType());
         if (columnTypes.length > 1) {
             //new columnType
             newColumnType = columnTypes[0];
@@ -380,18 +380,5 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return false;
         }
         return true;
-    }
-
-    //This only when update knowledge can use it.
-    private int [] getColumnType(final String columnType)
-    {
-        String tempString = columnType;
-        int mid = tempString.indexOf(",");
-        if (mid > 0) {
-            String newType = tempString.substring(0, mid);
-            String oldType = tempString.substring(mid + 1, tempString.length());
-            return new int[] { KnowledgeUtil.parserColumnId(newType), KnowledgeUtil.parserColumnId(oldType) };
-        }
-        return new int[] { KnowledgeUtil.parserColumnId(columnType) };
     }
 }

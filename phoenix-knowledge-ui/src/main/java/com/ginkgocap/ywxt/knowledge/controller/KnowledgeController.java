@@ -207,9 +207,11 @@ public class KnowledgeController extends BaseController {
             logger.error("request knowledgeDetail is null or incorrect");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
-        long knowledgeId = detail.getId();
 
-        if (!permissionServiceLocal.canUpdate(knowledgeId, detail.getColumnType(), userId)) {
+        int[] columnTypes = KnowledgeUtil.getColumnType(detail.getColumnType());
+        int columnType = columnTypes.length == 1 ? columnTypes[0] : columnTypes[1];
+        long knowledgeId = detail.getId();
+        if (!permissionServiceLocal.canUpdate(knowledgeId, String.valueOf(columnType), userId)) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
@@ -2188,11 +2190,13 @@ public class KnowledgeController extends BaseController {
             logger.warn("column type is null, so set a default value");
             detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
         } else {
-            int columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
-            if (columnType != KnowledgeType.knowledgeType(columnType).value()) {
+            int[] columnTypes = KnowledgeUtil.getColumnType(detail.getColumnType());
+            int newColumnType = columnTypes[0];
+            if (newColumnType != KnowledgeType.knowledgeType(newColumnType).value()) {
                 logger.warn("column type is invalidated, so set a default value");
-                columnType = KnowledgeType.ENews.value();
-                detail.setColumnType(String.valueOf(columnType));
+                newColumnType = KnowledgeType.ENews.value();
+                String columnType = columnTypes.length > 1 ? String.valueOf(newColumnType + "," + columnTypes[1]) : String.valueOf(newColumnType);
+                detail.setColumnType(columnType);
             }
         }
 

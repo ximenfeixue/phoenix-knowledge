@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.user.model.User;
 
 import org.apache.commons.lang3.StringUtils;
@@ -601,6 +602,22 @@ public final class KnowledgeUtil {
         else {
             return localHost.getHostAddress();
         }
+    }
+
+    //This only when update knowledge can use it.
+    public static int [] getColumnType(final String columnType)
+    {
+        if (StringUtil.inValidString(columnType)) {
+            String tempString = columnType;
+            int mid = tempString.indexOf(",");
+            if (mid > 0) {
+                String newType = tempString.substring(0, mid);
+                String oldType = tempString.substring(mid + 1, tempString.length());
+                return new int[]{KnowledgeUtil.parserColumnId(newType), KnowledgeUtil.parserColumnId(oldType)};
+            }
+            return new int[]{KnowledgeUtil.parserColumnId(columnType)};
+        }
+        return new int[]{KnowledgeType.ENews.value()};
     }
 
     //This is just for Unit Test code

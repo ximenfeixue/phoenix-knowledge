@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import junit.framework.Assert;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,7 +83,27 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
 
-    
+    public void testUpdateKnowledgeChangeColumnType()
+    {
+        LogMethod();
+        DataCollect data = createKnowledge("KnowledgeWebTest_create");
+        Knowledge detail = data != null ? data.getKnowledgeDetail() : null;
+        if (detail != null) {
+            detail.setTitle("KnowledgeWebTest_testUpdateKnowledgeChangeColumnType");
+            final String newColumnType = "2,1";
+            detail.setColumnType(newColumnType);
+            System.out.println("oldColumnType : "+detail.getColumnType() + ", newColumnType: "+newColumnType);
+        }
+        try {
+            String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
+            JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl, knowledgeJson);
+            checkRequestResultSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     public void testDeleteKnowledge()
     {
         LogMethod();
