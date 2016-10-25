@@ -1,7 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.model.*;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
@@ -14,7 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.*;
+import org.springframework.data.mongodb.core.query.BasicUpdate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -88,10 +93,30 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
         Query query = knowledgeIdQuery(knowledge.getId());
-        int columnType = parserColumnId(knowledge.getColumnType());
-        final String collectionName = getCollectionName(columnType);
+
+        int newColumnType = 1;
+        int oldColumnType = 1;
+        int[] columnTypes = getColumnType(knowledge.getColumnType());
+        if (columnTypes.length > 1) {
+            //new columnType
+            newColumnType = columnTypes[0];
+            //Old columnType
+            oldColumnType = columnTypes[1];
+            logger.info("update knowledge detail, newColumnType: " + newColumnType + ", oldColumnType: " + oldColumnType);
+        }
+        else {
+            newColumnType = oldColumnType = columnTypes[0];
+        }
+
+        String collectionName = getCollectionName(oldColumnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
         if (existValue != null) {
+            if ( newColumnType != oldColumnType) {
+                mongoTemplate.remove(query, collectionName);
+                logger.info("update knowledge detail, old collectionName: " + collectionName);
+                collectionName = getCollectionName(newColumnType);
+                logger.info("update knowledge detail, new collectionName: " + collectionName);
+            }
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
@@ -355,5 +380,18 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return false;
         }
         return true;
+    }
+
+    //This only when update knowledge can use it.
+    private int [] getColumnType(final String columnType)
+    {
+        String tempString = columnType;
+        int mid = tempString.indexOf(",");
+        if (mid > 0) {
+            String newType = tempString.substring(0, mid);
+            String oldType = tempString.substring(mid + 1, tempString.length());
+            return new int[] { KnowledgeUtil.parserColumnId(newType), KnowledgeUtil.parserColumnId(oldType) };
+        }
+        return new int[] { KnowledgeUtil.parserColumnId(columnType) };
     }
 }
