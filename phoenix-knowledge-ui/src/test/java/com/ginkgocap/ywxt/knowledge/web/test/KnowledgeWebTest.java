@@ -906,7 +906,7 @@ public class KnowledgeWebTest extends BaseTestCase
         String idsJson = getResponseData(result);
         return (List<Long>)KnowledgeUtil.readValue(List.class, idsJson);
     }
-    
+
     private List<Long> convertTagIdList(JsonNode result)
     {
         checkResponseWithData(result);
