@@ -654,7 +654,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         filterKnowledge(detail);
         Knowledge updateDetail = this.knowledgeMongoDao.update(detail);
         if (updateDetail != null) {
-            logger.info("update knowledgeDetail: " + updateDetail);
+            logger.info("update knowledge Detail success, knowledgeId: " + updateDetail.getId());
         }
         return updateDetail;
     }
