@@ -223,18 +223,18 @@ public class KnowledgeController extends BaseController {
             data.serUserInfo(user);
             result = this.knowledgeService.update(data);
         } catch (Exception e) {
-            logger.error("知识更新失败！失败原因："+e.getMessage());
+            logger.error("知识更新失败！失败原因： "+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
         if (result == null || !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
-            logger.error("知识更新失败！");
+            logger.error("知识更新失败, result is null or result code is not success.");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
         Knowledge updatedDetail = result.getResponseData();
         if (updatedDetail == null) {
-            logger.error("知识更新失败！");
+            logger.error("知识更新失败, updated knowledge Detail is null");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
