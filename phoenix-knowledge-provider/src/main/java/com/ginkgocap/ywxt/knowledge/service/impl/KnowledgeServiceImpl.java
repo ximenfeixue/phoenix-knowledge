@@ -168,7 +168,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             }
         }
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, updatedKnow);
     }
 
     @Override
