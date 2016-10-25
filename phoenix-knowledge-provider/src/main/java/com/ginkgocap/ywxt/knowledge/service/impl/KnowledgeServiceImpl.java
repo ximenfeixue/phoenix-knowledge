@@ -138,7 +138,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if (updatedKnow == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
         }
-        logger.info("update knowledgeDetail: " + updatedKnow);
+        logger.info("update knowledge Detail, knowledgeId: " + updatedKnow.getId());
         //Update knowledge detail
         DataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = DataCollect.generateKnowledge();
