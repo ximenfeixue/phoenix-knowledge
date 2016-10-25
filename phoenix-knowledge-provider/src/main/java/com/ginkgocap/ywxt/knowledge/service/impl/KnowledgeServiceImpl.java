@@ -127,7 +127,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult update(DataCollect DataCollect) throws Exception {
+    public InterfaceResult<Knowledge> update(DataCollect DataCollect) throws Exception {
 
         Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
         KnowledgeReference knowledgeReference = DataCollect.getReference();
@@ -143,6 +143,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
         }
         logger.info("update knowledgeDetail: " + updatedKnow);
+        //Update knowledge detail
+        DataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = DataCollect.generateKnowledge();
 
         //知识简表更新

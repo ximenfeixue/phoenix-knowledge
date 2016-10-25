@@ -117,6 +117,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 collectionName = getCollectionName(newColumnType);
                 logger.info("update knowledge detail, new collectionName: " + collectionName);
             }
+            knowledge.setColumnType(String.valueOf(newColumnType));
             mongoTemplate.save(knowledge, collectionName);
         }
         else {

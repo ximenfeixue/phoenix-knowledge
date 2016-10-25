@@ -62,7 +62,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult update(DataCollect DataCollect) throws Exception;
+    public InterfaceResult<Knowledge> update(DataCollect DataCollect) throws Exception;
 
     /**
      * 更新，承担以下任务：

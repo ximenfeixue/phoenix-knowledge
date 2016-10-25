@@ -218,7 +218,7 @@ public class KnowledgeController extends BaseController {
         columnTypeAndIdFaultTolerant(detail);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
-        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
+        InterfaceResult<Knowledge> result = null;
         try {
             data.serUserInfo(user);
             result = this.knowledgeService.update(data);
@@ -228,6 +228,12 @@ public class KnowledgeController extends BaseController {
         }
 
         if (result == null || !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
+            logger.error("知识更新失败！");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
+        }
+
+        Knowledge updatedDetail = result.getResponseData();
+        if (updatedDetail == null) {
             logger.error("知识更新失败！");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
@@ -247,6 +253,7 @@ public class KnowledgeController extends BaseController {
         associateServiceLocal.updateAssociate(knowledgeId, user, data);
 
         //send new knowledge to bigdata
+        data.setKnowledgeDetail(updatedDetail);
         KnowledgeBase base = data.generateKnowledge();
         bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, base, userId);
 
