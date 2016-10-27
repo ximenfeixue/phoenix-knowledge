@@ -77,7 +77,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge update(Knowledge knowledge) {
+    public Knowledge update(Knowledge knowledge, int oldType) {
 
         if(knowledge == null) {
             throw new IllegalArgumentException("knowledge is null");
@@ -94,33 +94,19 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
         Query query = knowledgeIdQuery(knowledge.getId());
 
-        int newColumnType = 1;
-        int oldColumnType = 1;
-        int[] columnTypes = KnowledgeUtil.getColumnType(knowledge.getColumnType());
-        if (columnTypes.length > 1) {
-            //new columnType
-            newColumnType = columnTypes[0];
-            //Old columnType
-            oldColumnType = columnTypes[1];
-            logger.info("update knowledge detail, newColumnType: " + newColumnType + ", oldColumnType: " + oldColumnType);
-        }
-        else {
-            newColumnType = oldColumnType = columnTypes[0];
-        }
-
-        String collectionName = getCollectionName(oldColumnType);
+        String columnType = oldType > 0 ? String.valueOf(oldType) : knowledge.getColumnType();
+        String collectionName = getCollectionName(columnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
         if (existValue != null) {
-            if ( newColumnType != oldColumnType) {
+            if ( oldType > 0) {
                 boolean result = remove(query, collectionName);
                 if (result) {
                     logger.info("delete old knowledge detail success, knowledgeId: " + knowledge.getId());
                 }
                 logger.info("update knowledge detail, old collectionName: " + collectionName);
-                collectionName = getCollectionName(newColumnType);
+                collectionName = getCollectionName(knowledge.getColumnType());
                 logger.info("update knowledge detail, new collectionName: " + collectionName);
             }
-            knowledge.setColumnType(String.valueOf(newColumnType));
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
@@ -165,7 +151,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         if (directoryIds != null && directoryIds.contains(directoryId)) {
             directoryIds.remove(directoryId);
             detail.setDirectorys(directoryIds);
-            update(detail);
+            update(detail, -1);
             return true;
         }
         else {

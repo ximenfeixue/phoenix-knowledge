@@ -123,31 +123,31 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public Knowledge update(Knowledge detail) throws Exception
     {
-        return updateKnowledgeDetail(detail);
+        return updateKnowledgeDetail(detail, -1);
     }
 
     @Override
-    public InterfaceResult<Knowledge> update(DataCollect DataCollect) throws Exception {
+    public InterfaceResult<Knowledge> update(DataCollect dataCollect) throws Exception {
 
-        Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
-        KnowledgeReference knowledgeReference = DataCollect.getReference();
+        Knowledge detail = dataCollect.getKnowledgeDetail();
+        KnowledgeReference knowledgeReference = dataCollect.getReference();
 
         //knowledgeMongo.createContendDesc();
         //知识详细表更新
-        Knowledge updatedKnow = updateKnowledgeDetail(knowledgeDetail);
+        Knowledge updatedKnow = updateKnowledgeDetail(detail, dataCollect.getOldType());
         if (updatedKnow == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
         }
         logger.info("update knowledge Detail, knowledgeId: " + updatedKnow.getId());
         //Update knowledge detail
-        DataCollect.setKnowledgeDetail(updatedKnow);
-        KnowledgeBase knowledge = DataCollect.generateKnowledge();
-        Long knowledgeId = knowledgeDetail.getId();
+        dataCollect.setKnowledgeDetail(updatedKnow);
+        KnowledgeBase knowledge = dataCollect.generateKnowledge();
+        Long knowledgeId = detail.getId();
         short columnType = knowledge.getType();
 
         //知识简表更新
         try {
-            knowledge.setPrivated(permissionValue(DataCollect));
+            knowledge.setPrivated(permissionValue(dataCollect));
             this.knowledgeMysqlDao.update(knowledge);
         } catch (Exception e) {
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
@@ -175,12 +175,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public boolean updateKnowledge(DataCollect DataCollect) throws Exception {
+    public boolean updateKnowledge(DataCollect dataCollect) throws Exception {
 
-        KnowledgeBase base = DataCollect.getKnowledge();
-        Knowledge knowledgeDetail = DataCollect.getKnowledgeDetail();
+        KnowledgeBase base = dataCollect.getKnowledge();
+        Knowledge knowledgeDetail = dataCollect.getKnowledgeDetail();
 
-        updateKnowledgeDetail(knowledgeDetail);
+        updateKnowledgeDetail(knowledgeDetail, dataCollect.getOldType());
 
         //知识简表更新
         try {
@@ -644,7 +644,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return savedDetail;
     }
 
-    private Knowledge updateKnowledgeDetail(Knowledge detail)
+    private Knowledge updateKnowledgeDetail(Knowledge detail, int oldType)
     {
         //知识详细表更新
         if (detail == null) {
@@ -652,7 +652,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return null;
         }
         filterKnowledge(detail);
-        Knowledge updateDetail = this.knowledgeMongoDao.update(detail);
+        Knowledge updateDetail = this.knowledgeMongoDao.update(detail, oldType);
         if (updateDetail != null) {
             logger.info("update knowledge Detail success, knowledgeId: " + updateDetail.getId());
         }

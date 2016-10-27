@@ -36,7 +36,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public Knowledge update(Knowledge Knowledge);
+    public Knowledge update(Knowledge Knowledge,int oldType);
 
     /**
      * 先删除后插入

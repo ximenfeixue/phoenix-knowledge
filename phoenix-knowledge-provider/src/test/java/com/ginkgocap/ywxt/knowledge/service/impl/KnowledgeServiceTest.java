@@ -45,19 +45,22 @@ public class KnowledgeServiceTest extends TestBase {
         System.out.println("===testUpdate===");
         try {
             DataCollect dataCollect = createKnowledge("Update-KnowledgeServiceTest");
-            KnowledgeBase knowledge = dataCollect.generateKnowledge();
+            Knowledge detail = dataCollect.getKnowledgeDetail();
 
-            knowledge.setContent("Update-Content-KnowledgeServiceTest");
-            knowledge.setModifyDate(System.currentTimeMillis());
+            detail.setColumnType("2");
+            detail.setContent("Update-Content-KnowledgeServiceTest");
+            detail.setModifytime(String.valueOf(System.currentTimeMillis()));
             KnowledgeReference reference = dataCollect.getReference();
             if (reference != null) {
                 reference.setKnowledgeId(knowledgeIdupdate);
                 reference.setArticleName("update_article_name");
                 reference.setModifyDate(System.currentTimeMillis());
             }
+            dataCollect.setOldType(1);
             dataCollect.serUserId(userId);
-            InterfaceResult<DataCollect> updateData = knowledgeService.update(dataCollect);
+            InterfaceResult<Knowledge> updateData = knowledgeService.update(dataCollect);
             assertResponseNoRetData(updateData);
+            System.out.println(updateData);
         } catch (Exception e) {
             e.printStackTrace();
             TestCase.fail();

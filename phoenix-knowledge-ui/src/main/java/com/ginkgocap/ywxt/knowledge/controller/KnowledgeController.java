@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
+import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
@@ -208,10 +209,9 @@ public class KnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
-        int[] columnTypes = KnowledgeUtil.getColumnType(detail.getColumnType());
-        int columnType = columnTypes.length == 1 ? columnTypes[0] : columnTypes[1];
+        String columnType = data.getOldType() > 0 ? String.valueOf(data.getOldType()) : detail.getColumnType();
         long knowledgeId = detail.getId();
-        if (!permissionServiceLocal.canUpdate(knowledgeId, String.valueOf(columnType), userId)) {
+        if (!permissionServiceLocal.canUpdate(knowledgeId, columnType, userId)) {
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
@@ -2175,7 +2175,7 @@ public class KnowledgeController extends BaseController {
         }
     }
 
-    private List<KnowledgeBase> convertKnowledgeDetailListToBase(List<Knowledge> detailList,short type)
+    private List<KnowledgeBase> convertDetailListToBase(List<Knowledge> detailList,short type)
     {
         if (detailList == null || detailList.size() <=0) {
             return null;
@@ -2193,18 +2193,13 @@ public class KnowledgeController extends BaseController {
 
     private Knowledge columnTypeAndIdFaultTolerant(Knowledge detail)
     {
-        if (StringUtils.isBlank(detail.getColumnType())) {
+        if (StringUtil.inValidString(detail.getColumnType())) {
             logger.warn("column type is null, so set a default value");
             detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
         } else {
-            int[] columnTypes = KnowledgeUtil.getColumnType(detail.getColumnType());
-            int newColumnType = columnTypes[0];
-            if (newColumnType != KnowledgeType.knowledgeType(newColumnType).value()) {
-                logger.warn("column type is invalidated, so set a default value");
-                newColumnType = KnowledgeType.ENews.value();
-                String columnType = columnTypes.length > 1 ? String.valueOf(newColumnType + "," + columnTypes[1]) : String.valueOf(newColumnType);
-                detail.setColumnType(columnType);
-            }
+            int columnType = KnowledgeUtil.parserShortType(detail.getColumnType());
+            columnType = KnowledgeType.knowledgeType(columnType).value();
+            detail.setColumnType(String.valueOf(columnType));
         }
 
         if (StringUtils.isBlank(detail.getColumnid())) {

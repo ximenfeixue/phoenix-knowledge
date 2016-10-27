@@ -30,7 +30,7 @@ public class HttpInterceptor implements HandlerInterceptor {
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("postHandle() ---------------");
+		logger.info("postHandle() ---------------");
 	}
 
 	@Override
