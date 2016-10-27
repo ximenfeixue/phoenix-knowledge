@@ -89,12 +89,11 @@ public class KnowledgeWebTest extends BaseTestCase
         DataCollect data = createKnowledge("KnowledgeWebTest_create");
         Knowledge detail = data != null ? data.getKnowledgeDetail() : null;
         if (detail != null) {
+            detail.setColumnType("2");
             detail.setTitle("KnowledgeWebTest_testUpdateKnowledgeChangeColumnType");
-            final String newColumnType = "2,1";
-            detail.setColumnType(newColumnType);
-            System.out.println("oldColumnType : "+detail.getColumnType() + ", newColumnType: "+newColumnType);
         }
         try {
+            data.setOldType(1);
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
             JsonNode result = HttpRequestResult(HttpMethod.PUT, baseUrl, knowledgeJson);
             checkRequestResultSuccess(result);
