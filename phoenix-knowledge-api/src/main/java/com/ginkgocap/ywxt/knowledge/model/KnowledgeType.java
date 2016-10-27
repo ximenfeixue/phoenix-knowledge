@@ -1,5 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by gintong on 2016/7/12.
  */
@@ -47,6 +50,8 @@ public enum KnowledgeType {
     Class cls;
     String dec;
     String typeName;
+
+    private final static Logger logger = LoggerFactory.getLogger(KnowledgeType.class);
 
     private KnowledgeType(int code,Class cls, String dec, String typeName) {
         this.code = code;
@@ -113,8 +118,10 @@ public enum KnowledgeType {
                 return KnowledgeType.EGame;
             case 19:
                 return KnowledgeType.ESmartHardware;
-            default:
+            default: {
+                logger.error("Can't find the type: " + type + ", so return default value: " + KnowledgeType.ENews.value());
                 return KnowledgeType.ENews;
+            }
         }
     }
 

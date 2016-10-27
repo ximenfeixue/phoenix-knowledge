@@ -13,12 +13,15 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by gintong on 2016/7/18.
  */
 public class DataCollect implements Serializable 
 {
+    private final static Logger logger = LoggerFactory.getLogger(DataCollect.class);
     // 知识简略信息
     private KnowledgeBase knowledge;
 
@@ -36,6 +39,9 @@ public class DataCollect implements Serializable
 
     //同步到动态
     private short updateDynamic;
+
+    //更新知识，更改栏目
+    private int oldType;
 
     public KnowledgeBase getKnowledge() {
         return knowledge;
@@ -99,6 +105,14 @@ public class DataCollect implements Serializable
         this.permission = permission;
     }
 
+    public int getOldType() {
+        return oldType;
+    }
+
+    public void setOldType(int oldType) {
+        this.oldType = oldType;
+    }
+
     public void serUserId(long userId) {
         if (userId <= 0) {
             throw new IllegalArgumentException("User is null");
@@ -138,13 +152,13 @@ public class DataCollect implements Serializable
             int maxLen = contentLen > 250 ? 250 : contentLen;
             knowledgeBase.setContentDesc(knowledgeContent.substring(0, maxLen));
             if (detail.getMultiUrls() != null && detail.getMultiUrls().size() > 0) {
-                System.out.println("save picture: " + detail.getMultiUrls().get(0));
+                logger.info("save picture: " + detail.getMultiUrls().get(0));
                 knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
             }
             //knowledge.setAuditStatus(auditStatus);
             if (detail.getTagList() != null && detail.getTagList().size() > 0) {
                 String tags = KnowledgeUtil.convertLongListToBase(detail.getTagList());
-                System.out.println("create tags for base: " + tags);
+                logger.info("create tags for base: " + tags);
                 knowledgeBase.setTags(tags);
             }
             if (type > 0) {

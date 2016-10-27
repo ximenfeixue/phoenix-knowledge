@@ -35,7 +35,6 @@ import java.util.*;
 public final class KnowledgeUtil {
 
     private final static Logger logger = LoggerFactory.getLogger(KnowledgeUtil.class);
-    private static final boolean writeNumberAsString = false;;
 
     public static Class getKnowledgeClassType(int columnId)
     {
@@ -540,7 +539,7 @@ public final class KnowledgeUtil {
         catch (SocketException ex) {
             logger.error("Get local Ip failed. error: " + ex.getMessage());
         }
-        System.out.println(IFCONFIG);
+        logger.info(IFCONFIG.toString());
         return IFCONFIG.toString();
     }
 
@@ -605,9 +604,10 @@ public final class KnowledgeUtil {
     }
 
     //This only when update knowledge can use it.
+    /*
     public static int [] getColumnType(final String columnType)
     {
-        if (StringUtil.inValidString(columnType)) {
+        if (!StringUtil.inValidString(columnType)) {
             String tempString = columnType;
             int mid = tempString.indexOf(",");
             if (mid > 0) {
@@ -618,7 +618,7 @@ public final class KnowledgeUtil {
             return new int[]{KnowledgeUtil.parserColumnId(columnType)};
         }
         return new int[]{KnowledgeType.ENews.value()};
-    }
+    }*/
 
     //This is just for Unit Test code
     public static String getJsonNodeContentFromObject(final String jsonContent, final String nodeName)
@@ -657,9 +657,8 @@ public final class KnowledgeUtil {
         StringBuffer buffer = new StringBuffer();
         try {
             File file = new File(filePath);
-            System.out.println(filePath);
             if (!file.exists()) {
-                System.err.println(filePath + " not exist!");
+                logger.error(filePath + " not exist!");
                 return null;
             }
             reader = new BufferedReader(new FileReader(file));

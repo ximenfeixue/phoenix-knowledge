@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class AppFilter implements Filter {
 
-    private Logger logger = LoggerFactory.getLogger(AppFilter.class);
+    private final Logger logger = LoggerFactory.getLogger(AppFilter.class);
 
     String excludedUrl = "";
     String[] excludedUrlArray = {};//任何情况都不需要登录，在web.xml里面配置
@@ -79,7 +79,7 @@ public class AppFilter implements Filter {
             res.setHeader("errorCode", "-1");
             try {
                 String str = Encodes.encodeBase64("用户长时间未操作或已过期,请重新登录".getBytes());
-                System.out.println("用户长时间未操作或已过期");
+                logger.info("用户长时间未操作或已过期");
                 res.setHeader("errorMessage", str);
             } catch (Exception e) {
                 e.printStackTrace();

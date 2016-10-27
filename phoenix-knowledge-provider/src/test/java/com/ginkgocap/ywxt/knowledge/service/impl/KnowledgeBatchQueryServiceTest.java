@@ -32,7 +32,7 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     public void testGetKnowledge()
     {
         String[] columnIds = new String[]{"12", "13", "14"};
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.getKnowledge(columnIds, 0, (short)1, 0, 20);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.getKnowledgeDetailList(columnIds, 0, (short)1, 0, 20);
         System.out.println("---knowledgeList: "+knowledgeList);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
     }
