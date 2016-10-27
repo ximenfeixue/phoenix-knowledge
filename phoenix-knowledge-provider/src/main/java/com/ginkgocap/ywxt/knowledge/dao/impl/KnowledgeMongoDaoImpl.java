@@ -98,7 +98,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         String collectionName = getCollectionName(columnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
         if (existValue != null) {
-            if ( oldType > 0) {
+            if (oldType > 0) {
                 boolean result = remove(query, collectionName);
                 if (result) {
                     logger.info("delete old knowledge detail success, knowledgeId: " + knowledge.getId());

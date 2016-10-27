@@ -142,7 +142,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //Update knowledge detail
         dataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = dataCollect.generateKnowledge();
-        Long knowledgeId = detail.getId();
+        long knowledgeId = detail.getId();
         short columnType = knowledge.getType();
 
         //知识简表更新

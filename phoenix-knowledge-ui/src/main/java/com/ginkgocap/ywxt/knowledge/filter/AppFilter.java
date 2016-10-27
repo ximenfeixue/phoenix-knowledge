@@ -79,7 +79,7 @@ public class AppFilter implements Filter {
             res.setHeader("errorCode", "-1");
             try {
                 String str = Encodes.encodeBase64("用户长时间未操作或已过期,请重新登录".getBytes());
-                logger.info("用户长时间未操作或已过期");
+                logger.error(str);
                 res.setHeader("errorMessage", str);
             } catch (Exception e) {
                 e.printStackTrace();
