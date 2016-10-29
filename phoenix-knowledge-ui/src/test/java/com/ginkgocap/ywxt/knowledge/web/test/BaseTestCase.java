@@ -38,7 +38,7 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = true;
+	protected static boolean web = false;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -54,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    private final static String testEnv = envArray[2];
+    public final static String testEnv = envArray[2];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080

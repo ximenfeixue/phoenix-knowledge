@@ -727,7 +727,7 @@ public class KnowledgeWebTest extends BaseTestCase
     	LogMethod();
         createDirectory();
     }
-        
+
     private String collectKnowledge(String title)
     {
         String subUrl = "/collect" + knowledAndColumnIdUrl(title);// "/collect/{knowledgeId/{columnId}"

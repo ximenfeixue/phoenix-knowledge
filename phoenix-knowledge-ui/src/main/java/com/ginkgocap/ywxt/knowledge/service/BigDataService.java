@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;

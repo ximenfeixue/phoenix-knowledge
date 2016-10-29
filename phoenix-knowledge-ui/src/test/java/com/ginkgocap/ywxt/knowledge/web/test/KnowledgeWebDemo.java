@@ -39,8 +39,8 @@ public class KnowledgeWebDemo extends BaseTestCase {
     }
 
     public static void main(String[] args) throws Exception {
-    	bigData();
-    	
+    	//bigData();
+        pusUpdate();
     	/*
     	login(loginUrl);
         KnowledgeWebDemo demo = new KnowledgeWebDemo();
@@ -412,6 +412,29 @@ public class KnowledgeWebDemo extends BaseTestCase {
         }
 
         return null;
+    }
+
+    public static void pusUpdate()
+    {
+        try {
+            String subUrl = "/mobileApp/updateVersion.json";
+            String content = "{\"version\":208,\"updateUrl\":\"http://file.gintong.com/app/gintong.apk\"}";
+
+            JsonNode result = null;
+            if ("dev".equals(testEnv)) {
+                result = HttpRequestResult(HttpMethod.POST, "http://192.168.120.135:8008/cross" + subUrl, content);
+            }
+            else if ("testOnline".equals(testEnv)) {
+                    result = HttpRequestResult(HttpMethod.POST, "http://test.online.gintong.com/cross" + subUrl, content);
+            }
+            else if ("online".equals(testEnv)) {
+                result = HttpRequestResult(HttpMethod.POST, "http://www.gintong.com/cross" + subUrl, content);
+            }
+            checkRequestResultSuccess(result);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     ///////////////////////=======Log Request/Response Message=======//////////////////////
