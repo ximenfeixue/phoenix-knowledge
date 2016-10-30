@@ -25,7 +25,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,7 +32,6 @@ import java.util.*;
  * Created by Admin on 2016/3/24.
  */
 public final class KnowledgeUtil {
-
     private final static Logger logger = LoggerFactory.getLogger(KnowledgeUtil.class);
 
     public static Class getKnowledgeClassType(int columnId)
@@ -501,106 +499,6 @@ public final class KnowledgeUtil {
 
         logger.info("The final UCT time: {}", time);
         return time;
-    }
-    
-    public static InetAddress getInetAddress(){
-        try{
-            return InetAddress.getLocalHost();
-        }catch(UnknownHostException e){
-            logger.error("unknown host!");
-        }
-        return null;
-    }
-
-    public static String getHostIp(){
-        InetAddress netAddress = getInetAddress();
-        if(null == netAddress){
-            return null;
-        }
-        String ip = netAddress.getHostAddress(); //get the ip address
-        return ip;
-    }
-
-    public static String getLocalIp()
-    {
-        StringBuilder IFCONFIG = new StringBuilder();
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
-                        IFCONFIG.append(inetAddress.getHostAddress().toString()+"\n");
-                    }
-
-                }
-            }
-        }
-        catch (SocketException ex) {
-            logger.error("Get local Ip failed. error: " + ex.getMessage());
-        }
-        logger.info(IFCONFIG.toString());
-        return IFCONFIG.toString();
-    }
-
-    public static String getLocalAddress() {
-        try {
-            // Traversal Network interface to get the first non-loopback and non-private address
-            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
-            ArrayList<String> ipv4Result = new ArrayList<String>();
-            ArrayList<String> ipv6Result = new ArrayList<String>();
-            while (enumeration.hasMoreElements()) {
-                final NetworkInterface networkInterface = enumeration.nextElement();
-                final Enumeration<InetAddress> en = networkInterface.getInetAddresses();
-                while (en.hasMoreElements()) {
-                    final InetAddress address = en.nextElement();
-                    if (!address.isLoopbackAddress()) {
-                        if (address instanceof Inet6Address) {
-                            ipv6Result.add(normalizeHostAddress(address));
-                        }
-                        else {
-                            ipv4Result.add(normalizeHostAddress(address));
-                        }
-                    }
-                }
-            }
-
-            // prefer ipv4
-            if (!ipv4Result.isEmpty()) {
-                for (String ip : ipv4Result) {
-                    if (ip.startsWith("127.0") || ip.startsWith("192.168")) {
-                        continue;
-                    }
-
-                    return ip;
-                }
-
-                return ipv4Result.get(ipv4Result.size() - 1);
-            }else if (!ipv6Result.isEmpty()) {
-                return ipv6Result.get(0);
-            }
-            //If failed to find,fall back to localhost
-            final InetAddress localHost = InetAddress.getLocalHost();
-            return normalizeHostAddress(localHost);
-        }
-        catch (SocketException e) {
-            e.printStackTrace();
-        }
-        catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-
-    public static String normalizeHostAddress(final InetAddress localHost) {
-        if (localHost instanceof Inet6Address) {
-            return "[" + localHost.getHostAddress() + "]";
-        }
-        else {
-            return localHost.getHostAddress();
-        }
     }
 
     //This only when update knowledge can use it.

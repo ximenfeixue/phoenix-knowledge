@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.NetworkUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 
 public class IdGeneratorFactory {
@@ -17,7 +17,7 @@ public class IdGeneratorFactory {
     public static DefaultIdGenerator idGenerator(MongoTemplate mongoTemplate)
     {
     	DefaultIdGenerator defaultIdGenerator = null;
-        String ipAddress = KnowledgeUtil.getHostIp();
+        String ipAddress = NetworkUtil.getLocalIp();
         if (ipAddress == null) {
             logger.error("Can't get host Ip address, please check the host configure..");
             //Dummy a address
