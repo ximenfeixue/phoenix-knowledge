@@ -67,7 +67,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             knowledgeBase.setPrivated(permissionValue(DataCollect));
             this.knowledgeMysqlDao.insert(knowledgeBase);
-            logger.info("End insert knowledge to tb_knowledge_base. knowledgeId: " + knowledgeBase.getId());
+            logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + knowledgeBase.getId());
         } catch (Exception e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
@@ -107,14 +107,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         try {
             List<Knowledge> savedList = this.knowledgeMongoDao.insertList(knowledgeList, type);
             if (CollectionUtils.isNotEmpty(savedList)) {
-                logger.info("End insert knowledge List to mongo success. size: " + savedList.size());
+                logger.info("insert knowledge List to mongo success. size: " + savedList.size());
             }
             else {
-                logger.info("End insert knowledge List to mongo failed." );
+                logger.info("insert knowledge List to mongo failed." );
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
             }
         } catch (Exception ex) {
-            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
+            logger.error("create knowledge detail failed: error:  " + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -627,7 +627,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             filterKnowledge(detail);
             detail.setStatus(4);
             this.knowledgeMongoDao.insert(detail);
-            logger.info("End insert knowledge to mongo. knowledgeId: " + detail.getId());
+            logger.info("insert knowledge to mongo success. knowledgeId: " + detail.getId());
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);

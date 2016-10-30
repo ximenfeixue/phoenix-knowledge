@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.web.test;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.NetworkUtil;
 
 public class TagWebTest extends BaseTestCase {
 
@@ -75,11 +76,11 @@ public class TagWebTest extends BaseTestCase {
 
 	public void testTest()
 	{
-		String ipList = KnowledgeUtil.getLocalIp();
+		String ipList = NetworkUtil.getLocalIp();
 		String[] ips = ipList.split("\n");
 		for (String IP : ips) {
 			System.out.println("Host IP1: " + IP);
 		}
-		System.out.println("Host IP2: " + KnowledgeUtil.getLocalAddress());
+		System.out.println("Host IP2: " + NetworkUtil.getLocalAddress());
 	}
 }

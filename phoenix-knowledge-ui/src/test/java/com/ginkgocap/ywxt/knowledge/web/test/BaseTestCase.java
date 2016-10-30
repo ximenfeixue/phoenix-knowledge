@@ -54,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    public final static String testEnv = envArray[2];
+    public final static String testEnv = envArray[1];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -94,7 +94,7 @@ public abstract class BaseTestCase extends TestCase
     @Override
     protected void runTest() throws Throwable
     {
-    	login(loginUrl);
+    	login();
         if (runTestCase) {
             super.runTest();
         }
@@ -505,6 +505,11 @@ public abstract class BaseTestCase extends TestCase
                 e.printStackTrace();
             }
         }
+    }
+
+    protected static void login()
+    {
+        login(loginUrl);
     }
     
     private static String getLoginUrl(boolean web)
