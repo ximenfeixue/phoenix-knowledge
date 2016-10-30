@@ -37,7 +37,17 @@ public class KnowledgeServiceTest extends TestBase {
     @Test
 	public void testInsert() {
         System.out.println("===testInsert===");
-        createKnowledge("KnowledgeServiceTest");
+        DataCollect collect = createKnowledge("KnowledgeServiceTest");
+    }
+
+    @Test
+    public void testInsertDetail() {
+        System.out.println("===testInsertDetail===");
+        DataCollect dataCollect = TestData.getDataCollect(userId, 1, "testInsertDetail");
+        Knowledge detail = dataCollect.getKnowledgeDetail();
+        Knowledge savedDetail = this.insertKnowledgeDetail(detail);
+        //detail.setTitle("testInsertDetail_Update");
+        //savedDetail = this.insertKnowledgeDetail(detail);
     }
 
     @Test
@@ -328,6 +338,17 @@ public class KnowledgeServiceTest extends TestBase {
         }
 
         return dataCollect;
+    }
+
+    private Knowledge insertKnowledgeDetail(Knowledge detail)
+    {
+        try {
+            return knowledgeService.insert(detail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TestCase.fail();
+        }
+        return null;
     }
 	
 }

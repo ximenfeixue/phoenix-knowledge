@@ -43,15 +43,14 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     @Override
     public Knowledge insert(Knowledge knowledge) throws Exception {
-        if(knowledge == null) {
+        if (knowledge == null) {
             throw new IllegalArgumentException("Knowledge is null");
         }
 
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
         knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
-        mongoTemplate.save(knowledge, currCollectionName);
-
+        mongoTemplate.insert(knowledge, currCollectionName);
         return knowledge;
     }
 
@@ -98,6 +97,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         String collectionName = getCollectionName(columnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
         if (existValue != null) {
+            if (existValue.getCid() != knowledge.getCid() || existValue.getUid() != knowledge.getUid()) {
+                logger.error("can't update this knowledge, because of owner is different. knowledgeId: " + knowledge.getId() +
+                " exist cid :" + existValue.getCid() + " new cid: " + knowledge.getCid());
+                return null;
+            }
             if (oldType > 0) {
                 boolean result = remove(query, collectionName);
                 if (result) {
