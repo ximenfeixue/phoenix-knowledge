@@ -14,10 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by gintong on 2016/10/30.
  */
-@Controller
-@RequestMapping("/knowledgeAdmin")
-public class KnowledgeAdminControl extends BaseController
+//@Controller
+//@RequestMapping("/knowledgeAdmin")
+public class KnowledgeAdminControl// extends BaseController
 {
+    /*
     @Autowired
     private KnowledgeService knowledgeService;
 
@@ -39,5 +40,5 @@ public class KnowledgeAdminControl extends BaseController
     public InterfaceResult deleteBaseKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         return null;
-    }
+    }*/
 }
