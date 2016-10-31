@@ -16,14 +16,14 @@ public class NetworkUtil
 
     public static String getLocalIp()
     {
-        StringBuilder IFCONFIG = new StringBuilder();
+        StringBuilder ipConfig = new StringBuilder();
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
                 for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
-                        IFCONFIG.append(inetAddress.getHostAddress().toString()+"\n");
+                        ipConfig.append(inetAddress.getHostAddress().toString() + "\n");
                     }
                 }
             }
@@ -31,8 +31,8 @@ public class NetworkUtil
         catch (SocketException ex) {
             logger.error("Get local Ip failed. error: " + ex.getMessage());
         }
-        logger.info(IFCONFIG.toString());
-        return IFCONFIG.toString();
+        logger.info("local IP is:" + ipConfig.toString());
+        return ipConfig.toString();
     }
 
     public static String getLocalAddress() {
