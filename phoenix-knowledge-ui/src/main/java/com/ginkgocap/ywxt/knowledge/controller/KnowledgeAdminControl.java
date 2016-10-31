@@ -23,14 +23,20 @@ public class KnowledgeAdminControl extends BaseController
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
-    public InterfaceResult update(HttpServletRequest request, HttpServletResponse response) throws Exception
+    public InterfaceResult updateKnowledgeDetail(HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+        return null;
+    }
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.PUT)
+    public InterfaceResult updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         return null;
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE)
-    public InterfaceResult delete(HttpServletRequest request, HttpServletResponse response) throws Exception
+    public InterfaceResult deleteBaseKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         return null;
     }
