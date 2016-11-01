@@ -164,7 +164,7 @@ public class KnowledgeController extends BaseController {
 
         //Sync to dynamic news
         if (syncToDynamic) {
-            String dynamicNews = createDynamicNews(detail, user.isVirtual());
+            String dynamicNews = createDynamicNews(detail, user);
             dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId, assoMap);
             /*
             DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail, user.isVirtual());
@@ -2111,18 +2111,18 @@ public class KnowledgeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(page);
     }
 
-    private DataSync createDynamicNewsDataSync(Knowledge detail,boolean isVirtual)
+    private DataSync createDynamicNewsDataSync(Knowledge detail, User user)
     {
         DataSync data = new DataSync();
         data.setIdType((short)5);
         data.setResId(detail.getId());
         data.setUserId(detail.getCid());
         data.setAction(EActionType.EAddDynamic.getValue());
-        data.setContent(createDynamicNews(detail,isVirtual));
+        data.setContent(createDynamicNews(detail, user));
         return data;
     }
 
-    private String createDynamicNews(Knowledge detail,boolean isVirtual)
+    private String createDynamicNews(Knowledge detail,User user)
     {
         DynamicNews dynamic = new DynamicNews();
         dynamic.setType("11"); //创建知识
@@ -2142,7 +2142,7 @@ public class KnowledgeController extends BaseController {
         //dynamic.setId();
         dynamic.setImgPath(detail.getPic());
         dynamic.setKnowledgeCount(0);
-        String createType = isVirtual ? "2" : "1";
+        String createType = user.isVirtual() ? "2" : "1";
         dynamic.setCreateType(createType);
         dynamic.setScope(String.valueOf(0));
         Location location = new Location();
@@ -2153,6 +2153,8 @@ public class KnowledgeController extends BaseController {
         location.setSecondLevel("");
         location.setType("");
         dynamic.setLocation(location);
+        dynamic.setPicPath(user.getPicPath());
+        logger.info("create knowledge, set userPicPath: "+user.getPicPath());
         dynamic.setPeopleRelation(new ArrayList<RelationUserInfo>(0));
         dynamic.setComments(new ArrayList<DynamicComment>(0));
         dynamic.setPicturePaths(new ArrayList<Picture>(0));
