@@ -170,9 +170,9 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            //Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
-            long knowledgeId = 31609281923241L; //detail.getId();
-            int columnId = 1; //KnowledgeUtil.parserColumnId(detail.getColumnid());
+            Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            long knowledgeId = detail.getId();
+            int columnId = KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}
             knowledgeDetailWeb(baseUrl, knowledgeId, columnId);
         } catch (Exception e) {

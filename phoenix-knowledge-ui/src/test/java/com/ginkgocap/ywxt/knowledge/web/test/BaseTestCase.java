@@ -54,7 +54,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    public final static String testEnv = envArray[2];
+    public final static String testEnv = envArray[1];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -62,11 +62,11 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://192.168.120.135:8008/cross" + getLoginUrl(web);
+            loginUrl = "http://192.168.101.131:8008/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            loginUrl = "http://192.168.120.135:8008/cross" + getLoginUrl(web);
+            loginUrl = "http://192.168.101.131:8008/cross" + getLoginUrl(web);
             hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/cross");
         }
         else if ("testOnline".equals(testEnv)) {
@@ -459,6 +459,7 @@ public abstract class BaseTestCase extends TestCase
             if (data != null && data.getKnowledgeDetail() != null) {
                 data.getKnowledgeDetail().setTagList(tagIds);
                 data.getKnowledgeDetail().setDirectorys(directoryIds);
+                data.getKnowledgeDetail().setColumnid("153");
                 //data.getKnowledgeDetail().setContent(content);
                 String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
                 JsonNode response = HttpRequestFull(HttpMethod.POST, baseUrl, knowledgeJson);

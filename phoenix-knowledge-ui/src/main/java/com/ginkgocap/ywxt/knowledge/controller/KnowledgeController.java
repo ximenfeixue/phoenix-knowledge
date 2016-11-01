@@ -533,11 +533,11 @@ public class KnowledgeController extends BaseController {
             List<Long> directoryIds = detail.getDirectorys();
             List<IdName> minTags = this.getMinTagList(userId, tags);
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
-            logger.info("get minTags: " + minTags + " minDirectoryList: " + minDirectoryList);
+            logger.debug("get minTags: " + minTags + " minDirectoryList size: " + minDirectoryList.size());
             long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
             ColumnSelf columnSelf = getColumn(columnId);
             IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
-            logger.info("get column info: " + column);
+            logger.info("get column info: Id: " + column.getId() + " name: "+column.getName());
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
             jacksonValue = knowledgeDetail(data);
