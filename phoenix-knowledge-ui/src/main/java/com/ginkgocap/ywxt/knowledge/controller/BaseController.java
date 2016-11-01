@@ -7,17 +7,15 @@ import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
-import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
 import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
-import org.parasol.column.service.ColumnCustomService;
+import org.parasol.column.service.ColumnSelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -116,11 +114,11 @@ public abstract class BaseController {
         return user;
     }
 
-    protected String [] getChildIdListByColumnId(ColumnCustomService columnCustomService, int columnId, long userId)
+    protected String [] getChildIdListByColumnId(ColumnSelfService columnSelfService, int columnId, long userId)
     {
         List<ColumnSelf> columnList = null;
         try {
-            columnList = columnCustomService.queryListByPidAndUserId((long) columnId, userId);
+            columnList = columnSelfService.queryListByPidAndUserId((long) columnId, userId);
         } catch (Exception ex) {
             logger.error("invoke queryListByPidAndUserId failed: error: {}", ex.getMessage());
         }

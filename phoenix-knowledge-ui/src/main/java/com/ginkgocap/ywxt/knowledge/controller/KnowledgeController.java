@@ -24,9 +24,8 @@ import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.parasol.column.entity.ColumnCustom;
 import org.parasol.column.entity.ColumnSelf;
-import org.parasol.column.service.ColumnCustomService;
+import org.parasol.column.service.ColumnSelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class KnowledgeController extends BaseController {
     private KnowledgeOtherService knowledgeOtherService;
 
     @Autowired
-    private ColumnCustomService columnCustomService;
+    private ColumnSelfService columnSelfService;
 
     @Autowired
     private KnowledgeBatchQueryService knowledgeBatchQueryService;
@@ -535,8 +534,9 @@ public class KnowledgeController extends BaseController {
             List<IdName> minTags = this.getMinTagList(userId, tags);
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
             logger.info("get minTags: " + minTags + " minDirectoryList: " + minDirectoryList);
-            ColumnCustom columnCustom = getColumn(detail.getColumnid());
-            IdName column = columnCustom != null ? new IdName(columnCustom.getCid(), columnCustom.getColumnname()) : null;
+            long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+            ColumnSelf columnSelf = getColumn(columnId);
+            IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
             logger.info("get column info: " + column);
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
@@ -889,7 +889,7 @@ public class KnowledgeController extends BaseController {
         if (source == KnowledgeConstant.SOURCE_GINTONG_BRAIN) {
             //First get total;
             userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
-            String [] idList = getChildIdListByColumnId(columnCustomService, columnId, userId);
+            String [] idList = getChildIdListByColumnId(columnSelfService, columnId, userId);
             if (total == -1) {
                 logger.info("begin to get knowledge count:");
                 total = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
@@ -906,9 +906,9 @@ public class KnowledgeController extends BaseController {
             }
         }
         else if (source == KnowledgeConstant.SOURCE_ALL_PLATFORM) {
-            ColumnCustom column = null;
+            ColumnSelf column = null;
             try {
-                column = columnCustomService.queryByCid((long) columnId);
+                column = columnSelfService.selectByPrimaryKey((long) columnId);
             } catch (Exception ex) {
                 logger.error("Get column failed: error: {}", ex.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，栏目服务当前不可用!");
@@ -992,18 +992,18 @@ public class KnowledgeController extends BaseController {
             long userId = this.getUserId(user);
             logger.info("进入知识分类首页！");
 
-            ColumnCustom column = columnCustomService.queryByCid((long) type);
+            ColumnSelf column = columnSelfService.selectByPrimaryKey((long) type);
             if (column != null) {
                 type = column.getType().shortValue();
             }
-            ColumnCustom c = null;
-            ColumnCustom co = null;
-            co = columnCustomService.queryByCid((long) type);// 一级栏目
-            c = columnCustomService.queryByCid((long) columnId);// 当前栏目
+            ColumnSelf c = null;
+            ColumnSelf co = null;
+            co = columnSelfService.selectByPrimaryKey((long) type);// 一级栏目
+            c = columnSelfService.selectByPrimaryKey((long) columnId);// 当前栏目
 
             // 获取栏目列表
             Map<String, Object> model = new HashMap<String, Object>(20);
-            List<ColumnSelf> cl = columnCustomService.queryListByPidAndUserId((long)type, userId);
+            List<ColumnSelf> cl = columnSelfService.queryListByPidAndUserId((long)type, userId);
             model = putKnowledge(model, type, columnId, userId, page, size);
             model.put("cl", cl);
             model.put("column", c);
@@ -2218,7 +2218,7 @@ public class KnowledgeController extends BaseController {
             String columnPath = null;
             try {
                 long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
-                ColumnCustom column = columnCustomService.queryByCid(columnId);
+                ColumnSelf column = columnSelfService.selectByPrimaryKey(columnId);
                 if (column != null) {
                     columnPath = column.getPathName();
                 }
@@ -2236,13 +2236,12 @@ public class KnowledgeController extends BaseController {
         return detail;
     }
 
-    private ColumnCustom getColumn(String columnId)
+    private ColumnSelf getColumn(long columnId)
     {
-        long id = KnowledgeUtil.parserStringIdToLong(columnId);
-        if (id > 0) {
+        if (columnId > 0) {
             try {
                 logger.info("Query column by Id. columnId: "+columnId);
-                return columnCustomService.queryByCid(id);
+                return columnSelfService.selectByPrimaryKey(columnId);
             } catch (Exception ex) {
                 logger.error("Get column failed: error {}", ex.getMessage());
             }
