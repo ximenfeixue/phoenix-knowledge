@@ -533,7 +533,8 @@ public class KnowledgeController extends BaseController {
             List<Long> directoryIds = detail.getDirectorys();
             List<IdName> minTags = this.getMinTagList(userId, tags);
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
-            logger.debug("get minTags: " + minTags + " minDirectoryList size: " + minDirectoryList.size());
+            logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
+                         " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
             long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
             ColumnSelf columnSelf = getColumn(columnId);
             IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;

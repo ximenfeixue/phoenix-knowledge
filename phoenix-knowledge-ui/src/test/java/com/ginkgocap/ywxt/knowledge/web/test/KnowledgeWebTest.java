@@ -181,8 +181,6 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
     
-    
-    
     public void testMultiThreadKnowledgeDetail()
     {
         LogMethod();
