@@ -157,24 +157,22 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         return newPermission;
     }
 
-    public Permission updatePermissionInfo(final long userId, final long knowledgeId, final Permission permission)
+    public Permission updatePermissionInfo(final long userId, final long knowledgeId, Permission permission)
     {
         if (permission == null) {
             logger.error("No permission info give, so skip to update");
             return null;
         }
-        Permission newPermission = null;
+
         try {
-            newPermission = permissionInfo(permission, knowledgeId, userId);
-            if (newPermission != null) {
-                permissionRepositoryService.update(newPermission);
-            }
+            permissionInfo(permission, knowledgeId, userId);
+            permissionRepositoryService.update(permission);
         } catch (Exception e) {
             logger.error("Update knowledge permission failed : error: {}", e.getMessage());
             return null;
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
-        return newPermission;
+        return permission;
     }
 
     public boolean deletePermissionInfo(long userId,long knowledgeId)
