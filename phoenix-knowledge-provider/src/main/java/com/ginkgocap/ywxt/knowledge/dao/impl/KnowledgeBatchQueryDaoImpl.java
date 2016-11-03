@@ -452,7 +452,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
 
     private void saveKnowledgeToCache(final List<Knowledge> result, final String key)
     {
-        if (result == null || result.size() <= 0) {
+        if (CollectionUtils.isEmpty(result)) {
             logger.error("The knowledge is null, so skip..");
         }
         if (StringUtils.isEmpty(key)) {
