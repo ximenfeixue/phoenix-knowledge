@@ -15,11 +15,7 @@ public interface KnowledgeBatchQueryService
 {
     public List<Knowledge> getKnowledgeDetailList(String[] columnID,long user_id,short type,int offset,int limit);
 
-    long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long user_id,short type);
-
-    List<Knowledge> fetchFriendKw(long[] kid,short type,int offset,int limit);
-
-    long fetchFriendKwCount(long[] kid,short type) ;
+    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long user_id,short type);
 
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size);
 

@@ -30,13 +30,8 @@ import com.ginkgocap.ywxt.util.PageUtil;
  */
 @Service("knowledgeBatchQueryService")
 public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryService {
-
-    private static final Logger logger = LoggerFactory.getLogger(KnowledgeBatchQueryServiceImpl.class);
-
     @Autowired
     private KnowledgeBatchQueryDao knowledgeBatchQueryDao;
-
-    private final String dataUrl = "http://192.168.130.119:8090";
 
     @Override
     public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type) {
@@ -68,15 +63,5 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     public List<KnowledgeBase> getAllByParamBase(short type, int columnId, String columnPath, long userId, int start, int size)
     {
         return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
-    }
-
-    @Override
-    public List<Knowledge> fetchFriendKw(long[] kid, short type, int offset, int limit) {
-        return knowledgeBatchQueryDao.fetchFriendKw(kid, type, offset, limit);
-    }
-
-    @Override
-    public long fetchFriendKwCount(long[] kid, short type) {
-        return knowledgeBatchQueryDao.fetchFriendKwCount(kid, type);
     }
 }

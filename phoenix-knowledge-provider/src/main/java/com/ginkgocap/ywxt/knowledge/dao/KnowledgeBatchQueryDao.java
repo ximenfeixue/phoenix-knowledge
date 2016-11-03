@@ -11,22 +11,7 @@ import java.util.Map;
  */
 public interface KnowledgeBatchQueryDao {
 
-    long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId,short type) ;
-
-    List<Knowledge> getMixKnowledge(String columnID,long userId,short type,int offset,int limit);
-
-    long getMixKnowledgeCount(String columnID,long userId,short type);
-
-    /**
-     * 从MySQL中查询出的knowledge_id和type  填充相应的knowledge 形成List
-     */
-    List<Knowledge>  fileKnowledge(Map<Long,Integer> map);
-
-    List<Knowledge> fetchFriendKw(long[] kid,short type,int offset,int limit);
-
-    long fetchFriendKwCount(long[] kid, short type) ;
-
-    public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size);
+    public long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId,short type);
 
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size);
 
@@ -35,8 +20,6 @@ public interface KnowledgeBatchQueryDao {
     public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size);
 
     public List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size);
-
-    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type);
 
     public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size);
 

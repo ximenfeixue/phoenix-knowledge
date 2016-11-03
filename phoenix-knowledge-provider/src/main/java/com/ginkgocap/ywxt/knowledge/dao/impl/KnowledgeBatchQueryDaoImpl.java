@@ -83,83 +83,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     }
 
     @Override
-    public List<Knowledge> getMixKnowledge(String columnID, long userId, short type, int offset, int limit) {
-        String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        return mongoTemplate.find(query(where("columnid").is(columnID).and("uid").in(Arrays.asList(new Long[]{0L,userId}))).skip(offset).limit(limit), Knowledge.class,collectionName);
-
-    }
-
-    @Override
-    public long getMixKnowledgeCount(String columnID, long userId, short type) {
-        String collectionName = getCollectionName(type);
-        return mongoTemplate.count(query(where("columnid").is(columnID).and("uid").in(Arrays.asList(new Long[]{0L,userId}))), collectionName);
-    }
-
-    @Override
-    public List<Knowledge> fileKnowledge(Map<Long, Integer> map) {
-        if(map == null || map.size() == 0) return null;
-        Set<Entry<Long,Integer>> set = map.entrySet();
-        Iterator<Entry<Long,Integer>> it = set.iterator();
-        List<Knowledge> result = new ArrayList<Knowledge>();
-        while(it.hasNext()) {
-            Entry<Long,Integer> entry = it.next();
-            long kid = entry.getKey();
-            int value = entry.getValue();
-            String collectionName = getCollectionName((short)value);
-            Knowledge knowledge = mongoTemplate.findOne(query(where("_id").is(kid)),Knowledge.class, collectionName);
-            if(knowledge != null) result.add(knowledge);
-
-        }
-        return result;
-    }
-
-    @Override
-    public List<Knowledge> fetchFriendKw(long[] kid, short type,int offset,int limit) {
-        String collectionName = getCollectionName(type);
-        String column = KnowledgeUtil.getKnowledgeTypeName(type);
-
-        if(StringUtils.isEmpty(column)) {
-            System.out.println(String.format("column=%s,type=%d", column,type));
-            return null;
-        }
-
-       /*List<Long> list = new ArrayList<Long>(kid.length);
-        for(int i = 0; i < kid.length; i++) {
-            list.add(kid[i]);
-        }
-        Criteria ctri = new Criteria("cpathid");
-        ctri.regex("^" + column + ".*$").and("status").is("4");*/
-        if(kid == null || kid.length == 0) return null;
-        List<Long> list = new ArrayList<Long>(kid.length);
-        for(int i = 0; i < kid.length; i++) {
-            list.add(kid[i]);
-        }
-        Criteria ctri = Criteria.where("_id").in(list).and("cpathid").regex("^" + column + ".*$").and("status").is(4);
-        Query query_n = new Query(ctri);
-        return mongoTemplate.find(query_n.limit(limit),Knowledge.class, collectionName);
-
-    }
-
-
-    //{"_id":{ "$in":[]},"$and":[{"cpathid":{ "$regex":"^资讯.*$"}},{"status":4}]}
-    @Override
-    public long fetchFriendKwCount(long[] kid, short type) {
-        String collectionName = getCollectionName(type);
-
-        String column = KnowledgeUtil.getKnowledgeTypeName(type);
-        if(StringUtils.isEmpty(column)) {
-            logger.error("column : {}, type: {}", column,type);
-            return 0L;
-        }
-
-        String knowledge = (kid == null || kid.length == 0) ? "[]" : JSONArray.fromObject(kid).toString();
-        String result = String.format("{\"_id\":{ \"$in\":%s},\"$and\":[{\"cpathid\":{ \"$regex\":\"^%s.*$\"}},{\"status\":4}]}", knowledge,column);
-        BasicQuery query = new BasicQuery(result);
-        long count = mongoTemplate.count(query, collectionName);
-        return count;
-    }
-
-    @Override
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size)
     {
         return getAllByParam(type, columnId, columnPath, -1, start, size);
@@ -383,30 +306,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             loadingMap.remove(key);
         }
         return result;
-    }
-
-    @Override
-    public List<Knowledge> getKnowledgeByUserIdAndColumnIds(int[] columnIds,long userId, short type,int start,int size)
-    {
-        final String collectionName = this.getCollectionName(type);
-        final List<String> list = new ArrayList<String>(columnIds.length);
-        for(int i = 0; i < columnIds.length; i++) {
-            list.add(String.valueOf(columnIds[i]));
-        }
-        Query query = new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)).skip(start).limit(size);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        return mongoTemplate.find(query, Knowledge.class, collectionName);
-    }
-
-    @Override
-    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID,long userId, short type)
-    {
-        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
-        final List<String> list = new ArrayList<String>(columnID.length);
-        for(int i = 0; i < columnID.length; i++) {
-            list.add(columnID[i]);
-        }
-        return mongoTemplate.count(new Query(Criteria.where("uid").is(userId).and("columnid").in(list).and("status").is(4)), collectionName);
     }
 
     // 首页主页
