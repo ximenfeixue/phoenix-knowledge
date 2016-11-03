@@ -166,7 +166,6 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
 
         try {
             permissionInfo(permission, knowledgeId, userId);
-            logger.info("Update permission: pub: "+permission.getPublicFlag()+" conn: "+permission.getConnectFlag());
             permissionRepositoryService.update(permission);
         } catch (Exception e) {
             logger.error("Update knowledge permission failed : error: {}", e.getMessage());
