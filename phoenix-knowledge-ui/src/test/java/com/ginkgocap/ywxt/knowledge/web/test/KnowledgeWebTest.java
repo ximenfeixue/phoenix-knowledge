@@ -153,7 +153,6 @@ public class KnowledgeWebTest extends BaseTestCase
         }
     }
 
-
     public void testKnowledgeDetail()
     {
         LogMethod();
@@ -207,7 +206,6 @@ public class KnowledgeWebTest extends BaseTestCase
 						}
 					}}).start();
         	}*/
-
         } catch (Exception e) {
             e.printStackTrace();
             fail();
