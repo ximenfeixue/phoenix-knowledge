@@ -72,6 +72,9 @@ public class KnowledgeWebTest extends BaseTestCase
         try {
             DataCollect data = createKnowledge("KnowledgeWebTest_create");
             data.getKnowledgeDetail().setTitle("KnowledgeWebTest_Update");
+            data.getPermission().setPublicFlag(0);
+            data.getPermission().setConnectFlag(0);
+            data.getPermission().setShareFlag(0);
             //data.getKnowledgeDetail().setTagList(getTagList());
             //data.getKnowledgeDetail().setDirectorys(getDirectoryList());
             String knowledgeJson = KnowledgeUtil.writeObjectToJson(assoFilter, data);
@@ -170,7 +173,7 @@ public class KnowledgeWebTest extends BaseTestCase
     {
         LogMethod();
         try {
-            Knowledge detail = createKnowledgeWithTagAndDirectory("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
+            Knowledge detail = createKnowledge("KnowledgeWebTest_testKnowledgeDetail").getKnowledgeDetail();
             long knowledgeId = detail.getId();
             int columnId = KnowledgeUtil.parserColumnId(detail.getColumnid());
             //String subUrl = "/" + knowledgeId + "/" + columnId;  ///web/{knowledgeId}/{columnId}

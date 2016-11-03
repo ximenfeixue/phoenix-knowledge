@@ -171,9 +171,9 @@ public class TestData {
         permission.setResId(knowledgeId);
         permission.setResType(ResourceType.KNOW.getVal());
         permission.setResOwnerId(ownerId);
-        permission.setPublicFlag(1);//公开-1，私密-0
-        permission.setShareFlag(1);//可分享-1,不可分享-0
-        permission.setConnectFlag(-1);//可对接-1,不可对接-0
+        permission.setPublicFlag(1);//公开1，私密-0
+        permission.setShareFlag(1);//可分享1,不可分享-0
+        permission.setConnectFlag(-1);//可对接1,不可对接-0
 
         return permission;
     }
