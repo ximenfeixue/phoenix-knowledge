@@ -43,6 +43,7 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
         return knowledgeBatchQueryDao.getKnowledge(columnID, userIdd, type, start, size);
     }
 
+    @Override
     public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size)
     {
         return knowledgeBatchQueryDao.selectPlatform(type, columnId, columnPath, userId, start, size);
