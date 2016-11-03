@@ -166,7 +166,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
                 ids = knowledgeIds.subList(fromIndex, toIndex);
             }
-            if (ids != null && ids.size() > 0) {
+            if (CollectionUtils.isNotEmpty(ids)) {
                 long begin = System.currentTimeMillis();
                 Criteria criteria = new Criteria();
                 criteria.and("_id").in(ids);
