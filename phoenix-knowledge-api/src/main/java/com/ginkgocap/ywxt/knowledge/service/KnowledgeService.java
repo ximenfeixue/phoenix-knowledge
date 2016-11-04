@@ -291,12 +291,20 @@ public interface KnowledgeService
      * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
      * @param keyWord
+     * @return
+     * @throws Exception
+     */
+    public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
+    /**
+     * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
+     * <p>1、知识基础表信息</P>
+     * @param keyWord
      * @param start
      * @param size
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByKeyWord(long userId,int start,int size,String keyWord) throws Exception;
+    public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>

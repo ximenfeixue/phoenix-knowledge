@@ -824,7 +824,7 @@ public class KnowledgeController extends BaseController {
                 knowledgeBaseItems = this.knowledgeService.getBaseByCreateUserId(usrId, start, size);
             }
             else {
-                knowledgeBaseItems = this.knowledgeService.getBaseByKeyWord(usrId, start, size, keyWord);
+                knowledgeBaseItems = this.knowledgeService.getByUserIdKeyWord(usrId, keyWord, start, size);
             }
             result.setResponseData(knowledgeBaseItems);
         } catch (Exception e) {
@@ -1906,7 +1906,7 @@ public class KnowledgeController extends BaseController {
                 createdKnowledgeItems = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
             }
             else {
-                createdKnowledgeItems = this.knowledgeService.getBaseByKeyWord(userId, start, size, keyWord);
+                createdKnowledgeItems = this.knowledgeService.getByUserIdKeyWord(userId, keyWord, start, size);
             }
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());

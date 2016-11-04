@@ -200,8 +200,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		return this.getSubEntitys("get_public_by_columnId", start, size, columnId, permission);
 	}
 
+	@Override
+	public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception
+	{
+		return this.countEntitys("get_by_createUserId_keyWord", userId, "%" + keyWord + "%");
+	}
+
     @Override
-    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
+    public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
 	{
         return this.getSubEntitys("get_by_createUserId_keyWord", start, size, userId, "%"+keyWord+"%");
     }

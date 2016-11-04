@@ -177,6 +177,13 @@ public interface KnowledgeMysqlDao {
 	 */
 	public List<KnowledgeBase> getPublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
 
+	/**
+	 * 根据关键字提取
+	 * @param keyWord
+	 * @return
+	 * @throws Exception
+	 */
+	public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
     /**
      * 根据关键字提取
      * @param keyWord
@@ -185,7 +192,7 @@ public interface KnowledgeMysqlDao {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByCreateUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
     /**
      * 根据栏目提取
