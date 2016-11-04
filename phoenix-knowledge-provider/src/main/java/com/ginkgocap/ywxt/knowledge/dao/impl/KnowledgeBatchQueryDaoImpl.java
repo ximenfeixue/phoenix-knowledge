@@ -53,7 +53,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 150;
+    private final int maxQuerySize = 200;
     private final int cacheTTL = 60 * 60 * 2;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
