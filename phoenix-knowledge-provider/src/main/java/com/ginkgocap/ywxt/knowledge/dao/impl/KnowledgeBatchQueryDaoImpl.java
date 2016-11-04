@@ -113,8 +113,8 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
-                if (userId >= 0) {
-                    criteria.and("uid").is(userId);
+                if (userId > 0) {
+                    criteria.and("cid").is(userId);
                 }
                 // 查询栏目目录为当前分类下的所有数据
                 final String reful = columnPath;
@@ -227,8 +227,8 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
-                if (userId >= 0) {
-                    criteria.and("uid").is(userId);
+                if (userId > 0) {
+                    criteria.and("cid").is(userId);
                 }
                 // 查询栏目目录为当前分类下的所有数据
                 final String reful = columnPath;
