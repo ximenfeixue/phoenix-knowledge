@@ -6,7 +6,9 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import junit.framework.TestCase;
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +21,9 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
 
     @Autowired
     private KnowledgeBatchQueryService knowledgeBatchQueryService;
+
+    @Autowired
+    private KnowledgeService knowledgeService;
 
     @Test
     public void testGetKnowledgeCountByUserIdAndColumnID() {
@@ -48,7 +53,7 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     @Test
     public void testGetAllPlatform()
     {
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 1, 1, "资讯", 0, 1, 10);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 1, 1, "资讯", 0, 0, 30);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: "+knowledgeList.size());
         String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);

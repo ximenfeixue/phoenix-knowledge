@@ -40,6 +40,7 @@ public class KnowledgeWebDemo extends BaseTestCase {
 
     public static void main(String[] args) throws Exception {
     	//bigData();
+        login();
         pusUpdate();
     	/*
     	login(loginUrl);
@@ -419,7 +420,7 @@ public class KnowledgeWebDemo extends BaseTestCase {
         try {
             login();
             String subUrl = "/mobileApp/updateVersion.json";
-            String content = "{\"version\":207,\"updateUrl\":\"http://file.gintong.com/app/gintong.apk\"}";
+            String content = "{\"version\":209,\"updateUrl\":\"http://file.gintong.com/app/gintong.apk\"}";
 
             JsonNode result = null;
             if ("dev".equals(testEnv)) {
