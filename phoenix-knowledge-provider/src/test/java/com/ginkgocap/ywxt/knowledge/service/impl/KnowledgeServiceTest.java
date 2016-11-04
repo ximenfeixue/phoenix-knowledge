@@ -78,7 +78,8 @@ public class KnowledgeServiceTest extends TestBase {
 	}
 
     @Test
-	public void testDeleteByKnowledgeId() {
+	public void testDeleteByKnowledgeId()
+    {
         System.out.println("===testDeleteByKnowledgeId===");
         try {
             DataCollect dataCollection = this.createKnowledge("test-delete-KnowledgeServiceTest");
@@ -92,7 +93,8 @@ public class KnowledgeServiceTest extends TestBase {
     }
 
     @Test
-	public void testDeleteByKnowledgeIds() {
+	public void testDeleteByKnowledgeIds()
+    {
         System.out.println("===testDeleteByKnowledgeIds===");
 
         DataCollect data = null;
