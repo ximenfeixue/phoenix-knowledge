@@ -38,14 +38,15 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = false;
+	protected static boolean web = true;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
     protected static long userId;
-    protected static String hostUrl = null;
     protected static SimpleFilterProvider assoFilter = null;
+    protected static String hostUrl = null;
     protected static String loginUrl = null;
+    protected static String knowUrl = null;
     protected static String baseUrl =  null;
     protected static String baseOrtherUrl = null;
     protected static String baseHomeUrl = null;
@@ -54,7 +55,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    public final static String testEnv = envArray[1];
+    public final static String testEnv = envArray[3];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -62,31 +63,34 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            loginUrl = "http://192.168.101.131:8008/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://localhost:8080");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:8008/cross");
+            loginUrl = hostUrl + getLoginUrl(web);
+            knowUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
         else if ("dev".equals(testEnv)) {
-            loginUrl = "http://192.168.101.131:8008/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/cross");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:8008/cross");
+            loginUrl = hostUrl + getLoginUrl(web);
+            knowUrl = System.getProperty("hostUrl", "http://192.168.120.135:8080/cross");
         }
         else if ("testOnline".equals(testEnv)) {
-            loginUrl = "http://test.online.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross/newknowledge");
+            hostUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross");
+            loginUrl = hostUrl + getLoginUrl(web);
+            knowUrl = System.getProperty("hostUrl", "http://test.online.gintong.com/cross/newknowledge");
             openHostUrl = System.getProperty("openHostUrl", "http://api.test.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         else if ("online".equals(testEnv)) {
             loginUrl = "http://www.gintong.com/cross" + getLoginUrl(web);
-            hostUrl = System.getProperty("hostUrl", "http://www.gintong.com/cross/newknowledge");
+            knowUrl = System.getProperty("hostUrl", "http://www.gintong.com/cross/newknowledge");
             openHostUrl = System.getProperty("openHostUrl", "http://api.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
-        baseUrl = hostUrl + "/knowledge";
-        baseOrtherUrl = hostUrl + "/knowledgeOther";
-        baseHomeUrl = hostUrl + "/webknowledge";
-        baseCommentUrl = hostUrl + "/knowledgeComment/";
+        baseUrl = knowUrl + "/knowledge";
+        baseOrtherUrl = knowUrl + "/knowledgeOther";
+        baseHomeUrl = knowUrl + "/webknowledge";
+        baseCommentUrl = knowUrl + "/knowledgeComment/";
         
         assoFilter = KnowledgeUtil.assoFilterProvider(Associate.class.getName());
     }
@@ -239,6 +243,7 @@ public abstract class BaseTestCase extends TestCase
         Assert.assertNotNull(notifNode);
         checkRequestResultSuccess(notifNode.get(RetKey.Notification));
         Assert.assertNotNull(notifNode.get(RetKey.RespData));
+        System.out.print(notifNode.get(RetKey.RespData));
     }
 
     public static void checkRequestResultSuccess(JsonNode notifNode)
@@ -520,8 +525,8 @@ public abstract class BaseTestCase extends TestCase
     
     private static String getLoginJson(boolean web)
     {
-    	final String userName = "18211081791";
-    	final String passWord = "MTExMTEx";
+    	final String userName = "18611386946";
+    	final String passWord = "sa#123";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);

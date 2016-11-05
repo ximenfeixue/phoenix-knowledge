@@ -465,177 +465,48 @@
 
     <profiles>
         <profile>
+            <id>testOnline</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <filters>
+                    <filter>${sa.config.file}</filter>
+                </filters>
+            </build>
+        </profile>
+        <profile>
             <id>test</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <user.imageUrl>http://www.baidu.com</user.imageUrl>
-                <user.cache.expiredTime>86400</user.cache.expiredTime>
-                <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
-                <!-- redis地址 -->
-                <redis.host>192.168.101.131</redis.host>
-                <!-- redis端口 -->
-                <redis.port>6379</redis.port>
-                <!-- mongo地址 -->
-                <mongodb.address>127.0.0.1:27017</mongodb.address>
-                <!-- mongo中数据库 -->
-                <mongodb.database>knowledge-new</mongodb.database>
-                <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://127.0.0.1:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
-                <jdbc.username>zhangwei</jdbc.username>
-                <jdbc.password>zhangwei</jdbc.password>
-                <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
-                <memcached.list_1.port>11211</memcached.list_1.port>
-                <memcached.object_1.ip>192.168.101.22</memcached.object_1.ip>
-                <memcached.object_1.port>11211</memcached.object_1.port>
-                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-                <log4j.level>debug</log4j.level>
-                <log4j.path>./logs</log4j.path>
-
-                <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
-                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
-                <!--<dubbo.registry.address>zookeeper://192.168.120.155:2182?client=zkclient</dubbo.registry.address>-->
-                <dubbo.registry.address>zookeeper://127.0.0.1:2181?client=zkclient</dubbo.registry.address>
-                <dubbo.protocol.port>7788</dubbo.protocol.port>
-                <!-- 访问大数据接口地址 -->
-                <bigData.url>http://192.168.101.53:8090</bigData.url>
-                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
-            </properties>
+            <build>
+                <filters>
+                    <filter>${sa.config.file}</filter>
+                </filters>
+            </build>
         </profile>
         <profile>
             <id>dev</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <user.imageUrl>http://www.baidu.com</user.imageUrl>
-                <user.cache.expiredTime>86400</user.cache.expiredTime>
-                <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
-                <!-- redis地址 -->
-                <redis.host>192.168.101.131</redis.host>
-                <!-- redis端口 -->
-                <redis.port>6379</redis.port>
-                <!-- mongo地址 -->
-                <mongodb.address>192.168.101.131:27017</mongodb.address>
-                <!-- mongo中数据库 -->
-                <mongodb.database>knowledge-new</mongodb.database>
-                <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.120.135:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
-                <jdbc.username>zhangwei</jdbc.username>
-                <jdbc.password>zhangwei</jdbc.password>
-                <memcached.list_1.ip>192.168.130.200</memcached.list_1.ip>
-                <memcached.list_1.port>11211</memcached.list_1.port>
-                <memcached.object_1.ip>192.168.130.200</memcached.object_1.ip>
-                <memcached.object_1.port>11211</memcached.object_1.port>
-                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-                <log4j.level>debug</log4j.level>
-                <log4j.path>./logs</log4j.path>
-
-                <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
-                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
-                <!--<dubbo.registry.address>zookeeper://192.168.120.155:2182?client=zkclient</dubbo.registry.address>-->
-                <dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
-                <dubbo.protocol.port>7788</dubbo.protocol.port>
-                <!-- 访问大数据接口地址 -->
-                <bigData.url>http://192.168.101.53:8090</bigData.url>
-                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
-            </properties>
+            <build>
+                <filters>
+                    <filter>${sa.config.file}</filter>
+                </filters>
+            </build>
         </profile>
         <profile>
-            <id>testOnline</id>
+            <id>delivery</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <user.imageUrl>http://www.baidu.com</user.imageUrl>
-                <user.cache.expiredTime>86400</user.cache.expiredTime>
-                <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
-
-                <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://192.168.101.42:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
-                <jdbc.username>ph_newknowledge</jdbc.username>
-                <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
-
-                <!-- redis地址, 端口 -->
-                <redis.host>192.168.101.42</redis.host>
-                <redis.port>6379</redis.port>
-
-                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-                <log4j.level>debug</log4j.level>
-                <log4j.path>./logs</log4j.path>
-
-                <!-- dubbo configure -->
-                <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
-                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
-                <dubbo.registry.address>zookeeper://192.168.101.15:2181?client=zkclient</dubbo.registry.address>
-                <dubbo.protocol.port>7788</dubbo.protocol.port>
-
-                <!-- mongo地址, 数据库  -->
-                <mongodb.address>192.168.120.133:27017</mongodb.address>
-                <mongodb.database>knowledge</mongodb.database>
-
-                <!-- memcached configure-->
-                <memcached.list_1.ip>192.168.101.22</memcached.list_1.ip>
-                <memcached.list_1.port>11211</memcached.list_1.port>
-                <memcached.object_1.ip>192.168.101.22</memcached.object_1.ip>
-                <memcached.object_1.port>11211</memcached.object_1.port>
-
-                <!-- 访问大数据接口地址 -->
-                <bigData.url>http://192.168.101.53:8090</bigData.url>
-                <knowledge.url.create>http://192.168.101.110:8001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://192.168.101.41:8090</knowledge.url.query>
-            </properties>
-        </profile>
-        <profile>
-            <id>online</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <user.imageUrl>http://www.baidu.com</user.imageUrl>
-                <user.cache.expiredTime>86400</user.cache.expiredTime>
-                <mobile.invit.url>http://local.gintong.com/</mobile.invit.url>
-
-                <!-- 数据库访问帐号 -->
-                <jdbc.url>jdbc:mysql://mysql.gintong.local:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
-                <jdbc.username>ph_newknowledge</jdbc.username>
-                <jdbc.password>HMlV9LgC0e7aM</jdbc.password>
-
-                <!-- redis地址, 端口 -->
-                <redis.host>redis.gintong.local</redis.host>
-                <redis.port>6379</redis.port>
-                <user.cache.expiredTime>86400</user.cache.expiredTime>
-
-                <!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-                <log4j.level>debug</log4j.level>
-                <log4j.path>./logs</log4j.path>
-
-                <!-- dubbo configure -->
-                <dubbo.application.name>phoenix-knowledge-provider</dubbo.application.name>
-                <dubbo.protocol.name>dubbo</dubbo.protocol.name>
-                <dubbo.registry.address>zookeeper://zk.gintong.local:2181?client=zkclient</dubbo.registry.address>
-                <dubbo.protocol.port>7788</dubbo.protocol.port>
-
-                <!-- mongo地址, 数据库  -->
-                <mongodb.address>mongodb.gintong.local:27017</mongodb.address>
-                <mongodb.database>knowledge</mongodb.database>
-
-                <!-- memcached configure-->
-                <memcached.list_1.ip>10.10.140.124</memcached.list_1.ip>
-                <memcached.list_1.port>11211</memcached.list_1.port>
-                <memcached.object_1.ip>10.10.140.124</memcached.object_1.ip>
-                <memcached.object_1.port>11211</memcached.object_1.port>
-                <memcached.map_1.ip>10.10.140.124</memcached.map_1.ip>
-                <memcached.map_1.port>11211</memcached.map_1.port>
-
-                <!-- 访问大数据接口地址 -->
-                <bigData.url>http://10.10.85.16:8090</bigData.url>
-                <knowledge.url.create>http://10.10.85.16:2001/depoapp/</knowledge.url.create>
-                <knowledge.url.query>http://10.10.85.16:8090</knowledge.url.query>
-            </properties>
+            <build>
+                <filters>
+                    <filter>${sa.config.file}</filter>
+                </filters>
+            </build>
         </profile>
     </profiles>
 	<scm>
