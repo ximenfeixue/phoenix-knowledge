@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -169,8 +170,18 @@ public class KnowledgeCommentController extends BaseController
             }
 
             List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(knowledgeId);
+            int commentSize = commentList != null ? commentList.size() : 0;
             if (logger.isDebugEnabled()) {
-                logger.debug("Get Knowledge comment : size:" + commentList.size() + " Content: " + commentList);
+                logger.debug("Get Knowledge comment : size:" + commentList.size());
+            }
+            if (commentSize >0) {
+                Iterator iterator = commentList.iterator();
+                while (iterator.hasNext()) {
+                    KnowledgeComment comment = (KnowledgeComment)iterator.next();
+                    if (comment.getVisible() == 0 && comment.getOwnerId() != user.getId()) {
+                        iterator.remove();
+                    }
+                }
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(commentList);
         } catch(Exception e){
