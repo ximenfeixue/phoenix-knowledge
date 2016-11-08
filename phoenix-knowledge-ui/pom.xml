@@ -294,29 +294,6 @@
 
             </plugin>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.ginkgocap.ywxt</groupId>
-                                    <artifactId>phoenix-util</artifactId>
-                                    <version>${util.dependencied}</version>
-                                    <outputDirectory>${project.build.directory}/dubbo</outputDirectory>
-                                    <includes>META-INF/assembly/**</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <descriptor>src/main/assembly/assembly.xml</descriptor>
