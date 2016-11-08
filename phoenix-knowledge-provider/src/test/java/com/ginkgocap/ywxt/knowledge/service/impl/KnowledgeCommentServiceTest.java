@@ -22,17 +22,17 @@ public class KnowledgeCommentServiceTest extends TestBase {
     KnowledgeCommentService knowledgeCommentService;
 
     private final long userId = 1234567L;
-    private final long knowledgeId = 0L;
+    private final long knowledgeId = 11111111L;
     private final int columnId = 1;
 
     @Test
     public void testGetKnowledgeCommentList()
     {
-        List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(839017L);
+        List<KnowledgeComment> commentList = knowledgeCommentService.getKnowledgeCommentList(knowledgeId);
         TestCase.assertTrue(commentList != null && commentList.size() > 0);
-        System.out.println("Size: " + commentList.size());
+        System.err.println("Size: " + commentList.size());
         for (KnowledgeComment comment : commentList) {
-            System.out.println("id: " + comment.getId() + " Time: " + comment.getCreateTime() + " comment: " + comment.getContent());
+            System.err.println("id: " + comment.getId() + " Time: " + comment.getCreateTime() + " comment: " + comment.getContent());
         }
     }
 
