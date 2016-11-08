@@ -26,7 +26,7 @@ public class KnowledgeCommentWebTest extends BaseTestCase
         String comment = getKnowledgeComment(KnowledgeId, CommentForCreate +"_1");
         createKnowledgeComment(comment);
 
-        comment = getKnowledgeComment(KnowledgeId, CommentForUpdate +"_2");
+        comment = getKnowledgeComment(KnowledgeId, 1, CommentForUpdate +"_2", false);
         createKnowledgeComment(comment);
 
         comment = getKnowledgeComment(KnowledgeId, CommentForDelete +"_3");

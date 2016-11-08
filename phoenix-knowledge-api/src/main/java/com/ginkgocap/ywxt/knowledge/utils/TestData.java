@@ -220,10 +220,15 @@ public class TestData {
     //For Knowledge Comment
     public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, int columnId) throws Exception
     {
-        return knowledgeComment(userId, knowledgeId, columnId, null);
+        return knowledgeComment(userId, knowledgeId, columnId, null, true);
     }
 
     public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, int columnId, String content)
+    {
+        return knowledgeComment(userId, knowledgeId, columnId, content, true);
+    }
+
+    public static KnowledgeComment knowledgeComment(long userId, long knowledgeId, int columnId, String content, boolean visible)
     {
         KnowledgeComment comment = new KnowledgeComment();
         comment.setOwnerId(userId);
@@ -232,7 +237,7 @@ public class TestData {
         comment.setOwnerName("DummyUserName");
         comment.setCreateTime(System.currentTimeMillis());
         comment.setContent(content == null ? "Very Good" : content);
-        comment.setVisible(1);
+        comment.setVisible(visible ? 1 : 0);
         return comment;
     }
 
