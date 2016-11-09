@@ -43,6 +43,8 @@ public class DataCollect implements Serializable
     //更新知识，更改栏目
     private int oldType;
 
+    private static final int maxLen = 255;
+
     public KnowledgeBase getKnowledge() {
         return knowledge;
     }
@@ -148,13 +150,12 @@ public class DataCollect implements Serializable
             knowledgeBase.setKnowledgeId(detail.getId());
             knowledgeBase.setTitle(detail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
-            int contentLen = knowledgeContent.length();
-            int maxLen = contentLen > 250 ? 250 : contentLen;
-            knowledgeBase.setContentDesc(knowledgeContent.substring(0, maxLen));
+            knowledgeBase.setContentDesc(knowledgeContent);
             if (detail.getMultiUrls() != null && detail.getMultiUrls().size() > 0) {
                 logger.info("save picture: " + detail.getMultiUrls().get(0));
                 knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
             }
+
             //knowledge.setAuditStatus(auditStatus);
             if (detail.getTagList() != null && detail.getTagList().size() > 0) {
                 String tags = KnowledgeUtil.convertLongListToBase(detail.getTagList());
@@ -179,6 +180,8 @@ public class DataCollect implements Serializable
             knowledgeBase.setIsOld((short) 0);
             knowledgeBase.setUserStar((short) 0);
             knowledgeBase.setStatus((short)detail.getStatus());
+            //check and truncate some data over database limit.
+            knowledgeBaseFaultTolerant(knowledgeBase);
             //knowledge.setPublicDate(System.currentTimeMillis());
             //knowledge.setReportStatus(reportStatus);
         }
@@ -213,4 +216,51 @@ public class DataCollect implements Serializable
             return (int)(b.intValue() - a.longValue());
         }
     };
+
+    public static KnowledgeBase knowledgeBaseFaultTolerant(KnowledgeBase base)
+    {
+        if (base != null) {
+            if (base.getTitle() != null && base.getTitle().length() > maxLen) {
+                logger.error("cover Picture over 255, so set it to null");
+                base.setTitle(base.getTitle().substring(0, maxLen - 1));
+            }
+
+            if (base.getContentDesc() != null && base.getContentDesc().length() > maxLen) {
+                logger.error("cover Picture over 255, so set it to null");
+                base.setContentDesc(base.getContentDesc().substring(0, maxLen - 1));
+            }
+
+            if (base.getSource() != null && base.getSource().length() > maxLen) {
+                logger.error("source over 255, so truncate it to 255");
+                base.setSource(base.getSource().substring(0, maxLen - 1));
+            }
+
+            if (base.getCoverPic() != null && base.getCoverPic().length() > maxLen) {
+                logger.error("cover Picture over 255, so set it to null");
+                base.setCoverPic(null);
+            }
+
+            if (base.getCpath() != null && base.getCpath().length() > maxLen) {
+                logger.error("cpath over 255, so truncate it to 255");
+                base.setCpath(base.getCpath().substring(0, maxLen - 1));
+            }
+
+            if (base.getTaskId() != null && base.getTaskId().length() > maxLen) {
+                logger.error("taskId over 255, so truncate it to 255");
+                base.setTaskId(base.getTaskId().substring(0, maxLen - 1));
+            }
+
+            if (base.getCreateUserName() != null && base.getCreateUserName().length() > 50) {
+                logger.error("create user name over 255, so truncate it to 50");
+                base.setCreateUserName(base.getCreateUserName().substring(0, 50 - 1));
+            }
+
+            if (base.getModifyUserName() != null && base.getModifyUserName().length() > maxLen) {
+                logger.error("modify user name over 255, so truncate it to 255");
+                base.setModifyUserName(base.getModifyUserName().substring(0, maxLen - 1));
+            }
+        }
+
+        return base;
+    }
 }

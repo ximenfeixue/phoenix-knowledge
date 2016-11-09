@@ -68,7 +68,6 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		
 		if(id <= 0) {
 			oldValue = this.getByKnowledgeId(id);
-			
 			this.deleteByKnowledgeId(id);
 		}
 		
@@ -132,17 +131,6 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
     @Override
 	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception
     {
-		/*
-        //TODO: this must be changed, bed performance
-        List<KnowledgeBase> knowledgeBaseList = new ArrayList<KnowledgeBase>(knowledgeIds.size());
-        for (Long knowledgeId : knowledgeIds) {
-            KnowledgeBase base = getByKnowledgeId(knowledgeId);
-            if (base != null) {
-                knowledgeBaseList.add(base);
-            }
-        }
-
-        return knowledgeBaseList;*/
 		return this.getEntityByIds(knowledgeIds);
 	}
 
@@ -362,7 +350,5 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		} else {
 			return new Date("0000-00-00 00:00:00");
 		}
-		
 	}
-	
 }

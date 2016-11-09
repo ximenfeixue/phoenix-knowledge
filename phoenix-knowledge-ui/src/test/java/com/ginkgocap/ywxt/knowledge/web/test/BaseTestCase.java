@@ -98,7 +98,7 @@ public abstract class BaseTestCase extends TestCase
     @Override
     protected void runTest() throws Throwable
     {
-    	login();
+    	//login();
         if (runTestCase) {
             super.runTest();
         }
@@ -227,8 +227,13 @@ public abstract class BaseTestCase extends TestCase
 
     public static String getKnowledgeComment(long KnowledgeId, int columnId, String content)
     {
+        return getKnowledgeComment(KnowledgeId, columnId, content, true);
+    }
+
+    public static String getKnowledgeComment(long KnowledgeId, int columnId, String content, boolean visible)
+    {
         columnId = columnId == 0 ? 2 : columnId;
-        KnowledgeComment KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content);
+        KnowledgeComment KnowledgeComment = TestData.knowledgeComment(user.getId(), KnowledgeId, columnId, content, visible);
         return KnowledgeUtil.writeObjectToJson(KnowledgeComment);
     }
 
@@ -420,8 +425,7 @@ public abstract class BaseTestCase extends TestCase
         }
         return buffer.toString();
     }
-    public static JsonNode getJsonNode(String jsonStr, String... values)
-            throws Exception {
+    public static JsonNode getJsonNode(String jsonStr, String... values)  throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true) ;
 
@@ -526,7 +530,7 @@ public abstract class BaseTestCase extends TestCase
     private static String getLoginJson(boolean web)
     {
     	final String userName = "18611386946";
-    	final String passWord = "sa#123";
+    	final String passWord = "MTExMTEx";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
