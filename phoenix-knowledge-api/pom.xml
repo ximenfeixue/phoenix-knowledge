@@ -36,14 +36,6 @@
             </exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>com.ginkgocap.parasol</groupId>
-			<artifactId>parasol-common-provider</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>com.ginkgocap.parasol</groupId>
-			<artifactId>parasol-cache</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.ginkgocap.parasol</groupId>
             <artifactId>parasol-associate-api</artifactId>
@@ -52,18 +44,5 @@
             <groupId>com.gintong.common</groupId>
             <artifactId>phoenix-permission-api</artifactId>
         </dependency>
-
-		<!-- MQ begin -->
-		<dependency>
-			<groupId>com.gintong</groupId>
-			<artifactId>phoenix-rocketmq-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>org.hibernate</artifactId>
-                </exclusion>
-            </exclusions>
-		</dependency>
-		<!-- MQ end -->
 	</dependencies>
 </project>

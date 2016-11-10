@@ -58,6 +58,10 @@
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-common-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
             <artifactId>parasol-directory-api</artifactId>
         </dependency>
         <dependency>

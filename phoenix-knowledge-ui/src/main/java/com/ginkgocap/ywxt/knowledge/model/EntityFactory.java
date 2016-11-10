@@ -10,12 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-/*
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleContactComm;
-import com.ginkgocap.ywxt.people.domain.modelnew.PeopleTemp;
-import com.ginkgocap.ywxt.people.service.PeopleMongoService;
-*/
-
 /**
 * <p>Title: EntityFactory.java<／p>
 * <p>Description: 实体类创建工厂，可以根据json解析出各种实体类<／p>

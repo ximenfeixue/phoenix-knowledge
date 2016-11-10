@@ -7,7 +7,7 @@ package com.ginkgocap.ywxt.knowledge.model.mobile;
 import java.io.Serializable;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class JTFile implements Serializable,Comparable {
@@ -150,7 +150,7 @@ public class JTFile implements Serializable,Comparable {
 		if(jsonEntity.equals("{}")) {
 			return null; //无数据判断
 		}
-		return JSON.parseObject(jsonEntity, JTFile.class);
+		return KnowledgeUtil.readValue( JTFile.class, jsonEntity);
 	}
 	
 	/**
@@ -175,7 +175,8 @@ public class JTFile implements Serializable,Comparable {
 	 * */
 	public static List<JTFile> getListByJsonString(String object) {
 		try{
-			List<JTFile> ret = JSON.parseArray(object, JTFile.class);
+			//List<JTFile> ret = JSON.parseArray(object, JTFile.class);
+			List<JTFile> ret = KnowledgeUtil.readListValue(JTFile.class, object);
 			return ret;
 		}catch(Exception e){
 			return null;

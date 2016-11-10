@@ -218,6 +218,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
+        <!-- MQ begin -->
+        <dependency>
+            <groupId>com.gintong</groupId>
+            <artifactId>phoenix-rocketmq-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>org.hibernate</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- MQ end -->
     </dependencies>
 
     <build>

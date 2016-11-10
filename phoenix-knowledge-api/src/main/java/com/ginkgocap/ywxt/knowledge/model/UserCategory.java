@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
-
 public class UserCategory implements Serializable {
 
     private static final long serialVersionUID = -9062835517314960963L;
@@ -142,7 +140,7 @@ public class UserCategory implements Serializable {
         if(jsonEntity.equals("{}")) {
             return null; //无数据判断
         }
-        return JSON.parseObject(jsonEntity, UserCategory.class);
+        return KnowledgeUtil.readValue(UserCategory.class, jsonEntity);
     }
 
     /**
@@ -166,7 +164,7 @@ public class UserCategory implements Serializable {
      * String jsonData = j.getString("Entity");
      * */
     public static List<UserCategory> getListByJsonString(String object) {
-        return JSON.parseArray(object, UserCategory.class);
+        return KnowledgeUtil.readListValue(UserCategory.class, object);
     }
 
     /**
