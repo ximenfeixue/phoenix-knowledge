@@ -28,6 +28,7 @@
         <knowledge.version>3.0.0-SNAPSHOT</knowledge.version>
         <phoenix-frame-util.version>1.0.1-SNAPSHOT</phoenix-frame-util.version>
         <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
+        <phoenix-framework.version>1.0.0</phoenix-framework.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
@@ -102,6 +103,11 @@
                 <groupId>com.ginkgocap.parasol</groupId>
                 <artifactId>parasol-cache</artifactId>
                 <version>${parasol-cache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.ywxt</groupId>
+                <artifactId>phoenix-framework-dal</artifactId>
+                <version>${phoenix-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.parasol</groupId>

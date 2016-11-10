@@ -217,7 +217,7 @@ public class HttpClientHelper {
                 StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
                 post.setEntity(stringEntry);
             }
-            logger.info("httpMethod: POST, url: {}，body {}", url, content);
+            logger.info("httpMethod: POST, url: {}， body {}", url, content);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {

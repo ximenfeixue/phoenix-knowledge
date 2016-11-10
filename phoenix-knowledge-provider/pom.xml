@@ -61,6 +61,10 @@
             <artifactId>parasol-common-provider</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-framework-dal</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ginkgocap.parasol</groupId>
             <artifactId>parasol-directory-api</artifactId>
         </dependency>

@@ -12,7 +12,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
  */
 public class KnowledgeCommentWebTest extends BaseTestCase
 {
-    private Long KnowledgeId = 11111111L;
+    private Long KnowledgeId = 222222L;
     List<KnowledgeComment> knowledgeCommentList = new ArrayList<KnowledgeComment>();
     private String CommentForCreate = "Comment For Update-UnitTest";
     private String CommentForUpdate = "Comment For Update-UnitTest";
