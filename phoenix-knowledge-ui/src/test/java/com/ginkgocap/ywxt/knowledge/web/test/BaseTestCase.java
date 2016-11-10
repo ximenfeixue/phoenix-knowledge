@@ -55,7 +55,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    public final static String testEnv = envArray[3];
+    public final static String testEnv = envArray[1];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -98,7 +98,7 @@ public abstract class BaseTestCase extends TestCase
     @Override
     protected void runTest() throws Throwable
     {
-    	//login();
+    	login();
         if (runTestCase) {
             super.runTest();
         }
@@ -248,7 +248,7 @@ public abstract class BaseTestCase extends TestCase
         Assert.assertNotNull(notifNode);
         checkRequestResultSuccess(notifNode.get(RetKey.Notification));
         Assert.assertNotNull(notifNode.get(RetKey.RespData));
-        System.out.print(notifNode.get(RetKey.RespData));
+        System.out.print(notifNode+"\r\n");
     }
 
     public static void checkRequestResultSuccess(JsonNode notifNode)
@@ -289,6 +289,7 @@ public abstract class BaseTestCase extends TestCase
     
     public static String HttpRequestFullJson(String httpMethod,String urlString,String jsonContent) throws Exception
     {
+        System.err.print("Method: " + httpMethod + "\r\nUrl: "+urlString+"\r\n" + "Body: " + jsonContent + "\r\n");
         Map<String,String> headers = new HashMap<String, String>(5);
         System.out.println("sessionID: " + sessionID);
         headers.put("s", web ? "web" : "api");
@@ -530,7 +531,7 @@ public abstract class BaseTestCase extends TestCase
     private static String getLoginJson(boolean web)
     {
     	final String userName = "18611386946";
-    	final String passWord = "MTExMTEx";
+    	final String passWord = "sa#123";
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, passWord);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\"}", userName, newPassWord);
