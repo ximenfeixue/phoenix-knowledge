@@ -158,7 +158,7 @@ public class KnowledgeController extends BaseController {
         boolean syncToDynamic = false;
         Permission permission = permissionServiceLocal.savePermissionInfo(userId, knowledgeId, data.getPermission());
         if (permission != null) {
-            logger.debug("save knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
+            logger.info("save knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
             syncToDynamic = (permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
         }
 
