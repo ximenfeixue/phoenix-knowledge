@@ -51,9 +51,6 @@ public class KnowledgeOtherControl extends BaseController
     @Autowired
     private TagServiceLocal tagServiceLocal;
 
-    @Autowired
-    private PermissionServiceLocal permissionServiceLocal;
-
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
@@ -437,19 +434,6 @@ public class KnowledgeOtherControl extends BaseController
         }
 
         vo.setSource(knowledge.getSource());
-        // 知识所在目录
-        /*
-        String strUc = "";
-        if (knowledge.getListUserCategory() != null) {
-            for (int i = 0; i < knowledge.getListUserCategory().size(); i++) {
-                UserCategory uc = knowledge.getListUserCategory().get(i);
-                strUc += uc.getId();
-                if (i < (knowledge.getListUserCategory().size() - 1))
-                    strUc += ",";
-            }
-            vo.setDirectorys(strUc);
-        }*/
-
         vo.setEssence(knowledge.getEssence());
         //vo.setShareMessage("");// 分享消息内容
 
@@ -472,7 +456,7 @@ public class KnowledgeOtherControl extends BaseController
     }
 
     public void checkGroup(long userid) {
-        List<Long> idtype = new ArrayList<Long>();
+        List<Long> idtype = new ArrayList<Long>(2);
         idtype.add(0l);
         idtype.add(1l);
         //userCategoryService.checkNogroup(userid, idtype);
