@@ -5,7 +5,7 @@
     <appender name="logconsole" class="org.apache.log4j.ConsoleAppender">
         <param name="encoding" value="UTF-8" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %c %t %m%n" />
+            <param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %l%m%n" />
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMax" value="error"></param>
@@ -19,7 +19,7 @@
         <param name="File" value="${log4j.path}/knowledge_normal.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %c %t %m%n" />
+            <param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %l%m%n" />
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMax" value="error"></param>
@@ -31,7 +31,7 @@
         <param name="File" value="${log4j.path}/knowledge_httpperformanceLog.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n" />
+            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
         </layout>
     </appender>
     <logger name="com.qintong.common.filters.HttpInterceptor"
@@ -44,7 +44,7 @@
         <param name="File" value="${log4j.path}/knowledge_performanceLog.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} -%m%n" />
+            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
         </layout>
     </appender>
     <logger

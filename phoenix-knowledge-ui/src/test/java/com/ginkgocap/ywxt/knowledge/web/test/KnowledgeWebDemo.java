@@ -420,7 +420,7 @@ public class KnowledgeWebDemo extends BaseTestCase {
         try {
             login();
             String subUrl = "/mobileApp/updateVersion.json";
-            String content = "{\"version\":209,\"updateUrl\":\"http://file.gintong.com/app/gintong.apk\"}";
+            String content = "{\"version\":214,\"updateUrl\":\"http://file.gintong.com/app/gintong.apk\"}";
 
             JsonNode result = null;
             if ("dev".equals(testEnv)) {
