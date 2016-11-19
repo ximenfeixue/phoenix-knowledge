@@ -43,4 +43,15 @@ public class DirectoryWebTest extends BaseTestCase {
 			e.printStackTrace();
 		}
 	}
+
+	public void testGetDirectoryName()
+	{
+		try {
+			String jsonNode = HttpRequestFullJson(HttpMethod.GET, "http://192.168.171.183:8081/directory/directory/getDirectoryName?page=0&size=6&name=Directory", null);
+			//System.out.println(jsonNode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

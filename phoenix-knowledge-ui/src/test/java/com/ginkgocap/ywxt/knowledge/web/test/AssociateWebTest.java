@@ -56,4 +56,18 @@ public class AssociateWebTest extends BaseTestCase {
 			e.printStackTrace();
 		}
 	}
+
+	public void testGetSourceAssociatesByPage()
+	{
+		LogMethod();
+		String path = "/associate/associate/getSourceAssociates";
+		try {
+			String jsonNode = HttpRequestFullJson(HttpMethod.GET, "http://192.168.171.183:8091/associate/associate/getAssociateByType?page=0&size=6&assocTypeId=7", null);
+			System.out.println(jsonNode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

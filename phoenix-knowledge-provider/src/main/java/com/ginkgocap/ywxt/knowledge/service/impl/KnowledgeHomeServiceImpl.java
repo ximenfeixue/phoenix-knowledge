@@ -30,12 +30,6 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
     @Autowired
     KnowledgeMysqlDao knowledgeMysqlDao;
 
-
-    @Override
-    public Map<String, Object> selectAllKnowledgeCategoryByParam(String tid, String lid, int state, String sortId, long userId, String keyword, int page, int size) {
-        return null;
-    }
-
     @Override
     public List<KnowledgeStatics> getRankList(int columnId) {
         return null;
