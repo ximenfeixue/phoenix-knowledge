@@ -31,6 +31,52 @@ public class FileWebTest extends BaseTestCase {
 		}
 	}
 
+
+	@Test
+	public void testRecommendFriend()
+	{
+		LogMethod();
+		try {
+			final String subUrl = "/friend/recommendFriend.json";
+			String jsonNode = HttpRequestFullJson(HttpMethod.GET, hostUrl + subUrl, null);
+			//System.out.println(jsonNode);
+		} catch (Exception e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testMoveFile()
+	{
+		LogMethod();
+		try {
+			final String subUrl = "/friend/recommendFriend.json";
+			String jsonNode = HttpRequestFullJson(HttpMethod.POST, "http://192.168.130.124:8080/phoenix-file-ui-2.1.0/fileManager/moveFile.json", "{\"categoryId\":1213,\"toCategoryId\":1221312,\"fileId\":\"dqwew\"}");
+			System.out.println(jsonNode);
+		} catch (Exception e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	@Test
+	public void testCreatePermission()
+	{
+		LogMethod();
+		try {
+			final String subUrl = "/friend/recommendFriend.json";
+			final String content = "{\"resId\":3248,\"resType\":11,\"resAccRule\":\"\",\"resOwnerId\":16405483,\"publicFlag\":0,\"connectFlag\":0,\"shareFlag\":1,\"perTime\":\"\",\"appId\":\"\"}";
+			String jsonNode = HttpRequestFullJson(HttpMethod.POST, "http://192.168.130.126:8088/permission/create", content);
+			System.out.println(jsonNode);
+		} catch (Exception e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
 	@Test
 	public void test()
 	{

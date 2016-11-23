@@ -38,7 +38,7 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = false;
+	protected static boolean web = true;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -81,8 +81,9 @@ public abstract class BaseTestCase extends TestCase
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");
         }
         else if ("online".equals(testEnv)) {
-            loginUrl = "http://www.gintong.com/cross" + getLoginUrl(web);
-            knowUrl = System.getProperty("hostUrl", "http://www.gintong.com/cross/newknowledge");
+            hostUrl = System.getProperty("hostUrl", "http://www.gintong.com/cross");
+            loginUrl = hostUrl + getLoginUrl(web);
+            knowUrl = hostUrl + "/newknowledge";
             openHostUrl = System.getProperty("openHostUrl", "http://api.gintong.com");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:3017");
             //hostUrl = System.getProperty("hostUrl", "http://192.168.130.103:8080");

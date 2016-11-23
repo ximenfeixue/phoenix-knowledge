@@ -60,9 +60,9 @@ public class AssociateWebTest extends BaseTestCase {
 	public void testGetSourceAssociatesByPage()
 	{
 		LogMethod();
-		String path = "/associate/associate/getSourceAssociates";
+		String path = "/associate/associate/getAssociateByType?page=0&size=6&assocTypeId=8";
 		try {
-			String jsonNode = HttpRequestFullJson(HttpMethod.GET, "http://192.168.171.183:8091/associate/associate/getAssociateByType?page=0&size=6&assocTypeId=7", null);
+			String jsonNode = HttpRequestFullJson(HttpMethod.GET, associateHost + path, null);
 			System.out.println(jsonNode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
