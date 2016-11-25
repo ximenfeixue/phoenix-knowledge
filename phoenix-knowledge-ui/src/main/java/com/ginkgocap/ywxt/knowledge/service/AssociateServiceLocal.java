@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,18 +119,20 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
         }
 
         //TODO: If this step failed, how to do ?
-        for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
-            List<Associate> associateList = (List) i.next();
-            for (int j = 0; j < associateList.size(); j++) {
-                Associate associate = associateList.get(j);
-                if (associate == null) {
-                    logger.error("Associate object is null, index: " + j);
-                    continue;
-                }
-                try {
-                    associateService.removeAssociate(APPID, this.getUserId(user), associate.getId());
-                } catch (Exception e) {
-                    logger.error("Asso update failed！reason：" + e.getMessage());
+        if (MapUtils.isNotEmpty(assomap)) {
+            for (Iterator i = assomap.values().iterator(); i.hasNext(); ) {
+                List<Associate> associateList = (List) i.next();
+                for (int j = 0; j < associateList.size(); j++) {
+                    Associate associate = associateList.get(j);
+                    if (associate == null) {
+                        logger.error("Associate object is null, index: " + j);
+                        continue;
+                    }
+                    try {
+                        associateService.removeAssociate(APPID, this.getUserId(user), associate.getId());
+                    } catch (Exception e) {
+                        logger.error("Asso update failed！reason：" + e.getMessage());
+                    }
                 }
             }
         }
