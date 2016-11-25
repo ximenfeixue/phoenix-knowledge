@@ -21,10 +21,10 @@ public class BigDataService
 	public final static String KNOWLEDGE_INSERT = FlagTypeUtils.createKnowledgeFlag();
 
 	/**知识MQ更新*/
-	public final static String KNOWLEDGE_UPDATE = FlagTypeUtils.createKnowledgeFlag();
+	public final static String KNOWLEDGE_UPDATE = FlagTypeUtils.updateKnowledgeFlag();
 
 	/**知识MQ删除*/
-	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.createKnowledgeFlag();
+	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.deleteKnowledgeFlag();
 
 	private static final Logger logger = LoggerFactory.getLogger(BigDataService.class);
 

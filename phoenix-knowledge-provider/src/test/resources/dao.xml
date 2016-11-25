@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="GB2312"?>
 <dal>
     <default>
-        <dbStrategy name=""
-                    clazz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy">
+        <dbStrategy name=""  clazz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy">
             <pattern value="[0-9]$" group="g2" />
         </dbStrategy>
         <listenerClass className="" />
@@ -32,7 +31,7 @@
                   sqlitem="select id from tb_knowledge_base where knowledge_id in (?) "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 
-            <list name="get_knowledge_by_Id"
+            <!-- list name="get_knowledge_by_Id"
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
@@ -52,7 +51,7 @@
                   sqlitem="select id from tb_knowledge_base where privated != ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="privated" update="true" />
 
-            <list name="get_by_createUserId"
+            <!-- list name="get_by_createUserId"
                   sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
 
@@ -90,7 +89,7 @@
 
             <list name="get_by_createUserId_type_columnId"
                   sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId" update="true" / -->
 
             <!-- "<"使用"&lt;"替换，">"使用"&gt;"替代，"&"使用"&amp;"替代 -->
             <list name="get_by_beginDate_endDate"
@@ -165,7 +164,7 @@
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="delete_reference_by_knowledgeId"
+            <!-- list name="delete_reference_by_knowledgeId"
                   sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
@@ -187,7 +186,7 @@
 
             <list name="get_by_knowledgeId_status"
                   sqlitem="select id from tb_knowledge_reference where knowledge_id = ? and status = ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" / -->
         </object>
 
         <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeCount"
@@ -200,13 +199,13 @@
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="get_knowledge_count_by_id"
+            <!-- list name="get_knowledge_count_by_id"
                   sqlitem="select id from tb_knowledge_count where knowledgeId = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_knowledge_count_by_page"
                   sqlitem="select id from tb_knowledge_count where hotCount > ? order by hotCount desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" / -->
         </object>
     </route>
 </dal>
