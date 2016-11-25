@@ -13,11 +13,11 @@ public interface KnowledgeOtherService
 {
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception;
 
-    public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int columnId) throws Exception;
+    public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId) throws Exception;
 
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId);
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int columnId,int start, int size,String keyword) throws Exception;
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId,int start, int size,String keyword) throws Exception;
 
     public long myCollectKnowledgeCount(long userId) throws Exception;
 

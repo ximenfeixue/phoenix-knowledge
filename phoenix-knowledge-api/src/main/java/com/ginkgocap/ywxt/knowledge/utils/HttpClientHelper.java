@@ -187,7 +187,7 @@ public class HttpClientHelper {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
                 logger.info("request {} success", url);
-                logger.info("Response: {}", respJson);
+                //logger.info("Response: {}", respJson);
                 return respJson;
             }
 
@@ -225,7 +225,7 @@ public class HttpClientHelper {
                 String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
                 logger.info("request {} success", url);
                 EntityUtils.consume(response.getEntity());
-                logger.info("respJson: {}", respJson);
+                //logger.info("respJson: {}", respJson);
                 return respJson;
             }
             EntityUtils.consume(response.getEntity());
@@ -260,7 +260,7 @@ public class HttpClientHelper {
                     String respJson = EntityUtils.toString(entity);
                     logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
-                    logger.info("respJson: {}", respJson);
+                    //logger.info("respJson: {}", respJson);
                     return respJson;
                 }
                 EntityUtils.consume(response.getEntity());

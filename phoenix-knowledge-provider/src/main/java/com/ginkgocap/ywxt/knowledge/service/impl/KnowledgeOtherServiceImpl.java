@@ -41,21 +41,21 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int columnId) throws Exception
+    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId) throws Exception
     {
-        return knowledgeCollectDao.deleteCollectedKnowledge(ownerId, knowledgeId, columnId);
+        return knowledgeCollectDao.deleteCollectedKnowledge(ownerId, knowledgeId, typeId);
     }
 
     @Override
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId)
     {
-        return knowledgeCollectDao.isCollectedKnowledge(userId, knowledgeId, columnId);
+        return knowledgeCollectDao.isCollectedKnowledge(userId, knowledgeId, typeId);
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,int columnId,int start, int size,String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(long userId,int typeId,int start, int size,String keyword) throws Exception
     {
-        return knowledgeCollectDao.myCollectKnowledge(userId, columnId, start, size, keyword);
+        return knowledgeCollectDao.myCollectKnowledge(userId, typeId, start, size, keyword);
     }
 
     @Override

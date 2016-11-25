@@ -1215,9 +1215,9 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/collect/{knowledgeId}/{columnId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/collect/{knowledgeId}/{typeId}", method = RequestMethod.POST)
     public InterfaceResult<DataCollection> collect(HttpServletRequest request, HttpServletResponse response,
-                                                   @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
+                                                   @PathVariable long knowledgeId, @PathVariable int typeId) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
@@ -1225,12 +1225,12 @@ public class KnowledgeController extends BaseController {
         }
         long userId = user.getId();
 
-        if (knowledgeId <= 0 || columnId <= 0) {
+        if (knowledgeId <= 0 || typeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
-            this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, columnId);
+            this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
             logger.error("collect knowledge failed！：" + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance();
