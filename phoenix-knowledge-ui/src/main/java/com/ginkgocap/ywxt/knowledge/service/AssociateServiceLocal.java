@@ -113,7 +113,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
             }
         }
-        catch (AssociateServiceException e) {
+        catch (Exception e) {
             logger.error("Asso update failed！reason：" + e.getMessage());
         }
 
@@ -128,7 +128,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
                 }
                 try {
                     associateService.removeAssociate(APPID, this.getUserId(user), associate.getId());
-                } catch (AssociateServiceException e) {
+                } catch (Exception e) {
                     logger.error("Asso update failed！reason：" + e.getMessage());
                 }
             }
