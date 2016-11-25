@@ -54,9 +54,9 @@
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region -->
 
-        <region name="get_all_public" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
+        <!--region name="get_all_public" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
-        </region>
+        </region -->
 
         <!-- region name="get_by_createUserId" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
@@ -160,9 +160,9 @@
         </region>
 
         <!-- for KnowledgeCount -->
-        <region name="get_knowledge_count_by_id"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
+        <!-- region name="get_knowledge_count_by_id"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
-        </region>
+        </region -->
 
         <!--region name="get_knowledge_count_by_page"  listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
