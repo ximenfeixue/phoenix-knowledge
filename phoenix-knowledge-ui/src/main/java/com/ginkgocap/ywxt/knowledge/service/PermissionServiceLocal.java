@@ -120,15 +120,15 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             int columnType = KnowledgeUtil.parserColumnId(type);
             DataCollect data = knowledgeService.getKnowledge(knowledgeId, columnType);
             if (data != null) {
-                Knowledge detail = data.getKnowledgeDetail();
-                if (detail != null) {
-                    logger.debug("check owner by detail info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
-                    return (detail.getCid() == userId);
-                }
                 KnowledgeBase base = data.getKnowledge();
                 if (base != null) {
-                    logger.debug("check owner by base info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
+                    logger.info("check owner by base info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
                     return (base.getCreateUserId() == userId);
+                }
+                Knowledge detail = data.getKnowledgeDetail();
+                if (detail != null) {
+                    logger.info("check owner by detail info. knowledgeId: " + knowledgeId + ", type: " + type + ", userId: " + userId);
+                    return (detail.getCid() == userId);
                 }
             }
             return false;
