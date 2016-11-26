@@ -29,45 +29,6 @@ public class TestData {
     public static <T> InterfaceResult<T> resultObject(T responseData) throws Exception {
         return InterfaceResult.getSuccessInterfaceResultInstance(responseData);
     }
-
-    public static InterfaceResult<DataCollection> knowledgeDetailObject() throws Exception {
-        return InterfaceResult.getSuccessInterfaceResultInstance(dataCollection());
-    }
-
-    public static List<DataCollection> getDataCollectionList()
-    {
-        List<DataCollection> knowledgeList = new ArrayList<DataCollection>(10);
-        for(int index = 0; index < 10; index++) {
-            knowledgeList.add(dataCollection());
-        }
-
-        return knowledgeList;
-    }
-
-    public static DataCollection dataCollection(long userId,String title) {
-        KnowledgeDetail knowledgeDetail = knowledgeDetail(userId, (short)2, title);
-        KnowledgeReference knowledgeReference = referenceObject(title);
-
-        DataCollection dataCollection = new DataCollection();
-        dataCollection.setKnowledgeDetail(knowledgeDetail);
-        dataCollection.setReference(knowledgeReference);
-        dataCollection.setPermission(permission(0, userId));
-        dataCollection.setAsso(assoList());
-
-        return dataCollection;
-    }
-
-    public static DataCollection getDataCollection(long userId, int columnId,String title)
-    {
-        DataCollection data = new DataCollection();
-        data.setKnowledgeDetail(knowledgeDetail(userId,columnId, title));
-        data.setReference(referenceObject(title));
-        data.setPermission(permission(0, userId));
-        data.setAsso(assoList());
-        data.setUpdateDynamic((short)1);
-
-        return data;
-    }
     
     public static DataCollect getDataCollect(long userId, int columnId,String title)
     {
@@ -91,15 +52,6 @@ public class TestData {
         return resItem;
     }
 
-    public static DataCollection dataCollection() {
-
-        return dataCollection(KnowledgeUtil.getDummyUser().getId(), null);
-    }
-
-    public static KnowledgeBase knowledgeBase(KnowledgeDetail detail)
-    {
-        return DataCollection.generateKnowledge(detail);
-    }
 
     public static KnowledgeDetail knowledgeDetail(long userId,int columnId,String title)
     {

@@ -263,4 +263,9 @@ public class DataCollect implements Serializable
 
         return base;
     }
+
+    public static String convertLongListToBase(List<Long> ids)
+    {
+        return KnowledgeUtil.convertLongListToBase(ids);
+    }
 }

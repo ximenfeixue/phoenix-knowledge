@@ -1216,7 +1216,7 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/collect/{knowledgeId}/{typeId}", method = RequestMethod.POST)
-    public InterfaceResult<DataCollection> collect(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult collect(HttpServletRequest request, HttpServletResponse response,
                                                    @PathVariable long knowledgeId, @PathVariable int typeId) throws Exception {
 
         User user = this.getUser(request);
@@ -1249,7 +1249,7 @@ public class KnowledgeController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value="/collect/{knowledgeId}/{columnId}", method = RequestMethod.DELETE)
-    public InterfaceResult<DataCollection> cancelCollection(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult cancelCollection(HttpServletRequest request, HttpServletResponse response,
                                                             @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
 
         User user = this.getUser(request);

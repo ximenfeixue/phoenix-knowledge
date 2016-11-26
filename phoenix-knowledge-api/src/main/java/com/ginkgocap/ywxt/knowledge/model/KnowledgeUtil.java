@@ -218,24 +218,6 @@ public final class KnowledgeUtil {
         return node;
     }
 
-    public static DataCollection getDataCollection(String jsonObject)
-    {
-        if (StringUtils.isBlank(jsonObject)) {
-            throw new IllegalArgumentException("jsonObject is null");
-        }
-        DataCollection dataCollection = null;
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-            JsonNode node = objectMapper.readTree(jsonObject);
-            dataCollection = objectMapper.readValue(jsonObject, DataCollection.class);
-        } catch (Exception e) {
-            //logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
-            System.out.println(e);
-        }
-        return dataCollection;
-    }
-
     public static DataCollect getDataCollect(String jsonObject)
     {
         if (StringUtils.isBlank(jsonObject)) {
@@ -578,21 +560,6 @@ public final class KnowledgeUtil {
         return buffer.toString();
     }
 
-    /**
-     * 返回数据包装方法
-     * @param knowledgeList
-     * @return
-     */
-    public static List<DataCollection> getReturn(List<KnowledgeBase> knowledgeList) {
-
-        List<DataCollection> returnList = new ArrayList<DataCollection>(knowledgeList.size());
-        if(knowledgeList != null && !knowledgeList.isEmpty())
-            for (KnowledgeBase data : knowledgeList)
-                returnList.add(getReturn(data,null));
-
-        return returnList;
-    }
-
     public static List<DataCollect> getDataCollectReturn(List<KnowledgeBase> knowledgeList) {
 
         List<DataCollect> returnList = new ArrayList<DataCollect>(knowledgeList.size());
@@ -601,23 +568,6 @@ public final class KnowledgeUtil {
                 returnList.add(getDataCollectReturn(data, null));
 
         return returnList;
-    }
-
-    /**
-     * 返回数据包装方法
-     * @param knowledgeBase
-     * @param knowledgeReference
-     * @return
-     */
-    public static DataCollection getReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
-
-        DataCollection dataCollection = new DataCollection();
-
-        dataCollection.setKnowledge(knowledgeBase);
-
-        dataCollection.setReference(knowledgeReference);
-
-        return dataCollection;
     }
 
     public static DataCollect getDataCollectReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {

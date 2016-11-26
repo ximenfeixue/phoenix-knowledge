@@ -179,15 +179,6 @@ public abstract class BaseController {
         return new MappingJacksonValue(InterfaceResult.getInterfaceResultInstance(resultCode,message));
     }
 
-    protected MappingJacksonValue knowledgeDetail(DataCollection data)
-    {
-        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-        result.setResponseData(data);
-        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        jacksonValue.setFilters(KnowledgeUtil.assoFilterProvider(Associate.class.getName()));
-        return jacksonValue;
-    }
-
     protected MappingJacksonValue knowledgeDetail(DataCollect data)
     {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
