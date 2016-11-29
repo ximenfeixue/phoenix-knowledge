@@ -268,7 +268,7 @@ public class KnowledgeHomeController extends BaseController {
             url = resource.getString("knowledge.url.query");
         }
         if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-            url = "http://192.168.101.41:8090";
+            url = "http://192.168.101.53:8090";
         }
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
         pairs.add(new BasicNameValuePair("page", String.valueOf(page)));

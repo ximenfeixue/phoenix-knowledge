@@ -477,7 +477,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                     loadingMap.remove(key);
                 }
             }
-
         }
     }
 }
