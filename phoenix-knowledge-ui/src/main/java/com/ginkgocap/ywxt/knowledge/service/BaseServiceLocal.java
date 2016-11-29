@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -78,7 +78,7 @@ public abstract class BaseServiceLocal {
 
     protected String convertLongValueListToString(List<Long> ids)
     {
-        return DataCollection.convertLongListToBase(ids);
+        return DataCollect.convertLongListToBase(ids);
     }
 
     protected InterfaceResult batchResult(int success,int failed,boolean overMaxLimit)

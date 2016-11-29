@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.base;
 
-import com.ginkgocap.ywxt.knowledge.model.common.DataCollection;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -75,12 +74,5 @@ public class TestBase {
         TestCase.assertEquals("0",data.getNotification().getNotifCode());
         TestCase.assertEquals("success",data.getNotification().getNotifInfo());
         TestCase.assertNotNull(data.getResponseData());
-    }
-
-    protected void assertKnowledge(DataCollection data)
-    {
-        TestCase.assertNotNull(data);
-        TestCase.assertNotNull(data.getKnowledge());
-        TestCase.assertTrue( data.getKnowledge().getId()>0 && data.getKnowledge().getKnowledgeId()>=0 );
     }
 }

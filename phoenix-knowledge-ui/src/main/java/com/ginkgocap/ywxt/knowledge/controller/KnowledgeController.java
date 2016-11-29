@@ -1277,9 +1277,9 @@ public class KnowledgeController extends BaseController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/save/{knowledgeId}/{columnId}", method = RequestMethod.POST)
-    public InterfaceResult<DataCollection> save(HttpServletRequest request, HttpServletResponse response,
-                                                @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
+    @RequestMapping(value = "/save/{knowledgeId}/{typeId}", method = RequestMethod.POST)
+    public InterfaceResult save(HttpServletRequest request, HttpServletResponse response,
+                                                @PathVariable long knowledgeId, @PathVariable int typeId) throws Exception {
 
         InterfaceResult result = create(request, response);
         logger.info(".......save knowledge success......");
