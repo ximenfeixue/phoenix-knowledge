@@ -220,16 +220,16 @@ public final class KnowledgeUtil {
         if (StringUtils.isBlank(jsonObject)) {
             throw new IllegalArgumentException("jsonObject is null");
         }
-        DataCollect dataCollection = null;
+        DataCollect dataCollect = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             JsonNode node = objectMapper.readTree(jsonObject);
-            dataCollection = objectMapper.readValue(jsonObject, DataCollect.class);
+            dataCollect = objectMapper.readValue(jsonObject, DataCollect.class);
         } catch (Exception e) {
             logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
         }
-        return dataCollection;
+        return dataCollect;
     }
 
     public static SimpleFilterProvider assoFilterProvider(final String className) {

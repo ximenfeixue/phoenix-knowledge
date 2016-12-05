@@ -82,8 +82,8 @@ public class KnowledgeServiceTest extends TestBase {
     {
         System.out.println("===testDeleteByKnowledgeId===");
         try {
-            DataCollect dataCollection = this.createKnowledge("test-delete-KnowledgeServiceTest");
-            KnowledgeBase knowledge = dataCollection.getKnowledge();
+            DataCollect dataCollect = this.createKnowledge("test-delete-KnowledgeServiceTest");
+            KnowledgeBase knowledge = dataCollect.getKnowledge();
             InterfaceResult result = knowledgeService.deleteByKnowledgeId(knowledge.getKnowledgeId(), knowledge.getColumnId());
             assertResponseWithData(result);
         } catch (Exception e) {

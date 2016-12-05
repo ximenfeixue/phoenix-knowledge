@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ginkgocap.ywxt.knowledge.model.common.IdName;
 import com.ginkgocap.ywxt.knowledge.model.common.IdNameType;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 
 import java.util.List;
 
