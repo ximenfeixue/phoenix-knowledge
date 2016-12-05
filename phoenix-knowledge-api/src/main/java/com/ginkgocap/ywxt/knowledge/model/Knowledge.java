@@ -1,16 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ginkgocap.ywxt.knowledge.model.common.SelfField;
 
-import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
-import com.ginkgocap.ywxt.user.model.User;
-import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 知识javaBean （资讯，资产管理,宏观，观点，文章）
@@ -127,6 +120,8 @@ public class Knowledge implements Serializable {
 
 	// 附件
 	private List<String> attachUrls;
+
+	private List<SelfField> selfDef;
 
 	// 系统时间（大数据推送带过来的数据）
 	private String sysTime;
@@ -468,6 +463,14 @@ public class Knowledge implements Serializable {
 		this.collected = collected;
 	}
 
+	public List<SelfField> getSelfDef() {
+		return selfDef;
+	}
+
+	public void setSelfDef(List<SelfField> selfDef) {
+		this.selfDef = selfDef;
+	}
+
 	public void clone(Knowledge detail)
 	{
 		this.setId(detail.getId());
@@ -485,6 +488,12 @@ public class Knowledge implements Serializable {
 		this.setS_addr(detail.getS_addr());
 		this.setDirectorys(null);
 		this.setTags(null);
+		this.setEssence(detail.getEssence());
+		this.setStatus(detail.getStatus());
+		this.setTranStatus(detail.getTranStatus());
+		this.setReport_status(detail.getReport_status());
+		this.setTaskid(detail.getTaskid());
+		this.setIsh(detail.getIsh());
 		this.setVirtual(detail.getVirtual());
 		this.setPic(detail.getPic());
 		this.setHcontent(detail.getHcontent());
@@ -492,5 +501,7 @@ public class Knowledge implements Serializable {
 		this.setCpathid(detail.getCpathid());
 		this.setDesc(detail.getDesc());
 		this.setSource(detail.getSource());
+		this.setSelfDef(detail.getSelfDef());
 	}
+
 }
