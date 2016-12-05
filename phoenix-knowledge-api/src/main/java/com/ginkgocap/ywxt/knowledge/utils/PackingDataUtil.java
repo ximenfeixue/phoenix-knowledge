@@ -42,7 +42,7 @@ public class PackingDataUtil {
 		json.put("pic", base.getCoverPic());
 		json.put("selectedIds", selectedIds);
 		json.put("status", base.getStatus());
-		json.put("tags", /*base.getTags()*/"");
+		json.put("tags", base.getTags());
 		json.put("columnid", base.getColumnId());
 		json.put("columnType", base.getType());
 		json.put("content", base.getContent());

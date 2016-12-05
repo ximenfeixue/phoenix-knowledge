@@ -208,9 +208,6 @@ public class TestData {
         return report;
     }
 
-    public static String knowledgeCommentJson(Long knowledgeId) throws Exception
-    {
-        return "{\"id\":0,\"knowledgeId\":"+ knowledgeId + ",\"ownerId\":12344567,\"ownerName\":\"DummyUserName\",\"createTime\":1454306782624,\"content\":\"很不错，很好，很赞\",\"visible\":1}";
-    }
+
     //end
 }

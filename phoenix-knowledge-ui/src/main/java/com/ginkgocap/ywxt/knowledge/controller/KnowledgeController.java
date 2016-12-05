@@ -149,7 +149,6 @@ public class KnowledgeController extends BaseController {
         Map<Long, List<Associate>> assoMap = null;
         try {
             assoMap = associateServiceLocal.createAssociate(data.getAsso(), knowledgeId, user);
-
         }catch (Throwable e) {
             logger.error("Insert associate failed : " + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
