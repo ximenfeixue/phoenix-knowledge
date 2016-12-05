@@ -6,7 +6,6 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeReport;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.user.model.User;
@@ -53,38 +52,6 @@ public class TestData {
         return resItem;
     }
 
-
-    public static KnowledgeDetail knowledgeDetail(long userId,int columnId,String title)
-    {
-        long pictureId = 123456L;
-        KnowledgeDetail knowledgeDetail = new KnowledgeDetail();
-        knowledgeDetail.setOwnerId(userId);
-        knowledgeDetail.setOwnerName("testUser");
-        knowledgeDetail.setCid(userId);
-        knowledgeDetail.setCname("testUser");
-        knowledgeDetail.setTitle(title == null ? "TestTitle" : title);
-        knowledgeDetail.setContent("Knowledge Description");
-        List<String> UrlIds= new ArrayList<String>();
-        UrlIds.add("11122");
-        knowledgeDetail.setMultiUrls(UrlIds);
-        knowledgeDetail.setAttachmentUrls(UrlIds);
-        knowledgeDetail.setType((short)columnId);
-        knowledgeDetail.setColumnId(columnId);
-        knowledgeDetail.setModifyUserId(userId);
-        knowledgeDetail.setCreateTime(System.currentTimeMillis());
-        knowledgeDetail.setModifyTime(System.currentTimeMillis());
-//        List<Long> tagIds = new ArrayList<Long>(2);
-//        tagIds.add(3971096034672650L);
-//        tagIds.add(3969557253586945L);
-//        knowledgeDetail.setTags(tagIds);
-//        List<Long> cataIds = new ArrayList<Long>(2);
-//        cataIds.add(3969635594797376L);
-//        cataIds.add(3971096089198959L);
-//        knowledgeDetail.setCategoryIds(cataIds);
-
-        return knowledgeDetail;
-    }
-    
     public static Knowledge knowledge(long userId,int columnId,String title)
     {
         Knowledge detail = new Knowledge();

@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeMongo;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;

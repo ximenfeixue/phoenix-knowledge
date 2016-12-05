@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 
@@ -126,28 +126,6 @@ public class TestDataUtil {
 			}
 		}
 	}
-    
-    public static void initBaseData(KnowledgeDetail knowledgeDetail)
-    {
-        knowledgeDetail.setColumnId((short)2);
-        knowledgeDetail.setTitle("title1");
-        knowledgeDetail.setContent("note");
-
-        knowledgeDetail.setOwnerId(122344L);
-        knowledgeDetail.setOwnerName("Jerry");
-        knowledgeDetail.setCreateTime(System.currentTimeMillis());
-        //knowledgeDetail.setDemandType(Long.valueOf(knowledgeType.getTypeId()));
-        //knowledgeDetail.setContact("Jerry");
-        List<Long> Ids = new ArrayList<Long>(3);
-        Ids.add(122L);
-        Ids.add(1223L);
-        Ids.add(345L);
-        knowledgeDetail.setTags(Ids);
-        knowledgeDetail.setCategoryIds(Ids);
-        knowledgeDetail.setMultiUrls(getImgVideos());
-        knowledgeDetail.setAttachmentUrls(getAttachFiles());
-        //demandBase.setPermisson(getPermission());
-    }
 
     public static List<String> getImgVideos()
     {
@@ -358,7 +336,7 @@ public class TestDataUtil {
     private static Map<Long,String> knowledgeMap = new HashMap<Long,String>(24);
     public static String allJson() { return jsonBuffer.toString(); }
 
-    public static void appendJson(KnowledgeDetail knowledgeDetail,String jsonContent)
+    public static void appendJson(Knowledge knowledgeDetail, String jsonContent)
     {
         if (knowledgeMap.size() <= 0) {
             //initDemandMap();

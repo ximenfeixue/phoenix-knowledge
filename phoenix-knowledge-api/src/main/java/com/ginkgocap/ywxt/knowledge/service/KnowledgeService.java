@@ -4,7 +4,6 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.List;

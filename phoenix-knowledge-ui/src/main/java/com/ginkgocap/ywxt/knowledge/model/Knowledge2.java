@@ -3,7 +3,6 @@ package com.ginkgocap.ywxt.knowledge.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeDetail;
 import com.ginkgocap.ywxt.knowledge.model.mobile.*;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
@@ -191,23 +190,6 @@ public class Knowledge2 {
 
     }
 
-    public Knowledge2(KnowledgeDetail knowledge) {
-
-        this.title = knowledge.getTitle();
-        this.uid = knowledge.getOwnerId();
-        this.uname = knowledge.getOwnerName();
-        this.cid = knowledge.getCid();
-        this.source = knowledge.getSource();
-        this.s_addr = knowledge.getS_addr();
-        this.cpathid = knowledge.getCPath();
-        this.pic = knowledge.getPic();
-        this.desc = knowledge.getDesc();
-        this.content = knowledge.getContent();
-        this.hcontent = knowledge.getHcontent();
-        this.essence = knowledge.getEssence();
-        this.status = knowledge.getStatus();
-        this.reportStatus = knowledge.getReportStatus();
-    }
 
     /**
      * @desc 从knowledge对象生成当前对象
