@@ -8,12 +8,14 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
+import com.ginkgocap.ywxt.knowledge.model.common.SelfField;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,6 +71,7 @@ public class TestData {
         detail.setColumnid(String.valueOf(columnId));
         detail.setModifytime(String.valueOf(System.currentTimeMillis()));
         detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
+        detail.setSelfDef(createSelfField());
 
         return detail;
     }
@@ -175,6 +178,10 @@ public class TestData {
         return report;
     }
 
+    private static List<SelfField> createSelfField()
+    {
+        return Arrays.asList(new SelfField("name1","value1"), new SelfField("name2","value2"));
+    }
 
     //end
 }

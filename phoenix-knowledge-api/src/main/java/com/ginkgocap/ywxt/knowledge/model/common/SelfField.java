@@ -27,4 +27,10 @@ public class SelfField implements Serializable
     public void setValue(String value) {
         this.value = value;
     }
+
+    public SelfField(String name,String value)
+    {
+        this.name = name;
+        this.value = value;
+    }
 }
