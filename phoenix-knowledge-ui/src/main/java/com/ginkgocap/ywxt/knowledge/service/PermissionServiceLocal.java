@@ -241,9 +241,10 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         permission.setAppId(APPID);
         permission.setResId(resId);
         permission.setResOwnerId(userId);
-        permission.setConnectFlag(0);
-        permission.setPublicFlag(0);
-        permission.setShareFlag(0);
+        final int defaultFlag = userId > 0 ? 0 : 1;
+        permission.setConnectFlag(defaultFlag);
+        permission.setPublicFlag(defaultFlag);
+        permission.setShareFlag(defaultFlag);
         permission.setResType((short)sourceType);
         return permission;
     }
