@@ -2019,7 +2019,7 @@ public class KnowledgeController extends BaseController {
         //set a default value
         if (permission == null) {
             logger.info("Can't get knowledge permission, so set a default value. knowledgeId: {}", knowledgeId);
-            permission = permissionServiceLocal.defaultPrivatePermission(userId, knowledgeId);
+            permission = permissionServiceLocal.defaultPrivatePermission(detail.getCid(), knowledgeId);
         }
         data.setPermission(permission);
 
