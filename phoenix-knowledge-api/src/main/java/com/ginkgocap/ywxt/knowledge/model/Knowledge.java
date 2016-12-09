@@ -11,8 +11,8 @@ import java.util.List;
  * @author Administrator
  * 
  */
-public class Knowledge implements Serializable {
-
+public class Knowledge implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	// id

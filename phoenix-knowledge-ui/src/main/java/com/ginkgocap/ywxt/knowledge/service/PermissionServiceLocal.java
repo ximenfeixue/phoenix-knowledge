@@ -245,7 +245,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         permission.setConnectFlag(defaultFlag);
         permission.setPublicFlag(defaultFlag);
         permission.setShareFlag(defaultFlag);
-        permission.setResType((short)sourceType);
+        permission.setResType(ResourceType.KNOW.getVal());
         return permission;
     }
 }
