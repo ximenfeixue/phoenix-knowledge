@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class BigDataService implements Runnable, InitializingBean
 	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.deleteKnowledgeFlag();
 
 
-	@Autowired
+    @Resource
 	TagServiceLocal tagServiceLocal;
 
 	@Autowired
@@ -72,41 +73,42 @@ public class BigDataService implements Runnable, InitializingBean
 		}
 	}
 
-	public void pushKnowledge(SyncKnowledgeData bigData) {
-				if (bigData != null && bigData.base != null) {
-					KnowledgeBase base = bigData.base;
-					long userId = base.getCreateUserId();
-					try {
-						List<String> tagNames = new ArrayList<String>();
-						List<Tag> tagList = tagServiceLocal.getTagList(userId);
-						if (CollectionUtils.isNotEmpty(tagList)) {
-							Map<Long, Tag> tagMap = new HashMap<Long, Tag>();
-							for (Tag tag : tagList) {
-								if (tag != null) {
-									tagMap.put(tag.getId(), tag);
-								}
-							}
-							List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
-							for (long id : idList) {
-								Tag tag = tagMap.get(id);
-								if (tag != null) {
-									tagNames.add(tag.getTagName());
-								} else {
-									logger.error("Can't find tag by id: " + id);
-								}
-							}
-							if (CollectionUtils.isNotEmpty(tagNames)) {
-								String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
-								logger.info("will send to bigdata service. tag names: " + tagNameString);
-								base.setTags(tagNameString);
-							}
-						}
-					} catch (Exception ex) {
-						logger.error("get tag list failed. userId : " + userId);
-					}
-					//base.setTags();
-					this.sendMessage(bigData.optionType, base, userId);
-				}
+	public void pushKnowledge(SyncKnowledgeData bigData)
+    {
+        if (bigData != null && bigData.base != null) {
+            KnowledgeBase base = bigData.base;
+            long userId = base.getCreateUserId();
+            try {
+                List<String> tagNames = new ArrayList<String>();
+                List<Tag> tagList = tagServiceLocal.getTagList(userId);
+                if (CollectionUtils.isNotEmpty(tagList)) {
+                    Map<Long, Tag> tagMap = new HashMap<Long, Tag>();
+                    for (Tag tag : tagList) {
+                        if (tag != null) {
+                            tagMap.put(tag.getId(), tag);
+                        }
+                    }
+                    List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
+                    for (long id : idList) {
+                        Tag tag = tagMap.get(id);
+                        if (tag != null) {
+                            tagNames.add(tag.getTagName());
+                        } else {
+                            logger.error("Can't find tag by id: " + id);
+                        }
+                    }
+                    if (CollectionUtils.isNotEmpty(tagNames)) {
+                        String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
+                        logger.info("will send to bigdata service. tag names: " + tagNameString);
+                        base.setTags(tagNameString);
+                    }
+                }
+            } catch (Exception ex) {
+                logger.error("get tag list failed. userId : " + userId);
+            }
+            //base.setTags();
+            this.sendMessage(bigData.optionType, base, userId);
+        }
 	}
 
 	public void deleteMessage(long knowledgeId, int columnId, long userId)	throws Exception {

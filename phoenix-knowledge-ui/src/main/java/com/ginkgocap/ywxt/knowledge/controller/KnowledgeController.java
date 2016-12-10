@@ -50,8 +50,8 @@ public class KnowledgeController extends BaseController {
     @Autowired
     private KnowledgeService knowledgeService;
 
-    @Autowired
-    private KnowledgeHomeService knowledgeHomeService;
+    //@Autowired
+    //private KnowledgeHomeService knowledgeHomeService;
 
     @Autowired
     private KnowledgeOtherService knowledgeOtherService;
