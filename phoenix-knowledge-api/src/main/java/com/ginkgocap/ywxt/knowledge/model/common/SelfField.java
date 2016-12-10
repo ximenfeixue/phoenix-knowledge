@@ -28,6 +28,8 @@ public class SelfField implements Serializable
         this.value = value;
     }
 
+    public SelfField() {}
+
     public SelfField(String name,String value)
     {
         this.name = name;

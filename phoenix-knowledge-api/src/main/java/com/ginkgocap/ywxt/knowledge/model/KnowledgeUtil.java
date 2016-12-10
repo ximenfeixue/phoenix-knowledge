@@ -223,7 +223,7 @@ public final class KnowledgeUtil {
         DataCollect dataCollect = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.enableDefaultTyping();
+            //objectMapper.enableDefaultTyping();
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             JsonNode node = objectMapper.readTree(jsonObject);
             dataCollect = objectMapper.readValue(jsonObject, DataCollect.class);
