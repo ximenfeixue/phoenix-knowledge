@@ -45,7 +45,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/knowledge")
-public class KnowledgeController extends BaseController implements , InitializingBean
+public class KnowledgeController extends BaseController implements InitializingBean
 {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeController.class);
 
