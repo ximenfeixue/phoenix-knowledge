@@ -10,6 +10,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
@@ -81,7 +82,7 @@ public class KnowledgeController extends BaseController {
     private KnowledgeCountService knowledgeCountService;
 
     @Autowired
-    private BigDataService bigDataService;
+    private BigDataSyncTask bigDataSyncTask;
 
     //@Autowired
     //private Cache cache;
@@ -174,7 +175,7 @@ public class KnowledgeController extends BaseController {
 
         //send new knowledge to bigdata
         KnowledgeBase base = data.generateKnowledge();
-        bigDataService.addToMessageQueue(BigDataService.KNOWLEDGE_INSERT, base, userId);
+        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, base, userId);
 
         logger.info(".......create knowledge success......");
         return result;
@@ -253,7 +254,7 @@ public class KnowledgeController extends BaseController {
         //send new knowledge to bigdata
         data.setKnowledgeDetail(updatedDetail);
         KnowledgeBase base = data.generateKnowledge();
-        bigDataService.addToMessageQueue(BigDataService.KNOWLEDGE_UPDATE, base, userId);
+        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, base, userId);
 
         logger.info(".......update knowledge success......");
         return result;
@@ -312,7 +313,7 @@ public class KnowledgeController extends BaseController {
         }
 
         //send new knowledge to bigdata
-        bigDataService.deleteMessage(knowledgeId, columnType, userId);
+        bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);
 
         logger.info(".......delete knowledge success......");
         return result;

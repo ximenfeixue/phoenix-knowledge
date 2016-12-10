@@ -1,10 +1,10 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.task;
 
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
-import com.ginkgocap.ywxt.util.Exceptions;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
@@ -26,10 +26,10 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-@Service("bigDataService")
-public class BigDataService implements Runnable, InitializingBean
+@Repository("bigDataSyncTask")
+public class BigDataSyncTask implements Runnable, InitializingBean
 {
-	private final Logger logger = LoggerFactory.getLogger(BigDataService.class);
+	private final Logger logger = LoggerFactory.getLogger(BigDataSyncTask.class);
 
 	/**知识MQ插入*/
 	public final static String KNOWLEDGE_INSERT = FlagTypeUtils.createKnowledgeFlag();
@@ -42,7 +42,7 @@ public class BigDataService implements Runnable, InitializingBean
 
 
     @Resource
-	TagServiceLocal tagServiceLocal;
+    TagServiceLocal tagServiceLocal;
 
 	@Autowired
 	private DefaultMessageService defaultMessageService;

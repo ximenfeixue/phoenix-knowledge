@@ -1,7 +1,9 @@
-package com.ginkgocap.ywxt.knowledge.service;
+package com.ginkgocap.ywxt.knowledge.task;
 
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
+import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
+import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
