@@ -174,7 +174,7 @@ public class KnowledgeController extends BaseController {
 
         //send new knowledge to bigdata
         KnowledgeBase base = data.generateKnowledge();
-        bigDataService.sendMessage(BigDataService.KNOWLEDGE_INSERT, base, userId);
+        bigDataService.addToMessageQueue(BigDataService.KNOWLEDGE_INSERT, base, userId);
 
         logger.info(".......create knowledge success......");
         return result;
@@ -253,7 +253,7 @@ public class KnowledgeController extends BaseController {
         //send new knowledge to bigdata
         data.setKnowledgeDetail(updatedDetail);
         KnowledgeBase base = data.generateKnowledge();
-        bigDataService.sendMessage(BigDataService.KNOWLEDGE_UPDATE, base, userId);
+        bigDataService.addToMessageQueue(BigDataService.KNOWLEDGE_UPDATE, base, userId);
 
         logger.info(".......update knowledge success......");
         return result;
@@ -2075,7 +2075,7 @@ public class KnowledgeController extends BaseController {
 
     private List<IdName> getMinTagList(long userId, List<Long> tagIds)
     {
-        List<Tag> tags = tagServiceLocal.getTagList(userId, tagIds);
+        List<Tag> tags = tagServiceLocal.getTagList(tagIds);
         if (tags != null && tags.size() >0) {
             List<IdName> minTags = new ArrayList<IdName>(tags.size());
             for (Tag tag : tags) {

@@ -91,7 +91,7 @@ public class DataSyncTask implements Runnable, InitializingBean
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("DataSyncTask starting........");
-        new Thread(new DataSyncTask()).start();
+        //logger.info("DataSyncTask starting........");
+        //new Thread(new DataSyncTask()).start();
     }
 }

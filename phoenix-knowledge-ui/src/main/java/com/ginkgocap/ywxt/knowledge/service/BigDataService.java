@@ -1,22 +1,34 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
+import com.ginkgocap.ywxt.util.Exceptions;
 import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
 import com.gintong.rocketmq.api.utils.FlagTypeUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 @Repository("bigDataService")
-public class BigDataService
+public class BigDataService implements Runnable, InitializingBean
 {
+	private final Logger logger = LoggerFactory.getLogger(BigDataService.class);
+
 	/**知识MQ插入*/
 	public final static String KNOWLEDGE_INSERT = FlagTypeUtils.createKnowledgeFlag();
 
@@ -26,17 +38,25 @@ public class BigDataService
 	/**知识MQ删除*/
 	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.deleteKnowledgeFlag();
 
-	private static final Logger logger = LoggerFactory.getLogger(BigDataService.class);
 
-	@Autowired(required = true)
+	@Autowired
+	TagServiceLocal tagServiceLocal;
+
+	@Autowired
 	private DefaultMessageService defaultMessageService;
 
-	public void sendMessage(String optionType, KnowledgeBase base, long userId) {
+	private BlockingQueue<SyncKnowledgeData> knowQueue = new ArrayBlockingQueue<SyncKnowledgeData>(1000);
+
+	public void addToMessageQueue(String optionType, KnowledgeBase base, long userId) {
+		knowQueue.add(new SyncKnowledgeData(userId, optionType, base));
+	}
+
+	private void sendMessage(String optionType, KnowledgeBase base, long userId) {
         if (base == null) {
             logger.error("Knowledge base is null, so skip to send..");
             return;
         }
-		logger.info("notify bigdata， userId: " + userId);
+		logger.info("push knowledge to bigdata， userId: " + userId + " knowledgeId: " + base.getId());
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {
@@ -51,26 +71,87 @@ public class BigDataService
 		}
 	}
 
-	public void sendMessage(String optionType, List<KnowledgeBase> knowledgeBaseList, long userId) {
-		if(knowledgeBaseList != null && !knowledgeBaseList.isEmpty()) {
-			for (KnowledgeBase base : knowledgeBaseList) {
-				if (base != null) {
-					this.sendMessage(optionType, base, userId);
+	public void pushKnowledge(SyncKnowledgeData bigData) {
+				if (bigData != null && bigData.base != null) {
+					KnowledgeBase base = bigData.base;
+					long userId = base.getCreateUserId();
+					try {
+						List<String> tagNames = new ArrayList<String>();
+						List<Tag> tagList = tagServiceLocal.getTagList(userId);
+						if (CollectionUtils.isNotEmpty(tagList)) {
+							Map<Long, Tag> tagMap = new HashMap<Long, Tag>();
+							for (Tag tag : tagList) {
+								if (tag != null) {
+									tagMap.put(tag.getId(), tag);
+								}
+							}
+							List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
+							for (long id : idList) {
+								Tag tag = tagMap.get(id);
+								if (tag != null) {
+									tagNames.add(tag.getTagName());
+								} else {
+									logger.error("Can't find tag by id: " + id);
+								}
+							}
+							if (CollectionUtils.isNotEmpty(tagNames)) {
+								String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
+								logger.info("will send to bigdata service. tag names: " + tagNameString);
+								base.setTags(tagNameString);
+							}
+						}
+					} catch (Exception ex) {
+						logger.error("get tag list failed. userId : " + userId);
+					}
+					//base.setTags();
+					this.sendMessage(bigData.optionType, base, userId);
 				}
-			}
-			
-		}
 	}
 
-	public void deleteMessage(long knowledgeId, int columnId, long userId)
-			throws Exception {
+	public void deleteMessage(long knowledgeId, int columnId, long userId)	throws Exception {
 		
 		KnowledgeBase base = new KnowledgeBase();
 		base.setId(knowledgeId);
 		base.setColumnId(columnId);
         base.setType((short)columnId);
 		
-		this.sendMessage(KNOWLEDGE_DELETE, base, userId);
+		//this.sendMessage(KNOWLEDGE_DELETE, base, userId);
+		addToMessageQueue(KNOWLEDGE_DELETE, base, userId);
 	}
 
+	private static class SyncKnowledgeData
+	{
+		private long userId;
+		private String optionType;
+		private KnowledgeBase base;
+
+		public SyncKnowledgeData(long userId,String optionType,KnowledgeBase base)
+		{
+			this.userId = userId;
+			this.optionType = optionType;
+			this.base = base;
+		}
+	}
+
+	public void run() {
+		try {
+			while (true) {
+				SyncKnowledgeData bigData = knowQueue.poll();
+				if (bigData != null) {
+					pushKnowledge(bigData);
+				} else {
+					Thread.sleep(5000); //sleep 5s
+				}
+			}
+		} catch (InterruptedException ex) {
+			logger.error("Exist thread, as it was interrupted.");
+		}
+	}
+
+
+	public void afterPropertiesSet() throws Exception {
+		logger.info("Knowledge message queue starting.");
+		new Thread(this).start();
+		logger.info("Knowledge message queue started.");
+	}
 }
