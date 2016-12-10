@@ -1357,7 +1357,7 @@ public class KnowledgeController extends BaseController {
         String requestJson = this.getBodyParam(request);
         logger.info("batchTags: {}", requestJson );
         List<ResItem> batchItems = KnowledgeUtil.readListValue(ResItem.class, requestJson);
-        if (batchItems == null || batchItems.size() <= 0) {
+        if (CollectionUtils.isEmpty(batchItems)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
@@ -1447,7 +1447,7 @@ public class KnowledgeController extends BaseController {
         String requestJson = this.getBodyParam(request);
         List<Long> tagIds = KnowledgeUtil.readListValue(Long.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (tagIds == null || tagIds.size() <= 0) {
+        if (CollectionUtils.isEmpty(tagIds)) {
             logger.error("No tag list send.");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No tag list send.");
         }
@@ -1560,7 +1560,7 @@ public class KnowledgeController extends BaseController {
         String requestJson = this.getBodyParam(request);
         List<Long> directoryIds = KnowledgeUtil.readListValue(Long.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (directoryIds == null || directoryIds.size() <= 0) {
+        if (CollectionUtils.isEmpty(directoryIds)) {
             logger.error("No any directory id send!");
             return mappingJacksonValue(InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory id send!"));
         }
@@ -1590,7 +1590,7 @@ public class KnowledgeController extends BaseController {
         String requestJson = this.getBodyParam(request);
         List<Long> directoryIds = KnowledgeUtil.readListValue(Long.class, requestJson);
         //String [] ids = KnowledgeUtil.readValue(List.class, requestJson);requestJson.split(",");
-        if (directoryIds == null || directoryIds.size() <= 0) {
+        if (CollectionUtils.isEmpty(directoryIds)) {
             logger.error("No any directory Id send..");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,"No any directory Id send..");
         }

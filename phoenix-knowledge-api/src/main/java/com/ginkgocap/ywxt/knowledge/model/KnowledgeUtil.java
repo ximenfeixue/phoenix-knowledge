@@ -137,7 +137,7 @@ public final class KnowledgeUtil {
 
     public static <T> List<T> readListValue(Class<T> valueType, final String content) {
         if (StringUtils.isBlank(content)) {
-            throw new IllegalArgumentException("Content is null");
+            return null;
         }
         try {
             //TypeReference javaType = new TypeReference<List<T>>(){};
