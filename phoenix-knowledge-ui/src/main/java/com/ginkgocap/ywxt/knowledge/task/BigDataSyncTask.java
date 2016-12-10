@@ -27,7 +27,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 @Repository("bigDataSyncTask")
-public class BigDataSyncTask implements Runnable, InitializingBean
+public class BigDataSyncTask implements Runnable
 {
 	private final Logger logger = LoggerFactory.getLogger(BigDataSyncTask.class);
 
@@ -149,12 +149,5 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 		} catch (InterruptedException ex) {
 			logger.error("Exist thread, as it was interrupted.");
 		}
-	}
-
-
-	public void afterPropertiesSet() throws Exception {
-		logger.info("Knowledge message queue starting.");
-		new Thread(this).start();
-		logger.info("Knowledge message queue started.");
 	}
 }

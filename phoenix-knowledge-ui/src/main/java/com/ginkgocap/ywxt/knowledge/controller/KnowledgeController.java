@@ -29,6 +29,7 @@ import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
@@ -44,8 +45,8 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/knowledge")
-public class KnowledgeController extends BaseController {
-
+public class KnowledgeController extends BaseController implements , InitializingBean
+{
     private final Logger logger = LoggerFactory.getLogger(KnowledgeController.class);
 
     @Autowired
@@ -2271,5 +2272,11 @@ public class KnowledgeController extends BaseController {
             }
         }
         return collectedKnowledgeItems;
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        logger.info("Knowledge message queue starting.");
+        new Thread(bigDataSyncTask).start();
+        logger.info("Knowledge message queue started.");
     }
 }
