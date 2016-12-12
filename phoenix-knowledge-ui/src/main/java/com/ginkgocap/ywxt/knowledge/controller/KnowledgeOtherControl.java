@@ -220,15 +220,9 @@ public class KnowledgeOtherControl extends BaseController
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
             }
-        } catch (IOException e) {
-            logger.error("Generate knowledge failed: error: " + e.getMessage());
-            e.printStackTrace();
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "输入参数不合法");
-        } catch (Exception q) {
+        } catch (Exception ex) {
             setSessionAndErr(request, response, "-1", "未知异常");
-            logger.error("Generate knowledge failed: error: {}" + q.getMessage());
-            logger.error(q.toString());
-            logger.error(q.getMessage());
+            logger.error("Generate knowledge failed: error: {}" + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
         responseDataMap.put("knowledge", knowledge);
