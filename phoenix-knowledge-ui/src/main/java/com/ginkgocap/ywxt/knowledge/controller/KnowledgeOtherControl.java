@@ -5,7 +5,6 @@ import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.PermissionServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
@@ -92,7 +91,7 @@ public class KnowledgeOtherControl extends BaseController
                 }
                 // 原始链接
                 String srcExternalUrl = externalUrl;
-                logger.info("srcExternalUrl: {}", srcExternalUrl);
+                logger.info("srcExternalUrl: " + srcExternalUrl);
 
                 // 配置大数据地址
                 ResourceBundle resource = ResourceBundle.getBundle("application");
@@ -110,7 +109,7 @@ public class KnowledgeOtherControl extends BaseController
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalException(url, jsonNode.toString());
+                    bigDataResponse = externalKnowledge(url, jsonNode.toString());
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
@@ -302,7 +301,7 @@ public class KnowledgeOtherControl extends BaseController
     }
 
     @SuppressWarnings("static-access")
-    private String externalException(String url, String jsonContent) {
+    private String externalKnowledge(String url, String jsonContent) {
         if (StringUtils.isEmpty(url) || StringUtils.isEmpty(jsonContent)) {
             return null;
         }
