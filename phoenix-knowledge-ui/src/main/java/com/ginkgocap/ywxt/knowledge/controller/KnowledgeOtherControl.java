@@ -185,9 +185,9 @@ public class KnowledgeOtherControl extends BaseController
                             // 创建人姓名
                             knowledge.setCname(user.getName());
                             // 用户ID
-                            knowledge.setUid();
+                            //knowledge.setUid();
                             // 用户名
-                            knowledge.setUname();
+                            //knowledge.setUname();
                             // 去除无用图片 - （仅针对移动端编辑时需要）
                             knowledge.setMultiUrls(null);
                             // 创建改知识

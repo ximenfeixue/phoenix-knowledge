@@ -1977,7 +1977,7 @@ public class KnowledgeController extends BaseController
         try {
             isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnType);
         } catch (Exception ex) {
-            logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
+            logger.error("Query knowledge is collected or not failed: userId: " + userId + " knowledgeId: " + knowledgeId + ", columnType: " + columnType);
         }
         detail.setCollected(isCollected ? (short) 1 : (short) 0);
         DataCollect data = new DataCollect(null, detail);
