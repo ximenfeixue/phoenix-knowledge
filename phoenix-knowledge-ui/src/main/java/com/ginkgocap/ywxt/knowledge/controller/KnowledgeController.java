@@ -497,14 +497,6 @@ public class KnowledgeController extends BaseController
         logger.info(".......get knowledge detail complete......");
         MappingJacksonValue jacksonValue = knowledgeDetail(data);
 
-        //Click count this should be in queue
-        try {
-            knowledgeCountService.updateClickCount(this.getUserId(user), knowledgeId, (short)type);
-        } catch (Exception ex) {
-            logger.error("count knowledge click failed: knowledgeId: {}, columnId: {}", knowledgeId, type);
-            ex.printStackTrace();
-        }
-
         return jacksonValue;
     }
 
@@ -1944,7 +1936,7 @@ public class KnowledgeController extends BaseController
         return permission;
     }
 
-    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnId,boolean isWeb) {
+    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType,boolean isWeb) {
         if (user != null) {
             logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + user.getId());
         }
@@ -1956,14 +1948,14 @@ public class KnowledgeController extends BaseController
         Knowledge detail = null;
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
-            detail = this.knowledgeService.getDetailById(knowledgeId, columnId);
+            detail = this.knowledgeService.getDetailById(knowledgeId, columnType);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
         }
 
         //数据为空则直接返回异常给前端
         if(detail == null) {
-            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnType);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
         }
         /*
@@ -1977,13 +1969,13 @@ public class KnowledgeController extends BaseController
         detail.setHcontent(hContent);
         detail.setVirtual(user.isVirtual() ? (short)2 : (short)1);
         if (StringUtils.isEmpty(detail.getColumnType())) {
-            detail.setColumnType(String.valueOf(columnId));
+            detail.setColumnType(String.valueOf(columnType));
         }
 
         boolean isCollected = false;
         long userId = user.getId();
         try {
-            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnId);
+            isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnType);
         } catch (Exception ex) {
             logger.error("Query knowledge is collected or not failed: userId: {}, knowledgeId: {}, columnId: {}", userId, knowledgeId, columnId);
         }
@@ -2019,7 +2011,7 @@ public class KnowledgeController extends BaseController
         Permission permission = permissionServiceLocal.getPermissionInfo(knowledgeId);
         //set a default value
         if (permission == null) {
-            logger.info("Can't get knowledge permission, so set a default value. knowledgeId: {}", knowledgeId);
+            logger.info("Can't get knowledge permission, so set a default value. knowledgeId: " + knowledgeId);
             permission = permissionServiceLocal.defaultPrivatePermission(detail.getCid(), knowledgeId);
         }
         data.setPermission(permission);
@@ -2028,12 +2020,21 @@ public class KnowledgeController extends BaseController
             List<Associate> associateList = associateServiceLocal.getAssociateList(user.getId(), knowledgeId);
             data.setAsso(associateList);
         } catch (Exception ex) {
-            logger.error("get knowledge associate info failed: knowledgeId: {}, columnId: {}", knowledgeId, columnId);
+            logger.error("get knowledge associate info failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
             ex.printStackTrace();
         }
 
         result.setResponseData(data);
         logger.info(".......get knowledge detail complete......");
+
+        //Click count this should be in queue
+        try {
+            knowledgeCountService.updateClickCount(this.getUserId(user), knowledgeId, (short)columnType);
+        } catch (Exception ex) {
+            logger.error("count knowledge click failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
+            ex.printStackTrace();
+        }
+
 
         return result;
     }
@@ -2042,7 +2043,7 @@ public class KnowledgeController extends BaseController
     {
         int createCount = getCreatedKnowledgeCount(userId);
         long collectedCount = getCollectedKnowledgeCount(userId);
-        logger.info("createCount: {}, collectedCount: {}", createCount, collectedCount);
+        logger.info("createCount: " + createCount +", collectedCount: " + collectedCount);
 
         return createCount + collectedCount;
     }
@@ -2053,10 +2054,10 @@ public class KnowledgeController extends BaseController
         try {
             createCount = this.knowledgeService.getKnowledgeCount(userId);
         }catch (Exception ex) {
-            logger.error("get created knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+            logger.error("get created knowledge count failed: userId: " + userId + ", error: " + ex.getMessage());
         }
 
-        logger.info("createCount: {}", createCount);
+        logger.info("createCount: " + createCount);
 
         return createCount;
     }
@@ -2067,7 +2068,7 @@ public class KnowledgeController extends BaseController
         try {
             collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
         }catch (Exception ex) {
-            logger.error("get collected knowledge count failed: userId: {}, error: {}", userId, ex.getMessage());
+            logger.error("get collected knowledge count failed: userId: " + userId + ", error: " + ex.getMessage());
         }
         logger.info("collectedCount: " + collectedCount);
 

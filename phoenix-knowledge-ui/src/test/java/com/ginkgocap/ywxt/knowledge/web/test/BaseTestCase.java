@@ -38,7 +38,7 @@ import com.ginkgocap.ywxt.user.model.User;
  */
 public abstract class BaseTestCase extends TestCase
 {
-	protected static boolean web = false;
+	protected static boolean web = true;
     protected static boolean noTestHost = false;
     protected static boolean debugModel = false;
     protected static boolean runTestCase = false;
@@ -55,7 +55,7 @@ public abstract class BaseTestCase extends TestCase
     protected static String openHostUrl = null;
     private final static String [] envArray = new String[] {"local", "dev", "testOnline", "online"};
     
-    public final static String testEnv = envArray[2];
+    public final static String testEnv = envArray[3];
     
     static {
         //-DdebugModel=true -DrunTestCase=true -DhostUrl=http://192.168.120.135:8080
@@ -532,8 +532,8 @@ public abstract class BaseTestCase extends TestCase
     private static String getLoginJson(boolean web)
     {
         final String vCode = "445311";
-    	final String userName = "online".equals(testEnv) ? "18611386946" : "18611386946"; //"457067008@qq.com"; //18612921857
-        final String passWord = "online".equals(testEnv) ? "sa#123" : "sa#123"; //"abc123"; //
+    	final String userName = "online".equals(testEnv) ? "18611386946" : "18611386946"; //"18612921857"; //
+        final String passWord = "online".equals(testEnv) ? "sa#123" : "sa#123"; //"MTExMTEx"; //
     	String newPassWord = new String(Base64.encode(passWord.getBytes()));
     	String webLoginJson = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"vCode\":\"\",\"index\":0}", userName, newPassWord, vCode);
     	String apiLoginJson = String.format("{\"clientID\":\"18211081791\",\"clientPassword\":\"GT4131929\",\"imei\":\"yss-3434-dsf55-22256\",\"version\":\"1.6.0.0609\",\"platform\":\"iPhone\",\"model\":\"iPhone 3G\",\"resolution\":\"480x320\",\"systemName\":\"iOS\",\"systemVersion\":\"1.5.7\",\"channelID\":\"10086111445441\",\"loginString\":\"%s\",\"password\":\"%s\",\"vCode\":\"%s\"}", userName, newPassWord, vCode);

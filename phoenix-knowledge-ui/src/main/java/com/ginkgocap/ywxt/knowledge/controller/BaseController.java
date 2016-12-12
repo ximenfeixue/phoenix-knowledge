@@ -233,7 +233,7 @@ public abstract class BaseController {
                 !CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
     }
 
-    protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, String[] listImageUrl2, String orgUrl, boolean isWeb)
+    protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, List<String> listImageUrl2, String orgUrl, boolean isWeb)
     {
         if (StringUtils.isEmpty(content)) {
             logger.error("Knowledge Content is null, please check the knowledge..");

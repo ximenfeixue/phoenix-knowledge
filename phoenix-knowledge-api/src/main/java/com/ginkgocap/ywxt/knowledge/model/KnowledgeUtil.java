@@ -299,9 +299,17 @@ public final class KnowledgeUtil {
 
     public static List<Long> convertStringToLongList(String ids)
     {
-        if (StringUtils.isEmpty(ids)) {
+        if (StringUtils.isBlank(ids)) {
             return null;
         }
+        logger.info("will convert ids :" + ids);
+        if (ids.indexOf("[") >= 0) {
+            ids = ids.replace("[", "");
+        }
+        if (ids.indexOf("]") >= 0) {
+            ids = ids.replace("]", "");
+        }
+        logger.info("after convert ids :" + ids);
         List<Long> idList = null;
         if (ids.indexOf(",") <= 0) {
             idList = new ArrayList<Long>(1);

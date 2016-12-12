@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.PermissionServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
+import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.Utils;
 import com.ginkgocap.ywxt.user.model.User;
@@ -51,6 +52,9 @@ public class KnowledgeOtherControl extends BaseController
     @Autowired
     private TagServiceLocal tagServiceLocal;
 
+    @Autowired
+    private BigDataSyncTask bigDataSyncTask;
+
     private final short DEFAULT_KNOWLEDGE_TYPE = 1;
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
@@ -65,9 +69,10 @@ public class KnowledgeOtherControl extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        long userId = user.getId();
         logger.info("into /FetchExternalKnowledgeUrl");
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
-        Knowledge2 knowledge = null;
+        Knowledge knowledge = null;
         String requestJson = "";
         try {
             requestJson = getBodyParam(request);
@@ -128,11 +133,6 @@ public class KnowledgeOtherControl extends BaseController
 
                 if (StringUtils.isBlank(bigDataResponse) || StringUtils.isBlank(title) ||
                         StringUtils.isBlank(HtmlToText.html2Text(content))) {
-                    // 大数据解析超时
-                    //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
-                    // 错误反馈
-                    //responseDataMap.put("knowledgeDetail", null);
-                    // 跳出
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
 
@@ -146,19 +146,19 @@ public class KnowledgeOtherControl extends BaseController
                     /** 以下条件，则大数据异常 */
                     if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
                         //content.replace("\\", "");
-                        knowledge = new Knowledge2();
+                        knowledge = new Knowledge();
 
                         // 指定来源
-                        knowledge.setWeb(isWeb(request));
-                        knowledge.setKnowledgeUrl(srcExternalUrl);
+                        boolean isWeb = isWeb(request);
+                        knowledge.setS_addr(srcExternalUrl);
 
-                        knowledge.setType(DEFAULT_KNOWLEDGE_TYPE);
-                        knowledge.setColumnId(DEFAULT_KNOWLEDGE_TYPE);
+                        knowledge.setColumnType(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));
+                        knowledge.setColumnid(String.valueOf(0));
                         // 带样式标签内容
                         knowledge.setContent(content);
                         knowledge.setTitle(title);
                         long createTime = KnowledgeUtil.parserTimeToLong(time);
-                        knowledge.setCreateTime(createTime);
+                        knowledge.setCreatetime(String.valueOf(createTime));
 
                         @SuppressWarnings("unchecked")
                         List<String> imgs = null;
@@ -171,27 +171,27 @@ public class KnowledgeOtherControl extends BaseController
                         }
                         setCoverPic(imgs, knowledge);
                         // 附件ID
-                        knowledge.setTaskId(null);
+                        knowledge.setTaskid(null);
                         // 摘除html底部图片
-                        knowledge.setListImageUrl(null);
+                        knowledge.setMultiUrls(null);
 
                         // 设置默认标签
-                        knowledge.setTags(new ArrayList<Long>());
+                        knowledge.setTags(null);
                         // 判断标示
                         JsonNode isCreate = jsonNode.get("isCreate");
                         if (isCreate != null && isCreate.asBoolean()) {
                             // 创建者ID
-                            knowledge.setCid(user.getId());
+                            knowledge.setCid(userId);
                             // 创建人姓名
                             knowledge.setCname(user.getName());
                             // 用户ID
-                            knowledge.setUid(user.getId());
+                            knowledge.setUid();
                             // 用户名
-                            knowledge.setUname(user.getName());
+                            knowledge.setUname();
                             // 去除无用图片 - （仅针对移动端编辑时需要）
-                            knowledge.setListImageUrl(null);
+                            knowledge.setMultiUrls(null);
                             // 创建改知识
-                            InterfaceResult createResult = createKnowledge(knowledge, user, srcExternalUrl);
+                            InterfaceResult createResult = createKnowledge(knowledge, user, srcExternalUrl, isWeb);
                             // 敏感字检测
                             if (createResult != null && createResult.getNotification() != null &&
                                     createResult.getNotification().getNotifCode() != null &&
@@ -199,7 +199,7 @@ public class KnowledgeOtherControl extends BaseController
                                 // 弹窗提示
                                 setSessionAndErr(request, response, "-1", createResult.getNotification() + " ：" + createResult.getResponseData());
                                 // 错误反馈
-                                responseDataMap.put("knowledge2", null);
+                                responseDataMap.put("knowledge", null);
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
@@ -207,43 +207,32 @@ public class KnowledgeOtherControl extends BaseController
 	                            Long kId = (Long)createResult.getResponseData();
 	                            // 知识ID
 	                            knowledge.setId(kId.longValue());
+                                KnowledgeBase base = DataCollect.generateKnowledge(knowledge, DEFAULT_KNOWLEDGE_TYPE);
+                                bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, base, userId);
 	                            logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
                             }
                         } else {
                             logger.warn("isCreate is not existing or false, so skip to create knowledge!");
                         }
                     } else {
-                        // 大数据错误
-                        //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
-                        // 错误反馈
-                        //responseDataMap.put("knowledge2", "请输入合法地址,请确保为新闻格式网址");
-                        // 跳出
                         return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                     }
                 } else {
-                    // 大数据错误
-                    //setSessionAndErr(request, response, "-1", "请输入合法地址,请确保为新闻格式网址");
-                    // 错误反馈
-                    //responseDataMap.put("knowledge2", null);
-                    // 跳出
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
             }
         } catch (IOException e) {
-            //setSessionAndErr(request, response, "-1", "输入参数不合法");
-            logger.error("Generate knowledge failed: error: {}", e.getMessage());
+            logger.error("Generate knowledge failed: error: " + e.getMessage());
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "输入参数不合法");
         } catch (Exception q) {
             setSessionAndErr(request, response, "-1", "未知异常");
-            logger.error("Generate knowledge failed: error: {}", q.getMessage());
-            logger.warn(q.toString());
-            logger.warn(q.getMessage());
-            logger.info(q.toString());
-            logger.info(q.getMessage());
+            logger.error("Generate knowledge failed: error: {}" + q.getMessage());
+            logger.error(q.toString());
+            logger.error(q.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
-        responseDataMap.put("knowledge2", knowledge);
+        responseDataMap.put("knowledge", knowledge);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
@@ -257,7 +246,7 @@ public class KnowledgeOtherControl extends BaseController
         }
         long userId = this.getUserId(user);
 
-        logger.debug("shareCount request, userId: {} type: {}, knowledgeId: {}", userId, type, knowledgeId);
+        logger.debug("shareCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
         knowledgeCountService.updateShareCount(userId, knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
@@ -272,7 +261,7 @@ public class KnowledgeOtherControl extends BaseController
         }
         long userId = this.getUserId(user);
 
-        logger.debug("collectCount request, userId: {} type: {}, knowledgeId: {}", userId, type, knowledgeId);
+        logger.debug("collectCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
         knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
@@ -344,12 +333,12 @@ public class KnowledgeOtherControl extends BaseController
     /**
      * 创建知识抽离
      * */
-    private InterfaceResult createKnowledge(Knowledge2 knowledge, User user, String url) {
+    private InterfaceResult createKnowledge(Knowledge knowledge, User user, String url, boolean isWeb) {
 
-        Knowledge vo = getKnowledgeNewsVO(knowledge, url);
+        Knowledge vo = getKnowledgeNewsVO(knowledge, url, isWeb);
         vo.setCid(this.getUserId(user));
         vo.setCname(user.getName());
-        vo.setColumnid(String.valueOf(KnowledgeType.ENews.value()));
+        vo.setColumnid(String.valueOf(0));
         vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));// 设置默认类型为咨询，目前手机端只支持咨询
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, vo);
@@ -358,9 +347,9 @@ public class KnowledgeOtherControl extends BaseController
     }
 
 
-    private Knowledge getKnowledgeNewsVO(Knowledge2 knowledge, String url) {
+    private Knowledge getKnowledgeNewsVO(Knowledge knowledge, String url, boolean isWeb) {
 
-        Knowledge vo = genVo(knowledge, url);
+        Knowledge vo = genVo(knowledge, url, isWeb);
         /*
         JSONObject jsonAsso = JSONObject.fromObject(vo.getAsso());
 
@@ -371,46 +360,30 @@ public class KnowledgeOtherControl extends BaseController
         return vo;
     }
 
-    private Knowledge genVo(final Knowledge2 knowledge,final String url) {
+    private Knowledge genVo(final Knowledge knowledge,final String url, final boolean isWeb) {
 
         Knowledge vo = new Knowledge();
         if (knowledge.getId() != 0) {
             vo.setId(knowledge.getId());
             vo.setKnowledgeMainId(knowledge.getId());
         }
-        if (knowledge.getType() == KnowledgeType.ELaw.value()) {
+        final int columnType = KnowledgeUtil.parserColumnId(knowledge.getColumnType());
+        if (columnType == KnowledgeType.ELaw.value()) {
             vo.setTitanic(knowledge.getTitanic());
             vo.setPostUnit(knowledge.getPostUnit());
             vo.setSubmitTime(knowledge.getSubmitTime());
             vo.setPerformTime(knowledge.getPerformTime());
         }
-        if (knowledge.getType() == KnowledgeType.EInvestment.value()) {
+        if (columnType == KnowledgeType.EInvestment.value()) {
             vo.setSynonyms(knowledge.getSynonyms());
         }
-        vo.setTaskid(knowledge.getTaskId());
+        vo.setTaskid(knowledge.getTaskid());
         vo.setTitle(knowledge.getTitle());
-        vo.setS_addr(knowledge.getKnowledgeUrl());
+        vo.setS_addr(knowledge.getS_addr());
         try {
             List<String> listImageUrl = new ArrayList<String>();
-
-            // 测试指定taskid的文件
-            // knowledge.setTaskId("taskId-123456");
-
-            // 根据taskid获取到附件列表
-            /* this position we don't need it
-            List<JTFile> listAttachFile = mJTFileService.getJTFileByTaskId(knowledge.getTaskId() + "");
-            if (listAttachFile != null) {
-                for (JTFile jt : listAttachFile) {
-                    if (jt.getType() != null) {
-                        if (jt.getType().equals(JTFile.TYPE_IMAGE)) {
-                            // 如果是图片类型，则要合并到html里取
-                            listImageUrl.add(jt.getUrl());
-                        }
-                    }
-                }
-            }*/
             // 区分APP和WEB
-            convertKnowledgeContent(vo, knowledge.getContent(), listImageUrl, knowledge.getListImageUrl(), url, knowledge.getWeb());
+            convertKnowledgeContent(vo, knowledge.getContent(), listImageUrl, knowledge.getMultiUrls(), url, isWeb);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -428,8 +401,8 @@ public class KnowledgeOtherControl extends BaseController
         }
         vo.setDesc(contentDes);
 
-        if (knowledge.getTags() != null && knowledge.getTags().size() > 0) {
-            String tags = knowledge.getTags().toString();
+        if (StringUtils.isNotBlank(knowledge.getTags())) {
+            String tags = knowledge.getTags();
             vo.setTags(tags.substring(1, tags.length()-1));
         }
 
@@ -437,82 +410,15 @@ public class KnowledgeOtherControl extends BaseController
         vo.setEssence(knowledge.getEssence());
         //vo.setShareMessage("");// 分享消息内容
 
-        vo.setColumnid(String.valueOf(knowledge.getColumnId()));
+        vo.setColumnid(knowledge.getColumnid());
         vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
         vo.setCpathid(knowledge.getCpathid());
         vo.setCpathid(KnowledgeType.ENews.typeName());
 
-        // 关联管理器
-        /*
-        vo.setAsso(EntityFactory.genAsso(knowledge.getListRelatedConnectionsNode(), knowledge.getListRelatedOrganizationNode(),
-                knowledge.getListRelatedKnowledgeNode(), knowledge.getListRelatedAffairNode()));
-
-        logger.info(vo.getAsso());
-        // 权限管理器
-        vo.setSelectedIds(EntityFactory.genSelectIds(knowledge.getListHightPermission(), knowledge.getListMiddlePermission(),
-                knowledge.getListLowPermission()));*/
-
         return vo;
     }
 
-    public void checkGroup(long userid) {
-        List<Long> idtype = new ArrayList<Long>(2);
-        idtype.add(0l);
-        idtype.add(1l);
-        //userCategoryService.checkNogroup(userid, idtype);
-    }
-
-    private void setKnowledgeContent(Knowledge2 knowledge2, Knowledge detail, List<String> urls, String url)
-    {
-        if (knowledge2.getWeb()) {
-            detail.setContent(knowledge2.getContent());
-        } else {
-            String htmlContent = Utils.txt2Html(knowledge2.getContent(), urls, knowledge2.getListImageUrl(), url);
-            // htmlContent =
-            // StringEscapeUtils.escapeHtml4(htmlContent);//入库的时候转换特殊字符
-            detail.setContent(htmlContent);
-        }
-        String contentDes = null;
-        if ((knowledge2.getContent() != null) && (knowledge2.getContent().length() > 0)) {
-            String content = knowledge2.getContent();
-            String filterContent = HtmlToText.filterHtml(content);
-            if (filterContent != null) {
-                contentDes =  filterContent.length() < 40 ? filterContent : filterContent.substring(0, 35) + "...";
-            }
-
-        }
-        detail.setDesc(contentDes);
-        detail.setPic(knowledge2.getPic());
-        detail.setTags(detail.getTags());
-        detail.setSource(knowledge2.getSource());
-
-        // 知识所在目录
-        /*
-        List<Long> directoryList = null;
-        if (knowledge2.getListUserCategory() != null && knowledge2.getListUserCategory().size() > 0) {
-            int size = knowledge2.getListUserCategory().size();
-            directoryList = new ArrayList<Long>(size);
-            for (int i = 0; i < size; i++) {
-                UserCategory uc = knowledge2.getListUserCategory().get(i);
-                if (uc.getId() > 0) {
-                    directoryList.add(uc.getId());
-                } else {
-                    logger.error("An invalidated directoryId: {}", uc.getId());
-                }
-            }
-            detail.setDirectorys(directoryList);
-        }*/
-
-        detail.setEssence(knowledge2.getEssence());
-        //detail.setShareMessage("");// 分享消息内容
-
-        if (knowledge2.getColumnId() <= 0) {
-            // 如果没指定栏目， 默认为资讯
-            detail.setColumnid(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));
-        }
-    }
-
-    private void setCoverPic(List<String> imgs,Knowledge2 knowledge)
+    private void setCoverPic(List<String> imgs,Knowledge knowledge)
     {
         /* old method
         if (imgs != null && imgs.size() > 0) {
@@ -551,16 +457,6 @@ public class KnowledgeOtherControl extends BaseController
         }
     }
 
-    public String filterHtml(String html) {
-        Pattern pattern = Pattern.compile("<style[^>]*?>[\\D\\d]*?<\\/style>");
-        Matcher matcher = pattern.matcher(html);
-        String htmlStr = matcher.replaceAll("");
-        pattern = Pattern.compile("<[^>]+>");
-        String filterStr = pattern.matcher(htmlStr).replaceAll("");
-        filterStr.replace("&nbsp;", " ");
-        return filterStr;
-    }
-
     private class KnowledgeSyncTask implements Runnable {
         private int start;
         private int size;
@@ -573,7 +469,7 @@ public class KnowledgeOtherControl extends BaseController
         public void run() {
             while (true) {
                 List<KnowledgeBaseSync> baseSyncList = null;
-                logger.info("get backup knowledge base, start: {}, size: {}", start, size);
+                logger.info("get backup knowledge base, start: " + start + ", size: " + size);
                 try {
                     baseSyncList = knowledgeService.getBackupKnowledgeBase(start, size);
                 }
@@ -586,7 +482,7 @@ public class KnowledgeOtherControl extends BaseController
                     break;
                 }
                 else {
-                    logger.info("got backup knowledge base size: {}", baseSyncList.size());
+                    logger.info("got backup knowledge base size: " + baseSyncList.size());
                     for (KnowledgeBaseSync baseSync : baseSyncList) {
                         if (baseSync != null) {
                             try {
