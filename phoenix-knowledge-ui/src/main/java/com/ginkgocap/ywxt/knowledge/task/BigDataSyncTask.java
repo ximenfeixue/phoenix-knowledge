@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
 import com.ginkgocap.parasol.tags.model.Tag;
+import com.ginkgocap.ywxt.knowledge.model.BigData;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
@@ -47,25 +48,29 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 	@Autowired
 	private DefaultMessageService defaultMessageService;
 
-	private BlockingQueue<SyncKnowledgeData> knowQueue = new ArrayBlockingQueue<SyncKnowledgeData>(1000);
+	private BlockingQueue<SyncBigData> knowQueue = new ArrayBlockingQueue<SyncBigData>(1000);
 
-	public void addToMessageQueue(String optionType, KnowledgeBase base, long userId) {
-		knowQueue.add(new SyncKnowledgeData(userId, optionType, base));
+	public void addToMessageQueue(String optionType, BigData base) {
+		if (base == null) {
+			logger.error("bigData is null, so skip to add.");
+			return;
+		}
+		knowQueue.add(new SyncBigData(optionType, base));
 	}
 
-	private void sendMessage(String optionType, KnowledgeBase base, long userId) {
-        if (base == null) {
-            logger.error("Knowledge base is null, so skip to send..");
-            return;
-        }
-		logger.info("push knowledge to bigdata， userId: " + userId + " knowledgeId: " + base.getId());
+	private void sendMessage(String optionType, BigData bigData) {
+		if (bigData == null) {
+			logger.error("Knowledge base is null, so skip to send..");
+			return;
+		}
+		logger.info("push knowledge to bigdata， userId: " + bigData.getCid() + " knowledgeId: " + bigData.getKid());
 		RocketSendResult result = null;
 		try {
 			if (StringUtils.isNotBlank(optionType)) {
-				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(base,userId));
+				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(bigData));
 				logger.info("response: " + result.getSendResult());
 			} else {
-				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(base,userId));
+				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(bigData));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,11 +78,11 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 		}
 	}
 
-	public void pushKnowledge(SyncKnowledgeData bigData)
+	public void pushKnowledge(SyncBigData syncBigData)
     {
-        if (bigData != null && bigData.base != null) {
-            KnowledgeBase base = bigData.base;
-            long userId = base.getCreateUserId();
+        if (syncBigData != null && syncBigData.base != null) {
+            BigData base = syncBigData.base;
+            long userId = base.getCid();
             try {
                 List<String> tagNames = new ArrayList<String>();
                 List<Tag> tagList = tagServiceLocal.getTagList(userId);
@@ -107,30 +112,29 @@ public class BigDataSyncTask implements Runnable, InitializingBean
                 logger.error("get tag list failed. userId : " + userId);
             }
             //base.setTags();
-            this.sendMessage(bigData.optionType, base, userId);
+            this.sendMessage(syncBigData.optionType, base);
         }
 	}
 
-	public void deleteMessage(long knowledgeId, int columnId, long userId)	throws Exception {
+	public void deleteMessage(long knowledgeId, int columnType, long userId)	throws Exception {
 		
-		KnowledgeBase base = new KnowledgeBase();
-		base.setId(knowledgeId);
-		base.setColumnId(columnId);
-        base.setType((short)columnId);
+		BigData base = new BigData();
+		base.setKid(knowledgeId);
+		base.setCid(userId);
+		base.setColumnid(columnType);
+        base.setColumnType((short)columnType);
 		
 		//this.sendMessage(KNOWLEDGE_DELETE, base, userId);
-		addToMessageQueue(KNOWLEDGE_DELETE, base, userId);
+		addToMessageQueue(KNOWLEDGE_DELETE, base);
 	}
 
-	private static class SyncKnowledgeData
+	private static class SyncBigData
 	{
-		private long userId;
 		private String optionType;
-		private KnowledgeBase base;
+		private BigData base;
 
-		public SyncKnowledgeData(long userId,String optionType,KnowledgeBase base)
+		public SyncBigData(String optionType,BigData base)
 		{
-			this.userId = userId;
 			this.optionType = optionType;
 			this.base = base;
 		}
@@ -139,7 +143,7 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 	public void run() {
 		try {
 			while (true) {
-				SyncKnowledgeData bigData = knowQueue.poll();
+				SyncBigData bigData = knowQueue.poll();
 				if (bigData != null) {
 					pushKnowledge(bigData);
 				} else {

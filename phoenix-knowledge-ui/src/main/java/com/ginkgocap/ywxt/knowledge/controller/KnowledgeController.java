@@ -174,8 +174,7 @@ public class KnowledgeController extends BaseController
         }
 
         //send new knowledge to bigdata
-        KnowledgeBase base = data.generateKnowledge();
-        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, base, userId);
+        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
 
         logger.info(".......create knowledge success......");
         return result;
@@ -253,8 +252,7 @@ public class KnowledgeController extends BaseController
 
         //send new knowledge to bigdata
         data.setKnowledgeDetail(updatedDetail);
-        KnowledgeBase base = data.generateKnowledge();
-        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, base, userId);
+        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, data.toBigData());
 
         logger.info(".......update knowledge success......");
         return result;
@@ -2012,7 +2010,7 @@ public class KnowledgeController extends BaseController
         //set a default value
         if (permission == null) {
             logger.info("Can't get knowledge permission, so set a default value. knowledgeId: " + knowledgeId);
-            permission = permissionServiceLocal.defaultPrivatePermission(detail.getCid(), knowledgeId);
+            permission = DataCollect.defaultPermission(detail.getCid(), knowledgeId);
         }
         data.setPermission(permission);
 

@@ -234,18 +234,4 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         }
         return permission;
     }
-
-    public Permission defaultPrivatePermission(final long userId,final long resId)
-    {
-        Permission permission = new Permission();
-        permission.setAppId(APPID);
-        permission.setResId(resId);
-        permission.setResOwnerId(userId);
-        final int defaultFlag = userId > 0 ? 0 : 1;
-        permission.setConnectFlag(defaultFlag);
-        permission.setPublicFlag(defaultFlag);
-        permission.setShareFlag(defaultFlag);
-        permission.setResType(ResourceType.KNOW.getVal());
-        return permission;
-    }
 }

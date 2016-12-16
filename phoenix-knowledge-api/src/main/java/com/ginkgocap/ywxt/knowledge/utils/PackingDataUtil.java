@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
+import com.ginkgocap.ywxt.knowledge.model.BigData;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.form.EtUserInfo;
 import com.ginkgocap.ywxt.user.form.ReceiversInfo;
 import com.ginkgocap.ywxt.user.model.User;
@@ -22,13 +24,6 @@ import java.util.regex.Pattern;
  */
 public class PackingDataUtil {
 
-	/**
-	 * 包装发送给MQ的数据
-	 * @date 2016年1月14日 下午4:33:26
-	 * @param base
-	 * @param userId
-	 * @return
-	 */
 	public static String packingSendBigData(KnowledgeBase base, long userId)
 	{
 		JSONObject json = new JSONObject();
@@ -48,6 +43,11 @@ public class PackingDataUtil {
 		json.put("createtime", base.getCreateDate());
 		
 		return json.toString();
+	}
+
+	public static String packingSendBigData(BigData bigData)
+	{
+		return KnowledgeUtil.writeObjectToJson(bigData);
 	}
 
 	/**

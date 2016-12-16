@@ -285,12 +285,12 @@ public class KnowledgeOtherControl extends BaseController
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
-                            if (createResult.getResponseData() instanceof Long) {
-                                Long kId = (Long)createResult.getResponseData();
+                            Long kId = (Long)createResult.getResponseData();
+                            if (kId != null && createResult.getResponseData() instanceof Long) {
                                 // 知识ID
                                 knowledge.setId(kId.longValue());
-                                KnowledgeBase base = DataCollect.generateKnowledge(knowledge, DEFAULT_KNOWLEDGE_TYPE);
-                                bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, base, userId);
+                                BigData bigData = DataCollect.generateBigData(knowledge, null);
+                                bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
                                 logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
                             }
                         } else {
@@ -344,7 +344,6 @@ public class KnowledgeOtherControl extends BaseController
         vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));// 设置默认类型为咨询，目前手机端只支持咨询
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, vo);
-        data.generateKnowledge();
         return this.knowledgeService.insert(data);
     }
 

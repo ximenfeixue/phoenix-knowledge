@@ -3,6 +3,9 @@ package com.ginkgocap.ywxt.knowledge.model.common;
 import java.io.Serializable;
 import java.util.*;
 
+import com.ginkgocap.ywxt.knowledge.model.BigData;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
+import com.gintong.common.phoenix.permission.ResourceType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -186,6 +189,58 @@ public class DataCollect implements Serializable
             //knowledge.setReportStatus(reportStatus);
         }
         return knowledgeBase;
+    }
+
+    public BigData toBigData() {
+        if (knowledgeDetail != null) {
+            if (this.permission == null) {
+                this.permission = defaultPermission(this.knowledgeDetail.getCid(), this.knowledgeDetail.getId());
+            }
+            return generateBigData(this.knowledgeDetail, this.permission);
+        }
+        return null;
+    }
+
+    public static BigData generateBigData(Knowledge detail, Permission permission) {
+        if (detail == null) {
+            return null;
+        }
+        BigData data = new BigData();
+        if (permission == null) {
+            permission = defaultPermission(detail.getCid(), detail.getId());
+        }
+
+        data.setKid(detail.getId());
+        data.setCid(detail.getCid());
+        data.setCname(detail.getCname());
+        data.setTitle(detail.getTitle());
+        data.setCpathid(detail.getCpathid());
+        data.setPic(detail.getPic());
+        data.setPublicFlag(permission.getPublicFlag().shortValue());
+        data.setConnectFlag(permission.getConnectFlag().shortValue());
+        data.setStatus((short)detail.getStatus());
+        data.setTags(detail.getTags());
+        data.setColumnid(KnowledgeUtil.parserColumnId(detail.getColumnid()));
+        data.setColumnType(KnowledgeUtil.parserColumnId(detail.getColumnType()));
+        data.setContent(detail.getContent());
+        data.setDesc(detail.getDesc());
+        data.setCreatetime(KnowledgeUtil.parserTimeToLong(detail.getCreatetime()));
+
+        return data;
+    }
+
+    public static Permission defaultPermission(final long userId,final long resId)
+    {
+        Permission permission = new Permission();
+        permission.setAppId(KnowledgeConstant.DEFAULT_APP_ID);
+        permission.setResId(resId);
+        permission.setResOwnerId(userId);
+        final int defaultFlag = userId > 0 ? 0 : 1;
+        permission.setConnectFlag(defaultFlag);
+        permission.setPublicFlag(defaultFlag);
+        permission.setShareFlag(defaultFlag);
+        permission.setResType(ResourceType.KNOW.getVal());
+        return permission;
     }
 
     public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList, short columnType, boolean desc)
