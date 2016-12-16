@@ -102,7 +102,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             return null;
         }
         final String key = getKey(columnType, columnId, userId, tableName);
-        List<Long> knowledgeIds = (List<Long>) cache.get(key);
+        List<Long> knowledgeIds = (List<Long>) getFromCache(key);
         size = size > maxSize ? maxSize : size;
         List<Knowledge> result = null;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
@@ -140,7 +140,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                         }
                         skip++;
                     }
-                    cache.set(key, cacheTTL, ids);
+                    saveToCache(key, ids);
                     final String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
                     saveKnowledgeToCache(result, knowledgeKey);
                 }
@@ -150,7 +150,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             }
         } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
             final String knowledgeKey = getKey(columnType, columnId, userId, tableName, start, size);
-            result = (List<Knowledge>)cache.get(knowledgeKey);
+            result = (List<Knowledge>)getFromCache(knowledgeKey);
             if (result != null) {
                 logger.info("This list have cached before, so return it directly..");
                 return result;
@@ -216,7 +216,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             return null;
         }
         final String key = getBaseKey(columnType, columnId, userId, tableName);
-        List<Long> knowledgeIds = (List<Long>) cache.get(key);
+        List<Long> knowledgeIds = (List<Long>) getFromCache(key);
         size = size > maxSize ? maxSize : size;
         List<KnowledgeBase> result = null;
         boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
@@ -254,7 +254,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                         }
                         skip++;
                     }
-                    cache.set(key, cacheTTL, ids);
+                    saveToCache(key, ids);
                     final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
                     result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
                 }
@@ -264,7 +264,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             }
         } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
             final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
-            result = (List<KnowledgeBase>)cache.get(knowledgeKey);
+            result = (List<KnowledgeBase>)getFromCache(knowledgeKey);
             if (result != null) {
                 logger.info("This list have cached before, so return it directly..");
                 return result;
@@ -353,12 +353,14 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     {
         if (CollectionUtils.isEmpty(result)) {
             logger.error("The knowledge is null, so skip..");
+            return;
         }
-        if (StringUtils.isEmpty(key)) {
+        if (StringUtils.isBlank(key)) {
             logger.error("The knowledge key is null, so skip..");
+            return;
         }
-        logger.error("Save the query result to catch, key: {}", key);
-        cache.set(key, cacheTTL, result);
+        logger.error("Save the query result to catch, key: " + key);
+        saveToCache(key, result);
     }
 
     private List<KnowledgeBase> saveKnowledgeBaseToCache(final List<Knowledge> detailList, short columnType, final String key)
@@ -371,7 +373,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         }
         logger.error("Save the query result to catch, key: {}", key);
         List<KnowledgeBase> baseList = DataCollect.convertDetailToBaseList(detailList, columnType, true);
-        cache.set(key, cacheTTL, baseList);
+        saveToCache(key, baseList);
         return baseList;
     }
 
@@ -425,6 +427,18 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return sb.toString();
     }
 
+    private void saveToCache(String key, Object value) {
+        cache.setByRedis(key, value, cacheTTL);
+    }
+
+    private void saveToCache(String key, Integer expiredTime, Object value) {
+        cache.setByRedis(key, value, expiredTime);
+    }
+
+    private Object getFromCache(String key) {
+        return cache.getByRedis(key);
+    }
+
     private class TakeRecordTask implements Runnable {
         private int columnId;
         private short status;
@@ -472,7 +486,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                             }
                         }
                     }
-                    cache.set(key, ids);
+                    saveToCache(key, ids);
                 } finally {
                     loadingMap.remove(key);
                 }
