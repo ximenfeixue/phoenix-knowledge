@@ -60,20 +60,104 @@ public class KnowledgeOtherControl extends BaseController
     private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
 
     @ResponseBody
+    @RequestMapping(value = "/fetchKnowledgeByUrl", method = RequestMethod.POST)
+    public InterfaceResult fetchKnowledgeByUrl(HttpServletRequest request, HttpServletResponse response) {
+        return generateKnowledgeByUrl(request, response, false);
+    }
+
+
+    @ResponseBody
     @RequestMapping(value = "/fetchExternalKnowledgeUrl", method = RequestMethod.POST)
     public InterfaceResult fetchExternalKnowledgeUrl(HttpServletRequest request, HttpServletResponse response) {
 
+        return generateKnowledgeByUrl(request, response, true);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/shareCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    public InterfaceResult shareCount(HttpServletRequest request,HttpServletResponse response,
+                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        long userId = this.getUserId(user);
+
+        logger.debug("shareCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
+        knowledgeCountService.updateShareCount(userId, knowledgeId, type);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/collectCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    public InterfaceResult collectCount(HttpServletRequest request,HttpServletResponse response,
+                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        long userId = this.getUserId(user);
+
+        logger.debug("collectCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
+        knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    /*
+    @ResponseBody
+    @RequestMapping(value="/update/{userId}/{password}", method = RequestMethod.GET)
+    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response,
+            @PathVariable long userId,@PathVariable String password) throws Exception {
+        logger.info("update userId: {} password: {}", userId, password);
+        permissionServiceLocal.updatePassword(userId, password);
+        logger.info("update userId: {} password: {}", userId, password);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }*/
+
+    @ResponseBody
+    @RequestMapping(value="/knowledgeSync", method = RequestMethod.GET)
+    public InterfaceResult knowledgeSync(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        boolean started = syncTaskMap.get(knowledgeSyncTaskKey) == null ? false : syncTaskMap.get(knowledgeSyncTaskKey);
+        if (started)
+        {
+            logger.info("Knowledge base sync task have started...");
+        } else {
+            syncTaskMap.put(knowledgeSyncTaskKey, true);
+            new Thread(new KnowledgeSyncTask(0, 20)).start();
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/tagCleanup", method = RequestMethod.GET)
+    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        tagServiceLocal.tagCleanUp(this.getUserId(user));
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    private InterfaceResult generateKnowledgeByUrl(HttpServletRequest request, HttpServletResponse response, boolean old) {
         User user = getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
         long userId = user.getId();
-        logger.info("into /FetchExternalKnowledgeUrl");
         Map<String, Object> responseDataMap = new HashMap<String, Object>();
+        final String knowKey = old ? "knowledge2" : "knowledge";
         Knowledge knowledge = null;
         String requestJson = "";
         try {
+            logger.info("begin generateKnowledgeByUrl");
             requestJson = getBodyParam(request);
             if (StringUtils.isNotEmpty(requestJson)) {
                 JsonNode jsonNode = KnowledgeUtil.readTree(requestJson);
@@ -197,17 +281,17 @@ public class KnowledgeOtherControl extends BaseController
                                 // 弹窗提示
                                 setSessionAndErr(request, response, "-1", createResult.getNotification() + " ：" + createResult.getResponseData());
                                 // 错误反馈
-                                responseDataMap.put("knowledge", null);
+                                responseDataMap.put(knowKey, null);
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
                             if (createResult.getResponseData() instanceof Long) {
-	                            Long kId = (Long)createResult.getResponseData();
-	                            // 知识ID
-	                            knowledge.setId(kId.longValue());
+                                Long kId = (Long)createResult.getResponseData();
+                                // 知识ID
+                                knowledge.setId(kId.longValue());
                                 KnowledgeBase base = DataCollect.generateKnowledge(knowledge, DEFAULT_KNOWLEDGE_TYPE);
                                 bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, base, userId);
-	                            logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
+                                logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
                             }
                         } else {
                             logger.warn("isCreate is not existing or false, so skip to create knowledge!");
@@ -221,83 +305,11 @@ public class KnowledgeOtherControl extends BaseController
             }
         } catch (Exception ex) {
             setSessionAndErr(request, response, "-1", "未知异常");
-            logger.error("Generate knowledge failed: error: {}" + ex.getMessage());
+            logger.error("Generate knowledge failed: error: " + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
-        responseDataMap.put("knowledge", knowledge);
+        responseDataMap.put(knowKey, knowledge);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
-    }
-
-    @ResponseBody
-    @RequestMapping(value="/shareCount/{type}/{knowledgeId}", method = RequestMethod.GET)
-    public InterfaceResult shareCount(HttpServletRequest request,HttpServletResponse response,
-                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-        long userId = this.getUserId(user);
-
-        logger.debug("shareCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
-        knowledgeCountService.updateShareCount(userId, knowledgeId, type);
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
-
-    @ResponseBody
-    @RequestMapping(value="/collectCount/{type}/{knowledgeId}", method = RequestMethod.GET)
-    public InterfaceResult collectCount(HttpServletRequest request,HttpServletResponse response,
-                                        @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-        long userId = this.getUserId(user);
-
-        logger.debug("collectCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
-        knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
-
-    /*
-    @ResponseBody
-    @RequestMapping(value="/update/{userId}/{password}", method = RequestMethod.GET)
-    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response,
-            @PathVariable long userId,@PathVariable String password) throws Exception {
-        logger.info("update userId: {} password: {}", userId, password);
-        permissionServiceLocal.updatePassword(userId, password);
-        logger.info("update userId: {} password: {}", userId, password);
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }*/
-
-    @ResponseBody
-    @RequestMapping(value="/knowledgeSync", method = RequestMethod.GET)
-    public InterfaceResult knowledgeSync(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        boolean started = syncTaskMap.get(knowledgeSyncTaskKey) == null ? false : syncTaskMap.get(knowledgeSyncTaskKey);
-        if (started)
-        {
-            logger.info("Knowledge base sync task have started...");
-        } else {
-            syncTaskMap.put(knowledgeSyncTaskKey, true);
-            new Thread(new KnowledgeSyncTask(0, 20)).start();
-        }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-    }
-
-    @ResponseBody
-    @RequestMapping(value="/tagCleanup", method = RequestMethod.GET)
-    public InterfaceResult updatePassword(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        User user = this.getUser(request);
-        if (user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        tagServiceLocal.tagCleanUp(this.getUserId(user));
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @SuppressWarnings("static-access")
