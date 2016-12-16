@@ -1262,6 +1262,29 @@ public class KnowledgeController extends BaseController
     }
 
     /**
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value="/collectCount", method = RequestMethod.GET)
+    public InterfaceResult<Integer> CollectCount(HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        int count = 0;
+        try {
+            //this.knowledgeOtherService.CollectedCount(userId);
+        } catch (Exception e) {
+            logger.error("cancel collected knowledge failed！：" + e.getMessage());
+        }
+        logger.info(".......cancel collect knowledge success......");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, count);
+    }
+
+    /**
      * 保存知识
      * @param knowledgeId 知识Id
      * @throws IOException

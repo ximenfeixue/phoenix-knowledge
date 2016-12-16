@@ -74,7 +74,7 @@ public class KnowledgeOtherControl extends BaseController
     }
 
     @ResponseBody
-    @RequestMapping(value="/shareCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    @RequestMapping(value="/shareCount/{knowledgeId}/{type}", method = RequestMethod.GET)
     public InterfaceResult shareCount(HttpServletRequest request,HttpServletResponse response,
                                         @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
         User user = this.getUser(request);
@@ -89,7 +89,7 @@ public class KnowledgeOtherControl extends BaseController
     }
 
     @ResponseBody
-    @RequestMapping(value="/collectCount/{type}/{knowledgeId}", method = RequestMethod.GET)
+    @RequestMapping(value="/collectCount/{knowledgeId}/{type}", method = RequestMethod.GET)
     public InterfaceResult collectCount(HttpServletRequest request,HttpServletResponse response,
                                         @PathVariable short type,@PathVariable long knowledgeId) throws Exception {
         User user = this.getUser(request);
@@ -234,8 +234,9 @@ public class KnowledgeOtherControl extends BaseController
                         boolean isWeb = isWeb(request);
                         knowledge.setS_addr(srcExternalUrl);
 
-                        knowledge.setColumnType(String.valueOf(DEFAULT_KNOWLEDGE_TYPE));
-                        knowledge.setColumnid(String.valueOf(0));
+                        final String columnId = String.valueOf(KnowledgeType.ENews.value());
+                        knowledge.setColumnType(columnId);
+                        knowledge.setColumnid(columnId);
                         // 带样式标签内容
                         knowledge.setContent(content);
                         knowledge.setTitle(title);
@@ -341,9 +342,9 @@ public class KnowledgeOtherControl extends BaseController
 
         //knowledge.setCid(this.getUserId(user));
         //knowledge.setCname(user.getName());
-        String columnId = String.valueOf(KnowledgeType.ENews.value());
-        knowledge.setColumnid(String.valueOf(0));
-        knowledge.setColumnType(columnId);// 设置默认类型为咨询，目前手机端只支持咨询
+        //String columnId = String.valueOf(KnowledgeType.ENews.value());
+        //knowledge.setColumnid(columnId);
+        //knowledge.setColumnType(columnId);// 设置默认类型为咨询，目前手机端只支持咨询
         knowledge.setS_addr(url);
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, knowledge);
