@@ -337,13 +337,16 @@ public class KnowledgeOtherControl extends BaseController
      * */
     private InterfaceResult createKnowledge(Knowledge knowledge, User user, String url, boolean isWeb) {
 
-        Knowledge vo = getKnowledgeNewsVO(knowledge, url, isWeb);
-        vo.setCid(this.getUserId(user));
-        vo.setCname(user.getName());
-        vo.setColumnid(String.valueOf(0));
-        vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));// 设置默认类型为咨询，目前手机端只支持咨询
+        //Knowledge vo = getKnowledgeNewsVO(knowledge, url, isWeb);
+
+        //knowledge.setCid(this.getUserId(user));
+        //knowledge.setCname(user.getName());
+        String columnId = String.valueOf(KnowledgeType.ENews.value());
+        knowledge.setColumnid(String.valueOf(0));
+        knowledge.setColumnType(columnId);// 设置默认类型为咨询，目前手机端只支持咨询
+        knowledge.setS_addr(url);
         // 调用平台层插入知识
-        DataCollect data = new DataCollect(null, vo);
+        DataCollect data = new DataCollect(null, knowledge);
         return this.knowledgeService.insert(data);
     }
 
