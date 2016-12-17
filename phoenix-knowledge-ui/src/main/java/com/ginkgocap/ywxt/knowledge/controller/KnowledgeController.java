@@ -459,6 +459,19 @@ public class KnowledgeController extends BaseController
             //delete permission information
             permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
         }
+        //Check if this is collected knowledge
+        for (Long knowledgeId : failedIds) {
+            try {
+                boolean isCollected = this.knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, -1);
+                if (isCollected) {
+                    knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, -1);
+                    logger.info("cancel collected knowledge success. userId: " + userId + " knowledgeId: " + knowledgeId);
+                }
+            } catch (Exception ex) {
+                logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
+            }
+        }
+
         String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
         logger.info("delete knowledge success: {}", resp);
 
