@@ -24,34 +24,7 @@ public class KnowledgeExt extends Knowledge {
 
     public void clone(Knowledge detail)
     {
-        this.setId(detail.getId());
-        this.setColumnid(detail.getColumnid());
-        this.setColumnType(detail.getColumnType());
-
-        this.setCid(detail.getCid());
-        this.setCname(detail.getCname());
-        this.setTitle(detail.getTitle());
-        this.setContent(detail.getContent());
-        this.setMultiUrls(detail.getMultiUrls());
-        this.setAttachUrls(detail.getAttachUrls());
-        this.setModifytime(detail.getModifytime());
-        this.setCreatetime(detail.getCreatetime());
-        this.setS_addr(detail.getS_addr());
-        this.setDirectorys(null);
-        this.setTags(null);
-        this.setEssence(detail.getEssence());
-        this.setStatus(detail.getStatus());
-        this.setTranStatus(detail.getTranStatus());
-        this.setReport_status(detail.getReport_status());
-        this.setTaskid(detail.getTaskid());
-        this.setIsh(detail.getIsh());
-        this.setVirtual(detail.getVirtual());
-        this.setPic(detail.getPic());
-        this.setHcontent(detail.getHcontent());
+        super.clone(detail);
         this.setCollected(detail.getCollected() == 0 ? false : true);
-        this.setCpathid(detail.getCpathid());
-        this.setDesc(detail.getDesc());
-        this.setSource(detail.getSource());
-        this.setSelfDef(detail.getSelfDef());
     }
 }
