@@ -74,14 +74,12 @@ public class KnowledgeVO implements Serializable {
 	private String selectedIds;
 	
 	private String columnType;
-	
-	
+
 	// 系统时间（大数据推送带过来的数据）
 	private String sysTime;
 	
 	private Long knowledgeMainId;//代表草稿箱中存储了真正知识的ID
-	
-	
+
 	/**
 	 * @return the columnType
 	 */

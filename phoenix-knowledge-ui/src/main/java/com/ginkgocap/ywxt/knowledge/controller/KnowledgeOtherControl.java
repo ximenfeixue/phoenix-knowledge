@@ -309,7 +309,7 @@ public class KnowledgeOtherControl extends BaseController
             logger.error("Generate knowledge failed: error: " + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "未知异常");
         }
-        responseDataMap.put(knowKey, knowledge);
+        responseDataMap.put(knowKey, KnowledgeExt.cloneExt(knowledge));
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
