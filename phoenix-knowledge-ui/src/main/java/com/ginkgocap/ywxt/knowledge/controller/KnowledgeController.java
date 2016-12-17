@@ -1240,7 +1240,7 @@ public class KnowledgeController extends BaseController
         }
 
         //collect count
-        //knowledgeCountService.updateCollectCount(knowledgeId);
+        //knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
         logger.info(".......collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
@@ -1279,7 +1279,7 @@ public class KnowledgeController extends BaseController
      */
     @ResponseBody
     @RequestMapping(value="/collectCount", method = RequestMethod.GET)
-    public InterfaceResult<Integer> CollectCount(HttpServletRequest request, HttpServletResponse response,
+    public InterfaceResult<Long> CollectCount(HttpServletRequest request, HttpServletResponse response,
                                             @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
 
         User user = this.getUser(request);
@@ -1287,11 +1287,12 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        int count = 0;
+        long count = 0;
+        final long userId = user.getId();
         try {
-            //this.knowledgeOtherService.CollectedCount(userId);
+            count = getCollectedKnowledgeCount(userId);
         } catch (Exception e) {
-            logger.error("cancel collected knowledge failed！：" + e.getMessage());
+            logger.error("cancel collected knowledge failed！ userId: "  + userId + " error:" + e.getMessage());
         }
         logger.info(".......cancel collect knowledge success......");
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, count);

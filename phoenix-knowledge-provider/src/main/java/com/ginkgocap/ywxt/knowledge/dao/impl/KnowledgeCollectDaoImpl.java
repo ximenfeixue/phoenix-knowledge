@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -110,6 +111,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             size = (int)count - start;
         }
 
+        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
         query.skip(start);
         query.limit(size);
         List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);

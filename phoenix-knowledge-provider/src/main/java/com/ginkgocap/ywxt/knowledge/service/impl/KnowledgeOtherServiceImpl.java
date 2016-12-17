@@ -53,7 +53,7 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,int typeId,int start, int size,String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int start, int size,String keyword) throws Exception
     {
         return knowledgeCollectDao.myCollectKnowledge(userId, typeId, start, size, keyword);
     }
