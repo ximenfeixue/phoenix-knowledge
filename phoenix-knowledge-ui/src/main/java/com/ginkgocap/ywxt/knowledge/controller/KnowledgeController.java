@@ -375,7 +375,7 @@ public class KnowledgeController extends BaseController
             permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
         }
         String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
-        logger.info("delete knowledge success: {}", resp);
+        logger.info("delete knowledge success: " + resp);
 
         result.setResponseData(resp);
         return result;
@@ -459,7 +459,9 @@ public class KnowledgeController extends BaseController
             //delete permission information
             permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
         }
+
         //Check if this is collected knowledge
+        /*
         for (Long knowledgeId : failedIds) {
             try {
                 boolean isCollected = this.knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, -1);
@@ -470,10 +472,10 @@ public class KnowledgeController extends BaseController
             } catch (Exception ex) {
                 logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
             }
-        }
+        }*/
 
         String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
-        logger.info("delete knowledge success: {}", resp);
+        logger.info("delete knowledge success: " + resp);
 
         result.setResponseData(resp);
         return result;
@@ -527,7 +529,7 @@ public class KnowledgeController extends BaseController
         if (result != null) {
             DataCollect data = result.getResponseData();
             if (data == null || data.getKnowledgeDetail() == null) {
-                logger.error("get knowledge detail failed: knowledgeId: {}", knowledgeId);
+                logger.error("get knowledge detail failed: knowledgeId: " + knowledgeId);
                 return jacksonValue;
             }
             long userId = user.getId();
@@ -567,7 +569,7 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        logger.info("---keyWord: {}", keyword);
+        logger.info("---keyWord: " + keyword);
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
         List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
@@ -615,7 +617,7 @@ public class KnowledgeController extends BaseController
         if (createCount > gotTotal) {
             createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, keyword);
             if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
-                logger.info("get created knowledge size: {}", createdKnowledgeList.size());
+                logger.info("get created knowledge size: " + createdKnowledgeList.size());
                 return knowledgeListPage(total, page, size, createdKnowledgeList);
             }
         }
@@ -624,7 +626,7 @@ public class KnowledgeController extends BaseController
             int restSize = size - createdKnowledgeList.size();
             List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, 0, restSize, keyword);
             int collectedSize = collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0;
-            logger.info("get created knowledge size: {} collected size: {}", createdKnowledgeList.size(), collectedSize);
+            logger.info("get created knowledge size: " + createdKnowledgeList.size() + " collected size: " + collectedSize);
             if (collectedSize > 0) {
                 createdKnowledgeList.addAll(collectedKnowledgeList);
             }
@@ -634,7 +636,7 @@ public class KnowledgeController extends BaseController
         page = gotTotal - createCount;
         List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, page, size, keyword);
         if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
-            logger.info("get collected size: {}", collectedKnowledgeList.size());
+            logger.info("get collected size: " + collectedKnowledgeList.size());
             return knowledgeListPage(total, page, collectedKnowledgeList.size(), collectedKnowledgeList);
         }
 
@@ -714,7 +716,7 @@ public class KnowledgeController extends BaseController
         List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
-        logger.info(".......get all created knowledge success. size: {}", createdKnowledgeList.size());
+        logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
     }
 
@@ -771,7 +773,7 @@ public class KnowledgeController extends BaseController
         List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, start, size, keyword);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
-        logger.info(".......get all collected knowledge success. size: {}", collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0);
+        logger.info(".......get all collected knowledge success. size: " + (collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0));
         return result;
     }
 
@@ -799,7 +801,7 @@ public class KnowledgeController extends BaseController
         try {
             knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            logger.error("Query knowledge failed！reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -831,7 +833,7 @@ public class KnowledgeController extends BaseController
             }
             result.setResponseData(knowledgeBaseItems);
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            logger.error("Query knowledge failed！reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -861,7 +863,7 @@ public class KnowledgeController extends BaseController
                 knowledgeBasesItems = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
             }
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            logger.error("Query knowledge failed！reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -914,7 +916,7 @@ public class KnowledgeController extends BaseController
             try {
                 column = columnSelfService.selectByPrimaryKey((long) columnId);
             } catch (Exception ex) {
-                logger.error("Get column failed: error: {}", ex.getMessage());
+                logger.error("Get column failed: error: " + ex.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "获取栏目信息失败，栏目服务当前不可用!");
             }
             if (total == -1) {
@@ -961,14 +963,14 @@ public class KnowledgeController extends BaseController
                 try {
                     total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
                 } catch (Exception ex) {
-                    logger.error("invoke getBaseAllPublicCount failed: error: {}", ex.getMessage());
+                    logger.error("invoke getBaseAllPublicCount failed: error: " + ex.getMessage());
                 }
             }
             if (total > 0 && start < total) {
                 try {
                     knowledgeList = this.knowledgeService.getBaseAllPublic(start, size, KnowledgeConstant.PRIVATED);
                 } catch (Exception ex) {
-                    logger.error("invoke getBaseAllPublic failed: error: {}", ex.getMessage());
+                    logger.error("invoke getBaseAllPublic failed: error: " + ex.getMessage());
                 }
             } else {
                 return queryKnowledgeEnd();
@@ -1014,7 +1016,7 @@ public class KnowledgeController extends BaseController
             model.put("columnone", co);
             model.put("columnid", columnId);
         } catch (Exception e) {
-            logger.error("查询栏目出错,错误信息:{}", e.toString());
+            logger.error("查询栏目出错,错误信息: " + e.toString());
             e.printStackTrace();
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -1042,7 +1044,7 @@ public class KnowledgeController extends BaseController
                 knowledgeBasesItems = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
             }
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}",e.getMessage());
+            logger.error("Query knowledge failed！reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -1066,7 +1068,7 @@ public class KnowledgeController extends BaseController
             knowledgeBasesItemList = knowledgeService.getKnowledgeNoDirectory(userId, start, size);
 
         } catch (Exception e) {
-            logger.error("Query knowledge failed！userId: {} reason：{}", userId, e.getMessage());
+            logger.error("Query knowledge failed！userId: " + userId + " reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge list success......");
@@ -1911,20 +1913,6 @@ public class KnowledgeController extends BaseController
         return desc;
     }
 
-    private String getDisposeString(String str) {
-
-        if(null == str || str.equals("")) {
-            return str;
-        }
-        String[] tempStr = str.split("/");
-
-        if (tempStr.length > 0) {
-            return tempStr[0];
-        }
-
-        return str;
-    }
-
     private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
     {
         List<KnowledgeBase> createdKnowledgeItems = null;
@@ -1955,20 +1943,6 @@ public class KnowledgeController extends BaseController
         //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
 
         return collectedKnowledgeItems;
-    }
-
-    private Permission permissionInfo(Permission permission,long knowledgeId,long userId)
-    {
-        if (permission != null) {
-            permission.setAppId(APPID);
-            permission.setResId(knowledgeId);
-            permission.setResOwnerId(userId);
-            permission.setResType(ResourceType.KNOW.getVal());
-            if (permission.getPerTime() == null) {
-                permission.setPerTime(new Date());
-            }
-        }
-        return permission;
     }
 
     private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType,boolean isWeb) {
@@ -2070,7 +2044,6 @@ public class KnowledgeController extends BaseController
             ex.printStackTrace();
         }
 
-
         return result;
     }
 
@@ -2093,7 +2066,6 @@ public class KnowledgeController extends BaseController
         }
 
         logger.info("createCount: " + createCount);
-
         return createCount;
     }
 
@@ -2106,7 +2078,6 @@ public class KnowledgeController extends BaseController
             logger.error("get collected knowledge count failed: userId: " + userId + ", error: " + ex.getMessage());
         }
         logger.info("collectedCount: " + collectedCount);
-
         return collectedCount;
     }
 
