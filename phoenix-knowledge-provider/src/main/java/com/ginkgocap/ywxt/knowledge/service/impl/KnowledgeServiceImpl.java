@@ -49,7 +49,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
 
     @Override
-    public InterfaceResult insert(DataCollect DataCollect) {
+    public InterfaceResult<Long> insert(DataCollect DataCollect) {
 
         Knowledge detail = DataCollect.getKnowledgeDetail();
         KnowledgeReference knowledgeReference = DataCollect.getReference();
@@ -71,7 +71,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         } catch (Exception e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
-            logger.error("知识基础表插入失败！失败原因：\n"+e.getMessage());
+            logger.error("知识基础表插入失败！失败原因：" + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
@@ -82,7 +82,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 this.knowledgeReferenceDao.insert(knowledgeReference);
             } catch (Exception e) {
-                logger.error("知识引用表插入失败！失败原因：\n" + e.getMessage());
+                logger.error("知识引用表插入失败！失败原因： " + e.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
             }
         }

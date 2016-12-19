@@ -23,7 +23,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult insert(DataCollect DataCollect);
+    public InterfaceResult<Long> insert(DataCollect DataCollect);
 
 
     /**

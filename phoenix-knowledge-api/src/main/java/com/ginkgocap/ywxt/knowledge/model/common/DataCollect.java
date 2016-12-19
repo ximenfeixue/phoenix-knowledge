@@ -229,19 +229,51 @@ public class DataCollect implements Serializable
         return data;
     }
 
+    public Permission defaultPermission()
+    {
+        if (knowledgeDetail != null) {
+            this.setPermission(defaultPermission(knowledgeDetail.getCid(), knowledgeDetail.getId()));
+            return this.getPermission();
+        }
+        return null;
+    }
+
+    public Permission defaultPublicPermission()
+    {
+        if (knowledgeDetail != null) {
+            this.setPermission(defaultPublicPermission(knowledgeDetail.getCid(), knowledgeDetail.getId()));
+            return this.getPermission();
+        }
+        return null;
+    }
+
+    public static Permission defaultPublicPermission(final long userId,final long resId)
+    {
+        return defaultPermission(userId, resId, 1);
+    }
+
     public static Permission defaultPermission(final long userId,final long resId)
+    {
+        return defaultPermission(userId, resId, -1);
+    }
+
+    public static Permission defaultPermission(final long userId,final long resId, int defaultFlag)
     {
         Permission permission = new Permission();
         permission.setAppId(KnowledgeConstant.DEFAULT_APP_ID);
         permission.setResId(resId);
         permission.setResOwnerId(userId);
-        final int defaultFlag = userId > 0 ? 0 : 1;
+        if (defaultFlag < 0) {
+            defaultFlag = userId > 0 ? 0 : 1;
+        }
         permission.setConnectFlag(defaultFlag);
         permission.setPublicFlag(defaultFlag);
         permission.setShareFlag(defaultFlag);
         permission.setResType(ResourceType.KNOW.getVal());
         return permission;
     }
+
+
 
     public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList, short columnType, boolean desc)
     {

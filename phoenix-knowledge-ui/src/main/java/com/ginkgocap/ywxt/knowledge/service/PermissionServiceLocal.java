@@ -144,24 +144,35 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             logger.error("No permission info give, so skip to save. userId: " + userId + " knowledgeId: " + knowledgeId);
             return null;
         }
-        Permission newPermission = null;
+        Permission newPermission = permissionInfo(permission, knowledgeId, userId);
+        boolean result = savePermissionInfo(newPermission);
+        if (result) {
+            return newPermission;
+        }
+        return null;
+    }
+
+    public boolean savePermissionInfo(final Permission permission)
+    {
+        if (permission == null) {
+            logger.error("No permission info give, so skip to save.");
+            return false;
+        }
         try {
-            newPermission = permissionInfo(permission, knowledgeId, userId);
-            if (newPermission != null) {
-                InterfaceResult<Boolean> result = permissionRepositoryService.insert(newPermission);
-                if (result != null && result.getResponseData() != null && result.getResponseData().booleanValue()) {
-                    logger.info("Insert knowledge permission success : userId: " + userId + " knowledgeId: " + knowledgeId);
-                }
-                else {
-                    logger.info("Insert knowledge permission failed : userId: " + userId + " knowledgeId: " + knowledgeId);
-                }
+            InterfaceResult<Boolean> result = permissionRepositoryService.insert(permission);
+            if (result != null && result.getResponseData() != null && result.getResponseData().booleanValue()) {
+                logger.info("Insert knowledge permission success : userId: " + permission.getResOwnerId() + " knowledgeId: " + permission.getResId());
+                return true;
+            }
+            else {
+                logger.info("Insert knowledge permission failed : userId: " + permission.getResOwnerId() + " knowledgeId: " + permission.getResId());
             }
         } catch (Exception e) {
-            logger.error("Insert knowledge permission failed : userId: " + userId + " knowledgeId: " + knowledgeId + " error: " + e.getMessage());
-            return null;
+            logger.error("Insert knowledge permission failed : userId: " + permission.getResOwnerId() + " knowledgeId: " + permission.getResId() + " error: " + e.getMessage());
+            return false;
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
-        return newPermission;
+        return false;
     }
 
     public Permission updatePermissionInfo(final long userId, final long knowledgeId, Permission permission)

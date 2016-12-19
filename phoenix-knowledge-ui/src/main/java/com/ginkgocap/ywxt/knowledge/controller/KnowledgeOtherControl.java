@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.PermissionServiceLocal;
 import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
@@ -50,6 +51,9 @@ public class KnowledgeOtherControl extends BaseController
 
     @Autowired
     private TagServiceLocal tagServiceLocal;
+
+    @Autowired
+    private PermissionServiceLocal permissionServiceLocal;
 
     @Autowired
     private BigDataSyncTask bigDataSyncTask;
@@ -274,26 +278,21 @@ public class KnowledgeOtherControl extends BaseController
                             // 去除无用图片 - （仅针对移动端编辑时需要）
                             knowledge.setMultiUrls(null);
                             // 创建改知识
-                            InterfaceResult createResult = createKnowledge(knowledge, user, srcExternalUrl, isWeb);
+                            DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
                             // 敏感字检测
-                            if (createResult != null && createResult.getNotification() != null &&
-                                    createResult.getNotification().getNotifCode() != null &&
-                                    !createResult.getNotification().getNotifCode().equals("0")) {
+                            if (data == null || data.getKnowledgeDetail().getId() <= 0) {
                                 // 弹窗提示
-                                setSessionAndErr(request, response, "-1", createResult.getNotification() + " ：" + createResult.getResponseData());
+                                setSessionAndErr(request, response, "-1", "创建知识失败");
                                 // 错误反馈
                                 responseDataMap.put(knowKey, null);
                                 // 跳出
                                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                             }
-                            Long kId = (Long)createResult.getResponseData();
-                            if (kId != null && createResult.getResponseData() instanceof Long) {
-                                // 知识ID
-                                knowledge.setId(kId.longValue());
-                                BigData bigData = DataCollect.generateBigData(knowledge, null);
-                                bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
-                                logger.info("fetchExternalKnowledgeUrl createKnowledge knowledgeId: " + kId);
-                            }
+
+                            BigData bigData = data.toBigData();
+                            bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
+                            logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
+
                         } else {
                             logger.warn("isCreate is not existing or false, so skip to create knowledge!");
                         }
@@ -336,7 +335,7 @@ public class KnowledgeOtherControl extends BaseController
     /**
      * 创建知识抽离
      * */
-    private InterfaceResult createKnowledge(Knowledge knowledge, User user, String url, boolean isWeb) {
+    private DataCollect createKnowledge(Knowledge knowledge, String url, boolean isWeb) {
 
         //Knowledge vo = getKnowledgeNewsVO(knowledge, url, isWeb);
 
@@ -348,7 +347,20 @@ public class KnowledgeOtherControl extends BaseController
         knowledge.setS_addr(url);
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, knowledge);
-        return this.knowledgeService.insert(data);
+        data.defaultPublicPermission();
+        InterfaceResult result = this.knowledgeService.insert(data);
+        if (result != null && result.getResponseData() != null && result.getResponseData() instanceof Long) {
+            Long knowledgeId = (Long)result.getResponseData();
+            if (knowledgeId != null && knowledgeId.longValue() > 0) {
+                data.getKnowledgeDetail().setId(knowledgeId);
+                try {
+                    permissionServiceLocal.savePermissionInfo(data.defaultPublicPermission());
+                } catch (Exception ex) {
+                    logger.error("Save permission failed. userId: " + knowledge.getCid() + " knowledgeId: " + knowledgeId);
+                }
+            }
+        }
+        return data;
     }
 
 
