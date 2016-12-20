@@ -6,7 +6,7 @@
 		http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-    <dubbo:application name="knowledgeWeb" />
+    <dubbo:application name="Knowledge-Web" />
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
     <dubbo:consumer check="false" timeout="30000"/>
     <import resource="classpath:knowledge-dubbo-consumer.xml" />
