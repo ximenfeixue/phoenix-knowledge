@@ -46,6 +46,8 @@ public class DataCollect implements Serializable
     //更新知识，更改栏目
     private int oldType;
 
+    private long readCount;
+
     private static final int maxLen = 255;
 
     public KnowledgeBase getKnowledge() {
@@ -116,6 +118,14 @@ public class DataCollect implements Serializable
 
     public void setOldType(int oldType) {
         this.oldType = oldType;
+    }
+
+    public long getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(long readCount) {
+        this.readCount = readCount;
     }
 
     public void serUserId(long userId) {

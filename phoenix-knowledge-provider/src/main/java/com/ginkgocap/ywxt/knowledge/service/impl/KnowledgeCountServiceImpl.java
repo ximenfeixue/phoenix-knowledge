@@ -34,47 +34,43 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     //private volatile boolean timerStarted = false;
 
     @Override
-    public boolean updateClickCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setClickCount(knowledgeCount.getClickCount() + 1);
-            return true;
         }
-        return false;
+        return knowledgeCount;
     }
 
     @Override
-    public boolean updateShareCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateShareCount(long userId,long knowledgeId,short type)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setShareCount(knowledgeCount.getClickCount() + 1);
-            return true;
         }
-        return false;
+        return knowledgeCount;
     }
 
     @Override
-    public boolean updateCollectCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateCollectCount(long userId,long knowledgeId,short type)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCollectCount(knowledgeCount.getClickCount() + 1);
-            return true;
         }
-        return false;
+        return knowledgeCount;
     }
 
     @Override
-    public boolean updateCommentCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateCommentCount(long userId,long knowledgeId,short type)
     {
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCommentCount(knowledgeCount.getClickCount() + 1);
-            return true;
         }
-        return false;
+        return knowledgeCount;
     }
 
     @Override
@@ -119,7 +115,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         if (knowledgeCount == null) {
             knowledgeCount = new KnowledgeCount();
             knowledgeCount.setId(knowledgeId);
-            knowledgeCount.setUserId(userId);
+            //knowledgeCount.setUserId(userId);
             knowledgeCount.setType(type);
             try {
                 knowledgeCountDao.saveKnowledgeCount(knowledgeCount);

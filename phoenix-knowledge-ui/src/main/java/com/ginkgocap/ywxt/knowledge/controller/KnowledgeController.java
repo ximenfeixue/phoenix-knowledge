@@ -2038,9 +2038,11 @@ public class KnowledgeController extends BaseController
 
         //Click count this should be in queue
         try {
-            knowledgeCountService.updateClickCount(this.getUserId(user), knowledgeId, (short)columnType);
+            KnowledgeCount count = knowledgeCountService.updateClickCount(userId, knowledgeId, (short)columnType);
+            final long readCount = count != null ? count.getClickCount() : 0L;
+            data.setReadCount(readCount);
         } catch (Exception ex) {
-            logger.error("count knowledge click failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
+            logger.error("count knowledge read failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
             ex.printStackTrace();
         }
 

@@ -9,13 +9,13 @@ import java.util.List;
  */
 public interface KnowledgeCountService {
 
-    public boolean updateClickCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type);
 
-    public boolean updateShareCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateShareCount(long userId,long knowledgeId,short type);
 
-    public boolean updateCollectCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateCollectCount(long userId,long knowledgeId,short type);
 
-    public boolean updateCommentCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateCommentCount(long userId,long knowledgeId,short type);
 
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
 
