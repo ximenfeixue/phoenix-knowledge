@@ -32,7 +32,7 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
 	
 	<dubbo:monitor protocol="registry" />
-    <dubbo:application name="${dubbo.application.name}" />
+    <dubbo:application name="Knowledge-Provider" />
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
 		<!-- threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
 		queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
