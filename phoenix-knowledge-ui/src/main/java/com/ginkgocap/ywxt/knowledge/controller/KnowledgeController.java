@@ -1937,7 +1937,7 @@ public class KnowledgeController extends BaseController
         try {
             collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, start, size, keyword);
         } catch (Exception ex) {
-            logger.error("invoke myCollectKnowledge failed. userId: {} error: {}", userId, ex.getMessage());
+            logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
         }
         final int collectedSize  = collectItems != null ? collectItems.size() : 0;
         logger.info("get collected knowledge size : " + collectedSize + " , keyword: " + keyword);
@@ -1966,7 +1966,7 @@ public class KnowledgeController extends BaseController
 
         //数据为空则直接返回异常给前端
         if(detail == null) {
-            logger.error("get knowledge failed: knowledgeId: {}, columnId: {}", knowledgeId, columnType);
+            logger.error("get knowledge failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
         }
         /*
