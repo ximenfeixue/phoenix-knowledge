@@ -102,7 +102,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         }
         long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
         if (start >= count) {
-            logger.error("start > count, so return. userId: " + userId + " start: " + start + " count: " + count);
+            logger.error("start exceed to end, so return null. userId: " + userId + " start: " + start + " count: " + count);
             return null;
         }
         if (size > maxSize) {
