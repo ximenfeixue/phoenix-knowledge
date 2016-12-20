@@ -543,7 +543,9 @@ public class KnowledgeController extends BaseController
             long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
             ColumnSelf columnSelf = getColumn(columnId);
             IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
-            logger.info("get column info: Id: " + column.getId() + " name: "+column.getName());
+            if (column != null) {
+                logger.info("get column info: Id: " + column.getId() + " name: " + column.getName());
+            }
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
             jacksonValue = knowledgeDetail(data);
