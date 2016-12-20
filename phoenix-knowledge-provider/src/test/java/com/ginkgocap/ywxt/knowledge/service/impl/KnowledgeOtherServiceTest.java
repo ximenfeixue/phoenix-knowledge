@@ -53,9 +53,10 @@ public class KnowledgeOtherServiceTest extends TestBase
     public void testGetCollectKnowledgeList()
     {
         try {
-            final String keyWord = "一切皆可";
+            final String keyWord = null;
             List<KnowledgeCollect> collectList = knowledgeOtherService.myCollectKnowledge(userId, -1, 0, 10, keyWord);
             Assert.assertTrue(collectList != null && collectList.size() >0);
+            System.out.println("Collected size: " + collectList.size());
             for (KnowledgeCollect collect : collectList) {
                 StringBuffer content = new StringBuffer();
                 content.append("collect: Id: ").append(collect.getId());
