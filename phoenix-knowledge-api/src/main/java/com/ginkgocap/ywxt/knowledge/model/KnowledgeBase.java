@@ -347,5 +347,4 @@ public class KnowledgeBase implements Serializable {
 	public void setReadCount(int readCount) {
 		this.readCount = readCount;
 	}
-
 }
