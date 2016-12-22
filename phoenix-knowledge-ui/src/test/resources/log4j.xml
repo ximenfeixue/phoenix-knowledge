@@ -16,7 +16,7 @@
 
     <appender name="logfile" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="encoding" value="UTF-8" />
-        <param name="File" value="${user.dir}/knowledge_normal.log" />
+        <param name="File" value="${user.home}/knowledge_ui/normal.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%p %d{yyyyMMddHHmmss} %l%m%n" />
@@ -28,7 +28,7 @@
         </filter>
     </appender>
     <appender name="httpPerformanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${user.dir}/knowledge_httpperformanceLog.log" />
+        <param name="File" value="${user.home}/knowledge_ui/httpperformanceLog.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
@@ -41,7 +41,7 @@
     </logger>
 
     <appender name="performanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${user.dir}/knowledge_performanceLog.log" />
+        <param name="File" value="${user.home}/knowledge_ui/performanceLog.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
