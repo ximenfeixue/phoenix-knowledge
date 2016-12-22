@@ -144,6 +144,6 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
     }
 
     public List<Associate> getAssociateList(long userId, long knowledgeId) throws AssociateServiceException {
-        return associateService.getAssociatesBySourceId(APPID, userId, knowledgeId);
+        return associateService.getAssociatesBySourceId(APPID, userId, knowledgeId, (long)sourceType);
     }
 }
