@@ -29,6 +29,7 @@ CREATE TABLE `tb_knowledge_base` (
   `cpath` varchar(255) DEFAULT NULL,
   `privated` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否私密 (1:是,0:否)',
   `taskId` varchar(255) DEFAULT NULL,
+  `read_count` int (20)  NOT NULL DEFAULT '0' COMMENT '阅读数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='知识基础表';
 

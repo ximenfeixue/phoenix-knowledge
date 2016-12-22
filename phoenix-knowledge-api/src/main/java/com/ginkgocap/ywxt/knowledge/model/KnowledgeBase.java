@@ -93,6 +93,9 @@ public class KnowledgeBase implements Serializable {
 	//是否私密，1是，0否
 	private short privated;
 
+	/** 阅读数量  **/
+	private int readCount;
+
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	public long getId() {
@@ -337,4 +340,9 @@ public class KnowledgeBase implements Serializable {
 	public void setPrivated(short privated) {
 		this.privated = privated;
 	}
+
+	@Column(name = "read_count")
+	public int getReadCount() {return readCount;}
+
+	public void setReadCount(int readCount) {this.readCount = readCount;}
 }
