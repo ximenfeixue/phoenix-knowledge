@@ -1,8 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.ginkgocap.parasol.directory.exception.DirectoryServiceException;
-import com.ginkgocap.parasol.directory.exception.DirectorySourceServiceException;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.directory.model.DirectorySource;
 import com.ginkgocap.parasol.directory.service.DirectoryService;
@@ -300,9 +298,6 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
         }catch(Exception ex){
             logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
-            return false;
-        } catch (Exception ex) {
-            ex.printStackTrace();
             return false;
         }
         return true;

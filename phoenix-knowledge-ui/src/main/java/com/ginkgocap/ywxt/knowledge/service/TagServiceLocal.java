@@ -17,8 +17,6 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.ginkgocap.parasol.tags.exception.TagServiceException;
-import com.ginkgocap.parasol.tags.exception.TagSourceServiceException;
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.parasol.tags.model.TagSource;
 import com.ginkgocap.parasol.tags.service.TagService;
@@ -340,10 +338,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 try {
                     tagSourceService.createTagSource(tagSource);
                     logger.info("create tag success tagId:" + tagId);
-                } catch (TagSourceServiceException ex) {
-                    logger.error("update tags failed...userId: " + userId + " knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
-                }
-                catch(Exception ex){
+                } catch (Exception ex) {
                     logger.error("update tags failed...userId: " + userId + " knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
                 }
             }
@@ -359,11 +354,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 logger.error("delete tags failed...userId=" + userId + ", knowledgeId=" + knowledgeId);
                 return false;
             }
-        }catch (TagSourceServiceException ex) {
-            logger.error("delete tag failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
-            return false;
-        }
-        catch(Exception ex){
+        }catch (Exception ex) {
             logger.error("delete tag failed...userId=" + userId + ", knowledgeId=" + knowledgeId + "error: "+ex.getMessage());
             return false;
         }
