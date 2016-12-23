@@ -16,8 +16,8 @@ public class HttpInterceptor implements HandlerInterceptor {
 	ThreadLocal<StopWatch> currentThread = new ThreadLocal<StopWatch>();
 
 	@Override
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
 		// TODO Auto-generated method stub
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -26,16 +26,14 @@ public class HttpInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
-	public void postHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
+            throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("postHandle() ---------------");
 	}
 
 	@Override
-	public void afterCompletion(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex)
+	public void afterCompletion(HttpServletRequest request,	HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 		// TODO Auto-generated method stub
 		StopWatch stopWatch = currentThread.get();
