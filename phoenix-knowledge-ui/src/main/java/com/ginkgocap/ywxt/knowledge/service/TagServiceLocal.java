@@ -57,7 +57,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
         try {
             return this.tagService.createTag(userId, tag);
-        } catch (TagServiceException ex) {
+        } catch (Exception ex) {
             logger.error("create tag failed!  userId: {}, tagName: {}", tag.getUserId(), tag.getTagName());
         }
         return -1L;
@@ -67,7 +67,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     {
         try {
             return this.tagService.getTagsByUserIdAppidTagType(userId, APPID, (long) sourceType);
-        } catch (TagServiceException ex) {
+        } catch (Exception ex) {
             logger.error("can't get tag list by userId: {} appId: {} error: ", userId, APPID, ex.getMessage());
         }
 
@@ -265,8 +265,8 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     {
         try {
             return tagService.getTags(-1L,tagIds);
-        } catch (TagServiceException ex) {
-            logger.error("get tag failed: {}", tagIds);
+        } catch (Exception ex) {
+            logger.error("get tag failed: " + tagIds);
         }
         return null;
     }
@@ -281,7 +281,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             try {
                 int count = tagSourceService.countTagSourcesByAppIdTagId(APPID, tagId);
                 sourceMap.put(tagId, count);
-            } catch (TagSourceServiceException ex) {
+            } catch (Exception ex) {
                 logger.error("get tag count failed. error: {}", ex.getMessage());
                 ex.printStackTrace();
             }
@@ -384,7 +384,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 successIds.add(tagId);
                 logger.info("create tag source success. tagId:" + tagId + " knowledgeId: " + knowledgeId);
             }
-            catch (TagSourceServiceException ex) {
+            catch (Exception ex) {
                 logger.error("create Tag failed, userId: {}, knowledgeId: {}, tagId: {}, error: {}",
                         userId, knowledgeId, tagId, ex.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, ex.getMessage());
@@ -408,7 +408,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             else {
                 logger.error("There is no any resource add this tag, tagId: {}", tagId);
             }
-        } catch (TagSourceServiceException ex) {
+        } catch (Exception ex) {
             logger.error("Get related resource failed. tagId: {} error: ", tagId, ex.getMessage());
         }
         return null;
@@ -419,7 +419,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         List<Tag> tagList = null;
         try {
             tagList = tagService.getTagsByUserIdAppidTagType(userId, APPID, (long)sourceType);
-        } catch (TagServiceException e) {
+        } catch (Exception e) {
             logger.info("Get Tag failed: error: {}", e.getMessage());
         }
 
@@ -432,7 +432,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                     if (!ret) {
                         logger.info("remove Tag source failed: tagId: {}", tag.getId());
                     }
-                } catch (TagSourceServiceException ex) {
+                } catch (Exception ex) {
                     logger.info("remove Tag source failed: tagId: {} error: {}", tag.getId(), ex.getMessage());
                 }
             }
@@ -471,7 +471,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
         try {
             tagSources = tagSourceService.getTagSourcesByAppIdSourceIdSourceType(APPID, knowledgeId, (long)sourceType);
         }
-        catch (TagSourceServiceException ex) {
+        catch (Exception ex) {
             logger.error("get tags from this knowledge, failed...userId: " + userId + ", knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
             return false;
         }
@@ -487,7 +487,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
                 if (!tagSourceService.removeTagSource(APPID, userId, tagSourceId)) {
                     logger.error("delete tags failed...userId: " + userId + ", tagSourceId: " + tagSource.getId());
                 }
-            } catch (TagSourceServiceException ex) {
+            } catch (Exception ex) {
                 logger.error("delete tags failed...userId: " + userId + ", tagSourceId: " +tagSourceId + "error: "+ex.getMessage());
             }
         }
