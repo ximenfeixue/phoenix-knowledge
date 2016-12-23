@@ -41,25 +41,21 @@ public class HttpInterceptor implements HandlerInterceptor {
 		StopWatch stopWatch = currentThread.get();
 		stopWatch.split();
 		long splitTime = stopWatch.getSplitTime();
-		//if (splitTime > threshold) {
-//			User user = (User) request.getAttribute("sessionUser");
-//			long userId = null == user ? -1 : user.getId();
 
-			StringBuilder buff = new StringBuilder();
-			buff.append("[url=").append(request.getRequestURI())
-					.append("]  [s=")
-					.append(splitTime)
-					.append(" ms]")
-					.append(" [userId=")
-//					.append(userId)
-					.append("]")
-					.append(" [params=")
-					.append(request.getAttribute("requestJson") == null ? ""
-							: request.getAttribute("requestJson").toString())
-					.append("]");
-			logger.info(buff.toString());
-		//}
-	}
+		StringBuilder buff = new StringBuilder();
+		buff.append("[url=").append(request.getRequestURI())
+				.append("]  [s=")
+				.append(splitTime)
+				.append(" ms]")
+				.append(" [userId=")
+//				.append(userId)
+				.append("]")
+				.append(" [params=")
+				.append(request.getAttribute("requestJson") == null ? ""
+						: request.getAttribute("requestJson").toString())
+				.append("]");
+		logger.info(buff.toString());
+}
 
 	public void setThreshold(long threshold) {
 		this.threshold = threshold;
