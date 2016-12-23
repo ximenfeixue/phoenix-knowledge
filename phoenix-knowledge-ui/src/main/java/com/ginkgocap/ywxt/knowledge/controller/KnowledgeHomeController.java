@@ -93,7 +93,7 @@ public class KnowledgeHomeController extends BaseController {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryTagUrl");
             if (StringUtils.isEmpty(url)) {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
-                url = resource.getString("knowledge.url.query.tag");
+                url = resource.getString("knowledge.url.query");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = defaultBigDataUrl;
@@ -132,7 +132,7 @@ public class KnowledgeHomeController extends BaseController {
             String url = (String) request.getSession().getServletContext().getAttribute("knowledgeQueryHotUrl");
             if (StringUtils.isEmpty(url)) {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
-                url = resource.getString("knowledge.url.query.hot");
+                url = resource.getString("knowledge.url.query");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = defaultBigDataUrl;
@@ -226,7 +226,7 @@ public class KnowledgeHomeController extends BaseController {
             String url = (String) request.getSession().getServletContext().getAttribute("newQueryHost");
             if (StringUtils.isEmpty(url)) {
                 ResourceBundle resource = ResourceBundle.getBundle("application");
-                url = resource.getString("knowledge.new.query.host");
+                url = resource.getString("knowledge.url.query");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
                 url = defaultBigDataUrl;
