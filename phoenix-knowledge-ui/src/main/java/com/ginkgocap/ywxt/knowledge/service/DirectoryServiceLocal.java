@@ -47,7 +47,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             directory.setName(directoryName);
             directory.setTypeId(sourceType);//This get from DB
             return directoryService.createDirectoryForRoot(userId, directory);
-        } catch (DirectoryServiceException ex) {
+        } catch (Exception ex) {
             logger.error("create directory failed. userId: {} directoryName: {}, error: {}", userId, directoryName, ex.getMessage());
         }
         return -1L;
@@ -57,7 +57,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         try {
             return directoryService.getDirectorysForRoot(APPID, userId, (long) sourceType);
-        } catch (DirectoryServiceException ex) {
+        } catch (Exception ex) {
             logger.error("Can't get directoryList by userId: {}, parentId: {} error: {}", userId, 0, ex.getMessage());
         }
 
@@ -77,7 +77,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             if (!directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
                 logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
             }
-        } catch (DirectorySourceServiceException ex) {
+        } catch (Exception ex) {
             logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
         }
 
@@ -87,7 +87,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                     DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
                     long directorySourceId = directorySourceService.createDirectorySources(directorySource);
                     logger.info("create directory success. userId: " + userId + ", knowledgeId: " + knowledgeId + "directorySourceId: " + directorySourceId);
-                } catch (DirectorySourceServiceException ex) {
+                } catch (Exception ex) {
                     logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
                 }
             }
@@ -271,7 +271,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         try {
             return directoryService.getDirectoryList(APPID, -1L, directoryIds);
-        } catch (DirectoryServiceException e) {
+        } catch (Exception e) {
             logger.error("Get directory list failed！reason："+e.getMessage());
             e.printStackTrace();
         }
@@ -298,7 +298,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
                 return false;
             }
-        }catch(DirectorySourceServiceException ex){
+        }catch(Exception ex){
             logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
             return false;
         } catch (Exception ex) {
@@ -314,7 +314,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         List<DirectorySource> directorySources = null;
         try {
             directorySources = directorySourceService.getSourcesByDirectoryIdAndSourceType(start, size, parameter);
-        } catch (DirectorySourceServiceException e) {
+        } catch (Exception e) {
             logger.error("get directory Source failed: "+e.getMessage());
             e.printStackTrace();
         }
@@ -360,7 +360,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
                 return false;
             }
-        } catch (DirectorySourceServiceException ex) {
+        } catch (Exception ex) {
             logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
             return false;
         }

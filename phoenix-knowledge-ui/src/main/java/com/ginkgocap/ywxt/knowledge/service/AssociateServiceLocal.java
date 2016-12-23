@@ -65,7 +65,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
                 }
                 assoMap.get(associate.getAssocTypeId()).add(associate);
                 logger.info("assoId:" + assoId);
-            }catch (AssociateServiceException e) {
+            }catch (Exception e) {
                 logger.error("create Asso failed！reason：" + e.getMessage());
             } catch (Throwable e) {
                 logger.error("create Asso failed！reason：" + e.getMessage());
@@ -84,7 +84,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
                 logger.error("asso item null or converted failed...");
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
             }
-        } catch (AssociateServiceException ex) {
+        } catch (Exception ex) {
             logger.error("delete Associate failed, reason: {}", ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
@@ -143,7 +143,7 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-    public List<Associate> getAssociateList(long userId, long knowledgeId) throws AssociateServiceException {
+    public List<Associate> getAssociateList(long userId, long knowledgeId) throws Exception {
         return associateService.getAssociatesBySourceId(APPID, userId, knowledgeId, (long)sourceType);
     }
 }
