@@ -56,6 +56,7 @@ public class KnowledgeHomeController extends BaseController {
     @Autowired
     KnowledgeCountService knowledgeCountService;
 
+    private final String defaultBigDataUrl = "http://192.168.101.53:8090";
     @ResponseBody
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
     public InterfaceResult<Map<String, Object>> separate(HttpServletRequest request, HttpServletResponse response,@PathVariable short type)
@@ -95,12 +96,12 @@ public class KnowledgeHomeController extends BaseController {
                 url = resource.getString("knowledge.url.query.tag");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-                url = "http://192.168.101.53:8090";
+                url = defaultBigDataUrl;
             }
 
             Map<String, String> params = new HashMap<String, String>(1);
             params.put("num", String.valueOf(count));
-            String jsonContent = HttpClientHelper.post(url + "/user/tags/search.json", params);
+            String jsonContent = HttpClientHelper.post(url + "/bigData/user/tags/search.json", params);
             String tags = "";
             try {
                 if (!org.apache.commons.lang.StringUtils.isBlank(jsonContent)) {
@@ -134,11 +135,11 @@ public class KnowledgeHomeController extends BaseController {
                 url = resource.getString("knowledge.url.query.hot");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-                url = "http://192.168.101.53:8090";
+                url = defaultBigDataUrl;
             }
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String jsonContent = HttpClientHelper.post(url + "/knowledge/hot/all.json", params);
+            String jsonContent = HttpClientHelper.post(url + "/bigData/knowledge/hot/all.json", params);
             if (StringUtils.isBlank(jsonContent)) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,"最热排行请求失败");
             }
@@ -166,14 +167,14 @@ public class KnowledgeHomeController extends BaseController {
                 url = resource.getString("knowledge.url.query");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-                url = "http://192.168.101.53:8090";
+                url = defaultBigDataUrl;
             }
             //List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
             //pairs.add(new BasicNameValuePair("type", String.valueOf(type)));
 
             Map<String, String> params = new HashMap<String, String>();
             params.put("type", String.valueOf(type));
-            String jsonContent = HttpClientHelper.post(url + "/knowledge/hot/comment.json", params);
+            String jsonContent = HttpClientHelper.post(url + "/bigData/knowledge/hot/comment.json", params);
             model.put("list", getKnowledgeList(jsonContent));
         } catch (Exception e) {
             logger.error("最热排行请求失败{}", e.toString());
@@ -228,7 +229,7 @@ public class KnowledgeHomeController extends BaseController {
                 url = resource.getString("knowledge.new.query.host");
             }
             if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-                url = "http://192.168.101.53:8090";
+                url = defaultBigDataUrl;
             }
 
             List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
@@ -268,7 +269,7 @@ public class KnowledgeHomeController extends BaseController {
             url = resource.getString("knowledge.url.query");
         }
         if (StringUtils.isEmpty(url) || url.indexOf("http") < 0) {
-            url = "http://192.168.101.53:8090";
+            url = defaultBigDataUrl;
         }
         List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
         pairs.add(new BasicNameValuePair("page", String.valueOf(page)));
@@ -276,7 +277,7 @@ public class KnowledgeHomeController extends BaseController {
         pairs.add(new BasicNameValuePair("type", String.valueOf(type)));// 1,推荐 2,发现
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            String responseJson = HttpClientHelper.post(url + "/API/hotKno.do", pairs);
+            String responseJson = HttpClientHelper.post(url + "/bigData/hotKno.do", pairs);
             model.put("list", PackingDataUtil.getRecommendResult(responseJson));
         } catch (Exception e) {
             logger.error("connect big data service failed！");
