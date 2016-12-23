@@ -575,15 +575,29 @@ public class KnowledgeController extends BaseController
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
         List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
-        if (createdKnowledgeItems != null && createdKnowledgeItems.size() > 0 ) {
+        if (CollectionUtils.isNotEmpty(createdKnowledgeItems)) {
+            createdKnowledgeItems = setReadCount(createdKnowledgeItems);
             resultMap.put("created", createdKnowledgeItems);
         }
 
         List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, start, size, keyword);
+        collectedKnowledgeItems = setReadCount(collectedKnowledgeItems);
         resultMap.put("collected", collectedKnowledgeItems);
 
         logger.info(".......get all knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(resultMap);
+    }
+
+    private List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+        for (KnowledgeBase knowledgeItem : baseList) {
+           KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
+           long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+           knowledgeItem.setReadCount((int)readCount);
+        }
+        return baseList;
     }
 
     /**
@@ -665,7 +679,7 @@ public class KnowledgeController extends BaseController
     }
 
     /**
-     * 提取所有知识数据
+     * 提取所有知识创建数据
      * @param start 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
@@ -688,7 +702,7 @@ public class KnowledgeController extends BaseController
     }
 
     /**
-     * 提取所有知识数据
+     * 提取所有知识创建数据
      * @param page 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
@@ -716,14 +730,13 @@ public class KnowledgeController extends BaseController
         }
 
         List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
-
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
     }
 
     /**
-     * 提取所有知识数据
+     * 提取所有知识收藏数据
      * @param start 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
@@ -746,7 +759,7 @@ public class KnowledgeController extends BaseController
     }
 
     /**
-     * 提取所有知识数据
+     * 提取所有知识收藏数据
      * @param page 分页起始
      * @param size 分页大小
      * @throws java.io.IOException
@@ -2119,7 +2132,8 @@ public class KnowledgeController extends BaseController
         page.setTotalCount(total);
         page.setPageNo(num);
         page.setPageSize(size);
-        page.setList(knowledgeBaseItems);
+        page.setList(setReadCount(knowledgeBaseItems));
+        //page.setList(knowledgeBaseItems);
         return InterfaceResult.getSuccessInterfaceResultInstance(page);
     }
 

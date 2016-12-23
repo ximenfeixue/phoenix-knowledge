@@ -90,11 +90,19 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     public KnowledgeCount getKnowledgeCount(long knowledgeId)
     {
         try {
-            return knowledgeCountDao.getKnowledgeCount(knowledgeId);
+            //return knowledgeCountDao.getKnowledgeCount(knowledgeId);
+            KnowledgeCount knowledgeCount = hotCountMap.get(knowledgeId);
+            if (knowledgeCount != null ) {
+                return knowledgeCount;
+            }
+            knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
+            if (knowledgeCount != null) {
+                hotCountMap.put(knowledgeId, knowledgeCount);
+            }
+            return knowledgeCount;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
