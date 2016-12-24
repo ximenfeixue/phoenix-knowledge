@@ -259,8 +259,6 @@ public class KnowledgeOtherControl extends BaseController
                         setCoverPic(imgs, knowledge);
                         // 附件ID
                         knowledge.setTaskid(null);
-                        // 摘除html底部图片
-                        knowledge.setMultiUrls(null);
 
                         // 设置默认标签
                         knowledge.setTags(null);
@@ -468,6 +466,7 @@ public class KnowledgeOtherControl extends BaseController
                     break;
                 }
             }
+            knowledge.setMultiUrls(imgs);
             if (knowledge.getPic() == null || "null".equals(knowledge.getPic()) || knowledge.getPic().trim().length() <= 0) {
                 knowledge.setPic(imgs.get(0));
             }
