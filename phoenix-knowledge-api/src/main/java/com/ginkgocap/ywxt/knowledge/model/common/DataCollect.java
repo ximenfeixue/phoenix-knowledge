@@ -164,13 +164,13 @@ public class DataCollect implements Serializable
             knowledgeBase.setTitle(detail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
             knowledgeBase.setContentDesc(knowledgeContent);
-            if (detail.getMultiUrls() != null && detail.getMultiUrls().size() > 0) {
-                logger.info("save picture: " + detail.getMultiUrls().get(0));
+            if (CollectionUtils.isNotEmpty(detail.getMultiUrls())) {
+                logger.info("save cover picture: " + detail.getMultiUrls().get(0));
                 knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
             }
 
             //knowledge.setAuditStatus(auditStatus);
-            if (detail.getTagList() != null && detail.getTagList().size() > 0) {
+            if (CollectionUtils.isNotEmpty(detail.getTagList())) {
                 String tags = KnowledgeUtil.convertLongListToBase(detail.getTagList());
                 logger.info("create tags for base: " + tags);
                 knowledgeBase.setTags(tags);
