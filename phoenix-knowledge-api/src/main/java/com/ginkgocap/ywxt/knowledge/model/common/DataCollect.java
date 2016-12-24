@@ -383,6 +383,7 @@ public class DataCollect implements Serializable
                 }
             }
         }
+        return null;
     }
 
     public static String convertLongListToBase(List<Long> ids)
