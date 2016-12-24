@@ -273,8 +273,6 @@ public class KnowledgeOtherControl extends BaseController
                             //knowledge.setUid();
                             // 用户名
                             //knowledge.setUname();
-                            // 去除无用图片 - （仅针对移动端编辑时需要）
-                            knowledge.setMultiUrls(null);
                             // 创建改知识
                             DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
                             // 敏感字检测
@@ -459,7 +457,7 @@ public class KnowledgeOtherControl extends BaseController
             }
         }*/
         //New
-        if (imgs != null && imgs.size() > 0) {
+        if (CollectionUtils.isNotEmpty(imgs)) {
             for (String img : imgs) {
                 if (StringUtils.isEmpty(img) && img.length() < 255) {
                     knowledge.setPic(img);
