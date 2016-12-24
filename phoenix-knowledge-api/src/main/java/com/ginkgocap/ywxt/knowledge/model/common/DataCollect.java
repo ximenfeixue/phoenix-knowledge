@@ -49,6 +49,7 @@ public class DataCollect implements Serializable
     private long readCount;
 
     private static final int maxLen = 255;
+    private static final int maxUrlLen = 512;
 
     public KnowledgeBase getKnowledge() {
         return knowledge;
@@ -164,9 +165,16 @@ public class DataCollect implements Serializable
             knowledgeBase.setTitle(detail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
             knowledgeBase.setContentDesc(knowledgeContent);
-            if (CollectionUtils.isNotEmpty(detail.getMultiUrls())) {
-                logger.info("save cover picture: " + detail.getMultiUrls().get(0));
-                knowledgeBase.setCoverPic(detail.getMultiUrls().get(0));
+
+            String coverPicUrl = detail.getPic();
+            if (StringUtils.isNotBlank(coverPicUrl) && !"null".equals(coverPicUrl)) {
+                logger.info("save cover picture: " + coverPicUrl);
+                knowledgeBase.setCoverPic(coverPicUrl);
+
+            } else {
+                coverPicUrl = validatePicUrl(detail.getMultiUrls());
+                logger.info("save cover picture: " + coverPicUrl);
+                knowledgeBase.setCoverPic(coverPicUrl);
             }
 
             //knowledge.setAuditStatus(auditStatus);
@@ -332,7 +340,7 @@ public class DataCollect implements Serializable
                 base.setSource(base.getSource().substring(0, maxLen - 1));
             }
 
-            if (base.getCoverPic() != null && base.getCoverPic().length() > maxLen * 2) {
+            if (base.getCoverPic() != null && base.getCoverPic().length() > maxUrlLen) {
                 logger.error("cover Picture over 512, so set it to null");
                 base.setCoverPic(null);
             }
@@ -359,6 +367,22 @@ public class DataCollect implements Serializable
         }
 
         return base;
+    }
+
+    public static String validatePicUrl(List<String> imgUrl)
+    {
+        if (CollectionUtils.isEmpty(imgUrl)) {
+            return null;
+        }
+
+        for (String url : imgUrl) {
+            if (StringUtils.isNotBlank(url) && !"null".equals(url)) {
+                if (url.endsWith("jpg") || url.endsWith("jpeg") || url.endsWith("gif") || url.endsWith("png") ||
+                        url.endsWith("JPG") || url.endsWith("JPEG") || url.endsWith("GIF") || url.endsWith("PNG")   ) {
+                    return url;
+                }
+            }
+        }
     }
 
     public static String convertLongListToBase(List<Long> ids)

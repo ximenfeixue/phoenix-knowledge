@@ -256,7 +256,9 @@ public class KnowledgeOtherControl extends BaseController
                                 imgs = KnowledgeUtil.readListValue(String.class, imgContent);
                             }
                         }
-                        setCoverPic(imgs, knowledge);
+
+                        knowledge.setPic(DataCollect.validatePicUrl(imgs));
+                        knowledge.setMultiUrls(imgs);
                         // 附件ID
                         knowledge.setTaskid(null);
 
