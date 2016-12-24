@@ -318,12 +318,12 @@ public class DataCollect implements Serializable
     {
         if (base != null) {
             if (base.getTitle() != null && base.getTitle().length() > maxLen) {
-                logger.error("cover Picture over 255, so set it to null");
+                logger.error("Title over 255, so truncate it to 255");
                 base.setTitle(base.getTitle().substring(0, maxLen - 1));
             }
 
             if (base.getContentDesc() != null && base.getContentDesc().length() > maxLen) {
-                logger.error("cover Picture over 255, so set it to null");
+                logger.error("ContentDesc over 255, so truncate it to 255");
                 base.setContentDesc(base.getContentDesc().substring(0, maxLen - 1));
             }
 
@@ -332,8 +332,8 @@ public class DataCollect implements Serializable
                 base.setSource(base.getSource().substring(0, maxLen - 1));
             }
 
-            if (base.getCoverPic() != null && base.getCoverPic().length() > maxLen) {
-                logger.error("cover Picture over 255, so set it to null");
+            if (base.getCoverPic() != null && base.getCoverPic().length() > maxLen * 2) {
+                logger.error("cover Picture over 512, so set it to null");
                 base.setCoverPic(null);
             }
 
