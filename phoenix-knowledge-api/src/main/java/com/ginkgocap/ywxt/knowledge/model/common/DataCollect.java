@@ -377,8 +377,8 @@ public class DataCollect implements Serializable
 
         for (String url : imgUrl) {
             if (StringUtils.isNotBlank(url) && !"null".equals(url)) {
-                if (url.endsWith("jpg") || url.endsWith("jpeg") || url.endsWith("gif") || url.endsWith("png") ||
-                        url.endsWith("JPG") || url.endsWith("JPEG") || url.endsWith("GIF") || url.endsWith("PNG")   ) {
+                if (url.endsWith("jpg") || url.endsWith("jpeg") || url.endsWith("gif") ||
+                        url.endsWith("JPG") || url.endsWith("JPEG") || url.endsWith("GIF") ) {
                     return url;
                 }
             }
