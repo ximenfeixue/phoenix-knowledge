@@ -673,7 +673,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         if (startIndex > 0) {
             final String filterContent = sb.replace(startIndex, endIndex, "").toString();
             if (filterContent != null) {
-                detail.setContent(filterContent.replace("\n", ""));
+                detail.setContent(filterContent.replaceAll("(\r\n|\r|\n|\n\r)", "<br>"));
             }
         }
     }
