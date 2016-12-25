@@ -672,7 +672,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         final int endIndex = sb.indexOf(endContent) + endLength;
         if (startIndex > 0) {
             final String filterContent = sb.replace(startIndex, endIndex, "").toString();
-            detail.setContent(filterContent);
+            if (filterContent != null) {
+                detail.setContent(filterContent.replace("\n", ""));
+            }
         }
     }
 }

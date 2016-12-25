@@ -228,7 +228,7 @@ public final class KnowledgeUtil {
             JsonNode node = objectMapper.readTree(jsonObject);
             dataCollect = objectMapper.readValue(jsonObject, DataCollect.class);
         } catch (Exception e) {
-            logger.error("json转换对象失败,json字符串:{},exp:{}", jsonObject, e.toString());
+            logger.error("json转换对象失败,json字符串: " + jsonObject + " exp: " + e.getMessage());
         }
         return dataCollect;
     }
