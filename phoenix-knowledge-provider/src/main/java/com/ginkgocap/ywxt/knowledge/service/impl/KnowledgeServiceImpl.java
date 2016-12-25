@@ -667,16 +667,15 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private void filterKnowledge(Knowledge detail)
     {
-        StringBuilder sb = new StringBuilder(detail.getContent());
-        final int startIndexBr = sb.indexOf("</br>版权归原作者所有，金桐网依法保护版权");
-        final int startIndexP = sb.indexOf("<p>版权归原作者所有，金桐网依法保护版权");
-        final int endIndex = sb.length() - 1;
+        String orgContent = detail.getContent();
+        final int startIndexBr = orgContent.indexOf("</br>版权归原作者所有，金桐网依法保护版权");
+        final int startIndexP = orgContent.indexOf("<p>版权归原作者所有，金桐网依法保护版权");
         String filterContent = null;
         if (startIndexBr > 0) {
-            filterContent = sb.replace(startIndexBr, endIndex, "").toString();
+            filterContent = orgContent.substring(0, startIndexBr);
         }
         else if (startIndexP > 0) {
-            filterContent = sb.replace(startIndexBr, endIndex, "").toString();
+            filterContent = orgContent.substring(0, startIndexP);
         }
         if (filterContent != null) {
             detail.setContent(filterContent);
