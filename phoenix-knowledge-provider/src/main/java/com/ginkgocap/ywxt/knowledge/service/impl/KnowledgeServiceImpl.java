@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by gintong on 2016/7/19.
@@ -669,16 +666,26 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         String orgContent = detail.getContent();
         if (orgContent != null) {
-            final int startIndex = orgContent.indexOf("版权归原作者所有，金桐网依法保护版权");
-            String filterContent = null;
-            if (startIndex > 0) {
-                filterContent = orgContent.substring(0, startIndex);
-                filterContent = filterContent.replace("<br></br>", "");
-                filterContent = filterContent.replace("<p></p>", "");
-            }
-            if (filterContent != null) {
-                detail.setContent(filterContent);
+            List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>");
+            for (String prefix : prefixList) {
+                String filterContent = filerString(orgContent, prefix);
+                if (filterContent != null) {
+                    detail.setContent(filterContent);
+                    return;
+                }
             }
         }
+    }
+
+
+    private String filerString(final String originContent, final String prefix)
+    {
+        final String filterString = prefix + "版权归原作者所有，金桐网依法保护版权";
+        final int startIndex = originContent.indexOf(filterString);
+        if (startIndex > 0) {
+            logger.info("filter string: " + filterString + " done.");
+            return originContent.substring(0, startIndex);
+        }
+        return null;
     }
 }
