@@ -666,7 +666,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     {
         String orgContent = detail.getContent();
         if (orgContent != null) {
-            List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>");
+            List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>", "");
             for (String prefix : prefixList) {
                 String filterContent = filerString(orgContent, prefix);
                 if (filterContent != null) {
