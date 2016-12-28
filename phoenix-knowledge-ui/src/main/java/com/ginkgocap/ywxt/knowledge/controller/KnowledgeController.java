@@ -2041,11 +2041,11 @@ public class KnowledgeController extends BaseController
         data.setPermission(permission);
 
         try {
-            List<Associate> associateList = associateServiceLocal.getAssociateList(user.getId(), knowledgeId);
+            List<Associate> associateList = associateServiceLocal.getAssociateList(userId, knowledgeId);
             data.setAsso(associateList);
         } catch (Exception ex) {
-            logger.error("get knowledge associate info failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
-            ex.printStackTrace();
+            logger.error("get associate info failed: knowledgeId: " + knowledgeId + ", userId: " + userId + " error: " + ex.getMessage());
+            //ex.printStackTrace();
         }
 
         result.setResponseData(data);

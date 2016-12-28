@@ -183,7 +183,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
                 logger.info("update knowledge permission failed : userId: " + userId + " knowledgeId: " + knowledgeId);
             }
         } catch (Exception e) {
-            logger.error("Update knowledge permission failed : error: {}", e.getMessage());
+            logger.error("Update knowledge permission failed : error: " + e.getMessage());
             return null;
         }
         return permission;
@@ -214,10 +214,10 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
                 return ret.getResponseData();
             }
             else {
-                logger.error("can't get knowledge permission failed: knowledgeId: {}, errorMsg: {}", knowledgeId, notif.getNotifInfo());
+                logger.error("can't get knowledge permission failed: knowledgeId: " + knowledgeId + ", errorMsg: " + notif.getNotifInfo());
             }
         }catch (Exception ex) {
-            logger.error("get knowledge permission failed: knowledgeId: {}, error: {}", knowledgeId, ex.getMessage());
+            logger.error("get knowledge permission failed: knowledgeId: " + knowledgeId + ", error: " + ex.getMessage());
             ex.printStackTrace();
         }
         return null;
