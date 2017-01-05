@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Chen Peifeng on 2016/5/24.
@@ -22,16 +21,20 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     private final Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);
 
     private final int defaultLimit = 50;
-    private final int MAX_NUM = 500;
+    private final int MAX_NUM = 10000;
     private final int defaultBatchSize = 50;
 
-    private ConcurrentMap<Long, KnowledgeCount> hotCountMap = new ConcurrentHashMap<Long, KnowledgeCount>(MAX_NUM);
+    private Set<Long> hotCountSet = new HashSet<Long>(MAX_NUM);
     /**知识简表*/
     @Autowired
     private KnowledgeCountDao knowledgeCountDao;
 
-    private int count =0;
-    //private volatile boolean timerStarted = false;
+    @Autowired
+    private Cache cache;
+
+    private int count = 0;
+
+    private int expiredTime = 60 * 60 * 24;
 
     @Override
     public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type)
@@ -91,13 +94,13 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     {
         try {
             //return knowledgeCountDao.getKnowledgeCount(knowledgeId);
-            KnowledgeCount knowledgeCount = hotCountMap.get(knowledgeId);
+            KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
             if (knowledgeCount != null ) {
                 return knowledgeCount;
             }
             knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
             if (knowledgeCount != null) {
-                hotCountMap.put(knowledgeId, knowledgeCount);
+                this.setToCache(knowledgeCount);
             }
             return knowledgeCount;
         } catch (Exception e) {
@@ -109,7 +112,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     @Override
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
     {
-        KnowledgeCount knowledgeCount = hotCountMap.get(knowledgeId);
+        KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
         if (knowledgeCount != null ) {
             return knowledgeCount;
         }
@@ -132,7 +135,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             }
         }
 
-        hotCountMap.put(knowledgeId, knowledgeCount);
+        this.setToCache(knowledgeCount);
         return knowledgeCount;
     }
 
@@ -140,15 +143,15 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     {
         logger.info("Knowledge Count batch save starting...");
         List<KnowledgeCount> KnowledgeCountList = null;
-        if (hotCountMap.size() > defaultBatchSize) {
+        if (hotCountSet.size() > defaultBatchSize) {
             KnowledgeCountList = new ArrayList<KnowledgeCount>(defaultBatchSize);
         } else {
-            KnowledgeCountList = new ArrayList<KnowledgeCount>(hotCountMap.size());
+            KnowledgeCountList = new ArrayList<KnowledgeCount>(hotCountSet.size());
         }
-        Set<Map.Entry<Long,KnowledgeCount>> knowledgeCountEntry = hotCountMap.entrySet();
-        for (Map.Entry<Long,KnowledgeCount> knowledgeCount : knowledgeCountEntry) {
-            if (knowledgeCount.getValue() != null && knowledgeCount.getValue() instanceof  KnowledgeCount) {
-                KnowledgeCountList.add(knowledgeCount.getValue());
+        for (long knowledgId : hotCountSet) {
+            KnowledgeCount knowledgeCount = this.getFromCache(knowledgId);
+            if (knowledgeCount != null) {
+                KnowledgeCountList.add(knowledgeCount);
             }
             //Batch save 20
             if (KnowledgeCountList.size() >= defaultBatchSize) {
@@ -170,7 +173,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             }
         }
         if (complete) {
-            hotCountMap.clear();
+            hotCountSet.clear();
             return null;
         }
         else {
@@ -189,7 +192,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         };
 
         //设置执行时间
-        Calendar calendar =Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);//每天
@@ -197,7 +200,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         calendar.set(year, month, day, 24, 0, 00);
         Date date = calendar.getTime();
         Timer timer = new Timer();
-        System.out.println(date);
+        logger.info("current Date: " + date.toLocaleString());
 
         int period = 7200 * 1000;
         //每天的date时刻执行task，每隔2小时重复执行
@@ -212,5 +215,28 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         logger.info("Knowledge Count save timer starting...");
         startTimer();
         logger.info("Knowledge Count save timer start complete...");
+    }
+
+    private void setToCache(KnowledgeCount count)
+    {
+        if (count != null) {
+            final long knowledgeId = count.getId();
+            String key = knowledgeCountKey(knowledgeId);
+            this.cache.setByRedis(key, count, expiredTime);
+            if (!hotCountSet.contains(knowledgeId)) {
+                hotCountSet.add(knowledgeId);
+            }
+        }
+    }
+
+    private KnowledgeCount getFromCache(long knowledgeId)
+    {
+        String key = knowledgeCountKey(knowledgeId);
+        return (KnowledgeCount)this.cache.getByRedis(key);
+    }
+
+    private String knowledgeCountKey(long knowledgeId)
+    {
+        return "know_count_key_" + knowledgeId;
     }
 }
