@@ -123,21 +123,17 @@ public class HtmlToText {
 	 * @return
 	 */
 	public static String removeFourChar(String content) {
-		if (content.indexOf("xF0") > 0 || content.indexOf("x9F") > 0 || content.indexOf("x98") > 0 ||
-			content.indexOf("x84") > 0 || content.indexOf("xF0") > 0) {
-			byte[] conbyte = content.getBytes();
-			for (int i = 0; i < conbyte.length; i++) {
-				if ((conbyte[i] & 0xF8) == 0xF0) {
-					for (int j = 0; j < 4; j++) {
-						conbyte[i + j] = 0x30;
-					}
-					i += 3;
-				}
-			}
-			content = new String(conbyte);
-			return content.replaceAll("0000", "");
-		}
-		return content;
+        byte[] conbyte = content.getBytes();
+        for (int i = 0; i < conbyte.length; i++) {
+            if ((conbyte[i] & 0xF8) == 0xF0) {
+                for (int j = 0; j < 4; j++) {
+                    conbyte[i + j] = 0x30;
+                }
+                i += 3;
+            }
+        }
+        content = new String(conbyte);
+        return content.replaceAll("0000", "");
 	}
 
 	public static void main(String[] args) {

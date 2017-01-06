@@ -65,7 +65,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             knowledgeBase.setPrivated(permissionValue(DataCollect));
             this.knowledgeMysqlDao.insert(knowledgeBase);
             logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + knowledgeBase.getId());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
             logger.error("知识基础表插入失败！失败原因：" + e.getMessage());
@@ -78,7 +78,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 knowledgeReference.setId(knowledgeId);
                 knowledgeReference.setKnowledgeId(knowledgeId);
                 this.knowledgeReferenceDao.insert(knowledgeReference);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 logger.error("知识引用表插入失败！失败原因： " + e.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
             }
