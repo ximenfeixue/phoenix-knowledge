@@ -42,6 +42,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setClickCount(knowledgeCount.getClickCount() + 1);
+            this.setToCache(knowledgeCount);
         }
         return knowledgeCount;
     }
@@ -52,6 +53,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setShareCount(knowledgeCount.getClickCount() + 1);
+            this.setToCache(knowledgeCount);
         }
         return knowledgeCount;
     }
@@ -62,6 +64,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCollectCount(knowledgeCount.getClickCount() + 1);
+            this.setToCache(knowledgeCount);
         }
         return knowledgeCount;
     }
@@ -72,6 +75,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCommentCount(knowledgeCount.getClickCount() + 1);
+            this.setToCache(knowledgeCount);
         }
         return knowledgeCount;
     }
@@ -135,7 +139,6 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             }
         }
 
-        this.setToCache(knowledgeCount);
         return knowledgeCount;
     }
 
