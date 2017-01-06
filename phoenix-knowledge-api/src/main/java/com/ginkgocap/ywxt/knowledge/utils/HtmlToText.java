@@ -123,8 +123,6 @@ public class HtmlToText {
 	 * @return
 	 */
 	public static String removeFourChar(String content) {
-        return content;
-        /*
         byte[] conbyte = content.getBytes();
         for (int i = 0; i < conbyte.length; i++) {
             if ((conbyte[i] & 0xF8) == 0xF0) {
@@ -135,7 +133,7 @@ public class HtmlToText {
             }
         }
         content = new String(conbyte);
-        return content.replaceAll("0000", "");*/
+        return content.replaceAll("0000", "");
 	}
 
 	public static void main(String[] args) {
