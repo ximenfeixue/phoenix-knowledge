@@ -361,20 +361,6 @@ public class KnowledgeOtherControl extends BaseController
         return data;
     }
 
-
-    private Knowledge getKnowledgeNewsVO(Knowledge knowledge, String url, boolean isWeb) {
-
-        Knowledge vo = genVo(knowledge, url, isWeb);
-        /*
-        JSONObject jsonAsso = JSONObject.fromObject(vo.getAsso());
-
-        vo.setAsso(jsonAsso.toString());*/
-
-        logger.info("Knowledge : " + vo);
-
-        return vo;
-    }
-
     private Knowledge genVo(final Knowledge knowledge,final String url, final boolean isWeb) {
 
         Knowledge vo = new Knowledge();
