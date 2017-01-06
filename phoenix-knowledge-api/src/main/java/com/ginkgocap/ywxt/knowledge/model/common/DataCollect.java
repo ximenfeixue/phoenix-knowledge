@@ -332,7 +332,8 @@ public class DataCollect implements Serializable
 
             if (base.getContentDesc() != null && base.getContentDesc().length() > maxLen) {
                 logger.error("ContentDesc over 255, so truncate it to 255");
-                base.setContentDesc(base.getContentDesc().substring(0, maxLen - 1));
+                final String contentDesc = HtmlToText.removeFourChar(base.getContentDesc().substring(0, maxLen - 1));
+                base.setContentDesc(contentDesc);
             }
 
             if (base.getSource() != null && base.getSource().length() > maxLen) {

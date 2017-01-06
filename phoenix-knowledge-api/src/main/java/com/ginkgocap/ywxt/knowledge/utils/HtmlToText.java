@@ -117,6 +117,29 @@ public class HtmlToText {
 		return filterStr;
 	}
 
+	/**
+	 * 替换四个字节的字符 '\xF0\x9F\x98\x84\xF0\x9F）的解决方案
+	 * @param content
+	 * @return
+	 */
+	public static String removeFourChar(String content) {
+		if (content.indexOf("xF0") > 0 || content.indexOf("x9F") > 0 || content.indexOf("x98") > 0 ||
+			content.indexOf("x84") > 0 || content.indexOf("xF0") > 0) {
+			byte[] conbyte = content.getBytes();
+			for (int i = 0; i < conbyte.length; i++) {
+				if ((conbyte[i] & 0xF8) == 0xF0) {
+					for (int j = 0; j < 4; j++) {
+						conbyte[i + j] = 0x30;
+					}
+					i += 3;
+				}
+			}
+			content = new String(conbyte);
+			return content.replaceAll("0000", "");
+		}
+		return content;
+	}
+
 	public static void main(String[] args) {
 		String str = "<html>"
 				+ "<head><meta http-equiv='content-type' content='text/html;charset=utf-8'></head> "
@@ -130,6 +153,5 @@ public class HtmlToText {
 		// System.out.println(s.trim());
 		// }
 		// System.out.println(strs.length);
-
 	}
 }
