@@ -218,14 +218,14 @@ public final class KnowledgeUtil {
     public static DataCollect getDataCollect(String jsonObject)
     {
         if (StringUtils.isBlank(jsonObject)) {
-            throw new IllegalArgumentException("jsonObject is null");
+            logger.error("jsonObject is null");
+            return null;
         }
         DataCollect dataCollect = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             //objectMapper.enableDefaultTyping();
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-            JsonNode node = objectMapper.readTree(jsonObject);
             dataCollect = objectMapper.readValue(jsonObject, DataCollect.class);
         } catch (Exception e) {
             logger.error("json转换对象失败,json字符串: " + jsonObject + " exp: " + e.getMessage());

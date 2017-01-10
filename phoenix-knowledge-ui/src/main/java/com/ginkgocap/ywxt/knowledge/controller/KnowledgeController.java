@@ -108,7 +108,7 @@ public class KnowledgeController extends BaseController
         String requestJson = this.getBodyParam(request);
         DataCollect data = KnowledgeUtil.getDataCollect(requestJson);
         if (data == null || data.getKnowledgeDetail() == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情错误");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情格式错误或者为空");
         }
         Knowledge detail = data.getKnowledgeDetail();
         columnTypeAndIdFaultTolerant(detail);
