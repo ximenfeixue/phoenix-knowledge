@@ -84,7 +84,8 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
     {
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
-        return mongoTemplate.exists(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        KnowledgeCollect collect = mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        return collect != null;
     }
 
     @Override

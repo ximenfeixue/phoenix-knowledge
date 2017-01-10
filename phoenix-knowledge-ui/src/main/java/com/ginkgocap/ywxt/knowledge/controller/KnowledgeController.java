@@ -279,7 +279,11 @@ public class KnowledgeController extends BaseController
 
         long userId = this.getUserId(user);
         if (!permissionServiceLocal.canDelete(knowledgeId, String.valueOf(columnType), userId)) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,"没有权限删除知识!");
+            //Try if is collected knowledge.
+            boolean cancelKnowledge = cancelKnowledge(userId, knowledgeId);
+            if (!cancelKnowledge) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限删除知识!");
+            }
         }
 
         InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
@@ -461,18 +465,9 @@ public class KnowledgeController extends BaseController
         }
 
         //Check if this is collected knowledge
-        /*
         for (Long knowledgeId : failedIds) {
-            try {
-                boolean isCollected = this.knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, -1);
-                if (isCollected) {
-                    knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, -1);
-                    logger.info("cancel collected knowledge success. userId: " + userId + " knowledgeId: " + knowledgeId);
-                }
-            } catch (Exception ex) {
-                logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
-            }
-        }*/
+            cancelKnowledge(userId, knowledgeId);
+        }
 
         String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
         logger.info("delete knowledge success: " + resp);
@@ -2079,7 +2074,7 @@ public class KnowledgeController extends BaseController
         try {
             createCount = this.knowledgeService.getKnowledgeCount(userId);
         }catch (Exception ex) {
-            logger.error("get created knowledge count failed: userId: " + userId + ", error: " + ex.getMessage());
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }
 
         logger.info("createCount: " + createCount);
@@ -2092,7 +2087,7 @@ public class KnowledgeController extends BaseController
         try {
             collectedCount = knowledgeOtherService.myCollectKnowledgeCount(userId);
         }catch (Exception ex) {
-            logger.error("get collected knowledge count failed: userId: " + userId + ", error: " + ex.getMessage());
+            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }
         logger.info("collectedCount: " + collectedCount);
         return collectedCount;
@@ -2296,5 +2291,20 @@ public class KnowledgeController extends BaseController
             }
         }
         return collectedKnowledgeItems;
+    }
+
+    private boolean cancelKnowledge(final long userId, final long knowledgeId)
+    {
+        try {
+            boolean isCollected = this.knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, -1);
+            if (isCollected) {
+                knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, -1);
+                logger.info("cancel collected knowledge success. userId: " + userId + " knowledgeId: " + knowledgeId);
+            }
+            return isCollected;
+        } catch (Exception ex) {
+            logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
+            return false;
+        }
     }
 }
