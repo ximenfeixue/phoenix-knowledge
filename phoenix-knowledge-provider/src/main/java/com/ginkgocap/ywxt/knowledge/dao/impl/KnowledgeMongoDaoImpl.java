@@ -293,8 +293,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         if (size > count) {
             size = (int)count;
         }
-
-        query.skip(start);
+        if (start > 0) {
+            query.skip(start);
+        }
         query.limit(size);
         return mongoTemplate.find(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
     }

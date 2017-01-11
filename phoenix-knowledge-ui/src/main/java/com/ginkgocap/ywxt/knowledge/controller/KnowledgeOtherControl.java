@@ -127,8 +127,7 @@ public class KnowledgeOtherControl extends BaseController
         }
 
         boolean started = syncTaskMap.get(knowledgeSyncTaskKey) == null ? false : syncTaskMap.get(knowledgeSyncTaskKey);
-        if (started)
-        {
+        if (started) {
             logger.info("Knowledge base sync task have started...");
         } else {
             syncTaskMap.put(knowledgeSyncTaskKey, true);
@@ -361,104 +360,6 @@ public class KnowledgeOtherControl extends BaseController
         return data;
     }
 
-    private Knowledge genVo(final Knowledge knowledge,final String url, final boolean isWeb) {
-
-        Knowledge vo = new Knowledge();
-        if (knowledge.getId() != 0) {
-            vo.setId(knowledge.getId());
-            vo.setKnowledgeMainId(knowledge.getId());
-        }
-        final int columnType = KnowledgeUtil.parserColumnId(knowledge.getColumnType());
-        if (columnType == KnowledgeType.ELaw.value()) {
-            vo.setTitanic(knowledge.getTitanic());
-            vo.setPostUnit(knowledge.getPostUnit());
-            vo.setSubmitTime(knowledge.getSubmitTime());
-            vo.setPerformTime(knowledge.getPerformTime());
-        }
-        if (columnType == KnowledgeType.EInvestment.value()) {
-            vo.setSynonyms(knowledge.getSynonyms());
-        }
-        vo.setTaskid(knowledge.getTaskid());
-        vo.setTitle(knowledge.getTitle());
-        vo.setS_addr(knowledge.getS_addr());
-        try {
-            List<String> listImageUrl = new ArrayList<String>();
-            // 区分APP和WEB
-            convertKnowledgeContent(vo, knowledge.getContent(), listImageUrl, knowledge.getMultiUrls(), url, isWeb);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        vo.setPic(knowledge.getPic());
-
-        String contentDes;
-        if ((knowledge.getContent() != null) && (knowledge.getContent().length() > 0)) {
-            String content = knowledge.getContent();
-            content = HtmlToText.htmlToText(content);
-            contentDes = content.length() < 40 ? content : content.substring(0, 40) + "...";
-
-        } else {
-            contentDes = " ";
-        }
-        vo.setDesc(contentDes);
-
-        if (StringUtils.isNotBlank(knowledge.getTags())) {
-            String tags = knowledge.getTags();
-            vo.setTags(tags.substring(1, tags.length()-1));
-        }
-
-        vo.setSource(knowledge.getSource());
-        vo.setEssence(knowledge.getEssence());
-        //vo.setShareMessage("");// 分享消息内容
-
-        vo.setColumnid(knowledge.getColumnid());
-        vo.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
-        vo.setCpathid(knowledge.getCpathid());
-        vo.setCpathid(KnowledgeType.ENews.typeName());
-
-        return vo;
-    }
-
-    private void setCoverPic(List<String> imgs,Knowledge knowledge)
-    {
-        /* old method
-        if (imgs != null && imgs.size() > 0) {
-            int tempSize = imgs.size();
-            if (tempSize > 0) {
-                String[] strs = new String[tempSize];
-                // 临时存储
-                List<String> tempPic = new ArrayList<String>(tempSize);
-                for (int i = 0; i < tempSize; i++) {
-                    String tempStr = imgs.get(i);
-                    // 2015-1-29 start
-                    if (tempStr.length() < 255) {
-                        // 将符合标准长度的图片地址存放在list中,防止在插入数据库中时报错
-                        tempPic.add(tempStr);
-                    }
-                    strs[i] = tempStr;
-                    // 2015-1-29 end
-                }
-                knowledge.setListImageUrl(strs);
-                if (tempPic.size() > 0)
-                    // 设置封面图片
-                    knowledge.setPic(tempPic.get(0));
-            }
-        }*/
-        //New
-        if (CollectionUtils.isNotEmpty(imgs)) {
-            for (String img : imgs) {
-                if (StringUtils.isEmpty(img) && img.length() < 255) {
-                    knowledge.setPic(img);
-                    break;
-                }
-            }
-            knowledge.setMultiUrls(imgs);
-            if (knowledge.getPic() == null || "null".equals(knowledge.getPic()) || knowledge.getPic().trim().length() <= 0) {
-                knowledge.setPic(imgs.get(0));
-            }
-        }
-    }
-
     private class KnowledgeSyncTask implements Runnable {
         private int start;
         private int size;
@@ -486,15 +387,18 @@ public class KnowledgeOtherControl extends BaseController
                 else {
                     logger.info("got backup knowledge base size: " + baseSyncList.size());
                     for (KnowledgeBaseSync baseSync : baseSyncList) {
-                        if (baseSync != null) {
-                            try {
-                                knowledgeService.syncKnowledgeBase(baseSync);
-                                Thread.sleep(1000);
-                            }
-                            catch (Throwable e) {
-                                logger.error("sync knowledge failed. knowledgeId: " + baseSync.getId() + ", type: " + baseSync.getType());
-                            }
+                        if (baseSync == null) {
+                            logger.error("Knowledge to sync is null.");
+                            continue;
                         }
+                        try {
+                            knowledgeService.syncKnowledgeBase(baseSync);
+                            Thread.sleep(1000);
+                        }
+                        catch (Throwable e) {
+                            logger.error("sync knowledge failed. knowledgeId: " + baseSync.getId() + ", type: " + baseSync.getType());
+                        }
+
                     }
                 }
             }

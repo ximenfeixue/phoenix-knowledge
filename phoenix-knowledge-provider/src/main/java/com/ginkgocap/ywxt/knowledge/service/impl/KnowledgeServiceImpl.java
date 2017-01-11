@@ -526,7 +526,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 }
                 logger.info("sync knowledge base success. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: " + isAdd);
             } catch (Throwable e) {
-                logger.error("Sync knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: "+detail.getColumnType() + ", isAdd: "+isAdd);
+                logger.error("Sync knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: "+isAdd);
                 e.printStackTrace();
                 return false;
             }
@@ -535,13 +535,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             try {
                 if (newBase != null) {
                     knowledgeMongoDao.deleteBackupKnowledgeBase(knowledgeSync.getId());
-                    logger.info("delete backup knowledge. knowledgeId: " + detail.getId() + ", columnType: "+detail.getColumnType());
+                    logger.info("delete backup knowledge. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType());
                 }
                 else {
                     return false;
                 }
             } catch (Throwable e) {
-                logger.error("delete backup knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: "+detail.getColumnType() + ", isAdd: "+isAdd);
+                logger.error("delete backup knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: "+isAdd);
                 e.printStackTrace();
                 return false;
             }
