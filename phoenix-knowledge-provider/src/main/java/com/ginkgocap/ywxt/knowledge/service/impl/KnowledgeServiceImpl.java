@@ -538,7 +538,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             }
         } else {
             logger.info("Knowledge can't find, maybe have been deleted. " + knowInfo);
-            result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
+            //result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
         }
         return result;
     }
