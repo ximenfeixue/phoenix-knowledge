@@ -509,13 +509,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
     }
 
-    private boolean syncKnowledgeBase(final KnowledgeBaseSync knowledgeSync, final boolean isAdd)
+    private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)
     {
         boolean result = false;
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeSync.getId(), knowledgeSync.getType());
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowSync.getId(), knowSync.getType());
+        final String knowInfo = "knowledgeId: " + knowSync.getId() + ", columnType: " + knowSync.getType() + ", isAdd: " + isAdd;
         if (detail != null) {
-            KnowledgeBase base = DataCollect.generateKnowledge(detail, knowledgeSync.getType());
-            base.setPrivated(knowledgeSync.getPrivated());
+            KnowledgeBase base = DataCollect.generateKnowledge(detail, knowSync.getType());
+            base.setPrivated(knowSync.getPrivated());
             KnowledgeBase newBase = null;
             try {
                 if (isAdd) {
@@ -524,30 +525,34 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 else {
                     newBase = knowledgeMysqlDao.update(base);
                 }
-                logger.info("sync knowledge base success. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: " + isAdd);
+                logger.info("sync knowledge base success. " + knowInfo);
             } catch (Throwable e) {
-                logger.error("Sync knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: "+isAdd);
+                logger.error("Sync knowledge base failed. " + knowInfo);
                 e.printStackTrace();
                 return false;
             }
 
-            //Make sure insert success;
-            try {
-                if (newBase != null) {
-                    knowledgeMongoDao.deleteBackupKnowledgeBase(knowledgeSync.getId());
-                    logger.info("delete backup knowledge. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType());
-                }
-                else {
-                    return false;
-                }
-            } catch (Throwable e) {
-                logger.error("delete backup knowledge base failed. knowledgeId: " + detail.getId() + ", columnType: " + detail.getColumnType() + ", isAdd: "+isAdd);
-                e.printStackTrace();
-                return false;
+            //Make sure insert/update success;
+            if (newBase != null) {
+                result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
             }
-            result = true;
+        } else {
+            logger.info("Knowledge can't find, maybe have been deleted. " + knowInfo);
+            result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
         }
         return result;
+    }
+
+    private boolean deleteBackupKnowledgeBase(final long knolwedgeId, final String knowInfo) {
+        try {
+            knowledgeMongoDao.deleteBackupKnowledgeBase(knolwedgeId);
+            logger.info("delete backup knowledge success. " + knowInfo);
+        } catch (Throwable e) {
+            logger.error("delete backup knowledge base failed. " + knowInfo);
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
     /**
      * 返回数据包装方法
