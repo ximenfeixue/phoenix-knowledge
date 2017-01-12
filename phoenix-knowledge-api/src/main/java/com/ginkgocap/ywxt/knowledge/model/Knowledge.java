@@ -478,6 +478,7 @@ public class Knowledge implements Serializable
 		this.setColumnType(detail.getColumnType());
 
 		this.setCid(detail.getCid());
+		this.setUid(detail.getUid());
 		this.setCname(detail.getCname());
 		this.setTitle(detail.getTitle());
 		this.setContent(detail.getContent());

@@ -63,7 +63,7 @@ public abstract class BaseTestCase extends TestCase
         debugModel = System.getProperty("debugModel", "true").equals("true");
         runTestCase = System.getProperty("runTestCase", "true").equals("true");
         if ("local".equals(testEnv)) {
-            hostUrl = System.getProperty("hostUrl", "http://192.168.130.130:81/cross");
+            hostUrl = System.getProperty("hostUrl", "http://192.168.101.131:8008/cross");
             loginUrl = hostUrl + getLoginUrl(web);
             knowUrl = System.getProperty("hostUrl", "http://localhost:8080");
         }
