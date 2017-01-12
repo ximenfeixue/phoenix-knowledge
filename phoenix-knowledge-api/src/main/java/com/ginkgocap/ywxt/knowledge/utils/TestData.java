@@ -58,9 +58,9 @@ public class TestData {
     {
         Knowledge detail = new Knowledge();
         detail.setCid(userId);
+        detail.setUid(userId);
         detail.setCname("testUser");
-        detail.setCid(userId);
-        detail.setCname("testUser");
+        detail.setUname("testUser");
         detail.setTitle(title == null ? "TestTitle" : title);
         detail.setContent("Knowledge Description");
         List<String> UrlIds= new ArrayList<String>();
