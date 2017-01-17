@@ -1,11 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
+import com.ginkgocap.ywxt.bean.util.BeanUtil;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.ywxt.im.model.MessageNotify;
+import com.gintong.ywxt.im.model.MessageNotifyType;
+import com.gintong.ywxt.im.service.MessageNotifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,37 +23,38 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Chen Peifeng on 2016/2/2.
  */
 @Controller
 @RequestMapping("knowledgeComment")
-public class KnowledgeCommentController extends BaseController
-{
+public class KnowledgeCommentController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(KnowledgeCommentController.class);
 
     @Autowired
     private KnowledgeCommentService knowledgeCommentService;
 
-    //@Autowired
-    //KnowledgeCountService knowledgeCountService;
+    @Autowired
+    private MessageNotifyService messageNotifyService;
 
     /**
      * des:创建评论
+     *
      * @param knowledgeId
      * @param request
      * @param reponse
      * @return
      */
-    @RequestMapping(value="/{knowledgeId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{knowledgeId}", method = RequestMethod.POST)
     @ResponseBody
-    public InterfaceResult createKnowledgeComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse)
-    {
+    public InterfaceResult createKnowledgeComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
         String requestJson = null;
-        try{
+        try {
             User user = getUser(request);
             if (user == null) {
                 logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
@@ -56,26 +62,41 @@ public class KnowledgeCommentController extends BaseController
             }
 
             requestJson = getBodyParam(request);
-            if(StringUtils.isBlank(requestJson)){
+            if (StringUtils.isBlank(requestJson)) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
-            KnowledgeComment knowledgeComment  = KnowledgeUtil.readValue( KnowledgeComment.class, requestJson);
-            if (knowledgeId == null || knowledgeComment == null || StringUtils.isBlank(knowledgeComment.getContent())) {
+            KnowledgeComment comment = KnowledgeUtil.readValue(KnowledgeComment.class, requestJson);
+            if (knowledgeId == null || comment == null || StringUtils.isBlank(comment.getContent())) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
-            knowledgeComment.setOwnerId(user.getId());
-            knowledgeComment.setOwnerName(user.getName());
-            long commentId = knowledgeCommentService.create(knowledgeComment);
+            comment.setOwnerId(user.getId());
+            comment.setOwnerName(user.getName());
+            long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
                 //knowledgeCountService.updateCommentCount(knowledgeId);
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
-            logger.error("Save Knowledge Comment to Mongo failed : knowledgeId: " + knowledgeId + " Comment: " + knowledgeComment.getContent());
+
+            MessageNotify message = createMessageNotify(comment, user);
+            if (message != null) {
+                try {
+                    boolean resilt = messageNotifyService.sendMessageNotify(message);
+                    if (resilt) {
+                        logger.error("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                    }
+                } catch (Exception ex) {
+                    logger.error("send comment notify message failed. error: " + ex.getMessage());
+                }
+            } else {
+                logger.error("send comment notify message failed. as comment is null.");
+            }
+
+            logger.error("Save Knowledge Comment to Mongo failed : knowledgeId: " + knowledgeId + " Comment: " + comment.getContent());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
@@ -83,17 +104,17 @@ public class KnowledgeCommentController extends BaseController
 
     /**
      * des:更新评论
+     *
      * @param commentId
      * @param request
      * @param reponse
      * @return
      */
-    @RequestMapping(value="/{commentId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{commentId}", method = RequestMethod.PUT)
     @ResponseBody
-    public InterfaceResult updateKnowledgeComment(@PathVariable Long commentId, HttpServletRequest request, HttpServletResponse reponse)
-    {
+    public InterfaceResult updateKnowledgeComment(@PathVariable Long commentId, HttpServletRequest request, HttpServletResponse reponse) {
         String knowledgeComment = null;
-        try{
+        try {
             User user = getUser(request);
             if (user == null) {
                 logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
@@ -101,7 +122,7 @@ public class KnowledgeCommentController extends BaseController
             }
 
             knowledgeComment = getBodyParam(request);
-            if(commentId == null || StringUtils.isBlank(knowledgeComment)){
+            if (commentId == null || StringUtils.isBlank(knowledgeComment)) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
@@ -111,7 +132,7 @@ public class KnowledgeCommentController extends BaseController
 
             logger.error("Update Knowledge Comment to Mongo failed : knowledgeId: " + commentId + " Comment: " + knowledgeComment);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_COMMENT_EXCEPTION_60051);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
@@ -119,16 +140,16 @@ public class KnowledgeCommentController extends BaseController
 
     /**
      * des:删除评论
+     *
      * @param commentId
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value="/{commentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{commentId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response,@PathVariable Long commentId)
-    {
-        try{
+    public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response, @PathVariable Long commentId) {
+        try {
             if (commentId == null) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
@@ -137,12 +158,12 @@ public class KnowledgeCommentController extends BaseController
                 logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
             }
-            if(knowledgeCommentService.delete(commentId, user.getId())){
+            if (knowledgeCommentService.delete(commentId, user.getId())) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
             }
             logger.error("Delete Knowledge Comment failed : knowledgeId: " + commentId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_COMMENT_EXCEPTION_60051);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
@@ -150,16 +171,16 @@ public class KnowledgeCommentController extends BaseController
 
     /**
      * des:获取评论列表
+     *
      * @param knowledgeId
      * @param request
      * @param reponse
      * @return
      */
-    @RequestMapping(value="/list/{knowledgeId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/{knowledgeId}", method = RequestMethod.GET)
     @ResponseBody
-    public InterfaceResult getKnowledgeCommentList(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse)
-    {
-        try{
+    public InterfaceResult getKnowledgeCommentList(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
+        try {
             User user = getJTNUser(request);
             if (user != null) {
                 logger.info("Query knowledge comment list. knowledgeId: " + knowledgeId + " userId: " + user.getId());
@@ -174,17 +195,17 @@ public class KnowledgeCommentController extends BaseController
             if (logger.isDebugEnabled()) {
                 logger.debug("Get Knowledge comment : size:" + commentList.size());
             }
-            if (commentSize >0) {
+            if (commentSize > 0) {
                 Iterator iterator = commentList.iterator();
                 while (iterator.hasNext()) {
-                    KnowledgeComment comment = (KnowledgeComment)iterator.next();
+                    KnowledgeComment comment = (KnowledgeComment) iterator.next();
                     if (comment.getVisible() == 0 && comment.getOwnerId() != user.getId()) {
                         iterator.remove();
                     }
                 }
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(commentList);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
@@ -192,16 +213,16 @@ public class KnowledgeCommentController extends BaseController
 
     /**
      * des:获取评论数量
+     *
      * @param knowledgeId
      * @param request
      * @param reponse
      * @return
      */
-    @RequestMapping(value="/count/{knowledgeId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/count/{knowledgeId}", method = RequestMethod.GET)
     @ResponseBody
-    public InterfaceResult getKnowledgeCommentCount(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse)
-    {
-        try{
+    public InterfaceResult getKnowledgeCommentCount(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
+        try {
             User user = getUser(request);
             if (user == null) {
                 logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
@@ -214,9 +235,46 @@ public class KnowledgeCommentController extends BaseController
 
             Long count = knowledgeCommentService.getKnowledgeCommentCount(knowledgeId);
             return InterfaceResult.getSuccessInterfaceResultInstance(count);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
     }
+
+    private MessageNotify createMessageNotify(final KnowledgeComment comment, final User user) {
+        if (comment == null) {
+            logger.error("knowledge comment is null, so skip to send message notify");
+            return null;
+        }
+
+        MessageNotify message = new MessageNotify();
+        final String uName = comment.getOwnerName();
+        message.setType(MessageNotifyType.EKnowledge.value());
+        message.setTitle(uName + "评论了你的知识");
+        message.setFromId(comment.getOwnerId());
+        message.setFromName(comment.getOwnerName());
+        message.setContent(converToJson(comment.getKnowledgeId(), comment.getColumnId()));
+        initHeaderPicAndVirtual(message, user);
+
+        return message;
+    }
+
+    private void initHeaderPicAndVirtual(MessageNotify message, User user) {
+        message.setPicPath(user.getPicPath());
+        final short virtual = user.isVirtual() ? (short) 1 : (short) 0;
+        message.setVirtual(virtual);
+    }
+
+    private String converToJson(long knowledgeId, int type) {
+        Map<String, Object> map = mapContent(knowledgeId, type);
+        return KnowledgeUtil.writeObjectToJson(map);
+    }
+
+    private Map<String, Object> mapContent(long dynamicId, int type) {
+        Map<String, Object> map = new HashMap<String, Object>(2);
+        map.put("id", dynamicId);
+        map.put("type", type);
+        return map;
+    }
+
 }
