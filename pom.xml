@@ -40,6 +40,7 @@
         <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
         <parasol-column.version>1.0.2-SNAPSHOT</parasol-column.version>
         <dynamic.version>1.0.0-SNAPSHOT</dynamic.version>
+        <im.version>2.0-SNAPSHOT</im.version>
         <slf4j-api.version>1.7.2</slf4j-api.version>
         <slf4j-log4j12.version>1.7.2</slf4j-log4j12.version>
         <log4j.version>1.2.16</log4j.version>
@@ -140,6 +141,11 @@
                 <groupId>com.ginkgocap.ywxt</groupId>
                 <artifactId>phoenix-dynamic-api</artifactId>
                 <version>${dynamic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gintong.ywxt</groupId>
+                <artifactId>phoenix-im-api</artifactId>
+                <version>${im.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

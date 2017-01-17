@@ -34,6 +34,10 @@ public class KnowledgeComment implements Serializable{
 
     private String pic;
 
+    private long targetUid;
+
+    private String targetUName;
+
     /** 是否可见 0 不可见， 1 可见**/
     private int visible;
 
@@ -118,6 +122,22 @@ public class KnowledgeComment implements Serializable{
 
     public void setPic(String pic) {
         this.pic = pic;
+    }
+
+    public long getTargetUid() {
+        return targetUid;
+    }
+
+    public void setTargetUid(long targetUid) {
+        this.targetUid = targetUid;
+    }
+
+    public String getTargetUName() {
+        return targetUName;
+    }
+
+    public void setTargetUName(String targetUName) {
+        this.targetUName = targetUName;
     }
 
     public int getVisible() {

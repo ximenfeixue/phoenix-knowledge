@@ -60,9 +60,11 @@
         <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame-util</artifactId>
-            <version>${phoenix-frame-util.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.gintong.ywxt</groupId>
+            <artifactId>phoenix-im-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.gintong.frame</groupId>
             <artifactId>phoenix-frame-cache</artifactId>
