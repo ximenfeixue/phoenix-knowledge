@@ -73,6 +73,7 @@ public class KnowledgeCommentController extends BaseController {
 
             comment.setOwnerId(user.getId());
             comment.setOwnerName(user.getName());
+            comment.setPic(user.getPicPath());
             long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
                 //knowledgeCountService.updateCommentCount(knowledgeId);
