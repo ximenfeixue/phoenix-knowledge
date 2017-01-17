@@ -34,6 +34,8 @@ public class KnowledgeComment implements Serializable{
 
     private String pic;
 
+    private long toId;
+
     private long targetUid;
 
     private String targetUName;
@@ -122,6 +124,14 @@ public class KnowledgeComment implements Serializable{
 
     public void setPic(String pic) {
         this.pic = pic;
+    }
+
+    public long getToId() {
+        return toId;
+    }
+
+    public void setToId(long toId) {
+        this.toId = toId;
     }
 
     public long getTargetUid() {

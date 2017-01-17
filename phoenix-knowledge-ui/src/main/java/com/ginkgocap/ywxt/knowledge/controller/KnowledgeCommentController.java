@@ -81,15 +81,12 @@ public class KnowledgeCommentController extends BaseController {
                     try {
                         boolean resilt = messageNotifyService.sendMessageNotify(message);
                         if (resilt) {
-                            logger.error("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                            logger.info("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
                         }
                     } catch (Exception ex) {
                         logger.error("send comment notify message failed. error: " + ex.getMessage());
                     }
-                } else {
-                    logger.error("send comment notify message failed. as comment is null.");
                 }
-
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
 
@@ -247,10 +244,16 @@ public class KnowledgeCommentController extends BaseController {
             return null;
         }
 
+        final long toId =  comment.getToId();
+        if (comment.getToId() == user.getId()) {
+            logger.error("toId is equal userId, so skip send message notify. toId: " + toId);
+        }
+
         MessageNotify message = new MessageNotify();
         final String uName = comment.getOwnerName();
         message.setType(MessageNotifyType.EKnowledge.value());
         message.setTitle(uName + "评论了你的知识");
+        message.setToId(toId);
         message.setFromId(comment.getOwnerId());
         message.setFromName(comment.getOwnerName());
         message.setContent(converToJson(comment.getKnowledgeId(), comment.getColumnId()));
