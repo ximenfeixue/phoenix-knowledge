@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class TestData {
 
+    private static long targetId = 1234567L;
     private static User user = KnowledgeUtil.getDummyUser();
 	public static void main(String[] args) throws Exception {
 
@@ -157,6 +158,7 @@ public class TestData {
         comment.setOwnerId(userId);
         comment.setKnowledgeId(knowledgeId);
         comment.setColumnId(columnId);
+        comment.setToId(targetId);
         comment.setOwnerName("DummyUserName");
         comment.setCreateTime(System.currentTimeMillis());
         comment.setContent(content == null ? "Very Good" : content);
