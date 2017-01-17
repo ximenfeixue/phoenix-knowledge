@@ -76,21 +76,21 @@ public class KnowledgeCommentController extends BaseController {
             long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
                 //knowledgeCountService.updateCommentCount(knowledgeId);
-                return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
-            }
-
-            MessageNotify message = createMessageNotify(comment, user);
-            if (message != null) {
-                try {
-                    boolean resilt = messageNotifyService.sendMessageNotify(message);
-                    if (resilt) {
-                        logger.error("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                MessageNotify message = createMessageNotify(comment, user);
+                if (message != null) {
+                    try {
+                        boolean resilt = messageNotifyService.sendMessageNotify(message);
+                        if (resilt) {
+                            logger.error("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                        }
+                    } catch (Exception ex) {
+                        logger.error("send comment notify message failed. error: " + ex.getMessage());
                     }
-                } catch (Exception ex) {
-                    logger.error("send comment notify message failed. error: " + ex.getMessage());
+                } else {
+                    logger.error("send comment notify message failed. as comment is null.");
                 }
-            } else {
-                logger.error("send comment notify message failed. as comment is null.");
+
+                return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
 
             logger.error("Save Knowledge Comment to Mongo failed : knowledgeId: " + knowledgeId + " Comment: " + comment.getContent());
