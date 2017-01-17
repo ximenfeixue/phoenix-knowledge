@@ -269,15 +269,16 @@ public class KnowledgeCommentController extends BaseController {
         message.setVirtual(virtual);
     }
 
-    private String converToJson(long knowledgeId, int type) {
-        Map<String, Object> map = mapContent(knowledgeId, type);
+    private String converToJson(long knowledgeId, int columnType) {
+        Map<String, Object> map = mapContent(knowledgeId, columnType);
         return KnowledgeUtil.writeObjectToJson(map);
     }
 
-    private Map<String, Object> mapContent(long dynamicId, int type) {
-        Map<String, Object> map = new HashMap<String, Object>(2);
-        map.put("id", dynamicId);
-        map.put("type", type);
+    private Map<String, Object> mapContent(long knowledgeId, int columnType) {
+        Map<String, Object> map = new HashMap<String, Object>(3);
+        map.put("id", knowledgeId);
+        map.put("columnType", columnType);
+        map.put("type", MessageNotifyType.EKnowledge.value());
         return map;
     }
 
