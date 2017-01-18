@@ -13,6 +13,10 @@ public class KnowledgeComment implements Serializable{
     private long id;
     /** 知识id **/
     private long knowledgeId;
+
+    /** 栏目id **/
+    private int columnType;
+
     /** 栏目id **/
     private int columnId;
 
@@ -76,6 +80,14 @@ public class KnowledgeComment implements Serializable{
 
     public void setColumnId(int columnId) {
         this.columnId = columnId;
+    }
+
+    public int getColumnType() {
+        return columnType > 0 ? columnType : columnId;
+    }
+
+    public void setColumnType(int columnType) {
+        this.columnType = columnType;
     }
 
     public long getOwnerId() {
