@@ -59,10 +59,13 @@ public class DataSyncTask implements Runnable {
         try {
             while(true) {
                 Object data = dataSyncQueue.poll();
-                if (data instanceof MessageNotify) {
-                    sendMessageNotify((MessageNotify) data);
+                if (data != null) {
+                    if (data instanceof MessageNotify) {
+                        sendMessageNotify((MessageNotify) data);
+                    }
                 } else {
                     Thread.sleep(2000);
+                    logger.info("sync data queue is null, so sleep 2 second");
                 }
 
             }
