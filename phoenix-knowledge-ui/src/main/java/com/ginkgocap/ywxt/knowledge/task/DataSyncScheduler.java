@@ -65,7 +65,7 @@ public class DataSyncScheduler implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         logger.info("DataSyncTask starting........");
-        new Thread(new DataSyncTask()).start();
+        new Thread(dataSyncTask).start();
         //startTimer();
         logger.info("DataSyncTask start completed........");
     }
