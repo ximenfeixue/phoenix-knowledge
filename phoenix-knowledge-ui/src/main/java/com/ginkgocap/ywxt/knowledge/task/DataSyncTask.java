@@ -65,7 +65,7 @@ public class DataSyncTask implements Runnable {
                     }
                 } else {
                     Thread.sleep(2000);
-                    logger.info("sync data queue is null, so sleep 2 second");
+                    //logger.info("sync data queue is null, so sleep 2 second");
                 }
 
             }
