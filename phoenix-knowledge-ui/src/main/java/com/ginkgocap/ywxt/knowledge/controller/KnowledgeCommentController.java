@@ -76,17 +76,20 @@ public class KnowledgeCommentController extends BaseController {
             comment.setPic(user.getPicPath());
             long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
-                //knowledgeCountService.updateCommentCount(knowledgeId);
-                MessageNotify message = createMessageNotify(comment, user);
-                if (message != null) {
-                    try {
-                        boolean resilt = messageNotifyService.sendMessageNotify(message);
-                        if (resilt) {
-                            logger.info("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                if (user.getId() != comment.getToId()) {
+                    MessageNotify message = createMessageNotify(comment, user);
+                    if (message != null) {
+                        try {
+                            boolean resilt = messageNotifyService.sendMessageNotify(message);
+                            if (resilt) {
+                                logger.info("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
+                            }
+                        } catch (Exception ex) {
+                            logger.error("send comment notify message failed. error: " + ex.getMessage());
                         }
-                    } catch (Exception ex) {
-                        logger.error("send comment notify message failed. error: " + ex.getMessage());
                     }
+                } else {
+                    logger.info("comment self knowledge, so skip to send message notify.");
                 }
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
