@@ -4,10 +4,13 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
+import com.gintong.ywxt.im.model.MessageNotify;
+import com.gintong.ywxt.im.service.MessageNotifyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -16,10 +19,10 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Created by gintong on 2016/7/9.
  */
-public class DataSyncTask implements Runnable, InitializingBean
-{
-    private Logger logger = LoggerFactory.getLogger(DataSyncTask.class);
-    private static final int MAX_QUEUE_NUM = 200;
+@Repository("dataSyncTask")
+public class DataSyncTask implements Runnable {
+    private final Logger logger = LoggerFactory.getLogger(DataSyncTask.class);
+    private static final int MAX_QUEUE_NUM = 2000;
 
     @Autowired
     DataSyncService dataSyncService;
@@ -27,16 +30,16 @@ public class DataSyncTask implements Runnable, InitializingBean
     @Autowired
     DynamicNewsServiceLocal dynamicNewsServiceLocal;
 
-    private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
+    @Autowired
+    private MessageNotifyService messageNotifyService;
 
-    public DataSyncTask()
-    {
-        //First get 50
-        List<DataSync> dataSyncList = dataSyncService.getDataSyncList();
-        if (dataSyncList != null && dataSyncList.size() >0) {
-            for (DataSync data : dataSyncList) {
-                dataSyncQueue.offer(data);
-            }
+    private BlockingQueue<Object> dataSyncQueue = new ArrayBlockingQueue<Object>(MAX_QUEUE_NUM);
+
+    public void addQueue(Object object) {
+        if (object != null) {
+            dataSyncQueue.offer(object);
+        } else {
+            logger.error("sync object is null, so skip it.");
         }
     }
 
@@ -52,48 +55,31 @@ public class DataSyncTask implements Runnable, InitializingBean
         return true;
     }
 
-    @Override
     public void run() {
         try {
-            DataSync data = dataSyncQueue.peek();
-            if (data.getAction() == EActionType.EAddDynamic.getValue()) {
-                dynamicNewsServiceLocal.addDynamic(data.getContent(), data.getUserId());
-            }
-            /*
-            else if (data.getAction() == EActionType.EDeleteKnowledgeDirectory.getValue()) {
-                List<KnowledgeUnique> failedIdList = new ArrayList<KnowledgeUnique>();
-                List<KnowledgeUnique> idList = data.getIds();
-                if (idList != null && idList.size() >0) {
-                    for (KnowledgeUnique ident : idList) {
-                        boolean ret = knowledgeMongoDao.deleteKnowledgeDirectory(ident.getId(), ident.getColumnId(), data.getId());
-                        if (!ret) {
-                            logger.error("delete directory failed for: knowledgeId: {}, directory: {}", ident.getId(), data.getId());
-                            failedIdList.add(ident);
-                        }
-                    }
+            while(true) {
+                Object data = dataSyncQueue.poll();
+                if (data instanceof MessageNotify) {
+                    sendMessageNotify((MessageNotify) data);
+                } else {
+                    Thread.sleep(2000);
                 }
-                if (failedIdList.size() > 0) {
-                    data.setIds(failedIdList);
-                    dataSyncMongoDao.saveDataSync(data);
-                }
-                else {
-                    dataSyncMongoDao.deleteDataSync(data);
-                }
-            }*/
-            else if (data.getAction() == EActionType.EDeleteKnowledgeTag.getValue()) {
-                logger.info("Not support now..");
+
             }
-            if (dataSyncQueue.size() == 0) {
-                Thread.sleep(10);
-            }
-        } catch (Exception ex) {
-            logger.error("Data sycn error: {}", ex.getMessage());
+        } catch (InterruptedException ex) {
+            logger.error("queues thread interrupted. so exit this thread.");
         }
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        //logger.info("DataSyncTask starting........");
-        //new Thread(new DataSyncTask()).start();
+    private void sendMessageNotify(MessageNotify message) {
+        try {
+            boolean resilt = messageNotifyService.sendMessageNotify(message);
+            if (resilt) {
+                logger.info("send comment notify message success. fromId: " + message.getFromId() + " toId: " + message.getToId());
+            }
+        } catch (Exception ex) {
+            logger.error("send comment notify message failed. error: " + ex.getMessage());
+        }
+
     }
 }

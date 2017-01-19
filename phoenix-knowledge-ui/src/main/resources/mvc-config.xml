@@ -17,6 +17,7 @@
     <mvc:annotation-driven/>
 
     <bean id="bigDataSyncTask" class="com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask"/>
+    <bean id="dataSyncScheduler" class="com.ginkgocap.ywxt.knowledge.task.DataSyncScheduler"/>
 
     <mvc:interceptors>
         <!-- 请求拦截器 -->

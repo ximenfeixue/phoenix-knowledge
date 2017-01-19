@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
+import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -40,7 +41,7 @@ public class KnowledgeCommentController extends BaseController {
     private KnowledgeCommentService knowledgeCommentService;
 
     @Autowired
-    private MessageNotifyService messageNotifyService;
+    private DataSyncTask dataSyncTask;
 
     /**
      * des:创建评论
@@ -77,17 +78,7 @@ public class KnowledgeCommentController extends BaseController {
             long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
                 if (user.getId() != comment.getToId()) {
-                    MessageNotify message = createMessageNotify(comment, user);
-                    if (message != null) {
-                        try {
-                            boolean resilt = messageNotifyService.sendMessageNotify(message);
-                            if (resilt) {
-                                logger.info("send comment notify message success. userId: " + user.getId() + " commentId: " + commentId);
-                            }
-                        } catch (Exception ex) {
-                            logger.error("send comment notify message failed. error: " + ex.getMessage());
-                        }
-                    }
+                    dataSyncTask.addQueue(createMessageNotify(comment, user));
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
