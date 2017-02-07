@@ -1458,7 +1458,7 @@ public class KnowledgeController extends BaseController
 
         String requestJson = this.getBodyParam(request);
         List<Long> tagIds = KnowledgeUtil.readListValue(Long.class, requestJson);
-        if (tagIds == null || tagIds.size() <= 0) {
+        if (CollectionUtils.isEmpty(tagIds)) {
             logger.error("tag list is null...");
             return mappingJacksonValue(CommonResultCode.PARAMS_NULL_EXCEPTION,"tag list is null...");
         }

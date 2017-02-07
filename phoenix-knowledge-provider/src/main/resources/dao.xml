@@ -9,7 +9,7 @@
     </default>
     <route>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeBase" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"  strategyProperty="id">
+        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeBase" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener" strategyProperty="id">
             <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
                 <pattern value="[13579]$" group="g3" />
@@ -150,8 +150,7 @@
 
         </object>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference"
-            listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
+        <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
             strategyProperty="id">
             <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
@@ -183,8 +182,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" />
         </object>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeCount"
-                listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
+        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeCount" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
                 strategyProperty="id">
             <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
