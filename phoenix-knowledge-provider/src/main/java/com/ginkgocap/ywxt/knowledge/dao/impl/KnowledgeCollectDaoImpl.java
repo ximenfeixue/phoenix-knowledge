@@ -42,20 +42,20 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception {
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, type);
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception {
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, typeId);
         if (detail == null) {
-            logger.error("can't get knowledge detail. userId: {} knowledgeId: {} type: {}", userId, knowledgeId, type);
+            logger.error("can't get knowledge detail. userId: " + userId +" knowledgeId: " + knowledgeId + " type: " + typeId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
-        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, type);
+        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
         if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
             collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
             collect.setKnowledgeId(knowledgeId);
-            collect.setType((short)type);
-            collect.setColumnId(type);
+            collect.setType((short)typeId);
+            collect.setColumnId(0);
             collect.setCreateTime(System.currentTimeMillis());
             collect.setKnowledgeTitle(detail.getTitle());
             collect.setOwnerId(userId);
@@ -65,13 +65,12 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("该知识已经被收藏");
-
     }
 
     @Override
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int columnId) throws Exception
+    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId) throws Exception
     {
-        Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, columnId);
+        Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, typeId);
         KnowledgeCollect collect = mongoTemplate.findAndRemove(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
         if (collect == null) {
             logger.error("caccel collected knowledge error, no this knowledge collect or no permission to delete: ownerId: "+ ownerId+ " knowledgeId: " + knowledgeId + " columnId: "+columnId);
@@ -81,15 +80,15 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int columnId)
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId)
     {
-        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, columnId);
+        Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
         KnowledgeCollect collect = mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
         return collect != null;
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int columnId,int start, int size,final String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int typeId,int start, int size,final String keyword) throws Exception
     {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
@@ -98,8 +97,8 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         }
         query.addCriteria(criteria);
 
-        if (columnId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        if (typeId > 0) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(typeId));
         }
         long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
         if (start >= count) {

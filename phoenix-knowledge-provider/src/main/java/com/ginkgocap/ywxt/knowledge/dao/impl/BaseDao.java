@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public abstract class BaseDao {
 
-    protected Query knowledgeColumnIdAndOwnerId(long ownerId, long knowledgeId, int columnId) {
+    protected Query knowledgeColumnIdAndOwnerId(long ownerId, long knowledgeId, int typeId) {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
         query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        if (columnId != -1) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(columnId));
+        if (typeId != -1) {
+            query.addCriteria(Criteria.where(Constant.ColumnId).is(typeId));
         }
         return query;
     }

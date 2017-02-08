@@ -36,8 +36,8 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private KnowledgeCollectDao knowledgeCollectDao;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception {
-        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, type);
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception {
+        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, typeId);
     }
 
     @Override

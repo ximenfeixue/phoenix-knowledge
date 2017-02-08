@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface KnowledgeOtherService
 {
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int type) throws Exception;
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception;
 
     public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId) throws Exception;
 

@@ -1263,9 +1263,9 @@ public class KnowledgeController extends BaseController
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping(value="/collect/{knowledgeId}/{columnId}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/collect/{knowledgeId}/{typeId}", method = RequestMethod.DELETE)
     public InterfaceResult cancelCollection(HttpServletRequest request, HttpServletResponse response,
-                                                            @PathVariable long knowledgeId, @PathVariable int columnId) throws Exception {
+                                                            @PathVariable long knowledgeId, @PathVariable int typeId) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
@@ -1273,12 +1273,12 @@ public class KnowledgeController extends BaseController
         }
 
         long userId = user.getId();
-        if (knowledgeId <= 0 || columnId <= 0) {
+        if (knowledgeId <= 0 || typeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
-            this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, columnId);
+            this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
             logger.error("cancel collected knowledge failed！：" + e.getMessage());
         }
