@@ -273,11 +273,12 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if(knowledgeId <= 0 || columnType <= 0){
+        if(knowledgeId <= 0 || columnType < 0){
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         long userId = this.getUserId(user);
+        columnType = columnType == 0 ? 1 : columnType;
         if (!permissionServiceLocal.canDelete(knowledgeId, String.valueOf(columnType), userId)) {
             //Try if is collected knowledge.
             boolean cancelKnowledge = cancelKnowledge(userId, knowledgeId);
@@ -2200,7 +2201,7 @@ public class KnowledgeController extends BaseController
 
     private List<KnowledgeBase> convertDetailListToBase(List<Knowledge> detailList,short type)
     {
-        if (detailList == null || detailList.size() <=0) {
+        if (CollectionUtils.isEmpty(detailList)) {
             return null;
         }
 
