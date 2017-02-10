@@ -19,7 +19,8 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception
     {
 		if(knowledgeBase == null) {
-            throw new IllegalArgumentException("knowledgeBase is null!");
+			logger.error("knowledge base is null, skip to save.");
+			return null;
         }
 		
 		this.saveEntity(knowledgeBase);
@@ -27,12 +28,14 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 	
 	@Override
-	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList) throws Exception
+	public List<KnowledgeBase> insertList(List<KnowledgeBase> baseList) throws Exception
     {
-		if(knowledgeBaseList == null || knowledgeBaseList.isEmpty())
+		if(CollectionUtils.isEmpty(baseList)) {
+			logger.error("knowledge base list is null, skip to save.");
 			return null;
+		}
 		
-		return this.saveEntitys(knowledgeBaseList);
+		return this.saveEntitys(baseList);
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		}
 		KnowledgeBase oldValue = this.getByKnowledgeId(knowledgeBase.getKnowledgeId());
 		if (oldValue == null) {
-			logger.error("update an not exist knowledge, knowledgeId: {}",knowledgeBase.getKnowledgeId());
+			logger.error("update an not exist knowledge, knowledgeId: " + knowledgeBase.getKnowledgeId());
 			return null;
 		}
 		knowledgeBase.setId(oldValue.getId());
