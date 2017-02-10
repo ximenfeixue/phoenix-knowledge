@@ -73,7 +73,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, typeId);
         KnowledgeCollect collect = mongoTemplate.findAndRemove(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
         if (collect == null) {
-            logger.error("caccel collected knowledge error, no this knowledge collect or no permission to delete: ownerId: "+ ownerId+ " knowledgeId: " + knowledgeId + " columnId: "+columnId);
+            logger.error("this knowledge is not collected: ownerId: "+ ownerId+ " knowledgeId: " + knowledgeId + " typeId: "+typeId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"该知识没有被收藏!");
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
