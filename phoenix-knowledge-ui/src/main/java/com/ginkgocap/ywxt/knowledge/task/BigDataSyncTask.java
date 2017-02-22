@@ -87,7 +87,7 @@ public class BigDataSyncTask implements Runnable, InitializingBean
                 List<String> tagNames = new ArrayList<String>();
                 List<Tag> tagList = tagServiceLocal.getTagList(userId);
                 if (CollectionUtils.isNotEmpty(tagList)) {
-                    Map<Long, Tag> tagMap = new HashMap<Long, Tag>();
+                    Map<Long, Tag> tagMap = new HashMap<Long, Tag>(tagList.size());
                     for (Tag tag : tagList) {
                         if (tag != null) {
                             tagMap.put(tag.getId(), tag);
