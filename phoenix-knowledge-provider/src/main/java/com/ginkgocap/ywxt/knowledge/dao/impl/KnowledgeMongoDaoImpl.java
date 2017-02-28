@@ -97,8 +97,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         String collectionName = getCollectionName(columnType);
         Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
         if (existValue != null) {
-            if (existValue.getCid() != knowledge.getCid() || existValue.getUid() != knowledge.getUid()) {
-                logger.error("can't update this knowledge, because of owner is different. knowledgeId: " + knowledge.getId() +
+            if (existValue.getCid() != knowledge.getCid()) {
+                logger.error("can't update knowledge, as owner is different. knowledgeId: " + knowledge.getId() +
                 " exist cid :" + existValue.getCid() + " new cid: " + knowledge.getCid());
                 return null;
             }
@@ -114,7 +114,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
-            logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId() + " type: " + oldType);
+            logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId() + " type: " + columnType);
             return null;
         }
 

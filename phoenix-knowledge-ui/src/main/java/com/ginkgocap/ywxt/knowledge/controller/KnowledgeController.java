@@ -207,6 +207,12 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        final int newType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+        if (newType == data.getOldType()) {
+            logger.info("becase oldType and newType same, so set oldType = 0");
+            data.setOldType(0);
+        }
+
         String columnType = data.getOldType() > 0 ? String.valueOf(data.getOldType()) : detail.getColumnType();
         long knowledgeId = detail.getId();
         if (!permissionServiceLocal.canUpdate(knowledgeId, columnType, userId)) {
@@ -226,7 +232,7 @@ public class KnowledgeController extends BaseController
         }
 
         if (result == null || !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
-            logger.error("知识更新失败, result is null or result code is not success.");
+            logger.error("知识更新失败, knowledgeId: " + knowledgeId + " columnType: " + columnType);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70002);
         }
 
