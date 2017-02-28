@@ -114,7 +114,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
-            logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId());
+            logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId() + " type: " + oldType);
             return null;
         }
 
