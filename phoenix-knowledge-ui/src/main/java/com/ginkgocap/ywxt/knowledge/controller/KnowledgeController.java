@@ -2232,7 +2232,7 @@ public class KnowledgeController extends BaseController
         } else {
             long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
             if (columnId <= 0) {
-                logger.warn("column id: {} is invalidated, so set a default value. ", detail.getColumnid());
+                logger.warn("column id: " + detail.getColumnid() + " is invalidated, so set a default value. ");
                 columnId = KnowledgeType.ENews.value();
                 detail.setColumnid(String.valueOf(columnId));
             }
@@ -2247,7 +2247,7 @@ public class KnowledgeController extends BaseController
                     columnPath = column.getPathName();
                 }
             } catch (Throwable ex) {
-                logger.error("Query column failed. columnId: {}, error: {}", detail.getColumnid(), ex.getMessage());
+                logger.error("Query column failed. columnId: " + detail.getColumnid() + " error: " + ex.getMessage());
             }
 
             if (columnPath == null) {
@@ -2264,10 +2264,10 @@ public class KnowledgeController extends BaseController
     {
         if (columnId > 0) {
             try {
-                logger.info("Query column by Id. columnId: "+columnId);
+                logger.info("Query column by Id. columnId: " + columnId);
                 return columnSelfService.selectByPrimaryKey(columnId);
             } catch (Exception ex) {
-                logger.error("Get column failed: error {}", ex.getMessage());
+                logger.error("Get column failed: error " + ex.getMessage());
             }
         }
         logger.error("ColumnId is invalidated. columnId: "+columnId);
