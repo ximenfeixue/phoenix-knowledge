@@ -254,7 +254,7 @@ public class KnowledgeController extends BaseController
         data.setKnowledgeDetail(updatedDetail);
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, data.toBigData());
 
-        logger.info(".......update knowledge success......");
+        logger.info("update knowledge success. knowledgeId: " + knowledgeId + " userId: " + userId);
         return result;
     }
 
