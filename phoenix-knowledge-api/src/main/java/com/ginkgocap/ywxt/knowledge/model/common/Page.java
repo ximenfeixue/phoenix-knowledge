@@ -14,7 +14,7 @@ public class Page<E> implements Serializable
 
     private int pageSize;// 该页内容数
 
-    private int pageNo;// 页码 从1开始
+    private int pageNo;// 页码 从0开始
 
     private List<E> list; // 存放任意实体
 
