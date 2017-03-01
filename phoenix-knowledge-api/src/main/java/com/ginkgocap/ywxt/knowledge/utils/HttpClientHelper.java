@@ -112,14 +112,13 @@ public class HttpClientHelper {
                 UrlEncodedFormEntity formEntity;
                 formEntity = new UrlEncodedFormEntity(list, "utf-8");
                 post.setEntity(formEntity);
-                logger.info("开始以POST方式访问路径{}，参数为{}", url, formEntity.toString());
+                logger.info("Http POST url: " + url + " param: " + formEntity.toString());
                 HttpClient httpClient = httpClient();
                 HttpResponse response = httpClient.execute(post);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     result.put("status", response.getStatusLine().getStatusCode());
                     HttpEntity entity = response.getEntity();
                     String respJson = EntityUtils.toString(entity);
-                    logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
                     return respJson;
                 }
@@ -148,13 +147,12 @@ public class HttpClientHelper {
             urlBuffer.deleteCharAt(urlBuffer.length() - 1);
             get = new HttpGet(urlBuffer.toString());
 
-            logger.info("开始以GET方式访问路径{}", get.getRequestLine().toString());
+            logger.info("Http GET Url: ", url);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(get);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("request {} success", url);
                 return respJson;
             }
 
@@ -177,7 +175,7 @@ public class HttpClientHelper {
     {
         HttpGet get = new HttpGet(url);
         try {
-            logger.info("httpMethod: GET, url: {}, body: {}", get.getRequestLine().toString());
+            logger.info("Http GET, url: " + url);
             for(String key:headers.keySet()){
                 get.addHeader(key, headers.get(key));
             }
@@ -186,7 +184,6 @@ public class HttpClientHelper {
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("request {} success", url);
                 //logger.info("Response: {}", respJson);
                 return respJson;
             }
@@ -217,13 +214,12 @@ public class HttpClientHelper {
                 StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
                 post.setEntity(stringEntry);
             }
-            logger.info("httpMethod: POST, url: {}， body {}", url, content);
+            logger.info("Http POST, url: " + url + " Body: " + content);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 result.put("status", response.getStatusLine().getStatusCode());
                 String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
-                logger.info("request {} success", url);
                 EntityUtils.consume(response.getEntity());
                 //logger.info("respJson: {}", respJson);
                 return respJson;
@@ -251,14 +247,13 @@ public class HttpClientHelper {
                 for(String key:headers.keySet()){
                     put.addHeader(key, headers.get(key));
                 }
-                logger.info("httpMethod: PUT, url: {}，body: {}{}", url, params);
+                logger.info("Http PUT, url: " + url + " Body: " + params);
                 HttpClient httpClient = httpClient();
                 HttpResponse response = httpClient.execute(put);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     result.put("status", response.getStatusLine().getStatusCode());
                     HttpEntity entity = response.getEntity();
                     String respJson = EntityUtils.toString(entity);
-                    logger.info("request {} success", url);
                     EntityUtils.consume(response.getEntity());
                     //logger.info("respJson: {}", respJson);
                     return respJson;
@@ -286,13 +281,13 @@ public class HttpClientHelper {
             for(String key:headers.keySet()){
                 delete.addHeader(key, headers.get(key));
             }
+            logger.info("httpMethod: DELETE url: " + url);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(delete);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result.put("httpMethod: DELETE, status", response.getStatusLine().getStatusCode());
+                result.put("status", response.getStatusLine().getStatusCode());
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
-                logger.info("url: {}, body: {}", url);
                 EntityUtils.consume(response.getEntity());
                 return respJson;
             }
