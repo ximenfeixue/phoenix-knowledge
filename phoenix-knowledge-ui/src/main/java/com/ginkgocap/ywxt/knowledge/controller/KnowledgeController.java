@@ -2292,6 +2292,7 @@ public class KnowledgeController extends BaseController
                     base.setKnowledgeId(collect.getKnowledgeId());
                     base.setTitle(collect.getKnowledgeTitle());
                     base.setCreateUserId(collect.getOwnerId());
+                    base.setCollected((short)1);
                     collectedKnowledgeItems.add(base);
                 }
             }

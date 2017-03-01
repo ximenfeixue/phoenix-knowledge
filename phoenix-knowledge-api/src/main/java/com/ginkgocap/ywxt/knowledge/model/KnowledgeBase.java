@@ -96,6 +96,9 @@ public class KnowledgeBase implements Serializable {
 	/** 阅读数量  **/
 	private int readCount;
 
+	//是否收藏，1是，0否
+	private short collected = 0;
+
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	public long getId() {
@@ -341,8 +344,17 @@ public class KnowledgeBase implements Serializable {
 		this.privated = privated;
 	}
 
-	@Column(name = "read_count")
+    @Transient
 	public int getReadCount() {return readCount;}
 
 	public void setReadCount(int readCount) {this.readCount = readCount;}
+
+	@Transient
+	public short getCollected() {
+		return collected;
+	}
+
+	public void setCollected(short collected) {
+		this.collected = collected;
+	}
 }
