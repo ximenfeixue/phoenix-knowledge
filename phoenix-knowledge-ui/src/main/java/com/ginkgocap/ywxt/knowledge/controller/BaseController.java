@@ -34,9 +34,9 @@ public abstract class BaseController {
 
     protected static final long APPID = KnowledgeConstant.DEFAULT_APP_ID;
 
-    protected final static short KNOWLEDGE_MYCOLLECT = 1;
-    protected final static short KNOWLEDGE_SHAREME = 2;
-    protected final static short KNOWLEDGE_MYCREATE = 3;
+    protected final static short KNOWLEDGE_CREATE = 1;
+    protected final static short KNOWLEDGE_COLLECT = 2;
+    protected final static short KNOWLEDGE_SHARE = 3;
     protected final static short KNOWLEDGE_ALL = -1;
 	
     /**

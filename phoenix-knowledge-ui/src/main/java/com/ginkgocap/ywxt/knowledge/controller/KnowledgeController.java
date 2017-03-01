@@ -16,7 +16,6 @@ import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.user.model.User;
-import com.gintong.common.phoenix.permission.ResourceType;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -668,11 +667,11 @@ public class KnowledgeController extends BaseController
     													@PathVariable short type, @PathVariable int page,@PathVariable int size,
     													@PathVariable long total,@PathVariable String keyword) throws Exception {
 
-        if (type == KNOWLEDGE_MYCOLLECT) {
+        if (type == KNOWLEDGE_CREATE) {
 			return this.getAllCreatedByPage(request, response, page, size, total, keyword);
-		} else if (type == KNOWLEDGE_SHAREME) {
+		} else if (type == KNOWLEDGE_COLLECT) {
 			return this.getAllCollectedByPage(request, response, page, size, total, keyword);
-		} else if (type == KNOWLEDGE_MYCREATE) {
+		} else if (type == KNOWLEDGE_SHARE) {
 			return null;
 		} else if (type == KNOWLEDGE_ALL) {
 			return this.getAllByPage(request, response, page, size, total, keyword);
