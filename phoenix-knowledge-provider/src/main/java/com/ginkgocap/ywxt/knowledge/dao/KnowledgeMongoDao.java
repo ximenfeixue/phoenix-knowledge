@@ -39,6 +39,28 @@ public interface KnowledgeMongoDao
     public Knowledge update(Knowledge Knowledge,int oldType);
 
     /**
+     * 更新
+     * @date 2017年1月13日 上午10:54:29
+     * @param knowledgeId
+     * @param type
+     * @param tagIdList
+     * @return
+     * @throws Exception
+     */
+    public boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+
+    /**
+     * 更新
+     * @date 2017年1月13日 上午10:54:29
+     * @param knowledgeId
+     * @param type
+     * @param directoryIdList
+     * @return
+     * @throws Exception
+     */
+    public boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
+
+    /**
      * 先删除后插入
      * @date 2016年1月13日 上午10:54:44
      * @param Knowledge
@@ -85,6 +107,24 @@ public interface KnowledgeMongoDao
      * @throws Exception
      */
     public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId);
+
+    /**
+     * @date 2016年1月13日 上午10:54:53
+     * @param userId
+     * @param knowledgeId
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+
+    /**
+     * @date 2016年1月15日 上午9:41:20
+     * @param userId
+     * @param knowledgeId
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList) throws Exception;
 
     /**
      * 根据主键以及栏目提取数据

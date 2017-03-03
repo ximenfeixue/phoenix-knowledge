@@ -537,7 +537,7 @@ public class KnowledgeController extends BaseController
             Knowledge detail = data.getKnowledgeDetail();
             List<Long> tags = detail.getTagList();
             List<Long> directoryIds = detail.getDirectorys();
-            List<IdName> minTags = this.getMinTagList(userId, tags);
+            List<IdName> minTags = this.getMinTagList(tags);
             List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
             logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
                          " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
@@ -2099,7 +2099,7 @@ public class KnowledgeController extends BaseController
         return collectedCount;
     }
 
-    private List<IdName> getMinTagList(long userId, List<Long> tagIds)
+    private List<IdName> getMinTagList(List<Long> tagIds)
     {
         List<Tag> tags = tagServiceLocal.getTagList(tagIds);
         if (tags != null && tags.size() >0) {

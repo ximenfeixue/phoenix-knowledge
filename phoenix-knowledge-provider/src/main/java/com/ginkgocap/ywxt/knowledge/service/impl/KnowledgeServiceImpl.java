@@ -193,6 +193,16 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
+    public boolean addTag(long userId, long knowledgeId, int type, List<Long> tagIdList) {
+        return this.knowledgeMongoDao.addTag(userId, knowledgeId, type, tagIdList);
+    }
+
+    @Override
+    public boolean addDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
+        return this.knowledgeMongoDao.addDirectory(userId, knowledgeId, type, directoryIdList);
+    }
+
+    @Override
     public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnType) throws Exception
     {
         //知识详细表删除
@@ -245,6 +255,16 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 		}*/
 
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
+    }
+
+    @Override
+    public boolean deleteTag(long userId, long knowledgeId, int type, List<Long> idList) throws Exception {
+        return this.knowledgeMongoDao.deleteTag(userId, knowledgeId, type, idList);
+    }
+
+    @Override
+    public boolean deleteDirectory(long userId, long knowledgeId, int type, List<Long> idList) throws Exception {
+        return this.knowledgeMongoDao.deleteDirectory(userId, knowledgeId, type, idList);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.mongodb.BasicDBObject;
@@ -121,6 +122,15 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return knowledge;
     }
 
+    @Override
+    public boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList) {
+        return addIds(userId, knowledgeId, type, tagIdList, EModuleType.ETag);
+    }
+
+    @Override
+    public boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList) {
+        return addIds(userId, knowledgeId, type, directoryIdList, EModuleType.EDirectory);
+    }
 
     @Override
     public boolean deleteByIdAndColumnId(long knowledgeId,int columnType)
@@ -159,9 +169,19 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return true;
         }
         else {
-            logger.error("can't find the knowledge by, knowledgeId: {} columnType: {}", knowledgeId, columnType);
+            logger.error("can't find the knowledge by, knowledgeId: " + knowledgeId+ " columnType: " + columnType);
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteTag(long userId, long knowledgeId, int type, List<Long> tagIdList) {
+        return deleteIds(userId, knowledgeId, type, tagIdList, EModuleType.ETag);
+    }
+
+    @Override
+    public boolean deleteDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
+        return deleteIds(userId, knowledgeId, type, directoryIdList, EModuleType.EDirectory);
     }
 
     @Override
@@ -366,6 +386,105 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return false;
         }
         return true;
+    }
+
+    private boolean addIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType) {
+        final String keyWord = moduleType.keyWord();
+        if (CollectionUtils.isEmpty(idList)) {
+            logger.error(keyWord + " is null, skip update. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+
+        Query query = knowledgeIdQuery(knowledgeId);
+        String collectionName = getCollectionName(type);
+        Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
+        if (existValue == null) {
+            logger.error("knowledge not exist. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+        List<Long> existIds = null;
+        if (moduleType == EModuleType.ETag) {
+            existIds = existValue.getTagList();
+        } else if (moduleType == EModuleType.EDirectory) {
+            existIds = existValue.getDirectorys();
+        } else {
+            logger.error("update id not exist. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+
+        if (CollectionUtils.isEmpty(existIds)) {
+            existIds = idList;
+        } else {
+            existIds.addAll(idList);
+        }
+
+        return updateIdToDB(query, collectionName, keyWord, existIds);
+        /*
+        Update update = new Update();
+        update.set(keyWord, existIds);
+        WriteResult result = mongoTemplate.upsert(query, update, collectionName);
+        if (result.getN() > 0) {
+            return true;
+        }
+        return false;*/
+    }
+
+    private boolean deleteIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType) {
+        final String keyWord = moduleType.keyWord();
+        if (CollectionUtils.isEmpty(idList)) {
+            logger.error(keyWord + " idList is null, skip update. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+
+        Query query = knowledgeIdQuery(knowledgeId);
+        String collectionName = getCollectionName(type);
+        Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
+        if (existValue == null) {
+            logger.error("knowledge not exist. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+        if (existValue.getCid() != userId) {
+            logger.error("no permission. id: " + knowledgeId + " type: " + type + " cid: " + existValue.getCid() + " userId: " + userId);
+            return false;
+        }
+
+        List<Long> existIds = null;
+        if (moduleType == EModuleType.ETag) {
+            existIds = existValue.getTagList();
+        } else if (moduleType == EModuleType.EDirectory) {
+            existIds = existValue.getDirectorys();
+        } else {
+            logger.error("update id not exist. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+
+        if (CollectionUtils.isEmpty(existIds)) {
+            logger.error(keyWord + "no id exist. knowledgeId: " + knowledgeId + " type: " + type);
+            return false;
+        } else {
+            existIds.removeAll(idList);
+        }
+
+        /*
+        Update update = new Update();
+        update.set(keyWord, existIds);
+        WriteResult result = mongoTemplate.upsert(query, update, collectionName);
+        if (result.getN() > 0) {
+            return true;
+        }
+        return false;*/
+
+        return updateIdToDB(query, collectionName, keyWord, existIds);
+    }
+
+    private boolean updateIdToDB(final Query query, final String collectionName, final String colName, final List<Long> ids) {
+        Update update = new Update();
+        update.set(colName, ids);
+        WriteResult result = mongoTemplate.upsert(query, update, collectionName);
+        if (result.getN() > 0) {
+            return true;
+        }
+        return false;
     }
 
     private <T> boolean findAndRemove(Query query, Class<T> entityClass, final String collectionName)

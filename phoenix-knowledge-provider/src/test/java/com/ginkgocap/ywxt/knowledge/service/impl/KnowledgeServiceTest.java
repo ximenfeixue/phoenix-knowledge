@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -25,12 +27,15 @@ public class KnowledgeServiceTest extends TestBase {
     @Autowired
     KnowledgeCommonService knowledgeCommonService;
 
+    private long userId = 200562;
+    private long knowledgeId = 317030311004641L;
+    private short type = 1;
+
     private static long knowledgeIdDelete = 0L;
     private static long knowledgeIdupdate = 0L;
     private static long knowledgeIdQuery = 0L;
     private static long Id = 0L;
     private static short columnId = 2;
-    private static short type = 0;
     private static int start = 1;
     private static int size = 12;
 
@@ -38,6 +43,8 @@ public class KnowledgeServiceTest extends TestBase {
 	public void testInsert() {
         System.out.println("===testInsert===");
         DataCollect collect = createKnowledge("KnowledgeServiceTest");
+        String data = KnowledgeUtil.writeObjectToJson(collect.getKnowledgeDetail());
+        System.out.print(data);
     }
 
     @Test
@@ -48,6 +55,30 @@ public class KnowledgeServiceTest extends TestBase {
         Knowledge savedDetail = this.insertKnowledgeDetail(detail);
         //detail.setTitle("testInsertDetail_Update");
         //savedDetail = this.insertKnowledgeDetail(detail);
+    }
+
+    @Test
+    public void testAddTag() {
+        System.out.println("===testAddTag===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.addTag(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testAddDirectory() {
+        System.out.println("===testAddDirectory===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.addDirectory(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            TestCase.fail();
+        }
     }
 
     @Test
@@ -109,6 +140,30 @@ public class KnowledgeServiceTest extends TestBase {
             assertResponseWithData(result);
         } catch (Exception e) {
             e.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testDeleteTag() {
+        System.out.println("===testDeleteTag===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.deleteTag(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testDeleteDirectory() {
+        System.out.println("===testDeleteDirectory===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.deleteDirectory(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
             TestCase.fail();
         }
     }

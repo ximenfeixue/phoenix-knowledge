@@ -52,10 +52,6 @@ public interface KnowledgeService
     public Knowledge update(Knowledge detail) throws Exception;
 
     /**
-     * 更新，承担以下任务：
-     * <p>1、知识详细表更新</P>
-     * <p>2、知识基础表更新</P>
-     * <p>3、知识来源表更新</P>
      * @date 2016年1月15日 上午9:41:16
      * @param DataCollect
      * @return
@@ -64,22 +60,29 @@ public interface KnowledgeService
     public InterfaceResult<Knowledge> update(DataCollect DataCollect) throws Exception;
 
     /**
-     * 更新，承担以下任务：
-     * <p>1、知识详细表更新</P>
-     * <p>2、知识基础表更新</P>
      * @date 2016年1月15日 上午9:41:16
      * @param DataCollect
      * @return
      * @throws Exception
      */
     public boolean updateKnowledge(DataCollect DataCollect) throws Exception;
+
     /**
-     * 删除，承担以下任务：
-     * <p>1、知识详细表删除</P>
-     * <p>2、知识基础表删除</P>
-     * <p>3、知识来源表删除</P>
-     * <p>4、大数据MQ推送删除</P>
-     * <p>5、动态推送删除</P>
+     * @date 2016年1月15日 上午9:41:16
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+
+    /**
+     * @date 2016年1月15日 上午9:41:16
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
+    /**
      * @date 2016年1月15日 上午9:41:20
      * @param knowledgeId
      * @param columnId
@@ -87,6 +90,24 @@ public interface KnowledgeService
      * @throws Exception
      */
     public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnId) throws Exception;
+
+    /**
+     * @date 2016年1月15日 上午9:41:20
+     * @param userId
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteTag(final long userId, final long knowledgeId, final int type, final List<Long> idList) throws Exception;
+
+    /**
+     * @date 2016年1月15日 上午9:41:20
+     * @param userId
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> idList) throws Exception;
 
     /**
      * 批量删除，承担以下任务：
