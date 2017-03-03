@@ -408,7 +408,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         } else if (moduleType == EModuleType.EDirectory) {
             existIds = existValue.getDirectorys();
         } else {
-            logger.error("update id not exist. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
+            logger.error("moduleType not match. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
             return false;
         }
 
@@ -454,7 +454,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         } else if (moduleType == EModuleType.EDirectory) {
             existIds = existValue.getDirectorys();
         } else {
-            logger.error("update id not exist. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
+            logger.error("moduleType not match. keyWord: " + keyWord + "id: " + knowledgeId + " type: " + type);
             return false;
         }
 
