@@ -82,6 +82,30 @@ public class KnowledgeServiceTest extends TestBase {
     }
 
     @Test
+    public void testUpdateTag() {
+        System.out.println("===testAddTag===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.updateTag(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
+    public void testUpdateDirectory() {
+        System.out.println("===testAddDirectory===");
+        try {
+            final List<Long> ids = Arrays.asList(333L, 444L);
+            knowledgeService.updateDirectory(userId, knowledgeId, type, ids);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            TestCase.fail();
+        }
+    }
+
+    @Test
 	public void testUpdate() {
         System.out.println("===testUpdate===");
         try {
