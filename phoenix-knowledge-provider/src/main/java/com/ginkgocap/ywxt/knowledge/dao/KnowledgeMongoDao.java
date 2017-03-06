@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
+import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 
 import java.util.List;
 import java.util.Map;
@@ -162,4 +163,6 @@ public interface KnowledgeMongoDao
     public void deleteBackupKnowledgeBase(long knowledgeId);
 
     public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
+
+    public boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType);
 }

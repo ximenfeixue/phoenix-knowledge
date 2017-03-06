@@ -300,8 +300,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         mongoTemplate.remove(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
     }
 
-    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size)
-    {
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size) {
         Query query = new Query();
         long count = mongoTemplate.count(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
         if (start >= count) {
@@ -318,6 +317,28 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
         query.limit(size);
         return mongoTemplate.find(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
+    }
+
+    public boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType) {
+        final String keyWord = moduleType.keyWord();
+        if (CollectionUtils.isEmpty(idList)) {
+            logger.error(keyWord + " is null, skip update. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+
+        Query query = knowledgeIdQuery(knowledgeId);
+        String collectionName = getCollectionName(type);
+        Knowledge existValue = mongoTemplate.findOne(query, Knowledge.class, collectionName);
+        if (existValue == null) {
+            logger.error("knowledge not exist. id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+        if (existValue.getCid() != userId) {
+            logger.error("no permission. id: " + knowledgeId + " type: " + type + " cid: " + existValue.getCid() + " userId: " + userId);
+            return false;
+        }
+
+        return updateIdToDB(query, collectionName, keyWord, idList);
     }
 
     private String getCollectionName(String columnId) {

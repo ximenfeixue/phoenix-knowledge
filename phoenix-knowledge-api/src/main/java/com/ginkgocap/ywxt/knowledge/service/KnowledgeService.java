@@ -82,6 +82,22 @@ public interface KnowledgeService
      * @throws Exception
      */
     public boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
+
+    /**
+     * @date 2016年1月15日 上午9:41:16
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean updateTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+
+    /**
+     * @date 2016年1月15日 上午9:41:16
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public boolean updateDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
     /**
      * @date 2016年1月15日 上午9:41:20
      * @param knowledgeId

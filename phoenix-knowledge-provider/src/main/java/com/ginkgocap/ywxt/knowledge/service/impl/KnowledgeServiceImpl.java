@@ -8,6 +8,7 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
@@ -200,6 +201,16 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public boolean addDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
         return this.knowledgeMongoDao.addDirectory(userId, knowledgeId, type, directoryIdList);
+    }
+
+    @Override
+    public boolean updateTag(long userId, long knowledgeId, int type, List<Long> tagIdList) {
+        return this.knowledgeMongoDao.updateIds(userId, knowledgeId, type, tagIdList, EModuleType.ETag);
+    }
+
+    @Override
+    public boolean updateDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
+        return this.knowledgeMongoDao.updateIds(userId, knowledgeId, type, directoryIdList, EModuleType.EDirectory);
     }
 
     @Override
