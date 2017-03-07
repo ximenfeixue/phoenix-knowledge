@@ -478,39 +478,6 @@
 
     <profiles>
         <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <filters>
-                    <filter>${sa.config.file}</filter>
-                </filters>
-            </build>
-        </profile>
-        <profile>
-            <id>qa</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <filters>
-                    <filter>${sa.config.file}</filter>
-                </filters>
-            </build>
-        </profile>
-        <profile>
-            <id>testOnline</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <filters>
-                    <filter>${sa.config.file}</filter>
-                </filters>
-            </build>
-        </profile>
-        <profile>
             <id>online</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
