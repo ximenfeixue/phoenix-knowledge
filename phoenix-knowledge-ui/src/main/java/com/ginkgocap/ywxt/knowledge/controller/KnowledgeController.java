@@ -1255,12 +1255,13 @@ public class KnowledgeController extends BaseController
             typeId = typeId <= 0 ? 1 : typeId;
             result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
-            logger.error("collect knowledge failed！：" + e.getMessage());
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
+            logger.error("collect knowledge failed！knowledgeId: " + knowledgeId + " type: " + typeId + " error: " + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
         }
 
         //collect count
         knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
+        logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
         return result;
     }
 
@@ -1286,12 +1287,13 @@ public class KnowledgeController extends BaseController
 
         try {
             typeId = typeId <= 0 ? 1 : typeId;
-            this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
+            InterfaceResult result = this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
+            logger.info("cancel collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
+            return result;
         } catch (Exception e) {
-            logger.error("cancel collected knowledge failed！：" + e.getMessage());
+            logger.error("cancel collect knowledge failed. knowledgeId: " + knowledgeId + " type: " + typeId + " error:" + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
-        logger.info(".......cancel collect knowledge success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     /**
@@ -1967,11 +1969,11 @@ public class KnowledgeController extends BaseController
         long userId = user.getId();
         logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + userId);
 
-
         if(knowledgeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION, "知识Id无效");
         }
 
+        columnType = columnType <= 0 ? 1 : columnType;
         Knowledge detail = null;
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
