@@ -1246,21 +1246,22 @@ public class KnowledgeController extends BaseController
         }
         long userId = user.getId();
 
-        if (knowledgeId <= 0 || typeId <= 0) {
+        if (knowledgeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
+        InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
-            this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
+            typeId = typeId <= 0 ? 1 : typeId;
+            result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
             logger.error("collect knowledge failed！：" + e.getMessage());
-            //return InterfaceResult.getInterfaceResultInstance();
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
         }
 
         //collect count
-        //knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
-        logger.info(".......collect knowledge success......");
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
+        return result;
     }
 
     /**
@@ -1279,11 +1280,12 @@ public class KnowledgeController extends BaseController
         }
 
         long userId = user.getId();
-        if (knowledgeId <= 0 || typeId <= 0) {
+        if (knowledgeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
         }
 
         try {
+            typeId = typeId <= 0 ? 1 : typeId;
             this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
             logger.error("cancel collected knowledge failed！：" + e.getMessage());
@@ -1962,9 +1964,9 @@ public class KnowledgeController extends BaseController
     }
 
     private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType,boolean isWeb) {
-        if (user != null) {
-            logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + user.getId());
-        }
+        long userId = user.getId();
+        logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + userId);
+
 
         if(knowledgeId <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION, "知识Id无效");
@@ -1998,7 +2000,6 @@ public class KnowledgeController extends BaseController
         }
 
         boolean isCollected = false;
-        long userId = user.getId();
         try {
             isCollected = knowledgeOtherService.isCollectedKnowledge(userId, knowledgeId, columnType);
         } catch (Exception ex) {
@@ -2287,11 +2288,11 @@ public class KnowledgeController extends BaseController
             for (KnowledgeCollect collect : collectItems) {
                 if (collect != null) {
                     KnowledgeBase base = new KnowledgeBase();
-                    base.setType((short)collect.getColumnId());
+                    base.setType(collect.getType());
                     base.setId(collect.getKnowledgeId());
                     base.setKnowledgeId(collect.getKnowledgeId());
                     base.setTitle(collect.getKnowledgeTitle());
-                    base.setCreateUserId(collect.getOwnerId());
+                    base.setCreateUserId(0);
                     base.setCollected((short)1);
                     collectedKnowledgeItems.add(base);
                 }
