@@ -55,7 +55,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
             collect.setKnowledgeId(knowledgeId);
             collect.setType((short)typeId);
-            collect.setColumnId(0);
+            collect.setColumnId(typeId);
             collect.setCreateTime(System.currentTimeMillis());
             collect.setKnowledgeTitle(detail.getTitle());
             collect.setOwnerId(userId);
