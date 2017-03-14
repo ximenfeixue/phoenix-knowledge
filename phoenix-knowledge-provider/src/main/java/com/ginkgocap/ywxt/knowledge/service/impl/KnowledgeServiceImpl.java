@@ -44,7 +44,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private static final String endContent = "若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
     private static final int endLength = endContent.length();
-    private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+    private static final String suffix = "</br>版权归原作者所有，葡萄园依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
 
     @Override
     public InterfaceResult<Long> insert(DataCollect DataCollect) {
