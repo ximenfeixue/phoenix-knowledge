@@ -1740,6 +1740,14 @@ public class KnowledgeController extends BaseController
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getRecommendedKnowledge/{type}/{page}/{size}", method = RequestMethod.GET)
+    public InterfaceResult<Map<String, Object>> getRecommendedKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                                                        @PathVariable short type,@PathVariable int page, @PathVariable int size) throws Exception {
+        return getKnowledgeByColumnAndSource(request, response, type, type, (short)KnowledgeConstant.SOURCE_ALL_PLATFORM, page, size, 300);
+    }
+
+
     @SuppressWarnings({ "deprecation", "unchecked" })
     private List<JSONObject>  getSearchList(HttpServletRequest request,long userId, int pno, int psize, String keyword, String module,Map<String, String> conditions) throws Exception
     {
