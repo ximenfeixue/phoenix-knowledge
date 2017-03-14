@@ -1669,7 +1669,7 @@ public class KnowledgeController extends BaseController
 
         long userId = this.getUserId(user);
         final String queryType ="knowledge";
-        /** 金桐网推荐的相关“知识”数据 */
+        /** 葡萄园推荐的相关“知识”数据 */
         List<KnowledgeMini> platformKnowledge = null;
         List<JSONObject> list = getSearchList(request, userId, page, size, keyword, queryType, null);
         if(list != null && list.size() > 0){
