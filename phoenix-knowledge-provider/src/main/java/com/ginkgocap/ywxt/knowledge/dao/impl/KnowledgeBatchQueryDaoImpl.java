@@ -409,9 +409,9 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         if (ArrayUtils.isEmpty(params)) {
             return null;
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
-            sb.append(i > 0 ? "_" : "").append(params[i]);
+            sb.append(i > 0 ? "-" : "").append(params[i]);
         }
         return sb.toString();
     }
@@ -420,9 +420,9 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         if (ArrayUtils.isEmpty(params)) {
             return null;
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
-            sb.append(i > 0 ? "_" : "").append(params[i]);
+            sb.append(i > 0 ? "-" : "").append(params[i]);
         }
         return sb.toString();
     }
