@@ -136,7 +136,7 @@ public class Knowledge implements Serializable
 	private short collected;
 
     //是否私有 0: 私有, 1: 公开
-	private short pub;
+	private short pub = 1; //默认公开
 
 	public long getId() {
 		return id;
