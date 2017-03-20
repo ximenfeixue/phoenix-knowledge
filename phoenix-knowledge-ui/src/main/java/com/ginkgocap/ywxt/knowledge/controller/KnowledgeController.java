@@ -109,10 +109,8 @@ public class KnowledgeController extends BaseController
         if (data == null || data.getKnowledgeDetail() == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情格式错误或者为空");
         }
-        Knowledge detail = data.getKnowledgeDetail();
-        columnTypeAndIdFaultTolerant(detail);
 
-        initKnowledgeTime(data);
+        detailFaultTolerant(data);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -129,6 +127,8 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
+
+        Knowledge detail = data.getKnowledgeDetail();
         detail.setId(knowledgeId);
 
         if (!tagServiceLocal.saveTagSource(userId, detail)) {
@@ -218,7 +218,7 @@ public class KnowledgeController extends BaseController
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
-        columnTypeAndIdFaultTolerant(detail);
+        detailFaultTolerant(data);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult<Knowledge> result = null;
@@ -2198,21 +2198,6 @@ public class KnowledgeController extends BaseController
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 
-    private void initKnowledgeTime(DataCollect data)
-    {
-        if (data != null) {
-            Knowledge detail = data.getKnowledgeDetail();
-            if (detail != null) {
-                if (StringUtils.isEmpty(detail.getCreatetime())) {
-                    detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
-                }
-                if (StringUtils.isEmpty(detail.getModifytime())) {
-                    detail.setModifytime(String.valueOf(detail.getModifytime()));
-                }
-            }
-        }
-    }
-
     private List<KnowledgeBase> convertDetailListToBase(List<Knowledge> detailList,short type)
     {
         if (CollectionUtils.isEmpty(detailList)) {
@@ -2229,8 +2214,9 @@ public class KnowledgeController extends BaseController
         return baseList;
     }
 
-    private Knowledge columnTypeAndIdFaultTolerant(Knowledge detail)
+    private Knowledge detailFaultTolerant(DataCollect data)
     {
+        Knowledge detail = data.getKnowledgeDetail();
         if (StringUtil.inValidString(detail.getColumnType())) {
             logger.warn("column type is null, so set a default value");
             detail.setColumnType(String.valueOf(KnowledgeType.ENews.value()));
@@ -2252,6 +2238,7 @@ public class KnowledgeController extends BaseController
             }
         }
 
+        //column path
         if (StringUtils.isBlank(detail.getCpathid())) {
             String columnPath = null;
             try {
@@ -2266,9 +2253,25 @@ public class KnowledgeController extends BaseController
 
             if (columnPath == null) {
                 logger.error("column path is null, so set a default value");
-                columnPath =  KnowledgeType.ENews.typeName();
+                columnPath = KnowledgeType.ENews.typeName();
             }
             detail.setCpathid(columnPath);
+        }
+
+        //create modify time
+        if (StringUtils.isEmpty(detail.getCreatetime())) {
+            detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
+        }
+        if (StringUtils.isEmpty(detail.getModifytime())) {
+            detail.setModifytime(String.valueOf(detail.getModifytime()));
+        }
+
+        //permission
+        Permission perm = data.getPermission();
+        if (perm != null && perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) {
+            detail.setPub((short)1);
+        } else {
+            detail.setPub((short)0);
         }
 
         return detail;
