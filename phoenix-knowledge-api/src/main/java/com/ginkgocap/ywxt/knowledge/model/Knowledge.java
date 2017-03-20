@@ -135,6 +135,9 @@ public class Knowledge implements Serializable
 	// 是否收藏
 	private short collected;
 
+    //是否私有 0: 私有, 1: 公开
+	private short pub;
+
 	public long getId() {
 		return id;
 	}
@@ -463,6 +466,14 @@ public class Knowledge implements Serializable
 		this.collected = collected;
 	}
 
+    public short getPub() {
+        return pub;
+    }
+
+    public void setPub(short pub) {
+        this.pub = pub;
+    }
+
 	public List<SelfField> getSelfDef() {
 		return selfDef;
 	}
@@ -502,6 +513,7 @@ public class Knowledge implements Serializable
 		this.setCpathid(detail.getCpathid());
 		this.setDesc(detail.getDesc());
 		this.setSource(detail.getSource());
+        this.setPub(detail.getPub());
 		this.setSelfDef(detail.getSelfDef());
 	}
 
