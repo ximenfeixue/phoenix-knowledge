@@ -76,7 +76,7 @@ public class KnowledgeConstant {
     }
 
     public enum UserType {
-        jinTN(0, "金桐脑"), platform(-1, "全平台");
+        jinTN(0, "葡萄园"), platform(-1, "全平台");
 
         private int v;
         private String c;
@@ -182,7 +182,7 @@ public class KnowledgeConstant {
 
     public enum Relation {
         // 来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
-        self(1, "自己"), friends(2, "好友"), jinTN(3, "金桐脑"), platform(4, "全平台"), org(
+        self(1, "自己"), friends(2, "好友"), jinTN(3, "葡萄园"), platform(4, "全平台"), org(
                 5, "组织"), notFriends(6, "不是好友"), waitAgree(7, "等待确认");
 
         private int v;
@@ -486,7 +486,7 @@ public class KnowledgeConstant {
     // 通知类型
     public enum noticeType {
         column(1, "栏目改变通知"), knowledge(2, "知识改变通知"), cases(3, "经典案例通知"), shareToJinTN(
-                4, "分享到金桐脑"), dynamic(5, "动态");
+                4, "分享到葡萄园"), dynamic(5, "动态");
 
         private int v;
         private String c;

@@ -716,7 +716,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private String filerString(final String originContent, final String prefix)
     {
-        final String filterString = prefix + "版权归原作者所有，金桐网依法保护版权";
+        final String filterString = prefix + "版权归原作者所有，葡萄园依法保护版权";
         final int startIndex = originContent.indexOf(filterString);
         if (startIndex > 0) {
             logger.info("filter string: " + filterString + " done.");
