@@ -424,7 +424,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             return false;
         }
         if (existValue.getCid() != userId) {
-            logger.error("knowledge owner id is different. knowledgeId: " + knowledgeId + " type: " + type + " cid: " + existValue.getCid() + " userId: " + userId);
+            logger.error("no permission. id: " + knowledgeId + " type: " + type + " cid: " + existValue.getCid() + " userId: " + userId);
             return false;
         }
         List<Long> existIds = null;
