@@ -2269,9 +2269,9 @@ public class KnowledgeController extends BaseController
         //permission
         Permission perm = data.getPermission();
         if (perm != null && perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) {
-            detail.setPub((short)1);
+            detail.setPrivated((short)0);
         } else {
-            detail.setPub((short)0);
+            detail.setPrivated((short)1);
         }
 
         return detail;
