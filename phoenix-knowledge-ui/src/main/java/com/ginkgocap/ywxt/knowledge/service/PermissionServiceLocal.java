@@ -218,9 +218,8 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             }
         }catch (Exception ex) {
             logger.error("get knowledge permission failed: knowledgeId: " + knowledgeId + ", error: " + ex.getMessage());
-            ex.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private Permission permissionInfo(Permission permission,long knowledgeId,long userId)
