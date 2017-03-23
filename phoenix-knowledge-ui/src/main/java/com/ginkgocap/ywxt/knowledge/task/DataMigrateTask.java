@@ -51,7 +51,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
     }
 
     private void updateKnowledgeBasePermission() {
-        
+
     }
 
     public void afterPropertiesSet() throws Exception {
