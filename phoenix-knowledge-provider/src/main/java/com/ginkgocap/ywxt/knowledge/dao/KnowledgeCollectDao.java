@@ -13,7 +13,7 @@ public interface KnowledgeCollectDao {
 
     public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId);
 
-    public boolean updateCollectedKnowledge(KnowledgeCollect collect);
+    public boolean updateCollectedKnowledge(final KnowledgeCollect collect);
 
     public KnowledgeCollect getCollectedKnowledge(long userId,long knowledgeId, int typeId);
 

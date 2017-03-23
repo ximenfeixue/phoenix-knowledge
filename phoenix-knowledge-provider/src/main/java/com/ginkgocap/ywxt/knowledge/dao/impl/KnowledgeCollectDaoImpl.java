@@ -81,7 +81,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public boolean updateCollectedKnowledge(KnowledgeCollect collect)
+    public boolean updateCollectedKnowledge(final KnowledgeCollect collect)
     {
         if (collect != null && collect.getId() > 0) {
             try {

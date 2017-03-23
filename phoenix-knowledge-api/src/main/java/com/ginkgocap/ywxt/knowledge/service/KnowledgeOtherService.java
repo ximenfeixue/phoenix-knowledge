@@ -15,6 +15,8 @@ public interface KnowledgeOtherService
 
     public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
+    public boolean updateCollectedKnowledge(final KnowledgeCollect collect);
+
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
     public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword);
