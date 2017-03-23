@@ -33,11 +33,15 @@ public class DataSyncTask implements Runnable {
     @Autowired
     private MessageNotifyService messageNotifyService;
 
-    private BlockingQueue<Object> dataSyncQueue = new ArrayBlockingQueue<Object>(MAX_QUEUE_NUM);
+    private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
 
-    public void addQueue(Object object) {
-        if (object != null) {
-            dataSyncQueue.offer(object);
+    public void addQueue(DataSync data) {
+        if (data != null) {
+            try {
+                dataSyncQueue.put(data);
+            } catch (Exception ex) {
+                logger.error("add sync data to queue failed.");
+            }
         } else {
             logger.error("sync object is null, so skip it.");
         }
@@ -47,7 +51,7 @@ public class DataSyncTask implements Runnable {
     {
         try {
             dataSyncService.saveDataSync(data);
-            dataSyncQueue.offer(data);
+            addQueue(data);
         } catch (Exception ex) {
             logger.error("save sync data failed: dataSync: {}",data);
             return false;
@@ -58,14 +62,16 @@ public class DataSyncTask implements Runnable {
     public void run() {
         try {
             while(true) {
-                Object data = dataSyncQueue.poll();
-                if (data != null) {
-                    if (data instanceof MessageNotify) {
-                        sendMessageNotify((MessageNotify) data);
+                DataSync dataSync = dataSyncQueue.take();
+                if (dataSync != null) {
+                    Object data = dataSync.getData();
+                    if (data != null) {
+                        if (data instanceof MessageNotify) {
+                            sendMessageNotify((MessageNotify) data);
+                        }
                     }
                 } else {
-                    Thread.sleep(2000);
-                    //logger.info("sync data queue is null, so sleep 2 second");
+                    logger.info("data is null, so skip to send.");
                 }
 
             }

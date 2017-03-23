@@ -30,8 +30,8 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     @Override
     public boolean saveDataSync(DataSync data) {
         try {
-            long id = knowledgeCommonService.getKnowledgeSequenceId();
-            data.setId(id);
+            //long id = knowledgeCommonService.getKnowledgeSequenceId();
+            //data.setId(id);
             mongoTemplate.save(data, collectionName());
         } catch (Throwable ex) {
             logger.error("save datasync failed: data: {} error: {}", data, ex.getMessage());

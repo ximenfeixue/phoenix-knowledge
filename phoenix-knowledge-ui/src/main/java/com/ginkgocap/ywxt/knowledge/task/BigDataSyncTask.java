@@ -41,21 +41,26 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 	/**知识MQ删除*/
 	public final static String KNOWLEDGE_DELETE = FlagTypeUtils.deleteKnowledgeFlag();
 
-
     @Resource
-    TagServiceLocal tagServiceLocal;
+    private TagServiceLocal tagServiceLocal;
 
 	@Autowired
 	private DefaultMessageService defaultMessageService;
 
-	private BlockingQueue<SyncBigData> knowQueue = new ArrayBlockingQueue<SyncBigData>(1000);
+    private final int maxQeueSize = 2000;
+
+	private BlockingQueue<SyncBigData> knowQueue = new ArrayBlockingQueue<SyncBigData>(maxQeueSize);
 
 	public void addToMessageQueue(String optionType, BigData base) {
 		if (base == null) {
 			logger.error("bigData is null, so skip to add.");
 			return;
 		}
-		knowQueue.add(new SyncBigData(optionType, base));
+		try {
+			knowQueue.put(new SyncBigData(optionType, base));
+		} catch (Exception ex) {
+			logger.error("add syncBigData to queue faile.");
+		}
 	}
 
 	private void sendMessage(String optionType, BigData bigData) {
@@ -143,11 +148,11 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 	public void run() {
 		try {
 			while (true) {
-				SyncBigData bigData = knowQueue.poll();
+				SyncBigData bigData = knowQueue.take();
 				if (bigData != null) {
 					pushKnowledge(bigData);
 				} else {
-					Thread.sleep(5000); //sleep 5s
+					logger.error("bigData is null, so skip to push");
 				}
 			}
 		} catch (InterruptedException ex) {

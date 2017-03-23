@@ -2149,16 +2149,11 @@ public class KnowledgeController extends BaseController
 
     private DataSync createDynamicNewsDataSync(Knowledge detail, User user)
     {
-        DataSync data = new DataSync();
-        data.setIdType((short)5);
-        data.setResId(detail.getId());
-        data.setUserId(detail.getCid());
-        data.setAction(EActionType.EAddDynamic.getValue());
-        data.setContent(createDynamicNews(detail, user));
+        DataSync data = new DataSync(0, createDynamicNewsObj(detail, user));
         return data;
     }
 
-    private String createDynamicNews(Knowledge detail,User user)
+    private DynamicNews createDynamicNewsObj(Knowledge detail,User user)
     {
         DynamicNews dynamic = new DynamicNews();
         dynamic.setType("11"); //创建知识
@@ -2195,6 +2190,12 @@ public class KnowledgeController extends BaseController
         dynamic.setComments(new ArrayList<DynamicComment>(0));
         dynamic.setPicturePaths(new ArrayList<Picture>(0));
         //dynamic.setVirtual(knowledge.getVirtual());
+
+        return dynamic;
+    }
+
+    private String createDynamicNews(Knowledge detail,User user) {
+        DynamicNews dynamic = createDynamicNewsObj(detail, user);
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 

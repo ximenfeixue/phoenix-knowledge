@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 import com.ginkgocap.ywxt.bean.util.BeanUtil;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
@@ -78,7 +79,8 @@ public class KnowledgeCommentController extends BaseController {
             long commentId = knowledgeCommentService.create(comment);
             if (commentId > 0) {
                 if (user.getId() != comment.getToId()) {
-                    dataSyncTask.addQueue(createMessageNotify(comment, user));
+                    MessageNotify message = createMessageNotify(comment, user);
+                    dataSyncTask.saveDataNeedSync(new DataSync(0, message));
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
