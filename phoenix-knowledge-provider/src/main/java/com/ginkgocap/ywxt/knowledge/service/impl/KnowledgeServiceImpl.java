@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +52,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //knowledgeDetail.createContendDesc();
         //知识详细信息插入
+        data.initPermission();
         Knowledge savedDetail = insertKnowledgeDetail(data.getKnowledgeDetail());
         if (savedDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -60,7 +62,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //知识基础表插入
         KnowledgeBase base = data.generateKnowledge();
         try {
-            base.setPrivated(permissionValue(data));
             this.knowledgeMysqlDao.insert(base);
             logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + base.getId());
         } catch (Throwable e) {
@@ -125,6 +126,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public InterfaceResult<Knowledge> update(DataCollect dataCollect) throws Exception {
 
+        dataCollect.initPermission();
         Knowledge detail = dataCollect.getKnowledgeDetail();
         //knowledgeMongo.createContendDesc();
         //知识详细表更新
@@ -133,15 +135,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
         }
         logger.info("update knowledge Detail, knowledgeId: " + updatedKnow.getId());
-        //Update knowledge detail
+
+        //Update knowledge base
         dataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = dataCollect.generateKnowledge();
         final long knowledgeId = detail.getId();
         final short columnType = knowledge.getType();
-
         //知识简表更新
         try {
-            knowledge.setPrivated(permissionValue(dataCollect));
             this.knowledgeMysqlDao.update(knowledge);
         } catch (Exception e) {
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
@@ -643,15 +644,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         return returnList;
-    }
-
-    private short permissionValue(DataCollect data)
-    {
-        short privated = 0; //default is private
-        if (data.getPermission() != null && data.getPermission().getPublicFlag() != null) {
-            privated = data.getPermission().getPublicFlag().shortValue();
-        }
-        return privated;
     }
 
     private Knowledge insertKnowledgeDetail(Knowledge detail)

@@ -344,7 +344,6 @@ public class KnowledgeOtherControl extends BaseController
         knowledge.setS_addr(url);
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, knowledge);
-        data.defaultPublicPermission();
         InterfaceResult result = this.knowledgeService.insert(data);
         if (result != null && result.getResponseData() != null && result.getResponseData() instanceof Long) {
             Long knowledgeId = (Long)result.getResponseData();

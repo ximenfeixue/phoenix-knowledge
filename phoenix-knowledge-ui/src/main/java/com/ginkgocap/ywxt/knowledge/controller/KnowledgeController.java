@@ -2266,14 +2266,6 @@ public class KnowledgeController extends BaseController
             detail.setModifytime(String.valueOf(detail.getModifytime()));
         }
 
-        //permission
-        Permission perm = data.getPermission();
-        if (perm != null && perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) {
-            detail.setPrivated((short)0);
-        } else {
-            detail.setPrivated((short)1);
-        }
-
         return detail;
     }
 

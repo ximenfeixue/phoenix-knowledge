@@ -109,6 +109,21 @@ public class DataCollect implements Serializable
         return permission;
     }
 
+    public void initPermission() {
+        if (this.knowledgeDetail != null) {
+            if (this.knowledgeDetail.getCid() == 0) {
+                this.knowledgeDetail.setPrivated((short)0);
+            } else {
+                int privated = 1; //default is private
+                final Permission perm = this.permission;
+                if (perm != null && perm.getPublicFlag() != null && perm.getConnectFlag() != null) {
+                    privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
+                }
+                this.knowledgeDetail.setPrivated((short) privated);
+            }
+        }
+    }
+
     public void setPermission(Permission permission) {
         this.permission = permission;
     }
