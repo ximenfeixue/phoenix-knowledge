@@ -109,6 +109,21 @@ public class DataCollect implements Serializable
         return permission;
     }
 
+    public void initPermission() {
+        if (this.knowledgeDetail != null) {
+            if (this.knowledgeDetail.getCid() == 0) {
+                this.knowledgeDetail.setPrivated((short)0);
+            } else {
+                int privated = 1; //default is private
+                final Permission perm = this.permission;
+                if (perm != null && perm.getPublicFlag() != null && perm.getConnectFlag() != null) {
+                    privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
+                }
+                this.knowledgeDetail.setPrivated((short) privated);
+            }
+        }
+    }
+
     public void setPermission(Permission permission) {
         this.permission = permission;
     }
@@ -157,56 +172,57 @@ public class DataCollect implements Serializable
     }
 
     public static KnowledgeBase generateKnowledge(Knowledge detail,short type) {
-        KnowledgeBase knowledgeBase = null;
+        KnowledgeBase base = null;
         if (detail != null) {
-            knowledgeBase = new KnowledgeBase();
-            knowledgeBase.setId(detail.getId());
-            knowledgeBase.setKnowledgeId(detail.getId());
-            knowledgeBase.setTitle(detail.getTitle());
+            base = new KnowledgeBase();
+            base.setId(detail.getId());
+            base.setKnowledgeId(detail.getId());
+            base.setTitle(detail.getTitle());
             String knowledgeContent = HtmlToText.htmlToText(detail.getContent());
-            knowledgeBase.setContentDesc(knowledgeContent);
+            base.setContentDesc(knowledgeContent);
 
             String coverPicUrl = detail.getPic();
             if (StringUtils.isNotBlank(coverPicUrl) && !"null".equals(coverPicUrl)) {
                 logger.info("save cover picture: " + coverPicUrl);
-                knowledgeBase.setCoverPic(coverPicUrl);
+                base.setCoverPic(coverPicUrl);
 
             } else {
                 coverPicUrl = validatePicUrl(detail.getMultiUrls());
                 logger.info("save cover picture: " + coverPicUrl);
-                knowledgeBase.setCoverPic(coverPicUrl);
+                base.setCoverPic(coverPicUrl);
             }
 
             //knowledge.setAuditStatus(auditStatus);
             if (CollectionUtils.isNotEmpty(detail.getTagList())) {
                 String tags = KnowledgeUtil.convertLongListToBase(detail.getTagList());
                 logger.info("create tags for base: " + tags);
-                knowledgeBase.setTags(tags);
+                base.setTags(tags);
             }
             if (type > 0) {
-                knowledgeBase.setType(type);
+                base.setType(type);
             } else {
-                knowledgeBase.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));
+                base.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));
             }
-            knowledgeBase.setColumnId(KnowledgeUtil.parserColumnId(detail.getColumnid()));
-            knowledgeBase.setCreateUserId(detail.getCid());
+            base.setColumnId(KnowledgeUtil.parserColumnId(detail.getColumnid()));
+            base.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author
-            knowledgeBase.setCreateUserName(detail.getCname());
+            base.setCreateUserName(detail.getCname());
             long createTime = StringUtils.isNotBlank(detail.getCreatetime()) ? KnowledgeUtil.parserTimeToLong(detail.getCreatetime()) : System.currentTimeMillis();
             long modifyTime = StringUtils.isNotBlank(detail.getModifytime()) ? KnowledgeUtil.parserTimeToLong(detail.getModifytime()) : System.currentTimeMillis();
             long publicTime = StringUtils.isNotBlank(detail.getSubmitTime()) ? KnowledgeUtil.parserTimeToLong(detail.getSubmitTime()) : System.currentTimeMillis();;
-            knowledgeBase.setCreateDate(createTime);
-            knowledgeBase.setModifyDate(modifyTime);
-            knowledgeBase.setPublicDate(publicTime);
-            knowledgeBase.setIsOld((short) 0);
-            knowledgeBase.setUserStar((short) 0);
-            knowledgeBase.setStatus((short)detail.getStatus());
+            base.setCreateDate(createTime);
+            base.setModifyDate(modifyTime);
+            base.setPublicDate(publicTime);
+            base.setIsOld((short) 0);
+            base.setUserStar((short) 0);
+            base.setStatus((short)detail.getStatus());
+            base.setPrivated(detail.getPrivated());
             //check and truncate some data over database limit.
-            knowledgeBaseFaultTolerant(knowledgeBase);
+            knowledgeBaseFaultTolerant(base);
             //knowledge.setPublicDate(System.currentTimeMillis());
             //knowledge.setReportStatus(reportStatus);
         }
-        return knowledgeBase;
+        return base;
     }
 
     public BigData toBigData() {

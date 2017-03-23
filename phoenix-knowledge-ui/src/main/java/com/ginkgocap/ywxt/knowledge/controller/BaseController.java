@@ -106,8 +106,8 @@ public abstract class BaseController {
         if(null == user){
             user = new User();
             user.setId(0);//金桐脑
-            user.setName("金桐脑");
-            user.setUserName("金桐脑");
+            user.setName("葡萄园");
+            user.setUserName("葡萄园");
             return user;
         }
         return user;

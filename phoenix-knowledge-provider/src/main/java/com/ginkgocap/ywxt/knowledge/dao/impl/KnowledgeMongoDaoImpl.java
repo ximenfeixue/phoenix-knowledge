@@ -423,6 +423,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             logger.error("knowledge not exist. id: " + knowledgeId + " type: " + type);
             return false;
         }
+        if (existValue.getCid() != userId) {
+            logger.error("no permission. id: " + knowledgeId + " type: " + type + " cid: " + existValue.getCid() + " userId: " + userId);
+            return false;
+        }
         List<Long> existIds = null;
         if (moduleType == EModuleType.ETag) {
             existIds = existValue.getTagList();

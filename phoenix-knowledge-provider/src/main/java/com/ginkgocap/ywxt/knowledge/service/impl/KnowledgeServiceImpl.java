@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -44,41 +45,39 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private static final String endContent = "若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
     private static final int endLength = endContent.length();
-    private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+    private static final String suffix = "</br>版权归原作者所有，葡萄园依法保护版权，保护权利人合法权益。葡萄园部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
 
     @Override
-    public InterfaceResult<Long> insert(DataCollect DataCollect) {
-
-        Knowledge detail = DataCollect.getKnowledgeDetail();
-        KnowledgeReference knowledgeReference = DataCollect.getReference();
+    public InterfaceResult<Long> insert(DataCollect data) {
 
         //knowledgeDetail.createContendDesc();
         //知识详细信息插入
-        Knowledge savedDetail = insertKnowledgeDetail(detail);
+        data.initPermission();
+        Knowledge savedDetail = insertKnowledgeDetail(data.getKnowledgeDetail());
         if (savedDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         long knowledgeId = savedDetail.getId();
 
         //知识基础表插入
-        KnowledgeBase knowledgeBase = DataCollect.generateKnowledge();
+        KnowledgeBase base = data.generateKnowledge();
         try {
-            knowledgeBase.setPrivated(permissionValue(DataCollect));
-            this.knowledgeMysqlDao.insert(knowledgeBase);
-            logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + knowledgeBase.getId());
+            this.knowledgeMysqlDao.insert(base);
+            logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + base.getId());
         } catch (Throwable e) {
             short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
-            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledgeBase.getPrivated(), EActionType.EAdd.getValue()));
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, base.getPrivated(), EActionType.EAdd.getValue()));
             logger.error("知识基础表插入失败！失败原因：" + e.getMessage());
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
         //知识来源表插入
-        if (knowledgeReference != null) {
+        KnowledgeReference reference = data.getReference();
+        if (reference != null) {
             try {
-                knowledgeReference.setId(knowledgeId);
-                knowledgeReference.setKnowledgeId(knowledgeId);
-                this.knowledgeReferenceDao.insert(knowledgeReference);
+                reference.setId(knowledgeId);
+                reference.setKnowledgeId(knowledgeId);
+                this.knowledgeReferenceDao.insert(reference);
             } catch (Throwable e) {
                 logger.error("知识引用表插入失败！失败原因： " + e.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -127,9 +126,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public InterfaceResult<Knowledge> update(DataCollect dataCollect) throws Exception {
 
+        dataCollect.initPermission();
         Knowledge detail = dataCollect.getKnowledgeDetail();
-        KnowledgeReference knowledgeReference = dataCollect.getReference();
-
         //knowledgeMongo.createContendDesc();
         //知识详细表更新
         Knowledge updatedKnow = updateKnowledgeDetail(detail, dataCollect.getOldType());
@@ -137,15 +135,14 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
         }
         logger.info("update knowledge Detail, knowledgeId: " + updatedKnow.getId());
-        //Update knowledge detail
+
+        //Update knowledge base
         dataCollect.setKnowledgeDetail(updatedKnow);
         KnowledgeBase knowledge = dataCollect.generateKnowledge();
-        long knowledgeId = detail.getId();
-        short columnType = knowledge.getType();
-
+        final long knowledgeId = detail.getId();
+        final short columnType = knowledge.getType();
         //知识简表更新
         try {
-            knowledge.setPrivated(permissionValue(dataCollect));
             this.knowledgeMysqlDao.update(knowledge);
         } catch (Exception e) {
             knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
@@ -154,11 +151,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         //知识来源表更新
-        if (knowledgeReference != null) {
+        KnowledgeReference reference = dataCollect.getReference();
+        if (reference != null) {
             try {
-                knowledgeReference.setId(knowledgeId);
-                knowledgeReference.setKnowledgeId(knowledgeId);
-                this.knowledgeReferenceDao.update(knowledgeReference);
+                reference.setId(knowledgeId);
+                reference.setKnowledgeId(knowledgeId);
+                this.knowledgeReferenceDao.update(reference);
             } catch (Exception e) {
                 //this.updateRollBack(knowledgeId, columnId, oldKnowledgeDetail, knowledge, null, true, true, false, false, false);
                 logger.error("知识来源表更新失败！失败原因：\n" + e.getMessage());
@@ -179,7 +177,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge knowledgeDetail = dataCollect.getKnowledgeDetail();
 
         updateKnowledgeDetail(knowledgeDetail, dataCollect.getOldType());
-
         //知识简表更新
         try {
             if (base != null) {
@@ -649,15 +646,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return returnList;
     }
 
-    private short permissionValue(DataCollect data)
-    {
-        short privated = 0; //default is private
-        if (data.getPermission() != null && data.getPermission().getPublicFlag() != null) {
-            privated = data.getPermission().getPublicFlag().shortValue();
-        }
-        return privated;
-    }
-
     private Knowledge insertKnowledgeDetail(Knowledge detail)
     {
         //知识详细信息插入
@@ -716,7 +704,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private String filerString(final String originContent, final String prefix)
     {
-        final String filterString = prefix + "版权归原作者所有，金桐网依法保护版权";
+        final String filterString = prefix + "版权归原作者所有，葡萄园依法保护版权";
         final int startIndex = originContent.indexOf(filterString);
         if (startIndex > 0) {
             logger.info("filter string: " + filterString + " done.");

@@ -109,10 +109,8 @@ public class KnowledgeController extends BaseController
         if (data == null || data.getKnowledgeDetail() == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情格式错误或者为空");
         }
-        Knowledge detail = data.getKnowledgeDetail();
-        columnTypeAndIdFaultTolerant(detail);
 
-        initKnowledgeTime(data);
+        detailFaultTolerant(data);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -129,6 +127,8 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
         long knowledgeId = Long.valueOf(result.getResponseData().toString());
+
+        Knowledge detail = data.getKnowledgeDetail();
         detail.setId(knowledgeId);
 
         if (!tagServiceLocal.saveTagSource(userId, detail)) {
@@ -218,7 +218,7 @@ public class KnowledgeController extends BaseController
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
-        columnTypeAndIdFaultTolerant(detail);
+        detailFaultTolerant(data);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult<Knowledge> result = null;
@@ -1255,11 +1255,15 @@ public class KnowledgeController extends BaseController
             typeId = typeId <= 0 ? 1 : typeId;
             result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
         } catch (Exception e) {
+            logger.error("collect knowledge failed！：" + e.getMessage());
+            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
             logger.error("collect knowledge failed！knowledgeId: " + knowledgeId + " type: " + typeId + " error: " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
         }
 
         //collect count
+        knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
+        return result;
         knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
         logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
         return result;
@@ -1286,6 +1290,8 @@ public class KnowledgeController extends BaseController
         }
 
         try {
+            typeId = typeId <= 0 ? 1 : typeId;
+            this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
             typeId = typeId <= 0 ? 1 : typeId;
             InterfaceResult result = this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
             logger.info("cancel collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);

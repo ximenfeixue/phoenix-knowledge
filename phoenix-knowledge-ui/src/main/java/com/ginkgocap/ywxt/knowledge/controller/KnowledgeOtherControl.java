@@ -334,17 +334,9 @@ public class KnowledgeOtherControl extends BaseController
      * */
     private DataCollect createKnowledge(Knowledge knowledge, String url, boolean isWeb) {
 
-        //Knowledge vo = getKnowledgeNewsVO(knowledge, url, isWeb);
-
-        //knowledge.setCid(this.getUserId(user));
-        //knowledge.setCname(user.getName());
-        //String columnId = String.valueOf(KnowledgeType.ENews.value());
-        //knowledge.setColumnid(columnId);
-        //knowledge.setColumnType(columnId);// 设置默认类型为咨询，目前手机端只支持咨询
         knowledge.setS_addr(url);
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, knowledge);
-        data.defaultPublicPermission();
         InterfaceResult result = this.knowledgeService.insert(data);
         if (result != null && result.getResponseData() != null && result.getResponseData() instanceof Long) {
             Long knowledgeId = (Long)result.getResponseData();

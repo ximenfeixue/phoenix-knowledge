@@ -91,7 +91,7 @@ public class KnowledgeBase implements Serializable {
     private short userStar;
 
 	//是否私密，1是，0否
-	private short privated;
+	private short privated = 0;
 
 	/** 阅读数量  **/
 	private int readCount;
