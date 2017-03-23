@@ -302,10 +302,18 @@ public class DataCollect implements Serializable
         return permission;
     }
 
-    public static short privated(Permission perm) {
+    public static short privated(final Permission perm) {
+        return privated(perm, true);
+    }
+
+    public static short privated(final Permission perm, final boolean owner) {
         int privated = 1; //default is private
         if (perm != null && perm.getPublicFlag() != null && perm.getConnectFlag() != null) {
-            privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
+            if (owner) {
+                privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
+            } else if (perm.getShareFlag() != null){
+                privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1 && perm.getShareFlag() == 1) ? 0 : 1;
+            }
         }
         return (short)privated;
     }

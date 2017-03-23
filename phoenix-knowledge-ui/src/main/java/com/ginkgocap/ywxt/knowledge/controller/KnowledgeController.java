@@ -1254,7 +1254,7 @@ public class KnowledgeController extends BaseController
         try {
             typeId = typeId <= 0 ? 1 : typeId;
             Permission perm = permissionServiceLocal.getPermissionInfo(knowledgeId);
-            final short privated = DataCollect.privated(perm);
+            final short privated = DataCollect.privated(perm, false);
             result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId, privated);
         } catch (Exception e) {
             logger.error("collect knowledge failed！：" + e.getMessage());
