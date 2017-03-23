@@ -24,7 +24,7 @@ public class KnowledgeReportDaoImpl extends BaseDao implements KnowledgeReportDa
     private MongoTemplate mongoTemplate;
 
     @Override
-    public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
+    public InterfaceResult reportKnowledge(KnowledgeReport report)
     {
         Query query = knowledgeColumnIdAndOwnerId(report.getUserId(), report.getKnowledgeId(), report.getColumnId());
         if (mongoTemplate.findOne(query, KnowledgeReport.class, Constant.Collection.KnowledgeReport) == null) {
