@@ -1253,7 +1253,9 @@ public class KnowledgeController extends BaseController
         InterfaceResult result = InterfaceResult.getSuccessInterfaceResultInstance("");
         try {
             typeId = typeId <= 0 ? 1 : typeId;
-            result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId);
+            Permission perm = permissionServiceLocal.getPermissionInfo(knowledgeId);
+            final short privated = DataCollect.privated(perm);
+            result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId, privated);
         } catch (Exception e) {
             logger.error("collect knowledge failed！：" + e.getMessage());
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
@@ -1262,8 +1264,6 @@ public class KnowledgeController extends BaseController
         }
 
         //collect count
-        knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
-        return result;
         knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
         logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
         return result;
@@ -1955,11 +1955,11 @@ public class KnowledgeController extends BaseController
         return createdKnowledgeItems;
     }
 
-    private List<KnowledgeBase> getCollectedKnowledge(long userId, int start, int size,String keyword) throws Exception {
+    private List<KnowledgeBase> getCollectedKnowledge(final long userId, final int page, final int size, final String keyword) throws Exception {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
         try {
-            collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, start, size, keyword);
+            collectItems = knowledgeOtherService.myCollectKnowledge(userId, (short) -1, page, size, keyword);
         } catch (Exception ex) {
             logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
         }
@@ -2302,6 +2302,7 @@ public class KnowledgeController extends BaseController
                     base.setTitle(collect.getKnowledgeTitle());
                     base.setCreateUserId(0);
                     base.setCollected((short)1);
+                    base.setPrivated(collect.getPrivated());
                     collectedKnowledgeItems.add(base);
                 }
             }

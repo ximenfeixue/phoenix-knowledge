@@ -36,12 +36,13 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private KnowledgeCollectDao knowledgeCollectDao;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception {
-        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, typeId);
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated)
+    {
+        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, typeId, privated);
     }
 
     @Override
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId) throws Exception
+    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId)
     {
         return knowledgeCollectDao.deleteCollectedKnowledge(ownerId, knowledgeId, typeId);
     }
@@ -53,19 +54,24 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int start, int size,String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword)
     {
-        return knowledgeCollectDao.myCollectKnowledge(userId, typeId, start, size, keyword);
+        return knowledgeCollectDao.myCollectKnowledge(userId, typeId, page, size, keyword);
     }
 
     @Override
-    public long myCollectKnowledgeCount(long userId) throws Exception
+    public long myCollectKnowledgeCount(long userId)
     {
         return knowledgeCollectDao.myCollectKnowledgeCount(userId);
     }
 
+    public List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size)
+    {
+        return knowledgeCollectDao.getAllCollectKnowledge(page, size);
+    }
+
     @Override
-    public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception
+    public InterfaceResult reportKnowledge(KnowledgeReport report)
     {
         return knowledgeReportDao.reportKnowledge(report);
     }

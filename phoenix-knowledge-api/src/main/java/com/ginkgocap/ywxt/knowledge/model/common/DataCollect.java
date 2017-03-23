@@ -114,12 +114,7 @@ public class DataCollect implements Serializable
             if (this.knowledgeDetail.getCid() == 0) {
                 this.knowledgeDetail.setPrivated((short)0);
             } else {
-                int privated = 1; //default is private
-                final Permission perm = this.permission;
-                if (perm != null && perm.getPublicFlag() != null && perm.getConnectFlag() != null) {
-                    privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
-                }
-                this.knowledgeDetail.setPrivated((short) privated);
+                this.knowledgeDetail.setPrivated(privated(this.permission));
             }
         }
     }
@@ -307,7 +302,13 @@ public class DataCollect implements Serializable
         return permission;
     }
 
-
+    public static short privated(Permission perm) {
+        int privated = 1; //default is private
+        if (perm != null && perm.getPublicFlag() != null && perm.getConnectFlag() != null) {
+            privated = (perm.getPublicFlag() == 1 && perm.getConnectFlag() == 1) ? 0 : 1;
+        }
+        return (short)privated;
+    }
 
     public static List<KnowledgeBase> convertDetailToBaseList(List<Knowledge> detailList, short columnType, boolean desc)
     {

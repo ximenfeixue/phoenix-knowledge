@@ -41,6 +41,9 @@ public class KnowledgeCollect implements Serializable {
     //来源(1：自己，2：好友，3：金桐脑，4：全平台，5：组织)
     private short source;
 
+    //是否私密，1是，0否
+    private short privated;
+
     public long getId() {
         return id;
     }
@@ -91,6 +94,14 @@ public class KnowledgeCollect implements Serializable {
 
     public void setSource(short source) {
         this.source = source;
+    }
+
+    public short getPrivated() {
+        return privated;
+    }
+
+    public void setPrivated(short privated) {
+        this.privated = privated;
     }
 
 }

@@ -42,7 +42,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception {
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId,short privated) {
         Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, typeId);
         if (detail == null) {
             logger.error("can't get knowledge detail. userId: " + userId +" knowledgeId: " + knowledgeId + " type: " + typeId);
@@ -59,6 +59,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             collect.setCreateTime(System.currentTimeMillis());
             collect.setKnowledgeTitle(detail.getTitle());
             collect.setOwnerId(userId);
+            collect.setPrivated(privated);
 
             mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -68,7 +69,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId) throws Exception
+    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId)
     {
         Query query = knowledgeColumnIdAndOwnerId(ownerId, knowledgeId, typeId);
         KnowledgeCollect collect = mongoTemplate.findAndRemove(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
@@ -80,15 +81,36 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId)
+    public boolean updateCollectedKnowledge(KnowledgeCollect collect)
+    {
+        if (collect != null && collect.getId() > 0) {
+            try {
+                mongoTemplate.save(collect, Constant.Collection.KnowledgeCollect);
+            } catch (Exception ex) {
+                logger.error("update collected knowledge failed. usserId: " + collect.getOwnerId() + " error: "  + ex.getMessage());
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public KnowledgeCollect getCollectedKnowledge(long userId,long knowledgeId, int typeId)
     {
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
-        KnowledgeCollect collect = mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        return mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+    }
+
+    @Override
+    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId)
+    {
+        KnowledgeCollect collect = getCollectedKnowledge(userId, knowledgeId, typeId);
         return collect != null;
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int typeId,int start, int size,final String keyword) throws Exception
+    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int typeId,int page, int size,final String keyword)
     {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
@@ -101,8 +123,9 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             query.addCriteria(Criteria.where(Constant.ColumnId).is(typeId));
         }
         long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        final int start = page * size;
         if (start >= count) {
-            logger.error("start exceed to end, so return null. userId: " + userId + " start: " + start + " count: " + count);
+            logger.error("start exceed to end, so return null. userId: " + userId + " start: " + start + " page: " + page + " count: " + count);
             return null;
         }
         if (size > maxSize) {
@@ -121,7 +144,25 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public long myCollectKnowledgeCount(long userId) throws Exception
+    public List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size)
+    {
+        Query query = new Query();
+        long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        final int start = page * size;
+        if (start >= count) {
+            logger.error("start exceed to end, so return null. page: " + page + " size: " + size);
+            return null;
+        }
+        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
+        query.skip(start);
+        query.limit(size);
+        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+
+        return collectedItem;
+    }
+
+    @Override
+    public long myCollectKnowledgeCount(long userId)
     {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));

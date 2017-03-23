@@ -11,16 +11,18 @@ import java.util.List;
  */
 public interface KnowledgeOtherService
 {
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId) throws Exception;
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
 
-    public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId) throws Exception;
+    public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId,int start, int size,String keyword) throws Exception;
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword);
 
-    public long myCollectKnowledgeCount(long userId) throws Exception;
+    public long myCollectKnowledgeCount(long userId);
 
-    public InterfaceResult reportKnowledge(KnowledgeReport report) throws Exception;
+    public List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
+
+    public InterfaceResult reportKnowledge(KnowledgeReport report);
 
 }
