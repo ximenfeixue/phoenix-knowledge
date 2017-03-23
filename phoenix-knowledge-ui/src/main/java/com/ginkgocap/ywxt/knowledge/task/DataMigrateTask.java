@@ -51,24 +51,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
     }
 
     private void updateKnowledgeBasePermission() {
-        int total = 0;
-        int page = 0;
-        final int size = 30;
-        List<KnowledgeCollect> collectKnowList = knowledgeOtherService.getAllCollectKnowledge(page++, size);
-        while (CollectionUtils.isNotEmpty(collectKnowList)) {
-            for (KnowledgeCollect collect : collectKnowList) {
-                if (collect != null) {
-                    Permission perm = permissionService.getPermissionInfo(collect.getKnowledgeId());
-                    final short privated = DataCollect.privated(perm);
-                    collect.setPrivated(privated);
-                    knowledgeOtherService.updateCollectedKnowledge(collect);
-                    logger.info("update collected knolwedge permision. knowledgeId: " + collect.getKnowledgeId());
-                }
-            }
-            total += collectKnowList.size();
-            collectKnowList = knowledgeOtherService.getAllCollectKnowledge(page++, size);
-        }
-        logger.info("collectd knowledge migrated size: " + total);
+        
     }
 
     public void afterPropertiesSet() throws Exception {

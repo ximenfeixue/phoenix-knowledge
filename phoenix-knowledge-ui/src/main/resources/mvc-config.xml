@@ -18,6 +18,7 @@
 
     <bean id="bigDataSyncTask" class="com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask"/>
     <bean id="dataSyncScheduler" class="com.ginkgocap.ywxt.knowledge.task.DataSyncScheduler"/>
+    <bean id="dataMigrateTask" class="com.ginkgocap.ywxt.knowledge.task.DataMigrateTask"/>
 
     <mvc:interceptors>
         <!-- 请求拦截器 -->
