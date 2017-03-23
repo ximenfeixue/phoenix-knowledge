@@ -110,7 +110,7 @@ public class KnowledgeController extends BaseController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情格式错误或者为空");
         }
 
-        detailFaultTolerant(data);
+        detailFaultTolerant(data.getKnowledgeDetail());
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -218,7 +218,7 @@ public class KnowledgeController extends BaseController
             logger.error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
-        detailFaultTolerant(data);
+        detailFaultTolerant(detail);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult<Knowledge> result = null;
