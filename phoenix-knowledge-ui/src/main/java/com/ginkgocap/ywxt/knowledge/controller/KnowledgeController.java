@@ -2198,21 +2198,6 @@ public class KnowledgeController extends BaseController
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 
-    private void initKnowledgeTime(DataCollect data)
-    {
-        if (data != null) {
-            Knowledge detail = data.getKnowledgeDetail();
-            if (detail != null) {
-                if (StringUtils.isEmpty(detail.getCreatetime())) {
-                    detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
-                }
-                if (StringUtils.isEmpty(detail.getModifytime())) {
-                    detail.setModifytime(String.valueOf(detail.getModifytime()));
-                }
-            }
-        }
-    }
-
     private List<KnowledgeBase> convertDetailListToBase(List<Knowledge> detailList,short type)
     {
         if (CollectionUtils.isEmpty(detailList)) {
@@ -2229,7 +2214,7 @@ public class KnowledgeController extends BaseController
         return baseList;
     }
 
-    private Knowledge columnTypeAndIdFaultTolerant(Knowledge detail)
+    private Knowledge detailFaultTolerant(Knowledge detail)
     {
         if (StringUtil.inValidString(detail.getColumnType())) {
             logger.warn("column type is null, so set a default value");
@@ -2269,6 +2254,13 @@ public class KnowledgeController extends BaseController
                 columnPath =  KnowledgeType.ENews.typeName();
             }
             detail.setCpathid(columnPath);
+        }
+
+        if (StringUtils.isEmpty(detail.getCreatetime())) {
+            detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
+        }
+        if (StringUtils.isEmpty(detail.getModifytime())) {
+            detail.setModifytime(String.valueOf(detail.getModifytime()));
         }
 
         return detail;
