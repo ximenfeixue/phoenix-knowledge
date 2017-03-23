@@ -333,7 +333,7 @@ public class KnowledgeOtherControl extends BaseController
      * 创建知识抽离
      * */
     private DataCollect createKnowledge(Knowledge knowledge, String url, boolean isWeb) {
-        
+
         knowledge.setS_addr(url);
         // 调用平台层插入知识
         DataCollect data = new DataCollect(null, knowledge);
