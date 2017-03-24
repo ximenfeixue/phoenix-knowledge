@@ -35,18 +35,6 @@ public class DataSyncTask implements Runnable {
 
     private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
 
-    public void addQueue(DataSync data) {
-        if (data != null) {
-            try {
-                dataSyncQueue.put(data);
-            } catch (Exception ex) {
-                logger.error("add sync data to queue failed.");
-            }
-        } else {
-            logger.error("sync object is null, so skip it.");
-        }
-    }
-
     public boolean saveDataNeedSync(DataSync data)
     {
         try {
@@ -66,8 +54,12 @@ public class DataSyncTask implements Runnable {
                 if (dataSync != null) {
                     Object data = dataSync.getData();
                     if (data != null) {
+                        boolean result = false;
                         if (data instanceof MessageNotify) {
                             sendMessageNotify((MessageNotify) data);
+                        }
+                        if (result) {
+                            dataSyncService.deleteDataSync(dataSync);
                         }
                     }
                 } else {
@@ -80,15 +72,30 @@ public class DataSyncTask implements Runnable {
         }
     }
 
-    private void sendMessageNotify(MessageNotify message) {
+    private boolean sendMessageNotify(MessageNotify message) {
+        boolean result = false;
         try {
-            boolean resilt = messageNotifyService.sendMessageNotify(message);
-            if (resilt) {
+            result = messageNotifyService.sendMessageNotify(message);
+            if (result) {
                 logger.info("send comment notify message success. fromId: " + message.getFromId() + " toId: " + message.getToId());
             }
+            return result;
         } catch (Exception ex) {
             logger.error("send comment notify message failed. error: " + ex.getMessage());
         }
-
+        return result;
     }
+
+    private void addQueue(DataSync data) {
+        if (data != null) {
+            try {
+                dataSyncQueue.put(data);
+            } catch (Exception ex) {
+                logger.error("add sync data to queue failed.");
+            }
+        } else {
+            logger.error("sync object is null, so skip it.");
+        }
+    }
+
 }

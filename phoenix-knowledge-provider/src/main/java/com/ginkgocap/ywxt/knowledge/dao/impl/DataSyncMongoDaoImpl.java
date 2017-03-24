@@ -1,12 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.DataSyncMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +29,8 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
 
     private final int maxSize = 50;
 
+    private final String tbName = DataSync.class.getSimpleName();
+
     @Override
     public boolean saveDataSync(DataSync data) {
         try {
@@ -34,23 +38,25 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
             //data.setId(id);
             mongoTemplate.save(data, collectionName());
         } catch (Throwable ex) {
-            logger.error("save datasync failed: data: {} error: {}", data, ex.getMessage());
+            logger.error("save datasync failed: data: " + data + " error: ", ex.getMessage());
             return false;
         }
         return true;
     }
 
     @Override
-    public boolean deleteDataSync(DataSync data)
+    public boolean deleteDataSync(final long id)
     {
         try {
-            mongoTemplate.remove(data);
+            Query query = new Query();
+            query.addCriteria(Criteria.where(Constant._ID).is(id));
+            DataSync data = mongoTemplate.findAndRemove(query, DataSync.class, tbName);
+            return data != null;
         }
         catch (Throwable ex) {
-            logger.error("delete dataSync failed: data: {} error: {}", data, ex.getMessage());
+            logger.error("delete dataSync failed: id:" + id + " error: " + ex.getMessage());
             return false;
         }
-        return true;
     }
 
     public List<DataSync> getDataSyncList()

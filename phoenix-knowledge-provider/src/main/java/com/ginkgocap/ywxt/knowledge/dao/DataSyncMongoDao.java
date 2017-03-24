@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface DataSyncMongoDao {
     public boolean saveDataSync(DataSync data);
-    public boolean deleteDataSync(DataSync data);
+    public boolean deleteDataSync(final long id);
     public List<DataSync> getDataSyncList();
 }
