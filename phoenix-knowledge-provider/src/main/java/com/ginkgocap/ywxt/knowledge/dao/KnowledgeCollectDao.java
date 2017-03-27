@@ -9,19 +9,21 @@ import java.util.List;
  * Created by gintong on 2016/8/17.
  */
 public interface KnowledgeCollectDao {
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
+    InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
 
-    public InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId);
+    InterfaceResult deleteCollectedKnowledge(long ownerId,long knowledgeId,int typeId);
 
-    public boolean updateCollectedKnowledge(final KnowledgeCollect collect);
+    boolean updateCollectedKnowledge(final KnowledgeCollect collect);
 
-    public KnowledgeCollect getCollectedKnowledge(long userId,long knowledgeId, int typeId);
+    boolean updateCollectedKnowledgePrivate(long knowledgeId, int typeId, short privated);
 
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
+    KnowledgeCollect getCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId,int typeId,int page, int size, String keyword);
+    boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
+    List<KnowledgeCollect> myCollectKnowledge(long userId,int typeId,int page, int size, String keyword);
 
-    public long myCollectKnowledgeCount(long userId);
+    List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
+
+    long myCollectKnowledgeCount(long userId);
 }

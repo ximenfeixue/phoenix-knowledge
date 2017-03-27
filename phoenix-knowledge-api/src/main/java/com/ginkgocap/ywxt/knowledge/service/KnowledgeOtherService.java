@@ -11,20 +11,22 @@ import java.util.List;
  */
 public interface KnowledgeOtherService
 {
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
+    InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
 
-    public InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId);
+    InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public boolean updateCollectedKnowledge(final KnowledgeCollect collect);
+    boolean updateCollectedKnowledge(KnowledgeCollect collect);
 
-    public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
+    boolean updateCollectedKnowledgePrivate(long knowledgeId, int typeId, short privated);
 
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword);
+    boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    public long myCollectKnowledgeCount(long userId);
+    List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword);
 
-    public List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
+    long myCollectKnowledgeCount(long userId);
 
-    public InterfaceResult reportKnowledge(KnowledgeReport report);
+    List<KnowledgeCollect> getAllCollectKnowledge(int page, int size);
+
+    InterfaceResult reportKnowledge(KnowledgeReport report);
 
 }

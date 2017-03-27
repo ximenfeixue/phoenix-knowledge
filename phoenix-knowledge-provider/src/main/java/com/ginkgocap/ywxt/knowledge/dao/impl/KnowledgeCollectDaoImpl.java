@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -93,6 +94,21 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean updateCollectedKnowledgePrivate(final long knowledgeId, final int typeId, final short privated)
+    {
+        Query query = idType(knowledgeId, typeId);
+        Update update = new Update().set("privated", privated);
+        KnowledgeCollect result = mongoTemplate.findAndModify(query, update, KnowledgeCollect.class);
+        if (result == null) {
+            logger.error("update privated failed. knowledgeId: " + knowledgeId);
+            return false;
+        } else {
+            logger.info("update privated success. knowledgeId: " + knowledgeId + " privated: " + privated);
+        }
+        return true;
     }
 
     @Override

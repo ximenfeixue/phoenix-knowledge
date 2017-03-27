@@ -11,6 +11,7 @@ import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
+import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
@@ -83,8 +84,8 @@ public class KnowledgeController extends BaseController
     @Autowired
     private BigDataSyncTask bigDataSyncTask;
 
-    //@Autowired
-    //private Cache cache;
+    @Autowired
+    private DataSyncTask dataSyncTask;
 
     //@Value("#{configuers.knowledgeBigDataSearchUrl}")
     //private String knowledgeBigDataSearchUrl;
@@ -259,6 +260,7 @@ public class KnowledgeController extends BaseController
         data.setKnowledgeDetail(updatedDetail);
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, data.toBigData());
 
+        dataSyncTask.saveDataNeedSync(new DataSync(0,permission));
         logger.info("update knowledge success. knowledgeId: " + knowledgeId + " userId: " + userId);
         return result;
     }

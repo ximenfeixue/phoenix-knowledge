@@ -1,9 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
 import com.ginkgocap.ywxt.knowledge.service.DynamicNewsServiceLocal;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.ywxt.im.model.MessageNotify;
 import com.gintong.ywxt.im.service.MessageNotifyService;
 import org.slf4j.Logger;
@@ -33,6 +36,9 @@ public class DataSyncTask implements Runnable {
     @Autowired
     private MessageNotifyService messageNotifyService;
 
+    @Autowired
+    private KnowledgeOtherService knowledgeOtherService;
+
     private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
 
     public boolean saveDataNeedSync(DataSync data)
@@ -58,7 +64,12 @@ public class DataSyncTask implements Runnable {
                     if (data != null) {
                         if (data instanceof MessageNotify) {
                             sendMessageNotify((MessageNotify) data);
+                        } else if(data instanceof Permission) {
+                            final Permission perm = (Permission)data;
+                            final short privated = DataCollect.privated(perm, false);
+                            knowledgeOtherService.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
                         }
+
                     }
                     if (result) {
                         dataSyncService.deleteDataSync(dataSync.getId());

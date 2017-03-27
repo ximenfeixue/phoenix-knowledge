@@ -53,6 +53,11 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return knowledgeCollectDao.updateCollectedKnowledge(collect);
     }
 
+    public boolean updateCollectedKnowledgePrivate(final long knowledgeId, final int typeId, final short privated)
+    {
+        return knowledgeCollectDao.updateCollectedKnowledgePrivate(knowledgeId, typeId, privated);
+    }
+
     @Override
     public boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId)
     {
