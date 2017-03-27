@@ -249,8 +249,13 @@ public class KnowledgeCommentController extends BaseController {
         MessageNotify message = new MessageNotify();
         final String uName = comment.getOwnerName();
         message.setType(MessageNotifyType.EKnowledge.value());
-        message.setTitle(uName + "评论了你的知识");
-        message.setToId(toId);
+        if (comment.getTargetUid() >= 0) {
+            message.setTitle(uName + "回复了你的评论");
+            message.setToId(comment.getTargetUid());
+        } else {
+            message.setTitle(uName + "评论了你的知识");
+            message.setToId(toId);
+        }
         message.setFromId(comment.getOwnerId());
         message.setFromName(comment.getOwnerName());
         message.setContent(converToJson(comment.getKnowledgeId(), comment.getColumnId()));
