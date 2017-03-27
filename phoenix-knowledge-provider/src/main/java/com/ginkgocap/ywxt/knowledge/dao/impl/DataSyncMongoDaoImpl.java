@@ -38,21 +38,25 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
             return id;
         } catch (Throwable ex) {
             logger.error("save datasync failed: data: {} error: {}", data, ex.getMessage());
+            logger.error("save datasync failed: data: " + data + " error: ", ex.getMessage());
+            return false;
         }
         return -1;
     }
 
     @Override
-    public boolean deleteDataSync(DataSync data)
+    public boolean deleteDataSync(final long id)
     {
         try {
-            mongoTemplate.remove(data);
+            Query query = new Query();
+            query.addCriteria(Criteria.where(Constant._ID).is(id));
+            DataSync data = mongoTemplate.findAndRemove(query, DataSync.class, tbName);
+            return data != null;
         }
         catch (Throwable ex) {
-            logger.error("delete dataSync failed, id: " + data.getId() + " error: " + ex.getMessage());
+            logger.error("delete dataSync failed: id:" + id + " error: " + ex.getMessage());
             return false;
         }
-        return true;
     }
 
     public List<DataSync> getDataSyncList()
