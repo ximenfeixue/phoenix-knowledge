@@ -160,8 +160,7 @@ public class KnowledgeCommentController extends BaseController {
             if (knowledgeCommentService.delete(commentId, user.getId())) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
             }
-            logger.error("Delete Knowledge Comment failed : knowledgeId: " + commentId);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DEMAND_COMMENT_EXCEPTION_60051);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } catch (Exception e) {
             e.printStackTrace();
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
