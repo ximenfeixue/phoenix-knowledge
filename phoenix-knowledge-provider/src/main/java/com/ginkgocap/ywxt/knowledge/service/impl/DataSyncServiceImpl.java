@@ -18,7 +18,7 @@ public class DataSyncServiceImpl implements DataSyncService
     DataSyncMongoDao dataSyncMongoDao;
 
     @Override
-    public boolean saveDataSync(DataSync data)
+    public long saveDataSync(DataSync data)
     {
         return dataSyncMongoDao.saveDataSync(data);
     }

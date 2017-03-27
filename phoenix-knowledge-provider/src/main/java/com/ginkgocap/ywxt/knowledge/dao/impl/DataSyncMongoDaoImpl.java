@@ -25,19 +25,21 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     @Autowired
     private KnowledgeCommonService knowledgeCommonService;
 
+    private final static String collectionName = "DataSync";
+
     private final int maxSize = 50;
 
     @Override
-    public boolean saveDataSync(DataSync data) {
+    public long saveDataSync(DataSync data) {
         try {
-            //long id = knowledgeCommonService.getKnowledgeSequenceId();
-            //data.setId(id);
-            mongoTemplate.save(data, collectionName());
+            long id = knowledgeCommonService.getKnowledgeSequenceId();
+            data.setId(id);
+            mongoTemplate.save(data, collectionName);
+            return id;
         } catch (Throwable ex) {
             logger.error("save datasync failed: data: {} error: {}", data, ex.getMessage());
-            return false;
         }
-        return true;
+        return -1;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
             mongoTemplate.remove(data);
         }
         catch (Throwable ex) {
-            logger.error("delete dataSync failed: data: {} error: {}", data, ex.getMessage());
+            logger.error("delete dataSync failed, id: " + data.getId() + " error: " + ex.getMessage());
             return false;
         }
         return true;
@@ -58,12 +60,6 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
         Query query = new Query();
         query.skip(0);
         query.limit(maxSize);
-        return mongoTemplate.find(query, DataSync.class, collectionName());
-    }
-
-
-    private String collectionName()
-    {
-        return "DataSync";
+        return mongoTemplate.find(query, DataSync.class, collectionName);
     }
 }

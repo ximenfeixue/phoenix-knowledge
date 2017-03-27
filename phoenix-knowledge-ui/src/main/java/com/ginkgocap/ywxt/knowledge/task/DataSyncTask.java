@@ -50,7 +50,8 @@ public class DataSyncTask implements Runnable {
     public boolean saveDataNeedSync(DataSync data)
     {
         try {
-            dataSyncService.saveDataSync(data);
+            final long id = dataSyncService.saveDataSync(data);
+            data.setId(id);
             addQueue(data);
         } catch (Exception ex) {
             logger.error("save sync data failed: dataSync: {}",data);
@@ -64,31 +65,35 @@ public class DataSyncTask implements Runnable {
             while(true) {
                 DataSync dataSync = dataSyncQueue.take();
                 if (dataSync != null) {
+                    boolean result = false;
                     Object data = dataSync.getData();
                     if (data != null) {
                         if (data instanceof MessageNotify) {
                             sendMessageNotify((MessageNotify) data);
                         }
                     }
+                    if (result) {
+                        dataSyncService.deleteDataSync(dataSync);
+                    }
                 } else {
                     logger.info("data is null, so skip to send.");
                 }
-
             }
         } catch (InterruptedException ex) {
             logger.error("queues thread interrupted. so exit this thread.");
         }
     }
 
-    private void sendMessageNotify(MessageNotify message) {
+    private boolean sendMessageNotify(MessageNotify message) {
         try {
             boolean resilt = messageNotifyService.sendMessageNotify(message);
             if (resilt) {
                 logger.info("send comment notify message success. fromId: " + message.getFromId() + " toId: " + message.getToId());
             }
+            return resilt;
         } catch (Exception ex) {
             logger.error("send comment notify message failed. error: " + ex.getMessage());
         }
-
+        return false;
     }
 }
