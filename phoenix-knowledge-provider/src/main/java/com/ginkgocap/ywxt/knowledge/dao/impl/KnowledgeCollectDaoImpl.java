@@ -8,6 +8,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.mongodb.WriteResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,9 +101,9 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     public boolean updateCollectedKnowledgePrivate(final long knowledgeId, final int typeId, final short privated)
     {
         Query query = idType(knowledgeId, typeId);
-        Update update = new Update().set("privated", privated);
-        KnowledgeCollect result = mongoTemplate.findAndModify(query, update, KnowledgeCollect.class);
-        if (result == null) {
+        Update update = Update.update("privated", privated);
+        WriteResult result = mongoTemplate.updateMulti(query, update, Constant.Collection.KnowledgeCollect);
+        if (result.getN() <= 0) {
             logger.error("update privated failed. knowledgeId: " + knowledgeId);
             return false;
         } else {
