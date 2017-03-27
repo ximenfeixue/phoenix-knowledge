@@ -44,6 +44,11 @@ public class KnowledgeCommentController extends BaseController {
     @Autowired
     private DataSyncTask dataSyncTask;
 
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseBody
+    public InterfaceResult createComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
+        return createKnowledgeComment(-1L, request, reponse);
+    }
     /**
      * des:创建评论
      *
@@ -69,7 +74,7 @@ public class KnowledgeCommentController extends BaseController {
             }
 
             KnowledgeComment comment = KnowledgeUtil.readValue(KnowledgeComment.class, requestJson);
-            if (knowledgeId == null || comment == null || StringUtils.isBlank(comment.getContent())) {
+            if (comment == null || StringUtils.isBlank(comment.getContent())) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
