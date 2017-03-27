@@ -24,9 +24,9 @@ public class DataSyncServiceImpl implements DataSyncService
     }
 
     @Override
-    public boolean deleteDataSync(DataSync data)
+    public boolean deleteDataSync(final long id)
     {
-        return dataSyncMongoDao.deleteDataSync(data);
+        return dataSyncMongoDao.deleteDataSync(id);
     }
 
     @Override

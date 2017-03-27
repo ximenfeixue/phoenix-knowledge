@@ -35,18 +35,6 @@ public class DataSyncTask implements Runnable {
 
     private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
 
-    public void addQueue(DataSync data) {
-        if (data != null) {
-            try {
-                dataSyncQueue.put(data);
-            } catch (Exception ex) {
-                logger.error("add sync data to queue failed.");
-            }
-        } else {
-            logger.error("sync object is null, so skip it.");
-        }
-    }
-
     public boolean saveDataNeedSync(DataSync data)
     {
         try {
@@ -65,18 +53,15 @@ public class DataSyncTask implements Runnable {
             while(true) {
                 DataSync dataSync = dataSyncQueue.take();
                 if (dataSync != null) {
+                    boolean result = false;
                     Object data = dataSync.getData();
                     if (data != null) {
-                        boolean result = false;
                         if (data instanceof MessageNotify) {
                             sendMessageNotify((MessageNotify) data);
                         }
-                        if (result) {
-                            dataSyncService.deleteDataSync(dataSync);
-                        }
                     }
                     if (result) {
-                        dataSyncService.deleteDataSync(dataSync);
+                        dataSyncService.deleteDataSync(dataSync.getId());
                     }
                 } else {
                     logger.info("data is null, so skip to send.");
@@ -89,18 +74,18 @@ public class DataSyncTask implements Runnable {
 
     private boolean sendMessageNotify(MessageNotify message) {
         try {
-            result = messageNotifyService.sendMessageNotify(message);
+            boolean result = messageNotifyService.sendMessageNotify(message);
             if (result) {
                 logger.info("send comment notify message success. fromId: " + message.getFromId() + " toId: " + message.getToId());
             }
-            return resilt;
+            return result;
         } catch (Exception ex) {
             logger.error("send comment notify message failed. error: " + ex.getMessage());
         }
         return false;
     }
 
-    private void addQueue(DataSync data) {
+    public void addQueue(DataSync data) {
         if (data != null) {
             try {
                 dataSyncQueue.put(data);

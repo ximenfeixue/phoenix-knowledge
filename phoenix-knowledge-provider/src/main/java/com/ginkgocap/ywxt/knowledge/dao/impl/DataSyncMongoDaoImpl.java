@@ -1,12 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.DataSyncMongoDao;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -37,9 +39,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
             mongoTemplate.save(data, collectionName);
             return id;
         } catch (Throwable ex) {
-            logger.error("save datasync failed: data: {} error: {}", data, ex.getMessage());
-            logger.error("save datasync failed: data: " + data + " error: ", ex.getMessage());
-            return false;
+            logger.error("save datasync failed: id: " + data.getId() + " error: ", ex.getMessage());
         }
         return -1;
     }
@@ -50,7 +50,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
         try {
             Query query = new Query();
             query.addCriteria(Criteria.where(Constant._ID).is(id));
-            DataSync data = mongoTemplate.findAndRemove(query, DataSync.class, tbName);
+            DataSync data = mongoTemplate.findAndRemove(query, DataSync.class, collectionName);
             return data != null;
         }
         catch (Throwable ex) {

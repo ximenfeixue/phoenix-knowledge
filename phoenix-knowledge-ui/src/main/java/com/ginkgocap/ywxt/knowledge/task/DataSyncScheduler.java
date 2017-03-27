@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.task;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,7 +33,7 @@ public class DataSyncScheduler implements InitializingBean {
     {
         //First get 50
         List<DataSync> dataSyncList = dataSyncService.getDataSyncList();
-        if (dataSyncList != null && dataSyncList.size() >0) {
+        if (CollectionUtils.isNotEmpty(dataSyncList)) {
             for (DataSync data : dataSyncList) {
                 dataSyncTask.addQueue(data);
             }
