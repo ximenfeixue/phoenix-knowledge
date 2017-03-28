@@ -99,7 +99,7 @@ public class KnowledgeComment implements Serializable{
     }
 
     public String getOwnerName() {
-        return ownerName;
+        return ownerName != null ? ownerName : "";
     }
 
     public void setOwnerName(String ownerName) {
@@ -155,7 +155,7 @@ public class KnowledgeComment implements Serializable{
     }
 
     public String getTargetUName() {
-        return targetUName;
+        return targetUName != null ? targetUName : "";
     }
 
     public void setTargetUName(String targetUName) {
