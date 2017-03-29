@@ -84,11 +84,11 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         if (knowledge.getId() <= 0) {
-            throw new IllegalArgumentException("knowledge Id is invalidated, id: "+knowledge.getId());
+            throw new IllegalArgumentException("knowledge Id is invalidated, id: " + knowledge.getId());
         }
 
         if (!validateColumnId(knowledge.getColumnid())) {
-            throw new IllegalArgumentException("knowledge columnId is invalidated, columnId: "+knowledge.getColumnid());
+            throw new IllegalArgumentException("knowledge columnId is invalidated, columnId: " + knowledge.getColumnid());
         }
 
         knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
@@ -120,6 +120,18 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         return knowledge;
+    }
+
+    public boolean updatePrivated(final long knowledgeId, final short type, final short privated) {
+        Query query = knowledgeIdQuery(knowledgeId);
+        String collectionName = getCollectionName(type);
+        Update update = Update.update("privated", privated);
+        WriteResult result = mongoTemplate.updateMulti(query, update, Knowledge.class, collectionName);
+        if (result.getN() <= 0) {
+            logger.error("update knowledge privated failed, id: " + knowledgeId + " type: " + type);
+            return false;
+        }
+        return true;
     }
 
     @Override

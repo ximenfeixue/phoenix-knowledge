@@ -4,6 +4,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.InterfaceResult;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public Knowledge update(Knowledge detail) throws Exception;
+    public Knowledge update(Knowledge detail);
 
     /**
      * @date 2016年1月15日 上午9:41:16
@@ -57,7 +58,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult<Knowledge> update(DataCollect DataCollect) throws Exception;
+    public InterfaceResult<Knowledge> update(DataCollect DataCollect);
 
     /**
      * @date 2016年1月15日 上午9:41:16
@@ -65,7 +66,15 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public boolean updateKnowledge(DataCollect DataCollect) throws Exception;
+    public boolean updateKnowledge(DataCollect DataCollect);
+
+    /**
+     * @date 2016年1月15日 上午9:41:16
+     * @param perm
+     * @return
+     * @throws Exception
+     */
+    public boolean updatePermission(Permission perm);
 
     /**
      * @date 2016年1月15日 上午9:41:16

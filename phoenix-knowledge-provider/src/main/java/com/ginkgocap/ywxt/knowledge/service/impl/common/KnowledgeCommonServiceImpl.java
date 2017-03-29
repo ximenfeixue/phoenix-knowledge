@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service("knowledgeCommonService")
 public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, InitializingBean {
     private final static Logger logger = LoggerFactory.getLogger(KnowledgeCommonServiceImpl.class);
+
 	@Resource
     private MongoTemplate mongoTemplate;
 
@@ -38,38 +39,7 @@ public class KnowledgeCommonServiceImpl implements KnowledgeCommonService, Initi
                 return tempId();
             }
         }
-        /*
-        if (zookeeperHost == null) {
-            ResourceBundle resource = ResourceBundle.getBundle("dubbo");
-            String zookeeperConfig = resource.getString("dubbo.registry.address");
-            int start = zookeeperConfig.indexOf("//") + 2;
-            int end = zookeeperConfig.indexOf("?");
-            if (start > 0 && end > 0 && end < zookeeperConfig.length()) {
-                zookeeperHost = zookeeperConfig.substring(start, end);
-            }
-        }
 
-        if (defaultIdGenerator != null) {
-            try {
-                long sequenceId = 0;
-                if (zookeeperHost != null) {
-                    DistributedLock lock = new DistributedLock(zookeeperHost, "/_idlocknode_");
-                    logger.info("create Distributed Lock success...");
-                    lock.acquire();
-                    sequenceId = Long.parseLong(defaultIdGenerator.next());
-                    lock.release();
-                } else {
-                    sequenceId = Long.parseLong(defaultIdGenerator.next());
-                }
-                logger.debug("generated  sequenceId： " + sequenceId);
-                return sequenceId;
-            } catch (NumberFormatException ex) {
-                logger.error("生成唯一Id不是数字 ： " + ex.getMessage());
-                return tempId();
-            } catch (Throwable ex) {
-                return tempId();
-            }
-        }*/
         return tempId();
     }
 

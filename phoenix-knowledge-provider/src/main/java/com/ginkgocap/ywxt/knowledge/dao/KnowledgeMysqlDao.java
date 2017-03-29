@@ -34,7 +34,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase update(KnowledgeBase knowledgeBase) throws Exception;
+	public boolean update(KnowledgeBase knowledgeBase) throws Exception;
 	
 	/**
 	 * 先删除后插入（删除时根据主键删除）

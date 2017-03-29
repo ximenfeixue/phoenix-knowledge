@@ -41,6 +41,15 @@ public interface KnowledgeMongoDao
 
     /**
      * 更新
+     * @date 2016年1月13日 上午10:54:29
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean updatePrivated(long id, short type, short privated);
+
+    /**
+     * 更新
      * @date 2017年1月13日 上午10:54:29
      * @param knowledgeId
      * @param type

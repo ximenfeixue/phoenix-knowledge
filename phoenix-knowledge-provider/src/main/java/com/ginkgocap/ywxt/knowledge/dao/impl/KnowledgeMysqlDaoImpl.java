@@ -39,15 +39,15 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public KnowledgeBase update(KnowledgeBase knowledgeBase) throws Exception {
+	public boolean update(KnowledgeBase knowledgeBase) throws Exception {
 		
 		if(knowledgeBase == null) {
-			return null;
+			return false;
 		}
 		KnowledgeBase oldValue = this.getByKnowledgeId(knowledgeBase.getKnowledgeId());
 		if (oldValue == null) {
 			logger.error("update an not exist knowledge, knowledgeId: " + knowledgeBase.getKnowledgeId());
-			return null;
+			return false;
 		}
 		knowledgeBase.setId(oldValue.getId());
 		knowledgeBase.setModifyDate(new Date().getTime());
@@ -57,8 +57,8 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		if (knowledgeBase.getModifyUserName() == null) {
 			knowledgeBase.setModifyUserName(knowledgeBase.getCreateUserName());
 		}
-		this.updateEntity(knowledgeBase);
-		return knowledgeBase;
+		return this.updateEntity(knowledgeBase);
+		///return knowledgeBase;
 	}
 
 	@Override

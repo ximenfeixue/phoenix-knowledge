@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
@@ -42,6 +43,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     /**知识来源表*/
     @Autowired
     private KnowledgeReferenceDao knowledgeReferenceDao;
+
+    @Autowired
+    private KnowledgeCollectDao knowledgeCollectDao;
 
     private static final String endContent = "若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
     private static final int endLength = endContent.length();
@@ -118,13 +122,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public Knowledge update(Knowledge detail) throws Exception
-    {
+    public Knowledge update(Knowledge detail) {
         return updateKnowledgeDetail(detail, -1);
     }
 
     @Override
-    public InterfaceResult<Knowledge> update(DataCollect dataCollect) throws Exception {
+    public InterfaceResult<Knowledge> update(DataCollect dataCollect) {
 
         dataCollect.initPermission();
         Knowledge detail = dataCollect.getKnowledgeDetail();
@@ -171,7 +174,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public boolean updateKnowledge(DataCollect dataCollect) throws Exception {
+    public boolean updateKnowledge(DataCollect dataCollect) {
 
         KnowledgeBase base = dataCollect.getKnowledge();
         Knowledge knowledgeDetail = dataCollect.getKnowledgeDetail();
@@ -187,6 +190,45 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return false;
         }
 
+        return true;
+    }
+
+    public boolean updatePermission(Permission perm) {
+        if (perm == null) {
+            logger.error("permission info is null, so skip.");
+            return false;
+        }
+
+        try {
+            final long knowledgeId = perm.getResId();
+            KnowledgeBase base = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+            if (base == null) {
+                logger.error("can 't find knowledge base by id: " + knowledgeId);
+                return false;
+            }
+            final short columnType = base.getType();
+            /*
+            Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+            if (detail == null) {
+                logger.error("can 't find knowledge detail by id: " + knowledgeId + " type: " + columnType);
+                return false;
+            }*/
+            short privated = DataCollect.privated(perm);
+            base.setPrivated(privated);
+            boolean result = knowledgeMysqlDao.update(base);
+            if (!result) {
+                logger.error("update knowledge base failed. by id: " + knowledgeId + " type: " + columnType);
+                return false;
+            }
+            knowledgeMongoDao.updatePrivated(knowledgeId, columnType, privated);
+
+            privated = DataCollect.privated(perm, false);
+            knowledgeCollectDao.updateCollectedKnowledgePrivate(knowledgeId, columnType, privated);
+
+        } catch (Exception e) {
+            logger.error("update knowledge permsiion failed, id: " + perm.getResId());
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -551,7 +593,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                     newBase = knowledgeMysqlDao.insert(base);
                 }
                 else {
-                    newBase = knowledgeMysqlDao.update(base);
+                    if (knowledgeMysqlDao.update(base)) {
+                        newBase = base;
+                    }
                 }
                 logger.info("sync knowledge base success. " + knowInfo);
             } catch (Throwable e) {
