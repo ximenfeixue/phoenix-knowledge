@@ -235,7 +235,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
                 criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").is(1);
+                criteria.and("privated").is(0);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 query.limit(maxQuerySize);
@@ -289,7 +289,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (detailList != null && detailList.size() > 0) {
+                if (CollectionUtils.isNotEmpty(detailList)) {
                     for(Knowledge detail : detailList) {
                         filterKnowledge(detail);
                     }
