@@ -170,7 +170,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             if (CollectionUtils.isNotEmpty(ids)) {
                 long begin = System.currentTimeMillis();
                 Criteria criteria = new Criteria();
-                criteria.and("_id").in(ids);
+                criteria.and("_id").ne(ids);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 result = mongoTemplate.find(query, Knowledge.class, tableName);
@@ -235,7 +235,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
                 criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").is(0);
+                criteria.and("privated").ne(1);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 query.limit(maxQuerySize);
