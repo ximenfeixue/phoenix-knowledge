@@ -147,24 +147,32 @@ public class KnowledgeCommentController extends BaseController {
      */
     @RequestMapping(value = "/{commentId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response, @PathVariable Long commentId) {
+    public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response, @PathVariable long commentId) {
+
+        if (commentId <= 0) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION,false);
+        }
+        User user = getUser(request);
+        if (user == null) {
+            logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION,false);
+        }
+
+        boolean result = false;
+        CommonResultCode resultCode = CommonResultCode.PARAMS_EXCEPTION;
+        final long userId = user.getId();
         try {
-            if (commentId == null) {
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-            }
-            User user = getUser(request);
-            if (user == null) {
-                logger.error(CommonResultCode.PERMISSION_EXCEPTION.getMsg());
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-            }
-            if (knowledgeCommentService.delete(commentId, user.getId())) {
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
-            }
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            result = knowledgeCommentService.delete(commentId, userId);
         } catch (Exception e) {
             e.printStackTrace();
-            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+            resultCode = CommonResultCode.SYSTEM_EXCEPTION;
         }
+        if (result) {
+            logger.info("delete comment success. commentId: " + commentId + " userId: " + userId);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, result);
+        }
+        logger.info("delete comment failed. commentId: " + commentId + " userId: " + userId);
+        return InterfaceResult.getInterfaceResultInstance(resultCode, result);
     }
 
     /**
