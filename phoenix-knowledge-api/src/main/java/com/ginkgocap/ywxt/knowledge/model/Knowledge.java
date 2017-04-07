@@ -65,7 +65,7 @@ public class Knowledge implements Serializable
 	// 最后修改时间
 	private String modifytime;
 
-	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
+	// 状态（0为无效/删除，1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
 	private int status;
 
 	// 举报状态(1:举报，0：未举报)

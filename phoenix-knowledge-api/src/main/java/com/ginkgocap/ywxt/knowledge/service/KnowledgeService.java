@@ -135,11 +135,6 @@ public interface KnowledgeService
     public boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> idList) throws Exception;
 
     /**
-     * 批量删除，承担以下任务：
-     * <p>1、知识详细表批量删除</P>
-     * <p>2、知识基础表批量删除</P>
-     * <p>3、知识来源表批量删除</P>
-     * <p>4、大数据MQ推送批量删除</P>
      * <p>5、动态推送批量删除</P>
      * @date 2016年1月15日 上午9:41:23
      * @param knowledgeIds
@@ -150,10 +145,6 @@ public interface KnowledgeService
     public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnId) throws Exception;
 
     /**
-     * 提取详细信息（一般用在知识详细信息查看界面、知识编辑界面的数据提取中），具体提取以下信息：
-     * <p>1、知识详细表信息</P>
-     * <p>2、知识来源表信息</P>
-     * @date 2016年1月15日 上午9:41:26
      * @param knowledgeId
      * @param columnId 由于知识详细表信息为分库存储，则columnId为必须字段
      * @return

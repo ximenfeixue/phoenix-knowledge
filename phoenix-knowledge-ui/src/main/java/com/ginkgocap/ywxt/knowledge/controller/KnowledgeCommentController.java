@@ -295,4 +295,5 @@ public class KnowledgeCommentController extends BaseController {
         return map;
     }
 
+    public Logger logger() { return this.logger; }
 }

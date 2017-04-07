@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCommentDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
@@ -25,94 +26,36 @@ import java.util.List;
 @Service("knowledgeCommentService")
 public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
 {
-    private Logger logger = LoggerFactory.getLogger(KnowledgeCommentServiceImpl.class);
-    @Resource
-    private MongoTemplate mongoTemplate;
-
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeCommentDao knowledgeCommentDao;
 
     @Override
-    public long create(KnowledgeComment knowledgeComment) {
-        if (knowledgeComment != null) {
-            knowledgeComment.setId(knowledgeCommonService.getKnowledgeSequenceId());
-            if (knowledgeComment.getCreateTime() <= 0) {
-                knowledgeComment.setCreateTime(new Date().getTime());
-            }
-            mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);
-            return knowledgeComment.getId();
-        }
-        return -1L;
+    public long create(KnowledgeComment comment) {
+        return knowledgeCommentDao.create(comment);
     }
 
     @Override
-    public boolean update(Long commentId,Long ownerId,String comment)
+    public boolean update(long commentId, long ownerId, String comment)
     {
-        if(commentId == null || comment == null || comment.trim().length() <= 0){
-            return false;
-        }
-
-        Query query = commentIdAndOwnerId(commentId, ownerId);
-
-        Update update = new Update();
-        update.set(Constant.Content, comment);
-        update.set(Constant.createTime, new Date().getTime());
-        KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
-        if (knowledgeComment == null) {
-            logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + commentId);
-            return false;
-        }
-        return true;
+        return knowledgeCommentDao.update(commentId, ownerId, comment);
     }
 
     @Override
-    public boolean delete(Long commentId,Long ownerId)
+    public boolean delete(long commentId,long ownerId)
     {
-        if(commentId == null || ownerId == null){
-            return false;
-        }
-
-        Query query = commentIdAndOwnerId(commentId, ownerId);
-        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
-        if (result.getN() <= 0) {
-            logger.error("delete knowledge comment error, ownerId: " + ownerId + " commentId: " + commentId);
-            return false;
-        }
-        return true;
+        return knowledgeCommentDao.delete(commentId, ownerId);
     }
 
     @Override
-    public List<KnowledgeComment> getKnowledgeCommentList(Long knowledgeId)
+    public List<KnowledgeComment> getKnowledgeCommentList(long knowledgeId)
     {
-        if(knowledgeId == null){
-            return null;
-        }
-
-        Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
-        Query query = new Query(c);
-        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
-
-        return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        return knowledgeCommentDao.getKnowledgeCommentList(knowledgeId);
     }
 
     @Override
-    public Long getKnowledgeCommentCount(Long knowledgeId)
+    public long getKnowledgeCommentCount(long knowledgeId)
     {
-        if(knowledgeId == null){
-            return null;
-        }
-
-        Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
-        Query query = new Query(c);
-
-        return mongoTemplate.count(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        return knowledgeCommentDao.getKnowledgeCommentCount(knowledgeId);
     }
 
-    private Query commentIdAndOwnerId(Long commentId, Long ownerId)
-    {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(Constant._ID).is(commentId));
-        query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
-        return query;
-    }
 }

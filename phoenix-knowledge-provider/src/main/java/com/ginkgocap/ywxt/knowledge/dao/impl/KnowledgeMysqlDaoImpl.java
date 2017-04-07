@@ -92,12 +92,24 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public int batchDeleteByKnowledgeIds(List<Long> knowledgeIds) throws Exception
+	public int batchDeleteByIds(List<Long> knowledgeIds) throws Exception
 	{
 		if (CollectionUtils.isNotEmpty(knowledgeIds)) {
 			return this.deleteEntityByIds(knowledgeIds) ? knowledgeIds.size() : 0;
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean logicDeleteByIds(List<Long> knowledgeIds)
+	{
+		return this.updateKnowledgeStatus(knowledgeIds, 0);
+	}
+
+	@Override
+	public boolean logicRecoveryByIds(List<Long> knowledgeIds) throws Exception
+	{
+		return this.updateKnowledgeStatus(knowledgeIds, 4);
 	}
 
 	@Override
@@ -111,9 +123,6 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception
     {
 		return this.getEntity(knowledgeId);
-		/*
-        List<KnowledgeBase> knowledgeBaseItems = this.getEntitys("get_knowledge_by_Id", knowledgeId);
-        return (knowledgeBaseItems != null && knowledgeBaseItems.size() > 0) ? knowledgeBaseItems.get(0) : null;*/
 	}
 
     @Override
@@ -353,5 +362,22 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		} else {
 			return new Date("0000-00-00 00:00:00");
 		}
+	}
+
+	private boolean updateKnowledgeStatus(List<Long> knowledgeIds, final int staus) {
+		if (CollectionUtils.isNotEmpty(knowledgeIds)) {
+			final String ids = knowledgeIds.toArray().toString();
+			final String updateSql = "update tb_knowledge_base set status = "+ staus + " where id in (" + ids + ")";
+			try {
+				return this.updateByRawSql(updateSql);
+			} catch (Exception ex) {
+				logger.error("logic " + (staus == 0 ? "delete" : "recovery") + " knowledge failed. error: " + ex.getMessage());
+			}
+		}
+		return false;
+	}
+
+	private boolean updateByRawSql(final String sqlStr) throws Exception {
+		return this.dao.updateSelf(sqlStr);
 	}
 }

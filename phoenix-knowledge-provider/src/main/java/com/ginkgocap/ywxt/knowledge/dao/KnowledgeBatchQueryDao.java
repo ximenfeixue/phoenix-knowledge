@@ -11,17 +11,19 @@ import java.util.Map;
  */
 public interface KnowledgeBatchQueryDao {
 
-    public long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId,short type);
+    long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId,short type);
 
-    public List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size);
+    List<Knowledge> selectPlatform(short type, int columnId, String columnPath,long userId, int start, int size);
 
-    public List<Knowledge> getAllByParam(short type, int columnId, String columnPath, long userId, int page, int size);
+    List<Knowledge> getAllByParam(short type, int columnId, String columnPath, long userId, int page, int size);
 
-    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size);
+    List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size);
 
-    public List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size);
+    List<KnowledgeBase> getAllByParamBase(short columnType, int columnId, String columnPath, long userId, int start, int size);
 
-    public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size);
+    List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int start,int size);
 
-    public List<Knowledge> selectIndexByParam(short type,int page, int size, List<Long> ids);
+    List<Knowledge> selectIndexByParam(short type,int page, int size, List<Long> ids);
+
+    List<KnowledgeBase> getAllByPage(final short columnType, final int page, int size);
 }

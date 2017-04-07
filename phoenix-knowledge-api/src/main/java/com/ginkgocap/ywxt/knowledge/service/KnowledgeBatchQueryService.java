@@ -24,4 +24,6 @@ public interface KnowledgeBatchQueryService
     public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath, long userId, int start, int size);
 
     public List<KnowledgeBase> getAllByParamBase(short type, int columnId, String columnPath, long userId, int start, int size);
+
+    public List<KnowledgeBase> getAllByPage(short type, int start, int size);
 }

@@ -18,7 +18,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception;
+	KnowledgeBase insert(KnowledgeBase knowledgeBase) throws Exception;
 	
 	/**
 	 * 批量插入
@@ -26,7 +26,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList) throws Exception;
+	List<KnowledgeBase> insertList(List<KnowledgeBase> knowledgeBaseList) throws Exception;
 	
 	/**
 	 * 更新
@@ -34,7 +34,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean update(KnowledgeBase knowledgeBase) throws Exception;
+	boolean update(KnowledgeBase knowledgeBase) throws Exception;
 	
 	/**
 	 * 先删除后插入（删除时根据主键删除）
@@ -42,7 +42,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase) throws Exception;
+	KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase) throws Exception;
 	
 	/**
 	 * 根据主键删除
@@ -50,15 +50,29 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByKnowledgeId(long id) throws Exception;
+	int deleteByKnowledgeId(long id) throws Exception;
 	
 	/**
 	 * 根据主键list批量删除
 	 * @date 2016年1月12日 上午9:51:21
 	 * @return
 	 */
-	public int batchDeleteByKnowledgeIds(List<Long> ids)  throws Exception;
-	
+	int batchDeleteByIds(List<Long> ids) throws Exception;
+
+	/**
+	 * 根据主键list批量删除
+	 * @date 2016年1月12日 上午9:51:21
+	 * @return
+	 */
+	boolean logicDeleteByIds(List<Long> ids) throws Exception;
+
+	/**
+	 * 根据主键list批量删除
+	 * @date 2016年1月12日 上午9:51:21
+	 * @return
+	 */
+	boolean logicRecoveryByIds(List<Long> ids) throws Exception;
+
 	/**
 	 * 根据创建用户ID删除
 	 * @date 2016年1月11日 下午6:09:54
@@ -66,7 +80,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteByCreateUserId(long createUserId) throws Exception;
+	int deleteByCreateUserId(long createUserId) throws Exception;
 	
 	/**
 	 * 根据主键提取
@@ -75,7 +89,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception;
+	KnowledgeBase getByKnowledgeId(long knowledgeId) throws Exception;
 
     /**
      * 根据知识Id, 关键字提取
@@ -83,7 +97,7 @@ public interface KnowledgeMysqlDao {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByKnowledgeIdKeyWord(List<Long> knowledgeIds,String keyword) throws Exception;
+    List<KnowledgeBase> getByKnowledgeIdKeyWord(List<Long> knowledgeIds,String keyword) throws Exception;
 	/**
 	 * 根据主键list批量提取
 	 * @date 2016年1月12日 上午9:54:24
@@ -91,7 +105,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception;
+	List<KnowledgeBase> getByKnowledgeIds(List<Long> knowledgeIds) throws Exception;
 	
 	/**
 	 * 提取所有数据
@@ -100,14 +114,14 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getAll(int start,int size) throws Exception;
+	List<KnowledgeBase> getAll(int start,int size) throws Exception;
 
 	/**
 	 * 提取所有数据数量
 	 * @return
 	 * @throws Exception
 	 */
-	public long getAllPublicCount(short permission) throws Exception;
+	long getAllPublicCount(short permission) throws Exception;
 	/**
 	 * 提取所有数据
 	 * @param start
@@ -115,7 +129,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getAllPublic(int start,int size,short permission) throws Exception;
+	List<KnowledgeBase> getAllPublic(int start,int size,short permission) throws Exception;
 
 	/**
 	 * 根据用户ID提取
@@ -125,7 +139,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户与知识类型提取
@@ -136,7 +150,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndType(long UserId,short type,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndType(long UserId,short type,int start,int size) throws Exception;
 
 	/**
 	 * 根据创建用户与栏目提取
@@ -147,7 +161,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,int columnId,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndColumnId(long createUserId,int columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目提取
@@ -157,7 +171,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception;
+	List<KnowledgeBase> getByColumnId(int columnId,int start,int size) throws Exception;
 
 	/**
 	 * 根据栏目提取
@@ -165,7 +179,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public long getPublicCountByColumnId(int columnId,short permission) throws Exception;
+	long getPublicCountByColumnId(int columnId,short permission) throws Exception;
 
 	/**
 	 * 根据栏目提取
@@ -175,7 +189,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getPublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
+	List<KnowledgeBase> getPublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
 
 	/**
 	 * 根据关键字提取
@@ -183,7 +197,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
+	int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
     /**
      * 根据关键字提取
      * @param keyWord
@@ -192,7 +206,7 @@ public interface KnowledgeMysqlDao {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
+    List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
     /**
      * 根据栏目提取
@@ -203,7 +217,7 @@ public interface KnowledgeMysqlDao {
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception;
+    List<KnowledgeBase> getByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception;
 
 	/**
 	 * 根据类型与栏目提取
@@ -214,7 +228,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndColumnId(short type,int columnId,int start,int size) throws Exception;
+	List<KnowledgeBase> getByTypeAndColumnId(short type,int columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 根据类型提取
@@ -224,7 +238,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByType(short type,int start,int size) throws Exception;
+	List<KnowledgeBase> getByType(short type,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户、类型、栏目提取
@@ -236,7 +250,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,short type,int columnId,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndTypeAndColumnId(long createUserId,short type,int columnId,int start,int size) throws Exception;
 	
 	/**
 	 * 获取某个时间段之间的知识
@@ -247,7 +261,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,Date endDate,int start,int size) throws Exception;
+	List<KnowledgeBase> getByBetweenCreateDate(Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据知识类型获取某个时间段之间的知识
@@ -259,7 +273,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,Date beginDate,Date endDate,int start,int size) throws Exception;
+	List<KnowledgeBase> getByTypeAndBetweenCreateDate(short type,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据创建用户Id获取某个时间段之间的知识
@@ -271,7 +285,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(long createUserId,Date beginDate,Date endDate,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndBetweenCreateDate(long createUserId,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、栏目获取某个时间段之间的知识
@@ -284,7 +298,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,int columnId,Date beginDate,Date endDate,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndColumnIdAndBetweenCreateDate(long createUserId,int columnId,Date beginDate,Date endDate,int start,int size) throws Exception;
 	
 	/**
 	 * 根据状态提取
@@ -294,7 +308,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByStatus(short status,int start,int size) throws Exception;
+	List<KnowledgeBase> getByStatus(short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据审核状态提取
@@ -304,7 +318,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByAuditStatus(short auditStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByAuditStatus(short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据举报状态提取
@@ -314,7 +328,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByReportStatus(short reportStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByReportStatus(short reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、状态提取
@@ -325,7 +339,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,short status,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndStatus(long createUserId,short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据用户Id、审核状态提取
@@ -336,7 +350,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,short auditStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndAuditStatus(long createUserId,short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据用户Id、举报状态提取
@@ -347,7 +361,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,short reportStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByCreateUserIdAndReportStatus(long createUserId,short reportStatus,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、状态提取
@@ -358,7 +372,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndStatus(int columnId,short status,int start,int size) throws Exception;
+	List<KnowledgeBase> getByColumnIdAndStatus(int columnId,short status,int start,int size) throws Exception;
 	
 	/**
 	 * 根据栏目Id、审核状态提取
@@ -368,7 +382,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndAuditStatus(int columnId,short auditStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByColumnIdAndAuditStatus(int columnId,short auditStatus,int start,int size) throws Exception;
 
 	/**
 	 * 根据栏目Id、举报状态提取
@@ -378,14 +392,14 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getByColumnIdAndReportStatus(int columnId,short reportStatus,int start,int size) throws Exception;
+	List<KnowledgeBase> getByColumnIdAndReportStatus(int columnId,short reportStatus,int start,int size) throws Exception;
 
 	/**
 	 * @param userId
 	 * @return
 	 * @throws Exception
 	 */
-	public int getKnowledgeCount(long userId) throws Exception;
+	int getKnowledgeCount(long userId) throws Exception;
 
 	/**
 	 * @param type
@@ -393,7 +407,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Long> getKnowledgeIdsByType(short type, int size)  throws Exception;
+	List<Long> getKnowledgeIdsByType(short type, int size)  throws Exception;
 
 	/**
 	 * @param userId
@@ -402,5 +416,5 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
+	List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
 }

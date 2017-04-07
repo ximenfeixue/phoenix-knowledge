@@ -13,14 +13,14 @@ public interface KnowledgeCommentService {
      * @param knowledgeComment
      * @return 状态（大于0成功，-1失败）
      */
-    public long create(KnowledgeComment knowledgeComment);
+    long create(KnowledgeComment knowledgeComment);
 
     /**
      * des: 更新评论
      * @param commentId	用户id
      * @return
      */
-    public boolean update(Long commentId,Long ownerId,String comment);
+    boolean update(long commentId,long ownerId,String comment);
 
     /**
      * des:根据id删除评论
@@ -28,7 +28,7 @@ public interface KnowledgeCommentService {
      * @param ownerId
      * @return 操作的记录数(0无记录，>0操作条数)
      */
-    public boolean delete(Long commentId,Long ownerId);
+    boolean delete(long commentId,long ownerId);
 
     /**
      * des:根据knowledgeId查询知识评论集合
@@ -36,12 +36,12 @@ public interface KnowledgeCommentService {
      * @param knowledgeId
      * @return
      */
-    public List<KnowledgeComment> getKnowledgeCommentList(Long knowledgeId);
+    List<KnowledgeComment> getKnowledgeCommentList(long knowledgeId);
 
     /**
      * des:根据knowledgeId查询知识评论数量
      * @param knowledgeId
      * @return
      */
-    public Long getKnowledgeCommentCount(Long knowledgeId);
+    long getKnowledgeCommentCount(long knowledgeId);
 }

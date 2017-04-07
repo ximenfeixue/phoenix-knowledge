@@ -161,6 +161,20 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
+    public boolean logicDeleteByIdsType(List<Long> ids,int columnType)
+    {
+        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        return logicDelete(query, getCollectionName(columnType));
+    }
+
+    @Override
+    public boolean logicRecoveryByIdsType(List<Long> ids,int columnType)
+    {
+        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        return logicRecovery(query, getCollectionName(columnType));
+    }
+
+    @Override
     public boolean deleteByUserIdAndColumnType(long createUserId,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant.cid).is(createUserId));
@@ -416,6 +430,26 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     {
         WriteResult result = mongoTemplate.remove(query, collectionName);
         if (result.getError() != null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean logicDelete(Query query, final String collectionName)
+    {
+        Update update = Update.update("status", 5);
+        WriteResult result = mongoTemplate.updateMulti(query, update, collectionName);
+        if (result.getN() <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean logicRecovery(Query query, final String collectionName)
+    {
+        Update update = Update.update("status", 4);
+        WriteResult result = mongoTemplate.updateMulti(query, update, collectionName);
+        if (result.getN() <= 0) {
             return false;
         }
         return true;

@@ -211,6 +211,7 @@ public class DataCollect implements Serializable
             base.setIsOld((short) 0);
             base.setUserStar((short) 0);
             base.setStatus((short)detail.getStatus());
+            base.setReportStatus((short)detail.getReport_status());
             base.setPrivated(detail.getPrivated());
             //check and truncate some data over database limit.
             knowledgeBaseFaultTolerant(base);

@@ -2,12 +2,18 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
+import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
+import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -17,6 +23,7 @@ import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 
 import javax.annotation.Resource;
@@ -25,14 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseController {
 
-    private final Logger logger = LoggerFactory.getLogger(BaseController.class);
     @Resource
     private RedisCacheService redisCacheService;
-
-    protected static final long APPID = KnowledgeConstant.DEFAULT_APP_ID;
 
     protected final static short KNOWLEDGE_CREATE = 1;
     protected final static short KNOWLEDGE_COLLECT = 2;
@@ -54,7 +59,7 @@ public abstract class BaseController {
                 jsonIn.append(line);
             }
         } catch (IOException e) {
-            logger.error("read request body failed : "+e.getMessage());
+            logger().error("read request body failed : "+e.getMessage());
             e.printStackTrace();
         }
         return jsonIn.toString();
@@ -70,7 +75,7 @@ public abstract class BaseController {
         String key = UserUtil.getUserSessionKey(request);
         User user = (User) redisCacheService.getRedisCacheByKey(key);
         if (user != null) {
-            logger.info("login userId: " + user.getId() + " userName: " + user.getName());
+            logger().info("login userId: " + user.getId() + " userName: " + user.getName());
         }
         return user;
         //return KnowledgeUtil.getDummyUser();
@@ -119,7 +124,7 @@ public abstract class BaseController {
         try {
             columnList = columnSelfService.queryListByPidAndUserId((long) columnId, userId);
         } catch (Exception ex) {
-            logger.error("invoke queryListByPidAndUserId failed: error: {}", ex.getMessage());
+            logger().error("invoke queryListByPidAndUserId failed: error: {}", ex.getMessage());
         }
         return getColumnIds(columnList, columnId);
     }
@@ -236,7 +241,7 @@ public abstract class BaseController {
     protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, List<String> listImageUrl2, String orgUrl, boolean isWeb)
     {
         if (StringUtils.isEmpty(content)) {
-            logger.error("Knowledge Content is null, please check the knowledge..");
+            logger().error("Knowledge Content is null, please check the knowledge..");
             return;
         }
         knowledge.setContent(content);
@@ -251,4 +256,6 @@ public abstract class BaseController {
             knowledge.setContent(htmlContent);
         }*/
     }
+
+    abstract Logger logger();
 }

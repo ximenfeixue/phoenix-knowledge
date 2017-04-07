@@ -350,4 +350,6 @@ public class KnowledgeHomeController extends BaseController {
         }
         return maps;
     }
+
+    public Logger logger() { return this.logger; }
 }

@@ -310,6 +310,21 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return result;
     }
 
+    public List<KnowledgeBase> getAllByPage(final short columnType, final int page, int size)
+    {
+        int start = page * size;
+        size = size > maxSize ? maxSize : size;
+        Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        query.skip(start);
+        query.limit(size);
+
+
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
+        return DataCollect.convertDetailToBaseList(detailList, columnType, true);
+    }
+
     // 首页主页
     @SuppressWarnings("unchecked")
     @Override

@@ -53,8 +53,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     @Override
     public InterfaceResult<Long> insert(DataCollect data) {
-
-        //knowledgeDetail.createContendDesc();
         //知识详细信息插入
         data.initPermission();
         Knowledge savedDetail = insertKnowledgeDetail(data.getKnowledgeDetail());
@@ -293,17 +291,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, "知识来源表删除失败！");
         }
 
-        //delete directory
-        /* move to web control do these operation
-        //大数据MQ推送删除
-        /*
-		try {
-			bigDataService.deleteMessage(knowledgeId, columnId, userId);
-		} catch (Exception e) {
-			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
-
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
     }
 
@@ -334,7 +321,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
         //知识简表删除
         try {
-            this.knowledgeMysqlDao.batchDeleteByKnowledgeIds(knowledgeIds);
+            this.knowledgeMysqlDao.batchDeleteByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
@@ -348,17 +335,54 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
         }
 
-        //大数据MQ推送删除
-		/*
-		try {
-            long userId = oldKnowledgeMongoList.get(0).getOwnerId();
-			bigDataService.sendMessage(BigDataService.KNOWLEDGE_DELETE, KnowledgeMongo.clone(oldKnowledgeMongoList), userId);
-		} catch (Exception e) {
-			logger.error("知识MQ推送失败！失败原因：\n"+e.getMessage());
-			return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
-		}*/
-
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeIds);
+    }
+
+    public InterfaceResult logicDelete(List<Long> knowledgeIds, final int type)
+    {
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            logger.warn("knowledge is is null, skip logic delete" + knowledgeIds + " columnType: " + type);
+        }
+
+        //知识详细表删除
+        boolean result = this.knowledgeMongoDao.logicDeleteByIdsType(knowledgeIds, type);
+        if (!result) {
+            logger.error("logic delete knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+
+        //知识简表删除
+        try {
+            this.knowledgeMysqlDao.logicDeleteByIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("logic delete knowledge base failed： error: " + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+
+    public InterfaceResult logicRecovery(List<Long> knowledgeIds, final int type)
+    {
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            logger.warn("knowledge is is null, skip logic delete" + knowledgeIds + " columnType: " + type);
+        }
+
+        //知识详细表删除
+        boolean result = this.knowledgeMongoDao.logicRecoveryByIdsType(knowledgeIds, type);
+        if (!result) {
+            logger.error("logic recovery knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+
+        //知识简表删除
+        try {
+            this.knowledgeMysqlDao.logicRecoveryByIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("logic recovery knowledge base failed： error: " + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     @Override

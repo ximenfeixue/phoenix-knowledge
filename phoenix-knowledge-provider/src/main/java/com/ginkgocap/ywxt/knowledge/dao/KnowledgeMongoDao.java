@@ -2,7 +2,10 @@ package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
+import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public Knowledge insert(Knowledge Knowledge) throws Exception;
+    Knowledge insert(Knowledge Knowledge) throws Exception;
 
     /**
      * 批量插入
@@ -28,7 +31,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception;
+    List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception;
 
     /**
      * 更新
@@ -37,7 +40,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public Knowledge update(Knowledge Knowledge,int oldType);
+    Knowledge update(Knowledge Knowledge,int oldType);
 
     /**
      * 更新
@@ -46,7 +49,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean updatePrivated(long id, short type, short privated);
+    boolean updatePrivated(long id, short type, short privated);
 
     /**
      * 更新
@@ -57,7 +60,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+    boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
 
     /**
      * 更新
@@ -68,7 +71,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
+    boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
 
     /**
      * 先删除后插入
@@ -77,7 +80,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public Knowledge insertAfterDelete(Knowledge Knowledge) throws Exception;
+    Knowledge insertAfterDelete(Knowledge Knowledge) throws Exception;
 
     /**
      * 根据主键及栏目删除数据
@@ -87,7 +90,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteByIdAndColumnId(long id,int columnId);
+    boolean deleteByIdAndColumnId(long id,int columnId);
 
     /**
      * 根据主键list以及栏目批量删除数据
@@ -97,7 +100,23 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteByIdsAndColumnType(List<Long> ids,int columnId) throws Exception;
+    boolean deleteByIdsAndColumnType(List<Long> ids,int columnId) throws Exception;
+
+    /**
+     * @param ids
+     * @param columnType
+     * @return
+     * @throws Exception
+     */
+    boolean logicDeleteByIdsType(List<Long> ids,int columnType);
+
+    /**
+     * @param ids
+     * @param columnType
+     * @return
+     * @throws Exception
+     */
+    boolean logicRecoveryByIdsType(List<Long> ids,int columnType);
 
     /**
      * 根据用户Id以及栏目删除数据
@@ -107,7 +126,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteByUserIdAndColumnType(long createUserId,int columnType) throws Exception;
+    boolean deleteByUserIdAndColumnType(long createUserId,int columnType) throws Exception;
 
     /**
      * @date 2016年1月13日 上午10:54:53
@@ -116,7 +135,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId);
+    boolean deleteKnowledgeDirectory(long knowledgeId,int columnId,long directoryId);
 
     /**
      * @date 2016年1月13日 上午10:54:53
@@ -125,7 +144,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+    boolean deleteTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
 
     /**
      * @date 2016年1月15日 上午9:41:20
@@ -134,7 +153,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList) throws Exception;
+    boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList) throws Exception;
 
     /**
      * 根据主键以及栏目提取数据
@@ -144,7 +163,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public Knowledge getByIdAndColumnId(long id,int columnType);
+    Knowledge getByIdAndColumnId(long id,int columnType);
 
     /**
      * 根据主键list以及栏目提取数据
@@ -154,7 +173,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception;
+    List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception;
 
     /**
      * @date 2016年1月13日 上午10:54:58
@@ -163,15 +182,15 @@ public interface KnowledgeMongoDao
      * @param size
      * @throws Exception
      */
-    public List<Knowledge> getNoDirectory(long userId,int start,int size);
+    List<Knowledge> getNoDirectory(long userId,int start,int size);
 
-    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids);
+    List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids);
 
-    public void backupKnowledgeBase(KnowledgeBaseSync knowledge);
+    void backupKnowledgeBase(KnowledgeBaseSync knowledge);
 
-    public void deleteBackupKnowledgeBase(long knowledgeId);
+    void deleteBackupKnowledgeBase(long knowledgeId);
 
-    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
+    List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
 
-    public boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType);
+    boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType);
 }

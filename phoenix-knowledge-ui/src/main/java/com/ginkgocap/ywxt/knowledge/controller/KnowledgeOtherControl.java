@@ -58,7 +58,6 @@ public class KnowledgeOtherControl extends BaseController
     @Autowired
     private BigDataSyncTask bigDataSyncTask;
 
-    private final short DEFAULT_KNOWLEDGE_TYPE = 1;
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
     private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
@@ -328,6 +327,8 @@ public class KnowledgeOtherControl extends BaseController
         return result;
     }
 
+    public Logger logger() { return this.logger; }
+
 
     /**
      * 创建知识抽离
@@ -360,7 +361,6 @@ public class KnowledgeOtherControl extends BaseController
             this.size  = size;
         }
 
-        @Override
         public void run() {
             while (true) {
                 List<KnowledgeBaseSync> baseSyncList = null;
