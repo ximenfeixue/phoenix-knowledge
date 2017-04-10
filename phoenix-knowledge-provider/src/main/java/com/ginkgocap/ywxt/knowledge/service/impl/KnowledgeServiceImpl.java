@@ -338,6 +338,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeIds);
     }
 
+    @Override
     public InterfaceResult logicDelete(List<Long> knowledgeIds, final int type)
     {
         if (CollectionUtils.isEmpty(knowledgeIds)) {
@@ -361,7 +362,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
-
+    @Override
     public InterfaceResult logicRecovery(List<Long> knowledgeIds, final int type)
     {
         if (CollectionUtils.isEmpty(knowledgeIds)) {

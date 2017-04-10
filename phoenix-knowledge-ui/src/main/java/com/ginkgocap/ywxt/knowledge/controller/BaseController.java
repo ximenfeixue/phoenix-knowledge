@@ -91,6 +91,10 @@ public abstract class BaseController {
         return user.getName();
     }
 
+    protected boolean isAdmin(HttpServletRequest request) {
+        User user = this.getUser(request);
+        return (user != null && user.getId() == 0);
+    }
 
     protected String getJsonIn(HttpServletRequest request) throws IOException {
         String requestJson=(String)request.getAttribute("requestJson");

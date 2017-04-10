@@ -25,5 +25,5 @@ public interface KnowledgeBatchQueryDao {
 
     List<Knowledge> selectIndexByParam(short type,int page, int size, List<Long> ids);
 
-    List<KnowledgeBase> getAllByPage(final short columnType, final int page, int size);
+    List<KnowledgeBase> getAllByPage(final long userId, final short columnType, final short status, final String title, final int page, int size);
 }

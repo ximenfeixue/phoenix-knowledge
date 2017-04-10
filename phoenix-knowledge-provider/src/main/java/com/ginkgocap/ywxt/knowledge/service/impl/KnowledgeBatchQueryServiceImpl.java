@@ -66,8 +66,8 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
         return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
     }
 
-    public List<KnowledgeBase> getAllByPage(final short type, final int page, final int size)
+    public List<KnowledgeBase> getAllByPage(final long userId, final short columnType, final short status, final String title, final int page, int size)
     {
-        return knowledgeBatchQueryDao.getAllByPage(type, page, size);
+        return knowledgeBatchQueryDao.getAllByPage(userId, columnType, status, title, page, size);
     }
 }

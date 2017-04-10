@@ -211,6 +211,34 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
+    @Override
+    public List<KnowledgeBase> getAllByPage(final long userId, final short columnType, final short status, final String title, final int page, int size)
+    {
+        int start = page * size;
+        size = size > maxSize ? maxSize : size;
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (userId > 0) {
+            criteria.and("cid").is(userId);
+        }
+        if (status >= 0) {
+            criteria.and("status").is(status);
+        }
+        if (StringUtils.isNotBlank(title) || !"null".equals(title)) {
+            criteria.and("title").regex("^" + title + ".*$");;
+        }
+        query.addCriteria(criteria);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        query.skip(start);
+        query.limit(size);
+
+
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
+        return DataCollect.convertDetailToBaseList(detailList, columnType, true);
+    }
+
+
     private List<KnowledgeBase> getKnowledgeBase(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
             logger.error("param is invalidated. start: " + start + ", size: " + size);
@@ -308,21 +336,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             loadingMap.remove(key);
         }
         return result;
-    }
-
-    public List<KnowledgeBase> getAllByPage(final short columnType, final int page, int size)
-    {
-        int start = page * size;
-        size = size > maxSize ? maxSize : size;
-        Query query = new Query();
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        query.skip(start);
-        query.limit(size);
-
-
-        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
-        return DataCollect.convertDetailToBaseList(detailList, columnType, true);
     }
 
     // 首页主页

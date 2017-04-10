@@ -1,9 +1,13 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.IdType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by gintong on 2016/10/30.
@@ -25,17 +31,14 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
 {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeAdminControl.class);
 
-    @Autowired
-    private KnowledgeService knowledgeService;
-
     @ResponseBody
     @RequestMapping(value="/create", method = RequestMethod.POST)
     public InterfaceResult createKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-        User user = this.getUser(request);
-        if(user == null || user.getId() != 0) {
+        if (!isAdmin(request)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
+        User user = this.getUser(request);
         return this.create(request, user);
     }
 
@@ -43,10 +46,11 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     @RequestMapping(value="/update", method = RequestMethod.POST)
     public InterfaceResult updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-        User user = this.getUser(request);
-        if(user == null || user.getId() != 0) {
+        if (!isAdmin(request)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
+
+        User user = this.getUser(request);
         return this.updateKnowledge(request, user);
     }
 
@@ -56,7 +60,12 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     public InterfaceResult deleteKnowledge(HttpServletRequest request, HttpServletResponse response,
                                            @PathVariable long id, @PathVariable int type) throws Exception
     {
-        return null;
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        List<Long> ids = Arrays.asList(id);
+        return this.knowledgeService.logicDelete(ids, type);
     }
 
     @ResponseBody
@@ -64,7 +73,17 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     public InterfaceResult batchDeleteKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable int type) throws Exception
     {
-        return null;
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> idList = KnowledgeUtil.readListValue(Long.class, requestJson);
+        if (CollectionUtils.isEmpty(idList)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        return this.knowledgeService.logicDelete(idList, type);
     }
 
     @ResponseBody
@@ -72,14 +91,32 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     public InterfaceResult batchRecoveryKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable int type) throws Exception
     {
-        return null;
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> idList = KnowledgeUtil.readListValue(Long.class, requestJson);
+        if (CollectionUtils.isEmpty(idList)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        return this.knowledgeService.logicRecovery(idList, type);
     }
 
     @ResponseBody
-    @RequestMapping(value="/getKnowledgeByPage", method = RequestMethod.POST)
-    public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response) throws Exception
+    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.POST)
+    public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
+                                              @PathVariable long userId,@PathVariable short type,
+                                              @PathVariable short status,@PathVariable String title,
+                                              @PathVariable int page,@PathVariable int size) throws Exception
     {
-        return null;
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        List<KnowledgeBase> baseList = knowledgeBatchQueryService.getAllByPage(userId, type, status, title, page, size);
+        return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
     }
 
     @ResponseBody

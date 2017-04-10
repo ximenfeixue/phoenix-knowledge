@@ -145,6 +145,22 @@ public interface KnowledgeService
     public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnId) throws Exception;
 
     /**
+     * @param knowledgeIds
+     * @param type
+     * @return
+     * @throws Exception
+     * */
+    public InterfaceResult logicDelete(List<Long> knowledgeIds, final int type);
+
+    /**
+     * @param knowledgeIds
+     * @param type
+     * @return
+     * @throws Exception
+     * */
+    public InterfaceResult logicRecovery(List<Long> knowledgeIds, final int type);
+
+    /**
      * @param knowledgeId
      * @param columnId 由于知识详细表信息为分库存储，则columnId为必须字段
      * @return
