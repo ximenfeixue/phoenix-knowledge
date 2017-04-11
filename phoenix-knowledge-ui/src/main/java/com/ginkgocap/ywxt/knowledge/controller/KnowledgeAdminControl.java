@@ -105,6 +105,52 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
+    @RequestMapping(value="/topKnowledge/{type}", method = RequestMethod.DELETE)
+    public InterfaceResult topKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                                @PathVariable short type) throws Exception  {
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> idList = KnowledgeUtil.readListValue(Long.class, requestJson);
+        if (CollectionUtils.isEmpty(idList)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeService.addTopKnowledge(idList, type);
+        } catch (Exception ex) {
+            logger.error("add top knowledge failed. error: " + ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+        return InterfaceResult.getSuccessInterfaceResultInstance(true);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/cancelTopKnowledge/{type}", method = RequestMethod.DELETE)
+    public InterfaceResult cancelTopKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                                  @PathVariable short type) throws Exception {
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        List<Long> idList = KnowledgeUtil.readListValue(Long.class, requestJson);
+        if (CollectionUtils.isEmpty(idList)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+        }
+
+        try {
+            this.knowledgeService.deleteTopKnowledge(idList, type);
+        } catch (Exception ex) {
+            logger.error("delete top knowledge failed. error: " + ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+        return InterfaceResult.getSuccessInterfaceResultInstance(true);
+    }
+
+    @ResponseBody
     @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.POST)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,

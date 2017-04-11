@@ -426,4 +426,10 @@ public interface KnowledgeService
     public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size) throws Exception;
 
     public boolean syncKnowledgeBase(KnowledgeBaseSync knowledgeSync) throws Exception;
+
+    public void addTopKnowledge(List<Long> ids, short type);
+
+    public void deleteTopKnowledge(List<Long> ids, short type);
+
+    public List<KnowledgeBase> getTopKnowledge(short type, int size);
 }

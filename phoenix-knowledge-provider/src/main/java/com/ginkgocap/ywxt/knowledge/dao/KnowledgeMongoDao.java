@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
@@ -166,6 +167,16 @@ public interface KnowledgeMongoDao
     Knowledge getByIdAndColumnId(long id,int columnType);
 
     /**
+     * 根据主键以及栏目提取数据
+     * @date 2016年1月13日 上午10:54:56
+     * @param ids
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    List<KnowledgeBase> getAllByIdsType(List<Long> ids, short type);
+
+    /**
      * 根据主键list以及栏目提取数据
      * @date 2016年1月13日 上午10:54:58
      * @param ids
@@ -193,4 +204,10 @@ public interface KnowledgeMongoDao
     List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
 
     boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType);
+
+    void addTopKnowledge(List<Long> ids, short type);
+
+    void deleteTopKnowledge(List<Long> ids, short type);
+
+    List<KnowledgeBase> getTopKnowledge(short type, int size);
 }

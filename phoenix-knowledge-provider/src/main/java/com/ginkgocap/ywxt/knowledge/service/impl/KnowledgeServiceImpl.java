@@ -604,6 +604,21 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
     }
 
+    @Override
+    public void addTopKnowledge(List<Long> ids, short type) {
+        this.knowledgeMongoDao.addTopKnowledge(ids, type);
+    }
+
+    @Override
+    public void deleteTopKnowledge(List<Long> ids, short type) {
+        this.knowledgeMongoDao.deleteTopKnowledge(ids, type);
+    }
+
+    @Override
+    public List<KnowledgeBase> getTopKnowledge(short type, int size) {
+        return this.getTopKnowledge(type, size);
+    }
+
     private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)
     {
         boolean result = false;

@@ -2,9 +2,11 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
@@ -39,6 +41,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
     @Autowired
     private KnowledgeCommonService knowledgeCommonService;
+
+    private static final String topKnowledge = "TopKnowledge";
 
     private final int maxSize = 20;
 
@@ -218,6 +222,20 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
+    public List<KnowledgeBase> getAllByIdsType(final List<Long> ids, final short type)
+    {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("status").is(4);
+        criteria.and("_id").in(ids);
+        query.addCriteria(criteria);
+
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
+        return DataCollect.convertDetailToBaseList(detailList, type, true);
+    }
+
+    @Override
     public Knowledge insertAfterDelete(Knowledge knowledge) throws Exception {
 
         if(knowledge == null || knowledge.getId() <= 0) {
@@ -309,6 +327,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return null;
     }
 
+    @Override
     public void backupKnowledgeBase(KnowledgeBaseSync knowledgeSync)
     {
         if (knowledgeSync == null) {
@@ -317,6 +336,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         mongoTemplate.save(knowledgeSync, Constant.Collection.KnowledgeBaseSync);
     }
 
+    @Override
     public void deleteBackupKnowledgeBase(long knowledgeId)
     {
         if (knowledgeId < 0) {
@@ -326,6 +346,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         mongoTemplate.remove(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
     }
 
+    @Override
     public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size) {
         Query query = new Query();
         long count = mongoTemplate.count(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
@@ -345,6 +366,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return mongoTemplate.find(query, KnowledgeBaseSync.class, Constant.Collection.KnowledgeBaseSync);
     }
 
+    @Override
     public boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType) {
         final String keyWord = moduleType.keyWord();
         if (CollectionUtils.isEmpty(idList)) {
@@ -365,6 +387,46 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         return updateIdToDB(query, collectionName, keyWord, idList);
+    }
+
+    @Override
+    public void addTopKnowledge(final List<Long> ids, final short type) {
+
+        List<KnowledgeBase> baseList = this.getAllByIdsType(ids, type);
+        if (CollectionUtils.isNotEmpty(baseList)) {
+            mongoTemplate.insert(baseList, topKnowledge);
+            logger.info("add top knowledge success..");
+        } else {
+            logger.error("add top knowledge failed..");
+        }
+    }
+
+    @Override
+    public void deleteTopKnowledge(final List<Long> ids, final short type) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("type").is(type);
+        criteria.and("_id").in(ids);
+        query.addCriteria(criteria);
+
+        WriteResult result = mongoTemplate.remove(query, topKnowledge);
+        if (result.getN() > 0) {
+            logger.info("delete top knowledge success..");
+        } else {
+            logger.error("delete top knowledge failed..");
+        }
+    }
+
+    @Override
+    public List<KnowledgeBase> getTopKnowledge(short type, int size) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("type").is(type);
+        query.addCriteria(criteria);
+        query.limit(size);
+        query.skip(0);
+
+        return mongoTemplate.find(query, KnowledgeBase.class, topKnowledge);
     }
 
     private String getCollectionName(String columnId) {
