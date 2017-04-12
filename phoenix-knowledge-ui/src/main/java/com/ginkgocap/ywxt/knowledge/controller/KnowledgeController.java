@@ -1118,8 +1118,6 @@ public class KnowledgeController extends BaseKnowledgeController
 
         try {
             typeId = typeId <= 0 ? 1 : typeId;
-            this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
-            typeId = typeId <= 0 ? 1 : typeId;
             InterfaceResult result = this.knowledgeOtherService.deleteCollectedKnowledge(userId, knowledgeId, typeId);
             logger.info("cancel collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
             return result;
