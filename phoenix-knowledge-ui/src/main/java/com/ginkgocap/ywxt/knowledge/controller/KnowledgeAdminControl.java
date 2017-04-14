@@ -69,7 +69,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/batchDelete/{type}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/batchDelete/{type}", method = RequestMethod.PUT)
     public InterfaceResult batchDeleteKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable int type) throws Exception
     {
@@ -87,7 +87,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/batchRecovery/{type}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/batchRecovery/{type}", method = RequestMethod.PUT)
     public InterfaceResult batchRecoveryKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable int type) throws Exception
     {
@@ -105,7 +105,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/topKnowledge/{type}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/topKnowledge/{type}", method = RequestMethod.POST)
     public InterfaceResult topKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                 @PathVariable short type) throws Exception  {
         if (!isAdmin(request)) {
@@ -128,7 +128,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/cancelTopKnowledge/{type}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/cancelTopKnowledge/{type}", method = RequestMethod.PUT)
     public InterfaceResult cancelTopKnowledge(HttpServletRequest request, HttpServletResponse response,
                                                   @PathVariable short type) throws Exception {
         if (!isAdmin(request)) {
@@ -151,7 +151,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.POST)
+    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,
                                               @PathVariable short status,@PathVariable String title,
