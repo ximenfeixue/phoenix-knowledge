@@ -330,13 +330,15 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        /*
         if (result == null || result.getResponseData() == null) {
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
             return mappingJacksonValue(result);
         }
-        DataCollect data = result.getResponseData();
+        DataCollect data = result.getResponseData();*/
         logger.info(".......get knowledge detail complete......");
-        MappingJacksonValue jacksonValue = knowledgeDetail(data);
+        //MappingJacksonValue jacksonValue = knowledgeDetail(data);
 
         return jacksonValue;
     }
@@ -354,7 +356,10 @@ public class KnowledgeController extends BaseKnowledgeController
         User user = this.getJTNUser(request);
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        if (result != null) {
+        if (result == null || result.getNotification() == null || !"0".equals(result.getNotification().getNotifCode())) {
+            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
+            return jacksonValue;
+        } else {
             DataCollect data = result.getResponseData();
             if (data == null || data.getKnowledgeDetail() == null) {
                 logger.error("get knowledge detail failed: knowledgeId: " + knowledgeId);
@@ -377,10 +382,8 @@ public class KnowledgeController extends BaseKnowledgeController
             KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
             data.setKnowledgeDetail(webDetail);
             jacksonValue = knowledgeDetail(data);
-        } else {
-            logger.info("Query knowledge detail failed.");
+            return jacksonValue;
         }
-        return jacksonValue;
     }
 
     /**
@@ -1818,6 +1821,11 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.error("get knowledge failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
         }
+        if (detail.getStatus() != 4) {
+            logger.error("this knowledge is disabled: knowledgeId: " + knowledgeId + ", columnId: " + columnType + " status: " + detail.getStatus());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "该知识已经被禁用!");
+        }
+
         /*
         if (!isWeb) {
             String convertContent =  Utils.txt2Html(detail.getContent(), null, null, detail.getS_addr());
