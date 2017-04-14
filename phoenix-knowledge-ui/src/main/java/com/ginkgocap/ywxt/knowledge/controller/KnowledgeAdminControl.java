@@ -43,7 +43,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/update", method = RequestMethod.POST)
+    @RequestMapping(value="/update", method = RequestMethod.PUT)
     public InterfaceResult updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         if (!isAdmin(request)) {
