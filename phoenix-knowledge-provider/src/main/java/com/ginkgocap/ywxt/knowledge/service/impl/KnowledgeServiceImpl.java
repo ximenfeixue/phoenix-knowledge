@@ -349,7 +349,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         boolean result = this.knowledgeMongoDao.logicDeleteByIdsType(knowledgeIds, type);
         if (!result) {
             logger.error("logic delete knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
 
         //知识简表删除
@@ -357,9 +357,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             this.knowledgeMysqlDao.logicDeleteByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("logic delete knowledge base failed： error: " + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
     }
 
     @Override
@@ -373,7 +373,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         boolean result = this.knowledgeMongoDao.logicRecoveryByIdsType(knowledgeIds, type);
         if (!result) {
             logger.error("logic recovery knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
 
         //知识简表删除
@@ -381,9 +381,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             this.knowledgeMysqlDao.logicRecoveryByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("logic recovery knowledge base failed： error: " + e.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
     }
 
     @Override
