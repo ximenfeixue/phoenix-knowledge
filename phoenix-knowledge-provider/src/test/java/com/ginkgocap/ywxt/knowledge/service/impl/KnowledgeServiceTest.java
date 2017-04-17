@@ -374,6 +374,21 @@ public class KnowledgeServiceTest extends TestBase {
         }
     }
 
+    @Test
+    public void testLogicDelete()
+    {
+        List<Long> idList = Arrays.asList(317032714564541L, 317032315524341L, 3161205150842410006L);
+        InterfaceResult result = knowledgeService.logicDelete(idList, 1);
+        System.out.println("result: " + result);
+    }
+
+    @Test
+    public void testLogicRecory()
+    {
+        List<Long> idList = Arrays.asList(317032714564541L, 317032315524341L, 3161205150842410006L);
+        InterfaceResult result = knowledgeService.logicRecovery(idList, 1);
+        System.out.println("result: " + result);
+    }
     /*
     @Test
     public void testGetAllByTagId()

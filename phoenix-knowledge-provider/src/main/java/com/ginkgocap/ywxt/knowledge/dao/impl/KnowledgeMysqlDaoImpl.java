@@ -103,7 +103,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public boolean logicDeleteByIds(List<Long> knowledgeIds)
 	{
-		return this.updateKnowledgeStatus(knowledgeIds, 0);
+		return this.updateKnowledgeStatus(knowledgeIds, 5);
 	}
 
 	@Override
@@ -366,7 +366,8 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 
 	private boolean updateKnowledgeStatus(List<Long> knowledgeIds, final int staus) {
 		if (CollectionUtils.isNotEmpty(knowledgeIds)) {
-			final String ids = knowledgeIds.toArray().toString();
+			String ids = knowledgeIds.toString();
+			ids = ids.substring(1, ids.length()-1);
 			final String updateSql = "update tb_knowledge_base set status = "+ staus + " where id in (" + ids + ")";
 			try {
 				return this.updateByRawSql(updateSql);
