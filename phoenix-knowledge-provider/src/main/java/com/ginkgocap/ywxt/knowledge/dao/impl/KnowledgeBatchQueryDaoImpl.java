@@ -218,10 +218,10 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         size = size > maxSize ? maxSize : size;
         Query query = new Query();
         Criteria criteria = new Criteria();
-        /*
+
         if (userId > 0) {
             criteria.and("cid").is(userId);
-        }*/
+        }
 
         if (status >= 0) {
             criteria.and("status").is(status);
