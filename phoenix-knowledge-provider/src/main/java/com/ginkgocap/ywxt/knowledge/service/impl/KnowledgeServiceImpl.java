@@ -181,6 +181,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //知识简表更新
         try {
             if (base != null) {
+                base.setStatus((short) defaultStatus);
                 this.knowledgeMysqlDao.update(base);
             }
         } catch (Exception e) {
@@ -772,6 +773,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private void filterKnowledge(Knowledge detail)
     {
+        detail.setStatus(defaultStatus);
         String orgContent = detail.getContent();
         if (orgContent != null) {
             List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>", "");

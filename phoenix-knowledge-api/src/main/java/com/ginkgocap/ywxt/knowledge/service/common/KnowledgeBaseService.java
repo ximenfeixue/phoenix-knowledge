@@ -8,4 +8,5 @@ import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 public interface KnowledgeBaseService {
     public final long APPID = KnowledgeConstant.DEFAULT_APP_ID;
     public final short sourceType = KnowledgeConstant.DEFAULT_SOURCE_TYPE;
+    public final int defaultStatus = 4;
 }
