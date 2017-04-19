@@ -163,7 +163,7 @@ public abstract class BaseKnowledgeController extends BaseController {
 
         final int newType = KnowledgeUtil.parserColumnId(detail.getColumnType());
         if (newType == data.getOldType()) {
-            logger().info("becase oldType and newType same, so set oldType = 0");
+            logger().info("as oldType and newType same, so set oldType = 0");
             data.setOldType(0);
         }
 
