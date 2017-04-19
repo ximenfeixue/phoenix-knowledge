@@ -399,7 +399,7 @@
         </repository>
 
         <repository>
-            <id>nexus-snapshort</id>
+            <id>nexus-snapshot</id>
             <name>Team Nexus Repository</name>
             <url>http://192.168.101.89:8081/nexus/content/repositories/snapshots/</url>
             <snapshots>

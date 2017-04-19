@@ -160,10 +160,6 @@ public abstract class BaseKnowledgeController extends BaseController {
             logger().error("request knowledgeDetail is null or incorrect");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
-        if (detail.getCid() != userId) {
-            logger().error("no permssion to update. userId: " + userId + "knowledgeId: " + detail.getId());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        }
 
         final int newType = KnowledgeUtil.parserColumnId(detail.getColumnType());
         if (newType == data.getOldType()) {
@@ -271,6 +267,9 @@ public abstract class BaseKnowledgeController extends BaseController {
         if (StringUtils.isEmpty(detail.getModifytime())) {
             detail.setModifytime(String.valueOf(detail.getModifytime()));
         }
+
+        //set status to default 4
+        detail.setStatus(4);
 
         return detail;
     }
