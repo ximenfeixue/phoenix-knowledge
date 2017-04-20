@@ -233,13 +233,13 @@ public abstract class BaseController {
     protected boolean Success(InterfaceResult result)
     {
         return (result != null && result.getNotification() != null &&
-                CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
+                CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode()));
     }
 
     protected boolean Failed(InterfaceResult result)
     {
         return (result == null || result.getNotification() == null ||
-                !CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
+                !CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode()));
     }
 
     protected boolean FailedGetKnowledge(InterfaceResult<DataCollect> result, MappingJacksonValue jacksonValue, final long knowledgeId, final int type)
