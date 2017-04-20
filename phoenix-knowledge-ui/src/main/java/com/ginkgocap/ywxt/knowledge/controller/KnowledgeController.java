@@ -331,14 +331,24 @@ public class KnowledgeController extends BaseKnowledgeController
 
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
         /*
-        if (result == null || result.getResponseData() == null) {
-            result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识详情失败!");
+        if (Failed(result)) {
+            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
             return mappingJacksonValue(result);
         }
-        DataCollect data = result.getResponseData();*/
-        logger.info(".......get knowledge detail complete......");
-        //MappingJacksonValue jacksonValue = knowledgeDetail(data);
+
+        DataCollect data = result.getResponseData();
+        if (data == null || data.getKnowledgeDetail() == null) {
+            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
+        }*/
+
+        DataCollect data = result.getResponseData();
+        logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
+        jacksonValue = knowledgeDetail(data);
 
         return jacksonValue;
     }
@@ -354,36 +364,43 @@ public class KnowledgeController extends BaseKnowledgeController
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getJTNUser(request);
+
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
-        if (result == null || result.getNotification() == null || !"0".equals(result.getNotification().getNotifCode())) {
-            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
-            return jacksonValue;
-        } else {
-            DataCollect data = result.getResponseData();
-            if (data == null || data.getKnowledgeDetail() == null) {
-                logger.error("get knowledge detail failed: knowledgeId: " + knowledgeId);
-                return jacksonValue;
-            }
-            long userId = user.getId();
-            Knowledge detail = data.getKnowledgeDetail();
-            List<Long> tags = detail.getTagList();
-            List<Long> directoryIds = detail.getDirectorys();
-            List<IdName> minTags = this.getMinTagList(tags);
-            List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
-            logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
-                         " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
-            long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
-            ColumnSelf columnSelf = getColumn(columnId);
-            IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
-            if (column != null) {
-                logger.info("get column info: Id: " + column.getId() + " name: " + column.getName());
-            }
-            KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
-            data.setKnowledgeDetail(webDetail);
-            jacksonValue = knowledgeDetail(data);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
         }
+        /*
+        if (Failed(result)) {
+            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(result);
+        }
+
+        DataCollect data = result.getResponseData();
+        if (data == null || data.getKnowledgeDetail() == null) {
+            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
+        }*/
+
+        DataCollect data = result.getResponseData();
+        Knowledge detail = data.getKnowledgeDetail();
+        List<Long> tags = detail.getTagList();
+        List<Long> directoryIds = detail.getDirectorys();
+        List<IdName> minTags = this.getMinTagList(tags);
+        long userId = user.getId() == 0 ? detail.getCid() : user.getId();
+        List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
+        logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
+                     " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
+        long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+        ColumnSelf columnSelf = getColumn(columnId);
+        IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
+        if (column != null) {
+            logger.info("get column info: Id: " + column.getId() + " name: " + column.getName());
+        }
+        KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
+        data.setKnowledgeDetail(webDetail);
+        return knowledgeDetail(data);
+
     }
 
     /**

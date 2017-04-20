@@ -242,6 +242,22 @@ public abstract class BaseController {
                 !CommonResultCode.SUCCESS.equals(result.getNotification().getNotifCode()));
     }
 
+    protected boolean FailedGetKnowledge(InterfaceResult<DataCollect> result, MappingJacksonValue jacksonValue, final long knowledgeId, final int type)
+    {
+        if (Failed(result)) {
+            logger().error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
+            return true;
+        }
+
+        DataCollect data = result.getResponseData();
+        if (data == null || data.getKnowledgeDetail() == null) {
+            logger().error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
+            jacksonValue.setValue(CommonResultCode.PARAMS_EXCEPTION);
+            return true;
+        }
+        return false;
+    }
+
     protected void convertKnowledgeContent(Knowledge knowledge, String content, List<String> listImageUrl, List<String> listImageUrl2, String orgUrl, boolean isWeb)
     {
         if (StringUtils.isEmpty(content)) {
