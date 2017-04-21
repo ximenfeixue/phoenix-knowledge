@@ -151,7 +151,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/getTopKnowledge/{type}/{page}/{size}", method = RequestMethod.PUT)
+    @RequestMapping(value="/getTopKnowledge/{type}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult getTopKnowledge(HttpServletRequest request, HttpServletResponse response,
                                            @PathVariable short type, @PathVariable int page,
                                            @PathVariable int size) throws Exception {
