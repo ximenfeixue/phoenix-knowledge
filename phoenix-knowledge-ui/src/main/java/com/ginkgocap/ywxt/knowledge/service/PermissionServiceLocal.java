@@ -232,6 +232,15 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
             if (permission.getPerTime() == null) {
                 permission.setPerTime(new Date());
             }
+            if (permission.getPublicFlag() == null) {
+                permission.setPublicFlag(0);
+            }
+            if (permission.getConnectFlag() == null) {
+                permission.setConnectFlag(0);
+            }
+            if (permission.getShareFlag() == null) {
+                permission.setShareFlag(0);
+            }
         }
         return permission;
     }

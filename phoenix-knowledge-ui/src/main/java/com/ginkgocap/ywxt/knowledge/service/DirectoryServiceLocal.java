@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.ResItem;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -280,7 +281,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     {
         //save directory
         List<Long> directoryIds = knowledgeDetail.getDirectorys();
-        if (directoryIds == null || directoryIds.size() <= 0) {
+        if (CollectionUtils.isEmpty(directoryIds)) {
             logger.error("directory List is empty, so skip to save..");
             return null;
         }
@@ -368,13 +369,13 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         int size = directoryIds.size();
         List<Long> successIds = new ArrayList<Long>(size);
         for (int index = 0; index < size; index++) {
-            logger.info("directoryId: {}", directoryIds.get(index));
-            if (directoryIds.get(index) == null || !(directoryIds.get(index) instanceof Long)) {
-                logger.error("directoryId: {} is invalidated, so skip to add to knowledge, id: {}", directoryIds.get(index), detail.getId());
+            final Long directoryId = directoryIds.get(index);
+            if (directoryId == null) {
+                logger.error("directoryId: " + directoryId + " is invalidated, knowledgeId: " +  detail.getId());
                 continue;
             }
 
-            Long directoryId = directoryIds.get(index);
+            logger.info("directoryId: " + directoryId);
             try {
                 DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, detail);
                 logger.info("before create directory source. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
@@ -382,8 +383,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 successIds.add(directoryId);
                 logger.info("create directory source success. directoryId:" + directoryId + " knowledgeId: " + knowledgeId);
             } catch (Exception ex) {
-                logger.info("create directory source, failed. userId: {}, knowledgeId: {}, directoryId: {} error: {}",
-                        userId, knowledgeId, directoryId, ex.getMessage());
+                logger.info("create directory source failed. userId: " + userId + ", knowledgeId: " + knowledgeId + ", directoryId: " + directoryId + " error: " + ex.getMessage());
             }
         }
         return successIds;

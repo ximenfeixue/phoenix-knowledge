@@ -48,6 +48,10 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
         Map<Long, List<Associate>> assoMap = new HashMap<Long, List<Associate>>(4);
         for (int index = 0; index < as.size(); index++) {
             Associate associate = as.get(index);
+            if (associate == null) {
+                logger.error("associate is null, so skip save it.");
+                continue;
+            }
             associate.setUserId(userId);
             associate.setUserName(user.getName());
             associate.setSourceId(knowledgeId);
@@ -92,7 +96,12 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
             List<Associate> associateList = (List)i.next();
             for (int j = 0; j < associateList.size(); j++) {
                 try {
-                    associateService.removeAssociate(APPID, userId, associateList.get(j).getId());
+                    final Associate associate = associateList.get(j);
+                    if (associate == null) {
+                        logger.error("associate is null, so skip save it.");
+                        continue;
+                    }
+                    associateService.removeAssociate(APPID, userId, associate.getId());
                 }catch (Exception ex) {
                     logger.error("delete Associate failed, reason: {}", ex.getMessage());
                 }
