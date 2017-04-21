@@ -227,7 +227,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             criteria.and("status").is(status);
         }
         if (StringUtils.isNotBlank(title) && !"null".equals(title)) {
-            criteria.and("title").regex("^" + title + ".*$");;
+            criteria.and("title").regex("^" + title + ".*$");
         }
         query.addCriteria(criteria);
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));

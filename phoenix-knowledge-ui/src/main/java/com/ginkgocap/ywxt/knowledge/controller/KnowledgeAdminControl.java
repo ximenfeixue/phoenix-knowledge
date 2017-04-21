@@ -169,11 +169,11 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.GET)
+    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{page}/{size}/{title}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,
-                                              @PathVariable short status,@PathVariable String title,
-                                              @PathVariable int page,@PathVariable int size) throws Exception
+                                              @PathVariable short status, @PathVariable int page,
+                                              @PathVariable int size,@PathVariable String title) throws Exception
     {
         if (!isAdmin(request)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
