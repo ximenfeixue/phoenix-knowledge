@@ -616,8 +616,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getTopKnowledge(short type, int size) {
-        return this.getTopKnowledge(type, size);
+    public List<KnowledgeBase> getTopKnowledgeByPage(final short type, final int page, int size) {
+        return this.knowledgeMongoDao.getTopKnowledgeByPage(type, page, size);
     }
 
     private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)

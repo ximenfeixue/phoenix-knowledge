@@ -151,6 +151,24 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
+    @RequestMapping(value="/getTopKnowledge/{type}/{page}/{size}", method = RequestMethod.PUT)
+    public InterfaceResult getTopKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                           @PathVariable short type, @PathVariable int page,
+                                           @PathVariable int size) throws Exception {
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        try {
+            List<KnowledgeBase> baseList = this.knowledgeService.getTopKnowledgeByPage(type, page, size);
+            return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
+        } catch (Exception ex) {
+            logger.error("delete top knowledge failed. error: " + ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{title}/{page}/{size}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,

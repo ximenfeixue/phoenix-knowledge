@@ -431,5 +431,5 @@ public interface KnowledgeService
 
     public void deleteTopKnowledge(List<Long> ids, short type);
 
-    public List<KnowledgeBase> getTopKnowledge(short type, int size);
+    public List<KnowledgeBase> getTopKnowledgeByPage(short type, int page, int size);
 }

@@ -418,13 +418,25 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public List<KnowledgeBase> getTopKnowledge(short type, int size) {
+    public List<KnowledgeBase> getTopKnowledgeByPage(final short type, final int page, int size) {
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("type").is(type);
         query.addCriteria(criteria);
+
+        long count = mongoTemplate.count(query, KnowledgeBase.class, topKnowledge);
+        final int start = page * size;
+        if (start >= count) {
+            return null;
+        }
+        if (size > maxSize) {
+            size = maxSize;
+        }
+        if (size > count) {
+            size = (int)count;
+        }
+        query.skip(start);
         query.limit(size);
-        query.skip(0);
 
         return mongoTemplate.find(query, KnowledgeBase.class, topKnowledge);
     }

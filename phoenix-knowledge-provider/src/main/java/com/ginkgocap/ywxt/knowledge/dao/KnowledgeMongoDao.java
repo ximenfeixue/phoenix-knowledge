@@ -32,7 +32,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception;
+    List<Knowledge> insertList(List<Knowledge> KnowledgeList, int type) throws Exception;
 
     /**
      * 更新
@@ -61,7 +61,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    boolean addTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+    boolean addTag(long userId, long knowledgeId, int type, List<Long> tagIdList);
 
     /**
      * 更新
@@ -72,7 +72,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    boolean addDirectory(final long userId, final long knowledgeId, final int type, final List<Long> directoryIdList);
+    boolean addDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList);
 
     /**
      * 先删除后插入
@@ -145,7 +145,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    boolean deleteTag(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList);
+    boolean deleteTag(long userId, long knowledgeId, int type, List<Long> tagIdList);
 
     /**
      * @date 2016年1月15日 上午9:41:20
@@ -154,7 +154,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    boolean deleteDirectory(final long userId, final long knowledgeId, final int type, final List<Long> tagIdList) throws Exception;
+    boolean deleteDirectory(long userId, long knowledgeId, int type, List<Long> tagIdList) throws Exception;
 
     /**
      * 根据主键以及栏目提取数据
@@ -203,11 +203,11 @@ public interface KnowledgeMongoDao
 
     List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size);
 
-    boolean updateIds(final long userId, final long knowledgeId, final int type, final List<Long> idList, final EModuleType moduleType);
+    boolean updateIds(long userId, long knowledgeId, int type, List<Long> idList, EModuleType moduleType);
 
     void addTopKnowledge(List<Long> ids, short type);
 
     void deleteTopKnowledge(List<Long> ids, short type);
 
-    List<KnowledgeBase> getTopKnowledge(short type, int size);
+    List<KnowledgeBase> getTopKnowledgeByPage(short type, int page, int size);
 }
