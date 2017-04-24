@@ -739,7 +739,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             filterKnowledge(detail);
             detail.setStatus(4);
             this.knowledgeMongoDao.insert(detail);
-            logger.info("insert knowledge to mongo success. knowledgeId: " + detail.getId());
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
