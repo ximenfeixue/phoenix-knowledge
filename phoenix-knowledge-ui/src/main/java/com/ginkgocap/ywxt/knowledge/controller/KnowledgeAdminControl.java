@@ -179,7 +179,19 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        List<KnowledgeBase> topBaseList = this.knowledgeService.getTopKnowledgeByPage(type, 0, 5);
+
         List<KnowledgeBase> baseList = knowledgeBatchQueryService.getAllByPage(userId, type, status, title, page, size);
+        if (CollectionUtils.isNotEmpty(topBaseList)) {
+            for (KnowledgeBase base : topBaseList) {
+                if (base != null) {
+                    base.setEssence((short) 1);
+                }
+            }
+            topBaseList.addAll(baseList);
+            return InterfaceResult.getSuccessInterfaceResultInstance(topBaseList);
+        }
+
         return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
     }
 

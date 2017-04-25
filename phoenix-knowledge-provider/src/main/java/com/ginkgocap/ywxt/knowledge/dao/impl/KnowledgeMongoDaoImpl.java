@@ -55,7 +55,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
         knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
-        mongoTemplate.save(knowledge, currCollectionName);
+        mongoTemplate.insert(knowledge, currCollectionName);
         return knowledge;
     }
 
