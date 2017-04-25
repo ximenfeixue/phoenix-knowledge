@@ -93,7 +93,9 @@ public abstract class BaseController {
 
     protected boolean isAdmin(HttpServletRequest request) {
         User user = this.getUser(request);
-        return (user != null && user.getId() == 1);
+        boolean isAdmin = (user != null && user.getId() == 1);
+        logger().info("admin permission verify " + (isAdmin ? "success" : "failed."));
+        return isAdmin;
     }
 
     protected String getJsonIn(HttpServletRequest request) throws IOException {
