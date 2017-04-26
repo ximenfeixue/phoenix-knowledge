@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gintong on 2016/10/30.
@@ -179,17 +181,26 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        List<KnowledgeBase> topBaseList = this.knowledgeService.getTopKnowledgeByPage(type, 0, 5);
-
         List<KnowledgeBase> baseList = knowledgeBatchQueryService.getAllByPage(userId, type, status, title, page, size);
-        if (CollectionUtils.isNotEmpty(topBaseList)) {
-            for (KnowledgeBase base : topBaseList) {
-                if (base != null) {
-                    base.setEssence((short) 1);
+        if (page  == 0) {
+            List<KnowledgeBase> topBaseList = this.knowledgeService.getTopKnowledgeByPage(type, 0, 5);
+            if (CollectionUtils.isNotEmpty(topBaseList)) {
+                Map<Long, KnowledgeBase> baseMap = new HashMap<Long, KnowledgeBase>(size + 5);
+                for (KnowledgeBase base : topBaseList) {
+                    if (base != null) {
+                        base.setEssence((short) 1);
+                        baseMap.put(base.getId(), base);
+                    } else {
+                        topBaseList.remove(base);
+                    }
                 }
+                for (KnowledgeBase base : baseList) {
+                    if (base != null && !baseMap.containsKey(base.getId())) {
+                        topBaseList.add(base);
+                    }
+                }
+                return InterfaceResult.getSuccessInterfaceResultInstance(topBaseList);
             }
-            topBaseList.addAll(baseList);
-            return InterfaceResult.getSuccessInterfaceResultInstance(topBaseList);
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
