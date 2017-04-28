@@ -4,6 +4,7 @@ import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -114,6 +115,26 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
+    public Map<Long, Long> getKnowledgeCount(List<Long> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return null;
+        }
+
+        Map<Long, Long> map = new HashMap<Long, Long>(idList.size());
+        for (Long id : idList) {
+            if (id != null) {
+                KnowledgeCount knowledgeCount = getKnowledgeCount(id);
+                if (knowledgeCount != null) {
+                    map.put(id, knowledgeCount.getClickCount());
+                } else {
+                    logger.warn("get knowlegde count object failed. knowledgeId: " + id);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
     {
         KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
@@ -124,6 +145,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         try {
             knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
         } catch (Exception e) {
+            logger.error("get knowlegde count object failed. knowledgeId: " + knowledgeId);
             e.printStackTrace();
         }
 

@@ -795,7 +795,7 @@ public class KnowledgeController extends BaseKnowledgeController
                     //detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
                     knowledgeList = this.knowledgeBatchQueryService.selectPlatformBase(type, columnId, column.getPathName(), userId, start, size);
                 } catch (Exception ex) {
-                    logger.error("invoke selectPlatform() failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
+                    logger.error("invoke selectPlatform failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
                             ,type, columnId, column.getPathName(), userId, ex.getMessage());
                 }
                 //knowledgeList = convertKnowledgeDetailListToBase(detailList, type);

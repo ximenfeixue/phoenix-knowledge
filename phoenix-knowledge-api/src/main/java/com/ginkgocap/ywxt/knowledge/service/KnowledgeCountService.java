@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Chen Peifeng on 2016/5/24.
@@ -20,6 +21,8 @@ public interface KnowledgeCountService {
     public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
 
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
+
+    public Map<Long, Long> getKnowledgeCount(List<Long> idList);
 
     public List<KnowledgeCount> getHotKnowledge(int size);
 
