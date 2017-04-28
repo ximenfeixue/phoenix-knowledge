@@ -205,7 +205,7 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         return true;
     }
 
-    public Permission getPermissionInfo(long knowledgeId)
+    public Permission getPermissionInfo(final long knowledgeId)
     {
         try {
             InterfaceResult<Permission> ret = permissionRepositoryService.selectByRes(knowledgeId, ResourceType.KNOW, APPID);

@@ -285,6 +285,20 @@ public abstract class BaseKnowledgeController extends BaseController {
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 
+    protected Permission getPermission(final long userId, final long knowledgeId) {
+        if (userId == 0 || userId ==1) {
+            logger().info("create default public permission for userId: " + userId + " knowledgeId: " + knowledgeId);
+            return DataCollect.defaultPublicPermission(userId, knowledgeId);
+        }
+        Permission permission = permissionServiceLocal.getPermissionInfo(knowledgeId);
+        if (permission == null) {
+            //set a default value
+            logger().info("Can't get knowledge permission, so set a default value. knowledgeId: " + knowledgeId);
+            return DataCollect.defaultPermission(userId, knowledgeId, 0);
+        }
+        return permission;
+    }
+
     private DynamicNews createDynamicNewsObj(Knowledge detail, User user)
     {
         DynamicNews dynamic = new DynamicNews();

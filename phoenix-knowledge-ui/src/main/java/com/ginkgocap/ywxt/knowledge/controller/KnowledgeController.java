@@ -1892,12 +1892,7 @@ public class KnowledgeController extends BaseKnowledgeController
             detail.setSubmitTime(newTime);
         }
 
-        Permission permission = permissionServiceLocal.getPermissionInfo(knowledgeId);
-        //set a default value
-        if (permission == null) {
-            logger.info("Can't get knowledge permission, so set a default value. knowledgeId: " + knowledgeId);
-            permission = DataCollect.defaultPermission(detail.getCid(), knowledgeId);
-        }
+        Permission permission = getPermission(userId, knowledgeId);
         data.setPermission(permission);
 
         try {
