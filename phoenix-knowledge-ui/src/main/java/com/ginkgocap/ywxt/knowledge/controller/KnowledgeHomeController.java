@@ -354,8 +354,8 @@ public class KnowledgeHomeController extends BaseController {
         return maps;
     }
 
-    private void addKnowledgeType(List<Knowledge> knowledgeList, final int type) {
-        if (CollectionUtils.isEmpty(knowledgeList)) {
+    private void addKnowledgeType(List<Knowledge> knowledgeList, final short type) {
+        if (CollectionUtils.isNotEmpty(knowledgeList)) {
             for (Knowledge knowledge : knowledgeList) {
                 if (knowledge != null) {
                     knowledge.setColumnType(String.valueOf(type));
