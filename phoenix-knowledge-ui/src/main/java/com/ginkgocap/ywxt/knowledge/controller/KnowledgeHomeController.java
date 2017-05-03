@@ -12,6 +12,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnCustomService;
 import org.slf4j.Logger;
@@ -75,6 +76,8 @@ public class KnowledgeHomeController extends BaseController {
         } else {
             knowledgeList = knowledgeHomeService.selectIndexByParam(type, 1, 6);
         }
+        addKnowledgeType(knowledgeList, type);
+
         model.put("list", knowledgeList);
 
         logger.info(" call separate success...");
@@ -349,6 +352,16 @@ public class KnowledgeHomeController extends BaseController {
             }
         }
         return maps;
+    }
+
+    private void addKnowledgeType(List<Knowledge> knowledgeList, final int type) {
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            for (Knowledge knowledge : knowledgeList) {
+                if (knowledge != null) {
+                    knowledge.setColumnType(String.valueOf(type));
+                }
+            }
+        }
     }
 
     public Logger logger() { return this.logger; }
