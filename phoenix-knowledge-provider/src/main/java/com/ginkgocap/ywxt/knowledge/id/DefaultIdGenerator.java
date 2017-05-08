@@ -60,7 +60,7 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
 	  public void run() {
 	    while (true){
 	      try {
-	        Thread.sleep(500 * config.getRollingInterval());
+	        Thread.sleep(1000 * config.getRollingInterval());
 	      } catch (InterruptedException e) {
 	        e.printStackTrace();
 	      }
