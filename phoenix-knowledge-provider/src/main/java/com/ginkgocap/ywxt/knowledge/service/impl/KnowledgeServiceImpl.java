@@ -751,6 +751,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
             return null;
         }
+        logger.info("Insert knowledge detail success. knowledgeId: " + detail.getId());
 
         return savedDetail;
     }
