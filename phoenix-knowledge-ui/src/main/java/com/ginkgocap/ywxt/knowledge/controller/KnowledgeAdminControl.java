@@ -171,6 +171,17 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
+    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{page}/{size}", method = RequestMethod.POST)
+    public InterfaceResult getKnowledgeByPagePost(HttpServletRequest request, HttpServletResponse response,
+                                              @PathVariable long userId,@PathVariable short type,
+                                              @PathVariable short status, @PathVariable int page,
+                                              @PathVariable int size) throws Exception
+    {
+        String keyWord = this.getBodyParam(request);
+        return getKnowledgeByPage(request, response, userId, type, status, page, size, keyWord);
+    }
+
+    @ResponseBody
     @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{page}/{size}/{title}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,

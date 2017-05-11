@@ -14,9 +14,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class KnowledgeServiceTest extends TestBase {
@@ -42,8 +40,12 @@ public class KnowledgeServiceTest extends TestBase {
     @Test
 	public void testInsert() {
         System.out.println("===testInsert===");
-        DataCollect collect = createKnowledge("KnowledgeServiceTest");
-        String data = KnowledgeUtil.writeObjectToJson(collect.getKnowledgeDetail());
+        //DataCollect collect = createKnowledge("KnowledgeServiceTest");
+        Map<Integer, List<Knowledge>> map = new HashMap<Integer, List<Knowledge>>(3);
+        map.put(1, Arrays.asList(TestData.knowledge(1112L, 1, "test1")));
+        map.put(2, Arrays.asList(TestData.knowledge(1112L, 1, "test2")));
+        map.put(3, Arrays.asList(TestData.knowledge(1112L, 1, "test3")));
+        String data = KnowledgeUtil.writeObjectToJson(map);
         System.out.print(data);
     }
 
