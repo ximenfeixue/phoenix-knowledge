@@ -1108,7 +1108,7 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         //collect count
-        knowledgeCountService.updateCollectCount(userId, knowledgeId, (short)typeId);
+        knowledgeCountService.updateCollectCount(knowledgeId, (short)typeId);
         logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
         return result;
     }
@@ -1687,7 +1687,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
     private void getCommentCount(short type, long kId, long userId, Map<Long, Object> commentCountMap) {
         // 评论数
-        KnowledgeCount kCount = knowledgeCountService.getKnowledgeCount(userId, kId, type);
+        KnowledgeCount kCount = knowledgeCountService.getKnowledgeCount(kId, type);
         commentCountMap.put(kId, kCount);
     }
 
@@ -1905,7 +1905,11 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //Click count this should be in queue
         try {
-            KnowledgeCount count = knowledgeCountService.updateClickCount(userId, knowledgeId, (short)columnType);
+            String userName = detail.getCname();
+            if (userName != null && userName.length() > 100) {
+                userName = userName.substring(0,100);
+            }
+            KnowledgeCount count = knowledgeCountService.updateClickCount(detail.getCid(), userName, detail.getTitle(), knowledgeId, (short)columnType);
             final long readCount = count != null ? count.getClickCount() : 0L;
             data.setReadCount(readCount);
         } catch (Exception ex) {

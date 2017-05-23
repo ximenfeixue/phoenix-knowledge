@@ -38,10 +38,13 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     private int expiredTime = 60 * 60 * 24;
 
     @Override
-    public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateClickCount(long userId, String userName, String title, long knowledgeId,short type)
     {
-        KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
+        KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId, type);
         if (knowledgeCount != null) {
+            knowledgeCount.setUserId(userId);
+            knowledgeCount.setUserName(userName);
+            knowledgeCount.setTitle(title);
             knowledgeCount.setClickCount(knowledgeCount.getClickCount() + 1);
             this.setToCache(knowledgeCount);
         }
@@ -49,9 +52,9 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
-    public KnowledgeCount updateShareCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateShareCount(long knowledgeId,short type)
     {
-        KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
+        KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setShareCount(knowledgeCount.getShareCount() + 1);
             this.setToCache(knowledgeCount);
@@ -60,9 +63,9 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
-    public KnowledgeCount updateCollectCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateCollectCount(long knowledgeId,short type)
     {
-        KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
+        KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCollectCount(knowledgeCount.getCollectCount() + 1);
             this.setToCache(knowledgeCount);
@@ -71,9 +74,9 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
-    public KnowledgeCount updateCommentCount(long userId,long knowledgeId,short type)
+    public KnowledgeCount updateCommentCount(long knowledgeId,short type)
     {
-        KnowledgeCount knowledgeCount = getKnowledgeCount(userId, knowledgeId, type);
+        KnowledgeCount knowledgeCount = getKnowledgeCount(knowledgeId, type);
         if (knowledgeCount != null) {
             knowledgeCount.setCommentCount(knowledgeCount.getCommentCount() + 1);
             this.setToCache(knowledgeCount);
@@ -135,7 +138,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
-    public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type)
+    public KnowledgeCount getKnowledgeCount(long knowledgeId, short type)
     {
         KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
         if (knowledgeCount != null ) {

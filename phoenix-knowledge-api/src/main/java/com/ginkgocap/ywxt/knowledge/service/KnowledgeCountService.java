@@ -10,15 +10,15 @@ import java.util.Map;
  */
 public interface KnowledgeCountService {
 
-    public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateClickCount(long userId, String userName, String title, long knowledgeId,short type);
 
-    public KnowledgeCount updateShareCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateShareCount(long knowledgeId,short type);
 
-    public KnowledgeCount updateCollectCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateCollectCount(long knowledgeId,short type);
 
-    public KnowledgeCount updateCommentCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateCommentCount(long knowledgeId,short type);
 
-    public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
+    public KnowledgeCount getKnowledgeCount(long knowledgeId, short type);
 
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
 

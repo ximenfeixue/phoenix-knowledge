@@ -89,7 +89,7 @@ public class KnowledgeCommentController extends BaseController {
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
-                knowledgeCountService.updateCommentCount(-1L, comment.getKnowledgeId(), (short)comment.getColumnId());
+                knowledgeCountService.updateCommentCount(comment.getKnowledgeId(), (short)comment.getColumnId());
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
 

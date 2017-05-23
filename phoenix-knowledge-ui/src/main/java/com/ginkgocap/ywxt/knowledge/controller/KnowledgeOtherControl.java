@@ -87,7 +87,7 @@ public class KnowledgeOtherControl extends BaseController
         long userId = this.getUserId(user);
 
         logger.debug("shareCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
-        knowledgeCountService.updateShareCount(userId, knowledgeId, type);
+        knowledgeCountService.updateShareCount(knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -102,7 +102,7 @@ public class KnowledgeOtherControl extends BaseController
         long userId = this.getUserId(user);
 
         logger.debug("collectCount request, userId: " + userId + " type: " + type +", knowledgeId: " + knowledgeId);
-        knowledgeCountService.updateCollectCount(this.getUserId(user), knowledgeId, type);
+        knowledgeCountService.updateCollectCount(knowledgeId, type);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
