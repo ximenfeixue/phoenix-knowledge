@@ -69,7 +69,6 @@ public class DataSyncTask implements Runnable {
                             final short privated = DataCollect.privated(perm, false);
                             knowledgeOtherService.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
                         }
-
                     }
                     if (result) {
                         dataSyncService.deleteDataSync(dataSync.getId());

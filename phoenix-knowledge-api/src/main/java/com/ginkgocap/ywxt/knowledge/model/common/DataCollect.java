@@ -111,7 +111,7 @@ public class DataCollect implements Serializable
 
     public void initPermission() {
         if (this.knowledgeDetail != null) {
-            if (this.knowledgeDetail.getCid() == 0) {
+            if (this.knowledgeDetail.getCid() == 0 || this.knowledgeDetail.getCid() == 1) {
                 this.knowledgeDetail.setPrivated((short)0);
             } else {
                 this.knowledgeDetail.setPrivated(privated(this.permission));

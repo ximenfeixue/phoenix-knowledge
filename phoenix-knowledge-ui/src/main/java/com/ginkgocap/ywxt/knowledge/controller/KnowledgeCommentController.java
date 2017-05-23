@@ -46,8 +46,8 @@ public class KnowledgeCommentController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public InterfaceResult createComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
-        return createKnowledgeComment(-1L, request, reponse);
+    public InterfaceResult createComment(HttpServletRequest request, HttpServletResponse reponse, @PathVariable Long knowledgeId) {
+        return createKnowledgeComment(request, reponse, -1L);
     }
     /**
      * des:创建评论
@@ -59,7 +59,7 @@ public class KnowledgeCommentController extends BaseController {
      */
     @RequestMapping(value = "/{knowledgeId}", method = RequestMethod.POST)
     @ResponseBody
-    public InterfaceResult createKnowledgeComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
+    public InterfaceResult createKnowledgeComment(HttpServletRequest request, HttpServletResponse reponse, @PathVariable Long knowledgeId) {
         String requestJson = null;
         try {
             User user = getUser(request);
@@ -89,6 +89,7 @@ public class KnowledgeCommentController extends BaseController {
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
+                knowledgeCountService.updateCommentCount(-1L, comment.getKnowledgeId(), (short)comment.getColumnId());
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
 

@@ -18,6 +18,7 @@ import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.ywxt.im.model.MessageNotify;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
@@ -38,6 +39,9 @@ public abstract class BaseController {
 
     @Resource
     private RedisCacheService redisCacheService;
+
+    @Autowired
+    protected KnowledgeCountService knowledgeCountService;
 
     protected final static short KNOWLEDGE_CREATE = 1;
     protected final static short KNOWLEDGE_COLLECT = 2;

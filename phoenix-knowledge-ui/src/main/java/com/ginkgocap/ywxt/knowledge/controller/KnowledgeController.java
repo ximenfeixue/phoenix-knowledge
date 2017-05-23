@@ -52,9 +52,6 @@ public class KnowledgeController extends BaseKnowledgeController
     @Autowired
     private KnowledgeOtherService knowledgeOtherService;
 
-    @Autowired
-    private KnowledgeCountService knowledgeCountService;
-
 
     //@Value("#{configuers.knowledgeBigDataSearchUrl}")
     //private String knowledgeBigDataSearchUrl;
