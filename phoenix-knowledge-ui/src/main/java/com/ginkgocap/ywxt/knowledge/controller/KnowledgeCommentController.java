@@ -74,10 +74,14 @@ public class KnowledgeCommentController extends BaseController {
             }
 
             KnowledgeComment comment = KnowledgeUtil.readValue(KnowledgeComment.class, requestJson);
-            if (comment == null || StringUtils.isBlank(comment.getContent())) {
+            if (comment.getKnowledgeId() <= 0 || comment.getColumnId() <= 0 || comment == null || StringUtils.isBlank(comment.getContent())) {
+                logger.error("param is invalidated. knowId: " + comment.getKnowledgeId() + " columnType: " + comment.getColumnId() + " content: " + comment.getContent());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
+            if (comment.getColumnType() <= 0) {
+                comment.setColumnType(comment.getColumnId());
+            }
             comment.setOwnerId(user.getId());
             comment.setOwnerName(user.getName());
             comment.setPic(user.getPicPath());
