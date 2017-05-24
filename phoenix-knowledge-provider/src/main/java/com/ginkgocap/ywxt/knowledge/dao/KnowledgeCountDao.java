@@ -15,6 +15,8 @@ public interface KnowledgeCountDao {
 
     public void saveKnowledgeCountList(List<KnowledgeCount> knowledgeCountList)throws Exception;
 
+    public boolean deleteKnowledgeCount(long knowledgeId)throws Exception;
+
     public List<KnowledgeCount> getHotKnowledge(int size);
 
     public List<KnowledgeCount> getHotKnowledgeByPage(int start,int size);

@@ -44,6 +44,11 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
         return this.getEntity(knowledgeId);
     }
 
+    public boolean deleteKnowledgeCount(long knowledgeId)throws Exception
+    {
+        return this.deleteEntity(knowledgeId);
+    }
+
     @Override
     public void saveKnowledgeCount(KnowledgeCount knowledgeCount) throws Exception
     {

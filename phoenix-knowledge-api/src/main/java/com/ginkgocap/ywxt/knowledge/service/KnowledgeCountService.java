@@ -24,6 +24,8 @@ public interface KnowledgeCountService {
 
     public Map<Long, Long> getKnowledgeCount(List<Long> idList);
 
+    public boolean deleteKnowledgeCount(long knowledgeId);
+
     public List<KnowledgeCount> getHotKnowledge(int size);
 
     public List<KnowledgeCount> getHotKnowledgeByPage(int start,int size);
