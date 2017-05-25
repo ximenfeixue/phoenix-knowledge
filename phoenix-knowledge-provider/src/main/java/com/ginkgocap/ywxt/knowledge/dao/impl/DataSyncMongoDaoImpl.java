@@ -34,7 +34,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     @Override
     public long saveDataSync(DataSync data) {
         try {
-            long id = knowledgeCommonService.getKnowledgeSequenceId();
+            long id = knowledgeCommonService.getUniqueSequenceId("4");
             data.setId(id);
             mongoTemplate.save(data, collectionName);
             return id;

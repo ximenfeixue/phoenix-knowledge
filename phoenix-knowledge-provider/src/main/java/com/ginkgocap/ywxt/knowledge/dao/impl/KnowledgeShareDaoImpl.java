@@ -35,7 +35,7 @@ public class KnowledgeShareDaoImpl implements KnowledgeShareDao {
     @Override
     public KnowledgeShare save(KnowledgeShare knowledgeShare) {
         knowledgeShare.setCtime(DateUtil.currentTime());
-        knowledgeShare.setId(knowledgeCommonService.getKnowledgeSequenceId());
+        knowledgeShare.setId(knowledgeCommonService.getUniqueSequenceId("1"));
         mongoTemplate.save(knowledgeShare);
         return knowledgeShare;
     }

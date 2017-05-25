@@ -31,6 +31,8 @@
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
+	<bean id="idService" class="com.ginkgocap.ywxt.framework.service.IdService"/>
+	<bean id="cloudIdService" class="com.ginkgocap.ywxt.framework.service.CloudIdService"/>
     <bean id="knowledgeCountServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeCountServiceImpl"/>
     <bean id="knowledgeCommonServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.common.KnowledgeCommonServiceImpl"/>
 

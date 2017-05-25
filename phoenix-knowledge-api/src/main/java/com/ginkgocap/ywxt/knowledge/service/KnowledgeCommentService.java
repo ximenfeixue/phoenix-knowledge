@@ -30,6 +30,8 @@ public interface KnowledgeCommentService {
      */
     boolean delete(long commentId,long ownerId);
 
+    boolean cleanComment(long knowledgeId);
+
     /**
      * des:根据knowledgeId查询知识评论集合
      * @param knowledgeId	知识id

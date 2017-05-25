@@ -54,7 +54,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
-        knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
+        knowledge.setId(knowledgeCommonService.getUniqueSequenceId());
         mongoTemplate.insert(knowledge, currCollectionName);
         return knowledge;
     }
@@ -67,7 +67,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             final String collectionName = getCollectionName(type);
             for(Knowledge detail : KnowledgeList) {
                 if (detail != null) {
-                    detail.setId(knowledgeCommonService.getKnowledgeSequenceId());
+                    detail.setId(knowledgeCommonService.getUniqueSequenceId());
                     batchToSave.add(detail);
                 }
                 else {

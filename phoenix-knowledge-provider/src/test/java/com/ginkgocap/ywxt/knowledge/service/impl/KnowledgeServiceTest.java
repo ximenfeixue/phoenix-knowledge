@@ -371,7 +371,7 @@ public class KnowledgeServiceTest extends TestBase {
     public void testGetKnowledgeSequenceId()
     {
         for (int index = 0; index <10000; index++) {
-           long sequenceId = knowledgeCommonService.getKnowledgeSequenceId();
+           long sequenceId = knowledgeCommonService.getUniqueSequenceId();
             System.out.println("sequenceId: " + sequenceId);
         }
     }

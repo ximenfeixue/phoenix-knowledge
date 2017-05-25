@@ -29,6 +29,7 @@
         <phoenix-frame-util.version>1.0.1-SNAPSHOT</phoenix-frame-util.version>
         <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
         <phoenix-framework.version>1.0.0-SNAPSHOT</phoenix-framework.version>
+        <framework-id.version>2.0-SNAPSHOT</framework-id.version>
         <framework-dal.version>1.1.0-SNAPSHOT</framework-dal.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
@@ -54,7 +55,6 @@
         <dubbo.version>2.5.3</dubbo.version>
         <zookeeper.version>3.4.6</zookeeper.version>
         <zkclient.version>0.1</zkclient.version>
-        <c3p0.version>0.9.1.2</c3p0.version>
         <mysql.version>5.1.12</mysql.version>
         <spring-data-mongodb.version>1.8.0.RELEASE</spring-data-mongodb.version>
         <rocketmq.version>1.0.0-SNAPSHOT</rocketmq.version>
@@ -110,6 +110,11 @@
                 <groupId>com.ginkgocap.ywxt</groupId>
                 <artifactId>phoenix-framework-dal</artifactId>
                 <version>${framework-dal.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.ywxt</groupId>
+                <artifactId>phoenix-framework-id</artifactId>
+                <version>${framework-id.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.parasol</groupId>
@@ -305,11 +310,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>c3p0</groupId>
-                <artifactId>c3p0</artifactId>
-                <version>${c3p0.version}</version>
             </dependency>
             <dependency>
                 <groupId>${jdbc.groupId}</groupId>

@@ -54,7 +54,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
         if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
-            collect.setId(knowledgeCommonService.getKnowledgeSequenceId());
+            collect.setId(knowledgeCommonService.getUniqueSequenceId("1"));
             collect.setKnowledgeId(knowledgeId);
             collect.setType((short)typeId);
             collect.setColumnId(typeId);
