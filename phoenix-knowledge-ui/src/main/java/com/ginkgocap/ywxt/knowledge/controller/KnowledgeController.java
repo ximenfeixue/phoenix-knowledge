@@ -126,6 +126,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(result.getNotification().getNotifCode(),"删除知识失败!");
         }
 
+        //Async delete knowledge related resource
         IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, columnType, userId);
         DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
         dataSyncTask.saveDataNeedSync(dataSync);
@@ -198,6 +199,12 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //This need to change to batch delete
         for (long knowledgeId : permDeleteIds) {
+            //asynchronize delete other knowledge resource
+            IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, 1, userId);
+            DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+            dataSyncTask.saveDataNeedSync(dataSync);
+
+            /*
             //delete Assso info
             associateServiceLocal.deleteAssociate(knowledgeId, user.getId());
             //delete tags
@@ -207,9 +214,9 @@ public class KnowledgeController extends BaseKnowledgeController
             directoryServiceLocal.deleteDirectory(userId, knowledgeId);
 
             //delete permission information
-            permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
+            permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);*/
         }
-        String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
+        String resp = "successId: " + permDeleteIds.toString() + " failedId: " + failedIds.toString();
         logger.info("delete knowledge success: " + resp);
 
         result.setResponseData(resp);
