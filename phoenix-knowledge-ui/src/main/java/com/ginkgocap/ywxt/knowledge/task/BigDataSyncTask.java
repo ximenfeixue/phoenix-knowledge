@@ -87,35 +87,37 @@ public class BigDataSyncTask implements Runnable, InitializingBean
     {
         if (syncBigData != null && syncBigData.base != null) {
             BigData base = syncBigData.base;
-            long userId = base.getCid();
-            try {
-                List<String> tagNames = new ArrayList<String>();
-                List<Tag> tagList = tagServiceLocal.getTagList(userId);
-                if (CollectionUtils.isNotEmpty(tagList)) {
-                    Map<Long, Tag> tagMap = new HashMap<Long, Tag>(tagList.size());
-                    for (Tag tag : tagList) {
-                        if (tag != null) {
-                            tagMap.put(tag.getId(), tag);
-                        }
-                    }
-                    List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
-                    for (long id : idList) {
-                        Tag tag = tagMap.get(id);
-                        if (tag != null) {
-                            tagNames.add(tag.getTagName());
-                        } else {
-                            logger.error("Can't find tag by id: " + id);
-                        }
-                    }
-                    if (CollectionUtils.isNotEmpty(tagNames)) {
-                        String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
-                        logger.info("will send to bigdata service. tag names: " + tagNameString);
-                        base.setTags(tagNameString);
-                    }
-                }
-            } catch (Exception ex) {
-                logger.error("get tag list failed. userId : " + userId);
-            }
+			if (!KNOWLEDGE_DELETE.equals(syncBigData.optionType)) {
+				long userId = base.getCid();
+				try {
+					List<String> tagNames = new ArrayList<String>();
+					List<Tag> tagList = tagServiceLocal.getTagList(userId);
+					if (CollectionUtils.isNotEmpty(tagList)) {
+						Map<Long, Tag> tagMap = new HashMap<Long, Tag>(tagList.size());
+						for (Tag tag : tagList) {
+							if (tag != null) {
+								tagMap.put(tag.getId(), tag);
+							}
+						}
+						List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
+						for (long id : idList) {
+							Tag tag = tagMap.get(id);
+							if (tag != null) {
+								tagNames.add(tag.getTagName());
+							} else {
+								logger.error("Can't find tag by id: " + id);
+							}
+						}
+						if (CollectionUtils.isNotEmpty(tagNames)) {
+							String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
+							logger.info("will send to bigdata service. tag names: " + tagNameString);
+							base.setTags(tagNameString);
+						}
+					}
+				} catch (Exception ex) {
+					logger.error("get tag list failed. userId : " + userId);
+				}
+			}
             //base.setTags();
             this.sendMessage(syncBigData.optionType, base);
         }
