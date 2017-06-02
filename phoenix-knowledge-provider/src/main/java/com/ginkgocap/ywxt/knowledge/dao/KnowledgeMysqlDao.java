@@ -140,7 +140,25 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	List<KnowledgeBase> getByCreateUserId(long createUserId,int start,int size) throws Exception;
-	
+
+	/**
+	 * 根据用户 Name 提取
+	 * @param userName
+	 * @return int
+	 * @throws Exception
+	 */
+	int countByCreateUserName(String userName) throws Exception;
+
+	/**
+	 * 根据用户 Name 提取
+	 * @param userName
+	 * @param start 分页起始行数
+	 * @param size 分页大小
+	 * @return int
+	 * @throws Exception
+	 */
+	List<KnowledgeBase> getByCreateUserName(String userName, int start, int size) throws Exception;
+
 	/**
 	 * 根据创建用户与知识类型提取
 	 * @param UserId

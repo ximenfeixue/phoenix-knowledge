@@ -31,10 +31,6 @@
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
-            <list name="get_knowledge_by_Ids"
-                  sqlitem="select id from tb_knowledge_base where knowledge_id in (?)"
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
-
             <list name="get_knowledge_by_Id_keyword"
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? and title like ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
@@ -50,6 +46,10 @@
             <list name="get_by_createUserId"
                 sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
+
+            <list name="get_by_createUserName"
+                  sqlitem="select id from tb_knowledge_base where create_user_name = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="userName" update="true" />
 
             <list name="get_by_createUserId_columnId"
                 sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"

@@ -41,7 +41,7 @@
         <region name="get_knowledge_by_Id" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region>
-        <!-- get_knowledge_by_Ids -->
+
         <!-- region name="get_knowledge_by_Id_keyword" listenerClass="com.ginkgocap.ywxt.framework.dal.cache.listener.DefaultListenerImpl" strategyClass="com.ginkgocap.ywxt.framework.dal.cache.memcached.route.strategy.DefaultStrategy" localCache="false" limitLen="100000">
             <keyPattern value="[0-9A-Za-z]$" datasource="list1" />
         </region -->

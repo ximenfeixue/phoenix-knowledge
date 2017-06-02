@@ -462,9 +462,35 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
+    public int countByCreateUserId(long userId) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
+    }
+
+
+    @Override
     public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
+    }
+
+    @Override
+    public int countByCreateUserName(String userName) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.countByCreateUserName(userName);
+    }
+
+
+    @Override
+    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
     }
 
     @Override
@@ -539,15 +565,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public InterfaceResult<List<DataCollect>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception
     {
         return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
-    }
-
-    @Override
-    public int getKnowledgeCount(long userId) throws Exception
-    {
-        /*if (userId ==0) {
-            return this.knowledgeMongoDao.c
-        }*/
-        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
     }
 
     @Override
