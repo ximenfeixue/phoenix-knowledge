@@ -137,8 +137,11 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         return map;
     }
 
-    public boolean deleteKnowledgeCount(long knowledgeId) {
+    public boolean deleteKnowledgeCount(final long knowledgeId) {
         try {
+            if (this.deleteFromCache(knowledgeId)) {
+                logger.info("delete knowlegde count sucess from cache. knowledgeId: " + knowledgeId);
+            }
             return knowledgeCountDao.deleteKnowledgeCount(knowledgeId);
         } catch (Exception ex) {
             logger.error("delete knowlegde count failed. knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
@@ -254,7 +257,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         logger.info("Knowledge Count save timer start complete...");
     }
 
-    private void setToCache(KnowledgeCount count)
+    private void setToCache(final KnowledgeCount count)
     {
         if (count != null) {
             final long knowledgeId = count.getId();
@@ -266,13 +269,20 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         }
     }
 
-    private KnowledgeCount getFromCache(long knowledgeId)
+    private KnowledgeCount getFromCache(final long knowledgeId)
     {
         String key = knowledgeCountKey(knowledgeId);
         return (KnowledgeCount)this.cache.getByRedis(key);
     }
 
-    private String knowledgeCountKey(long knowledgeId)
+    private boolean deleteFromCache(final long knowledgeId)
+    {
+        String key = knowledgeCountKey(knowledgeId);
+        this.cache.setUseRedis(true);
+        return this.cache.remove(key);
+    }
+
+    private String knowledgeCountKey(final long knowledgeId)
     {
         return "know_count_key_" + knowledgeId;
     }
