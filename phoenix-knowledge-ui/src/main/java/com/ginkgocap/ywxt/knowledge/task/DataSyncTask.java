@@ -154,6 +154,7 @@ public class DataSyncTask implements Runnable {
 
         //send new knowledge to bigdata
         bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);
+        logger.info("clean up knowlege regards resource complete.");
         return true;
     }
 
