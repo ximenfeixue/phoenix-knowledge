@@ -131,6 +131,7 @@ public class DataSyncTask implements Runnable {
         final long userId = idTypeUid.getUid();
         final long knowledgeId = idTypeUid.getId();
         final int columnType = idTypeUid.getType();
+        logger.info("begin clean up knowlege regards resource. knowledgeId: " + knowledgeId + " type: " + columnType);
         //delete tags
         tagServiceLocal.deleteTags(userId, knowledgeId);
 
