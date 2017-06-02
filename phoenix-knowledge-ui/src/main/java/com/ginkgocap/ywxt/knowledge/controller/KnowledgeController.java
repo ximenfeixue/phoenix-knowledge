@@ -3,14 +3,11 @@ package com.ginkgocap.ywxt.knowledge.controller;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.directory.model.Directory;
 import com.ginkgocap.parasol.tags.model.Tag;
-import com.ginkgocap.ywxt.dynamic.model.*;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
-import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
-import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
@@ -24,7 +21,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.parasol.column.entity.ColumnSelf;
-import org.parasol.column.service.ColumnSelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,6 +126,11 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(result.getNotification().getNotifCode(),"删除知识失败!");
         }
 
+        IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, columnType, userId);
+        DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+        dataSyncTask.saveDataNeedSync(dataSync);
+
+        /*
         //delete tags
         tagServiceLocal.deleteTags(userId, knowledgeId);
 
@@ -146,6 +147,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //send new knowledge to bigdata
         bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);
+        */
 
         logger.info(".......delete knowledge success......");
         return result;
@@ -189,7 +191,6 @@ public class KnowledgeController extends BaseKnowledgeController
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             result = this.knowledgeService.batchDeleteByKnowledgeIds(permDeleteIds, (short)-1);
-
         } catch (Exception e) {
             logger.error("knowledge delete failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -268,12 +269,19 @@ public class KnowledgeController extends BaseKnowledgeController
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         for (Map.Entry<Integer, List<Long>> keyValue : permDeleteMap.entrySet()) {
             try {
-                int type = keyValue.getKey();
+                final int type = keyValue.getKey();
                 List<Long> deleIds = keyValue.getValue();
                 result = this.knowledgeService.batchDeleteByKnowledgeIds(deleIds, (short)type);
                 if (result == null || result.getNotification() == null || !"0".equals(result.getNotification().getNotifCode())) {
                     logger.error("delete knowledge failed. knowledgeId: " + deleIds + " type: " + type);
                 }
+                //asynchronize delete other knowledge resource
+                for (long knowledgeId : deleIds) {
+                    IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, type, userId);
+                    DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+                    dataSyncTask.saveDataNeedSync(dataSync);
+                }
+
             } catch (Exception e) {
                 logger.error("knowledge delete failed！reason："+e.getMessage());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -281,6 +289,7 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         //This need to change to batch delete
+        /*
         for (long knowledgeId : permDeleteIds) {
             //delete Assso info
             associateServiceLocal.deleteAssociate(knowledgeId, user.getId());
@@ -292,14 +301,14 @@ public class KnowledgeController extends BaseKnowledgeController
 
             //delete permission information
             permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
-        }
+        }*/
 
         //Check if this is collected knowledge
         for (Long knowledgeId : failedIds) {
             cancelKnowledge(userId, knowledgeId);
         }
 
-        String resp = "successId: "+permDeleteIds.toString()+","+"failedId: " + failedIds.toString();
+        String resp = "successId: " + permDeleteIds.toString() + ", failedId: " + failedIds.toString();
         logger.info("delete knowledge success: " + resp);
 
         result.setResponseData(resp);

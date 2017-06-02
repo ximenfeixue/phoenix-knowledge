@@ -141,7 +141,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         try {
             return knowledgeCountDao.deleteKnowledgeCount(knowledgeId);
         } catch (Exception ex) {
-            logger.warn("delete knowlegde count failed. knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
+            logger.error("delete knowlegde count failed. knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
             return false;
         }
     }

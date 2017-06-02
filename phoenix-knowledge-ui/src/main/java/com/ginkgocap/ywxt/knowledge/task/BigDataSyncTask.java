@@ -121,7 +121,7 @@ public class BigDataSyncTask implements Runnable, InitializingBean
         }
 	}
 
-	public void deleteMessage(long knowledgeId, int columnType, long userId)	throws Exception {
+	public void deleteMessage(long knowledgeId, int columnType, long userId) {
 		
 		BigData base = new BigData();
 		base.setKid(knowledgeId);
