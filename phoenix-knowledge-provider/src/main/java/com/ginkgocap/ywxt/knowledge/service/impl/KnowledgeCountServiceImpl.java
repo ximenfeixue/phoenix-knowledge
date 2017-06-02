@@ -140,7 +140,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     public boolean deleteKnowledgeCount(final long knowledgeId) {
         try {
             if (this.deleteFromCache(knowledgeId)) {
-                logger.info("delete knowlegde count sucess from cache. knowledgeId: " + knowledgeId);
+                logger.info("delete knowlegde count success from cache. knowledgeId: " + knowledgeId);
             }
             return knowledgeCountDao.deleteKnowledgeCount(knowledgeId);
         } catch (Exception ex) {
