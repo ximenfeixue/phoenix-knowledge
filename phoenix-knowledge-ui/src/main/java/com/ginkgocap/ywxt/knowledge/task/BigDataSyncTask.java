@@ -59,7 +59,7 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 		try {
 			knowQueue.put(new SyncBigData(optionType, base));
 		} catch (Exception ex) {
-			logger.error("add syncBigData to queue faile.");
+			logger.error("add syncBigData to queue failed.");
 		}
 	}
 
@@ -159,7 +159,6 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 			logger.error("Exist thread, as it was interrupted.");
 		}
 	}
-
 
 	public void afterPropertiesSet() throws Exception {
 		logger.info("Knowledge message queue starting.");

@@ -141,7 +141,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //delete permission info
         if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
-            logger.debug("delete knowledge permission success. userId: {}, knowledgeId: {}", userId, knowledgeId);
+            logger.info("delete knowledge permission success. userId: ," + userId + " knowledgeId: " + knowledgeId);
         }
 
         //send new knowledge to bigdata
@@ -431,18 +431,6 @@ public class KnowledgeController extends BaseKnowledgeController
 
         logger.info(".......get all knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(resultMap);
-    }
-
-    private List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
-        if (CollectionUtils.isEmpty(baseList)) {
-            return null;
-        }
-        for (KnowledgeBase knowledgeItem : baseList) {
-           KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
-           long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
-           knowledgeItem.setReadCount((int)readCount);
-        }
-        return baseList;
     }
 
     /**
@@ -2059,6 +2047,19 @@ public class KnowledgeController extends BaseKnowledgeController
             return false;
         }
     }
+
+    private List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+        for (KnowledgeBase knowledgeItem : baseList) {
+            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
+            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+            knowledgeItem.setReadCount((int)readCount);
+        }
+        return baseList;
+    }
+
 
     public Logger logger() { return this.logger; }
 }
