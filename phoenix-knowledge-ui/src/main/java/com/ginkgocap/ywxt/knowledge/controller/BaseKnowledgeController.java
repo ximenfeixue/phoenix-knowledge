@@ -2,10 +2,9 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.dynamic.model.*;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
@@ -16,6 +15,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
@@ -297,6 +297,29 @@ public abstract class BaseKnowledgeController extends BaseController {
             return DataCollect.defaultPermission(userId, knowledgeId, 0);
         }
         return permission;
+    }
+
+    protected InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    {
+        Page<KnowledgeBase> page = new Page<KnowledgeBase>();
+        page.setTotalCount(total);
+        page.setPageNo(num);
+        page.setPageSize(size);
+        page.setList(setReadCount(knowledgeBaseItems));
+        //page.setList(knowledgeBaseItems);
+        return InterfaceResult.getSuccessInterfaceResultInstance(page);
+    }
+
+    protected List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+        for (KnowledgeBase knowledgeItem : baseList) {
+            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
+            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+            knowledgeItem.setReadCount((int)readCount);
+        }
+        return baseList;
     }
 
     private DynamicNews createDynamicNewsObj(Knowledge detail, User user)

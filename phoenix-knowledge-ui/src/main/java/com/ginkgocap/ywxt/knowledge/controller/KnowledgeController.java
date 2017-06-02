@@ -585,40 +585,6 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     /**
-     * 提取所有知识创建数据
-     * @param page 分页起始
-     * @param size 分页大小
-     * @throws java.io.IOException
-     */
-    @ResponseBody
-    @RequestMapping(value = "/allByUserName/{page}/{size}/{total}/{userName}", method = RequestMethod.GET)
-    public InterfaceResult getAllByUserName(HttpServletRequest request, HttpServletResponse response,
-                                               @PathVariable int page,@PathVariable int size,
-                                               @PathVariable long total,@PathVariable String userName) throws Exception {
-
-        User user = this.getUser(request);
-        if(user == null) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
-        }
-
-        long userId = this.getUserId(user);
-        if (total == -1) {
-            //TODO: need to check if long to int
-            total = getCreatedKnowledgeCount(userId);
-        }
-
-        int start = page * size;
-        if (start > total) {
-            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
-        }
-
-        List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, userName);
-        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
-        logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
-        return result;
-    }
-
-    /**
      * 提取所有知识收藏数据
      * @param start 分页起始
      * @param size 分页大小
@@ -724,7 +690,7 @@ public class KnowledgeController extends BaseKnowledgeController
             long usrId = user.getId();
             List<KnowledgeBase> knowledgeBaseItems = null;
             if (keyWord == null || keyWord.length() > 0) {
-                knowledgeBaseItems = this.knowledgeService.getBaseByCreateUserId(usrId, start, size);
+                knowledgeBaseItems = this.knowledgeService.getByCreateUserId(usrId, start, size);
             }
             else {
                 knowledgeBaseItems = this.knowledgeService.getByUserIdKeyWord(usrId, keyWord, start, size);
@@ -1069,7 +1035,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<DataCollect> dataList = null; //DummyData.resultObject(DummyData.getDataCollectList());
         try {
-            dataList = KnowledgeUtil.getDataCollectReturn(this.knowledgeService.getBaseByCreateUserId(user.getId(), start, size));
+            dataList = KnowledgeUtil.getDataCollectReturn(this.knowledgeService.getByCreateUserId(user.getId(), start, size));
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -1824,7 +1790,7 @@ public class KnowledgeController extends BaseKnowledgeController
         List<KnowledgeBase> createdKnowledgeItems = null;
         try {
             if (keyWord == null || "null".equals(keyWord)) {
-                createdKnowledgeItems = this.knowledgeService.getBaseByCreateUserId(userId, start, size);
+                createdKnowledgeItems = this.knowledgeService.getByCreateUserId(userId, start, size);
             }
             else {
                 createdKnowledgeItems = this.knowledgeService.getByUserIdKeyWord(userId, keyWord, start, size);
@@ -2020,17 +1986,6 @@ public class KnowledgeController extends BaseKnowledgeController
         return null;
     }
 
-    private InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
-    {
-        Page<KnowledgeBase> page = new Page<KnowledgeBase>();
-        page.setTotalCount(total);
-        page.setPageNo(num);
-        page.setPageSize(size);
-        page.setList(setReadCount(knowledgeBaseItems));
-        //page.setList(knowledgeBaseItems);
-        return InterfaceResult.getSuccessInterfaceResultInstance(page);
-    }
-
     private List<KnowledgeBase> convertDetailListToBase(List<Knowledge> detailList,short type)
     {
         if (CollectionUtils.isEmpty(detailList)) {
@@ -2097,19 +2052,6 @@ public class KnowledgeController extends BaseKnowledgeController
             return false;
         }
     }
-
-    private List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
-        if (CollectionUtils.isEmpty(baseList)) {
-            return null;
-        }
-        for (KnowledgeBase knowledgeItem : baseList) {
-            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
-            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
-            knowledgeItem.setReadCount((int)readCount);
-        }
-        return baseList;
-    }
-
 
     public Logger logger() { return this.logger; }
 }

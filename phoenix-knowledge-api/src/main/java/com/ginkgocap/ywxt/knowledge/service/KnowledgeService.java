@@ -250,7 +250,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>

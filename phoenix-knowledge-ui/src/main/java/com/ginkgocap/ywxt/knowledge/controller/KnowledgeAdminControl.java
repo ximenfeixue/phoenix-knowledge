@@ -3,11 +3,13 @@ package com.ginkgocap.ywxt.knowledge.controller;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.IdType;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,11 +219,59 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
         return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
     }
 
+    /**
+     * 提取所有知识创建数据
+     * @param page 分页起始
+     * @param size 分页大小
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/allByUserName/{page}/{size}/{total}/{userName}", method = RequestMethod.GET)
+    public InterfaceResult getAllByUserName(HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable int page,@PathVariable int size,
+                                            @PathVariable int total,@PathVariable String userName) throws Exception {
+
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        if (StringUtils.isBlank(userName) || "null".equals(userName)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        if (total == -1) {
+            total = countKnowledgeByUserName(userName);
+        }
+
+        int start = page * size;
+        if (start > total) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = this.knowledgeService.getByCreateUserName(userName, start, size);
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
+        logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
+        return result;
+    }
+
     @ResponseBody
     @RequestMapping(value="/comment/delete", method = RequestMethod.DELETE)
     public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         return null;
+    }
+
+    private int countKnowledgeByUserName(String userName)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.countByCreateUserName(userName);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. userName: " + userName + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
     }
 
     public Logger logger() { return this.logger; }

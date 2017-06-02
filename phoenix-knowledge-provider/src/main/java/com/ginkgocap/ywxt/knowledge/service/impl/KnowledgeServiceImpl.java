@@ -472,7 +472,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
 
     @Override
-    public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception
+    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
     }

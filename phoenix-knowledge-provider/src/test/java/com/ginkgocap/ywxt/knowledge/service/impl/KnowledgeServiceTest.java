@@ -257,7 +257,7 @@ public class KnowledgeServiceTest extends TestBase {
         System.out.println("===testGetBaseByCreateUserId===");
         try {
             userId = 201035L; start = 1; size = 10;
-            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserId(userId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getByCreateUserId(userId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -360,7 +360,7 @@ public class KnowledgeServiceTest extends TestBase {
     public void testGetKnowledgeCount()
     {
         try {
-            int size = knowledgeService.getKnowledgeCount(201003L);
+            int size = knowledgeService.countByCreateUserId(201003L);
             System.out.println("Count: " + size);
         } catch (Exception e) {
             e.printStackTrace();
