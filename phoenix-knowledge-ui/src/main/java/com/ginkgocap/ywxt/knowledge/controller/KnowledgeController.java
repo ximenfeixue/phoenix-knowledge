@@ -141,7 +141,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //delete permission info
         if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
-            logger.info("delete knowledge permission success. userId: ," + userId + " knowledgeId: " + knowledgeId);
+            logger.info("delete knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
         }
 
         //send new knowledge to bigdata
