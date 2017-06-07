@@ -346,6 +346,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             KnowledgeBaseExt baseExt = new KnowledgeBaseExt();
             baseExt.clone(baseItem);
             baseExt.setTypeName(KnowledgeType.knowledgeType(baseItem.getType()).typeName());
+            baseExtList.add(baseExt);
         }
         return baseExtList;
     }
