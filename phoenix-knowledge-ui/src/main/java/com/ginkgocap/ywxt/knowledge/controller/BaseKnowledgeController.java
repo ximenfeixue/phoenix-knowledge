@@ -322,6 +322,34 @@ public abstract class BaseKnowledgeController extends BaseController {
         return baseList;
     }
 
+    protected InterfaceResult<Page<KnowledgeBaseExt>> knowledgeExtListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    {
+        Page<KnowledgeBaseExt> page = new Page<KnowledgeBaseExt>();
+        page.setTotalCount(total);
+        page.setPageNo(num);
+        page.setPageSize(size);
+        page.setList(setBaseExtReadCount(knowledgeBaseItems));
+        //page.setList(knowledgeBaseItems);
+        return InterfaceResult.getSuccessInterfaceResultInstance(page);
+    }
+
+    protected List<KnowledgeBaseExt> setBaseExtReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+
+        List<KnowledgeBaseExt> baseExtList = new ArrayList<KnowledgeBaseExt>(baseList.size());
+        for (KnowledgeBase baseItem : baseList) {
+            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(baseItem.getKnowledgeId());
+            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+            baseItem.setReadCount((int)readCount);
+            KnowledgeBaseExt baseExt = new KnowledgeBaseExt();
+            baseExt.clone(baseItem);
+            baseExt.setTypeName(KnowledgeType.knowledgeType(baseItem.getType()).typeName());
+        }
+        return baseExtList;
+    }
+
     private DynamicNews createDynamicNewsObj(Knowledge detail, User user)
     {
         DynamicNews dynamic = new DynamicNews();

@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseExt;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.IdType;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
@@ -264,7 +265,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
         }
 
         List<KnowledgeBase> createdKnowledgeList = this.knowledgeService.getByCreateUserName(userName, start, size);
-        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
+        InterfaceResult<Page<KnowledgeBaseExt>> result = this.knowledgeExtListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
     }
