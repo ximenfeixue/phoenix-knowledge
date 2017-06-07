@@ -226,10 +226,25 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
+    @RequestMapping(value = "/allByUserName/{page}/{size}/{total}", method = RequestMethod.POST)
+    public InterfaceResult getAllByUserNamePost(HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable int page, @PathVariable int size,
+                                            @PathVariable int total) throws Exception {
+        final String userName = this.getBodyParam(request);
+        return getAllByUserName(request, response, page, size, total, userName);
+    }
+
+    /**
+     * 提取所有知识创建数据
+     * @param page 分页起始
+     * @param size 分页大小
+     * @throws java.io.IOException
+     */
+    @ResponseBody
     @RequestMapping(value = "/allByUserName/{page}/{size}/{total}/{userName}", method = RequestMethod.GET)
     public InterfaceResult getAllByUserName(HttpServletRequest request, HttpServletResponse response,
-                                            @PathVariable int page,@PathVariable int size,
-                                            @PathVariable int total,@PathVariable String userName) throws Exception {
+                                            @PathVariable int page, @PathVariable int size,
+                                            @PathVariable int total, @PathVariable String userName) throws Exception {
 
         if (!isAdmin(request)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
