@@ -55,6 +55,10 @@
                   sqlitem="select id from tb_knowledge_base where create_user_name = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="userName" update="true" />
 
+            <list name="get_by_title"
+                  sqlitem="select id from tb_knowledge_base where title like ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="title" update="true" />
+
             <list name="get_by_createUserId_columnId"
                   sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />

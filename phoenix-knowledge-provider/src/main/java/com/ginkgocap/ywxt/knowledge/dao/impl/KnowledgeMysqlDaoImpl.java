@@ -183,6 +183,18 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
+	public int countByTitle(String title) throws Exception {
+
+		return this.countEntitys("get_by_title", "%" + title + "%");
+	}
+
+	@Override
+	public List<KnowledgeBase> getByTitle(String title, int start, int size) throws Exception {
+
+		return this.getSubEntitys("get_by_title", start, size, "%" + title + "%");
+	}
+
+	@Override
 	public List<KnowledgeBase> getByCreateUserIdAndType(long userId, short type, int start, int size) throws Exception
 	{
 		return this.getSubEntitys("get_by_createUserId_type", start, size, userId, type);

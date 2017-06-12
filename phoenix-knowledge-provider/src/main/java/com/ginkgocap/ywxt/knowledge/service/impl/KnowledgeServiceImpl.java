@@ -493,6 +493,17 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
     }
 
+    public int countByTitle(String title) throws Exception
+    {
+        return this.knowledgeMysqlDao.countByTitle(title);
+    }
+
+
+    public List<KnowledgeBase> getByTitle(String title,int start, int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByTitle(title, start, size);
+    }
+
     @Override
     public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception
     {

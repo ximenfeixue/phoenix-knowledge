@@ -227,12 +227,12 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allByUserName/{page}/{size}/{total}", method = RequestMethod.POST)
-    public InterfaceResult getAllByUserNamePost(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/allKnowledge/{page}/{size}/{total}/{type}", method = RequestMethod.POST)
+    public InterfaceResult allKnowledgePost(HttpServletRequest request, HttpServletResponse response,
                                             @PathVariable int page, @PathVariable int size,
-                                            @PathVariable int total) throws Exception {
-        final String userName = this.getBodyParam(request);
-        return getAllByUserName(request, response, page, size, total, userName);
+                                            @PathVariable int total, @PathVariable int type) throws Exception {
+        final String keyword = this.getBodyParam(request);
+        return allKnowledge(request, response, page, size, total, type, keyword);
     }
 
     /**
@@ -242,21 +242,25 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allByUserName/{page}/{size}/{total}/{userName}", method = RequestMethod.GET)
-    public InterfaceResult getAllByUserName(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/allKnowledge/{page}/{size}/{total}/{type}/{keyword}", method = RequestMethod.GET)
+    public InterfaceResult allKnowledge(HttpServletRequest request, HttpServletResponse response,
                                             @PathVariable int page, @PathVariable int size,
-                                            @PathVariable int total, @PathVariable String userName) throws Exception {
+                                            @PathVariable int total, @PathVariable int type, @PathVariable String keyword) throws Exception {
 
         if (!isAdmin(request)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if (StringUtils.isBlank(userName) || "null".equals(userName)) {
+        if (StringUtils.isBlank(keyword) || "null".equals(keyword)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
         if (total == -1) {
-            total = countKnowledgeByUserName(userName);
+            if (type == 1) {
+                total = countKnowledgeByTitle(keyword);
+            } else if (type == 2) {
+                total = countKnowledgeByUserName(keyword);
+            }
         }
 
         int start = page * size;
@@ -264,7 +268,12 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
-        List<KnowledgeBase> createdKnowledgeList = this.knowledgeService.getByCreateUserName(userName, start, size);
+        List<KnowledgeBase> createdKnowledgeList = null;
+        if (type == 1) {
+            createdKnowledgeList = this.knowledgeService.getByTitle(keyword, start, size);
+        } else if (type == 2) {
+            createdKnowledgeList = this.knowledgeService.getByCreateUserName(keyword, start, size);
+        }
         InterfaceResult<Page<KnowledgeBaseExt>> result = this.knowledgeExtListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
@@ -284,6 +293,19 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             createCount = this.knowledgeService.countByCreateUserName(userName);
         }catch (Exception ex) {
             logger.error("get created knowledge count failed. userName: " + userName + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+    private int countKnowledgeByTitle(String title)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.countByTitle(title);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. title: " + title + ", error: " + ex.getMessage());
         }
 
         logger.info("createCount: " + createCount);

@@ -272,6 +272,25 @@ public interface KnowledgeService
     public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception;
 
     /**
+     * <p>1、知识基础表信息</P>
+     * @date 2016年1月15日 上午9:41:33
+     * @param title
+     * @return
+     * @throws Exception
+     */
+    public int countByTitle(String title) throws Exception;
+
+    /**
+     * <p>1、知识基础表信息</P>
+     * @param title
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getByTitle(String title,int start,int size) throws Exception;
+
+    /**
      * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
      * @date 2016年1月15日 上午9:41:32
