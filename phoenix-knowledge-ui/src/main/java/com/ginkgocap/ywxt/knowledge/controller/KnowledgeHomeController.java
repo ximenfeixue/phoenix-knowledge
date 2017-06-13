@@ -54,9 +54,6 @@ public class KnowledgeHomeController extends BaseController {
     @Autowired
     ColumnCustomService columnCustomService;
 
-    @Autowired
-    KnowledgeCountService knowledgeCountService;
-
     private final String defaultBigDataUrl = "http://192.168.101.53:8090";
     @ResponseBody
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
