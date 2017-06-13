@@ -260,6 +260,8 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
                 total = countKnowledgeByTitle(keyword);
             } else if (type == 2) {
                 total = countKnowledgeByUserName(keyword);
+            } else {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
             }
         }
 
