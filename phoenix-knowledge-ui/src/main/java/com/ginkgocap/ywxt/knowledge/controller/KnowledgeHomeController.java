@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.model.RecommendResult;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
@@ -43,16 +42,10 @@ public class KnowledgeHomeController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeHomeController.class);
 
     @Autowired
-    KnowledgeBatchQueryService knowledgeBatchQueryService;
+    private KnowledgeHomeService knowledgeHomeService;
 
     @Autowired
-    KnowledgeHomeService knowledgeHomeService;
-
-    @Autowired
-    KnowledgeOtherService knowledgeOtherService;
-
-    @Autowired
-    ColumnCustomService columnCustomService;
+    private ColumnCustomService columnCustomService;
 
     private final String defaultBigDataUrl = "http://192.168.101.53:8090";
     @ResponseBody
@@ -208,6 +201,7 @@ public class KnowledgeHomeController extends BaseController {
         return InterfaceResult.getSuccessInterfaceResultInstance(model);
     }
 
+    /*
     @ResponseBody
     @RequestMapping(value = "/home/getDockingKnowledge/{targetType}/{targetId}/{page}/{size}/{scope}", method = RequestMethod.GET)
     public InterfaceResult getDockingKnowledge(HttpServletRequest request, HttpServletResponse response,
@@ -249,7 +243,7 @@ public class KnowledgeHomeController extends BaseController {
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance(model);
-    }
+    }*/
 
     /**
      * 首页获取大数据知识热门推荐和发现热门知识
@@ -325,30 +319,6 @@ public class KnowledgeHomeController extends BaseController {
             }
         }
         return list;
-    }
-
-    public List<RecommendResult> getKnowledge(String str) throws Exception {
-        List<RecommendResult> maps = new ArrayList<RecommendResult>();
-        if (StringUtils.isNotBlank(str)) {
-            JsonNode knowNode = KnowledgeUtil.getJsonNode(str, "knos");
-            if (knowNode != null) {
-                JsonNode datasNode = knowNode.get("datas");
-                if (datasNode != null) {
-                    RecommendResult sr = null;
-                    Iterator<JsonNode> resultList = datasNode.elements();
-                    while (resultList.hasNext()) {
-                        JsonNode node = (JsonNode)resultList.next();
-                        sr = new RecommendResult();
-                        sr.setId(Long.parseLong(node.get("id").toString()));
-                        sr.setTitle(node.get("name").toString());
-                        sr.setKnowledgeType(node.get("knoType").intValue());
-                        sr.setTagsScores(node.get("tagsScores").toString());
-                        maps.add(sr);
-                    }
-                }
-            }
-        }
-        return maps;
     }
 
     private void addKnowledgeType(List<Knowledge> knowledgeList, final short type) {
