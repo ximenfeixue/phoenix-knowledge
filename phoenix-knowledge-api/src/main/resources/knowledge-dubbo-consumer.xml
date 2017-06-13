@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:int="http://www.springframework.org/schema/integration"
-	xmlns:int-redis="http://www.springframework.org/schema/integration/redis"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" 
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xmlns:stream="http://www.springframework.org/schema/integration/stream"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="   
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-redis="http://www.springframework.org/schema/integration/redis"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:stream="http://www.springframework.org/schema/integration/stream"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
@@ -27,48 +24,18 @@
 	http://www.springframework.org/schema/integration/redis
 	http://www.springframework.org/schema/integration/redis/spring-integration-redis-2.1.xsd
 	http://www.springframework.org/schema/integration/stream
-	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd 
+	http://www.springframework.org/schema/integration/stream/spring-integration-stream-2.1.xsd
 	http://code.alibabatech.com/schema/dubbo
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
-    <!-- 需要单独注释掉此service类，打成jar提供给手机端调用否则会与其他服务提供者冲突，web端则放开此方法 -->
-<!--  	<dubbo:reference id="articleService" interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" version="1.0.0"/> -->
-<!--  	<dubbo:reference id="favoritesService" interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" version="1.0.0"/>  -->
- 	<dubbo:reference id="categoryService" interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" version="1.0.0"/>
-
-    <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="1.0.0"/>
-    <dubbo:reference id="connectInfoService" interface="com.ginkgocap.ywxt.knowledge.service.ConnectInfoService" version="1.0.0"/>
-    <dubbo:reference id="columnService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" version="1.0.0"/>
-    <dubbo:reference id="columnVisibleService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" version="1.0.0"/>
-    <dubbo:reference id="columnSubscribeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeMainService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" version="1.0.0"/>
-    <!--<dubbo:reference id="knowledgeContentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeContentService" version="1.0.0"/> -->
-    <dubbo:reference id="knowledgeMongoIncService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeAdminService" interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService" version="1.0.0"/>
-    <dubbo:reference id="columnknowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService" version="1.0.0"/>
-    <dubbo:reference id="userpermissionService" interface="com.ginkgocap.ywxt.knowledge.service.UserPermissionService" version="1.0.0"/>
-	<dubbo:reference id="knowledgeHomeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="1.0.0"/>
-	<dubbo:reference id="userCategoryService" interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeTagService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCaseService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeIndustryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeInvestmentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeInvestmentService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeStaticsService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCollectionService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeReaderService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeReportService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeDraftService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeRecycleService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeSearchService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService" version="1.0.0"/>
-    <dubbo:reference id="mobileSearchService" interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService" version="1.0.0"/>
-    <dubbo:reference id="attachmentService" interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService" version="1.0.0"/>
-    <dubbo:reference id="appKnowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService" version="1.0.0"/>
-    <dubbo:reference id="dataCenterService" interface="com.ginkgocap.ywxt.knowledge.service.DataCenterService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeCloudCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCloudCountService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeConnectInfoService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService" version="1.0.0"/>
-    <dubbo:reference id="knowledgeAssoImportService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService" version="1.0.0"/>
-	<dubbo:reference id="appKnowledgeNewsService" interface="com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService"  version="1.0.0"/>
+    <!-- dubbo服务配置 -->
+    <dubbo:reference id="dataSyncService" interface="com.ginkgocap.ywxt.knowledge.service.DataSyncService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeBatchQueryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeOtherService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" version="3.0.0"/>
+    <dubbo:reference id="knowledgeHomeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="3.0.0"/>
+    <!-- dubbo:reference id="jtFileService" interface="com.ginkgocap.ywxt.knowledge.service.JTFileService" version="3.0.0"/ -->
 </beans>

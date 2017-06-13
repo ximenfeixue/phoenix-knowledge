@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="GB2312"?>
+<root>
+    <datasources>
+        <ds name="idCenterDS"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            username="zhangwei"
+            password="zhangwei"
+            maxActive=""
+            maxIdle=""
+            maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
+                />
+
+        <ds name="master"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            username="zhangwei"
+            password="zhangwei"
+            maxActive=""
+            maxIdle=""
+            maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
+                />
+        <ds name="slave"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://192.168.101.131:3306/phoenix_knowledge_new?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            username="zhangwei"
+            password="zhangwei"
+            maxActive=""
+            maxIdle=""
+            maxWait=""
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
+                />
+    </datasources>
+    <groups>
+        <group name="g2" master="master" slave="slave"/>
+        <group name="g3" master="master" slave="slave"/>
+    </groups>
+</root>

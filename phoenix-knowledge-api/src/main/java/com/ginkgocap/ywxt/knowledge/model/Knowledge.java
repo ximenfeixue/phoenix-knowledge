@@ -1,11 +1,9 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.ginkgocap.ywxt.knowledge.model.common.SelfField;
 
-import com.ginkgocap.ywxt.user.model.User;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 知识javaBean （资讯，资产管理,宏观，观点，文章）
@@ -13,12 +11,15 @@ import com.ginkgocap.ywxt.user.model.User;
  * @author Administrator
  * 
  */
-public class Knowledge implements Serializable {
-
+public class Knowledge implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	// id
 	private long id;
+
+	//1. 人， 2. 组织
+	private short virtual;
 
 	// 标题
 	private String title;
@@ -64,7 +65,7 @@ public class Knowledge implements Serializable {
 	// 最后修改时间
 	private String modifytime;
 
-	// 状态（1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
+	// 状态（0为无效/删除，1为草稿，2：待审核 3：审核中 4：审核通过 5：未通过 6：回收站)
 	private int status;
 
 	// 举报状态(1:举报，0：未举报)
@@ -75,6 +76,12 @@ public class Knowledge implements Serializable {
 
 	// 标签
 	private String tags;
+
+	//标签, 新系统
+	private List<Long> tagList;
+
+	//目录
+	private List<Long> directorys;
 
 	// 栏目
 	private String columnid;
@@ -107,6 +114,93 @@ public class Knowledge implements Serializable {
 
 	// 转换状态
 	private int tranStatus;
+
+	// 图片/视频
+	private List<String> multiUrls;
+
+	// 附件
+	private List<String> attachUrls;
+
+	private List<SelfField> selfDef;
+
+	// 系统时间（大数据推送带过来的数据）
+	private String sysTime;
+
+	// 代表草稿箱中存储了真正知识的ID
+	private long knowledgeMainId;
+
+	// 高亮状态（0-未加 1-已加）
+	private int ish;
+
+	// 是否收藏
+	private short collected;
+
+    //是否私有 1: 私有, 0: 公开
+	private short privated = 0; //默认公开
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public long getUid() {
+		return uid;
+	}
+
+	public void setUid(long uid) {
+		this.uid = uid;
+	}
+
+	public String getUname() {
+		return uname;
+	}
+
+	public void setUname(String uname) {
+		this.uname = uname;
+	}
+
+	public long getCid() {
+		return cid;
+	}
+
+	public void setCid(long cid) {
+		this.cid = cid;
+	}
+
+	public String getCname() {
+		return cname;
+	}
+
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+
+	public String getColumnType() {
+		return columnType;
+	}
+
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
+	}
+
+	public short getVirtual() {
+		return virtual;
+	}
+
+	public void setVirtual(short virtual) {
+		this.virtual = virtual;
+	}
 
 	public int getTranStatus() {
 		return tranStatus;
@@ -172,26 +266,6 @@ public class Knowledge implements Serializable {
 		this.hideDesc = hideDesc;
 	}
 
-	// 系统时间（大数据推送带过来的数据）
-	private String sysTime;
-
-	private Long knowledgeMainId;// 代表草稿箱中存储了真正知识的ID
-
-	/**
-	 * @return the columnType
-	 */
-	public String getColumnType() {
-		return columnType;
-	}
-
-	/**
-	 * @param columnType
-	 *            the columnType to set
-	 */
-	public void setColumnType(String columnType) {
-		this.columnType = columnType;
-	}
-
 	public String getSysTime() {
 		return sysTime;
 	}
@@ -232,55 +306,20 @@ public class Knowledge implements Serializable {
 		this.tags = tags;
 	}
 
-	// 高亮状态（0-未加 1-已加）
-	private int ish;
-
-	public long getId() {
-		return id;
+	public List<Long> getTagList() {
+		return tagList;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setTagList(List<Long> tagList) {
+		this.tagList = tagList;
 	}
 
-	public String getTitle() {
-		return title;
+	public List<Long> getDirectorys() {
+		return directorys;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public long getUid() {
-		return uid;
-	}
-
-	public void setUid(long uid) {
-		this.uid = uid;
-	}
-
-	public String getUname() {
-		return uname;
-	}
-
-	public void setUname(String uname) {
-		this.uname = uname;
-	}
-
-	public long getCid() {
-		return cid;
-	}
-
-	public void setCid(long cid) {
-		this.cid = cid;
-	}
-
-	public String getCname() {
-		return cname;
-	}
-
-	public void setCname(String cname) {
-		this.cname = cname;
+	public void setDirectorys(List<Long> directorys) {
+		this.directorys = directorys;
 	}
 
 	public String getSource() {
@@ -395,39 +434,87 @@ public class Knowledge implements Serializable {
 		this.ish = ish;
 	}
 
-	public <T> Knowledge setValue(KnowledgeNewsVO vo, User user) {
-		return null;
-	}
-
-	public <T> Knowledge setDraftValue(KnowledgeNewsVO vo, User user) {
-		return null;
-	}
-
-	public Long getKnowledgeMainId() {
+	public long getKnowledgeMainId() {
 		return knowledgeMainId;
 	}
 
-	public void setKnowledgeMainId(Long knowledgeMainId) {
+	public void setKnowledgeMainId(long knowledgeMainId) {
 		this.knowledgeMainId = knowledgeMainId;
 	}
 
-	public static Map<String,Object> setMapVO(Object bean){
-		Map<String, Object> map = new HashMap<String, Object>();
-		Knowledge k = (Knowledge) bean;
-		map.put("kid", k.getId());
-		map.put("cid", k.getCid());
-		map.put("cname", k.getCname());
-		map.put("title", k.getTitle());
-		map.put("cpathid", k.getCpathid());
-		map.put("pic", k.getPic());
-		map.put("selectedIds", k.getSelectedIds());
-		map.put("status", k.getStatus());
-		map.put("tags", k.getTags());
-		map.put("columnid", k.getColumnid());
-		map.put("columnType", k.getColumnType());
-		map.put("content", k.getContent());
-		map.put("desc", k.getDesc());
-		map.put("createtime", k.getCreatetime());
-		return map;
+	public List<String> getMultiUrls() {
+		return multiUrls;
 	}
+
+	public void setMultiUrls(List<String> multiUrls) {
+		this.multiUrls = multiUrls;
+	}
+
+	public List<String> getAttachUrls() {
+		return attachUrls;
+	}
+
+	public void setAttachUrls(List<String> attachUrls) {
+		this.attachUrls = attachUrls;
+	}
+
+	public short getCollected() {
+		return collected;
+	}
+
+	public void setCollected(short collected) {
+		this.collected = collected;
+	}
+
+    public short getPrivated() {
+        return privated;
+    }
+
+    public void setPrivated(short privated) {
+        this.privated = privated;
+    }
+
+	public List<SelfField> getSelfDef() {
+		return selfDef;
+	}
+
+	public void setSelfDef(List<SelfField> selfDef) {
+		this.selfDef = selfDef;
+	}
+
+	public void clone(Knowledge detail)
+	{
+		this.setId(detail.getId());
+		this.setColumnid(detail.getColumnid());
+		this.setColumnType(detail.getColumnType());
+
+		this.setCid(detail.getCid());
+		this.setUid(detail.getUid());
+		this.setCname(detail.getCname());
+		this.setTitle(detail.getTitle());
+		this.setContent(detail.getContent());
+		this.setMultiUrls(detail.getMultiUrls());
+		this.setAttachUrls(detail.getAttachUrls());
+		this.setModifytime(detail.getModifytime());
+		this.setCreatetime(detail.getCreatetime());
+		this.setS_addr(detail.getS_addr());
+		this.setDirectorys(null);
+		this.setTags(null);
+		this.setEssence(detail.getEssence());
+		this.setStatus(detail.getStatus());
+		this.setTranStatus(detail.getTranStatus());
+		this.setReport_status(detail.getReport_status());
+		this.setTaskid(detail.getTaskid());
+		this.setIsh(detail.getIsh());
+		this.setVirtual(detail.getVirtual());
+		this.setPic(detail.getPic());
+		this.setHcontent(detail.getHcontent());
+		this.setCollected(detail.getCollected());
+		this.setCpathid(detail.getCpathid());
+		this.setDesc(detail.getDesc());
+		this.setSource(detail.getSource());
+        this.setPrivated(detail.getPrivated());
+		this.setSelfDef(detail.getSelfDef());
+	}
+
 }

@@ -32,53 +32,23 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
 	
 	<dubbo:monitor protocol="registry" />
-    <dubbo:application name="${dubbo.application.name}" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"
-		threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
+    <dubbo:application name="Knowledge-Provider" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+	<!-- threadpool="${knowledge.dubbo.protocol.threadpool}" threads="${knowledge.dubbo.protocol.threads}"
 		queues="${knowledge.dubbo.protocol.queues}" buffer="${knowledge.dubbo.protocol.buffer}"
 		accepts="${knowledge.dubbo.protocol.accepts}" accesslog="${knowledge.dubbo.protocol.accesslog}"
-		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" />
+		payload="${knowledge.dubbo.protocol.payload}" heartbeat="${knowledge.dubbo.protocol.heartbeat}" --> 
     <dubbo:registry address="${dubbo.registry.address}" protocol="${dubbo.protocol.name}"/>
-	<!--     此接口上线后去掉 -->
- 
-<!--   	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ArticleService" ref="articleService" version="1.0.0"/> -->
-<!--  	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.FavoritesService" ref="favoritesService" version="1.0.0"/>  -->
- 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.CategoryService" ref="categoryService" version="1.0.0"/>
- 
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ConnectInfoService" ref="connectInfoService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnService" ref="columnService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.ColumnVisibleService" ref="columnVisibleService" version="1.0.0"/>
-    <dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnSubscribeService" ref="columnSubscribeService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService" ref="knowledgeMainService" version="1.0.0"/>
-    <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
- 	<dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService" ref="knowledgeMongoIncService" version="1.0.0"/>
-     <dubbo:service  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" ref="knowledgeHomeService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService"  ref="knowledgeService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.admin.service.KnowledgeAdminService"  ref="knowledgeAdminService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService"  ref="knowledgeCategoryService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService"  ref="columnknowledgeService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserPermissionService"  ref="userpermissionService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeTagService"  ref="knowledgeTagService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCaseService"  ref="knowledgeCaseService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeIndustryService"  ref="knowledgeIndustryService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeInvestmentService"  ref="knowledgeInvestmentService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService"  ref="knowledgeStaticsService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCollectionService"  ref="knowledgeCollectionService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeReaderService"  ref="knowledgeReaderService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService"  ref="knowledgeCommentService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeReportService"  ref="knowledgeReportService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeDraftService"  ref="knowledgeDraftService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommonService"  ref="knowledgeCommonService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeRecycleService"  ref="knowledgeRecycleService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.UserCategoryService"  ref="userCategoryService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeSearchService"  ref="knowledgeSearchService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.MobileSearchService"  ref="mobileSearchService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AttachmentService"  ref="attachmentService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.DataCenterService"  ref="dataCenterService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCloudCountService"  ref="knowledgeCloudCountService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService"  ref="knowledgeConnectInfoService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeAssoImportService"  ref="knowledgeAssoImportService" version="1.0.0"/>
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService"  ref="knowledgeShareService" version="1.0.0"/>
-		<!-- app端使用service -->
-	<dubbo:service interface="com.ginkgocap.ywxt.knowledge.service.AppKnowledgeNewsService" ref="appKnowledgeNewsService" version="1.0.0"/>
+    <dubbo:consumer timeout="10000" check="false" />
+
+    <dubbo:service ref="dataSyncService" interface="com.ginkgocap.ywxt.knowledge.service.DataSyncService" version="3.0.0"/>
+ 	<dubbo:service ref="knowledgeBatchQueryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
+    <dubbo:service ref="knowledgeOtherService"  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeHomeService"  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="3.0.0"/>
+    <!-- dubbo:service ref="jtFileService" interface="com.ginkgocap.ywxt.knowledge.service.JTFileService" version="3.0.0"/ -->
 </beans>

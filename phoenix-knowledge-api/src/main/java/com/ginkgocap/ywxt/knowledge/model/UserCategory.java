@@ -1,96 +1,182 @@
 package com.ginkgocap.ywxt.knowledge.model;
 
+/**
+ * Created by gintong on 2016/7/11.
+ */
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-/**   
- * 用户目录左树
- * <p>于2014-9-16 由 bianzhiwei 创建 </p>
- * @author  <p>当前负责人 bianzhiwei</p>     
- *
- */
 public class UserCategory implements Serializable {
 
-    private static final long serialVersionUID = 9210031377998416429L;
+    private static final long serialVersionUID = -9062835517314960963L;
 
-    public long getId() {
+    private Long id;
+
+    private Long userId;
+
+    private String categoryname;
+
+    private String sortid;
+
+    private Date createtime;
+
+    private String pathName;
+
+    private Long parentId;
+
+    private Short categoryType;
+
+    private List<UserCategory> listUserCategory;
+
+    private Integer level;
+
+    public UserCategory() {
+        super();
+    }
+
+    public UserCategory(UserCategory userCategory) {
+
+        this.id = userCategory.getId();
+        this.userId = userCategory.getUserId();
+        this.categoryname = userCategory.getCategoryname();
+        this.sortid = userCategory.getSortid();
+        this.createtime = userCategory.getCreatetime();
+        this.pathName = userCategory.getPathName();
+        this.parentId = userCategory.getParentId();
+        this.categoryType = userCategory.getCategoryType();
+
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getCategoryname() {
+        return categoryname;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategoryname(String categoryname) {
+        this.categoryname = categoryname;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getSortid() {
+        return sortid;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setSortid(String sortid) {
+        this.sortid = sortid;
     }
 
-    public String getModifyTime() {
-        return modifyTime;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
     }
 
-    public long getParentId() {
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
-    public String getSortId() {
-        return sortId;
+    public Short getCategoryType() {
+        return categoryType;
     }
 
-    public void setSortId(String sortId) {
-        this.sortId = sortId;
+    public void setCategoryType(Short categoryType) {
+        this.categoryType = categoryType;
     }
 
-    public List<UserCategory> getList() {
-        return list;
+    public List<UserCategory> getListUserCategory() {
+        return listUserCategory;
     }
 
-    public void setList(List<UserCategory> list) {
-        this.list = list;
+    public void setListUserCategory(List<UserCategory> listUserCategory) {
+        this.listUserCategory = listUserCategory;
     }
 
-    /** 主键 */
-    private long id;
-    /** phoenix_user.tb_user.id */
-    private long userId;
-    /** 分类名称 */
-    private String categoryName;
-    /** 父类ID */
-    private long parentId;
-    /** 排序ID，九位一级 如000000001000000001,为一级分类下的第一个分类 */
-    private String sortId;
-    /** 分类创建时间 */
-    private String createTime;
-    /** 最后修改时间 */
-    private String modifyTime;
-    /** 子分类列表 */
-    private List<UserCategory> list;
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    /**
+     * @author zhangzhen
+     * 如果数据为空返回null
+     *
+     * 指导使用方法
+     * JSONObject j = JSONObject.fromObject(requestJson);
+     * String jsonData = j.getString("Entity");
+     * */
+    public static UserCategory getByJsonString(String jsonEntity) {
+        if(jsonEntity.equals("{}")) {
+            return null; //无数据判断
+        }
+        return KnowledgeUtil.readValue(UserCategory.class, jsonEntity);
+    }
+
+    /**
+     * @author zhangzhen
+     * 如果数据为空返回null
+     *
+     * 指导使用方法
+     * JSONObject j = JSONObject.fromObject(requestJson);
+     * Object jsonData = j.get("Entity");
+     * */
+    public static UserCategory getByJsonObject(Object jsonEntity) {
+        return getByJsonString(jsonEntity.toString());
+    }
+
+    /**
+     * @author zhangzhen
+     * 如果没有数据，返回空数组
+     *
+     * 指导使用方法
+     * JSONObject j = JSONObject.fromObject(requestJson);
+     * String jsonData = j.getString("Entity");
+     * */
+    public static List<UserCategory> getListByJsonString(String object) {
+        return KnowledgeUtil.readListValue(UserCategory.class, object);
+    }
+
+    /**
+     * @author zhangzhen
+     * @CreateTime 2014-11-11
+     * 如果没有数据，返回空数组
+     *
+     * 指导使用方法
+     * JSONObject j = JSONObject.fromObject(requestJson);
+     * Object jsonData = j.get("EntityList");
+     * */
+    public static List<UserCategory> getListByJsonObject(Object object) {
+        return getListByJsonString(object.toString());
+    }
 }

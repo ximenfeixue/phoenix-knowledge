@@ -1,452 +1,206 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>phoenix-knowledge</artifactId>
 		<groupId>com.ginkgocap.ywxt</groupId>
-		<version>2.1.0</version>
+		<artifactId>phoenix-knowledge</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>phoenix-knowledge-provider</artifactId>
+    <packaging>jar</packaging>
 	<name>${project.artifactId}</name>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<skip_maven_deploy>true</skip_maven_deploy>
 	</properties>
 
-	<dependencies>
-		<dependency>
-		  <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
-	  		<artifactId>jersey-guava</artifactId>
-	 	 	<version>2.15</version>
-		</dependency>
-		<dependency>
-     		<artifactId>phoenix-dynamic-api</artifactId> 
-     		<groupId>com.ginkgocap.ywxt</groupId> 
-     	<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gintong</groupId>
-			<artifactId>phoenix-rocketmq-api</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-knowledge-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-entire-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>3.1.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-person-api</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<!-- spring begin -->
+    <dependencies>
+        <dependency>
+            <groupId>com.gintong</groupId>
+            <artifactId>phoenix-rocketmq-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <artifactId>hibernate-jpa-2.0-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate.common</groupId>
+                    <artifactId>hibernate-commons-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.gintong.frame</groupId>
+            <artifactId>phoenix-frame-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-entire-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-common-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-framework-dal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-framework-id</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-directory-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-tags-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-knowledge-api</artifactId>
+            <version>${knowledge.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.parasol</groupId>
+            <artifactId>parasol-associate-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+        </dependency>
+        <!-- spring end -->
 
-		<!-- mybatis -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.generator</groupId>
-			<artifactId>mybatis-generator-core</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-		<!-- spring base -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
+        <!-- spring orm -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
 
-		<!-- spring aop -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-		</dependency>
-		<!-- spring end -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+        <!-- web begin -->
+        <!-- spring mvc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-stream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
 
-		<!-- spring orm -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.8.0.RELEASE</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-		</dependency>
-		<!-- spring integration -->
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-stream</artifactId>
-		</dependency>
-		<!-- web begin -->
-		<!-- spring mvc -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-		<!-- JSR-303 validator begin -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<!-- JSR-303 validator end -->
-		<!-- JSR-303 validator end -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.8.5</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-		</dependency>
-		<!-- srping JPA ,ORM, and its dependencies -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ezmorph</groupId>
-			<artifactId>ezmorph</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-		</dependency>
-		<!-- json -->
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		<!-- logging begin -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+        </dependency>
+        <!-- mongodb end -->
 
-		<!-- JSON begin -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.1.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-jaxb-annotations</artifactId>
-			<version>2.1.3</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-commons-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-lgpl</artifactId>
-			<version>1.9.9</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.9</version>
-		</dependency>
-		<!-- JSON end -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.sgroschupf</groupId>
+            <artifactId>zkclient</artifactId>
+        </dependency>
 
-		<!-- logback -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-access</artifactId>
-			<version>1.0.7</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.7</version>
-		</dependency>
-		<!-- slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.4</version>
-		</dependency>
+        <!-- optional datasource pool -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${jdbc.groupId}</groupId>
+            <artifactId>${jdbc.artifactId}</artifactId>
+            <version>${jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-		<!-- slf4j-log4j绑定 -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.4</version>
-		</dependency>
-
-		<!-- java concurrency in practie -->
-		<dependency>
-			<groupId>net.jcip</groupId>
-			<artifactId>jcip-annotations</artifactId>
-		</dependency>
-		<!-- optional datasource pool -->
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${jdbc.groupId}</groupId>
-			<artifactId>${jdbc.artifactId}</artifactId>
-			<version>${jdbc.version}</version>
-		</dependency>
-		<!-- database access end -->
-		<!-- ibatis -->
-		<dependency>
-			<groupId>org.apache.ibatis</groupId>
-			<artifactId>ibatis-sqlmap</artifactId>
-			<version>2.3.4.726</version>
-		</dependency>
-		<!-- spring mongodb mapper -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
-			<version>1.1.0.M1</version>
-		</dependency>
-		<!-- spring mongodb mapper end -->
-		<!-- mongodb- -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>2.7.3</version>
-		</dependency>
-		<!-- mongodb end -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<!-- dubbo 服务注册方式 start -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>dubbo</artifactId>
-			<version>2.5.3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.netty</groupId>
-			<artifactId>netty</artifactId>
-			<version>3.2.7.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.16.1-GA</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.zookeeper</groupId>
-			<artifactId>zookeeper</artifactId>
-			<version>3.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.sgroschupf</groupId>
-			<artifactId>zkclient</artifactId>
-			<version>0.1</version>
-		</dependency>
-		<!-- dubbo 服务注册方式 end -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-		</dependency>
-		<!-- word操作 -->
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>iText</artifactId>
-			<version>2.0.8</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>iTextAsian</artifactId>
-			<version>5.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>itext-rtf</artifactId>
-			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-scratchpad</artifactId>
-			<version>3.9</version>
-		</dependency>
-		<!-- openOffice相关jar -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.artofsolving</groupId>
-			<artifactId>jodconverter</artifactId>
-			<version>2.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openoffice</groupId>
-			<artifactId>juh</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openoffice</groupId>
-			<artifactId>jurt</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openoffice</groupId>
-			<artifactId>ridl</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openoffice</groupId>
-			<artifactId>unoil</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.artofsolving.jodconverter</groupId>
-			<artifactId>jodconverter-core</artifactId>
-			<version>3.0-beta-4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.9.0</version>
-		</dependency>
-		<!-- quartz start -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.8.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<!-- Latest 2.3.x (not 2.4.x), at least 2.3.18 -->
-			<version>[2.3.18,2.4)</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ginkgocap.ywxt</groupId>
-			<artifactId>phoenix-util</artifactId>
-			<version>${util.dependencied}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>httpclient</artifactId>
-					<groupId>org.apache.httpcomponents</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- httpclient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcomponents-client</artifactId>
-			<version>4.3.1</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gintong.frame</groupId>
-			<artifactId>phoenix-frame-util</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
-
-	<build>
+    <build>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -462,27 +216,32 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</resource>
-			<resource>
-				<directory>src/main/gen</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
 		</resources>
 		<testResources>
 			<testResource>
 				<filtering>true</filtering>
 				<directory>src/test/resources</directory>
 			</testResource>
-			<testResource>
-				<filtering>true</filtering>
-				<directory>src/main/webapp</directory>
-				<includes>
-					<include>**/*.xml</include>
-				</includes>
-			</testResource>
 		</testResources>
 		<plugins>
+			<!-- test插件, 仅测试名称为*Test的类, 使用支持分组测试的surefire-junit47 driver -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>2.12.4</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -509,19 +268,9 @@
 				<version>1.7</version>
 
 				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/java</source>
-								<source>src/main/gen</source>
-							</sources>
-						</configuration>
-					</execution>
+					<!-- <execution> <id>add-source</id> <phase>generate-sources</phase> 
+						<goals> <goal>add-source</goal> </goals> <configuration> <sources> <source>src/main/java</source> 
+						<source>src/main/gen</source> </sources> </configuration> </execution> -->
 				</executions>
 
 			</plugin>
@@ -563,355 +312,14 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
-	<profiles>
-		<!-- 生成ibatis模型和dao -->
-		<profile>
-			<id>generatemybatis</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.mybatis.generator</groupId>
-						<artifactId>mybatis-generator-maven-plugin</artifactId>
-						<version>1.3.2</version>
-						<configuration>
-							<verbose>true</verbose>
-							<overwrite>true</overwrite>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>mysql</groupId>
-								<artifactId>mysql-connector-java</artifactId>
-								<version>5.1.12</version>
-							</dependency>
-							<dependency>
-								<groupId>org.mybatis.generator</groupId>
-								<artifactId>mybatis-generator-core</artifactId>
-								<version>1.3.2</version>
-							</dependency>
-							<dependency>
-								<groupId>org.mybatis</groupId>
-								<artifactId>mybatis</artifactId>
-								<version>3.2.2</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<!-- 开发打包使用的profile -->
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-				<!-- 大数据搜索请求地址 -->
-				<knowledge.data.searchUrl>http://192.168.130.119:8090/</knowledge.data.searchUrl>
-				<!-- 大数据解析请求地址 -->
-				<knowledge.data.parseUrl>http://192.168.130.120:8000/async_data/</knowledge.data.parseUrl>
-				<!-- 大数据推送请求地址 -->
-				<knowledge.data.pushUrl>http://192.168.101.14:4453/</knowledge.data.pushUrl>
-				<konwledge.query.hot.url>http://192.168.101.14:4453/</konwledge.query.hot.url>
-				<konwledge.query.comment.url>http://192.168.101.14:4453/</konwledge.query.comment.url>
-
-				<!-- redis地址 -->
-				<redis.host>192.168.101.131</redis.host>
-				<!-- redis端口 -->
-				<redis.port>6379</redis.port>
-				<!-- mongo地址 -->
-				<mongodb.address>192.168.101.131:27017</mongodb.address>
-				<!-- mongo中数据库 -->
-				<mongodb.database>knowledge</mongodb.database>
-				<!-- 数据库连接地址和数据库名 -->
-				<jdbc.url>
-					jdbc:mysql://192.168.101.131:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8&amp;amp;zeroDateTimeBehavior=convertToNull
-				</jdbc.url>
-				<!-- 数据库访问帐号 -->
-				<jdbc.username>zhangwei</jdbc.username>
-				<!-- 数据库访问密码 -->
-				<jdbc.password>zhangwei</jdbc.password>
-				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-				<log4j.level>debug</log4j.level>
-				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
-				<log4j.path>d:/log</log4j.path>
-				<logback.path>d:/knowledge-provider</logback.path>
-				<qatest.schema.skip>false</qatest.schema.skip>
-				<!-- dubbo注册中心的地址 -->
-				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
-				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.101.131:2181?client=zkclient</dubbo.registry.address>
-				<dubbo.protocol.port>8812</dubbo.protocol.port>
-				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-				<webserver.path>/root/apache-tomcat-6.0.36/webapps</webserver.path>
-				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
-				<nginx.root>http://file.dev.gintong.com</nginx.root>
-			</properties>
-		</profile>
-		<profile>
-			<!-- ci configuration -->
-			<id>server</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-				<!-- redis地址 -->
-				<redis.host>192.168.101.89</redis.host>
-				<!-- redis端口 -->
-				<redis.port>6379</redis.port>
-				<!-- mongo地址 -->
-				<mongodb.address>192.168.101.89:27017</mongodb.address>
-				<!-- mongo中数据库 -->
-				<mongodb.database>ywxt</mongodb.database>
-				<!-- 数据库连接地址和数据库名 -->
-				<jdbc.url>
-					jdbc:mysql://192.168.101.89:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
-				</jdbc.url>
-				<!-- 数据库访问帐号 -->
-				<jdbc.username>root</jdbc.username>
-				<!-- 数据库访问密码 -->
-				<jdbc.password />
-				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-				<log4j.level>debug</log4j.level>
-				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
-				<log4j.path>/home/zhangle/project/ci</log4j.path>
-				<qatest.schema.skip>false</qatest.schema.skip>
-				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
-				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.101.88:2181?client=zkclient</dubbo.registry.address>
-				<dubbo.protocol.port>2015</dubbo.protocol.port>
-				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
-				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
-				<nginx.root>http://file.server.gintong.com:81</nginx.root>
-			</properties>
-			<build>
-				<plugins>
-					<!-- sql plugin -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>sql-maven-plugin</artifactId>
-						<version>1.5</version>
-						<!-- common configuration shared by all executions -->
-						<dependencies>
-							<!-- specify the dependent jdbc driver here -->
-							<dependency>
-								<groupId>mysql</groupId>
-								<artifactId>mysql-connector-java</artifactId>
-								<version>5.1.12</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<driver>${jdbc.driverClassName}</driver>
-							<username>${jdbc.username}</username>
-							<password>${jdbc.password}</password>
-							<url>${jdbc.url}</url>
-							<!--all executions are ignored if -Dmaven.test.skip=true -->
-						</configuration>
-						<executions>
-							<execution>
-								<id>create-schema-server</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>execute</goal>
-								</goals>
-								<inherited>false</inherited>
-								<configuration>
-									<autocommit>true</autocommit>
-									<srcFiles>
-										<srcFile>src/test/resources/sql/mysql/schema.sql</srcFile>
-										<srcFile>src/test/resources/sql/mysql/default-data.sql</srcFile>
-									</srcFiles>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>dbunit-maven-plugin</artifactId>
-						<version>1.0-beta-3</version>
-						<executions>
-							<execution>
-								<id>test-compile</id>
-								<phase>process-test-classes</phase>
-								<goals>
-									<goal>operation</goal>
-								</goals>
-							</execution>
-						</executions>
-						<dependencies>
-							<dependency>
-								<groupId>${jdbc.groupId}</groupId>
-								<artifactId>${jdbc.artifactId}</artifactId>
-								<version>${jdbc.version}</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<dataTypeFactoryName> ${dbuint.dataTypeFactoryName}
-							</dataTypeFactoryName>
-							<driver>${jdbc.driverClassName}</driver>
-							<username>${jdbc.username}</username>
-							<password>${jdbc.password}</password>
-							<url>${jdbc.url}</url>
-							<src>src/test/resources/data/sample-data.xml</src>
-							<type>CLEAN_INSERT</type>
-							<skip>${maven.test.skip}</skip>
-							<format>flat</format>
-							<encoding>UTF-8</encoding>
-							<dest>target/dbunit/export.xml</dest>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- qatest configuration -->
-			<id>qatest</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-				<!-- redis地址 -->
-				<redis.host>192.168.101.90</redis.host>
-				<!-- redis端口 -->
-				<redis.port>6379</redis.port>
-				<!-- mongo地址 -->
-				<mongodb.address>192.168.101.90:27017</mongodb.address>
-				<!-- mongo中数据库 -->
-				<mongodb.database>ywxt</mongodb.database>
-				<!-- 数据库连接地址和数据库名 -->
-				<jdbc.url>
-					jdbc:mysql://192.168.101.90:3306/phoenix_knowledge?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf8
-				</jdbc.url>
-				<!-- 数据库访问帐号 -->
-				<jdbc.username>root</jdbc.username>
-				<!-- 数据库访问密码 -->
-				<jdbc.password>111111</jdbc.password>
-				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-				<log4j.level>debug</log4j.level>
-				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
-				<log4j.path>/home/zhangle/project/qatest</log4j.path>
-				<qatest.schema.skip>false</qatest.schema.skip>
-				<dubbo.application.name>knowledgedubboprovider</dubbo.application.name>
-				<dubbo.protocol.name>dubbo</dubbo.protocol.name>
-				<dubbo.registry.address>zookeeper://192.168.101.90:2181?client=zkclient</dubbo.registry.address>
-				<dubbo.protocol.port>2015</dubbo.protocol.port>
-				<!-- 应用端的挂载配置路径 -->
-				<linux.mount.path>/webserver/upload/knowledge</linux.mount.path>
-				<webserver.path>/webserver/tomcat/phoenix-knowledge-web/ywxt</webserver.path>
-				<gen.path>/webserver/upload/knowledge/GENFILE</gen.path>
-				<nginx.root>http://file.qatest.gintong.com:81</nginx.root>
-			</properties>
-			<build>
-				<plugins>
-					<!-- sql plugin -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>sql-maven-plugin</artifactId>
-						<version>1.5</version>
-						<!-- common configuration shared by all executions -->
-						<dependencies>
-							<!-- specify the dependent jdbc driver here -->
-							<dependency>
-								<groupId>mysql</groupId>
-								<artifactId>mysql-connector-java</artifactId>
-								<version>5.1.12</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<driver>${jdbc.driverClassName}</driver>
-							<username>${jdbc.username}</username>
-							<password>${jdbc.password}</password>
-							<url>${jdbc.url}</url>
-							<!--all executions are ignored if -Dmaven.test.skip=true -->
-							<skip>${qatest.schema.skip}</skip>
-						</configuration>
-						<executions>
-							<execution>
-								<id>final-create-schema-qatest</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>execute</goal>
-								</goals>
-								<inherited>false</inherited>
-								<configuration>
-									<autocommit>true</autocommit>
-									<srcFiles>
-										<srcFile>src/test/resources/sql/mysql/online.sql</srcFile>
-										<srcFile>src/test/resources/sql/mysql/ddl.sql</srcFile>
-									</srcFiles>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>delivery</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<filters>
-					<filter>${sa.config.file}</filter>
-				</filters>
-			</build>
-		</profile>
-
-
-
-		<profile>
-			<id>online</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<filters>
-					<filter>${sa.config.file}</filter>
-				</filters>
-			</build>
-			<properties>
-				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-				<!-- redis地址 -->
-				<redis.host>${knowledge.online.redis.host}</redis.host>
-				<!-- redis端口 -->
-				<redis.port>${knowledge.online.redis.port}</redis.port>
-				<!-- mongo地址 -->
-				<mongodb.address>${knowledge.online.mongodb.address}</mongodb.address>
-				<!-- mongo中数据库 -->
-				<mongodb.database>${knowledge.online.mongodb.database}</mongodb.database>
-				<!-- 数据库连接地址和数据库名 -->
-				<jdbc.url>${knowledge.online.jdbc.url}</jdbc.url>
-				<!-- 数据库访问帐号 -->
-				<jdbc.username>${knowledge.online.jdbc.username}</jdbc.username>
-				<!-- 数据库访问密码 -->
-				<jdbc.password>${knowledge.online.jdbc.password}</jdbc.password>
-				<!-- 日志级别，一般由大到小分为 debug info warn error 四个级别，越大日志越详细 -->
-				<log4j.level>${knowledge.online.log4j.level}</log4j.level>
-				<!-- 日志存储路径，多个项目可以用同一个路径，在该路径下每个项目会自动创建以项目名称命名的子文件夹 -->
-				<log4j.path>${knowledge.online.log4j.path}</log4j.path>
-				<!-- dubbo注册中心的地址 -->
-				<dubbo.application.name>${knowledge.online.dubbo.application.name}</dubbo.application.name>
-				<dubbo.protocol.name>${knowledge.online.dubbo.protocol.name}</dubbo.protocol.name>
-				<dubbo.registry.address>${knowledge.online.dubbo.registry.address}</dubbo.registry.address>
-				<dubbo.protocol.port>${knowledge.online.dubbo.protocol.port}</dubbo.protocol.port>
-				<nginx.root>${knowledgeweb.online.nginx.root}</nginx.root>
-				<linux.mount.path>${knowledge.online.linux.mount.path}</linux.mount.path>
-				<webserver.path>${knowledge.online.webserver.path}</webserver.path>
-				<gen.path>${knowledge.online.gen.path}</gen.path>
-			</properties>
-		</profile>
-	</profiles>
 </project>

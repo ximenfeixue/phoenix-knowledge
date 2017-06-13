@@ -1,104 +1,49 @@
 package com.ginkgocap.ywxt.knowledge.service;
 
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
+
 import java.util.List;
-import java.util.Map;
 
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCommentQuery;
-import com.ginkgocap.ywxt.user.model.User;
-
+/**
+ * Created by Chen Peifeng on 2016/4/7.
+ */
 public interface KnowledgeCommentService {
+    /**
+     * des:新建知识评论
+     * @param knowledgeComment
+     * @return 状态（大于0成功，-1失败）
+     */
+    long create(KnowledgeComment knowledgeComment);
 
-	/**
-	 * 添加评论
-	 * 
-	 * @param kid
-	 *            知识Id
-	 * @param userid
-	 *            登陆用户id
-	 * @param pid
-	 *            评论父类id（一级传0）
-	 * @param content
-	 *            评论内容
-	 * @return
-	 */
-	Map<String, Object> addComment(long kid, User user, long pid, String content);
+    /**
+     * des: 更新评论
+     * @param commentId	用户id
+     * @return
+     */
+    boolean update(long commentId,long ownerId,String comment);
 
-	/**
-	 * 查询评论
-	 * 
-	 * @param kid
-	 *            知识Id
-	 * @param pid
-	 *            父级Id (0查一级，非0查2级)
-	 * @param psize
-	 * @param pno
-	 * @param user
-	 * @return
-	 */
-	Map<String, Object> findCommentList(long kid, long pid, Integer pno,
-			Integer psize, User user);
+    /**
+     * des:根据id删除评论
+     * @param commentId
+     * @param ownerId
+     * @return 操作的记录数(0无记录，>0操作条数)
+     */
+    boolean delete(long commentId,long ownerId);
 
-	/**
-	 * 删除评论
-	 * 
-	 * @param id
-	 *            评论id
-	 * @param kId
-	 *            知识Id
-	 * @param userid
-	 *            登陆用户Id
-	 * @return
-	 */
-	Map<String, Object> delComment(long id, long kId, User user);
+    boolean cleanComment(long knowledgeId);
 
-	int deleteCommentByknowledgeId(long knowledgeid, long userid);
+    /**
+     * des:根据knowledgeId查询知识评论集合
+     * @param knowledgeId	知识id
+     * @param knowledgeId
+     * @return
+     */
+    List<KnowledgeComment> getKnowledgeCommentList(long knowledgeId);
 
-	/**
-	 * @param id
-	 * @param kId
-	 * @param user
-	 * @param pno
-	 * @return
-	 */
-	Map<String, Object> delComment(long id, long kId,
-			User user, Integer pno); 
-	/**
-	 * 分页查询评论
-	 * @param param
-	 * @return
-	 */
-	public List<KnowledgeCommentQuery> getCommentByPage(Map<String, Object> param);
-	/**
-	 * 查询评论数量
-	 * @param param
-	 * @return
-	 */
-	public int getCommentCount(Map<String, Object> param);
-	/**
-	 * 删除评论 设置标志位
-	 * @param idList
-	 * @param userId 删除操作人ID
-	 * @param userName 删除操作人姓名
-	 */
-	public void deleteComment(List<Long> idList, Long userId, String userName);
-	/**
-	 * 彻底删除评论 物理删除
-	 * @param idList
-	 */
-	public void deleteCommentCompletely(List<Long> idList);
-	/**
-	 * 恢复已删除的评论
-	 * @param idList
-	 */
-	public void recoverDeletedComment(List<Long> idList);
-	/**
-	 * 屏蔽评论内容
-	 * @param idList
-	 */
-	public void invisibleComment(List<Long> idList);
-	/**
-	 * 恢复屏蔽内容
-	 * @param idList
-	 */
-	public void recoverInvisibleComment(List<Long> idList);
+    /**
+     * des:根据knowledgeId查询知识评论数量
+     * @param knowledgeId
+     * @return
+     */
+    long getKnowledgeCommentCount(long knowledgeId);
 }

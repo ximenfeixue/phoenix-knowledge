@@ -1,817 +1,829 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.ginkgocap.ywxt.knowledge.util.*;
-import com.gintong.rocketmq.api.DefaultMessageService;
-import com.gintong.rocketmq.api.enums.TopicType;
-import com.gintong.rocketmq.api.model.RocketSendResult;
-import com.gintong.rocketmq.api.utils.FlagTypeUtils;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
+import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
+import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.gintong.common.phoenix.permission.entity.Permission;
+import com.gintong.frame.util.dto.CommonResultCode;
+import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-/*import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;*/
-import com.ginkgocap.ywxt.file.model.FileIndex;
-import com.ginkgocap.ywxt.file.service.FileIndexService;
-import com.ginkgocap.ywxt.knowledge.dao.knowledge.KnowledgeDao;
-import com.ginkgocap.ywxt.knowledge.dao.knowledgecategory.KnowledgeCategoryDAO;
-import com.ginkgocap.ywxt.knowledge.dao.news.KnowledgeNewsDAO;
-import com.ginkgocap.ywxt.knowledge.entity.Column;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.entity.KnowledgeCategory;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategory;
-import com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeBaseMapper;
-import com.ginkgocap.ywxt.knowledge.mapper.KnowledgeStaticsMapper;
-import com.ginkgocap.ywxt.knowledge.mapper.UserCategoryMapper;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNewsVO;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeNews;
-import com.ginkgocap.ywxt.knowledge.service.ColumnKnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.ColumnService;
-import com.ginkgocap.ywxt.knowledge.service.DataCenterService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeConnectInfoService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeMainService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeMongoIncService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeStaticsService;
-import com.ginkgocap.ywxt.knowledge.service.UserCategoryService;
-import com.ginkgocap.ywxt.knowledge.service.UserPermissionService;
-import com.ginkgocap.ywxt.knowledge.thread.NoticeThreadPool;
-import com.ginkgocap.ywxt.metadata.service.SensitiveWordService;
-import com.ginkgocap.ywxt.user.form.EtUserInfo;
-import com.ginkgocap.ywxt.user.form.ReceiversInfo;
-import com.ginkgocap.ywxt.user.model.User;
-import com.ginkgocap.ywxt.user.model.UserFeed;
-import com.ginkgocap.ywxt.user.service.DiaryService;
-import com.ginkgocap.ywxt.user.service.FriendsRelationService;
-import com.ginkgocap.ywxt.user.service.UserFeedService;
-import com.ginkgocap.ywxt.util.DateFunc;
-import com.ginkgocap.ywxt.util.MakePrimaryKey;
-import com.ginkgocap.ywxt.util.MakeTaskId;
-import com.gintong.frame.util.log.ServiceLogAnnotation;
+import java.util.*;
 
+/**
+ * Created by gintong on 2016/7/19.
+ */
 @Service("knowledgeService")
-@ServiceLogAnnotation
-public class KnowledgeServiceImpl extends BaseServiceImpl implements KnowledgeService {
-
-	private final static String dule = "1";
-
-	private static final Logger logger = LoggerFactory.getLogger(KnowledgeServiceImpl.class);
-
-	@Autowired
-	private KnowledgeDao knowledgeDao;
-
-	@Autowired
-	private KnowledgeNewsDAO knowledgeNewsDAO;
-
-	@Autowired
-	private KnowledgeCategoryDAO knowledgeBetweenDAO;
-	@Resource
-	private MongoTemplate mongoTemplate;
-
-	@Resource
-	private UserPermissionService userPermissionService;
-
-	@Resource
-	private KnowledgeCategoryService knowledgeCategoryService;
-
-	@Resource
-	private ColumnService columnService;
-
-	@Resource
-	private ColumnKnowledgeService columnKnowledgeService;
-
-	@Resource
-	private KnowledgeMongoIncService knowledgeMongoIncService;
-
-	@Resource
-	private KnowledgeStaticsMapper knowledgeStaticsMapper;
-
-	@Resource
-	private UserCategoryMapper userCategoryMapper;
-
-	@Resource
-	private UserCategoryService userCategoryService;
-
-	@Resource
-	private KnowledgeBaseMapper knowledgeBaseMapper;
-
-	@Autowired
-	private SensitiveWordService sensitiveWordService;
-
-	@Autowired
-	private KnowledgeMainService knowledgeMainService;
-
-	@Autowired
-	private UserFeedService userFeedService;
-
-	@Autowired
-	private DiaryService diaryService;
-
-	@Autowired
-	private KnowledgeStaticsService knowledgeStaticsService;
-
-	@Autowired
-	private DataCenterService dataCenterService;
-
-	@Autowired
-	private NoticeThreadPool noticeThreadPool;
-
-	@Autowired
-	private KnowledgeCommentService knowledgeCommentService;
-
-	@Autowired
-	private FileIndexService fileIndexService;
-
-	@Autowired
-	private KnowledgeConnectInfoService knowledgeConnectInfoService;
-
-	@Autowired
-	private FriendsRelationService friendsRelationService;
-
-	@Autowired(required = true)
-	private DefaultMessageService defaultMessageService;
-
-	/*@Autowired
-	private DynamicNewsService dynamicNewsService;*/
-
-	@Override
-	public Map<String, Object> deleteKnowledgeNew(String knowledgeids, long catetoryid, long userid) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		long[] knowledgeid = null;
-
-		// 检查是否为标准数据
-		try {
-			if (knowledgeids.endsWith(",")) {
-				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.substring(0, knowledgeids.length() - 1).split(","));
-			} else {
-				knowledgeid = KnowledgeUtil.convertionToLong(knowledgeids.split(","));
-			}
-		} catch (Exception e) {
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			return result;
-		}
-
-		// 批量删除
-		for (int i = 0; i < knowledgeid.length; i++) {
-			KnowledgeBase bl = knowledgeBaseMapper.selectByPrimaryKey(knowledgeid[i]);
-			long ct = 0;
-			if (bl != null) {
-				ct = bl.getColumnType();
-			} else {
-				continue;
-			}
-			String obj = Constants.getTableName(ct + "");
-			String collectionName = obj.substring(obj.lastIndexOf(".") + 1, obj.length());
-			Criteria criteria = Criteria.where("_id").in(knowledgeid[i]);
-			Query query = new Query(criteria);
-			Update update = new Update();
-			update.set("status", Constants.Status.recycle.v());
-
-			// 删除动态长观点信息
-			if (ct == Constants.KnowledgeType.Opinion.v()) {
-				userFeedService.deleteDynamicKnowledge(knowledgeid[i]);
-			}
-			// 删除更新关联表
-			try {
-				mongoTemplate.updateFirst(query, update, collectionName);
-				List<KnowledgeCategory> list = knowledgeCategoryService.selectKnowledgeCategory(knowledgeid[i]);
-				if (list != null && list.size() > 0) {
-					for (KnowledgeCategory knowledgeCategory : list) {
-						knowledgeCategoryService.updateKnowledgeCategory(knowledgeid[i], knowledgeCategory.getCategoryId());
-					}
-				}
-			} catch (Exception e) {
-				result.put(Constants.status, Constants.ResultType.fail.v());
-			}
-			// 删除统计表信息
-			knowledgeStaticsService.deleteKnowledgeStatics(knowledgeid[i]);
-			// 删除该知识评论信息
-			knowledgeCommentService.deleteCommentByknowledgeId(knowledgeid[i], userid);
-
-			KnowledgeNewsVO vo = new KnowledgeNewsVO();
-			vo.setkId(knowledgeid[i]);
-			vo.setColumnType(ct + "");
-			// noticeDataCenter(ct + "", knowledgeid[i], "del");
-			noticeDataCenter("upd", vo, userid, bl.getAuthor());
-		}
-		return result;
-	}
-
-	@Override
-	public Map<String, Object> updateKnowledge(KnowledgeNewsVO vo, User user) {
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		// 查询知识内容敏感词
-		List<String> listword = sensitiveWordService.sensitiveWord(vo.getContent());
-		if (listword != null && listword.size() > 0) {
-			logger.warn("发布的知识内容存在敏感词，参数为：{}", listword.toString());
-			result.put(Constants.status, Constants.ResultType.sensitiveWords.v());
-			result.put(Constants.errormessage, Constants.ErrorMessage.sensitiveWord.c());
-			result.put("listword", listword);
-			return result;
-		}
-		setVoValues(vo, user);
-		updateKnowledgeVO(vo, user);
-		// 添加知识到权限表
-		result = insertUserPermissions(vo, user);
-		Integer status = Integer.parseInt(result.get(Constants.status) + "");
-		if (status != 1) {
-			result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
-			return result;
-		}
-
-		// 添加知识到目录知识表
-		result = insertCatalogueIds(vo, user);
-		status = Integer.parseInt(result.get(Constants.status) + "");
-
-		if (status != 1) {
-			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
-			return result;
-		}
-
-		saveFeed(vo, user);
-		// 大数据通知接口
-		// noticeDataCenter("upd", vo);
-		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
-		noticeDataCenter("upd", vo, user.getId(), user.getName());
-		result.put(Constants.status, Constants.ResultType.success.v());
-		result.put("knowledgeid", vo.getkId());
-		result.put("type", vo.getColumnType());
-		logger.info("编辑知识成功,知识ID:{}", vo.getkId());
-		return result;
-
-	}
-
-	@Override
-	public List<String> insertUserShare(KnowledgeNewsVO vo, User user) {
-		List<String> permList = JsonUtil.getPermissionList(vo.getSelectedIds());
-		// 大乐全平台分享
-		userPermissionService.insertUserShare(permList, vo.getkId(), vo, user);
-		return permList;
-	}
-
-	@Override
-	public Knowledge selectKnowledge(long knowledgeid, String type) {
-
-		String obj = Constants.getTableName(type);
-
-		Knowledge knowledge = null;
-		Criteria criteria = Criteria.where("_id").is(knowledgeid);
-		Query query = new Query(criteria);
-		try {
-			knowledge = (Knowledge) Class.forName(obj).newInstance();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		return mongoTemplate.findOne(query, Knowledge.class, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
-
-	}
-
-	@Override
-	public Map<String, Object> insertknowledge(KnowledgeNewsVO vo, User user) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (user == null) {
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
-			return result;
-		}
-		logger.info("开始新建知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
-		// 查询知识内容敏感词
-		List<String> listword = sensitiveWordService.sensitiveWord(vo.getContent());
-		if (listword != null && listword.size() > 0) {
-			logger.warn("发布的知识内容存在敏感词，参数为：{}", listword.toString());
-			result.put(Constants.status, Constants.ResultType.sensitiveWords.v());
-			result.put(Constants.errormessage, Constants.ErrorMessage.sensitiveWord.c());
-			result.put("listword", listword);
-			return result;
-		}
-		setVoValues(vo, user);
-		insertKnowledgeVO(vo, user); // 插入Or修改知识
-		// 添加知识到权限表
-		result = insertUserPermissions(vo, user);
-		Integer status = Integer.parseInt(result.get(Constants.status) + "");
-		if (status != 1) {
-			result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
-			return result;
-		}
-
-		// 添加知识到目录知识表
-		result = insertCatalogueIds(vo, user);
-		status = Integer.parseInt(result.get(Constants.status) + "");
-
-		if (status != 1) {
-			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
-			return result;
-		}
-		saveFeed(vo, user); // 动态存观点
-		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
-		noticeDataCenter("add", vo, user.getId(), user.getName());
-		result.put("knowledgeid", vo.getkId());
-		result.put("type", vo.getColumnType());
-		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.info("创建知识成功,知识ID:{}", vo.getkId());
-		return result;
-	}
-
-	/**
-	 * @param vo
-	 * @param user
-	 */
-	private void setVoValues(KnowledgeNewsVO vo, User user) {
-		Map<String, Object> result;
-		long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-		result = getColumnidAndColumnPath(vo, user.getId()); // 获得该用户的栏目路径
-		vo.setColumnid(result.get("columnid") + "");
-		vo.setColumnPath(result.get("columnPath") + "");
-		if (this.isAsso(vo.getAsso())) {
-			vo.setAsso("");
-		}
-
-		if (vo.getKnowledgeid() != null && !"".equals(vo.getKnowledgeid())) {
-			vo.setkId(Long.parseLong(vo.getKnowledgeid()));
-		} else {
-			vo.setkId(kId);
-		}
-		vo.setDesc(getDesc(vo)); // 如果是行业，投融工具，经典案例，不从内容取简介
-		vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
-		vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
-		vo.setEssence(vo.getEssence() != null ? StringUtils.equals(vo.getEssence(), "on") ? "1" : "0" : "0");
-		vo.setKnowledgestatus(Constants.Status.checked.v());
-	}
-
-	@Override
-	public Map<String, Object> insertUserPermissions(KnowledgeNewsVO vo, User user) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		List<String> permList = null;
-		// 删除知识之前的权限
-		userPermissionService.deleteUserPermission(vo.getkId(), user.getId());
-		// 创建知识，生成动态
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("type", "10");
-		param.put("lowType", vo.getColumnType() + "");
-		param.put("createrId", user.getId() + "");
-		param.put("title", vo.getTitle() + "");
-		param.put("content", vo.getDesc() + "");
-		param.put("createrName", user.getName() + "");
-		param.put("targetId", vo.getkId() + "");
-		param.put("imgPath", vo.getPic() + "");
-		param.put("picPath", user.getPicPath() + "");
-		param.put("forwardingContent", "");
-		param.put("gender", user.getSex());
-		param.put("createType", user.isVirtual() ? "2" : "1");
-		if (StringUtils.isNotBlank(vo.getSelectedIds()) && !vo.getSelectedIds().equals(dule)) {
-			// 获取知识权限,大乐（2）：用户ID1，用户ID2...&中乐（3）：用户ID1，用户ID2...&小乐（4）：用户ID1，用户ID2...
-			Boolean dule = JsonUtil.checkKnowledgePermission(vo.getSelectedIds());
-			if (dule == null) {
-				logger.error("解析权限信息失败，参数为：{}", vo.getSelectedIds());
-				result.put(Constants.status, Constants.ResultType.fail.v());
-				result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			if (!dule) {
-				// 获取用户
-				permList = userPermissionService.userPermissionAll(vo.getSelectedIds(), user);
-				// 大乐全平台分享
-				userPermissionService.insertUserShare(permList, vo.getkId(), vo, user);
-				// 分享到金桐脑
-//				Map<String, Object> params = new HashMap<String, Object>();
-//				params.put("userId", user.getId());
-//				params.put("vo", vo);
-//				noticeThreadPool.noticeDataCenter(Constants.noticeType.shareToJinTN.v(), params);
-				noticeDataCenter(null, vo, user.getId(), user.getName());
-				// 判断基础信息来源
-				boolean flag = userPermissionService.checkUserSource(permList);
-				result.put("flag", flag);
-				int pV = userPermissionService.insertUserPermission(permList, vo.getkId(), user.getId(), vo.getShareMessage(),
-						Short.parseShort(vo.getColumnType()), Long.parseLong(vo.getColumnid()));
-				if (pV == 0) {
-					logger.error("创建知识未全部完成,添加知识到用户权限信息失败，知识ID:{},目录ID:{}", vo.getkId());
-				}
-				param.put("receiverIds", changeRelation(permList));
-			}
-		} else {
-			// 独乐也生成动态
-			param.put("receiverIds", null);
-		}
-		// 新建知识均生成动态
-//		dynamicNewsService.insertNewsAndRelationByParam(param);
-		//dynamicNewsService.insert(param);
-		if (vo.isNeedUpdate()) {
-			updateKnowledgeByPermission(vo);
-		}
-		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "upd");
-		noticeDataCenter("upd", vo, user.getId(), user.getName());
-		result.put(Constants.status, Constants.ResultType.success.v());
-		return result;
-	}
-
-	private Map<String, List<Long>> changeRelation(List<String> permList) {
-
-		Map<String, List<Long>> map = new HashMap<String, List<Long>>();
-
-		if (permList == null || permList.size() == 0)
-			return null;
-		for (String str : permList) {
-			String[] temp = str.split(":");
-			// 未分享给用户
-			if (temp.length < 1)
-				continue;
-			List<Long> ids = new ArrayList<Long>();
-			String tem = temp[1];
-			if ("[]".equals(tem) || "".equals(tem))
-				continue;
-			String[] strIds = tem.substring(1, tem.length() - 1).split(",");
-			for (String id : strIds) {
-				ids.add(Long.valueOf(id.trim()));
-			}
-			// 如果为大乐
-			if ("2".equals(temp[0])) {
-				map.put("dale", ids);
-			}// 如果为中乐
-			else if ("3".equals(temp[0])) {
-				map.put("zhongle", ids);
-			}
-		}
-		return map;
-	}
-
-	/**
-	 * @param vo
-	 */
-	private void updateKnowledgeByPermission(KnowledgeNewsVO vo) {
-		logger.info("进入修改知识权限请求,id:{},type{}", vo.getkId(), vo.getColumnType());
-		String obj = Constants.getTableName(vo.getColumnType());
-		try {
-			Criteria criteria = Criteria.where("_id").is(vo.getkId());
-			Query query = new Query(criteria);
-			Update update = new Update();
-			update.set("selectedIds", vo.getSelectedIds());
-
-			mongoTemplate.updateFirst(query, update, obj.substring(obj.lastIndexOf(".") + 1, obj.length()));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("修改知识权限请求失败,id:{},type{}", vo.getkId(), vo.getColumnType());
-		}
-
-		logger.info("修改知识权限请求成功,id:{},type{}", vo.getkId(), vo.getColumnType());
-
-	}
-
-	public void updateByPrimaryKey(KnowledgeBase kb) {
-		knowledgeBaseMapper.modifyKnowledgeId(kb);
-	}
-
-	@Override
-	public Map<String, Object> saveKnowledge(KnowledgeNewsVO vo, User user) {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (user == null) {
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage, Constants.ErrorMessage.userNotLogin.c());
-			return result;
-		}
-		logger.info("开始保存知识,知识类型为：{},创建用户:{}", vo.getColumnType(), user.getId());
-		// 保存，通过知识ID 查找需要保存的信息
-		if (vo.getkId() != 0) {
-			String taskId = MakeTaskId.getTaskId();
-			Knowledge knowledge = selectKnowledge(vo.getkId(), vo.getColumnType());
-			long kId = knowledgeMongoIncService.getKnowledgeIncreaseId();
-			String columnid = StringUtils.isBlank(knowledge.getColumnid()) ? "0" : knowledge.getColumnid();
-			// 判断用户是否选择栏目
-			String columnPath = null;
-			if (Long.parseLong(columnid) != 0) {
-				columnPath = columnService.getColumnPathById(Long.parseLong(columnid));
-			} else {
-				columnPath = "";
-			}
-			if (isAsso(vo.getAsso())) {
-				vo.setAsso("");
-			}
-			saveFileIndex(knowledge.getTaskid(), user);
-			// 知识入Mongo
-			vo.setkId(kId);
-			vo.setColumnPath(columnPath);
-			vo.setColumnid(columnid);
-			vo.setContent(knowledge.getContent());
-			vo.setTaskId(taskId);
-			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
-				vo.setColumnid(Constants.KnowledgeType.Opinion.v() + "");
-				columnPath = Constants.KnowledgeType.Opinion.c();
-				vo.setColumnPath(Constants.KnowledgeType.Opinion.c());
-
-			}
-
-			if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
-				vo.setColumnid(Constants.KnowledgeType.Article.v() + "");
-				columnPath = Constants.KnowledgeType.Article.c();
-				vo.setColumnPath(Constants.KnowledgeType.Article.c());
-
-			}
-			vo.setDesc(knowledge.getDesc());
-			vo.setStatus(Constants.KnowledgeCategoryStatus.effect.v() + "");
-			vo.setCreatetime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
-			vo.setEssence(knowledge.getEssence() + "");
-			vo.setKnowledgestatus(Constants.Status.checked.v());
-			vo.setPic(knowledge.getPic());
-			insertKnowledgeVO(vo, user);
-			// 添加知识到权限表
-			result = insertUserPermissions(vo, user);
-			Integer status = Integer.parseInt(result.get(Constants.status) + "");
-			if (status != 1) {
-				result.put(Constants.errormessage, Constants.ErrorMessage.paramNotValid.c());
-				return result;
-			}
-			// 添加知识到目录知识表
-			result = insertCatalogueIds(vo, user);
-			status = Integer.parseInt(result.get(Constants.status) + "");
-			if (status != 1) {
-				result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeCatalogueIds.c());
-				return result;
-			}
-			saveFeed(vo, user);
-		}
-		// noticeDataCenter(vo.getColumnType(), vo.getkId(), "add");
-		noticeDataCenter("add", vo, user.getId(), user.getName());
-		result.put("knowledgeid", vo.getkId());
-		result.put("type", vo.getColumnType());
-		result.put(Constants.status, Constants.ResultType.success.v());
-		logger.info("保存知识成功,知识ID:{}", vo.getkId());
-		return result;
-
-	}
-
-	@Override
-	public Map<String, Object> insertCatalogueIds(KnowledgeNewsVO vo, User user) {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		// 删除该知识下的所有目录
-		knowledgeCategoryService.deleteKnowledgeCategory(vo.getkId());
-		// 删除该知识的基本信息
-		knowledgeBaseMapper.deleteByPrimaryKey(vo.getkId());
-
-		long[] cIds = null;
-		// 添加知识到知识目录表
-		if (StringUtils.isBlank(vo.getCatalogueIds())) { // 如果目录ID为空,默认添加到未分组目录中.
-			UserCategoryExample example = new UserCategoryExample();
-			com.ginkgocap.ywxt.knowledge.entity.UserCategoryExample.Criteria criteria = example.createCriteria();
-			criteria.andSortidEqualTo(Constants.unGroupSortId);
-			criteria.andUserIdEqualTo(user.getId());
-			criteria.andCategoryTypeEqualTo((short) Constants.CategoryType.common.v());
-			List<UserCategory> list = userCategoryMapper.selectByExample(example);
-			if (list != null && list.size() > 0) {// 创建空指针异常
-				cIds = new long[1];
-				cIds[0] = list.get(0).getId();
-			}
-		} else {
-			cIds = KnowledgeUtil.formatString(vo.getCatalogueIds());
-		}
-
-		int categoryV = knowledgeCategoryService.insertKnowledgeRCategory(vo.getkId(), cIds, user.getId(), user.getName(), vo.getColumnPath(), vo);
-		if (categoryV == 0) {
-			logger.error("创建知识未全部完成,添加知识到知识目录信息失败，知识ID:{},目录ID:{}", vo.getkId(), cIds);
-			result.put(Constants.status, Constants.ResultType.fail.v());
-			result.put(Constants.errormessage, Constants.ErrorMessage.addKnowledgeFail.c());
-			return result;
-		}
-		result.put(Constants.status, Constants.ResultType.success.v());
-		return result;
-	}
-
-	public boolean isAsso(String asso) {
-		if (asso.contains("{\"r\":[],\"p\":[],\"o\":[],\"k\":[]}")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * 根据知识knowledgeId 来判断 insert Or update
-	 * 
-	 * @param vo
-	 * @param user
-	 */
-	public void insertKnowledgeVO(KnowledgeNewsVO vo, User user) {
-		if (StringUtils.isNotBlank(vo.getAsso())) {
-			knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId());
-		}
-		knowledgeNewsDAO.insertknowledge(vo, user);
-	}
-
-	/**
-	 * 根据知识knowledgeId 来判断 insert Or update
-	 * 
-	 * @param vo
-	 * @param user
-	 */
-	public void updateKnowledgeVO(KnowledgeNewsVO vo, User user) {
-		// 关联信息存入mysql中
-		if (StringUtils.isNotBlank(vo.getAsso())) {
-			knowledgeConnectInfoService.insertKnowledgeConnectInfo(vo.getAsso(), vo.getkId(), user.getId()); // 关联信息存入mysql中
-		}
-		knowledgeNewsDAO.updateKnowledge(vo, user);
-	}
-
-	/**
-	 * 观点添加到动态
-	 * 
-	 * @param vo
-	 * @param user
-	 */
-	public void saveFeed(KnowledgeNewsVO vo, User user) {
-		try {
-			if (Integer.parseInt(vo.getColumnType()) == Constants.KnowledgeType.Opinion.v()) {
-				UserFeed feed = new UserFeed();
-				feed.setContent(vo.getContent());
-				feed.setCreatedBy(user.getName());
-				feed.setCreatedById(user.getId());
-				feed.setCtime(DateFunc.getDate());
-				feed.setGroupName("仅好友可见");
-				feed.setScope(1);// 设置可见级别
-				feed.setGroupName("");
-				feed.setTargetId(vo.getkId());
-				feed.setTitle(vo.getTitle());
-				feed.setType(1);
-				feed.setImgPath("");// 长观点地址
-				feed.setDelstatus(0);// 删除状态
-				List<ReceiversInfo> receivers = diaryService.getReceiversInfo(vo.getContent(), -1, user.getId());
-				feed.setReceivers(receivers);// 获取接收人信息
-				feed.setDiaryType(1);
-				List<EtUserInfo> etInfo = new ArrayList<EtUserInfo>();// 被@的信息
-				feed.setEtInfo(etInfo);
-				userFeedService.saveOrUpdate(feed);
-			}
-		} catch (Exception e) {
-			logger.error("动态观点存储失败,知识ID{}", vo.getkId());
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 获取知识栏目Id和栏目路径
-	 * 
-	 * @param vo
-	 * @param userId
-	 * @return
-	 */
-	public Map<String, Object> getColumnidAndColumnPath(KnowledgeNewsVO vo, long userId) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		String columnid = StringUtils.isBlank(vo.getColumnid()) ? "0" : vo.getColumnid();
-		String columnPath = null;
-		Column column = null;
-		if (Long.parseLong(columnid) != 0) {
-			columnPath = columnService.getColumnPathById(Long.parseLong(columnid));
-		} else {
-			column = columnService.getUnGroupColumnIdBySortId(userId);
-			if (column == null) {
-				columnService.checkNogroup(userId); // 没有未没分组栏目，添加
-			} else {
-				columnid = column.getId() + "";
-			}
-			columnPath = Constants.unGroupSortName;
-		}
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Opinion.v()) {
-			columnid = Constants.KnowledgeType.Opinion.v() + "";
-			columnPath = Constants.KnowledgeType.Opinion.c();
-		}
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Article.v()) {
-			columnid = Constants.KnowledgeType.Article.v() + "";
-			columnPath = Constants.KnowledgeType.Article.c();
-		}
-		result.put("columnid", columnid);
-		result.put("columnPath", columnPath);
-		return result;
-	}
-
-	/**
-	 * 接知识类型 获取知识的desc
-	 * 
-	 * @param vo
-	 * @return
-	 */
-	public String getDesc(KnowledgeNewsVO vo) {
-		String content = "";
-		if (Integer.parseInt(vo.getColumnType()) == Constants.Type.Investment.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Industry.v()
-				|| Integer.parseInt(vo.getColumnType()) == Constants.Type.Case.v()) {
-			if (StringUtils.isNotBlank(vo.getDesc())) {
-				return getContent(vo.getDesc());
-			} else {
-				return getContent(vo.getContent());
-			}
-		} else {
-			if (StringUtils.isBlank(vo.getDesc())) {
-				return getContent(vo.getContent());
-			}
-		}
-		return content;
-	}
-
-	/**
-	 * 保存知识，通过taskId 获取原知识附件，保存到新知识内
-	 * 
-	 * @param taskId
-	 * @param user
-	 */
-	public void saveFileIndex(String taskId, User user) {
-		// 保存附件
-		List<FileIndex> filelist = fileIndexService.selectByTaskId(taskId, Constants.KnowledgeCategoryStatus.effect.v() + "");
-		if (filelist != null && filelist.size() > 0) {
-			for (FileIndex fileIndex : filelist) {
-				String fileId = MakePrimaryKey.getPrimaryKey();
-				FileIndex fileIndex1 = new FileIndex();
-				fileIndex1.setId(fileId);
-				fileIndex1.setFilePath(fileIndex.getFilePath());
-				fileIndex1.setFileTitle(fileIndex.getFileTitle());
-				fileIndex1.setTaskId(taskId);
-				fileIndex1.setFileSize(fileIndex.getFileSize());
-				fileIndex1.setAuthor(user.getId());
-				fileIndex1.setAuthorName(user.getName());
-				fileIndex1.setMd5(fileIndex.getMd5());
-				fileIndex1.setStatus(true);
-				fileIndex1.setCtime(DateUtil.formatWithYYYYMMDDHHMMSS(new Date()));
-				fileIndexService.insert(fileIndex1);
-			}
-		}
-	}
-
-	public String getContent(String strContent) {
-		String content = HtmlToText.html2Text(strContent);
-		if (StringUtils.isNotBlank(content)) {
-			content = content.length() > 50 ? content.substring(0, 50) + "..." : content;
-		}
-		return content;
-	}
-
-	@Override
-	public String initOldSerach(int type,int start,int end){
-		logger.info("通知大数据，发送请求 开始于：{}，结束于：{}", start,end);
-		/**
-		 传入开始的页码和结束的页码，不传总条数，因为总条数随时可能会改变，
-		 发送老数据是可以确定要发送的数据的条数的。自己人工的计算页数，利于控制。
-		**/
-		// 根据传入的知识类型，获取对应的知识枚举
-		KnowledgeEnum kenum = KnowledgeEnum.knowledgeEnumFactory(type);
-		// result 是MQ返回的数据格式
-		RocketSendResult result = null;
-		// 用y记录执行到哪页
-		int y = start;
-		// 设置查询条件,ch
-		Criteria criteria = new Criteria();
-		// 查询status=4的对象
-		criteria.where("status").is(4);
-		// 每次查询一万条
-		Query query = new Query(criteria).limit(1000);
-		// 循环开始页数和结束页数，每页取值10000条
-		for (int x = start;x < end;x++) {
-			// 开始于哪条数据，页码乘以页长
-			query.skip(x*1000);
-			List<Knowledge> k = null;
-			try {
-				 k = mongoTemplate.find(query,kenum.cls(),kenum.dec());
-				y++;
-			}catch(Exception e) {
-				logger.error("获取Konwledge失败：",e);
-			}
-			int exint = 0;
-
-
-			for(int top=0;top<k.size();top++) {
-				// 记录执行到哪条
-				exint = top;
-				Knowledge knowledge = k.get(top);
-				knowledge.setColumnType(String.valueOf(kenum.code()));
-				try {
-					result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, FlagTypeUtils.createKnowledgeFlag(), beanToJsonForInit(knowledge.setMapVO(knowledge)));
-				}catch(Exception e) {
-					logger.error("发送失败  返回参数{},执行到{},错误位置{}", result.getSendResult(),x +":"+exint);
-				}
-			}
-
-		}
-		return "SUCCESS，NUM：" + y;
-	}
-
+public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseService
+{
+    private Logger logger = LoggerFactory.getLogger(KnowledgeServiceImpl.class);
+
+    /**知识简表*/
+    @Autowired
+    private KnowledgeMysqlDao knowledgeMysqlDao;
+    /**知识详细表*/
+    @Autowired
+    private KnowledgeMongoDao knowledgeMongoDao;
+    /**知识来源表*/
+    @Autowired
+    private KnowledgeReferenceDao knowledgeReferenceDao;
+
+    @Autowired
+    private KnowledgeCollectDao knowledgeCollectDao;
+
+    private static final String endContent = "若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+    private static final int endLength = endContent.length();
+    private static final String suffix = "</br>版权归原作者所有，金桐网依法保护版权，保护权利人合法权益。金桐网部分文章、知识等若未能第一时间与作者取得联系或标注原始出处，请谅解。若涉及版权或第三方网络侵权问题，请及时与我公司服务中心联系。";
+
+    @Override
+    public InterfaceResult<Long> insert(DataCollect data) {
+        //知识详细信息插入
+        data.initPermission();
+        Knowledge savedDetail = insertKnowledgeDetail(data.getKnowledgeDetail());
+        if (savedDetail == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        long knowledgeId = savedDetail.getId();
+
+        //知识基础表插入
+        KnowledgeBase base = data.generateKnowledge();
+        try {
+            this.knowledgeMysqlDao.insert(base);
+            logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + base.getId());
+        } catch (Throwable e) {
+            short columnType = KnowledgeUtil.parserShortType(savedDetail.getColumnType());
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, base.getPrivated(), EActionType.EAdd.getValue()));
+            logger.error("知识基础表插入失败！失败原因：" + e.getMessage());
+            //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        //知识来源表插入
+        KnowledgeReference reference = data.getReference();
+        if (reference != null) {
+            try {
+                reference.setId(knowledgeId);
+                reference.setKnowledgeId(knowledgeId);
+                this.knowledgeReferenceDao.insert(reference);
+            } catch (Throwable e) {
+                logger.error("知识引用表插入失败！失败原因： " + e.getMessage());
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            }
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
+    }
+
+    @Override
+    public Knowledge insert(Knowledge detail)
+    {
+        return insertKnowledgeDetail(detail);
+    }
+
+    @Override
+    public InterfaceResult insert(List<Knowledge> knowledgeList, final int type)
+    {
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            logger.error("Knowledge list is empty, so skip to save..");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        try {
+            List<Knowledge> savedList = this.knowledgeMongoDao.insertList(knowledgeList, type);
+            if (CollectionUtils.isNotEmpty(savedList)) {
+                logger.info("insert knowledge List to mongo success. size: " + savedList.size());
+            }
+            else {
+                logger.info("insert knowledge List to mongo failed." );
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
+            }
+        } catch (Exception ex) {
+            logger.error("create knowledge detail failed: error:  " + ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+    }
+
+    @Override
+    public Knowledge update(Knowledge detail) {
+        return updateKnowledgeDetail(detail, -1);
+    }
+
+    @Override
+    public InterfaceResult<Knowledge> update(DataCollect dataCollect) {
+
+        dataCollect.initPermission();
+        Knowledge detail = dataCollect.getKnowledgeDetail();
+        //knowledgeMongo.createContendDesc();
+        //知识详细表更新
+        Knowledge updatedKnow = updateKnowledgeDetail(detail, dataCollect.getOldType());
+        if (updatedKnow == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识更新失败");
+        }
+        logger.info("update knowledge Detail, knowledgeId: " + updatedKnow.getId());
+
+        //Update knowledge base
+        dataCollect.setKnowledgeDetail(updatedKnow);
+        KnowledgeBase knowledge = dataCollect.generateKnowledge();
+        final long knowledgeId = detail.getId();
+        final short columnType = knowledge.getType();
+        //知识简表更新
+        try {
+            this.knowledgeMysqlDao.update(knowledge);
+        } catch (Exception e) {
+            knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, columnType, knowledge.getPrivated(), EActionType.EUpdate.getValue()));
+            logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+        }
+
+        //知识来源表更新
+        KnowledgeReference reference = dataCollect.getReference();
+        if (reference != null) {
+            try {
+                reference.setId(knowledgeId);
+                reference.setKnowledgeId(knowledgeId);
+                this.knowledgeReferenceDao.update(reference);
+            } catch (Exception e) {
+                //this.updateRollBack(knowledgeId, columnId, oldKnowledgeDetail, knowledge, null, true, true, false, false, false);
+                logger.error("知识来源表更新失败！失败原因：\n" + e.getMessage());
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            }
+        }
+
+        InterfaceResult<Knowledge> result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        result.setResponseData(updatedKnow);
+        logger.info("知识来更新成功\n");
+        return result;
+    }
+
+    @Override
+    public boolean updateKnowledge(DataCollect dataCollect) {
+
+        KnowledgeBase base = dataCollect.getKnowledge();
+        Knowledge knowledgeDetail = dataCollect.getKnowledgeDetail();
+
+        updateKnowledgeDetail(knowledgeDetail, dataCollect.getOldType());
+        //知识简表更新
+        try {
+            if (base != null) {
+                base.setStatus((short) defaultStatus);
+                this.knowledgeMysqlDao.update(base);
+            }
+        } catch (Exception e) {
+            logger.error("知识基础表更新失败！失败原因：\n"+e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean updatePermission(Permission perm) {
+        if (perm == null) {
+            logger.error("permission info is null, so skip.");
+            return false;
+        }
+
+        try {
+            final long knowledgeId = perm.getResId();
+            KnowledgeBase base = knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+            if (base == null) {
+                logger.error("can 't find knowledge base by id: " + knowledgeId);
+                return false;
+            }
+            final short columnType = base.getType();
+            /*
+            Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+            if (detail == null) {
+                logger.error("can 't find knowledge detail by id: " + knowledgeId + " type: " + columnType);
+                return false;
+            }*/
+            short privated = DataCollect.privated(perm);
+            base.setPrivated(privated);
+            boolean result = knowledgeMysqlDao.update(base);
+            if (!result) {
+                logger.error("update knowledge base failed. by id: " + knowledgeId + " type: " + columnType);
+                return false;
+            }
+            knowledgeMongoDao.updatePrivated(knowledgeId, columnType, privated);
+
+            privated = DataCollect.privated(perm, false);
+            knowledgeCollectDao.updateCollectedKnowledgePrivate(knowledgeId, columnType, privated);
+
+        } catch (Exception e) {
+            logger.error("update knowledge permsiion failed, id: " + perm.getResId());
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addTag(long userId, long knowledgeId, int type, List<Long> tagIdList) {
+        return this.knowledgeMongoDao.addTag(userId, knowledgeId, type, tagIdList);
+    }
+
+    @Override
+    public boolean addDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
+        return this.knowledgeMongoDao.addDirectory(userId, knowledgeId, type, directoryIdList);
+    }
+
+    @Override
+    public boolean updateTag(long userId, long knowledgeId, int type, List<Long> tagIdList) {
+        return this.knowledgeMongoDao.updateIds(userId, knowledgeId, type, tagIdList, EModuleType.ETag);
+    }
+
+    @Override
+    public boolean updateDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList) {
+        return this.knowledgeMongoDao.updateIds(userId, knowledgeId, type, directoryIdList, EModuleType.EDirectory);
+    }
+
+    @Override
+    public InterfaceResult deleteByKnowledgeId(long knowledgeId, int columnType) throws Exception
+    {
+        //知识详细表删除
+        try {
+            boolean result = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
+            if (!result) {
+                logger.error("知识详细表删除失败: knowledgeId: " + knowledgeId + " columnType: " + columnType);
+                Knowledge detail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+                if (detail == null) {
+                    logger.info("Maybe some reason, this knowledge had been deleted, so continue delete other info regards this knowledge. knowledgeId: " + knowledgeId + " columnType: " + columnType);
+                } else {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("知识详细表删除失败！失败原因：\n"+ex.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识详细删除失败!");
+        }
+
+        //知识简表删除
+        try {
+            int result = this.knowledgeMysqlDao.deleteByKnowledgeId(knowledgeId);
+            if (result <= 0) {
+                logger.error("delete knowledge base failed. knowledgeId: " + knowledgeId);
+            }
+        } catch (Exception e) {
+            //knowledgeMongoDao.backupKnowledgeBase(new KnowledgeBaseSync(knowledgeId, (short)columnType, (short)0, EActionType.EDelete.getValue()));
+            logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION, "知识删除失败!");
+        }
+
+        //知识来源表删除
+        try {
+            this.knowledgeReferenceDao.deleteByKnowledgeId(knowledgeId);
+        } catch (Exception e) {
+            //this.deleteRollBack(knowledgeId, columnId,oldKnowledgeDetail,knowledge,null, true, true, false, false, false);
+            logger.error("知识来源表删除失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, "知识来源表删除失败！");
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeId);
+    }
+
+    @Override
+    public boolean deleteTag(long userId, long knowledgeId, int type, List<Long> idList) throws Exception {
+        return this.knowledgeMongoDao.deleteTag(userId, knowledgeId, type, idList);
+    }
+
+    @Override
+    public boolean deleteDirectory(long userId, long knowledgeId, int type, List<Long> idList) throws Exception {
+        return this.knowledgeMongoDao.deleteDirectory(userId, knowledgeId, type, idList);
+    }
+
+    @Override
+    public InterfaceResult batchDeleteByKnowledgeIds(List<Long> knowledgeIds, int columnType) throws Exception {
+
+        List<Knowledge> oldKnowledgeMongoList = this.knowledgeMongoDao.getByIdsAndColumnId(knowledgeIds, columnType);
+        if (CollectionUtils.isEmpty(oldKnowledgeMongoList)) {
+            logger.warn("get knowledge detail list failed, maybe these knowledge have been deleted. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
+        }
+        else {
+            //知识详细表删除
+            boolean result = this.knowledgeMongoDao.deleteByIdsAndColumnType(knowledgeIds, columnType);
+            if (!result) {
+                logger.error("delete knowledge detail failed. knowledgeIds：" + knowledgeIds + " columnType: " + columnType);
+            }
+        }
+
+        //知识简表删除
+        try {
+            this.knowledgeMysqlDao.batchDeleteByIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("知识基础表删除失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+        }
+
+        //知识来源表删除
+        try {
+            this.knowledgeReferenceDao.batchDeleteByKnowledgeIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("知识来源表删除失败！失败原因：\n"+e.getMessage());
+            return InterfaceResult.getInterfaceResultInstanceWithException(CommonResultCode.SYSTEM_EXCEPTION, e);
+        }
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(knowledgeIds);
+    }
+
+    @Override
+    public InterfaceResult logicDelete(List<Long> knowledgeIds, final int type)
+    {
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            logger.warn("knowledge is is null, skip logic delete" + knowledgeIds + " columnType: " + type);
+        }
+
+        //知识详细表删除
+        boolean result = this.knowledgeMongoDao.logicDeleteByIdsType(knowledgeIds, type);
+        if (!result) {
+            logger.error("logic delete knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+
+        //知识简表删除
+        try {
+            this.knowledgeMysqlDao.logicDeleteByIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("logic delete knowledge base failed： error: " + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
+    }
+
+    @Override
+    public InterfaceResult logicRecovery(List<Long> knowledgeIds, final int type)
+    {
+        if (CollectionUtils.isEmpty(knowledgeIds)) {
+            logger.warn("knowledge is is null, skip logic delete" + knowledgeIds + " columnType: " + type);
+        }
+
+        //知识详细表删除
+        boolean result = this.knowledgeMongoDao.logicRecoveryByIdsType(knowledgeIds, type);
+        if (!result) {
+            logger.error("logic recovery knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+
+        //知识简表删除
+        try {
+            this.knowledgeMysqlDao.logicRecoveryByIds(knowledgeIds);
+        } catch (Exception e) {
+            logger.error("logic recovery knowledge base failed： error: " + e.getMessage());
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
+    }
+
+    @Override
+    public Knowledge getDetailById(long knowledgeId, int columnType) throws Exception {
+
+        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+        if (knowledgeDetail == null) {
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
+        } else {
+            //Add knowledge property
+            filterKnowledge(knowledgeDetail);
+            final String knowledgeContent = knowledgeDetail.getContent() + suffix;
+            knowledgeDetail.setContent(knowledgeContent);
+        }
+
+        return knowledgeDetail;
+    }
+
+    @Override
+    public DataCollect getKnowledge(long knowledgeId,int columnType) throws Exception
+    {
+        Knowledge knowledgeDetail = getDetailById(knowledgeId, columnType);
+        if (knowledgeDetail == null) {
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
+        }
+
+        KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+        if (knowledgeBase == null) {
+            logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnId: " + columnType);
+        }
+
+        if (knowledgeBase != null || knowledgeDetail != null) {
+            return new DataCollect(knowledgeBase, knowledgeDetail);
+        }
+
+        return null;
+    }
+
+    @Override
+    public InterfaceResult<DataCollect> getBaseById(long knowledgeId) throws Exception
+    {
+        KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+        KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
+
+        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledgeBase,knowledgeReference));
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception
+    {
+        List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
+        if (knowledgeList == null || knowledgeList.size() <= 0 ) {
+            logger.info("can't get any knowledge by Ids: "+knowledgeIds.toString());
+        }
+
+        return knowledgeList;
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getAll(start, size);
+    }
+
+    @Override
+    public long getBaseAllPublicCount(short permission) throws Exception
+    {
+        return this.knowledgeMysqlDao.getAllPublicCount(permission);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception
+    {
+        return this.knowledgeMysqlDao.getAllPublic(start, size, permission);
+    }
+
+    @Override
+    public int countByCreateUserId(long userId) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
+    }
+
+
+    @Override
+    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
+    }
+
+    @Override
+    public int countByCreateUserName(String userName) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.countByCreateUserName(userName);
+    }
+
+
+    @Override
+    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
+    }
+
+    public int countByTitle(String title) throws Exception
+    {
+        return this.knowledgeMysqlDao.countByTitle(title);
+    }
+
+
+    public List<KnowledgeBase> getByTitle(String title,int start, int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByTitle(title, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception
+    {
+        if (keyword == null || "null".equals(keyword)) {
+            return this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
+        } else {
+            return this.knowledgeMysqlDao.getByKnowledgeIdKeyWord(knowledgeIds, keyword);
+        }
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception {
+        return this.knowledgeMysqlDao.getByCreateUserIdAndType(userId, type, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByCreateUserIdAndColumnIdAndType(long UserId,int columnId, short type,int start,int size) throws Exception {
+        return this.knowledgeMysqlDao.getByCreateUserIdAndTypeAndColumnId(UserId, type, columnId, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByType(short type,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByType(type, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByColumnId(columnId,start,size);
+    }
+
+    @Override
+    public long getBasePublicCountByColumnId(int columnId,short permission) throws Exception
+    {
+        return this.knowledgeMysqlDao.getPublicCountByColumnId(columnId, permission);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBasePublicByColumnId(int columnId,short permission,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getPublicByColumnId(columnId, permission, start, size);
+    }
+
+    @Override
+    public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception
+    {
+        return this.knowledgeMysqlDao.getCountByUserIdKeyWord(userId, keyWord);
+    }
+
+    @Override
+    public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByUserIdKeyWord(userId, keyWord, start, size);
+    }
+
+    @Override
+    public List<KnowledgeBase> getBaseByColumnIdAndKeyWord(String keyWord,int columnId,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByColumnIdAndKeyWord(keyWord, columnId, start, size);
+    }
+
+    @Override
+    public InterfaceResult<List<DataCollect>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception
+    {
+        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
+    }
+
+    @Override
+    public List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception
+    {
+        //return this.knowledgeMysqlDao.getKnowledgeNoDirectory(userId, start, size);
+        List<Knowledge> detailList = null;
+        try {
+            detailList = knowledgeMongoDao.getNoDirectory(userId, start, size);
+        } catch (Exception ex) {
+            logger.error("get knowledge detail list failed: userId: {}", userId);
+        }
+        if (detailList != null && detailList.size() >0) {
+            List<KnowledgeBase> baseList = new ArrayList<KnowledgeBase>(detailList.size());
+            for (Knowledge detail : detailList) {
+                KnowledgeBase base = DataCollect.generateKnowledge(detail, (short)0);
+                baseList.add(base);
+            }
+            return baseList;
+        }
+        return null;
+    }
+
+    public List<KnowledgeBaseSync> getBackupKnowledgeBase(int start, int size)
+    {
+        return knowledgeMongoDao.getBackupKnowledgeBase(start, size);
+    }
+
+    public boolean syncKnowledgeBase(final KnowledgeBaseSync knowledgeSync) throws Exception
+    {
+        if (knowledgeSync == null) {
+            logger.error("knowledgeSync is null, please check again..");
+            return false;
+        }
+        switch (knowledgeSync.getAction()) {
+            case 1:
+                return syncKnowledgeBase(knowledgeSync, true);
+            case 2:
+                return syncKnowledgeBase(knowledgeSync, false);
+            case 3:
+            {
+                try {
+                    return knowledgeMysqlDao.deleteByKnowledgeId(knowledgeSync.getId()) > 0;
+                } catch (Throwable e) {
+                    logger.error("delete Knowledge base failed:  knowledgeId: {} type: {}", knowledgeSync.getId(), knowledgeSync.getType());
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            default:
+            {
+                logger.error("Unknown Knowledge Sync Action..");
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public void addTopKnowledge(List<Long> ids, short type) {
+        this.knowledgeMongoDao.addTopKnowledge(ids, type);
+    }
+
+    @Override
+    public void deleteTopKnowledge(List<Long> ids, short type) {
+        this.knowledgeMongoDao.deleteTopKnowledge(ids, type);
+    }
+
+    @Override
+    public List<KnowledgeBase> getTopKnowledgeByPage(final short type, final int page, int size) {
+        return this.knowledgeMongoDao.getTopKnowledgeByPage(type, page, size);
+    }
+
+    private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)
+    {
+        boolean result = false;
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowSync.getId(), knowSync.getType());
+        final String knowInfo = "knowledgeId: " + knowSync.getId() + ", columnType: " + knowSync.getType() + ", isAdd: " + isAdd;
+        if (detail != null) {
+            KnowledgeBase base = DataCollect.generateKnowledge(detail, knowSync.getType());
+            base.setPrivated(knowSync.getPrivated());
+            KnowledgeBase newBase = null;
+            try {
+                if (isAdd) {
+                    newBase = knowledgeMysqlDao.insert(base);
+                }
+                else {
+                    if (knowledgeMysqlDao.update(base)) {
+                        newBase = base;
+                    }
+                }
+                logger.info("sync knowledge base success. " + knowInfo);
+            } catch (Throwable e) {
+                logger.error("Sync knowledge base failed. " + knowInfo);
+                e.printStackTrace();
+                return false;
+            }
+
+            //Make sure insert/update success;
+            if (newBase != null) {
+                result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
+            }
+        } else {
+            logger.info("Knowledge can't find, maybe have been deleted. " + knowInfo);
+            //result = deleteBackupKnowledgeBase(knowSync.getId(), knowInfo);
+        }
+        return result;
+    }
+
+    private boolean deleteBackupKnowledgeBase(final long knolwedgeId, final String knowInfo) {
+        try {
+            knowledgeMongoDao.deleteBackupKnowledgeBase(knolwedgeId);
+            logger.info("delete backup knowledge success. " + knowInfo);
+        } catch (Throwable e) {
+            logger.error("delete backup knowledge base failed. " + knowInfo);
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 返回数据包装方法
+     * @param knowledgeList
+     * @return
+     */
+    private List<DataCollect> getReturn(List<KnowledgeBase> knowledgeList) {
+
+        List<DataCollect> returnList = new ArrayList<DataCollect>(knowledgeList.size());
+        if(knowledgeList != null && !knowledgeList.isEmpty())
+            for (KnowledgeBase data : knowledgeList)
+                returnList.add(getReturn(data,null));
+
+        return returnList;
+    }
+
+    /**
+     * 返回数据包装方法
+     * @param knowledgeBase
+     * @param knowledgeReference
+     * @return
+     */
+    private DataCollect getReturn(KnowledgeBase knowledgeBase, KnowledgeReference knowledgeReference) {
+
+        DataCollect DataCollect = new DataCollect();
+
+        DataCollect.setKnowledge(knowledgeBase);
+
+        DataCollect.setReference(knowledgeReference);
+
+        return DataCollect;
+    }
+
+    private DataCollect getReturn(Knowledge knowledgeDetail, KnowledgeReference knowledgeReference) {
+
+        DataCollect DataCollect = new DataCollect();
+        DataCollect.setKnowledgeDetail(knowledgeDetail);
+        DataCollect.setReference(knowledgeReference);
+
+        return DataCollect;
+    }
+
+    private List<DataCollect> putReferenceList2BaseList(List<KnowledgeBase> knowledgeBaseList,List<KnowledgeReference> referenceList) {
+
+        if(knowledgeBaseList == null || knowledgeBaseList.size() <= 0) {
+            return null;
+        }
+
+        int referenceSize = referenceList != null ? referenceList.size() : 0;
+        Map<Long, KnowledgeReference> referenceMap = new HashMap<Long, KnowledgeReference>(referenceSize > 0 ? referenceSize : 1);
+        for (KnowledgeReference reference : referenceList) {
+            referenceMap.put(reference.getKnowledgeId(), reference);
+        }
+
+        int knowledgeSize = knowledgeBaseList.size();
+        List<DataCollect> returnList = new ArrayList<DataCollect>(knowledgeSize);
+        for (KnowledgeBase knowledgeBase : knowledgeBaseList) {
+            KnowledgeReference reference = referenceMap.get(knowledgeBase.getKnowledgeId());
+            DataCollect DataCollect = new DataCollect(knowledgeBase, reference);
+            returnList.add(DataCollect);
+        }
+
+        return returnList;
+    }
+
+    private Knowledge insertKnowledgeDetail(Knowledge detail)
+    {
+        //知识详细信息插入
+        Knowledge savedDetail = null;
+        try {
+            filterKnowledge(detail);
+            detail.setStatus(4);
+            this.knowledgeMongoDao.insert(detail);
+            //Get from mongo, make sure save success..
+            final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
+            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
+        } catch (Exception ex) {
+            logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
+            return null;
+        }
+
+        if (savedDetail == null) {
+            logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
+            return null;
+        }
+        logger.info("Insert knowledge detail success. knowledgeId: " + detail.getId());
+
+        return savedDetail;
+    }
+
+    private Knowledge updateKnowledgeDetail(Knowledge detail, int oldType)
+    {
+        //知识详细表更新
+        if (detail == null) {
+            logger.info("Knowledge Detail is null, so skip to save.");
+            return null;
+        }
+        filterKnowledge(detail);
+        Knowledge updateDetail = this.knowledgeMongoDao.update(detail, oldType);
+        if (updateDetail != null) {
+            logger.info("update knowledge Detail success, knowledgeId: " + updateDetail.getId());
+        }
+        return updateDetail;
+    }
+
+    private void filterKnowledge(Knowledge detail)
+    {
+        detail.setStatus(defaultStatus);
+        String orgContent = detail.getContent();
+        if (orgContent != null) {
+            List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>", "");
+            for (String prefix : prefixList) {
+                String filterContent = filerString(orgContent, prefix);
+                if (filterContent != null) {
+                    detail.setContent(filterContent);
+                    return;
+                }
+            }
+        }
+    }
+
+
+    private String filerString(final String originContent, final String prefix)
+    {
+        final String filterString = prefix + "版权归原作者所有，金桐网依法保护版权";
+        final int startIndex = originContent.indexOf(filterString);
+        if (startIndex > 0) {
+            logger.info("filter string: " + filterString + " done.");
+            return originContent.substring(0, startIndex);
+        }
+        return null;
+    }
 }

@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="   
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
-	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 	http://www.springframework.org/schema/data/mongo
     http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
     http://www.springframework.org/schema/mvc
-	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-	http://www.springframework.org/schema/data/jpa 
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://www.springframework.org/schema/data/jpa
 	http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd">
-	<context:component-scan base-package="com.ginkgocap.ywxt">
-	</context:component-scan>
+
 	<import resource="classpath:knowledge-dubbo-provider.xml" />
-	<import resource="classpath:file-dubbo-consumer.xml" />
-	<import resource="classpath:rocketmq-dubbo-consumer.xml" />
-	<import resource="classpath:knowledge-integration.xml" />
 	<import resource="classpath:knowledge-mongo-config.xml" />
-	<import resource="classpath:user-dubbo-consumer.xml" /><!-- 加载user注册服务 -->
-	<import resource="classpath:knowledge-schedule.xml" />
-	<import resource="classpath:metadata-dubbo-consumer.xml" />
-	<import resource="classpath:applicationContext-cache.xml" />
-<!-- 	<import resource="classpath:people-dubbo-consumer.xml" /> -->
-<!-- 	<import resource="classpath:customer-dubbo-consumer.xml" /> -->
-	<import resource="classpath:requirement-dubbo-consumer.xml" />
-	<import resource="classpath:person-dubbo-consumer.xml" />
+    <import resource="classpath:knowledge-cloud-cache.xml" />
 	<import resource="classpath:applicationContext_log.xml"/>
-    <import resource="classpath:dynamic-dubbo-consumer.xml"/>
+
+    <context:component-scan base-package="com.ginkgocap.ywxt.knowledge">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+    <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
+	<bean id="idService" class="com.ginkgocap.ywxt.framework.service.IdService"/>
+	<bean id="cloudIdService" class="com.ginkgocap.ywxt.framework.service.CloudIdService"/>
+    <bean id="knowledgeCountServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeCountServiceImpl"/>
+    <bean id="knowledgeCommonServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.common.KnowledgeCommonServiceImpl"/>
+
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -47,129 +47,4 @@
 		</property>
 	</bean>
 
-
-	<!-- Datasource -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="${jdbc.driverClassName}" />
-		<property name="jdbcUrl" value="${jdbc.url}" />
-		<property name="user" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="initialPoolSize">
-			<value>${knowledge.jdbc.initialPoolSize}</value>
-		</property>
-		<property name="minPoolSize">
-			<value>${knowledge.jdbc.minPoolSize}</value>
-		</property>
-		<property name="acquireIncrement">
-			<value>${knowledge.jdbc.acquireIncrement}</value>
-		</property>
-		<property name="maxPoolSize">
-			<value>${knowledge.jdbc.maxPoolSize}</value>
-		</property>
-		<property name="maxIdleTime">
-			<value>${knowledge.jdbc.maxIdleTime}</value>
-		</property>
-		<property name="idleConnectionTestPeriod">
-			<value>${knowledge.jdbc.idleConnectionTestPeriod}</value>
-		</property>
-		<property name="maxStatements">
-			<value>${knowledge.jdbc.maxStatements}</value>
-		</property>
-		<property name="maxStatementsPerConnection">
-			<value>${knowledge.jdbc.maxStatementsPerConnection}</value>
-		</property>
-		<property name="debugUnreturnedConnectionStackTraces">
-			<value>${knowledge.jdbc.debugUnreturnedConnectionStackTraces}</value>
-		</property>
-		<property name="automaticTestTable">
-			<value>c3p0test</value>
-		</property>
-	</bean>
-
-
-	<bean id="freeMarkerConfigurer"
-		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<property name="templateLoaderPath" value="classpath:/template/" />
-		<property name="freemarkerSettings">
-			<props>
-				<prop key="template_update_delay">0</prop>
-				<prop key="default_encoding">UTF-8</prop>
-				<prop key="locale">zh_CN</prop>
-				<prop key="number_format">#</prop>
-			</props>
-		</property>
-	</bean>
-	<bean class="com.ginkgocap.ywxt.knowledge.util.TemplateUtils">
-		<property name="freeMarkerConfigurer">
-			<ref local="freeMarkerConfigurer" />
-		</property>
-		<property name="charset">
-			<value>UTF-8</value>
-		</property>
-		<property name="templateLoaderPath" value="/template/" />
-	</bean>
-	<!-- jpa -->
-
-
-
-
-	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
-		<property name="configLocation" value="classpath:knowledgeSqlMapConfig.xml" />
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
-	<bean id="httpInvokerRequestExecutor"
-		class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor">
-		<property name="httpClient">
-			<bean class="org.apache.commons.httpclient.HttpClient">
-				<property name="params">
-					<bean class="org.apache.commons.httpclient.params.HttpClientParams">
-						<property name="connectionManagerTimeout" value="10000" />
-						<property name="soTimeout" value="20000" />
-					</bean>
-				</property>
-				<property name="httpConnectionManager">
-					<ref bean="multiThreadedHttpConnectionManager" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-	<bean id="multiThreadedHttpConnectionManager"
-		class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
-		<property name="params">
-			<bean
-				class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
-				<property name="maxTotalConnections" value="600" />
-				<property name="defaultMaxConnectionsPerHost" value="512" />
-			</bean>
-		</property>
-	</bean>
-
-	<!-- 使用annotation定义事务 -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	<bean id="mybatisSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath:**Mapper.xml" />
-	</bean>
-
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.ginkgocap.ywxt.knowledge.mapper" />
-		<property name="sqlSessionFactoryBeanName" value="mybatisSqlSessionFactory" />
-	</bean>
-
-	<bean id="httpUrlConfig" class="com.ginkgocap.ywxt.knowledge.util.HTTPUrlConfig">
-		<property name="searchUrl" value="${knowledge.data.searchUrl}" />
-		<property name="parseUrl" value="${knowledge.data.parseUrl}" />
-		<property name="pushUrl" value="${knowledge.data.pushUrl}" />
-		<property name="hotSortUrl" value="${konwledge.query.hot.url}" />
-		<property name="commentSortUrl" value="${konwledge.query.comment.url}" />
-	</bean>
 </beans>
