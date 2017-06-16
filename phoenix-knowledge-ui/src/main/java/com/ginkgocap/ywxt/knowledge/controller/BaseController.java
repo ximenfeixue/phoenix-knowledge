@@ -110,8 +110,7 @@ public abstract class BaseController {
         return requestJson;
     }
 
-    protected boolean isWeb(HttpServletRequest request)
-    {
+    protected boolean isWeb(HttpServletRequest request) {
         return CommonUtil.isWeb(request);
     }
 
