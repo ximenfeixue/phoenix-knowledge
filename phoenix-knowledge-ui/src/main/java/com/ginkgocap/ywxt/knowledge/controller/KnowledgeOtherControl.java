@@ -39,24 +39,9 @@ import java.util.regex.Pattern;
  */
 @Controller
 @RequestMapping("/knowledgeOther")
-public class KnowledgeOtherControl extends BaseController
+public class KnowledgeOtherControl extends BaseKnowledgeController
 {
-    private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
-
-    @Autowired
-    private KnowledgeService knowledgeService;
-
-    @Autowired
-    private KnowledgeCountService knowledgeCountService;
-
-    @Autowired
-    private TagServiceLocal tagServiceLocal;
-
-    @Autowired
-    private PermissionServiceLocal permissionServiceLocal;
-
-    @Autowired
-    private BigDataSyncTask bigDataSyncTask;
+    private final static Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
@@ -320,6 +305,22 @@ public class KnowledgeOtherControl extends BaseController
         } catch (IOException e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
             result = "";
+        } catch (Exception e) {
+            logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
+            result = "";
+        }
+        return result;
+    }
+
+    private static String fastFetchKnowledge(String url) {
+        if (StringUtils.isEmpty(url)) {
+            return null;
+        }
+
+        String result = "";
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            result = restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
             result = "";

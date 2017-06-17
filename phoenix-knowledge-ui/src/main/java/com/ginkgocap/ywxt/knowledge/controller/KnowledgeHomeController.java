@@ -50,7 +50,7 @@ public class KnowledgeHomeController extends BaseController {
     private final String defaultBigDataUrl = "http://192.168.101.53:8090";
     @ResponseBody
     @RequestMapping(value = "/home/separate/{type}", method = RequestMethod.GET)
-    public InterfaceResult<Map<String, Object>> separate(HttpServletRequest request, HttpServletResponse response,@PathVariable short type)
+    public InterfaceResult<Map<String, Object>> separate(HttpServletRequest request, HttpServletResponse response, @PathVariable short type)
             throws IOException {
 
         Map<String, Object> model = new HashMap<String, Object>(2);
