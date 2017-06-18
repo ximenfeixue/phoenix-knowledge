@@ -201,12 +201,12 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                     }
                 }
 
-                if (StringUtils.isBlank(bigDataResponse) || StringUtils.isBlank(title) ||
+                if (StringUtils.isBlank(content) || StringUtils.isBlank(title) ||
                         StringUtils.isBlank(HtmlToText.html2Text(content))) {
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
 
-                logger.warn(bigDataResponse);
+                //logger.warn(bigDataResponse);
                 if (bigDataResponse.indexOf("<!DOCTYPE html>") == -1 && bigDataResponse.startsWith("{")) {
                     String time = dataJson.get("publish_time").textValue();
 
@@ -214,73 +214,71 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                     // content = getSping(content);
                     // title = getSping(title);
                     /** 以下条件，则大数据异常 */
-                    if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
-                        //content.replace("\\", "");
-                        knowledge = new Knowledge();
 
-                        // 指定来源
-                        boolean isWeb = isWeb(request);
-                        knowledge.setS_addr(srcExternalUrl);
+                    //content.replace("\\", "");
+                    knowledge = new Knowledge();
 
-                        final String columnId = String.valueOf(KnowledgeType.ENews.value());
-                        knowledge.setColumnType(columnId);
-                        knowledge.setColumnid(columnId);
-                        // 带样式标签内容
-                        knowledge.setContent(content);
-                        knowledge.setTitle(title);
-                        long createTime = KnowledgeUtil.parserTimeToLong(time);
-                        knowledge.setCreatetime(String.valueOf(createTime));
+                    // 指定来源
+                    boolean isWeb = isWeb(request);
+                    knowledge.setS_addr(srcExternalUrl);
 
-                        @SuppressWarnings("unchecked")
-                        List<String> imgs = null;
-                        JsonNode imgNodes = dataJson.findValue("imgs");
-                        if (imgNodes != null) {
-                            String imgContent = imgNodes.toString();
-                            if (StringUtils.isNotEmpty(imgContent)) {
-                                imgs = KnowledgeUtil.readListValue(String.class, imgContent);
-                            }
+                    final String columnId = String.valueOf(KnowledgeType.ENews.value());
+                    knowledge.setColumnType(columnId);
+                    knowledge.setColumnid(columnId);
+                    // 带样式标签内容
+                    knowledge.setContent(content);
+                    knowledge.setTitle(title);
+                    long createTime = KnowledgeUtil.parserTimeToLong(time);
+                    knowledge.setCreatetime(String.valueOf(createTime));
+
+                    @SuppressWarnings("unchecked")
+                    List<String> imgs = null;
+                    JsonNode imgNodes = dataJson.findValue("imgs");
+                    if (imgNodes != null) {
+                        String imgContent = imgNodes.toString();
+                        if (StringUtils.isNotEmpty(imgContent)) {
+                            imgs = KnowledgeUtil.readListValue(String.class, imgContent);
                         }
-
-                        knowledge.setPic(DataCollect.validatePicUrl(imgs));
-                        knowledge.setMultiUrls(imgs);
-                        // 附件ID
-                        knowledge.setTaskid(null);
-
-                        // 设置默认标签
-                        knowledge.setTags(null);
-                        // 判断标示
-                        JsonNode isCreate = jsonNode.get("isCreate");
-                        if (isCreate != null && isCreate.asBoolean()) {
-                            // 创建者ID
-                            knowledge.setCid(userId);
-                            // 创建人姓名
-                            knowledge.setCname(user.getName());
-                            // 用户ID
-                            //knowledge.setUid();
-                            // 用户名
-                            //knowledge.setUname();
-                            // 创建改知识
-                            DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
-                            // 敏感字检测
-                            if (data == null || data.getKnowledgeDetail().getId() <= 0) {
-                                // 弹窗提示
-                                setSessionAndErr(request, response, "-1", "创建知识失败");
-                                // 错误反馈
-                                responseDataMap.put(knowKey, null);
-                                // 跳出
-                                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
-                            }
-
-                            BigData bigData = data.toBigData();
-                            bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
-                            logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
-
-                        } else {
-                            logger.warn("isCreate is not existing or false, so skip to create knowledge!");
-                        }
-                    } else {
-                        return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                     }
+
+                    knowledge.setPic(DataCollect.validatePicUrl(imgs));
+                    knowledge.setMultiUrls(imgs);
+                    // 附件ID
+                    knowledge.setTaskid(null);
+
+                    // 设置默认标签
+                    knowledge.setTags(null);
+                    // 判断标示
+                    JsonNode isCreate = jsonNode.get("isCreate");
+                    if (isCreate != null && isCreate.asBoolean()) {
+                        // 创建者ID
+                        knowledge.setCid(userId);
+                        // 创建人姓名
+                        knowledge.setCname(user.getName());
+                        // 用户ID
+                        //knowledge.setUid();
+                        // 用户名
+                        //knowledge.setUname();
+                        // 创建改知识
+                        DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
+                        // 敏感字检测
+                        if (data == null || data.getKnowledgeDetail().getId() <= 0) {
+                            // 弹窗提示
+                            setSessionAndErr(request, response, "-1", "创建知识失败");
+                            // 错误反馈
+                            responseDataMap.put(knowKey, null);
+                            // 跳出
+                            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
+                        }
+
+                        BigData bigData = data.toBigData();
+                        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
+                        logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
+
+                    } else {
+                        logger.warn("isCreate is not existing or false, so skip to create knowledge!");
+                    }
+
                 } else {
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
