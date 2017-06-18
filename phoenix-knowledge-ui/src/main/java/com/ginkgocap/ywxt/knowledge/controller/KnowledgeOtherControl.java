@@ -47,6 +47,12 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
 
     private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
 
+    private static final String knowledgeCreateUrl;
+    static {
+        ResourceBundle resource = ResourceBundle.getBundle("application");
+        knowledgeCreateUrl = resource.getString("knowledge.url.create");
+    }
+
     @ResponseBody
     @RequestMapping(value = "/fetchKnowledgeByUrl", method = RequestMethod.POST)
     public InterfaceResult fetchKnowledgeByUrl(HttpServletRequest request, HttpServletResponse response) {
@@ -164,11 +170,6 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                 String srcExternalUrl = externalUrl;
                 logger.info("srcExternalUrl: " + srcExternalUrl);
 
-                // 配置大数据地址
-                ResourceBundle resource = ResourceBundle.getBundle("application");
-                String url = resource.getString("knowledge.url.create");
-                logger.warn(url);
-
                 // 反馈数据
                 String bigDataResponse = "";
                 // 反馈json对象
@@ -180,7 +181,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalKnowledge(url, jsonNode.toString());
+                    bigDataResponse = fastFetchKnowledge(srcExternalUrl); //externalKnowledge(jsonNode.toString());
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
@@ -294,14 +295,16 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
     }
 
     @SuppressWarnings("static-access")
-    private String externalKnowledge(String url, String jsonContent) {
-        if (StringUtils.isEmpty(url) || StringUtils.isEmpty(jsonContent)) {
+    private static String externalKnowledge(final String jsonContent) {
+        // 配置大数据地址
+        logger.info("url: " + knowledgeCreateUrl);
+        if (StringUtils.isEmpty(knowledgeCreateUrl) || StringUtils.isEmpty(jsonContent)) {
             return null;
         }
         String result = "";
         try {
             RestTemplate restTemplate = new RestTemplate();
-            result = restTemplate.postForObject(url, jsonContent.replace("externalUrl", "url").getBytes("utf-8"), String.class);
+            result = restTemplate.postForObject(knowledgeCreateUrl, jsonContent.replace("externalUrl", "url").getBytes("utf-8"), String.class);
         } catch (IOException e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
             result = "";
@@ -319,6 +322,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
 
         String result = "";
         try {
+            url = knowledgeCreateUrl + "?url=" + url;
             RestTemplate restTemplate = new RestTemplate();
             result = restTemplate.getForObject(url, String.class);
         } catch (Exception e) {

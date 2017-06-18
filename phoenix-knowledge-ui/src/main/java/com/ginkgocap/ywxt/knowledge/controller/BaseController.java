@@ -114,7 +114,7 @@ public abstract class BaseController {
         return CommonUtil.isWeb(request);
     }
 
-    protected User getJTNUser(HttpServletRequest request) throws Exception {
+    protected User getJTNUser(HttpServletRequest request) {
         User user = getUser(request);
 
         if(null == user){
