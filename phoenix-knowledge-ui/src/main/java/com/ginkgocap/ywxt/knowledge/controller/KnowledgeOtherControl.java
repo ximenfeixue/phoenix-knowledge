@@ -48,9 +48,11 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
     private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
 
     private static final String knowledgeCreateUrl;
+    private static final boolean createNew;
     static {
         ResourceBundle resource = ResourceBundle.getBundle("application");
         knowledgeCreateUrl = resource.getString("knowledge.url.create");
+        createNew = Boolean.valueOf(resource.getString("knowledge.url.create.new"));
     }
 
     @ResponseBody
@@ -181,7 +183,14 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = fastFetchKnowledge(srcExternalUrl); //externalKnowledge(jsonNode.toString());
+                    final long begin = System.currentTimeMillis();
+                    if (createNew) {
+                        bigDataResponse = fastFetchKnowledge(srcExternalUrl);
+                        logger.info("new fetch Knowledge cost: " + (System.currentTimeMillis() - begin));
+                    } else {
+                        bigDataResponse = externalKnowledge(jsonNode.toString());
+                        logger.info("old fetch Knowledge cost: " + (System.currentTimeMillis() - begin));
+                    }
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
