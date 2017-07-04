@@ -21,9 +21,10 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
 {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeCountServiceImpl.class);
 
-    private final int defaultLimit = 50;
-    private final int MAX_NUM = 10000;
-    private final int defaultBatchSize = 50;
+    private final static int maxSize = 10;
+    private final static int defaultLimit = 50;
+    private final static int MAX_NUM = 10000;
+    private final static int defaultBatchSize = 50;
 
     private Set<Long> hotCountSet = new HashSet<Long>(MAX_NUM);
     /**知识简表*/
@@ -123,6 +124,11 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             return null;
         }
 
+        if (idList.size() > maxSize) {
+            idList = idList.subList(0, maxSize-1);
+            logger.warn("id list size is over maxSize, so set to maxSize");
+        }
+
         Map<Long, Long> map = new HashMap<Long, Long>(idList.size());
         for (Long id : idList) {
             if (id != null) {
@@ -141,6 +147,11 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     public Map<Long, KnowledgeCount> getKnowledgeCount(List<Long> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return null;
+        }
+
+        if (idList.size() > maxSize) {
+            idList = idList.subList(0, maxSize-1);
+            logger.warn("id list size is over maxSize, so set to maxSize");
         }
 
         Map<Long, KnowledgeCount> map = new HashMap<Long, KnowledgeCount>(idList.size());
