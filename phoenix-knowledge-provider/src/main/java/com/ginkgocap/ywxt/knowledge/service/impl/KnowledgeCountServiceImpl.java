@@ -118,7 +118,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
     }
 
     @Override
-    public Map<Long, Long> getKnowledgeCount(List<Long> idList) {
+    public Map<Long, Long> getKnowledgeClickCount(List<Long> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return null;
         }
@@ -129,6 +129,26 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
                 KnowledgeCount knowledgeCount = getKnowledgeCount(id);
                 if (knowledgeCount != null) {
                     map.put(id, knowledgeCount.getClickCount());
+                } else {
+                    logger.warn("get knowlegde count object failed. knowledgeId: " + id);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Map<Long, KnowledgeCount> getKnowledgeCount(List<Long> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return null;
+        }
+
+        Map<Long, KnowledgeCount> map = new HashMap<Long, KnowledgeCount>(idList.size());
+        for (Long id : idList) {
+            if (id != null) {
+                KnowledgeCount knowCount = getKnowledgeCount(id);
+                if (knowCount != null) {
+                    map.put(id, knowCount);
                 } else {
                     logger.warn("get knowlegde count object failed. knowledgeId: " + id);
                 }
