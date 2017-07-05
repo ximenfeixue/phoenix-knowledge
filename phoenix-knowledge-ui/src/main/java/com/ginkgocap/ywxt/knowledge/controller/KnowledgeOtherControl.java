@@ -39,28 +39,21 @@ import java.util.regex.Pattern;
  */
 @Controller
 @RequestMapping("/knowledgeOther")
-public class KnowledgeOtherControl extends BaseController
+public class KnowledgeOtherControl extends BaseKnowledgeController
 {
-    private final Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
-
-    @Autowired
-    private KnowledgeService knowledgeService;
-
-    @Autowired
-    private KnowledgeCountService knowledgeCountService;
-
-    @Autowired
-    private TagServiceLocal tagServiceLocal;
-
-    @Autowired
-    private PermissionServiceLocal permissionServiceLocal;
-
-    @Autowired
-    private BigDataSyncTask bigDataSyncTask;
+    private final static Logger logger = LoggerFactory.getLogger(KnowledgeOtherControl.class);
 
     private final String knowledgeSyncTaskKey = "knowledgeSync";
 
     private static final Map<String, Boolean> syncTaskMap = new ConcurrentHashMap<String, Boolean>();
+
+    private static final String knowledgeCreateUrl;
+    private static final boolean createNew;
+    static {
+        ResourceBundle resource = ResourceBundle.getBundle("application");
+        knowledgeCreateUrl = resource.getString("knowledge.url.create");
+        createNew = Boolean.valueOf(resource.getString("knowledge.url.create.new"));
+    }
 
     @ResponseBody
     @RequestMapping(value = "/fetchKnowledgeByUrl", method = RequestMethod.POST)
@@ -179,11 +172,6 @@ public class KnowledgeOtherControl extends BaseController
                 String srcExternalUrl = externalUrl;
                 logger.info("srcExternalUrl: " + srcExternalUrl);
 
-                // 配置大数据地址
-                ResourceBundle resource = ResourceBundle.getBundle("application");
-                String url = resource.getString("knowledge.url.create");
-                logger.warn(url);
-
                 // 反馈数据
                 String bigDataResponse = "";
                 // 反馈json对象
@@ -195,7 +183,14 @@ public class KnowledgeOtherControl extends BaseController
                 String title = "";
                 // 解析异常处理机制容忍限制
                 for (int x = 0; x < 3; x++) {
-                    bigDataResponse = externalKnowledge(url, jsonNode.toString());
+                    final long begin = System.currentTimeMillis();
+                    if (createNew) {
+                        bigDataResponse = fastFetchKnowledge(srcExternalUrl);
+                        logger.info("new fetch Knowledge cost: " + (System.currentTimeMillis() - begin));
+                    } else {
+                        bigDataResponse = externalKnowledge(jsonNode.toString());
+                        logger.info("old fetch Knowledge cost: " + (System.currentTimeMillis() - begin));
+                    }
                     if (StringUtils.isNotEmpty(bigDataResponse)) {
                         JsonNode responseJson = KnowledgeUtil.readTree(bigDataResponse);
                         if (responseJson == null) {
@@ -215,12 +210,12 @@ public class KnowledgeOtherControl extends BaseController
                     }
                 }
 
-                if (StringUtils.isBlank(bigDataResponse) || StringUtils.isBlank(title) ||
+                if (StringUtils.isBlank(content) || StringUtils.isBlank(title) ||
                         StringUtils.isBlank(HtmlToText.html2Text(content))) {
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
 
-                logger.warn(bigDataResponse);
+                //logger.warn(bigDataResponse);
                 if (bigDataResponse.indexOf("<!DOCTYPE html>") == -1 && bigDataResponse.startsWith("{")) {
                     String time = dataJson.get("publish_time").textValue();
 
@@ -228,73 +223,71 @@ public class KnowledgeOtherControl extends BaseController
                     // content = getSping(content);
                     // title = getSping(title);
                     /** 以下条件，则大数据异常 */
-                    if (StringUtils.isNotBlank(content) || StringUtils.isNotBlank(title)) {
-                        //content.replace("\\", "");
-                        knowledge = new Knowledge();
 
-                        // 指定来源
-                        boolean isWeb = isWeb(request);
-                        knowledge.setS_addr(srcExternalUrl);
+                    //content.replace("\\", "");
+                    knowledge = new Knowledge();
 
-                        final String columnId = String.valueOf(KnowledgeType.ENews.value());
-                        knowledge.setColumnType(columnId);
-                        knowledge.setColumnid(columnId);
-                        // 带样式标签内容
-                        knowledge.setContent(content);
-                        knowledge.setTitle(title);
-                        long createTime = KnowledgeUtil.parserTimeToLong(time);
-                        knowledge.setCreatetime(String.valueOf(createTime));
+                    // 指定来源
+                    boolean isWeb = isWeb(request);
+                    knowledge.setS_addr(srcExternalUrl);
 
-                        @SuppressWarnings("unchecked")
-                        List<String> imgs = null;
-                        JsonNode imgNodes = dataJson.findValue("imgs");
-                        if (imgNodes != null) {
-                            String imgContent = imgNodes.toString();
-                            if (StringUtils.isNotEmpty(imgContent)) {
-                                imgs = KnowledgeUtil.readListValue(String.class, imgContent);
-                            }
+                    final String columnId = String.valueOf(KnowledgeType.ENews.value());
+                    knowledge.setColumnType(columnId);
+                    knowledge.setColumnid(columnId);
+                    // 带样式标签内容
+                    knowledge.setContent(content);
+                    knowledge.setTitle(title);
+                    long createTime = KnowledgeUtil.parserTimeToLong(time);
+                    knowledge.setCreatetime(String.valueOf(createTime));
+
+                    @SuppressWarnings("unchecked")
+                    List<String> imgs = null;
+                    JsonNode imgNodes = dataJson.findValue("imgs");
+                    if (imgNodes != null) {
+                        String imgContent = imgNodes.toString();
+                        if (StringUtils.isNotEmpty(imgContent)) {
+                            imgs = KnowledgeUtil.readListValue(String.class, imgContent);
                         }
-
-                        knowledge.setPic(DataCollect.validatePicUrl(imgs));
-                        knowledge.setMultiUrls(imgs);
-                        // 附件ID
-                        knowledge.setTaskid(null);
-
-                        // 设置默认标签
-                        knowledge.setTags(null);
-                        // 判断标示
-                        JsonNode isCreate = jsonNode.get("isCreate");
-                        if (isCreate != null && isCreate.asBoolean()) {
-                            // 创建者ID
-                            knowledge.setCid(userId);
-                            // 创建人姓名
-                            knowledge.setCname(user.getName());
-                            // 用户ID
-                            //knowledge.setUid();
-                            // 用户名
-                            //knowledge.setUname();
-                            // 创建改知识
-                            DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
-                            // 敏感字检测
-                            if (data == null || data.getKnowledgeDetail().getId() <= 0) {
-                                // 弹窗提示
-                                setSessionAndErr(request, response, "-1", "创建知识失败");
-                                // 错误反馈
-                                responseDataMap.put(knowKey, null);
-                                // 跳出
-                                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
-                            }
-
-                            BigData bigData = data.toBigData();
-                            bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
-                            logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
-
-                        } else {
-                            logger.warn("isCreate is not existing or false, so skip to create knowledge!");
-                        }
-                    } else {
-                        return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                     }
+
+                    knowledge.setPic(DataCollect.validatePicUrl(imgs));
+                    knowledge.setMultiUrls(imgs);
+                    // 附件ID
+                    knowledge.setTaskid(null);
+
+                    // 设置默认标签
+                    knowledge.setTags(null);
+                    // 判断标示
+                    JsonNode isCreate = jsonNode.get("isCreate");
+                    if (isCreate != null && isCreate.asBoolean()) {
+                        // 创建者ID
+                        knowledge.setCid(userId);
+                        // 创建人姓名
+                        knowledge.setCname(user.getName());
+                        // 用户ID
+                        //knowledge.setUid();
+                        // 用户名
+                        //knowledge.setUname();
+                        // 创建改知识
+                        DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
+                        // 敏感字检测
+                        if (data == null || data.getKnowledgeDetail().getId() <= 0) {
+                            // 弹窗提示
+                            setSessionAndErr(request, response, "-1", "创建知识失败");
+                            // 错误反馈
+                            responseDataMap.put(knowKey, null);
+                            // 跳出
+                            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
+                        }
+
+                        BigData bigData = data.toBigData();
+                        bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
+                        logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
+
+                    } else {
+                        logger.warn("isCreate is not existing or false, so skip to create knowledge!");
+                    }
+
                 } else {
                     return errorResult(CommonResultCode.PARAMS_EXCEPTION, "请输入合法地址,请确保为新闻格式网址");
                 }
@@ -309,17 +302,36 @@ public class KnowledgeOtherControl extends BaseController
     }
 
     @SuppressWarnings("static-access")
-    private String externalKnowledge(String url, String jsonContent) {
-        if (StringUtils.isEmpty(url) || StringUtils.isEmpty(jsonContent)) {
+    private static String externalKnowledge(final String jsonContent) {
+        // 配置大数据地址
+        logger.info("url: " + knowledgeCreateUrl);
+        if (StringUtils.isEmpty(knowledgeCreateUrl) || StringUtils.isEmpty(jsonContent)) {
             return null;
         }
         String result = "";
         try {
             RestTemplate restTemplate = new RestTemplate();
-            result = restTemplate.postForObject(url, jsonContent.replace("externalUrl", "url").getBytes("utf-8"), String.class);
+            result = restTemplate.postForObject(knowledgeCreateUrl, jsonContent.replace("externalUrl", "url").getBytes("utf-8"), String.class);
         } catch (IOException e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
             result = "";
+        } catch (Exception e) {
+            logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
+            result = "";
+        }
+        return result;
+    }
+
+    private static String fastFetchKnowledge(String url) {
+        if (StringUtils.isEmpty(url)) {
+            return null;
+        }
+
+        String result = "";
+        try {
+            url = knowledgeCreateUrl + "?url=" + url;
+            RestTemplate restTemplate = new RestTemplate();
+            result = restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
             logger.warn("fetchExternalKnowledgeUrl : " + e.getMessage());
             result = "";

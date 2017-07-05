@@ -22,7 +22,9 @@ public interface KnowledgeCountService {
 
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
 
-    public Map<Long, Long> getKnowledgeCount(List<Long> idList);
+    public Map<Long, Long> getKnowledgeClickCount(List<Long> idList);
+
+    public Map<Long, KnowledgeCount> getKnowledgeCount(List<Long> idList);
 
     public boolean deleteKnowledgeCount(long knowledgeId);
 

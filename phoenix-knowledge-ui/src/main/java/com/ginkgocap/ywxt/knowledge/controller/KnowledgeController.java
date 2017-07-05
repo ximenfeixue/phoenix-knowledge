@@ -467,6 +467,10 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         long userId = getUserId(user);
+        if (user.isVirtual()) {
+            userId = user.getUid();
+            logger.info("org user, will get the user knowledge. id: " + user.getId() + " uid: " + user.getUid());
+        }
         //First request need to get from server
         if (total == -1) {
             total = getKnowledgeCount(userId);

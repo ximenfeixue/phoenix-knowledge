@@ -110,12 +110,11 @@ public abstract class BaseController {
         return requestJson;
     }
 
-    protected boolean isWeb(HttpServletRequest request)
-    {
+    protected boolean isWeb(HttpServletRequest request) {
         return CommonUtil.isWeb(request);
     }
 
-    protected User getJTNUser(HttpServletRequest request) throws Exception {
+    protected User getJTNUser(HttpServletRequest request) {
         User user = getUser(request);
 
         if(null == user){
