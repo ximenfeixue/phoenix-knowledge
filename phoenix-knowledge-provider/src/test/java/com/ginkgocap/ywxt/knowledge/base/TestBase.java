@@ -1,7 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.base;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.gintong.frame.util.dto.InterfaceResult;
 import junit.framework.TestCase;
 import org.junit.*;

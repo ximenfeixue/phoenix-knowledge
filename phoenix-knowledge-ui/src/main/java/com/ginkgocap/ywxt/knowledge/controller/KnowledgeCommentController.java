@@ -1,18 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.ginkgocap.ywxt.bean.util.BeanUtil;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.ywxt.im.model.MessageNotify;
 import com.gintong.ywxt.im.model.MessageNotifyType;
-import com.gintong.ywxt.im.service.MessageNotifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

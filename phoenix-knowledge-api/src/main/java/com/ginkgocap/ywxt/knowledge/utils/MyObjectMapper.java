@@ -1,7 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
 
 /**
  * Created by Chen Peifeng on 2016/4/26.

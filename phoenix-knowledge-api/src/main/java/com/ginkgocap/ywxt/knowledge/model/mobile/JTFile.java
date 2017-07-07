@@ -7,7 +7,7 @@ package com.ginkgocap.ywxt.knowledge.model.mobile;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class JTFile implements Serializable,Comparable {
