@@ -65,9 +65,9 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword)
+    public List<KnowledgeCollect> myCollectKnowledge(long userId, long total, int typeId, int page, int size,String keyword)
     {
-        return knowledgeCollectDao.myCollectKnowledge(userId, typeId, page, size, keyword);
+        return knowledgeCollectDao.myCollectKnowledge(userId, total, typeId, page, size, keyword);
     }
 
     @Override
