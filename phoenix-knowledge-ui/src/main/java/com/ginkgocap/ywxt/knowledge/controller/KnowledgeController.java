@@ -638,7 +638,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, total, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, total, page, size, keyword);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
         logger.info(".......get all collected knowledge success. size: " + (collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0));

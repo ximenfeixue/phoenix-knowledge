@@ -149,6 +149,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             logger.error("start exceed to end, so return null. userId: " + userId + " start: " + index + " page: " + page + " total: " + total);
             return null;
         }
+
         if (size > maxSize) {
             size = maxSize;
         }
