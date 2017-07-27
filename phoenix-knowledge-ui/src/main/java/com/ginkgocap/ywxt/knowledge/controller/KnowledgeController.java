@@ -441,7 +441,7 @@ public class KnowledgeController extends BaseKnowledgeController
             resultMap.put("created", createdKnowledgeItems);
         }
 
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, -1, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyword);
         collectedKnowledgeItems = setReadCount(collectedKnowledgeItems);
         resultMap.put("collected", collectedKnowledgeItems);
 
@@ -493,7 +493,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         if (createdKnowledgeList != null && createdKnowledgeList.size() > 0) {
             int restSize = size - createdKnowledgeList.size();
-            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, -1, 0, restSize, keyword);
+            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByIndex(userId, 0, restSize, keyword);
             int collectedSize = collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0;
             logger.info("get created knowledge size: " + createdKnowledgeList.size() + " collected size: " + collectedSize);
             if (collectedSize > 0) {
@@ -502,8 +502,8 @@ public class KnowledgeController extends BaseKnowledgeController
             return knowledgeListPage(total, page, createdKnowledgeList.size(), createdKnowledgeList);
         }
 
-        page = gotTotal - createCount;
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, -1, page, size, keyword);
+        final int collecedIndex = (gotTotal - createCount);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByIndex(userId, collecedIndex, size, keyword);
         if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
             logger.info("get collected size: " + collectedKnowledgeList.size());
             return knowledgeListPage(total, page, collectedKnowledgeList.size(), collectedKnowledgeList);
@@ -605,7 +605,7 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         long userId = this.getUserId(user);
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledge(userId, -1L, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyword);
 
         logger.info(".......get all collected knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledgeItems);
@@ -633,12 +633,12 @@ public class KnowledgeController extends BaseKnowledgeController
             total = getCollectedKnowledgeCount(userId);
         }
 
-        int start = page * size;
+        final int start = page * size;
         if (start > total) {
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledge(userId, total, page, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByPage(userId, total, page, size, keyword);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
         logger.info(".......get all collected knowledge success. size: " + (collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0));
@@ -1805,11 +1805,27 @@ public class KnowledgeController extends BaseKnowledgeController
         return createdKnowledgeItems;
     }
 
-    private List<KnowledgeBase> getCollectedKnowledge(final long userId, final long total, final int page, final int size, final String keyword) throws Exception {
+    private List<KnowledgeBase>  getCollectedKnowledgeByPage(long userId, long total, int page, int size, String keyword) throws Exception {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
         try {
-            collectItems = knowledgeOtherService.myCollectKnowledge(userId, total, (short)-1, page, size, keyword);
+            collectItems = knowledgeOtherService.myCollectedKnowledgeByPage(userId, total, (short)-1, page, size, keyword);
+        } catch (Exception ex) {
+            logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
+        }
+        final int collectedSize  = collectItems != null ? collectItems.size() : 0;
+        logger.info("get collected knowledge size : " + collectedSize + " , keyword: " + keyword);
+        collectedKnowledgeItems = convertCollectedKnowledge(collectItems);
+        //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
+
+        return collectedKnowledgeItems;
+    }
+
+    private List<KnowledgeBase> getCollectedKnowledgeByIndex(long userId, int index, int size, String keyword) throws Exception {
+        List<KnowledgeCollect> collectItems = null;
+        List<KnowledgeBase> collectedKnowledgeItems = null;
+        try {
+            collectItems = knowledgeOtherService.myCollectedKnowledgeByIndex(userId, (short)-1, index, size, keyword);
         } catch (Exception ex) {
             logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
         }

@@ -127,18 +127,9 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(final long userId, long total, final int typeId, int page, int size, final String keyword)
+    public List<KnowledgeCollect> myCollectedKnowledgeByPage(final long userId, long total, final int typeId, int page, int size, final String keyword)
     {
-        Query query = new Query();
-        Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
-        if (StringUtils.isNotBlank(keyword) && !"null".equals(keyword)) {
-            criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
-        }
-        query.addCriteria(criteria);
-
-        if (typeId > 0) {
-            query.addCriteria(Criteria.where(Constant.type).is(typeId));
-        }
+        Query query = newQuery(userId, typeId, keyword);
 
         if (total <= 0) {
             total = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
@@ -157,12 +148,19 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             size = (int)total - index;
         }
 
-        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
-        query.skip(index);
-        query.limit(size);
-        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        return getAllCollectedKnowledge(query, index, size);
+    }
 
-        return collectedItem;
+    @Override
+    public List<KnowledgeCollect> myCollectedKnowledgeByIndex(final long userId, final int typeId, int index, int size, final String keyword)
+    {
+        Query query = newQuery(userId, typeId, keyword);
+
+        if (size > maxSize) {
+            size = maxSize;
+        }
+
+        return getAllCollectedKnowledge(query, index, size);
     }
 
     @Override
@@ -170,17 +168,14 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     {
         Query query = new Query();
         long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-        final int start = page * size;
-        if (start >= count) {
+
+        final int index = page * size;
+        if (index >= count) {
             logger.error("start exceed to end, so return null. page: " + page + " size: " + size);
             return null;
         }
-        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
-        query.skip(start);
-        query.limit(size);
-        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
 
-        return collectedItem;
+        return getAllCollectedKnowledge(query, index, size);
     }
 
     @Override
@@ -190,5 +185,30 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         query.addCriteria(Criteria.where(Constant.OwnerId).is(userId));
 
         return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+    }
+
+    private Query newQuery(final long userId,  final int typeId, final String keyword) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
+        if (StringUtils.isNotBlank(keyword) && !"null".equals(keyword)) {
+            criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
+        }
+
+        if (typeId > 0) {
+            query.addCriteria(Criteria.where(Constant.type).is(typeId));
+        }
+
+        query.addCriteria(criteria);
+
+        return query;
+    }
+
+    public List<KnowledgeCollect> getAllCollectedKnowledge(Query query, int index, int size) {
+        query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
+        query.skip(index);
+        query.limit(size);
+        List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+
+        return collectedItem;
     }
 }
