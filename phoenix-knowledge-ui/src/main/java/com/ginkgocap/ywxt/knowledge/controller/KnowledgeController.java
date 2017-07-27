@@ -1841,7 +1841,7 @@ public class KnowledgeController extends BaseKnowledgeController
         //数据为空则直接返回异常给前端
         if(detail == null) {
             logger.error("get knowledge failed: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"获取知识失败!");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION,"知识已删除!");
         }
         if (detail.getStatus() != 4) {
             logger.error("this knowledge is disabled: knowledgeId: " + knowledgeId + ", columnId: " + columnType + " status: " + detail.getStatus());
