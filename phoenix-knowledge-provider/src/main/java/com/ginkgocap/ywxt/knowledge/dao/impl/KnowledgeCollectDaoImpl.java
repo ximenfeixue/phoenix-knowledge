@@ -127,7 +127,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
-    public List<KnowledgeCollect> myCollectKnowledge(final long userId,final int typeId,int page, int size,final String keyword)
+    public List<KnowledgeCollect> myCollectKnowledge(final long userId, long total, final int typeId, int page, int size, final String keyword)
     {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
@@ -137,23 +137,27 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         query.addCriteria(criteria);
 
         if (typeId > 0) {
-            query.addCriteria(Criteria.where(Constant.ColumnId).is(typeId));
+            query.addCriteria(Criteria.where(Constant.type).is(typeId));
         }
-        long count = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
-        final int start = page * size;
-        if (start >= count) {
-            logger.error("start exceed to end, so return null. userId: " + userId + " start: " + start + " page: " + page + " count: " + count);
+
+        if (total <= 0) {
+            total = mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+        }
+
+        final int index = page * size;
+        if (index >= total) {
+            logger.error("start exceed to end, so return null. userId: " + userId + " start: " + index + " page: " + page + " total: " + total);
             return null;
         }
         if (size > maxSize) {
             size = maxSize;
         }
-        if (start+size > count) {
-            size = (int)count - start;
+        if (index+size > total) {
+            size = (int)total - index;
         }
 
         query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
-        query.skip(start);
+        query.skip(index);
         query.limit(size);
         List<KnowledgeCollect> collectedItem = mongoTemplate.find(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
 

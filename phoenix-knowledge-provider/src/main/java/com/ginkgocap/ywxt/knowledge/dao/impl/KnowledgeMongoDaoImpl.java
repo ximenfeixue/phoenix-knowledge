@@ -116,6 +116,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 collectionName = getCollectionName(knowledge.getColumnType());
                 logger.info("update knowledge detail, new collectionName: " + collectionName);
             }
+            knowledge.setCreatetime(existValue.getCreatetime());
+            knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
             mongoTemplate.save(knowledge, collectionName);
         }
         else {

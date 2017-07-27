@@ -21,7 +21,7 @@ public interface KnowledgeCollectDao {
 
     boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    List<KnowledgeCollect> myCollectKnowledge(long userId,int typeId,int page, int size, String keyword);
+    List<KnowledgeCollect> myCollectKnowledge(long userId, long total, int typeId, int page, int size, String keyword);
 
     List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
 

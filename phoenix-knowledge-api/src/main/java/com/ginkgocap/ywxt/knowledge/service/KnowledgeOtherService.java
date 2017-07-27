@@ -21,7 +21,7 @@ public interface KnowledgeOtherService
 
     boolean isCollectedKnowledge(long userId,long knowledgeId, int typeId);
 
-    List<KnowledgeCollect> myCollectKnowledge(long userId, int typeId, int page, int size,String keyword);
+    List<KnowledgeCollect> myCollectKnowledge(long userId, long total, int typeId, int page, int size,String keyword);
 
     long myCollectKnowledgeCount(long userId);
 

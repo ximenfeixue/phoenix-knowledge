@@ -484,7 +484,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-dev.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -495,7 +495,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-qa.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -506,7 +506,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-testOnline.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -517,7 +517,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-online.properties</filter>
                 </filters>
             </build>
         </profile>
