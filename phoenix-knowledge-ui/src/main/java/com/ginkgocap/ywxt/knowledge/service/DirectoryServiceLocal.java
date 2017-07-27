@@ -74,14 +74,14 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         long knowledgeId = knowledgeDetail.getId();
         try {
             if (!directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
-                logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId);
+                logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
             }
         } catch (Exception ex) {
-            logger.error("delete category failed...userId: " + userId+ ", knowledgeId: " + knowledgeId + "error: "+ex.getMessage());
+            logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
         }
 
-        for(Long directoryId : directoryIds){
-            if(directoryId >= 0) {
+        for (Long directoryId : directoryIds) {
+            if (directoryId >= 0) {
                 try {
                     DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
                     long directorySourceId = directorySourceService.createDirectorySources(directorySource);
