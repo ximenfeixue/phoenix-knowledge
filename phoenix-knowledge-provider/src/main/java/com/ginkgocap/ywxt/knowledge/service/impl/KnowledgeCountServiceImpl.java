@@ -97,27 +97,6 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         return knowledgeCountDao.getHotKnowledgeByPage(start, size);
     }
 
-    //Only check exist or not
-    @Override
-    public KnowledgeCount getKnowledgeCount(long knowledgeId)
-    {
-        try {
-            //return knowledgeCountDao.getKnowledgeCount(knowledgeId);
-            KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
-            if (knowledgeCount != null ) {
-                return knowledgeCount;
-            }
-            knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
-            if (knowledgeCount != null) {
-                this.setToCache(knowledgeCount);
-            }
-            return knowledgeCount;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @Override
     public Map<Long, Long> getKnowledgeClickCount(List<Long> idList) {
         if (CollectionUtils.isEmpty(idList)) {
@@ -180,20 +159,30 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
         }
     }
 
+    //Only check exist or not
+    @Override
+    public KnowledgeCount getKnowledgeCount(long knowledgeId)
+    {
+        try {
+            KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
+            if (knowledgeCount != null ) {
+                return knowledgeCount;
+            }
+            knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
+            if (knowledgeCount != null) {
+                this.setToCache(knowledgeCount);
+            }
+            return knowledgeCount;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public KnowledgeCount getKnowledgeCount(long knowledgeId, short type)
     {
-        KnowledgeCount knowledgeCount = this.getFromCache(knowledgeId);
-        if (knowledgeCount != null ) {
-            return knowledgeCount;
-        }
-
-        try {
-            knowledgeCount = knowledgeCountDao.getKnowledgeCount(knowledgeId);
-        } catch (Exception e) {
-            logger.error("get knowlegde count object failed. knowledgeId: " + knowledgeId);
-            e.printStackTrace();
-        }
+        KnowledgeCount knowledgeCount = this.getKnowledgeCount(knowledgeId);
 
         if (knowledgeCount == null) {
             knowledgeCount = new KnowledgeCount();
@@ -202,6 +191,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             knowledgeCount.setType(type);
             try {
                 knowledgeCountDao.saveKnowledgeCount(knowledgeCount);
+                this.setToCache(knowledgeCount);
             } catch (Exception e) {
                 e.printStackTrace();
             }
