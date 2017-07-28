@@ -28,9 +28,8 @@
         <knowledge.version>3.0.0-SNAPSHOT</knowledge.version>
         <phoenix-frame-util.version>1.0.1-SNAPSHOT</phoenix-frame-util.version>
         <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
-        <phoenix-framework.version>1.0.0-SNAPSHOT</phoenix-framework.version>
         <framework-id.version>2.0-SNAPSHOT</framework-id.version>
-        <framework-dal.version>1.1.0-SNAPSHOT</framework-dal.version>
+        <framework-dal.version>2.0-SNAPSHOT</framework-dal.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>

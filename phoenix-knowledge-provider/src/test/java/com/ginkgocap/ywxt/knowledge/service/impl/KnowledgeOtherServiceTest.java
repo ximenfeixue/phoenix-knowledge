@@ -54,7 +54,7 @@ public class KnowledgeOtherServiceTest extends TestBase
     {
         try {
             final String keyWord = null;
-            List<KnowledgeCollect> collectList = knowledgeOtherService.myCollectKnowledge(userId, -1L, -1, 0, 10, keyWord);
+            List<KnowledgeCollect> collectList = knowledgeOtherService.myCollectedKnowledgeByPage(userId, -1L, -1, 0, 10, keyWord);
             Assert.assertTrue(collectList != null && collectList.size() >0);
             System.out.println("Collected size: " + collectList.size());
             for (KnowledgeCollect collect : collectList) {
