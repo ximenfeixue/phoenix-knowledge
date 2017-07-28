@@ -18,9 +18,9 @@ public interface KnowledgeCountService {
 
     public KnowledgeCount updateCommentCount(long knowledgeId,short type);
 
-    public KnowledgeCount getKnowledgeCount(long knowledgeId, short type);
-
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
+
+    public KnowledgeCount getKnowledgeCount(long knowledgeId, short type);
 
     public Map<Long, Long> getKnowledgeClickCount(List<Long> idList);
 

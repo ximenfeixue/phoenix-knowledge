@@ -174,6 +174,7 @@ public class KnowledgeCountServiceImpl implements KnowledgeCountService, Initial
             }
             return knowledgeCount;
         } catch (Exception e) {
+            logger.error("get knowlegde count object failed. knowledgeId: " + knowledgeId);
             e.printStackTrace();
         }
         return null;
