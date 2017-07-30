@@ -193,13 +193,13 @@
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="get_knowledge_count_by_id"
+            <!--list name="get_knowledge_count_by_id"
                   sqlitem="select id from tb_knowledge_count where knowledgeId = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_knowledge_count_by_page"
                   sqlitem="select id from tb_knowledge_count where hotCount > ? order by hotCount desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" / -->
         </object>
     </route>
 </dal>

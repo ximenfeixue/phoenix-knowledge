@@ -20,7 +20,7 @@ public interface KnowledgeCountService {
 
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
 
-    public KnowledgeCount getKnowledgeCount(long knowledgeId, short type);
+    public KnowledgeCount getKnowledgeCountByIdType(long knowledgeId, short type);
 
     public Map<Long, Long> getKnowledgeClickCount(List<Long> idList);
 
