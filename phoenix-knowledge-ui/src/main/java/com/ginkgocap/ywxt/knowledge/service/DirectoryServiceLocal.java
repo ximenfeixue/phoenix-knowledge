@@ -66,11 +66,6 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
     public boolean updateDirectorySource(long userId, Knowledge knowledgeDetail)
     {
-        List<Long> directoryIds = knowledgeDetail.getDirectorys();
-        if(directoryIds == null || directoryIds.size() <= 0) {
-            return false;
-        }
-
         long knowledgeId = knowledgeDetail.getId();
         try {
             if (!directorySourceService.removeDirectorySourcesBySourceId(userId, APPID, sourceType, knowledgeId)) {
@@ -78,16 +73,20 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
         } catch (Exception ex) {
             logger.error("delete category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+            return false;
         }
 
-        for (Long directoryId : directoryIds) {
-            if (directoryId >= 0) {
-                try {
-                    DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
-                    long directorySourceId = directorySourceService.createDirectorySources(directorySource);
-                    logger.info("create directory success. userId: " + userId + ", knowledgeId: " + knowledgeId + "directorySourceId: " + directorySourceId);
-                } catch (Exception ex) {
-                    logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+        List<Long> directoryIds = knowledgeDetail.getDirectorys();
+        if(CollectionUtils.isNotEmpty(directoryIds)) {
+            for (Long directoryId : directoryIds) {
+                if (directoryId >= 0) {
+                    try {
+                        DirectorySource directorySource = newDirectorySourceObject(userId, directoryId, knowledgeDetail);
+                        long directorySourceId = directorySourceService.createDirectorySources(directorySource);
+                        logger.info("create directory success. userId: " + userId + ", knowledgeId: " + knowledgeId + "directorySourceId: " + directorySourceId);
+                    } catch (Exception ex) {
+                        logger.error("create category failed...userId: " + userId + ", knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+                    }
                 }
             }
         }
@@ -97,7 +96,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
 
     public InterfaceResult batchDirectory(KnowledgeService knowledgeService,long userId,List<ResItem> directoryItems) throws Exception
     {
-        logger.info("batchDirectory: {}", directoryItems );
+        logger.info("batchDirectory: " + directoryItems );
         if(directoryItems == null || directoryItems.size() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
@@ -148,7 +147,7 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
     }
 
     public InterfaceResult batchDirectory(KnowledgeService knowledgeService,long userId,String requestJson) throws Exception {
-        logger.info("batchDirectory: {}", requestJson );
+        logger.info("batchDirectory: " + requestJson );
         if(StringUtils.isEmpty(requestJson)) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
