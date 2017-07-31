@@ -9,8 +9,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -292,7 +292,7 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
     public boolean saveTagSource(long userId, Knowledge detail)
     {
         List<Long> tagsList = detail.getTagList();
-        if (tagsList == null || tagsList.size() <= 0) {
+        if (CollectionUtils.isEmpty(tagsList)) {
             logger.error("tag List is empty, so skip to save..");
             return false;
         }
@@ -322,24 +322,22 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
 
     public boolean updateTagSource(long userId, Knowledge knowledgeDetail)
     {
-        List<Long> tagsList = knowledgeDetail.getTagList();
-        if(tagsList == null || tagsList.size() <= 0) {
-            return false;
-        }
-
         long knowledgeId = knowledgeDetail.getId();
         if (!deleteTagSourceByKnowledgeId(userId, knowledgeId)) {
             logger.error("delete tags failed...userId: " + userId + ", knowledgeId: " + knowledgeId);
         }
 
-        for(Long tagId : tagsList){
-            if(tagId > 0){
-                TagSource tagSource = newTagSourceObject(userId, tagId, knowledgeDetail);
-                try {
-                    tagSourceService.createTagSource(tagSource);
-                    logger.info("create tag success tagId: " + tagId);
-                } catch (Exception ex) {
-                    logger.error("update tags failed...userId: " + userId + " knowledgeId: " +knowledgeId + "error: "+ex.getMessage());
+        List<Long> tagsList = knowledgeDetail.getTagList();
+        if (CollectionUtils.isNotEmpty(tagsList)) {
+            for (Long tagId : tagsList) {
+                if (tagId > 0) {
+                    TagSource tagSource = newTagSourceObject(userId, tagId, knowledgeDetail);
+                    try {
+                        tagSourceService.createTagSource(tagSource);
+                        logger.info("create tag success tagId: " + tagId);
+                    } catch (Exception ex) {
+                        logger.error("update tags failed...userId: " + userId + " knowledgeId: " + knowledgeId + "error: " + ex.getMessage());
+                    }
                 }
             }
         }

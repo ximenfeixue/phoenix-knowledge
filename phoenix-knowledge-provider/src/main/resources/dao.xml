@@ -84,7 +84,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />
 
             <list name="get_by_type"
-                sqlitem="select id from tb_knowledge_base where type = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
             <list name="get_by_createUserId_type_columnId"
@@ -109,7 +109,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate" update="true" />
 
             <list name="get_by_status"
-                sqlitem="select id from tb_knowledge_base where status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="status" update="true" />
 
             <list name="get_by_auditStatus"
@@ -133,7 +133,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus" update="true" />
 
             <list name="get_by_columnId_status"
-                sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,status" update="true" />
 
             <list name="get_by_columnId_auditStatus"
@@ -141,7 +141,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus" update="true" />
 
             <list name="get_by_columnId_reportStatus"
-                sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus" update="true" />
 
             <list name="get_count_by_user"
@@ -149,7 +149,7 @@
                   sqlType="hsql" valueProperty="id" keyProperty="create_user_id" update="true" />
 
             <list name="get_id_list_by_type"
-                  sqlitem="select id from tb_knowledge_base where type = ?"
+                  sqlitem="select id from tb_knowledge_base where privated = 0 and type = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
         </object>
@@ -193,13 +193,13 @@
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="get_knowledge_count_by_id"
+            <!--list name="get_knowledge_count_by_id"
                   sqlitem="select id from tb_knowledge_count where knowledgeId = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_knowledge_count_by_page"
                   sqlitem="select id from tb_knowledge_count where hotCount > ? order by hotCount desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" / -->
         </object>
     </route>
 </dal>

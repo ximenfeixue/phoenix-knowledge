@@ -1696,7 +1696,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
     private void getCommentCount(short type, long kId, long userId, Map<Long, Object> commentCountMap) {
         // 评论数
-        KnowledgeCount kCount = knowledgeCountService.getKnowledgeCount(kId, type);
+        KnowledgeCount kCount = knowledgeCountService.getKnowledgeCountByIdType(kId, type);
         commentCountMap.put(kId, kCount);
     }
 
@@ -1838,7 +1838,7 @@ public class KnowledgeController extends BaseKnowledgeController
         return collectedKnowledgeItems;
     }
 
-    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType,boolean isWeb) {
+    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, boolean isWeb) {
         long userId = user.getId();
         logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + userId);
 
