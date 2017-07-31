@@ -84,7 +84,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />
 
             <list name="get_by_type"
-                sqlitem="select id from tb_knowledge_base where type = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
             <list name="get_by_createUserId_type_columnId"
@@ -109,7 +109,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate" update="true" />
 
             <list name="get_by_status"
-                sqlitem="select id from tb_knowledge_base where status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="status" update="true" />
 
             <list name="get_by_auditStatus"
@@ -133,7 +133,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus" update="true" />
 
             <list name="get_by_columnId_status"
-                sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,status" update="true" />
 
             <list name="get_by_columnId_auditStatus"
@@ -141,7 +141,7 @@
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus" update="true" />
 
             <list name="get_by_columnId_reportStatus"
-                sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date"
+                sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc"
                 sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus" update="true" />
 
             <list name="get_count_by_user"

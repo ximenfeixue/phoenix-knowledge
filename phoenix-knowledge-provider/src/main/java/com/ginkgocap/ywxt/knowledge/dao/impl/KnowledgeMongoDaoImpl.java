@@ -296,27 +296,20 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         logger.info("type: " + type + " page: " + page + " size: " + size);
         String collectionName = getCollectionName(type);
         Criteria criteria = Criteria.where("status").is(4);
-        Criteria criteriaPj = new Criteria();
-        Criteria criteriaUp = new Criteria();
-        Criteria criteriaGt = new Criteria();
-
-        criteriaGt.and("uid").is(KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID);
         // 查询栏目大类下的数据：全平台
         // 查询资讯
         Query query = null;
         if (CollectionUtils.isNotEmpty(ids)) {
-            criteriaUp.and("_id").in(ids);
-            criteriaPj.orOperator(criteriaUp, criteriaGt);
-            criteriaPj.andOperator(criteria);
-            query = new Query(criteriaPj);
+            criteria.and("_id").in(ids);
+            query = new Query(criteria);
         } else {
-            criteria.andOperator(criteriaGt);
+            criteria.and("privated").is(KnowledgeConstant.PRIVATED);
             query = new Query(criteria);
         }
         String str = "" + KnowledgeUtil.writeObjectToJson(criteria);
         logger.info("MongoObject:" + collectionName + ",Query:" + str);
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        long count;
+
         try {
             query.skip(0);
             query.limit(size);
