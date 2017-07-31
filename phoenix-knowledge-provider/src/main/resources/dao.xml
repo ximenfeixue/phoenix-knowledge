@@ -149,7 +149,7 @@
                   sqlType="hsql" valueProperty="id" keyProperty="create_user_id" update="true" />
 
             <list name="get_id_list_by_type"
-                  sqlitem="select id from tb_knowledge_base where type = ?"
+                  sqlitem="select id from tb_knowledge_base where privated = 0 and type = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
         </object>

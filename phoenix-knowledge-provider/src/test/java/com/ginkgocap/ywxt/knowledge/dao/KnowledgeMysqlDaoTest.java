@@ -68,4 +68,16 @@ public class KnowledgeMysqlDaoTest extends TestBase {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testGetKnowledgeIdsByType() {
+        try {
+            List<Long> IdList = knowledgeMysqlDao.getKnowledgeIdsByType((short) 1, 10);
+            System.out.println(IdList);
+            TestCase.assertTrue(IdList != null && IdList.size() > 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
