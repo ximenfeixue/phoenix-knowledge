@@ -291,9 +291,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     // 首页主页
     @SuppressWarnings("unchecked")
     @Override
-    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids)
+    public List<Knowledge> selectIndexByParam(short type, int page, int size, List<Long> ids)
     {
-        logger.info("type: {} page: {} size: {}", type, page, size);
+        logger.info("type: " + type + " page: " + page + " size: " + size);
         String collectionName = getCollectionName(type);
         Criteria criteria = Criteria.where("status").is(4);
         Criteria criteriaPj = new Criteria();
@@ -304,7 +304,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         // 查询栏目大类下的数据：全平台
         // 查询资讯
         Query query = null;
-        if (ids != null && ids.size() > 0) {
+        if (CollectionUtils.isNotEmpty(ids)) {
             criteriaUp.and("_id").in(ids);
             criteriaPj.orOperator(criteriaUp, criteriaGt);
             criteriaPj.andOperator(criteria);
@@ -318,10 +318,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));
         long count;
         try {
-            // count = mongoTemplate.count(query, names[length - 1]);
-            // PageUtil p = new PageUtil((int) count, page, size);
-            query.limit(size);
             query.skip(0);
+            query.limit(size);
             return mongoTemplate.find(query, Knowledge.class, collectionName);
         } catch (Exception e) {
             e.printStackTrace();
