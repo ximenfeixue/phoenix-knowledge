@@ -37,14 +37,6 @@ public interface KnowledgeMysqlDao {
 	boolean update(KnowledgeBase knowledgeBase) throws Exception;
 	
 	/**
-	 * 先删除后插入（删除时根据主键删除）
-	 * @param knowledgeBase
-	 * @return
-	 * @throws Exception
-	 */
-	KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase) throws Exception;
-	
-	/**
 	 * 根据主键删除
 	 * @param id
 	 * @return

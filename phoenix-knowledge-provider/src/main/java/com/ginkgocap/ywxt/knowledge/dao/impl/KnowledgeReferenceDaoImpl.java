@@ -74,31 +74,6 @@ public class KnowledgeReferenceDaoImpl extends BaseService<KnowledgeReference> i
 	}
 
 	@Override
-	public KnowledgeReference insertAfterDelete(
-			KnowledgeReference knowledgeReference) throws Exception {
-		
-		long id = knowledgeReference.getId();
-		
-		KnowledgeReference oldValue = null;
-		
-		if(id <= 0) {
-			oldValue = this.getById(id);
-			this.deleteById(id);
-		}
-		
-		try {
-			this.insert(knowledgeReference);
-		} catch (Exception e) {
-			if(oldValue != null && oldValue.getId() > 0) {
-                this.insert(oldValue);
-            }
-			throw e;
-		}
-		
-		return knowledgeReference;
-	}
-
-	@Override
 	public int deleteById(long id) throws Exception {
 		
 		boolean deleteStatus = this.deleteEntity(id);

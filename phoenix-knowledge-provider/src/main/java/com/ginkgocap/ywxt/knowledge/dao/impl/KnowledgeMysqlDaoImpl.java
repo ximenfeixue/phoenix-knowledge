@@ -62,30 +62,6 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase)
-			throws Exception {
-		
-		long id = knowledgeBase.getId();
-		
-		KnowledgeBase oldValue = null;
-		
-		if(id <= 0) {
-			oldValue = this.getByKnowledgeId(id);
-			this.deleteByKnowledgeId(id);
-		}
-		
-		try {
-			this.insert(knowledgeBase);
-		} catch (Exception e) {
-			if(oldValue != null && oldValue.getId() > 0)
-				this.insert(oldValue);
-			throw e;
-		}
-		
-		return this.getByKnowledgeId(id);
-	}
-
-	@Override
 	public int deleteByKnowledgeId(long knowledgeId) throws Exception
 	{
         return this.deleteList("delete_knowledge_by_knowledgeId", knowledgeId);

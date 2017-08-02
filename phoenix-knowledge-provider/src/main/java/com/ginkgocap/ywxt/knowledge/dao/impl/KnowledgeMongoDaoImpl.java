@@ -238,27 +238,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge insertAfterDelete(Knowledge knowledge) throws Exception {
-
-        if(knowledge == null || knowledge.getId() <= 0) {
-            throw new IllegalArgumentException("Knowledge is null or invalidated!");
-        }
-
-        long knowledgeId = knowledge.getId();
-        int columnId = parserColumnId(knowledge.getColumnid());
-        Knowledge oldValue = this.getByIdAndColumnId(knowledgeId,columnId);
-        if (oldValue == null) {
-            try {
-                this.insert(knowledge);
-            } catch (Exception ex) {
-                throw ex;
-            }
-        }
-
-        return oldValue;
-    }
-
-    @Override
     public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
@@ -486,11 +465,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         return newColumnId > 0;
-    }
-
-    private int parserColumnId(String columnId)
-    {
-        return KnowledgeUtil.parserColumnId(columnId);
     }
 
     private boolean remove(Query query, final String collectionName)
