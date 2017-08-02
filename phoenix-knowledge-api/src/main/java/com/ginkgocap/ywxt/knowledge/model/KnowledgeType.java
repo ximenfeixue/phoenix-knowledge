@@ -44,7 +44,31 @@ public enum KnowledgeType {
     //游戏
     EGame(18, KnowledgeGame.class, "KnowledgeGame", "游戏"),
     //智能硬件
-    ESmartHardware(19,  KnowledgeSmartHardware.class, "KnowledgeSmartHardware", "智能硬件");
+    ESmartHardware(19,  KnowledgeSmartHardware.class, "KnowledgeSmartHardware", "智能硬件"),
+    //  IT
+    EIT(20,  KnowledgeIT.class, "KnowledgeIT", "IT"),
+    //消费品
+    EConsumerGoods(21,  KnowledgeConsumerGoods.class, "KnowledgeConsumerGoods", "消费品"),
+    //制造
+    EManufacture(22,  KnowledgeManufacture.class, "KnowledgeManufacture", "制造"),
+    //文化
+    ECulture(23,  KnowledgeCulture.class, "KnowledgeCulture", "文化"),
+    //体育
+    ESports(24,  KnowledgeSports.class, "KnowledgeSports", "体育"),
+    //传媒
+    EMedia(25,  KnowledgeMedia.class, "KnowledgeMedia", "传媒"),
+    //建筑
+    EBuilding(26,  KnowledgeBuilding.class, "KnowledgeBuilding", "建筑"),
+    //房地产
+    ERealEstate(27,  KnowledgeRealEstate.class, "KnowledgeRealEstate", "房地产"),
+    //贸易
+    ETrade(28,  KnowledgeTrade.class, "KnowledgeTrade", "智能硬件"),
+    //专业服务
+    EProfessionalService(29,  KnowledgeProfessionalService.class, "KnowledgeProfessionalService", "专业服务"),
+    //生活服务
+    ELifeService(30,  KnowledgeLifeService.class, "KnowledgeLifeService", "生活服务"),
+    //政府
+    EGovernment(31,  KnowledgeGovernment.class, "KnowledgeGovernment", "政府");
 
     int code;
     Class cls;
@@ -103,21 +127,65 @@ public enum KnowledgeType {
             case 11:
                 return KnowledgeType.EArticle;
             case 12:
+            case 2872:
                 return KnowledgeType.EInternet;
             case 13:
+            case 2873:
                 return KnowledgeType.EBigData;
             case 14:
+            case 2874:
                 return KnowledgeType.EFinance;
             case 15:
+            case 2875:
                 return KnowledgeType.EEducation;
             case 16:
+            case 2876:
                 return KnowledgeType.EMedical;
             case 17:
+            case 2877:
                 return KnowledgeType.EO2O;
             case 18:
+            case 2878:
                 return KnowledgeType.EGame;
             case 19:
+            case 2879:
                 return KnowledgeType.ESmartHardware;
+            case 20:
+            case 2880:
+                return KnowledgeType.EIT;
+            case 21:
+            case 2881:
+                return KnowledgeType.EConsumerGoods;
+            case 22:
+            case 2882:
+                return KnowledgeType.EManufacture;
+            case 23:
+            case 2883:
+                return KnowledgeType.ECulture;
+            case 24:
+            case 2884:
+                return KnowledgeType.ESports;
+            case 25:
+            case 2885:
+                return KnowledgeType.EMedia;
+            case 26:
+            case 2886:
+                return KnowledgeType.EBuilding;
+            case 27:
+            case 2887:
+                return KnowledgeType.ERealEstate;
+            case 28:
+            case 2888:
+                return KnowledgeType.ETrade;
+            case 29:
+            case 2889:
+                return KnowledgeType.EProfessionalService;
+            case 30:
+            case 2890:
+                return KnowledgeType.ELifeService;
+            case 31:
+            case 2891:
+                return KnowledgeType.EGovernment;
             default: {
                 logger.error("Can't find the type: " + type + ", so return default value: " + KnowledgeType.ENews.value());
                 return KnowledgeType.ENews;
