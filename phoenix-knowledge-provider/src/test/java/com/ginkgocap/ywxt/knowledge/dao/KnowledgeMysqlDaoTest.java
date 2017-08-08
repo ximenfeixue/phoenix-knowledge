@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.dao;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import junit.framework.TestCase;
@@ -63,6 +63,18 @@ public class KnowledgeMysqlDaoTest extends TestBase {
             List<KnowledgeBase> baseList = knowledgeMysqlDao.getByCreateUserId(userId, 0, 10);
             System.out.println(baseList);
             TestCase.assertTrue(baseList != null && baseList.size() > 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetKnowledgeIdsByType() {
+        try {
+            List<Long> IdList = knowledgeMysqlDao.getKnowledgeIdsByType((short) 1, 10);
+            System.out.println(IdList);
+            TestCase.assertTrue(IdList != null && IdList.size() > 0);
 
         } catch (Exception e) {
             e.printStackTrace();

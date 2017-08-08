@@ -62,30 +62,6 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public KnowledgeBase insertAfterDelete(KnowledgeBase knowledgeBase)
-			throws Exception {
-		
-		long id = knowledgeBase.getId();
-		
-		KnowledgeBase oldValue = null;
-		
-		if(id <= 0) {
-			oldValue = this.getByKnowledgeId(id);
-			this.deleteByKnowledgeId(id);
-		}
-		
-		try {
-			this.insert(knowledgeBase);
-		} catch (Exception e) {
-			if(oldValue != null && oldValue.getId() > 0)
-				this.insert(oldValue);
-			throw e;
-		}
-		
-		return this.getByKnowledgeId(id);
-	}
-
-	@Override
 	public int deleteByKnowledgeId(long knowledgeId) throws Exception
 	{
         return this.deleteList("delete_knowledge_by_knowledgeId", knowledgeId);
@@ -168,6 +144,30 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_by_createUserId", start, size, userId);
+	}
+
+	@Override
+	public int countByCreateUserName(String userName) throws Exception {
+
+		return this.countEntitys("get_by_createUserName", userName);
+	}
+
+	@Override
+	public List<KnowledgeBase> getByCreateUserName(String userName, int start, int size) throws Exception {
+
+		return this.getSubEntitys("get_by_createUserName", start, size, userName);
+	}
+
+	@Override
+	public int countByTitle(String title) throws Exception {
+
+		return this.countEntitys("get_by_title", "%" + title + "%");
+	}
+
+	@Override
+	public List<KnowledgeBase> getByTitle(String title, int start, int size) throws Exception {
+
+		return this.getSubEntitys("get_by_title", start, size, "%" + title + "%");
 	}
 
 	@Override

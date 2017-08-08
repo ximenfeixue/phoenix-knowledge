@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
@@ -18,7 +18,6 @@ import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -462,9 +461,46 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception
+    public int countByCreateUserId(long userId) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
+    }
+
+
+    @Override
+    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
+    }
+
+    @Override
+    public int countByCreateUserName(String userName) throws Exception
+    {
+        /*if (userId ==0) {
+            return this.knowledgeMongoDao.c
+        }*/
+        return this.knowledgeMysqlDao.countByCreateUserName(userName);
+    }
+
+
+    @Override
+    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
+    }
+
+    public int countByTitle(String title) throws Exception
+    {
+        return this.knowledgeMysqlDao.countByTitle(title);
+    }
+
+
+    public List<KnowledgeBase> getByTitle(String title,int start, int size) throws Exception
+    {
+        return this.knowledgeMysqlDao.getByTitle(title, start, size);
     }
 
     @Override
@@ -539,15 +575,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public InterfaceResult<List<DataCollect>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception
     {
         return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(this.knowledgeMysqlDao.getByTypeAndColumnId(type, columnId, start, size)));
-    }
-
-    @Override
-    public int getKnowledgeCount(long userId) throws Exception
-    {
-        /*if (userId ==0) {
-            return this.knowledgeMongoDao.c
-        }*/
-        return this.knowledgeMysqlDao.getKnowledgeCount(userId);
     }
 
     @Override
@@ -751,6 +778,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("Create knowledge detail failed, knowledgeId: " + detail.getId());
             return null;
         }
+        logger.info("Insert knowledge detail success. knowledgeId: " + detail.getId());
 
         return savedDetail;
     }

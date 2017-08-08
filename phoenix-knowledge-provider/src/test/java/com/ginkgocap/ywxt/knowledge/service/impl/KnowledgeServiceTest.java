@@ -2,7 +2,7 @@ package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
@@ -14,9 +14,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class KnowledgeServiceTest extends TestBase {
@@ -42,8 +40,12 @@ public class KnowledgeServiceTest extends TestBase {
     @Test
 	public void testInsert() {
         System.out.println("===testInsert===");
-        DataCollect collect = createKnowledge("KnowledgeServiceTest");
-        String data = KnowledgeUtil.writeObjectToJson(collect.getKnowledgeDetail());
+        //DataCollect collect = createKnowledge("KnowledgeServiceTest");
+        Map<Integer, List<Knowledge>> map = new HashMap<Integer, List<Knowledge>>(3);
+        map.put(1, Arrays.asList(TestData.knowledge(1112L, 1, "test1")));
+        map.put(2, Arrays.asList(TestData.knowledge(1112L, 1, "test2")));
+        map.put(3, Arrays.asList(TestData.knowledge(1112L, 1, "test3")));
+        String data = KnowledgeUtil.writeObjectToJson(map);
         System.out.print(data);
     }
 
@@ -255,7 +257,7 @@ public class KnowledgeServiceTest extends TestBase {
         System.out.println("===testGetBaseByCreateUserId===");
         try {
             userId = 201035L; start = 1; size = 10;
-            List<KnowledgeBase> result = knowledgeService.getBaseByCreateUserId(userId, start, size);
+            List<KnowledgeBase> result = knowledgeService.getByCreateUserId(userId, start, size);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -358,7 +360,7 @@ public class KnowledgeServiceTest extends TestBase {
     public void testGetKnowledgeCount()
     {
         try {
-            int size = knowledgeService.getKnowledgeCount(201003L);
+            int size = knowledgeService.countByCreateUserId(201003L);
             System.out.println("Count: " + size);
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,7 +371,7 @@ public class KnowledgeServiceTest extends TestBase {
     public void testGetKnowledgeSequenceId()
     {
         for (int index = 0; index <10000; index++) {
-           long sequenceId = knowledgeCommonService.getKnowledgeSequenceId();
+           long sequenceId = knowledgeCommonService.getUniqueSequenceId();
             System.out.println("sequenceId: " + sequenceId);
         }
     }

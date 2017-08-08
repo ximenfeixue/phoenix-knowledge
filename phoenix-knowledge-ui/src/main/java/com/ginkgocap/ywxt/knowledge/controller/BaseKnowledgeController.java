@@ -2,27 +2,27 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.dynamic.model.*;
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -261,13 +261,6 @@ public abstract class BaseKnowledgeController extends BaseController {
             detail.setCpathid(columnPath);
         }
 
-        if (StringUtils.isEmpty(detail.getCreatetime())) {
-            detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
-        }
-        if (StringUtils.isEmpty(detail.getModifytime())) {
-            detail.setModifytime(String.valueOf(detail.getModifytime()));
-        }
-
         //set status to default 4
         detail.setStatus(4);
 
@@ -297,6 +290,58 @@ public abstract class BaseKnowledgeController extends BaseController {
             return DataCollect.defaultPermission(userId, knowledgeId, 0);
         }
         return permission;
+    }
+
+    protected InterfaceResult<Page<KnowledgeBase>> knowledgeListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    {
+        Page<KnowledgeBase> page = new Page<KnowledgeBase>();
+        page.setTotalCount(total);
+        page.setPageNo(num);
+        page.setPageSize(size);
+        page.setList(setReadCount(knowledgeBaseItems));
+        //page.setList(knowledgeBaseItems);
+        return InterfaceResult.getSuccessInterfaceResultInstance(page);
+    }
+
+    protected List<KnowledgeBase> setReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+        for (KnowledgeBase knowledgeItem : baseList) {
+            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(knowledgeItem.getKnowledgeId());
+            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+            knowledgeItem.setReadCount((int)readCount);
+        }
+        return baseList;
+    }
+
+    protected InterfaceResult<Page<KnowledgeBaseExt>> knowledgeExtListPage(long total, int num, int size, List<KnowledgeBase> knowledgeBaseItems)
+    {
+        Page<KnowledgeBaseExt> page = new Page<KnowledgeBaseExt>();
+        page.setTotalCount(total);
+        page.setPageNo(num);
+        page.setPageSize(size);
+        page.setList(setBaseExtReadCount(knowledgeBaseItems));
+        //page.setList(knowledgeBaseItems);
+        return InterfaceResult.getSuccessInterfaceResultInstance(page);
+    }
+
+    protected List<KnowledgeBaseExt> setBaseExtReadCount(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isEmpty(baseList)) {
+            return null;
+        }
+
+        List<KnowledgeBaseExt> baseExtList = new ArrayList<KnowledgeBaseExt>(baseList.size());
+        for (KnowledgeBase baseItem : baseList) {
+            KnowledgeCount knowledgeCount = knowledgeCountService.getKnowledgeCount(baseItem.getKnowledgeId());
+            long readCount = knowledgeCount != null ? knowledgeCount.getClickCount() : 0L;
+            baseItem.setReadCount((int)readCount);
+            KnowledgeBaseExt baseExt = new KnowledgeBaseExt();
+            baseExt.clone(baseItem);
+            baseExt.setTypeName(KnowledgeType.knowledgeType(baseItem.getType()).typeName());
+            baseExtList.add(baseExt);
+        }
+        return baseExtList;
     }
 
     private DynamicNews createDynamicNewsObj(Knowledge detail, User user)

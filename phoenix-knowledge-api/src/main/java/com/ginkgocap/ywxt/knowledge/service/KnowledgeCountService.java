@@ -10,19 +10,23 @@ import java.util.Map;
  */
 public interface KnowledgeCountService {
 
-    public KnowledgeCount updateClickCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateClickCount(long userId, String userName, String title, long knowledgeId,short type);
 
-    public KnowledgeCount updateShareCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateShareCount(long knowledgeId,short type);
 
-    public KnowledgeCount updateCollectCount(long userId,long knowledgeId,short type);
+    public KnowledgeCount updateCollectCount(long knowledgeId,short type);
 
-    public KnowledgeCount updateCommentCount(long userId,long knowledgeId,short type);
-
-    public KnowledgeCount getKnowledgeCount(long userId, long knowledgeId, short type);
+    public KnowledgeCount updateCommentCount(long knowledgeId,short type);
 
     public KnowledgeCount getKnowledgeCount(long knowledgeId);
 
-    public Map<Long, Long> getKnowledgeCount(List<Long> idList);
+    public KnowledgeCount getKnowledgeCountByIdType(long knowledgeId, short type);
+
+    public Map<Long, Long> getKnowledgeClickCount(List<Long> idList);
+
+    public Map<Long, KnowledgeCount> getKnowledgeCount(List<Long> idList);
+
+    public boolean deleteKnowledgeCount(long knowledgeId);
 
     public List<KnowledgeCount> getHotKnowledge(int size);
 

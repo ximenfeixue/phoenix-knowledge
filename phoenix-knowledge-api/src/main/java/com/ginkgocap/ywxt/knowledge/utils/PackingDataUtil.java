@@ -2,20 +2,11 @@ package com.ginkgocap.ywxt.knowledge.utils;
 
 import com.ginkgocap.ywxt.knowledge.model.BigData;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.user.form.EtUserInfo;
-import com.ginkgocap.ywxt.user.form.ReceiversInfo;
-import com.ginkgocap.ywxt.user.model.User;
-import com.ginkgocap.ywxt.user.model.UserFeed;
-import com.ginkgocap.ywxt.user.service.DiaryService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @Title: 数据包装转换类

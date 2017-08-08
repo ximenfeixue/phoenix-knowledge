@@ -34,15 +34,7 @@ public interface KnowledgeReferenceDao {
 	 * @throws Exception
 	 */
 	public KnowledgeReference update(KnowledgeReference knowledgeReference) throws Exception;
-	
-	/**
-	 * 先删除后插入
-	 * @param knowledgeReference
-	 * @return
-	 * @throws Exception
-	 */
-	public KnowledgeReference insertAfterDelete(KnowledgeReference knowledgeReference) throws Exception;
-	
+
 	/**
 	 * 根据主键删除
 	 * @param id

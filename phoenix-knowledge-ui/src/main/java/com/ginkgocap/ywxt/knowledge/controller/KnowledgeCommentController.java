@@ -1,18 +1,15 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
-import com.ginkgocap.ywxt.bean.util.BeanUtil;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
 import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.gintong.ywxt.im.model.MessageNotify;
 import com.gintong.ywxt.im.model.MessageNotifyType;
-import com.gintong.ywxt.im.service.MessageNotifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +43,8 @@ public class KnowledgeCommentController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public InterfaceResult createComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
-        return createKnowledgeComment(-1L, request, reponse);
+    public InterfaceResult createComment(HttpServletRequest request, HttpServletResponse reponse, @PathVariable Long knowledgeId) {
+        return createKnowledgeComment(request, reponse, -1L);
     }
     /**
      * des:创建评论
@@ -59,7 +56,7 @@ public class KnowledgeCommentController extends BaseController {
      */
     @RequestMapping(value = "/{knowledgeId}", method = RequestMethod.POST)
     @ResponseBody
-    public InterfaceResult createKnowledgeComment(@PathVariable Long knowledgeId, HttpServletRequest request, HttpServletResponse reponse) {
+    public InterfaceResult createKnowledgeComment(HttpServletRequest request, HttpServletResponse reponse, @PathVariable Long knowledgeId) {
         String requestJson = null;
         try {
             User user = getUser(request);
@@ -74,10 +71,14 @@ public class KnowledgeCommentController extends BaseController {
             }
 
             KnowledgeComment comment = KnowledgeUtil.readValue(KnowledgeComment.class, requestJson);
-            if (comment == null || StringUtils.isBlank(comment.getContent())) {
+            if (comment.getKnowledgeId() <= 0 || comment.getColumnId() <= 0 || comment == null || StringUtils.isBlank(comment.getContent())) {
+                logger.error("param is invalidated. knowId: " + comment.getKnowledgeId() + " columnType: " + comment.getColumnId() + " content: " + comment.getContent());
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
             }
 
+            if (comment.getColumnType() <= 0) {
+                comment.setColumnType(comment.getColumnId());
+            }
             comment.setOwnerId(user.getId());
             comment.setOwnerName(user.getName());
             comment.setPic(user.getPicPath());
@@ -89,6 +90,7 @@ public class KnowledgeCommentController extends BaseController {
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
+                knowledgeCountService.updateCommentCount(comment.getKnowledgeId(), (short)comment.getColumnId());
                 return InterfaceResult.getSuccessInterfaceResultInstance(commentId);
             }
 

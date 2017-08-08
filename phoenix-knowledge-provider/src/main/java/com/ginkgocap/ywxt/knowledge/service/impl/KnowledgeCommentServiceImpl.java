@@ -47,6 +47,11 @@ public class KnowledgeCommentServiceImpl implements KnowledgeCommentService
     }
 
     @Override
+    public boolean cleanComment(long knowledgeId) {
+        return knowledgeCommentDao.cleanComment(knowledgeId);
+    }
+
+    @Override
     public List<KnowledgeComment> getKnowledgeCommentList(long knowledgeId)
     {
         return knowledgeCommentDao.getKnowledgeCommentList(knowledgeId);

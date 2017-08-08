@@ -3,6 +3,8 @@ package com.ginkgocap.ywxt.knowledge.model;
 /**
  * Created by gintong on 2016/7/11.
  */
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

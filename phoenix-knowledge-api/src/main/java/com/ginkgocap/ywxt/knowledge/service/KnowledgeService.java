@@ -231,6 +231,16 @@ public interface KnowledgeService
     public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception;
 
     /**
+     * 获取知识数量：
+     * <p>1、知识基础表信息</P>
+     * @date 2016年1月15日 上午10:14:59
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public int countByCreateUserId(long userId) throws Exception;
+
+    /**
      * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
      * @date 2016年1月15日 上午9:41:33
@@ -240,7 +250,45 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByCreateUserId(long userId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception;
+
+    /**
+     * <p>1、知识基础表信息</P>
+     * @date 2016年1月15日 上午9:41:33
+     * @param userName
+     * @return
+     * @throws Exception
+     */
+    public int countByCreateUserName(String userName) throws Exception;
+
+    /**
+     * <p>1、知识基础表信息</P>
+     * @param userName
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception;
+
+    /**
+     * <p>1、知识基础表信息</P>
+     * @date 2016年1月15日 上午9:41:33
+     * @param title
+     * @return
+     * @throws Exception
+     */
+    public int countByTitle(String title) throws Exception;
+
+    /**
+     * <p>1、知识基础表信息</P>
+     * @param title
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public List<KnowledgeBase> getByTitle(String title,int start,int size) throws Exception;
 
     /**
      * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
@@ -391,16 +439,6 @@ public interface KnowledgeService
      * @throws Exception
      */
     public InterfaceResult<List<DataCollect>> getBaseByColumnIdAndType(int columnId,short type,int start,int size) throws Exception;
-
-    /**
-     * 获取知识数量：
-     * <p>1、知识基础表信息</P>
-     * @date 2016年1月15日 上午10:14:59
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    public int getKnowledgeCount(long userId) throws Exception;
 
     /**
      * 获取未分组知识数量：

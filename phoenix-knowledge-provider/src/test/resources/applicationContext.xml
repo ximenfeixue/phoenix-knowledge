@@ -29,6 +29,8 @@
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
+    <bean id="idService" class="com.ginkgocap.ywxt.framework.service.IdService"/>
+    <bean id="cloudIdService" class="com.ginkgocap.ywxt.framework.service.CloudIdService"/>
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />

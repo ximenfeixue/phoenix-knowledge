@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.dynamic.service.DynamicNewsService;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.service.FriendsRelationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

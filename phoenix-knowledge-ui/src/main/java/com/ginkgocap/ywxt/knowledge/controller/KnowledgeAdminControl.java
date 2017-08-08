@@ -1,16 +1,16 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.model.common.IdType;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseExt;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -171,6 +171,17 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
+    @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{page}/{size}", method = RequestMethod.POST)
+    public InterfaceResult getKnowledgeByPagePost(HttpServletRequest request, HttpServletResponse response,
+                                              @PathVariable long userId,@PathVariable short type,
+                                              @PathVariable short status, @PathVariable int page,
+                                              @PathVariable int size) throws Exception
+    {
+        String keyWord = this.getBodyParam(request);
+        return getKnowledgeByPage(request, response, userId, type, status, page, size, keyWord);
+    }
+
+    @ResponseBody
     @RequestMapping(value="/getKnowledgeByPage/{userId}/{type}/{status}/{page}/{size}/{title}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByPage(HttpServletRequest request, HttpServletResponse response,
                                               @PathVariable long userId,@PathVariable short type,
@@ -206,11 +217,98 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
         return InterfaceResult.getSuccessInterfaceResultInstance(baseList);
     }
 
+    /**
+     * 提取所有知识创建数据
+     * @param page 分页起始
+     * @param size 分页大小
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/allKnowledge/{page}/{size}/{total}/{type}", method = RequestMethod.POST)
+    public InterfaceResult allKnowledgePost(HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable int page, @PathVariable int size,
+                                            @PathVariable int total, @PathVariable int type) throws Exception {
+        final String keyword = this.getBodyParam(request);
+        return allKnowledge(request, response, page, size, total, type, keyword);
+    }
+
+    /**
+     * 提取所有知识创建数据
+     * @param page 分页起始
+     * @param size 分页大小
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/allKnowledge/{page}/{size}/{total}/{type}/{keyword}", method = RequestMethod.GET)
+    public InterfaceResult allKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable int page, @PathVariable int size,
+                                            @PathVariable int total, @PathVariable int type, @PathVariable String keyword) throws Exception {
+
+        if (!isAdmin(request)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        if (StringUtils.isBlank(keyword) || "null".equals(keyword)) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+
+        if (total == -1) {
+            if (type == 1) {
+                total = countKnowledgeByTitle(keyword);
+            } else if (type == 2) {
+                total = countKnowledgeByUserName(keyword);
+            } else {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            }
+        }
+
+        int start = page * size;
+        if (start > total) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = null;
+        if (type == 1) {
+            createdKnowledgeList = this.knowledgeService.getByTitle(keyword, start, size);
+        } else if (type == 2) {
+            createdKnowledgeList = this.knowledgeService.getByCreateUserName(keyword, start, size);
+        }
+        InterfaceResult<Page<KnowledgeBaseExt>> result = this.knowledgeExtListPage(total, page, size, createdKnowledgeList);
+        logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
+        return result;
+    }
+
     @ResponseBody
     @RequestMapping(value="/comment/delete", method = RequestMethod.DELETE)
     public InterfaceResult deleteKnowledgeComment(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         return null;
+    }
+
+    private int countKnowledgeByUserName(String userName)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.countByCreateUserName(userName);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. userName: " + userName + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+    private int countKnowledgeByTitle(String title)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.countByTitle(title);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. title: " + title + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
     }
 
     public Logger logger() { return this.logger; }

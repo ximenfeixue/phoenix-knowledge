@@ -4,7 +4,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
@@ -54,7 +54,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
-        knowledge.setId(knowledgeCommonService.getKnowledgeSequenceId());
+        knowledge.setId(knowledgeCommonService.getUniqueSequenceId());
         mongoTemplate.insert(knowledge, currCollectionName);
         return knowledge;
     }
@@ -67,7 +67,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             final String collectionName = getCollectionName(type);
             for(Knowledge detail : KnowledgeList) {
                 if (detail != null) {
-                    detail.setId(knowledgeCommonService.getKnowledgeSequenceId());
+                    detail.setId(knowledgeCommonService.getUniqueSequenceId());
                     batchToSave.add(detail);
                 }
                 else {
@@ -116,6 +116,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                 collectionName = getCollectionName(knowledge.getColumnType());
                 logger.info("update knowledge detail, new collectionName: " + collectionName);
             }
+            knowledge.setCreatetime(existValue.getCreatetime());
+            knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
             mongoTemplate.save(knowledge, collectionName);
         }
         else {
@@ -236,27 +238,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge insertAfterDelete(Knowledge knowledge) throws Exception {
-
-        if(knowledge == null || knowledge.getId() <= 0) {
-            throw new IllegalArgumentException("Knowledge is null or invalidated!");
-        }
-
-        long knowledgeId = knowledge.getId();
-        int columnId = parserColumnId(knowledge.getColumnid());
-        Knowledge oldValue = this.getByIdAndColumnId(knowledgeId,columnId);
-        if (oldValue == null) {
-            try {
-                this.insert(knowledge);
-            } catch (Exception ex) {
-                throw ex;
-            }
-        }
-
-        return oldValue;
-    }
-
-    @Override
     public List<Knowledge> getByIdsAndColumnId(List<Long> ids,int columnType) throws Exception
     {
         Query query = new Query(Criteria.where(Constant._ID).in(ids));
@@ -289,37 +270,28 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     // 首页主页
     @SuppressWarnings("unchecked")
     @Override
-    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids)
+    public List<Knowledge> selectIndexByParam(short type, int page, int size, List<Long> ids)
     {
-        logger.info("type: {} page: {} size: {}", type, page, size);
+        logger.info("type: " + type + " page: " + page + " size: " + size);
         String collectionName = getCollectionName(type);
         Criteria criteria = Criteria.where("status").is(4);
-        Criteria criteriaPj = new Criteria();
-        Criteria criteriaUp = new Criteria();
-        Criteria criteriaGt = new Criteria();
-
-        criteriaGt.and("uid").is(KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID);
         // 查询栏目大类下的数据：全平台
         // 查询资讯
         Query query = null;
-        if (ids != null && ids.size() > 0) {
-            criteriaUp.and("_id").in(ids);
-            criteriaPj.orOperator(criteriaUp, criteriaGt);
-            criteriaPj.andOperator(criteria);
-            query = new Query(criteriaPj);
+        if (CollectionUtils.isNotEmpty(ids)) {
+            criteria.and("_id").in(ids);
+            query = new Query(criteria);
         } else {
-            criteria.andOperator(criteriaGt);
+            criteria.and("privated").is(KnowledgeConstant.PRIVATED);
             query = new Query(criteria);
         }
         String str = "" + KnowledgeUtil.writeObjectToJson(criteria);
         logger.info("MongoObject:" + collectionName + ",Query:" + str);
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        long count;
+
         try {
-            // count = mongoTemplate.count(query, names[length - 1]);
-            // PageUtil p = new PageUtil((int) count, page, size);
-            query.limit(size);
             query.skip(0);
+            query.limit(size);
             return mongoTemplate.find(query, Knowledge.class, collectionName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -493,11 +465,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         }
 
         return newColumnId > 0;
-    }
-
-    private int parserColumnId(String columnId)
-    {
-        return KnowledgeUtil.parserColumnId(columnId);
     }
 
     private boolean remove(Query query, final String collectionName)

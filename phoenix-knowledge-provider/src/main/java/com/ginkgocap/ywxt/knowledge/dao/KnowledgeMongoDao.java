@@ -75,15 +75,6 @@ public interface KnowledgeMongoDao
     boolean addDirectory(long userId, long knowledgeId, int type, List<Long> directoryIdList);
 
     /**
-     * 先删除后插入
-     * @date 2016年1月13日 上午10:54:44
-     * @param Knowledge
-     * @return
-     * @throws Exception
-     */
-    Knowledge insertAfterDelete(Knowledge Knowledge) throws Exception;
-
-    /**
      * 根据主键及栏目删除数据
      * @date 2016年1月13日 上午10:54:47
      * @param id

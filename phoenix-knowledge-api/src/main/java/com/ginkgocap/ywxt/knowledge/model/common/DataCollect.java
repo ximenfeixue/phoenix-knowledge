@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
@@ -111,7 +111,7 @@ public class DataCollect implements Serializable
 
     public void initPermission() {
         if (this.knowledgeDetail != null) {
-            if (this.knowledgeDetail.getCid() == 0) {
+            if (this.knowledgeDetail.getCid() == 0 || this.knowledgeDetail.getCid() == 1) {
                 this.knowledgeDetail.setPrivated((short)0);
             } else {
                 this.knowledgeDetail.setPrivated(privated(this.permission));

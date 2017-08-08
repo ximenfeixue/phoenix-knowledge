@@ -2,8 +2,7 @@ package com.ginkgocap.ywxt.knowledge.task;
 
 import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.BigData;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.TagServiceLocal;
 import com.ginkgocap.ywxt.knowledge.utils.PackingDataUtil;
 import com.gintong.rocketmq.api.DefaultMessageService;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -59,7 +57,7 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 		try {
 			knowQueue.put(new SyncBigData(optionType, base));
 		} catch (Exception ex) {
-			logger.error("add syncBigData to queue faile.");
+			logger.error("add syncBigData to queue failed.");
 		}
 	}
 
@@ -87,41 +85,43 @@ public class BigDataSyncTask implements Runnable, InitializingBean
     {
         if (syncBigData != null && syncBigData.base != null) {
             BigData base = syncBigData.base;
-            long userId = base.getCid();
-            try {
-                List<String> tagNames = new ArrayList<String>();
-                List<Tag> tagList = tagServiceLocal.getTagList(userId);
-                if (CollectionUtils.isNotEmpty(tagList)) {
-                    Map<Long, Tag> tagMap = new HashMap<Long, Tag>(tagList.size());
-                    for (Tag tag : tagList) {
-                        if (tag != null) {
-                            tagMap.put(tag.getId(), tag);
-                        }
-                    }
-                    List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
-                    for (long id : idList) {
-                        Tag tag = tagMap.get(id);
-                        if (tag != null) {
-                            tagNames.add(tag.getTagName());
-                        } else {
-                            logger.error("Can't find tag by id: " + id);
-                        }
-                    }
-                    if (CollectionUtils.isNotEmpty(tagNames)) {
-                        String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
-                        logger.info("will send to bigdata service. tag names: " + tagNameString);
-                        base.setTags(tagNameString);
-                    }
-                }
-            } catch (Exception ex) {
-                logger.error("get tag list failed. userId : " + userId);
-            }
+			if (!KNOWLEDGE_DELETE.equals(syncBigData.optionType)) {
+				long userId = base.getCid();
+				try {
+					List<String> tagNames = new ArrayList<String>();
+					List<Tag> tagList = tagServiceLocal.getTagList(userId);
+					if (CollectionUtils.isNotEmpty(tagList)) {
+						Map<Long, Tag> tagMap = new HashMap<Long, Tag>(tagList.size());
+						for (Tag tag : tagList) {
+							if (tag != null) {
+								tagMap.put(tag.getId(), tag);
+							}
+						}
+						List<Long> idList = KnowledgeUtil.convertStringToLongList(base.getTags());
+						for (long id : idList) {
+							Tag tag = tagMap.get(id);
+							if (tag != null) {
+								tagNames.add(tag.getTagName());
+							} else {
+								logger.error("Can't find tag by id: " + id);
+							}
+						}
+						if (CollectionUtils.isNotEmpty(tagNames)) {
+							String tagNameString = KnowledgeUtil.writeObjectToJson(tagNames);
+							logger.info("will send to bigdata service. tag names: " + tagNameString);
+							base.setTags(tagNameString);
+						}
+					}
+				} catch (Exception ex) {
+					logger.error("get tag list failed. userId : " + userId);
+				}
+			}
             //base.setTags();
             this.sendMessage(syncBigData.optionType, base);
         }
 	}
 
-	public void deleteMessage(long knowledgeId, int columnType, long userId)	throws Exception {
+	public void deleteMessage(long knowledgeId, int columnType, long userId) {
 		
 		BigData base = new BigData();
 		base.setKid(knowledgeId);
@@ -159,7 +159,6 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 			logger.error("Exist thread, as it was interrupted.");
 		}
 	}
-
 
 	public void afterPropertiesSet() throws Exception {
 		logger.info("Knowledge message queue starting.");

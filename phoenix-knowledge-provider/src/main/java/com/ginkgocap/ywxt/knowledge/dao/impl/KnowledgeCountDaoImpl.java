@@ -4,6 +4,7 @@ import com.ginkgocap.parasol.common.service.exception.BaseServiceException;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,11 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
         return this.getEntity(knowledgeId);
     }
 
+    public boolean deleteKnowledgeCount(long knowledgeId)throws Exception
+    {
+        return this.deleteEntity(knowledgeId);
+    }
+
     @Override
     public void saveKnowledgeCount(KnowledgeCount knowledgeCount) throws Exception
     {
@@ -52,6 +58,8 @@ public class KnowledgeCountDaoImpl extends BaseService<KnowledgeCount> implement
     @Override
     public void saveKnowledgeCountList(List<KnowledgeCount> knowledgeCountList) throws Exception
     {
-        this.updateEntitys(knowledgeCountList);
+        if (CollectionUtils.isNotEmpty(knowledgeCountList)) {
+            this.updateEntitys(knowledgeCountList);
+        }
     }
 }

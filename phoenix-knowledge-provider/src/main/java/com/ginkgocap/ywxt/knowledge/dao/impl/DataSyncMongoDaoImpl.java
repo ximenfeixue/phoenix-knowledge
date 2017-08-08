@@ -34,11 +34,11 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     @Override
     public long saveDataSync(DataSync data) {
         try {
-            long id = knowledgeCommonService.getKnowledgeSequenceId();
+            long id = knowledgeCommonService.getUniqueSequenceId("4");
             data.setId(id);
             mongoTemplate.save(data, collectionName);
             return id;
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             logger.error("save datasync failed: id: " + data.getId() + " error: ", ex.getMessage());
         }
         return -1;
@@ -53,7 +53,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
             DataSync data = mongoTemplate.findAndRemove(query, DataSync.class, collectionName);
             return data != null;
         }
-        catch (Throwable ex) {
+        catch (Exception ex) {
             logger.error("delete dataSync failed: id:" + id + " error: " + ex.getMessage());
             return false;
         }

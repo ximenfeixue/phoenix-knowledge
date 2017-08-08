@@ -9,19 +9,15 @@
     </default>
     <route>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeBase"
-                listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
-                strategyProperty="id">
-            <dbStrategy name="aa"
-                        clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy"
-                        useCRC32="true">
+        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeBase" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener" strategyProperty="id">
+            <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
             <list name="delete_by_createUserId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ?"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
 
             <list name="delete_knowledge_by_knowledgeId"
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
@@ -35,45 +31,45 @@
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? "
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
-            <list name="get_knowledge_by_Ids"
-                  sqlitem="select id from tb_knowledge_base where knowledge_id in (?)"
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
-
             <list name="get_knowledge_by_Id_keyword"
                   sqlitem="select id from tb_knowledge_base where knowledge_id = ? and title like ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_all_start_size"
-                  sqlitem="select id from tb_knowledge_base where id > ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="value" update="true" />
+                sqlitem="select id from tb_knowledge_base where id > ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="value" update="true" />
 
             <list name="get_all_public"
                   sqlitem="select id from tb_knowledge_base where privated != ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="privated" update="true" />
 
             <list name="get_by_createUserId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId" update="true" />
+
+            <list name="get_by_createUserName"
+                  sqlitem="select id from tb_knowledge_base where create_user_name = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="userName" update="true" />
+
+            <list name="get_by_title"
+                  sqlitem="select id from tb_knowledge_base where title like ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="title" update="true" />
 
             <list name="get_by_createUserId_columnId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
 
             <list name="get_by_createUserId_type"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and column_id = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId" update="true" />
 
             <list name="get_by_columnId"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId" update="true" />
+                sqlitem="select id from tb_knowledge_base where column_id = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="columnId" update="true" />
 
             <list name="get_public_by_columnId"
                   sqlitem="select id from tb_knowledge_base where column_id = ? and privated != ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="columnId,privated" update="true" />
-
-            <list name="get_by_type_columnId"
-                  sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />
 
             <list name="get_by_columnId_keyWord"
                   sqlitem="select id from tb_knowledge_base where column_id = ? and title like ? order by create_date desc"
@@ -83,129 +79,127 @@
                   sqlitem="select id from tb_knowledge_base where create_user_id = ? and title like ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="createUserId,title" update="true" />
 
+            <list name="get_by_type_columnId"
+                sqlitem="select id from tb_knowledge_base where type = ? and column_id = ? order by create_date"
+                sqlType="hsql" valueProperty="id" keyProperty="type,columnId" update="true" />
+
             <list name="get_by_type"
-                  sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
+                sqlitem="select id from tb_knowledge_base where type = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
             <list name="get_by_createUserId_type_columnId"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and type = ? and column_id = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,type,columnId" update="true" />
 
             <!-- "<"使用"&lt;"替换，">"使用"&gt;"替代，"&"使用"&amp;"替代 -->
             <list name="get_by_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_date &gt; ? and create_date &lt; ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="beginDate,endDate" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_date &gt; ? and create_date &lt; ?"
+                sqlType="hsql" valueProperty="id" keyProperty="beginDate,endDate" update="true" />
 
             <list name="get_by_type_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where type = ? and create_date &gt; ? and create_date &lt; ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="type,beginDate,endDate" update="true" />
+                sqlitem="select id from tb_knowledge_base where type = ? and create_date &gt; ? and create_date &lt; ?"
+                sqlType="hsql" valueProperty="id" keyProperty="type,beginDate,endDate" update="true" />
 
             <list name="get_by_createUserId_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and create_date &gt; ? and create_date &lt; ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,beginDate,endDate" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id= ? and create_date &gt; ? and create_date &lt; ?"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,beginDate,endDate" update="true" />
 
             <list name="get_by_createUserId_columnId_beginDate_endDate"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and column_id = ? and create_date &gt; ? and create_date &lt; ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id= ? and column_id = ? and create_date &gt; ? and create_date &lt; ?"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,columnId,beginDate,endDate" update="true" />
 
             <list name="get_by_status"
-                  sqlitem="select id from tb_knowledge_base where status = ? order by create_date"
-                  sqlType="hsql" valueProperty="id" keyProperty="status" update="true" />
+                sqlitem="select id from tb_knowledge_base where status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="status" update="true" />
 
             <list name="get_by_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where audit_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="auditStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where audit_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="auditStatus" update="true" />
 
             <list name="get_by_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where report_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="reportStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where report_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="reportStatus" update="true" />
 
             <list name="get_by_createUserId_status"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,status" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,status" update="true" />
 
             <list name="get_by_createUserId_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id= ? and audit_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,auditStatus" update="true" />
 
             <list name="get_by_createUserId_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where create_user_id = ? and report_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="createUserId,reportStatus" update="true" />
 
             <list name="get_by_columnId_status"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,status" update="true" />
+                sqlitem="select id from tb_knowledge_base where column_id = ? and status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="columnId,status" update="true" />
 
             <list name="get_by_columnId_auditStatus"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and audit_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where column_id = ? and audit_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="columnId,auditStatus" update="true" />
 
             <list name="get_by_columnId_reportStatus"
-                  sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus" update="true" />
+                sqlitem="select id from tb_knowledge_base where column_id = ? and report_status = ? order by create_date desc"
+                sqlType="hsql" valueProperty="id" keyProperty="columnId,reportStatus" update="true" />
 
             <list name="get_count_by_user"
                   sqlitem="select id from tb_knowledge_base where create_user_id = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="create_user_id" update="true" />
 
             <list name="get_id_list_by_type"
-                  sqlitem="select id from tb_knowledge_base where type = ?"
+                  sqlitem="select id from tb_knowledge_base where privated = 0 and type = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
         </object>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference"
-                listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
-                strategyProperty="id">
-            <dbStrategy name="aa"
-                        clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy"
-                        useCRC32="true">
+        <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
+            strategyProperty="id">
+            <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
             <list name="delete_reference_by_knowledgeId"
-                  sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
+                sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
+                sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="delete_reference_by_knowledgeIds"
-                  sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
+                sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
+                sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 
             <list name="get_by_id_status"
-                  sqlitem="select id from tb_knowledge_reference where id = ? and status = ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="id,status" update="true" />
+                sqlitem="select id from tb_knowledge_reference where id = ? and status = ?"
+                sqlType="hsql" valueProperty="id" keyProperty="id,status" update="true" />
 
             <list name="get_reference_by_Id"
-                  sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
+                sqlitem="select id from tb_knowledge_reference where knowledge_id = ? "
+                sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_reference_by_Ids"
-                  sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
+                sqlitem="select id from tb_knowledge_reference where knowledge_id in (?) "
+                sqlType="hsql" valueProperty="id" keyProperty="knowledgeIds" update="true" />
 
             <list name="get_by_knowledgeId_status"
-                  sqlitem="select id from tb_knowledge_reference where knowledge_id = ? and status = ?"
-                  sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" />
+                sqlitem="select id from tb_knowledge_reference where knowledge_id = ? and status = ?"
+                sqlType="hsql" valueProperty="id" keyProperty="knowledgeId,status" update="true" />
         </object>
 
-        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeCount"
-                listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
+        <object name="com.ginkgocap.ywxt.knowledge.model.KnowledgeCount" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
                 strategyProperty="id">
-            <dbStrategy name="aa"
-                        clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy"
-                        useCRC32="true">
+            <dbStrategy name="" clasz="com.ginkgocap.ywxt.framework.dal.dao.route.strategy.DefaultStrategy" useCRC32="true">
                 <pattern value="[02468]$" group="g2" />
                 <pattern value="[13579]$" group="g3" />
             </dbStrategy>
 
-            <list name="get_knowledge_count_by_id"
+            <!--list name="get_knowledge_count_by_id"
                   sqlitem="select id from tb_knowledge_count where knowledgeId = ?"
                   sqlType="hsql" valueProperty="id" keyProperty="knowledgeId" update="true" />
 
             <list name="get_knowledge_count_by_page"
                   sqlitem="select id from tb_knowledge_count where hotCount > ? order by hotCount desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" />
+                  sqlType="hsql" valueProperty="id" keyProperty="count" update="true" / -->
         </object>
     </route>
 </dal>

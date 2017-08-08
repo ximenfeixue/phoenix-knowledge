@@ -35,7 +35,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
     @Override
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
-            knowledgeComment.setId(knowledgeCommonService.getKnowledgeSequenceId());
+            knowledgeComment.setId(knowledgeCommonService.getUniqueSequenceId("2"));
             if (knowledgeComment.getCreateTime() <= 0) {
                 knowledgeComment.setCreateTime(new Date().getTime());
             }
@@ -78,6 +78,21 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
             logger.error("delete knowledge comment error, ownerId: " + ownerId + " commentId: " + commentId);
             return false;
         }
+        //Delete child comment.
+        deleteChildComment(commentId);
+
+        return true;
+    }
+
+    @Override
+    public boolean cleanComment(final long knowledgeId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        if (result.getN() <= 0) {
+            logger.error("delete knowledge comment error, knowledgeId: " + knowledgeId);
+            return false;
+        }
         return true;
     }
 
@@ -114,5 +129,18 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         query.addCriteria(Criteria.where(Constant._ID).is(commentId));
         query.addCriteria(Criteria.where(Constant.OwnerId).is(ownerId));
         return query;
+    }
+
+    public boolean deleteChildComment(final long commentId)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("parentId").is(commentId));
+
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        if (result.getN() <= 0) {
+            logger.error("delete knowledge child comment error, commentId: " + commentId);
+            return false;
+        }
+        return true;
     }
 }

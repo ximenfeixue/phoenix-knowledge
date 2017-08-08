@@ -22,6 +22,8 @@ public interface KnowledgeCommentDao
 
     boolean delete(long commentId,long ownerId);
 
+    boolean cleanComment(long knowledgeId);
+
     List<KnowledgeComment> getKnowledgeCommentList(long knowledgeId);
 
     Long getKnowledgeCommentCount(long knowledgeId);

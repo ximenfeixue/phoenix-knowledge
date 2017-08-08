@@ -28,8 +28,8 @@
         <knowledge.version>3.0.0-SNAPSHOT</knowledge.version>
         <phoenix-frame-util.version>1.0.1-SNAPSHOT</phoenix-frame-util.version>
         <phoenix-frame-cache.version>1.0.1-SNAPSHOT</phoenix-frame-cache.version>
-        <phoenix-framework.version>1.0.0-SNAPSHOT</phoenix-framework.version>
-        <framework-dal.version>1.1.0-SNAPSHOT</framework-dal.version>
+        <framework-id.version>2.0-SNAPSHOT</framework-id.version>
+        <framework-dal.version>2.0-SNAPSHOT</framework-dal.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
@@ -50,11 +50,10 @@
         <gson.version>2.2.4</gson.version>
         <mongo-java-driver.version>2.10.1</mongo-java-driver.version>
         <spring-data-jpa.version>1.1.0.RELEASE</spring-data-jpa.version>
-        <jackson-databind.version>2.3.2</jackson-databind.version>
+        <fastxml.version>2.3.2</fastxml.version>
         <dubbo.version>2.5.3</dubbo.version>
         <zookeeper.version>3.4.6</zookeeper.version>
         <zkclient.version>0.1</zkclient.version>
-        <c3p0.version>0.9.1.2</c3p0.version>
         <mysql.version>5.1.12</mysql.version>
         <spring-data-mongodb.version>1.8.0.RELEASE</spring-data-mongodb.version>
         <rocketmq.version>1.0.0-SNAPSHOT</rocketmq.version>
@@ -110,6 +109,11 @@
                 <groupId>com.ginkgocap.ywxt</groupId>
                 <artifactId>phoenix-framework-dal</artifactId>
                 <version>${framework-dal.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ginkgocap.ywxt</groupId>
+                <artifactId>phoenix-framework-id</artifactId>
+                <version>${framework-id.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.parasol</groupId>
@@ -307,11 +311,6 @@
                 <version>${commons-pool2.version}</version>
             </dependency>
             <dependency>
-                <groupId>c3p0</groupId>
-                <artifactId>c3p0</artifactId>
-                <version>${c3p0.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>${jdbc.groupId}</groupId>
                 <artifactId>${jdbc.artifactId}</artifactId>
                 <version>${jdbc.version}</version>
@@ -327,7 +326,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson-databind.version}</version>
+                <version>${fastxml.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -484,7 +483,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-dev.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -495,7 +494,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-qa.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -506,7 +505,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-testOnline.properties</filter>
                 </filters>
             </build>
         </profile>
@@ -517,7 +516,7 @@
             </activation>
             <build>
                 <filters>
-                    <filter>${sa.config.file}</filter>
+                    <filter>../sa-online.properties</filter>
                 </filters>
             </build>
         </profile>

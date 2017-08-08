@@ -4,12 +4,10 @@ import com.ginkgocap.ywxt.knowledge.base.TestBase;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
-import com.ginkgocap.ywxt.knowledge.model.KnowledgeUtil;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import junit.framework.TestCase;
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
