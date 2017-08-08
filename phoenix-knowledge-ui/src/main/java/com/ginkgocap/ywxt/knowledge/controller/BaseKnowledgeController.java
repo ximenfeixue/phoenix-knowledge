@@ -265,7 +265,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
         }
         if (StringUtils.isEmpty(detail.getModifytime())) {
-            detail.setModifytime(String.valueOf(detail.getModifytime()));
+            detail.setModifytime(String.valueOf(System.currentTimeMillis()));
         }
 
         //set status to default 4
