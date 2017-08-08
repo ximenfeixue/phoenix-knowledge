@@ -261,13 +261,6 @@ public abstract class BaseKnowledgeController extends BaseController {
             detail.setCpathid(columnPath);
         }
 
-        if (StringUtils.isEmpty(detail.getCreatetime())) {
-            detail.setCreatetime(String.valueOf(System.currentTimeMillis()));
-        }
-        if (StringUtils.isEmpty(detail.getModifytime())) {
-            detail.setModifytime(String.valueOf(System.currentTimeMillis()));
-        }
-
         //set status to default 4
         detail.setStatus(4);
 
