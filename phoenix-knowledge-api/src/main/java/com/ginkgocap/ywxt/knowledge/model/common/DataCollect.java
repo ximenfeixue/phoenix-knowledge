@@ -351,14 +351,26 @@ public class DataCollect implements Serializable
     public static KnowledgeBase knowledgeBaseFaultTolerant(KnowledgeBase base)
     {
         if (base != null) {
-            if (base.getTitle() != null && base.getTitle().length() > maxLen) {
-                logger.error("Title over 255, so truncate it to 255");
-                base.setTitle(base.getTitle().substring(0, maxLen - 1));
+            String title = base.getTitle();
+            if (title != null) {
+                if (title.length() > maxLen) {
+                    title = title.substring(0, maxLen - 1);
+                    logger.error("Title over 255, so truncate it to 255");
+                }
+                title = HtmlToText.removeFourChar(title);
+                if (title == null || title.length() <= 0) {
+                    title = "title";
+                }
+                base.setTitle(title);
             }
 
-            if (base.getContentDesc() != null && base.getContentDesc().length() > maxLen) {
-                logger.error("ContentDesc over 255, so truncate it to 255");
-                final String contentDesc = HtmlToText.removeFourChar(base.getContentDesc().substring(0, maxLen - 1));
+            String contentDesc = base.getContentDesc();
+            if (contentDesc != null) {
+                if (contentDesc.length() > maxLen) {
+                    logger.error("ContentDesc over 255, so truncate it to 255");
+                    contentDesc = contentDesc.substring(0, maxLen - 1);
+                }
+                contentDesc = HtmlToText.removeFourChar(contentDesc);
                 base.setContentDesc(contentDesc);
             }
 
