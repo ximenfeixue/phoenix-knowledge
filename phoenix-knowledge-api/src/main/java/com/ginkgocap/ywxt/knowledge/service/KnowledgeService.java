@@ -470,4 +470,6 @@ public interface KnowledgeService
     public void deleteTopKnowledge(List<Long> ids, short type);
 
     public List<KnowledgeBase> getTopKnowledgeByPage(short type, int page, int size);
+
+    public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate);
 }

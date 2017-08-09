@@ -647,6 +647,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return this.knowledgeMongoDao.getTopKnowledgeByPage(type, page, size);
     }
 
+    @Override
+    public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) {
+        return this.knowledgeMysqlDao.getCreatedKnowledgeCountGroupByDay(userId, startDate, endDate);
+    }
+
     private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)
     {
         boolean result = false;

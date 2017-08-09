@@ -335,7 +335,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) throws Exception {
+	public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) {
 		final String querySQL = "SELECT DATE_FORMAT(from_unixtime(create_date/1000),'%Y%m%d') day, count(id) FROM tb_knowledge_base " +
 				"WHERE " + startDate + " <= create_date AND create_date <= " + endDate + " AND create_user_id = " + userId +" group by day;";
 

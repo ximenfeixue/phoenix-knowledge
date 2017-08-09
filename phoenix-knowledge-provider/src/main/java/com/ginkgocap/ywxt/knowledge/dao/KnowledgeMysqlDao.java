@@ -447,5 +447,5 @@ public interface KnowledgeMysqlDao {
 	 */
 	List<KnowledgeBase> getKnowledgeNoDirectory(long userId,int start,int size) throws Exception;
 
-	List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) throws Exception;
+	List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate);
 }
