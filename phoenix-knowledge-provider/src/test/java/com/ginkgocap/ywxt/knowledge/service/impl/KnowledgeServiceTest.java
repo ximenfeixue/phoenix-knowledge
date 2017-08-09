@@ -391,6 +391,15 @@ public class KnowledgeServiceTest extends TestBase {
         InterfaceResult result = knowledgeService.logicRecovery(idList, 1);
         System.out.println("result: " + result);
     }
+
+    @Test
+    public void testGetCreatedKnowledgeCountGroupByDay()
+    {
+        List result = knowledgeService.getCreatedKnowledgeCountGroupByDay(3167354L, 1500160318170L, 1502160318170L);
+        System.out.println("result: " + result);
+    }
+
+
     /*
     @Test
     public void testGetAllByTagId()
