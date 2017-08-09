@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -334,6 +335,19 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
+	public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) throws Exception {
+		final String querySQL = "SELECT DATE_FORMAT(from_unixtime(create_date/1000),'%Y%m%d') day, count(id) FROM tb_knowledge_base " +
+				"WHERE " + startDate + " <= create_date AND create_date <= " + endDate + " AND create_user_id = " + userId +" group by day;";
+
+		try {
+			return this.dao.getListBySQL(querySQL);
+		} catch (Exception ex) {
+			logger.error("query created kowledge failed. userId: " + userId + " startDate: " + startDate + " endDate: " + endDate + "error: " + ex.getMessage());
+		}
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override
 	public int getKnowledgeCount(long userId) throws Exception
 	{
 		return this.countEntitys("get_count_by_user", userId);
@@ -372,13 +386,13 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 			try {
 				return this.updateByRawSql(updateSql);
 			} catch (Exception ex) {
-				logger.error("logic " + (staus == 0 ? "delete" : "recovery") + " knowledge failed. error: " + ex.getMessage());
+				logger.error("update tb_knowledge_base set status + " + staus + " knowledge failed. error: " + ex.getMessage());
 			}
 		}
 		return false;
 	}
 
 	private boolean updateByRawSql(final String sqlStr) throws Exception {
-		return this.dao.updateSelf(sqlStr);
+		return this.dao.updateBySQL(sqlStr);
 	}
 }
