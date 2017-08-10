@@ -294,7 +294,7 @@ public class DataCollect implements Serializable
         permission.setResId(resId);
         permission.setResOwnerId(userId);
         if (defaultFlag < 0) {
-            defaultFlag = userId > 0 ? 0 : 1;
+            defaultFlag = userId > 1 ? 0 : 1;
         }
         permission.setConnectFlag(defaultFlag);
         permission.setPublicFlag(defaultFlag);

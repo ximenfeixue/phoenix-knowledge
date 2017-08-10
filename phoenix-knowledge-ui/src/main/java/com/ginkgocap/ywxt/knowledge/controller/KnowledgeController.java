@@ -1864,9 +1864,11 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.error("this knowledge is disabled: knowledgeId: " + knowledgeId + ", columnId: " + columnType + " status: " + detail.getStatus());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "该知识已经被禁用!");
         }
-        if (detail.getPrivated() == 1 && userId != detail.getCid()) {
-            logger.error("this knowledge is private: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "该资源权限为私密，您没有权限查看！");
+        if (detail.getCid() > 1) {
+            if (detail.getPrivated() == 1 && userId != detail.getCid()) {
+                logger.error("this knowledge is private: knowledgeId: " + knowledgeId + ", columnId: " + columnType);
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "该资源权限为私密，您没有权限查看！");
+            }
         }
 
         /*
