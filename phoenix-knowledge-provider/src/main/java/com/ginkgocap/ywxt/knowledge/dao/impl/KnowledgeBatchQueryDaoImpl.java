@@ -114,7 +114,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
                 criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").ne(1);
+                criteria.and("privated").is(0);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 query.limit(maxQuerySize);
@@ -248,7 +248,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         if (!bLoading) {
             try {
                 loadingMap.put(key, Boolean.TRUE);
-                logger.info("First query begin... key: {}", key);
+                logger.info("First query begin... key: " + key);
                 // 查询栏目类型
                 Criteria criteria = Criteria.where("status").is(4);
                 // 金桐脑知识条件
@@ -259,7 +259,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
                 criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").ne(1);
+                criteria.and("privated").is(0);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                 query.limit(maxQuerySize);
