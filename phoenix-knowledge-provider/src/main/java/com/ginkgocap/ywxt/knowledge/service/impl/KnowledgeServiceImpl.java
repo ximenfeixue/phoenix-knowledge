@@ -505,6 +505,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return this.knowledgeMysqlDao.getByTitle(title, start, size);
     }
 
+    @Override
     public long countAllCreateAndCollected(long userId)
     {
         int createCount = getCreatedKnowledgeCount(userId);
@@ -514,6 +515,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return createCount + collectedCount;
     }
 
+    @Override
     public List<KnowledgeBase> getAllCreateAndCollected(long userId, long total, String keyWord, int page, int size)
     {
         if (total <= 0) {
@@ -554,7 +556,8 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return null;
     }
 
-    private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
+    @Override
+    public List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
     {
         List<KnowledgeBase> createdKnowledgeItems = null;
         try {
@@ -570,7 +573,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return createdKnowledgeItems;
     }
 
-    private List<KnowledgeBase> getCollectedKnowledgeByIndex(long userId, int index, int size, String keyword) {
+    @Override
+    public List<KnowledgeBase> getCollectedKnowledgeByIndex(long userId, int index, int size, String keyword)
+    {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedBaseItems = null;
         try {
@@ -583,31 +588,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         collectedBaseItems = KnowledgeUtil.convertCollectedKnowledge(collectItems);
 
         return collectedBaseItems;
-    }
-
-    private int getCreatedKnowledgeCount(long userId)
-    {
-        int createCount = 0;
-        try {
-            createCount = this.countByUserId(userId);
-        }catch (Exception ex) {
-            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
-        }
-
-        logger.info("createCount: " + createCount);
-        return createCount;
-    }
-
-    private long getCollectedKnowledgeCount(long userId)
-    {
-        long collectedCount = 0;
-        try {
-            collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId);
-        }catch (Exception ex) {
-            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
-        }
-        logger.info("collectedCount: " + collectedCount);
-        return collectedCount;
     }
 
     @Override
@@ -908,5 +888,30 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             return originContent.substring(0, startIndex);
         }
         return null;
+    }
+
+    private int getCreatedKnowledgeCount(long userId)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.countByUserId(userId);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+    private long getCollectedKnowledgeCount(long userId)
+    {
+        long collectedCount = 0;
+        try {
+            collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        logger.info("collectedCount: " + collectedCount);
+        return collectedCount;
     }
 }

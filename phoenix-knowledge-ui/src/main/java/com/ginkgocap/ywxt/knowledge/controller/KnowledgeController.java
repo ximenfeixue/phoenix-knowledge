@@ -1800,19 +1800,14 @@ public class KnowledgeController extends BaseKnowledgeController
     {
         List<KnowledgeBase> createdKnowledgeItems = null;
         try {
-            if (keyWord == null || "null".equals(keyWord)) {
-                createdKnowledgeItems = this.knowledgeService.getByUserId(userId, start, size);
-            }
-            else {
-                createdKnowledgeItems = this.knowledgeService.getByUserIdKeyWord(userId, keyWord, start, size);
-            }
+            createdKnowledgeItems = this.knowledgeService.getCreatedKnowledge(userId, start, size, keyWord);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
         }
         return createdKnowledgeItems;
     }
 
-    private List<KnowledgeBase>  getCollectedKnowledgeByPage(long userId, long total, int page, int size, String keyword) throws Exception {
+    private List<KnowledgeBase> getCollectedKnowledgeByPage(long userId, long total, int page, int size, String keyword) throws Exception {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
         try {
@@ -1829,19 +1824,15 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     private List<KnowledgeBase> getCollectedKnowledgeByIndex(long userId, int index, int size, String keyword) throws Exception {
-        List<KnowledgeCollect> collectItems = null;
-        List<KnowledgeBase> collectedKnowledgeItems = null;
+        List<KnowledgeBase> collectedBaseItems = null;
         try {
-            collectItems = knowledgeOtherService.myCollectedKnowledgeByIndex(userId, (short)-1, index, size, keyword);
+            collectedBaseItems = knowledgeService.getCollectedKnowledgeByIndex(userId, index, size, keyword);
         } catch (Exception ex) {
             logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
         }
-        final int collectedSize  = collectItems != null ? collectItems.size() : 0;
+        final int collectedSize = collectedBaseItems != null ? collectedBaseItems.size() : 0;
         logger.info("get collected knowledge size : " + collectedSize + " , keyword: " + keyword);
-        collectedKnowledgeItems = convertCollectedKnowledge(collectItems);
-        //collectedKnowledgeItems = this.knowledgeService.getMyCollected(knowledgeIds,keyword);
-
-        return collectedKnowledgeItems;
+        return collectedBaseItems;
     }
 
     private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, boolean isWeb) {
@@ -1960,7 +1951,13 @@ public class KnowledgeController extends BaseKnowledgeController
 
     private long getKnowledgeCount(long userId)
     {
-        return this.knowledgeService.countAllCreateAndCollected(userId);
+        try {
+            long count = this.knowledgeService.countAllCreateAndCollected(userId);
+            logger.info("knowledge count: " + count);
+        }  catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        return 0;
     }
 
     private int getCreatedKnowledgeCount(long userId)
@@ -1968,7 +1965,7 @@ public class KnowledgeController extends BaseKnowledgeController
         int createCount = 0;
         try {
             createCount = this.knowledgeService.countByUserId(userId);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }
 

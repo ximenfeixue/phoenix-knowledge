@@ -1,10 +1,10 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReportDao;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.knowledge.service.impl.common.BaseService;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,11 @@ import java.util.*;
  */
 
 @Service("knowledgeOtherService")
-public class KnowledgeOtherServiceImpl extends BaseService implements KnowledgeOtherService, KnowledgeBaseService
+public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
 {
+    @Autowired
+    private KnowledgeCollectDao knowledgeCollectDao;
+
     @Autowired
     private KnowledgeReportDao knowledgeReportDao;
 
