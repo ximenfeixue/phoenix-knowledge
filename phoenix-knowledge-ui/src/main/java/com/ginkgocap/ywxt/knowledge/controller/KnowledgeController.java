@@ -1952,8 +1952,7 @@ public class KnowledgeController extends BaseKnowledgeController
     private long getKnowledgeCount(long userId)
     {
         try {
-            long count = this.knowledgeService.countAllCreateAndCollected(userId);
-            logger.info("knowledge count: " + count);
+            return this.knowledgeService.countAllCreateAndCollected(userId);
         }  catch (Exception ex) {
             logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }
