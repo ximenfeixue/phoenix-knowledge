@@ -45,10 +45,10 @@
  	<dubbo:service ref="knowledgeBatchQueryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
-	<dubbo:service ref="knowledgeCommonService" interface="com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>
     <dubbo:service ref="knowledgeOtherService"  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeHomeService"  interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeHomeService" version="3.0.0"/>
+	<!-- dubbo:service ref="knowledgeIdService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService" version="3.0.0"/ -->
     <!-- dubbo:service ref="jtFileService" interface="com.ginkgocap.ywxt.knowledge.service.JTFileService" version="3.0.0"/ -->
 </beans>

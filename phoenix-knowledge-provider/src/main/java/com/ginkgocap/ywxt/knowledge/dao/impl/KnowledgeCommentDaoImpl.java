@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCommentDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeComment;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import com.mongodb.WriteResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +30,12 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeIdService knowledgeIdService;
 
     @Override
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
-            knowledgeComment.setId(knowledgeCommonService.getUniqueSequenceId("2"));
+            knowledgeComment.setId(knowledgeIdService.getUniqueSequenceId("2"));
             if (knowledgeComment.getCreateTime() <= 0) {
                 knowledgeComment.setCreateTime(new Date().getTime());
             }

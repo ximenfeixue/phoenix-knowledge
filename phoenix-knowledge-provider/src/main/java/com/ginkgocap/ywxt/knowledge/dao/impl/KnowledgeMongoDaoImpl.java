@@ -8,7 +8,7 @@ import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.mongodb.BasicDBObject;
 import com.mongodb.WriteResult;
@@ -40,7 +40,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeIdService knowledgeIdService;
 
     private static final String topKnowledge = "TopKnowledge";
 
@@ -54,7 +54,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
-        knowledge.setId(knowledgeCommonService.getUniqueSequenceId());
+        knowledge.setId(knowledgeIdService.getUniqueSequenceId());
         mongoTemplate.insert(knowledge, currCollectionName);
         return knowledge;
     }
@@ -67,7 +67,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             final String collectionName = getCollectionName(type);
             for(Knowledge detail : KnowledgeList) {
                 if (detail != null) {
-                    detail.setId(knowledgeCommonService.getUniqueSequenceId());
+                    detail.setId(knowledgeIdService.getUniqueSequenceId());
                     batchToSave.add(detail);
                 }
                 else {

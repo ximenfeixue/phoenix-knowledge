@@ -3,7 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.ywxt.knowledge.dao.DataSyncMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeIdService knowledgeIdService;
 
     private final static String collectionName = "DataSync";
 
@@ -34,7 +34,7 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
     @Override
     public long saveDataSync(DataSync data) {
         try {
-            long id = knowledgeCommonService.getUniqueSequenceId("4");
+            long id = knowledgeIdService.getUniqueSequenceId("4");
             data.setId(id);
             mongoTemplate.save(data, collectionName);
             return id;

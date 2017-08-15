@@ -7,7 +7,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import com.ginkgocap.ywxt.knowledge.utils.TestData;
 import com.gintong.frame.util.dto.InterfaceResult;
 import junit.framework.TestCase;
@@ -23,7 +23,7 @@ public class KnowledgeServiceTest extends TestBase {
 	private KnowledgeService knowledgeService;
 
     @Autowired
-    KnowledgeCommonService knowledgeCommonService;
+    KnowledgeIdService knowledgeIdService;
 
     private long userId = 200562;
     private long knowledgeId = 317030311004641L;
@@ -371,7 +371,7 @@ public class KnowledgeServiceTest extends TestBase {
     public void testGetKnowledgeSequenceId()
     {
         for (int index = 0; index <10000; index++) {
-           long sequenceId = knowledgeCommonService.getUniqueSequenceId();
+           long sequenceId = knowledgeIdService.getUniqueSequenceId();
             System.out.println("sequenceId: " + sequenceId);
         }
     }

@@ -1,25 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCollectDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReportDao;
 import com.ginkgocap.ywxt.knowledge.model.*;
-import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeOtherService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
-import com.gintong.frame.util.dto.CommonResultCode;
+import com.ginkgocap.ywxt.knowledge.service.impl.common.BaseService;
 import com.gintong.frame.util.dto.InterfaceResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -27,13 +16,10 @@ import java.util.*;
  */
 
 @Service("knowledgeOtherService")
-public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, KnowledgeBaseService
+public class KnowledgeOtherServiceImpl extends BaseService implements KnowledgeOtherService, KnowledgeBaseService
 {
     @Autowired
     private KnowledgeReportDao knowledgeReportDao;
-
-    @Autowired
-    private KnowledgeCollectDao knowledgeCollectDao;
 
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated)

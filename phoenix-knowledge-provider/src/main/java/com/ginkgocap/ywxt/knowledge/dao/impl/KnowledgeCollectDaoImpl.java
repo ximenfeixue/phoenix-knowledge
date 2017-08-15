@@ -5,7 +5,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMongoDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.mongodb.WriteResult;
@@ -35,7 +35,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeIdService knowledgeIdService;
 
     @Autowired
     KnowledgeMongoDao knowledgeMongoDao;
@@ -54,7 +54,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
         if (mongoTemplate.findOne(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect) == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
-            collect.setId(knowledgeCommonService.getUniqueSequenceId("1"));
+            collect.setId(knowledgeIdService.getUniqueSequenceId("1"));
             collect.setKnowledgeId(knowledgeId);
             collect.setType((short)typeId);
             collect.setColumnId(typeId);

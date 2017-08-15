@@ -7,17 +7,15 @@ import javax.annotation.Resource;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeShareDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeShare;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeCommonService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,7 +25,7 @@ import org.springframework.stereotype.Repository;
 public class KnowledgeShareDaoImpl implements KnowledgeShareDao {
 
     @Autowired
-    private KnowledgeCommonService knowledgeCommonService;
+    private KnowledgeIdService knowledgeIdService;
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -35,7 +33,7 @@ public class KnowledgeShareDaoImpl implements KnowledgeShareDao {
     @Override
     public KnowledgeShare save(KnowledgeShare knowledgeShare) {
         knowledgeShare.setCtime(DateUtil.currentTime());
-        knowledgeShare.setId(knowledgeCommonService.getUniqueSequenceId("1"));
+        knowledgeShare.setId(knowledgeIdService.getUniqueSequenceId("1"));
         mongoTemplate.save(knowledgeShare);
         return knowledgeShare;
     }
