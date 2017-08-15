@@ -239,12 +239,12 @@ public class KnowledgeServiceTest extends TestBase {
 	}
 
     @Test
-	public void testGetBaseAll() {
+	public void testGetAll() {
         System.out.println("===testGetBaseAll===");
         try {
             int start = 1;
             int end = 12;
-            List<KnowledgeBase> result = knowledgeService.getBaseAll(start, end);
+            List<KnowledgeBase> result = knowledgeService.getAll(start, end);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();

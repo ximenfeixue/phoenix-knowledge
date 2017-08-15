@@ -186,7 +186,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult<DataCollect> getBaseById(long knowledgeId) throws Exception;
+    public InterfaceResult<DataCollect> getById(long knowledgeId) throws Exception;
 
     /**
      * 提取简要信息列表（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
@@ -197,7 +197,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception;
+    public List<KnowledgeBase> getByIds(List<Long> knowledgeIds) throws Exception;
 
     /**
      * 提取所有数据（一般用在首页数据展示中）
@@ -208,7 +208,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception;
+    public List<KnowledgeBase> getAll(int start,int size) throws Exception;
 
     /**
      * 提取所有数据（一般用在首页数据展示中）
@@ -217,7 +217,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public long getBaseAllPublicCount(short permission) throws Exception;
+    public long getAllPublicCount(short permission) throws Exception;
 
     /**
      * 提取所有数据（一般用在首页数据展示中）
@@ -228,7 +228,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception;
+    public List<KnowledgeBase> getAllPublic(int start,int size,short permission) throws Exception;
 
     /**
      * 获取知识数量：

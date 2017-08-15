@@ -423,7 +423,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public InterfaceResult<DataCollect> getBaseById(long knowledgeId) throws Exception
+    public InterfaceResult<DataCollect> getById(long knowledgeId) throws Exception
     {
         KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
         KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
@@ -432,7 +432,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception
+    public List<KnowledgeBase> getByIds(List<Long> knowledgeIds) throws Exception
     {
         List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
         if (knowledgeList == null || knowledgeList.size() <= 0 ) {
@@ -443,19 +443,19 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getBaseAll(int start,int size) throws Exception
+    public List<KnowledgeBase> getAll(int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getAll(start, size);
     }
 
     @Override
-    public long getBaseAllPublicCount(short permission) throws Exception
+    public long getAllPublicCount(short permission) throws Exception
     {
         return this.knowledgeMysqlDao.getAllPublicCount(permission);
     }
 
     @Override
-    public List<KnowledgeBase> getBaseAllPublic(int start,int size,short permission) throws Exception
+    public List<KnowledgeBase> getAllPublic(int start,int size,short permission) throws Exception
     {
         return this.knowledgeMysqlDao.getAllPublic(start, size, permission);
     }

@@ -830,14 +830,14 @@ public class KnowledgeController extends BaseKnowledgeController
         else {
             if (total == -1) {
                 try {
-                    total = this.knowledgeService.getBaseAllPublicCount(KnowledgeConstant.PRIVATED);
+                    total = this.knowledgeService.getAllPublicCount(KnowledgeConstant.PRIVATED);
                 } catch (Exception ex) {
                     logger.error("invoke getBaseAllPublicCount failed: error: " + ex.getMessage());
                 }
             }
             if (total > 0 && start < total) {
                 try {
-                    knowledgeList = this.knowledgeService.getBaseAllPublic(start, size, KnowledgeConstant.PRIVATED);
+                    knowledgeList = this.knowledgeService.getAllPublic(start, size, KnowledgeConstant.PRIVATED);
                 } catch (Exception ex) {
                     logger.error("invoke getBaseAllPublic failed: error: " + ex.getMessage());
                 }
@@ -963,9 +963,9 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
+            knowledgeBaseList = this.knowledgeService.getByIds(knowledgeIds);
         } catch (Exception e) {
-            logger.error("Query knowledge failed！reason：{}", e.getMessage());
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
         logger.info(".......get all knowledge by columnId success......");
@@ -997,7 +997,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
+            knowledgeBaseList = this.knowledgeService.getByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "查询知识失败！");
