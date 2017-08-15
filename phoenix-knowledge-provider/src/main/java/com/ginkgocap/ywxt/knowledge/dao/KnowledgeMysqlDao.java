@@ -226,7 +226,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
+	int countByUserIdKeyWord(long userId,String keyWord) throws Exception;
     /**
      * 根据关键字提取
      * @param keyWord

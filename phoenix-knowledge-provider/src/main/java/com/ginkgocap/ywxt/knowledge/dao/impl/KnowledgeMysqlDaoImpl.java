@@ -202,7 +202,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception
+	public int countByUserIdKeyWord(long userId,String keyWord) throws Exception
 	{
 		return this.countEntitys("get_by_createUserId_keyWord", userId, "%" + keyWord + "%");
 	}

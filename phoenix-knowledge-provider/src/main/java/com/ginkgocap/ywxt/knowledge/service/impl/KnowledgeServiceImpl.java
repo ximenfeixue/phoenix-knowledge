@@ -619,6 +619,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
+    public int countByUserIdKeyWord(long userId,String keyWord) throws Exception
+    {
+        return this.knowledgeMysqlDao.countByUserIdKeyWord(userId, keyWord);
+    }
+
+    @Override
     public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByUserIdKeyWord(userId, keyWord, start, size);
