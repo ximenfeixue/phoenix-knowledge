@@ -668,7 +668,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> knowledgeBasesItems = null;
         try {
-            knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+            knowledgeBasesItems = this.knowledgeService.getByUserIdAndColumnId(user.getId(), columnId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason： " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -695,7 +695,7 @@ public class KnowledgeController extends BaseKnowledgeController
             long usrId = user.getId();
             List<KnowledgeBase> knowledgeBaseItems = null;
             if (keyWord == null || keyWord.length() > 0) {
-                knowledgeBaseItems = this.knowledgeService.getByCreateUserId(usrId, start, size);
+                knowledgeBaseItems = this.knowledgeService.getByUserId(usrId, start, size);
             }
             else {
                 knowledgeBaseItems = this.knowledgeService.getByUserIdKeyWord(usrId, keyWord, start, size);
@@ -727,7 +727,7 @@ public class KnowledgeController extends BaseKnowledgeController
         List<KnowledgeBase> knowledgeBasesItems = null;
         try {
             if (keyWord == null || keyWord.length() <= 0) {
-                knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+                knowledgeBasesItems = this.knowledgeService.getByUserIdAndColumnId(user.getId(), columnId, start, size);
             } else {
                 knowledgeBasesItems = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
             }
@@ -908,7 +908,7 @@ public class KnowledgeController extends BaseKnowledgeController
         List<KnowledgeBase> knowledgeBasesItems = null;
         try {
             if (keyWord == null || keyWord.length() <= 0) {
-                knowledgeBasesItems = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+                knowledgeBasesItems = this.knowledgeService.getByUserIdAndColumnId(user.getId(), columnId, start, size);
             } else {
                 knowledgeBasesItems = this.knowledgeService.getBaseByColumnIdAndKeyWord(keyWord, columnId, start, size);
             }
@@ -1040,7 +1040,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<DataCollect> dataList = null; //DummyData.resultObject(DummyData.getDataCollectList());
         try {
-            dataList = KnowledgeUtil.getDataCollectReturn(this.knowledgeService.getByCreateUserId(user.getId(), start, size));
+            dataList = KnowledgeUtil.getDataCollectReturn(this.knowledgeService.getByUserId(user.getId(), start, size));
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason："+e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -1075,7 +1075,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> KnowledgeBaseList = null;
         try {
-            KnowledgeBaseList = this.knowledgeService.getBaseByCreateUserIdAndColumnId(user.getId(), columnId, start, size);
+            KnowledgeBaseList = this.knowledgeService.getByUserIdAndColumnId(user.getId(), columnId, start, size);
         } catch (Exception e) {
             logger.error("Query knowledge by userId and columnId failed. error: {}", e.getMessage());
         }
@@ -1795,7 +1795,7 @@ public class KnowledgeController extends BaseKnowledgeController
         List<KnowledgeBase> createdKnowledgeItems = null;
         try {
             if (keyWord == null || "null".equals(keyWord)) {
-                createdKnowledgeItems = this.knowledgeService.getByCreateUserId(userId, start, size);
+                createdKnowledgeItems = this.knowledgeService.getByUserId(userId, start, size);
             }
             else {
                 createdKnowledgeItems = this.knowledgeService.getByUserIdKeyWord(userId, keyWord, start, size);
@@ -1965,7 +1965,7 @@ public class KnowledgeController extends BaseKnowledgeController
     {
         int createCount = 0;
         try {
-            createCount = this.knowledgeService.countByCreateUserId(userId);
+            createCount = this.knowledgeService.countByUserId(userId);
         }catch (Exception ex) {
             logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }

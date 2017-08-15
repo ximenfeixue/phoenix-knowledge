@@ -461,7 +461,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public int countByCreateUserId(long userId) throws Exception
+    public int countByUserId(long userId) throws Exception
     {
         /*if (userId ==0) {
             return this.knowledgeMongoDao.c
@@ -471,13 +471,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
 
     @Override
-    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception
+    public List<KnowledgeBase> getByUserId(long userId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserId(userId, start, size);
     }
 
     @Override
-    public int countByCreateUserName(String userName) throws Exception
+    public int countByUserName(String userName) throws Exception
     {
         /*if (userId ==0) {
             return this.knowledgeMongoDao.c
@@ -487,7 +487,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
 
     @Override
-    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception
+    public List<KnowledgeBase> getByUserName(String userName,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
     }
@@ -504,23 +504,13 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception
-    {
-        if (keyword == null || "null".equals(keyword)) {
-            return this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
-        } else {
-            return this.knowledgeMysqlDao.getByKnowledgeIdKeyWord(knowledgeIds, keyword);
-        }
-    }
-
-    @Override
-    public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception
+    public List<KnowledgeBase> getByUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByCreateUserIdAndColumnId(userId, columnId, start, size);
     }
 
     @Override
-    public List<KnowledgeBase> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception {
+    public List<KnowledgeBase> getByUserIdAndType(long userId,short type,int start,int size) throws Exception {
         return this.knowledgeMysqlDao.getByCreateUserIdAndType(userId, type, start, size);
     }
 
@@ -539,24 +529,6 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByColumnId(columnId,start,size);
-    }
-
-    @Override
-    public long getBasePublicCountByColumnId(int columnId,short permission) throws Exception
-    {
-        return this.knowledgeMysqlDao.getPublicCountByColumnId(columnId, permission);
-    }
-
-    @Override
-    public List<KnowledgeBase> getBasePublicByColumnId(int columnId,short permission,int start,int size) throws Exception
-    {
-        return this.knowledgeMysqlDao.getPublicByColumnId(columnId, permission, start, size);
-    }
-
-    @Override
-    public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception
-    {
-        return this.knowledgeMysqlDao.getCountByUserIdKeyWord(userId, keyWord);
     }
 
     @Override

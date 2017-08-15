@@ -238,7 +238,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public int countByCreateUserId(long userId) throws Exception;
+    public int countByUserId(long userId) throws Exception;
 
     /**
      * 根据用户ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
@@ -250,7 +250,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByCreateUserId(long userId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByUserId(long userId,int start,int size) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>
@@ -259,7 +259,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public int countByCreateUserName(String userName) throws Exception;
+    public int countByUserName(String userName) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>
@@ -269,7 +269,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getByCreateUserName(String userName,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByUserName(String userName,int start,int size) throws Exception;
 
     /**
      * <p>1、知识基础表信息</P>
@@ -294,23 +294,13 @@ public interface KnowledgeService
      * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
      * @date 2016年1月15日 上午9:41:32
-     * @param knowledgeIds
-     * @return
-     * @throws Exception
-     */
-    public List<KnowledgeBase> getMyCollected(List<Long> knowledgeIds,String keyword) throws Exception;
-
-    /**
-     * 根据用户ID与栏目ID提取简要信息列表（一般用在用户个人中心知识信息列表查询的数据提取中），具体提取以下信息：
-     * <p>1、知识基础表信息</P>
-     * @date 2016年1月15日 上午9:41:32
      * @param columnId
      * @param start
      * @param size
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByCreateUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByUserIdAndColumnId(long userId,int columnId,int start,int size) throws Exception;
 
     /**
      * 根据用户ID与类型提取简要信息列表（一般用个人中心在根据类型区分的知识信息列表查询的数据提取中），具体提取以下信息：
@@ -322,7 +312,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getBaseByCreateUserIdAndType(long userId,short type,int start,int size) throws Exception;
+    public List<KnowledgeBase> getByUserIdAndType(long userId,short type,int start,int size) throws Exception;
 
     /**
      * 根据用户ID与类型提取简要信息列表（一般用在个人中心根据类型、栏目区分的知识信息列表查询的数据提取中），具体提取以下信息：
@@ -362,39 +352,6 @@ public interface KnowledgeService
      */
     public List<KnowledgeBase> getBaseByColumnId(int columnId,int start,int size) throws Exception;
 
-
-    /**
-     * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
-     * <p>1、知识基础表信息</P>
-     * @date 2016年1月15日 上午10:14:55
-     * @param columnId
-     * @param permission
-     * @return
-     * @throws Exception
-     */
-    public long getBasePublicCountByColumnId(int columnId,short permission) throws Exception;
-
-    /**
-     * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
-     * <p>1、知识基础表信息</P>
-     * @date 2016年1月15日 上午10:14:55
-     * @param columnId
-     * @param start
-     * @param size
-     * @param permission
-     * @return
-     * @throws Exception
-     */
-    public List<KnowledgeBase> getBasePublicByColumnId(int columnId,short permission,int start,int size) throws Exception;
-
-    /**
-     * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
-     * <p>1、知识基础表信息</P>
-     * @param keyWord
-     * @return
-     * @throws Exception
-     */
-    public int getCountByUserIdKeyWord(long userId,String keyWord) throws Exception;
     /**
      * 根据关键字提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>
@@ -406,15 +363,6 @@ public interface KnowledgeService
      */
     public List<KnowledgeBase> getByUserIdKeyWord(long userId,String keyWord,int start,int size) throws Exception;
 
-    /**
-     * <p>1、知识基础表信息</P>
-     * @param directoryId
-     * @param start
-     * @param size
-     * @return
-     * @throws Exception
-     */
-    //public List<KnowledgeBase> getBaseByDirectoryId(long userId,long directoryId,int start,int size) throws Exception;
     /**
      * 根据栏目提取简要信息列表（一般用在游客、或者首页等不区分用户的界面中），具体提取以下信息：
      * <p>1、知识基础表信息</P>

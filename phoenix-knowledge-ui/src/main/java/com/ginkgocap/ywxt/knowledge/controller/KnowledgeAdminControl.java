@@ -271,7 +271,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
         if (type == 1) {
             createdKnowledgeList = this.knowledgeService.getByTitle(keyword, start, size);
         } else if (type == 2) {
-            createdKnowledgeList = this.knowledgeService.getByCreateUserName(keyword, start, size);
+            createdKnowledgeList = this.knowledgeService.getByUserName(keyword, start, size);
         }
         InterfaceResult<Page<KnowledgeBaseExt>> result = this.knowledgeExtListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
@@ -289,7 +289,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     {
         int createCount = 0;
         try {
-            createCount = this.knowledgeService.countByCreateUserName(userName);
+            createCount = this.knowledgeService.countByUserName(userName);
         }catch (Exception ex) {
             logger.error("get created knowledge count failed. userName: " + userName + ", error: " + ex.getMessage());
         }

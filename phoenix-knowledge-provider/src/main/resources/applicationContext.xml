@@ -33,8 +33,8 @@
     <bean name="dao" class="com.ginkgocap.ywxt.framework.dal.dao.impl.CompositeDaoImpl"/>
 	<bean id="idService" class="com.ginkgocap.ywxt.framework.service.IdService"/>
 	<bean id="cloudIdService" class="com.ginkgocap.ywxt.framework.service.CloudIdService"/>
+    <!-- bean id="KnowledgeIdServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeIdServiceImpl"/ -->
     <bean id="knowledgeCountServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeCountServiceImpl"/>
-    <bean id="knowledgeCommonServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.common.KnowledgeIdServiceImpl"/>
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

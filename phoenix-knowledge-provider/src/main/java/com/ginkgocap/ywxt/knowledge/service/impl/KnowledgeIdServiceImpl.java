@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.knowledge.service.impl.common;
+package com.ginkgocap.ywxt.knowledge.service.impl;
 
 import com.ginkgocap.ywxt.framework.service.IdService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
