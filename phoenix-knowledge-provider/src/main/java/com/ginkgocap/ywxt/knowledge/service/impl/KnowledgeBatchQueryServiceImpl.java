@@ -34,13 +34,13 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     private KnowledgeBatchQueryDao knowledgeBatchQueryDao;
 
     @Override
-    public long getKnowledgeCountByUserIdAndColumnID(String[] columnID, long userId, short type) {
-        return knowledgeBatchQueryDao.getKnowledgeByUserIdAndColumnID(columnID, userId, type);
+    public long getKnowledgeCountByUserIdAndColumnId(String[] columnID, long userId, short type) {
+        return knowledgeBatchQueryDao.getKnowledgeByUserIdAndColumnId(columnID, userId, type);
     }
 
     @Override
-    public List<Knowledge> getKnowledgeDetailList(String[] columnID, long userIdd, short type, int start, int size) {
-        return knowledgeBatchQueryDao.getKnowledge(columnID, userIdd, type, start, size);
+    public List<Knowledge> getKnowledgeDetailList(String[] columnId, long userIdd, short type, int start, int size) {
+        return knowledgeBatchQueryDao.getKnowledge(columnId, userIdd, type, start, size);
     }
 
     @Override
@@ -50,24 +50,13 @@ public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryServic
     }
 
     @Override
-    public List<Knowledge> getAllByParam(short type, int columnId, String columnPath, long userId, int start, int size)
+    public List<KnowledgeBase> getAllPublicByPage(short type, int columnId, String columnPath, long userId, int start, int size)
     {
-        return knowledgeBatchQueryDao.getAllByParam(type, columnId, columnPath, userId, start, size);
+        return knowledgeBatchQueryDao.getAllPublicByPage(type, columnId, columnPath, start, size);
     }
 
-    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath, long userId, int start, int size)
+    public List<KnowledgeBase> getAllByType(final long userId, final short type, final short status, final String title, final int page, int size)
     {
-        return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
-    }
-
-    @Override
-    public List<KnowledgeBase> getAllByParamBase(short type, int columnId, String columnPath, long userId, int start, int size)
-    {
-        return knowledgeBatchQueryDao.getAllByParamBase(type, columnId, columnPath, userId, start, size);
-    }
-
-    public List<KnowledgeBase> getAllByPage(final long userId, final short columnType, final short status, final String title, final int page, int size)
-    {
-        return knowledgeBatchQueryDao.getAllByPage(userId, columnType, status, title, page, size);
+        return knowledgeBatchQueryDao.getAllByType(userId, type, status, title, page, size);
     }
 }

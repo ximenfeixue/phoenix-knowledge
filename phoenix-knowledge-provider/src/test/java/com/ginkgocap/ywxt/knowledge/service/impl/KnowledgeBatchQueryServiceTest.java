@@ -25,9 +25,9 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     private KnowledgeService knowledgeService;
 
     @Test
-    public void testGetKnowledgeCountByUserIdAndColumnID() {
+    public void testGetKnowledgeCountByUserIdAndColumnId() {
         String[] columnIds = new String[]{"12", "13", "14"};
-        long count = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnID(columnIds, 0, (short) 1);
+        long count = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnId(columnIds, 0, (short) 1);
         System.out.println("---Count: "+count);
         TestCase.assertTrue(count > 0);
     }
@@ -44,7 +44,7 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     @Test
     public void testGetAllByParam()
     {
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.getAllByParam((short) 5, 5, "新材料", 0, 0, 30);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform((short) 5, 5, "新材料", 0, 0, 30);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: "+knowledgeList.size());
     }
@@ -77,9 +77,9 @@ public class KnowledgeBatchQueryServiceTest extends TestBase {
     }
 
     @Test
-    public void testGetAllByPage()
+    public void testGetAllByType()
     {
-        List<KnowledgeBase> knowledgeList = knowledgeBatchQueryService.getAllByPage(1, (short)1, (short)-1, null, 0, 30);
+        List<KnowledgeBase> knowledgeList = knowledgeBatchQueryService.getAllByType(1, (short)1, (short)-1, null, 0, 30);
         TestCase.assertTrue(knowledgeList != null && knowledgeList.size() > 0);
         System.out.println("---knowledgeList: " + knowledgeList.size());
         //String jsonContent = KnowledgeUtil.writeObjectToJson(knowledgeList);

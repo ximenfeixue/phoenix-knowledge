@@ -457,10 +457,10 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allByPage/{page}/{size}/{total}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAllByPage(HttpServletRequest request, HttpServletResponse response,
                                         @PathVariable int page,@PathVariable int size,
-                                        @PathVariable long total,@PathVariable String keyword) throws Exception {
+                                        @PathVariable long total,@PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
@@ -472,11 +472,12 @@ public class KnowledgeController extends BaseKnowledgeController
             userId = user.getUid();
             logger.info("org user, will get the user knowledge. id: " + user.getId() + " uid: " + user.getUid());
         }
+
         //First request need to get from server
-        if (total == -1) {
+        if (total <= 0) {
             total = getKnowledgeCount(userId);
         }
-
+        /*
         int gotTotal = page * size;
         if ( gotTotal >= total) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS,"到达最后一页，知识已经取完。");
@@ -508,6 +509,11 @@ public class KnowledgeController extends BaseKnowledgeController
         if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
             logger.info("get collected size: " + collectedKnowledgeList.size());
             return knowledgeListPage(total, page, collectedKnowledgeList.size(), collectedKnowledgeList);
+        }*/
+
+        List<KnowledgeBase> baseList =  this.knowledgeService.getAllCreateAndCollected(userId, total, keyWord, page, size);
+        if (CollectionUtils.isNotEmpty(baseList)) {
+            return knowledgeListPage(total, page, baseList.size(), baseList);
         }
 
         logger.info(".......get all knowledge complete......");
@@ -767,7 +773,7 @@ public class KnowledgeController extends BaseKnowledgeController
             String [] idList = getChildIdListByColumnId(columnSelfService, columnId, userId);
             if (total == -1) {
                 logger.info("begin to get knowledge count:");
-                total = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnID(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
+                total = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnId(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
                 logger.info("end to get knowledge count:" + total);
             }
             if (total > 0 && start < total) {
@@ -799,7 +805,7 @@ public class KnowledgeController extends BaseKnowledgeController
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 try {
                     //detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
-                    knowledgeList = this.knowledgeBatchQueryService.selectPlatformBase(type, columnId, column.getPathName(), userId, start, size);
+                    knowledgeList = this.knowledgeBatchQueryService.getAllPublicByPage(type, columnId, column.getPathName(), userId, start, size);
                 } catch (Exception ex) {
                     logger.error("invoke selectPlatform failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
                             ,type, columnId, column.getPathName(), userId, ex.getMessage());
@@ -1649,7 +1655,7 @@ public class KnowledgeController extends BaseKnowledgeController
         Map<Long, Object> plr = new HashMap<Long, Object>(size);
         Map<Long, Object> plcontent = new HashMap<Long, Object>(size);
 
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.getAllByParam(type, columnId, null, userId, page, size);
+        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform(type, columnId, null, userId, page, size);
         if (model != null) {
             model.put("list", knowledgeList);
         }
@@ -1954,11 +1960,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
     private long getKnowledgeCount(long userId)
     {
-        int createCount = getCreatedKnowledgeCount(userId);
-        long collectedCount = getCollectedKnowledgeCount(userId);
-        logger.info("createCount: " + createCount +", collectedCount: " + collectedCount);
-
-        return createCount + collectedCount;
+        return this.knowledgeService.countAllCreateAndCollected(userId);
     }
 
     private int getCreatedKnowledgeCount(long userId)
@@ -2046,24 +2048,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
     private List<KnowledgeBase> convertCollectedKnowledge(List<KnowledgeCollect> collectItems)
     {
-        List<KnowledgeBase> collectedKnowledgeItems = null;
-        if (CollectionUtils.isNotEmpty(collectItems)) {
-            collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
-            for (KnowledgeCollect collect : collectItems) {
-                if (collect != null) {
-                    KnowledgeBase base = new KnowledgeBase();
-                    base.setType(collect.getType());
-                    base.setId(collect.getKnowledgeId());
-                    base.setKnowledgeId(collect.getKnowledgeId());
-                    base.setTitle(collect.getKnowledgeTitle());
-                    base.setCreateUserId(0);
-                    base.setCollected((short)1);
-                    base.setPrivated(collect.getPrivated());
-                    collectedKnowledgeItems.add(base);
-                }
-            }
-        }
-        return collectedKnowledgeItems;
+        return KnowledgeUtil.convertCollectedKnowledge(collectItems);
     }
 
     private boolean cancelKnowledge(final long userId, final long knowledgeId)

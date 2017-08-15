@@ -51,14 +51,13 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     private final int cacheTTL = 60 * 60 * 2;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
-    //private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
     @Override
-    public List<Knowledge> getKnowledge(String[] columnID,long user_id, short type,int offset,int limit) {
+    public List<Knowledge> getKnowledge(String[] columnId,long user_id, short type,int offset,int limit) {
         String collectionName = getCollectionName(type);
-        List<String> list = new ArrayList<String>(columnID.length);
-        for(int i = 0; i < columnID.length; i++) {
-            list.add(columnID[i]);
+        List<String> list = new ArrayList<String>(columnId.length);
+        for(int i = 0; i < columnId.length; i++) {
+            list.add(columnId[i]);
         }
         Query query = query(where("uid").is(user_id).and("columnid").in(list).and("status").is(4)).skip(offset).limit(limit);
         //qu.sort().on("createtime", Order.DESCENDING);
@@ -67,7 +66,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     }
 
     @Override
-    public long getKnowledgeByUserIdAndColumnID(String[] columnID,long userId, short type) {
+    public long getKnowledgeByUserIdAndColumnId(String[] columnID,long userId, short type) {
         String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
         List<String> list = new ArrayList<String>(columnID.length);
         for(int i = 0; i < columnID.length; i++) {
@@ -90,9 +89,138 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
+    @Override
+    public List<KnowledgeBase> getAllPublicByPage(final short columnType, final int columnId, final String columnPath, final int start, int size) {
+        if (start < 0 || size < 0) {
+            logger.error("param is invalidated. start: " + start + ", size: " + size);
+            return null;
+        }
+        logger.info("columnType: " + columnType + " columnId: " + columnId + " columnPath： " + columnPath);
+        final String tableName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+
+        final String key = getBaseKey(columnType, columnId, tableName);
+        List<Long> knowledgeIds = (List<Long>) getFromCache(key);
+        size = size > maxSize ? maxSize : size;
+        List<KnowledgeBase> result = null;
+        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
+        if (!bLoading) {
+            try {
+                loadingMap.put(key, Boolean.TRUE);
+                logger.info("First query begin... key: " + key);
+                // 查询栏目类型
+                Criteria criteria = Criteria.where("status").is(4);
+
+                // 查询栏目目录为当前分类下的所有数据
+                final String reful = columnPath;
+                // 该栏目路径下的所有文章条件
+                criteria.and("cpathid").regex("^" + reful + ".*$");
+                criteria.and("privated").is(0);
+                Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                query.limit(maxQuerySize);
+                query.skip(0);
+
+                final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                if (knowledgeList != null && knowledgeList.size() > 0 ) {
+                    List<Long> ids = new ArrayList<Long>(maxQuerySize);
+                    List<Knowledge> detailList = new ArrayList<Knowledge>(size);
+                    int skip = 0;
+                    int toIndex = start + size;
+                    for (Knowledge knowledge : knowledgeList) {
+                        if (knowledge != null) {
+                            ids.add(knowledge.getId());
+                            if (skip >= start && skip < toIndex) {
+                                detailList.add(filterKnowledge(knowledge));
+                            }
+                        }
+                        skip++;
+                    }
+                    saveToCache(key, ids);
+                    final String knowledgeKey = getBaseKey(columnType, columnId, tableName, start, size);
+                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
+                }
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
+            final String knowledgeKey = getBaseKey(columnType, columnId, tableName, start, size);
+            result = (List<KnowledgeBase>)getFromCache(knowledgeKey);
+            if (result != null) {
+                logger.info("This list have cached before, so return it directly..");
+                return result;
+            }
+
+            int fromIndex = start;
+            int toIndex = start + size;
+            if (toIndex > knowledgeIds.size() - 1) {
+                toIndex = knowledgeIds.size() - 1;
+            }
+            List<Long> ids = null;
+            if (knowledgeIds != null && fromIndex < toIndex) {
+                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
+                ids = knowledgeIds.subList(fromIndex, toIndex);
+            }
+            if (CollectionUtils.isNotEmpty(ids)) {
+                long begin = System.currentTimeMillis();
+                Criteria criteria = new Criteria();
+                criteria.and("_id").in(ids);
+                Query query = new Query(criteria);
+                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
+                if (CollectionUtils.isNotEmpty(detailList)) {
+                    for(Knowledge detail : detailList) {
+                        filterKnowledge(detail);
+                    }
+                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
+                    logger.info("get Knowledge size: " + (result != null ? result.size() : 0));
+                }
+                else {
+                    logger.info("can't get Knowledge by Ids: +", ids.toString());
+                }
+                long end = System.currentTimeMillis();
+                System.out.println("Time: " + (end-begin));
+            }
+        }
+        else {
+            //if no data got need query again.
+            loadingMap.remove(key);
+        }
+        return result;
+    }
+
+    @Override
+    public List<KnowledgeBase> getAllByType(final long userId, final short type, final short status, final String title, final int page, int size)
+    {
+        int start = page * size;
+        size = size > maxSize ? maxSize : size;
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+
+        if (userId > 0) {
+            criteria.and("cid").is(userId);
+        }
+
+        if (status >= 0) {
+            criteria.and("status").is(status);
+        }
+        if (StringUtils.isNotBlank(title) && !"null".equals(title)) {
+            criteria.and("title").regex("^" + title + ".*$");
+        }
+        query.addCriteria(criteria);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        query.skip(start);
+        query.limit(size);
+
+
+        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(type);
+        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
+        return DataCollect.convertDetailToBaseList(detailList, type, true);
+    }
+
     private List<Knowledge> getMongoIds(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
-            logger.error("param is invalidated. start: " + start + ", size: {}" + size);
+            logger.error("param is invalidated. start: " + start + ", size: " + size);
             return null;
         }
         final String key = getKey(columnType, columnId, userId, tableName);
@@ -189,190 +317,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             loadingMap.remove(key);
         }
         return result;
-    }
-
-    @Override
-    public List<KnowledgeBase> selectPlatformBase(short type, int columnId, String columnPath,long userId, int start, int size)
-    {
-        return getAllByParamBase(type, columnId, columnPath, -1, start, size);
-    }
-
-    @Override
-    public List<KnowledgeBase> getAllByParamBase(final short columnType, final int columnId, final String columnPath, final long userId, final int start, int size)
-    {
-        logger.info("columnType: " + columnType + " columnId: " + columnId + " userId: " + userId + " columnPath： " + columnPath);
-        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-        return getKnowledgeBase(columnType, columnId, columnPath, userId, collectionName, start, size);
-    }
-
-    @Override
-    public List<KnowledgeBase> getAllByPage(final long userId, final short columnType, final short status, final String title, final int page, int size)
-    {
-        int start = page * size;
-        size = size > maxSize ? maxSize : size;
-        Query query = new Query();
-        Criteria criteria = new Criteria();
-
-        if (userId > 0) {
-            criteria.and("cid").is(userId);
-        }
-
-        if (status >= 0) {
-            criteria.and("status").is(status);
-        }
-        if (StringUtils.isNotBlank(title) && !"null".equals(title)) {
-            criteria.and("title").regex("^" + title + ".*$");
-        }
-        query.addCriteria(criteria);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        query.skip(start);
-        query.limit(size);
-
-
-        final String collectionName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-        final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, collectionName);
-        return DataCollect.convertDetailToBaseList(detailList, columnType, true);
-    }
-
-
-    private List<KnowledgeBase> getKnowledgeBase(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
-        if (start < 0 || size < 0) {
-            logger.error("param is invalidated. start: " + start + ", size: " + size);
-            return null;
-        }
-        final String key = getBaseKey(columnType, columnId, userId, tableName);
-        List<Long> knowledgeIds = (List<Long>) getFromCache(key);
-        size = size > maxSize ? maxSize : size;
-        List<KnowledgeBase> result = null;
-        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-        if (!bLoading) {
-            try {
-                loadingMap.put(key, Boolean.TRUE);
-                logger.info("First query begin... key: " + key);
-                // 查询栏目类型
-                Criteria criteria = Criteria.where("status").is(4);
-                // 金桐脑知识条件
-                if (userId > 0) {
-                    criteria.and("cid").is(userId);
-                }
-                // 查询栏目目录为当前分类下的所有数据
-                final String reful = columnPath;
-                // 该栏目路径下的所有文章条件
-                criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").is(0);
-                Query query = new Query(criteria);
-                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                query.limit(maxQuerySize);
-                query.skip(0);
-
-                final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                    List<Long> ids = new ArrayList<Long>(maxQuerySize);
-                    List<Knowledge> detailList = new ArrayList<Knowledge>(size);
-                    int skip = 0;
-                    int toIndex = start + size;
-                    for (Knowledge knowledge : knowledgeList) {
-                        if (knowledge != null) {
-                            ids.add(knowledge.getId());
-                            if (skip >= start && skip < toIndex) {
-                                detailList.add(filterKnowledge(knowledge));
-                            }
-                        }
-                        skip++;
-                    }
-                    saveToCache(key, ids);
-                    final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
-                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
-                }
-            }
-            catch(Exception ex) {
-                ex.printStackTrace();
-            }
-        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
-            final String knowledgeKey = getBaseKey(columnType, columnId, userId, tableName, start, size);
-            result = (List<KnowledgeBase>)getFromCache(knowledgeKey);
-            if (result != null) {
-                logger.info("This list have cached before, so return it directly..");
-                return result;
-            }
-
-            int fromIndex = start;
-            int toIndex = start + size;
-            if (toIndex > knowledgeIds.size() - 1) {
-                toIndex = knowledgeIds.size() - 1;
-            }
-            List<Long> ids = null;
-            if (knowledgeIds != null && fromIndex < toIndex) {
-                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
-                ids = knowledgeIds.subList(fromIndex, toIndex);
-            }
-            if (CollectionUtils.isNotEmpty(ids)) {
-                long begin = System.currentTimeMillis();
-                Criteria criteria = new Criteria();
-                criteria.and("_id").in(ids);
-                Query query = new Query(criteria);
-                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (CollectionUtils.isNotEmpty(detailList)) {
-                    for(Knowledge detail : detailList) {
-                        filterKnowledge(detail);
-                    }
-                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
-                    logger.info("get Knowledge size: " + (result != null ? result.size() : 0));
-                }
-                else {
-                    logger.info("can't get Knowledge by Ids: +", ids.toString());
-                }
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end-begin));
-            }
-        }
-        else {
-            //if no data got need query again.
-            loadingMap.remove(key);
-        }
-        return result;
-    }
-
-    // 首页主页
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Knowledge> selectIndexByParam(short type,int page, int size,List<Long> ids)
-    {
-        logger.info("com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeHomeService", type);
-        String collectionName = getCollectionName(type);
-        Criteria criteria = Criteria.where("status").is(4);
-        Criteria criteriaPj = new Criteria();
-        Criteria criteriaUp = new Criteria();
-        Criteria criteriaGt = new Criteria();
-
-        criteriaGt.and("uid").is(KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID);
-        // 查询栏目大类下的数据：全平台
-        // 查询资讯
-        Query query = null;
-        if (ids != null && ids.size() > 0) {
-            criteriaUp.and("_id").in(ids);
-            criteriaPj.orOperator(criteriaUp, criteriaGt);
-            criteriaPj.andOperator(criteria);
-            query = new Query(criteriaPj);
-        } else {
-            criteria.andOperator(criteriaGt);
-            query = new Query(criteria);
-        }
-        String str = "" + KnowledgeUtil.writeObjectToJson(criteria);
-        logger.info("MongoObject:" + collectionName + ",Query:" + str);
-        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-        long count;
-        try {
-            // count = mongoTemplate.count(query, names[length - 1]);
-            // PageUtil p = new PageUtil((int) count, page, size);
-            query.limit(size);
-            query.skip(0);
-            return mongoTemplate.find(query, Knowledge.class, collectionName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private void saveKnowledgeToCache(final List<Knowledge> result, final String key)

@@ -12,10 +12,12 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.user.model.User;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -489,6 +491,28 @@ public final class KnowledgeUtil {
 
         logger.info("The final UCT time: {}", time);
         return time;
+    }
+
+    public static List<KnowledgeBase> convertCollectedKnowledge(List<KnowledgeCollect> collectItems)
+    {
+        List<KnowledgeBase> collectedKnowledgeItems = null;
+        if (CollectionUtils.isNotEmpty(collectItems)) {
+            collectedKnowledgeItems =  new ArrayList<KnowledgeBase>(collectItems.size());
+            for (KnowledgeCollect collect : collectItems) {
+                if (collect != null) {
+                    KnowledgeBase base = new KnowledgeBase();
+                    base.setType(collect.getType());
+                    base.setId(collect.getKnowledgeId());
+                    base.setKnowledgeId(collect.getKnowledgeId());
+                    base.setTitle(collect.getKnowledgeTitle());
+                    base.setCreateUserId(0);
+                    base.setCollected((short)1);
+                    base.setPrivated(collect.getPrivated());
+                    collectedKnowledgeItems.add(base);
+                }
+            }
+        }
+        return collectedKnowledgeItems;
     }
 
     //This only when update knowledge can use it.

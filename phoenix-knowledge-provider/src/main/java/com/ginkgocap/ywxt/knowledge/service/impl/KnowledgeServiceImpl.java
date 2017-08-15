@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.dao.KnowledgeReferenceDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
@@ -492,15 +493,121 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return this.knowledgeMysqlDao.getByCreateUserName(userName, start, size);
     }
 
+    @Override
     public int countByTitle(String title) throws Exception
     {
         return this.knowledgeMysqlDao.countByTitle(title);
     }
 
-
+    @Override
     public List<KnowledgeBase> getByTitle(String title,int start, int size) throws Exception
     {
         return this.knowledgeMysqlDao.getByTitle(title, start, size);
+    }
+
+    public long countAllCreateAndCollected(long userId)
+    {
+        int createCount = getCreatedKnowledgeCount(userId);
+        long collectedCount = getCollectedKnowledgeCount(userId);
+        logger.info("createCount: " + createCount +", collectedCount: " + collectedCount);
+
+        return createCount + collectedCount;
+    }
+
+    public List<KnowledgeBase> getAllCreateAndCollected(long userId, long total, String keyWord, int page, int size)
+    {
+        if (total <= 0) {
+            total = countAllCreateAndCollected(userId);
+        }
+        int gotTotal = page * size;
+        if ( gotTotal >= total) {
+            return null;
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = null;
+        int createCount = getCreatedKnowledgeCount(userId);
+        if (createCount > gotTotal) {
+            createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, keyWord);
+            if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
+                logger.info("get created knowledge size: " + createdKnowledgeList.size());
+                return createdKnowledgeList;
+            }
+        }
+
+        if (createdKnowledgeList != null && createdKnowledgeList.size() > 0) {
+            int restSize = size - createdKnowledgeList.size();
+            List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByIndex(userId, 0, restSize, keyWord);
+            int collectedSize = collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0;
+            logger.info("get created knowledge size: " + createdKnowledgeList.size() + " collected size: " + collectedSize);
+            if (collectedSize > 0) {
+                createdKnowledgeList.addAll(collectedKnowledgeList);
+            }
+            return createdKnowledgeList;
+        }
+
+        final int collecedIndex = (gotTotal - createCount);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByIndex(userId, collecedIndex, size, keyWord);
+        if (collectedKnowledgeList != null && collectedKnowledgeList.size() > 0) {
+            logger.info("get collected size: " + collectedKnowledgeList.size());
+            return collectedKnowledgeList;
+        }
+        return null;
+    }
+
+    private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
+    {
+        List<KnowledgeBase> createdKnowledgeItems = null;
+        try {
+            if (keyWord == null || "null".equals(keyWord)) {
+                createdKnowledgeItems = this.getByUserId(userId, start, size);
+            }
+            else {
+                createdKnowledgeItems = this.getByUserIdKeyWord(userId, keyWord, start, size);
+            }
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
+        }
+        return createdKnowledgeItems;
+    }
+
+    private List<KnowledgeBase> getCollectedKnowledgeByIndex(long userId, int index, int size, String keyword) {
+        List<KnowledgeCollect> collectItems = null;
+        List<KnowledgeBase> collectedBaseItems = null;
+        try {
+            collectItems = knowledgeCollectDao.myCollectedKnowledgeByIndex(userId, (short)-1, index, size, keyword);
+        } catch (Exception ex) {
+            logger.error("invoke myCollectKnowledge failed. userId: " + userId + " error: " + ex.getMessage());
+        }
+        final int collectedSize  = collectItems != null ? collectItems.size() : 0;
+        logger.info("get collected knowledge size : " + collectedSize + " , keyword: " + keyword);
+        collectedBaseItems = KnowledgeUtil.convertCollectedKnowledge(collectItems);
+
+        return collectedBaseItems;
+    }
+
+    private int getCreatedKnowledgeCount(long userId)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.countByUserId(userId);
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+    private long getCollectedKnowledgeCount(long userId)
+    {
+        long collectedCount = 0;
+        try {
+            collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId);
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        logger.info("collectedCount: " + collectedCount);
+        return collectedCount;
     }
 
     @Override
