@@ -223,6 +223,7 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
 
                     final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
                     if (CollectionUtils.isNotEmpty(knowledgeList)) {
+                        logger.info("query knowledge size: " + knowledgeList.size());
                         for (Knowledge knowledge : knowledgeList) {
                             KnowledgeBase base = DataCollect.generateKnowledge(knowledge);
                             saveKnowledgeIndex(base);
