@@ -358,7 +358,7 @@ public final class KnowledgeUtil {
         }
 
         StringBuffer tagIds = new StringBuffer();
-        for (int index = 0; index < 8 && index < ids.size(); index++) {
+        for (int index = 0; index < ids.size() && index < 8; index++) {
             tagIds.append(String.valueOf(ids.get(index)));
             tagIds.append(",");
         }

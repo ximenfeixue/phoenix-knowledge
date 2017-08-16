@@ -165,6 +165,9 @@ public class DataCollect implements Serializable
 
         return this.knowledge;
     }
+    public static KnowledgeBase generateKnowledge(Knowledge detail) {
+        return generateKnowledge(detail, (short)0);
+    }
 
     public static KnowledgeBase generateKnowledge(Knowledge detail,short type) {
         KnowledgeBase base = null;

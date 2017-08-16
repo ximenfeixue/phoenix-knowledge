@@ -67,6 +67,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             final String collectionName = getCollectionName(type);
             for (Knowledge detail : KnowledgeList) {
                 if (detail != null) {
+                    detail.setColumnType(String.valueOf(type));
                     detail.setId(knowledgeIdService.getUniqueSequenceId());
                     batchToSave.add(detail);
                 }

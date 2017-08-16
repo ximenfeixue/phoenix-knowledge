@@ -41,7 +41,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult insert(List<Knowledge> knowledgeList,final int type);
+    //public InterfaceResult insertKnowledgeList(List<Knowledge> knowledgeList,final int type);
 
     /**
      * 更新，承担以下任务：
@@ -50,7 +50,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public Knowledge update(Knowledge detail);
+    public Knowledge updateKnowledgeDetail(Knowledge detail);
 
     /**
      * @date 2016年1月15日 上午9:41:16
@@ -59,14 +59,6 @@ public interface KnowledgeService
      * @throws Exception
      */
     public InterfaceResult<Knowledge> update(DataCollect DataCollect);
-
-    /**
-     * @date 2016年1月15日 上午9:41:16
-     * @param DataCollect
-     * @return
-     * @throws Exception
-     */
-    public boolean updateKnowledge(DataCollect DataCollect);
 
     /**
      * @date 2016年1月15日 上午9:41:16
@@ -162,11 +154,11 @@ public interface KnowledgeService
 
     /**
      * @param knowledgeId
-     * @param columnId 由于知识详细表信息为分库存储，则columnId为必须字段
+     * @param columnType 由于知识详细表信息为分库存储，则columnId为必须字段
      * @return
      * @throws Exception
      */
-    public Knowledge getDetailById(long knowledgeId,int columnId) throws Exception;
+    public Knowledge getDetailById(long knowledgeId,int columnType) throws Exception;
 
     /**
      * 更新，承担以下任务：
@@ -175,7 +167,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public DataCollect getKnowledge(long knowledgeId,int columnId) throws Exception;
+    public DataCollect getKnowledge(long knowledgeId,int columnType) throws Exception;
 
     /**
      * 提取简要信息（一般用在知识简要信息界面的数据提取中），具体提取以下信息：
@@ -186,7 +178,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public InterfaceResult<DataCollect> getById(long knowledgeId) throws Exception;
+    //public InterfaceResult<DataCollect> getById(long knowledgeId) throws Exception;
 
     /**
      * 提取简要信息列表（一般用在知识简要信息界面的数据提取中），具体提取以下信息：

@@ -224,7 +224,7 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
                     final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
                     if (CollectionUtils.isNotEmpty(knowledgeList)) {
                         for (Knowledge knowledge : knowledgeList) {
-                            KnowledgeBase base = DataCollect.generateKnowledge(knowledge, (short) 0);
+                            KnowledgeBase base = DataCollect.generateKnowledge(knowledge);
                             saveKnowledgeIndex(base);
                         }
                     } else {
@@ -239,7 +239,6 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
 
         return baseList;
     }
-
 
     @Override
     public List<KnowledgeBase> getAllByType(final long userId, final short type, final short status, final String title, final int page, int size)
@@ -270,6 +269,7 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
         return DataCollect.convertDetailToBaseList(detailList, type, true);
     }
 
+    @Override
     public void saveKnowledgeIndex(KnowledgeBase base) {
         if (base.getPrivated() > 0) {
             logger.error("privated knowledge, skip to save. knowledgeId: " + base.getId() + " createId: " + base.getCreateUserId());
@@ -282,6 +282,16 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
         mongoTemplate.save(base, indexTbName);
     }
 
+    @Override
+    public void saveKnowledgeIndex(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isNotEmpty(baseList)) {
+            for (KnowledgeBase base : baseList) {
+                saveKnowledgeIndex(base);
+            }
+        }
+    }
+
+    @Override
     public boolean deleteKnowledgeIndex(final long knowledgeId) {
         if (knowledgeId > 0) {
             Query query = new Query(Criteria.where("id").is(knowledgeId));
@@ -293,14 +303,7 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
         return false;
     }
 
-    public void saveKnowledgeIndex(List<KnowledgeBase> baseList) {
-        if (CollectionUtils.isNotEmpty(baseList)) {
-            for (KnowledgeBase base : baseList) {
-                saveKnowledgeIndex(base);
-            }
-        }
-    }
-
+    @Override
     public List<KnowledgeBase> getKnowledgeIndexList(final short columnType, final int columnId, final int page, int size) {
         Query query = new Query();
         Criteria criteria = new Criteria();
@@ -509,12 +512,4 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
     private Object getFromCache(String key) {
         return cache.getByRedis(key);
     }
-
-    private void saveKnowledgeToCache(Knowledge know) {
-        final String key = getBaseKey(know.getColumnType(), know.getColumnid());
-        KnowledgeBase base = DataCollect.generateKnowledge(know, (short)0);
-        cache.rpushByRedis(key, base, cacheTTL);
-    }
-
-
 }

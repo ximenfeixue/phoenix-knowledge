@@ -102,30 +102,25 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
         }
 
         for (ResItem item : directoryItems) {
-            long knowledgeId = item.getResId();
+            final long knowledgeId = item.getResId();
+            final short columnType = item.getType();
             List<Long> directoryIds = item.getIds();
 
             if (directoryIds == null || directoryIds.size() <= 0) {
-                logger.error("Directory list is null or empty, so skip to add. knowledgeId: {}", knowledgeId);
+                logger.error("Directory list is null or empty, so skip to add. knowledgeId: " + knowledgeId);
             }
 
             //Update knowledge Detail
-            DataCollect data = null;
+            Knowledge knowledgeDetail = null;
             try {
-                short columnType = item.getType();
-                data = knowledgeService.getKnowledge(knowledgeId, columnType);
+                knowledgeDetail = knowledgeService.getDetailById(knowledgeId, columnType);
             } catch (Exception ex) {
-                logger.error("find knowledge failed, knowledgeId: {} error: {}", knowledgeId, ex.getMessage());
-                continue;
-            }
-            if (data == null) {
-                logger.error("can't knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
+                logger.error("find knowledge failed, knowledgeId: " + knowledgeId + " type: " + columnType +" error: " + ex.getMessage());
                 continue;
             }
 
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
-            if (data.getKnowledgeDetail() == null) {
-                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
+            if (knowledgeDetail == null) {
+                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: " + knowledgeId + " type: " + columnType);
                 continue;
             }
 
@@ -139,8 +134,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             //Update knowledge detail
             knowledgeDetail.setDirectorys(successIds);
 
-            knowledgeService.updateKnowledge(new DataCollect(null, knowledgeDetail));
-            logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
+            knowledgeService.updateKnowledgeDetail(knowledgeDetail);
+            logger.info("batch Directory to knowledge success!  knowledgeId: " + knowledgeId);
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("创建目录成功.");
@@ -181,31 +176,26 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
                 continue;
             }
 
-            long knowledgeId = KnowledgeUtil.parserStringIdToLong(resId.toString());
-            List<Object> directoryIds = (List<Object>)ids;
+            final long knowledgeId = KnowledgeUtil.parserStringIdToLong(resId.toString());
+            final short columnType = KnowledgeUtil.parserShortType(type.toString());
 
+            List<Object> directoryIds = (List<Object>)ids;
             List<Long> newDirectoryIds = convertObjectListToLongList(directoryIds);
             if (newDirectoryIds == null || newDirectoryIds.size() <= 0) {
-                logger.error("There is no valid and safe Directory Id, so skip. knowledgeId: {}", knowledgeId);
+                logger.error("There is no valid and safe Directory Id, so skip. knowledgeId: " + knowledgeId);
                 continue;
             }
 
-            DataCollect data = null;
+            Knowledge knowledgeDetail = null;
             try {
-                short columnType = KnowledgeUtil.parserShortType(type.toString());
-                data = knowledgeService.getKnowledge(knowledgeId, columnType);
+                knowledgeDetail = knowledgeService.getDetailById(knowledgeId, columnType);
             } catch (Exception ex) {
-                logger.error("find knowledge failed, knowledgeId: {} error: {}", knowledgeId, ex.getMessage());
-                continue;
-            }
-            if (data == null) {
-                logger.error("can't get knowledge, so skip add directory, knowledgeId: {}", knowledgeId);
+                logger.error("find knowledge failed, knowledgeId: " + knowledgeId + "columnType: " + columnType + " error: " + ex.getMessage());
                 continue;
             }
 
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
-            if (data.getKnowledgeDetail() == null) {
-                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: {}", knowledgeId);
+            if (knowledgeDetail == null) {
+                logger.error("can't find this knowledge detail, so skip add directory, knowledgeId: " + knowledgeId + "columnType: " + columnType);
                 continue;
             }
 
@@ -226,8 +216,8 @@ public class DirectoryServiceLocal extends BaseServiceLocal implements Knowledge
             }
             knowledgeDetail.setDirectorys(existDirectoryIds);
 
-            knowledgeService.updateKnowledge(new DataCollect(null, knowledgeDetail));
-            logger.info("batch Directory to knowledge success!  knowledgeId: {}", knowledgeId);
+            knowledgeService.updateKnowledgeDetail(knowledgeDetail);
+            logger.info("batch Directory to knowledge success!  knowledgeId: " + knowledgeId);
             successResult = + successIds.size();
             failedResult = + newDirectoryIds.size() - successIds.size();
         }

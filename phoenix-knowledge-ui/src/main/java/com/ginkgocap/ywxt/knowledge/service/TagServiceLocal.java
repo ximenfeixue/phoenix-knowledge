@@ -85,23 +85,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             List<Long> tagIds = batchItem.getIds();
 
             //Update knowledge Detail
-            DataCollect data = null;
+            Knowledge knowledgeDetail = null;
             try {
-                data = knowledgeService.getKnowledge(knowledgeId, type);
+                knowledgeDetail = knowledgeService.getDetailById(knowledgeId, type);
             } catch (Exception ex) {
                 logger.error("find knowledge failed. knowledgeId: {}, error: {}", knowledgeId, ex.getMessage());
                 continue;
             }
 
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
             if (knowledgeDetail == null) {
                 logger.error("can't find this knowledge detail info, knowledgeId: {}, skip to add tag", knowledgeId);
-                continue;
-            }
-
-            KnowledgeBase knowledgeBase = data.getKnowledge();
-            if (knowledgeBase == null) {
-                logger.error("can't find this knowledge base info, knowledgeId: {}, skip to add tag", knowledgeId);
                 continue;
             }
 
@@ -128,11 +121,9 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             knowledgeDetail.setTagList(existTags);
 
             //Update knowledge base
-            String tagString = convertLongValueListToString(successIds, knowledgeBase.getTags());
-            knowledgeBase.setTags(tagString);
 
-            knowledgeService.updateKnowledge(new DataCollect(knowledgeBase, knowledgeDetail));
-            logger.info("batch tags to knowledge success!  knowledgeId: {}", knowledgeId);
+            knowledgeService.updateKnowledgeDetail(knowledgeDetail);
+            logger.info("batch tags to knowledge success!  knowledgeId: " + knowledgeId);
         }
 
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
@@ -183,26 +174,16 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
 
             //Update knowledge Detail
-            DataCollect data = null;
+            Knowledge knowledgeDetail = null;
             try {
                 short columnType = KnowledgeUtil.parserShortType(type.toString());
-                data = knowledgeService.getKnowledge(knowledgeId, columnType);
+                knowledgeDetail = knowledgeService.getDetailById(knowledgeId, columnType);
             } catch (Exception ex) {
                 logger.error("find knowledge failed. knowledgeId: " + knowledgeId + ", error: " + ex.getMessage());
             }
-            if (data == null) {
-                logger.error("can't find knowledge. skip to add tag, knowledgeId: " + knowledgeId);
-                continue;
-            }
-            Knowledge knowledgeDetail = data.getKnowledgeDetail();
-            if (data.getKnowledgeDetail() == null) {
-                logger.error("can't find this knowledge detail failed, skip to add tag, knowledgeId: " + knowledgeId);
-                continue;
-            }
 
-            KnowledgeBase knowledgeBase = data.getKnowledge();
-            if (knowledgeBase == null) {
-                logger.error("can't find this knowledge base failed. skip to add tag. knowledgeId: " + knowledgeId);
+            if (knowledgeDetail == null) {
+                logger.error("can't find knowledge detail. skip to add tag, knowledgeId: " + knowledgeId);
                 continue;
             }
 
@@ -226,14 +207,12 @@ public class TagServiceLocal extends BaseServiceLocal implements KnowledgeBaseSe
             }
             knowledgeDetail.setTagList(existTagsIds);
 
-            //Update knowledge base
-            String tagString = convertLongValueListToString(existTagsIds);
-            knowledgeBase.setTags(tagString);
+            //Update knowledge
             try {
-                knowledgeService.updateKnowledge(new DataCollect(knowledgeBase, knowledgeDetail));
-                logger.info("batch tags to knowledge success!  knowledgeId: " + knowledgeId);
+                knowledgeService.updateKnowledgeDetail(knowledgeDetail);
+                logger.info("batch tags to knowledge detail success!  knowledgeId: " + knowledgeId);
             } catch (Exception ex) {
-                logger.error("batch tags to knowledge failed!  knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
+                logger.error("batch tags to knowledge detail failed!  knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
             }
             successResult = + successIds.size();
             failedResult = + newTagIds.size() - successIds.size();

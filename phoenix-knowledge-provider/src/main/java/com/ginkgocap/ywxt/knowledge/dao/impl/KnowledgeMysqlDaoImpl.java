@@ -23,9 +23,11 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 			logger.error("knowledge base is null, skip to save.");
 			return null;
         }
-		
-		this.saveEntity(knowledgeBase);
-		return knowledgeBase;
+
+        if (this.saveEntity(knowledgeBase) != null) {
+            return knowledgeBase;
+        }
+        return null;
 	}
 	
 	@Override
