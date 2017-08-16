@@ -90,20 +90,22 @@ public class HtmlToText {
 
     public static String htmlToText(String htmlContent)
     {
-        if (htmlContent.indexOf("html>") >= 0 || htmlContent.indexOf("/html>") > 0
-				|| htmlContent.indexOf("<style") >= 0 || htmlContent.indexOf("<div>") >= 0
-				|| htmlContent.indexOf("<p>") >= 0 || htmlContent.indexOf("<br>") >= 0
-				|| htmlContent.indexOf("<head>") >= 0 || htmlContent.indexOf("http-equiv") >= 0
-				|| htmlContent.indexOf("<body>") >= 0 || htmlContent.indexOf("content-type") >= 0
-				|| htmlContent.indexOf("http-equiv") >= 0 || htmlContent.indexOf("http-equiv") >= 0
-				|| htmlContent.indexOf("h3 style") >= 0 || htmlContent.indexOf("span style") >= 0
-				|| htmlContent.indexOf("class=") >= 0 || htmlContent.indexOf("align:center") >= 0
-				|| htmlContent.indexOf("line-height") >= 0 || htmlContent.indexOf("font-family") >= 0
-				|| htmlContent.indexOf("img src") >= 0 || htmlContent.indexOf("font-family") >= 0) {
-            //Document doc = Jsoup.parse(htmlContent);
-            //return doc.body().text();
-            return html2Text(htmlContent);
-        }
+		if (htmlContent != null && htmlContent.trim().length() > 5) {
+			if (htmlContent.indexOf("html>") >= 0 || htmlContent.indexOf("/html>") > 0
+					|| htmlContent.indexOf("<style") >= 0 || htmlContent.indexOf("<div>") >= 0
+					|| htmlContent.indexOf("<p>") >= 0 || htmlContent.indexOf("<br>") >= 0
+					|| htmlContent.indexOf("<head>") >= 0 || htmlContent.indexOf("http-equiv") >= 0
+					|| htmlContent.indexOf("<body>") >= 0 || htmlContent.indexOf("content-type") >= 0
+					|| htmlContent.indexOf("http-equiv") >= 0 || htmlContent.indexOf("http-equiv") >= 0
+					|| htmlContent.indexOf("h3 style") >= 0 || htmlContent.indexOf("span style") >= 0
+					|| htmlContent.indexOf("class=") >= 0 || htmlContent.indexOf("align:center") >= 0
+					|| htmlContent.indexOf("line-height") >= 0 || htmlContent.indexOf("font-family") >= 0
+					|| htmlContent.indexOf("img src") >= 0 || htmlContent.indexOf("font-family") >= 0) {
+				//Document doc = Jsoup.parse(htmlContent);
+				//return doc.body().text();
+				return html2Text(htmlContent);
+			}
+		}
         return htmlContent;
     }
 

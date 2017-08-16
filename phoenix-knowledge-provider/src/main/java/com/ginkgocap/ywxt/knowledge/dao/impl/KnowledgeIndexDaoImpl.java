@@ -212,10 +212,10 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
                     Criteria criteria = Criteria.where("status").is(4);
 
                     // 查询栏目目录为当前分类下的所有数据
-                    final String reful = columnPath;
+                    //final String reful = columnPath;
                     // 该栏目路径下的所有文章条件
                     //criteria.and("cpathid").regex("^" + reful + ".*$");
-                    criteria.and("privated").is(0);
+                    //criteria.and("privated").is(0);
                     Query query = new Query(criteria);
                     query.with(new Sort(Sort.Direction.DESC, Constant._ID));
                     query.limit(maxQuerySize);
