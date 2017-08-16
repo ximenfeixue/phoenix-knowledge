@@ -506,20 +506,55 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public long countAllCreateAndCollected(long userId)
+    public long countAllCreateAndCollected(long userId, String keyWord)
     {
-        int createCount = getCreatedKnowledgeCount(userId);
-        long collectedCount = getCollectedKnowledgeCount(userId);
+        int createCount = countCreated(userId, keyWord);
+        long collectedCount = countCollected(userId, keyWord);
         logger.info("createCount: " + createCount +", collectedCount: " + collectedCount);
 
         return createCount + collectedCount;
     }
 
     @Override
+    public int countCreated(long userId, String keyWord)
+    {
+        int createCount = 0;
+        try {
+            if (keyWord != null && keyWord.trim().length() > 0) {
+                createCount = this.countByUserIdKeyWord(userId, keyWord);
+            } else {
+                createCount = this.countByUserId(userId);
+            }
+        }catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+    @Override
+    public long countCollected(long userId, String keyWord)
+    {
+        long collectedCount = 0;
+        try {
+            if (keyWord != null && keyWord.trim().length() > 0) {
+                collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId, keyWord);
+            } else {
+                collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId);
+            }
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        logger.info("collectedCount: " + collectedCount);
+        return collectedCount;
+    }
+
+    @Override
     public List<KnowledgeBase> getAllCreateAndCollected(long userId, long total, String keyWord, int page, int size)
     {
         if (total <= 0) {
-            total = countAllCreateAndCollected(userId);
+            total = countAllCreateAndCollected(userId, keyWord);
         }
         int gotTotal = page * size;
         if ( gotTotal >= total) {
@@ -527,7 +562,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         List<KnowledgeBase> createdKnowledgeList = null;
-        int createCount = getCreatedKnowledgeCount(userId);
+        final int createCount = countCreated(userId, keyWord);
         if (createCount > gotTotal) {
             createdKnowledgeList = this.getCreatedKnowledge(userId, gotTotal, size, keyWord);
             if (createdKnowledgeList != null && createdKnowledgeList.size() >= size) {
@@ -896,28 +931,5 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return null;
     }
 
-    private int getCreatedKnowledgeCount(long userId)
-    {
-        int createCount = 0;
-        try {
-            createCount = this.countByUserId(userId);
-        }catch (Exception ex) {
-            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
-        }
 
-        logger.info("createCount: " + createCount);
-        return createCount;
-    }
-
-    private long getCollectedKnowledgeCount(long userId)
-    {
-        long collectedCount = 0;
-        try {
-            collectedCount = knowledgeCollectDao.myCollectKnowledgeCount(userId);
-        }catch (Exception ex) {
-            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
-        }
-        logger.info("collectedCount: " + collectedCount);
-        return collectedCount;
-    }
 }

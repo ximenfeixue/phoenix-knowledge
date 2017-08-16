@@ -409,58 +409,10 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return cache.getByRedis(key);
     }
 
-    private class TakeRecordTask implements Runnable {
-        private int columnId;
-        private short status;
-        private long uid;
-        private String name;
-        private String key;
-        private String columnPath;
-        private int start;
-
-        public TakeRecordTask(int columnId, short status, long uid, String name,String columnPath,int start) {
-            this.columnId = columnId;
-            this.status = status;
-            this.uid = uid;
-            this.name = name;
-            this.columnPath = columnPath;
-            this.key = getKey(columnId, status, uid, name, start);
-            this.start = start;
-        }
-
-        @Override
-        public void run() {
-            boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-            if (!bLoading) {
-                try {
-                    loadingMap.put(key, Boolean.TRUE);
-                    // 查询栏目类型
-                    Criteria criteria = Criteria.where("status").is(4);
-                    // 金桐脑知识条件
-                    criteria.and("uid").is(uid);
-                    // 查询栏目目录为当前分类下的所有数据
-                    String reful = columnPath;
-                    // 该栏目路径下的所有文章条件
-                    criteria.and("cpathid").regex("^" + reful + ".*$");
-                    Query query = new Query(criteria);
-                    query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                    query.limit(maxQuerySize);
-                    query.skip(0);
-
-                    List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, name);
-                    List<Long> ids = new CopyOnWriteArrayList<Long>();
-                    if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                        for (Knowledge knowledge : knowledgeList) {
-                            if (knowledge != null) {
-                                ids.add(knowledge.getId());
-                            }
-                        }
-                    }
-                    saveToCache(key, ids);
-                } finally {
-                    loadingMap.remove(key);
-                }
-            }
-        }
+    private void saveKnowledgeToCache(Knowledge know) {
+        final String key = getBaseKey(know.getColumnType(), know.getColumnid());
+        KnowledgeBase base = DataCollect.generateKnowledge(know, (short)0);
+        cache.rpushByRedis(key, base, cacheTTL);
     }
+
 }

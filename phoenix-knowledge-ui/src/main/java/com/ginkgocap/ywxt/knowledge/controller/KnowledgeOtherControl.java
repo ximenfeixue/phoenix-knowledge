@@ -331,9 +331,6 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
         return result;
     }
 
-    public Logger logger() { return this.logger; }
-
-
     /**
      * 创建知识抽离
      * */
@@ -400,4 +397,6 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
             }
         }
     }
+
+    public Logger logger() { return this.logger; }
 }

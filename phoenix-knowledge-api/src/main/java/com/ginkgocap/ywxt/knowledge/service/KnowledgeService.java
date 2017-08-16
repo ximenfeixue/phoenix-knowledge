@@ -296,7 +296,23 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public long countAllCreateAndCollected(long userId);
+    public long countAllCreateAndCollected(long userId, String keyWord);
+
+    /**
+     * @param userId
+     * @param keyWord;
+     * @return
+     * @throws Exception
+     */
+    public int countCreated(long userId, String keyWord);
+
+    /**
+     * @param userId
+     * @param keyWord
+     * @return
+     * @throws Exception
+     */
+    public long countCollected(long userId, String keyWord);
 
     /**
      * <p>1、知识基础表信息</P>

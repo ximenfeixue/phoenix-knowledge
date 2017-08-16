@@ -187,10 +187,21 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
     }
 
-    private Query newQuery(final long userId,  final int typeId, final String keyword) {
+    @Override
+    public long myCollectKnowledgeCount(long userId, String keyWord)
+    {
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
-        if (StringUtils.isNotBlank(keyword) && !"null".equals(keyword)) {
+        criteria.and("knowledgeTitle").regex("^" + keyWord + ".*$");
+        query.addCriteria(criteria);
+
+        return mongoTemplate.count(query, KnowledgeCollect.class, Constant.Collection.KnowledgeCollect);
+    }
+
+    private Query newQuery(final long userId, final int typeId, final String keyword) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
+        if (keyword != null && keyword.trim().length() > 0) {
             criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
         }
 

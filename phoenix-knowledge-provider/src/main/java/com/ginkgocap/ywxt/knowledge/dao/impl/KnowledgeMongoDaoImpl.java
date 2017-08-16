@@ -62,10 +62,10 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     @Override
     public List<Knowledge> insertList(List<Knowledge> KnowledgeList, final int type) throws Exception {
         List<Knowledge> batchToSave = null;
-        if(KnowledgeList != null && KnowledgeList.size() > 0) {
+        if (KnowledgeList != null && KnowledgeList.size() > 0) {
         	batchToSave = new ArrayList<Knowledge>(KnowledgeList.size());
             final String collectionName = getCollectionName(type);
-            for(Knowledge detail : KnowledgeList) {
+            for (Knowledge detail : KnowledgeList) {
                 if (detail != null) {
                     detail.setId(knowledgeIdService.getUniqueSequenceId());
                     batchToSave.add(detail);
@@ -81,9 +81,9 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge update(Knowledge knowledge, int oldType) {
-
-        if(knowledge == null) {
+    public Knowledge update(Knowledge knowledge, int oldType)
+    {
+        if (knowledge == null) {
             throw new IllegalArgumentException("knowledge is null");
         }
 
@@ -128,7 +128,8 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         return knowledge;
     }
 
-    public boolean updatePrivated(final long knowledgeId, final short type, final short privated) {
+    public boolean updatePrivated(final long knowledgeId, final short type, final short privated)
+    {
         Query query = knowledgeIdQuery(knowledgeId);
         String collectionName = getCollectionName(type);
         Update update = Update.update("privated", privated);

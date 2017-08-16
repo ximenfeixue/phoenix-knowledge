@@ -424,25 +424,27 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/all/{start}/{size}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{start}/{size}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAll(HttpServletRequest request, HttpServletResponse response,
-                                  @PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
+                                  @PathVariable int start,@PathVariable int size,@PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        logger.info("---keyWord: " + keyword);
+        logger.info("---keyWord: " + keyWord);
+        keyWord = resetKeyWord(keyWord);
+
         long userId = user.getId();
         Map<String, List<KnowledgeBase>> resultMap = new HashMap<String, List<KnowledgeBase>>();
-        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyWord);
         if (CollectionUtils.isNotEmpty(createdKnowledgeItems)) {
             createdKnowledgeItems = setReadCount(createdKnowledgeItems);
             resultMap.put("created", createdKnowledgeItems);
         }
 
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyWord);
         collectedKnowledgeItems = setReadCount(collectedKnowledgeItems);
         resultMap.put("collected", collectedKnowledgeItems);
 
@@ -473,10 +475,12 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.info("org user, will get the user knowledge. id: " + user.getId() + " uid: " + user.getUid());
         }
 
+        keyWord = resetKeyWord(keyWord);
         //First request need to get from server
         if (total <= 0) {
-            total = getKnowledgeCount(userId);
+            total = getKnowledgeCount(userId, keyWord);
         }
+
         /*
         int gotTotal = page * size;
         if ( gotTotal >= total) {
@@ -521,19 +525,19 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/getKnowledgeByTypeAndKeyword/{type}{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getKnowledgeByTypeAndKeyword/{type}{page}/{size}/{total}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getKnowledgeByTypeAndKeyword(HttpServletRequest request, HttpServletResponse response,
     													@PathVariable short type, @PathVariable int page,@PathVariable int size,
-    													@PathVariable long total,@PathVariable String keyword) throws Exception {
-
+    													@PathVariable long total,@PathVariable String keyWord) throws Exception {
+        keyWord = resetKeyWord(keyWord);
         if (type == KNOWLEDGE_CREATE) {
-			return this.getAllCreatedByPage(request, response, page, size, total, keyword);
+			return this.getAllCreatedByPage(request, response, page, size, total, keyWord);
 		} else if (type == KNOWLEDGE_COLLECT) {
-			return this.getAllCollectedByPage(request, response, page, size, total, keyword);
+			return this.getAllCollectedByPage(request, response, page, size, total, keyWord);
 		} else if (type == KNOWLEDGE_SHARE) {
 			return null;
 		} else if (type == KNOWLEDGE_ALL) {
-			return this.getAllByPage(request, response, page, size, total, keyword);
+			return this.getAllByPage(request, response, page, size, total, keyWord);
 		}
         return InterfaceResult.getSuccessInterfaceResultInstance("No data");
     }
@@ -545,17 +549,18 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCreated/{start}/{size}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCreated/{start}/{size}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAllCreated(HttpServletRequest request, HttpServletResponse response,
-                                         @PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
+                                         @PathVariable int start,@PathVariable int size,@PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        long userId = user.getId();
-        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(userId, start, size, keyword);
+        keyWord = resetKeyWord(keyWord);
+        //long userId = user.getId();
+        List<KnowledgeBase> createdKnowledgeItems = this.getCreatedKnowledge(user.getId(), start, size, keyWord);
 
         logger.info(".......get all created knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(createdKnowledgeItems);
@@ -568,20 +573,21 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCreatedByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCreatedByPage/{page}/{size}/{total}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAllCreatedByPage(HttpServletRequest request, HttpServletResponse response,
                                                @PathVariable int page,@PathVariable int size,
-                                               @PathVariable long total,@PathVariable String keyword) throws Exception {
+                                               @PathVariable long total,@PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         long userId = this.getUserId(user);
         if (total == -1) {
             //TODO: need to check if long to int
-            total = getCreatedKnowledgeCount(userId);
+            total = getCreatedKnowledgeCount(userId, keyWord);
         }
 
         int start = page * size;
@@ -589,7 +595,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
-        List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
+        List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyWord);
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
@@ -602,17 +608,19 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCollected/{start}/{size}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCollected/{start}/{size}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAllCollected(HttpServletRequest request, HttpServletResponse response,
-                                           @PathVariable int start,@PathVariable int size,@PathVariable String keyword) throws Exception {
+                                           @PathVariable int start,@PathVariable int size,
+                                           @PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         long userId = this.getUserId(user);
-        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeItems = this.getCollectedKnowledgeByIndex(userId, start, size, keyWord);
 
         logger.info(".......get all collected knowledge success......");
         return InterfaceResult.getSuccessInterfaceResultInstance(collectedKnowledgeItems);
@@ -625,19 +633,20 @@ public class KnowledgeController extends BaseKnowledgeController
      * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/allCollectedByPage/{page}/{size}/{total}/{keyword}", method = RequestMethod.GET)
+    @RequestMapping(value = "/allCollectedByPage/{page}/{size}/{total}/{keyWord}", method = RequestMethod.GET)
     public InterfaceResult getAllCollectedByPage(HttpServletRequest request, HttpServletResponse response,
                                                  @PathVariable int page,@PathVariable int size,
-                                                 @PathVariable long total,@PathVariable String keyword) throws Exception {
+                                                 @PathVariable long total,@PathVariable String keyWord) throws Exception {
 
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         long userId = this.getUserId(user);
         if (total == -1) {
-            total = getCollectedKnowledgeCount(userId);
+            total = getCollectedKnowledgeCount(userId, keyWord);
         }
 
         final int start = page * size;
@@ -645,7 +654,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
         }
 
-        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByPage(userId, total, page, size, keyword);
+        List<KnowledgeBase> collectedKnowledgeList = this.getCollectedKnowledgeByPage(userId, total, page, size, keyWord);
 
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, collectedKnowledgeList);
         logger.info(".......get all collected knowledge success. size: " + (collectedKnowledgeList != null ? collectedKnowledgeList.size() : 0));
@@ -696,6 +705,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             long usrId = user.getId();
@@ -730,6 +740,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         List<KnowledgeBase> knowledgeBasesItems = null;
         try {
             if (keyWord == null || keyWord.length() <= 0) {
@@ -911,6 +922,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        keyWord = resetKeyWord(keyWord);
         List<KnowledgeBase> knowledgeBasesItems = null;
         try {
             if (keyWord == null || keyWord.length() <= 0) {
@@ -928,8 +940,8 @@ public class KnowledgeController extends BaseKnowledgeController
 
     @ResponseBody
     @RequestMapping(value = "/allNoDirectory/{start}/{size}", method = RequestMethod.GET)
-    public InterfaceResult<List<KnowledgeBase>> allByColumnIdAndKeyWord(HttpServletRequest request,HttpServletResponse response,
-                                                                        @PathVariable int start,@PathVariable int size) throws Exception
+    public InterfaceResult<List<KnowledgeBase>> allNoDirectory(HttpServletRequest request,HttpServletResponse response,
+                                                               @PathVariable int start,@PathVariable int size) throws Exception
     {
 
         User user = this.getUser(request);
@@ -1532,6 +1544,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        keyword = resetKeyWord(keyword);
         long userId = this.getUserId(user);
         final String queryType ="knowledge";
         /** 金桐网推荐的相关“知识”数据 */
@@ -1952,12 +1965,23 @@ public class KnowledgeController extends BaseKnowledgeController
     private long getKnowledgeCount(long userId)
     {
         try {
-            return this.knowledgeService.countAllCreateAndCollected(userId);
+            return this.knowledgeService.countAllCreateAndCollected(userId, null);
         }  catch (Exception ex) {
             logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
         }
         return 0;
     }
+
+    private long getKnowledgeCount(long userId, String keyWord)
+    {
+        try {
+            return this.knowledgeService.countAllCreateAndCollected(userId, keyWord);
+        }  catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        return 0;
+    }
+
 
     private int getCreatedKnowledgeCount(long userId)
     {
@@ -1970,6 +1994,32 @@ public class KnowledgeController extends BaseKnowledgeController
 
         logger.info("createCount: " + createCount);
         return createCount;
+    }
+
+    private int getCreatedKnowledgeCount(long userId, String keyWord)
+    {
+        int createCount = 0;
+        try {
+            createCount = this.knowledgeService.countCreated(userId, keyWord);
+        } catch (Exception ex) {
+            logger.error("get created knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+
+        logger.info("createCount: " + createCount);
+        return createCount;
+    }
+
+
+    private long getCollectedKnowledgeCount(long userId, String keyWord)
+    {
+        long collectedCount = 0;
+        try {
+            collectedCount = this.knowledgeService.countCollected(userId, keyWord);
+        }catch (Exception ex) {
+            logger.error("get collected knowledge count failed. userId: " + userId + ", error: " + ex.getMessage());
+        }
+        logger.info("collectedCount: " + collectedCount);
+        return collectedCount;
     }
 
     private long getCollectedKnowledgeCount(long userId)
@@ -2060,6 +2110,14 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
             return false;
         }
+    }
+
+    private String resetKeyWord(final String keyWord) {
+        if (StringUtils.isBlank(keyWord) || "null".equals(keyWord)) {
+            logger.info("query keyword is null. keyWord: " + keyWord);
+            return null;
+        }
+        return keyWord;
     }
 
     public Logger logger() { return this.logger; }

@@ -28,4 +28,6 @@ public interface KnowledgeCollectDao {
     List<KnowledgeCollect> getAllCollectKnowledge(final int page, final int size);
 
     long myCollectKnowledgeCount(long userId);
+
+    long myCollectKnowledgeCount(long userId, String keyWord);
 }
