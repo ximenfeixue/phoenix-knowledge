@@ -202,9 +202,10 @@ public class DataCollect implements Serializable
             base.setCreateUserId(detail.getCid());
             //For reference knowledge may be different with author
             base.setCreateUserName(detail.getCname());
-            long createTime = StringUtils.isNotBlank(detail.getCreatetime()) ? KnowledgeUtil.parserTimeToLong(detail.getCreatetime()) : System.currentTimeMillis();
-            long modifyTime = StringUtils.isNotBlank(detail.getModifytime()) ? KnowledgeUtil.parserTimeToLong(detail.getModifytime()) : System.currentTimeMillis();
-            long publicTime = StringUtils.isNotBlank(detail.getSubmitTime()) ? KnowledgeUtil.parserTimeToLong(detail.getSubmitTime()) : System.currentTimeMillis();;
+            final long currTime = System.currentTimeMillis();
+            final long createTime = StringUtils.isNotBlank(detail.getCreatetime()) ? KnowledgeUtil.parserTimeToLong(detail.getCreatetime()) : currTime;
+            final long modifyTime = StringUtils.isNotBlank(detail.getModifytime()) ? KnowledgeUtil.parserTimeToLong(detail.getModifytime()) : createTime;
+            final long publicTime = StringUtils.isNotBlank(detail.getSubmitTime()) ? KnowledgeUtil.parserTimeToLong(detail.getSubmitTime()) : createTime;
             base.setCreateDate(createTime);
             base.setModifyDate(modifyTime);
             base.setPublicDate(publicTime);

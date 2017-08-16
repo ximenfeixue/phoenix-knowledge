@@ -9,19 +9,18 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 
 import com.ginkgocap.ywxt.cache.Cache;
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeBatchQueryDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeIndexDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 
+import com.mongodb.WriteResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,10 +34,10 @@ import org.springframework.stereotype.Component;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
-@Component("knowledgeBatchQueryDao")
-public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
+@Component("knowledgeIndexDao")
+public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
 
-    private final Logger logger = LoggerFactory.getLogger(KnowledgeBatchQueryDaoImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(KnowledgeIndexDaoImpl.class);
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -47,10 +46,12 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 200;
+    private final int maxQuerySize = 300;
     private final int cacheTTL = 60 * 60 * 2;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
+
+    private final static String indexTbName = "KnowledgeIndex";
 
     @Override
     public List<Knowledge> getKnowledge(String[] columnId,long user_id, short type,int offset,int limit) {
@@ -89,6 +90,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
+    /*
     @Override
     public List<KnowledgeBase> getAllPublicByPage(final short columnType, final int columnId, final String columnPath, final int start, int size) {
         if (start < 0 || size < 0) {
@@ -113,7 +115,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 // 查询栏目目录为当前分类下的所有数据
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
-                criteria.and("cpathid").regex("^" + reful + ".*$");
+                //criteria.and("cpathid").regex("^" + reful + ".*$");
                 criteria.and("privated").is(0);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
@@ -187,7 +189,57 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
             loadingMap.remove(key);
         }
         return result;
+    }*/
+
+    @Override
+    public List<KnowledgeBase> getAllPublicByPage(final short columnType, final int columnId, final String columnPath, final int page, int size) {
+        if (page < 0 || size < 0) {
+            logger.error("param is invalidated. page: " + page + ", size: " + size);
+            return null;
+        }
+        logger.info("columnType: " + columnType + " columnId: " + columnId + " columnPath： " + columnPath);
+
+        List<KnowledgeBase> baseList = getKnowledgeIndexList(columnType, columnId, page, size);
+        if (CollectionUtils.isEmpty(baseList)) {
+            final String tableName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+            final String key = getBaseKey(columnType, columnId, tableName);
+            boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
+            if (!bLoading) {
+                try {
+                    loadingMap.put(key, Boolean.TRUE);
+                    logger.info("First query begin... key: " + key);
+                    // 查询栏目类型
+                    Criteria criteria = Criteria.where("status").is(4);
+
+                    // 查询栏目目录为当前分类下的所有数据
+                    final String reful = columnPath;
+                    // 该栏目路径下的所有文章条件
+                    //criteria.and("cpathid").regex("^" + reful + ".*$");
+                    criteria.and("privated").is(0);
+                    Query query = new Query(criteria);
+                    query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                    query.limit(maxQuerySize);
+                    query.skip(0);
+
+                    final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                    if (CollectionUtils.isNotEmpty(knowledgeList)) {
+                        for (Knowledge knowledge : knowledgeList) {
+                            KnowledgeBase base = DataCollect.generateKnowledge(knowledge, (short) 0);
+                            saveKnowledgeIndex(base);
+                        }
+                    } else {
+                        logger.info("query knowledge failed. columnType: " + columnType + " columnId: " + columnId + " tableName： " + tableName);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            baseList = getKnowledgeIndexList(columnType, columnId, page, size);
+        }
+
+        return baseList;
     }
+
 
     @Override
     public List<KnowledgeBase> getAllByType(final long userId, final short type, final short status, final String title, final int page, int size)
@@ -218,6 +270,55 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         return DataCollect.convertDetailToBaseList(detailList, type, true);
     }
 
+    public void saveKnowledgeIndex(KnowledgeBase base) {
+        if (base.getPrivated() > 0) {
+            logger.error("privated knowledge, skip to save. knowledgeId: " + base.getId() + " createId: " + base.getCreateUserId());
+            return;
+        }
+        if (base == null) {
+            logger.error("knowledge base is null, skip to save.");
+            return;
+        }
+        mongoTemplate.save(base, indexTbName);
+    }
+
+    public boolean deleteKnowledgeIndex(final long knowledgeId) {
+        if (knowledgeId > 0) {
+            Query query = new Query(Criteria.where("id").is(knowledgeId));
+            WriteResult result = mongoTemplate.remove(query, indexTbName);
+            if (result.getN() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void saveKnowledgeIndex(List<KnowledgeBase> baseList) {
+        if (CollectionUtils.isNotEmpty(baseList)) {
+            for (KnowledgeBase base : baseList) {
+                saveKnowledgeIndex(base);
+            }
+        }
+    }
+
+    public List<KnowledgeBase> getKnowledgeIndexList(final short columnType, final int columnId, final int page, int size) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+
+        if (columnType > 0) {
+            criteria.and("type").is(columnType);
+        }
+
+
+        final int index = page * size;
+        query.addCriteria(criteria);
+        query.with(new Sort(Sort.Direction.DESC, "createDate"));
+        query.skip(index);
+        query.limit(size);
+
+        return mongoTemplate.find(query, KnowledgeBase.class, indexTbName);
+    }
+
     private List<Knowledge> getMongoIds(final short columnType, final int columnId, final String columnPath, final long userId, final String tableName, final int start, int size) {
         if (start < 0 || size < 0) {
             logger.error("param is invalidated. start: " + start + ", size: " + size);
@@ -241,7 +342,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
                 // 查询栏目目录为当前分类下的所有数据
                 final String reful = columnPath;
                 // 该栏目路径下的所有文章条件
-                criteria.and("cpathid").regex("^" + reful + ".*$");
+                //criteria.and("cpathid").regex("^" + reful + ".*$");
                 criteria.and("privated").is(0);
                 Query query = new Query(criteria);
                 query.with(new Sort(Sort.Direction.DESC, Constant._ID));
@@ -401,7 +502,7 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         cache.setByRedis(key, value, cacheTTL);
     }
 
-    private void saveToCache(String key, Integer expiredTime, Object value) {
+    private void saveToCache(String key, Object value, Integer expiredTime) {
         cache.setByRedis(key, value, expiredTime);
     }
 
@@ -414,5 +515,6 @@ public class KnowledgeBatchQueryDaoImpl implements KnowledgeBatchQueryDao {
         KnowledgeBase base = DataCollect.generateKnowledge(know, (short)0);
         cache.rpushByRedis(key, base, cacheTTL);
     }
+
 
 }

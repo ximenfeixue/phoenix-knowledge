@@ -193,7 +193,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     @Override
     public boolean deleteKnowledgeDirectory(long knowledgeId,int columnType,long directoryId)
     {
-        Knowledge detail = getByIdAndColumnId(knowledgeId, columnType);
+        Knowledge detail = getByIdAndColumnType(knowledgeId, columnType);
         List<Long> directoryIds = detail.getDirectorys();
         if (directoryIds != null && directoryIds.contains(directoryId)) {
             directoryIds.remove(directoryId);
@@ -218,7 +218,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
     }
 
     @Override
-    public Knowledge getByIdAndColumnId(long knowledgeId, int columnType)
+    public Knowledge getByIdAndColumnType(long knowledgeId, int columnType)
     {
         Query query = knowledgeIdQuery(knowledgeId);
         return mongoTemplate.findOne(query, Knowledge.class, getCollectionName(columnType));

@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by gintong on 2016/7/30.
  */
-public interface KnowledgeBatchQueryDao {
+public interface KnowledgeIndexDao {
 
     long getKnowledgeByUserIdAndColumnId(String[] columnID,long userId,short type);
 

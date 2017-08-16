@@ -36,7 +36,7 @@ public abstract class BaseKnowledgeController extends BaseController {
     protected KnowledgeService knowledgeService;
 
     @Autowired
-    protected KnowledgeBatchQueryService knowledgeBatchQueryService;
+    protected KnowledgeIndexService knowledgeIndexService;
 
     @Autowired
     protected ColumnSelfService columnSelfService;
@@ -342,6 +342,14 @@ public abstract class BaseKnowledgeController extends BaseController {
             baseExtList.add(baseExt);
         }
         return baseExtList;
+    }
+
+    protected String resetKeyWord(final String keyWord) {
+        if (StringUtils.isBlank(keyWord) || "null".equals(keyWord)) {
+            logger().info("query keyword is null. keyWord: " + keyWord);
+            return null;
+        }
+        return keyWord;
     }
 
     private DynamicNews createDynamicNewsObj(Knowledge detail, User user)

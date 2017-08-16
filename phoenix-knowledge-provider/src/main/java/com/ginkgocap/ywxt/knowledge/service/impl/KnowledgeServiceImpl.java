@@ -55,7 +55,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     public InterfaceResult<Long> insert(DataCollect data) {
         //知识详细信息插入
         data.initPermission();
-        Knowledge savedDetail = insertKnowledgeDetail(data.getKnowledgeDetail());
+        Knowledge savedDetail = insert(data.getKnowledgeDetail());
         if (savedDetail == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
@@ -259,7 +259,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             boolean result = this.knowledgeMongoDao.deleteByIdAndColumnId(knowledgeId, columnType);
             if (!result) {
                 logger.error("知识详细表删除失败: knowledgeId: " + knowledgeId + " columnType: " + columnType);
-                Knowledge detail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+                Knowledge detail = this.knowledgeMongoDao.getByIdAndColumnType(knowledgeId, columnType);
                 if (detail == null) {
                     logger.info("Maybe some reason, this knowledge had been deleted, so continue delete other info regards this knowledge. knowledgeId: " + knowledgeId + " columnType: " + columnType);
                 } else {
@@ -390,7 +390,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public Knowledge getDetailById(long knowledgeId, int columnType) throws Exception {
 
-        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnId(knowledgeId, columnType);
+        Knowledge knowledgeDetail = this.knowledgeMongoDao.getByIdAndColumnType(knowledgeId, columnType);
         if (knowledgeDetail == null) {
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
         } else {
@@ -755,7 +755,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)
     {
         boolean result = false;
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowSync.getId(), knowSync.getType());
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnType(knowSync.getId(), knowSync.getType());
         final String knowInfo = "knowledgeId: " + knowSync.getId() + ", columnType: " + knowSync.getType() + ", isAdd: " + isAdd;
         if (detail != null) {
             KnowledgeBase base = DataCollect.generateKnowledge(detail, knowSync.getType());
@@ -873,7 +873,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             this.knowledgeMongoDao.insert(detail);
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
-            savedDetail = this.knowledgeMongoDao.getByIdAndColumnId(detail.getId(), columnType);
+            savedDetail = this.knowledgeMongoDao.getByIdAndColumnType(detail.getId(), columnType);
         } catch (Exception ex) {
             logger.error("Create knowledge detail failed: error:  " + ex.getMessage());
             return null;

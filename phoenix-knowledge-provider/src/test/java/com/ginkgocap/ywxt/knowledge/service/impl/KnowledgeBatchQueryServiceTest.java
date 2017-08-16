@@ -5,7 +5,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIndexService;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import java.util.List;
 public class KnowledgeBatchQueryServiceTest extends TestBase {
 
     @Autowired
-    private KnowledgeBatchQueryService knowledgeBatchQueryService;
+    private KnowledgeIndexService knowledgeBatchQueryService;
 
     @Autowired
     private KnowledgeService knowledgeService;

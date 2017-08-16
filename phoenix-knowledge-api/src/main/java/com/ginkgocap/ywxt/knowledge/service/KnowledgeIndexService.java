@@ -11,7 +11,7 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 /**
  * Created by gintong on 2016/7/21.
  */
-public interface KnowledgeBatchQueryService
+public interface KnowledgeIndexService
 {
     public List<Knowledge> getKnowledgeDetailList(String[] columnID,long user_id,short type,int offset,int limit);
 

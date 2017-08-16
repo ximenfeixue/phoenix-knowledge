@@ -1,37 +1,24 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Resource;
-
-import com.ginkgocap.ywxt.knowledge.dao.KnowledgeBatchQueryDao;
+import com.ginkgocap.ywxt.knowledge.dao.KnowledgeIndexDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
-import net.sf.json.JSONObject;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
-import com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService;
-import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.knowledge.service.KnowledgeIndexService;
 
 /**
  * Created by gintong on 2016/7/21.
  */
-@Service("knowledgeBatchQueryService")
-public class KnowledgeBatchQueryServiceImpl implements KnowledgeBatchQueryService {
+@Service("knowledgeIndexService")
+public class KnowledgeIndexServiceImpl implements KnowledgeIndexService {
     @Autowired
-    private KnowledgeBatchQueryDao knowledgeBatchQueryDao;
+    private KnowledgeIndexDao knowledgeBatchQueryDao;
 
     @Override
     public long getKnowledgeCountByUserIdAndColumnId(String[] columnID, long userId, short type) {

@@ -42,8 +42,8 @@
     <dubbo:consumer timeout="10000" check="false" />
 
     <dubbo:service ref="dataSyncService" interface="com.ginkgocap.ywxt.knowledge.service.DataSyncService" version="3.0.0"/>
- 	<dubbo:service ref="knowledgeBatchQueryService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeBatchQueryService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeService" version="3.0.0"/>
+	<dubbo:service ref="knowledgeIndexService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeIndexService" version="3.0.0"/>
     <dubbo:service ref="knowledgeCommentService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCommentService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeShareService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeShareService" version="3.0.0"/>
 	<dubbo:service ref="knowledgeCountService" interface="com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService" version="3.0.0"/>

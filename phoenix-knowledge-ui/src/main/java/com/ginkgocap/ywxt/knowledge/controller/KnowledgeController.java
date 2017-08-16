@@ -784,12 +784,12 @@ public class KnowledgeController extends BaseKnowledgeController
             String [] idList = getChildIdListByColumnId(columnSelfService, columnId, userId);
             if (total == -1) {
                 logger.info("begin to get knowledge count:");
-                total = knowledgeBatchQueryService.getKnowledgeCountByUserIdAndColumnId(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
+                total = knowledgeIndexService.getKnowledgeCountByUserIdAndColumnId(idList, (long)KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID, type);
                 logger.info("end to get knowledge count:" + total);
             }
             if (total > 0 && start < total) {
                 logger.info("start to get knowledge:" + total);
-                List<Knowledge> detailList = knowledgeBatchQueryService.getKnowledgeDetailList(idList, userId, type, start, size);
+                List<Knowledge> detailList = knowledgeIndexService.getKnowledgeDetailList(idList, userId, type, start, size);
                 logger.info("end to get knowledge: size: " + (detailList != null ? detailList.size() : 0));
                 knowledgeList = DataCollect.convertDetailToBaseList(detailList, type, true);
                 logger.info("convert knowledge size: " + (knowledgeList != null ? knowledgeList.size() : 0));
@@ -816,7 +816,7 @@ public class KnowledgeController extends BaseKnowledgeController
                 userId = KnowledgeConstant.SOURCE_GINTONG_BRAIN_ID;
                 try {
                     //detailList = this.knowledgeBatchQueryService.selectPlatform(type, columnId, column.getPathName(), userId, start, size);
-                    knowledgeList = this.knowledgeBatchQueryService.getAllPublicByPage(type, columnId, column.getPathName(), userId, start, size);
+                    knowledgeList = this.knowledgeIndexService.getAllPublicByPage(type, columnId, column.getPathName(), userId, start, size);
                 } catch (Exception ex) {
                     logger.error("invoke selectPlatform failed. type: {}, columnId: {}, columnPath: {},  userId: {} error: {}"
                             ,type, columnId, column.getPathName(), userId, ex.getMessage());
@@ -1668,7 +1668,7 @@ public class KnowledgeController extends BaseKnowledgeController
         Map<Long, Object> plr = new HashMap<Long, Object>(size);
         Map<Long, Object> plcontent = new HashMap<Long, Object>(size);
 
-        List<Knowledge> knowledgeList = knowledgeBatchQueryService.selectPlatform(type, columnId, null, userId, page, size);
+        List<Knowledge> knowledgeList = knowledgeIndexService.selectPlatform(type, columnId, null, userId, page, size);
         if (model != null) {
             model.put("list", knowledgeList);
         }
@@ -2110,14 +2110,6 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.error("invoke knowledgeOtherService service failed. error: " + ex.getMessage());
             return false;
         }
-    }
-
-    private String resetKeyWord(final String keyWord) {
-        if (StringUtils.isBlank(keyWord) || "null".equals(keyWord)) {
-            logger.info("query keyword is null. keyWord: " + keyWord);
-            return null;
-        }
-        return keyWord;
     }
 
     public Logger logger() { return this.logger; }

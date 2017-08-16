@@ -45,7 +45,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
 
     @Override
     public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId,short privated) {
-        Knowledge detail = knowledgeMongoDao.getByIdAndColumnId(knowledgeId, typeId);
+        Knowledge detail = knowledgeMongoDao.getByIdAndColumnType(knowledgeId, typeId);
         if (detail == null) {
             logger.error("can't get knowledge detail. userId: " + userId +" knowledgeId: " + knowledgeId + " type: " + typeId);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -202,7 +202,8 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         Query query = new Query();
         Criteria criteria = Criteria.where(Constant.OwnerId).is(userId);
         if (keyword != null && keyword.trim().length() > 0) {
-            criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
+            //criteria.and("knowledgeTitle").regex(".*?\\" +keyword+ ".*");
+            criteria.and("knowledgeTitle").regex("^" +keyword);
         }
 
         if (typeId > 0) {

@@ -192,7 +192,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        List<KnowledgeBase> baseList = knowledgeBatchQueryService.getAllByType(userId, type, status, title, page, size);
+        List<KnowledgeBase> baseList = knowledgeIndexService.getAllByType(userId, type, status, title, page, size);
         if (page  == 0) {
             List<KnowledgeBase> topBaseList = this.knowledgeService.getTopKnowledgeByPage(type, 0, 5);
             if (CollectionUtils.isNotEmpty(topBaseList)) {
@@ -248,7 +248,9 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        if (StringUtils.isBlank(keyword) || "null".equals(keyword)) {
+        keyword = resetKeyWord(keyword);
+
+        if (keyword == null || keyword.trim().length() <= 0) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 

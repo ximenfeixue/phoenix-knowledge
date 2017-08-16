@@ -155,7 +155,7 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    Knowledge getByIdAndColumnId(long id,int columnType);
+    Knowledge getByIdAndColumnType(long id,int columnType);
 
     /**
      * 根据主键以及栏目提取数据
