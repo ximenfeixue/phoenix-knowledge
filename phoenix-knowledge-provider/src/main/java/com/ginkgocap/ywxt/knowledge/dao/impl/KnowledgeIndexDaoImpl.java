@@ -294,7 +294,7 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
     @Override
     public boolean deleteKnowledgeIndex(final long knowledgeId) {
         if (knowledgeId > 0) {
-            Query query = new Query(Criteria.where("id").is(knowledgeId));
+            Query query = new Query(Criteria.where(Constant._ID).is(knowledgeId));
             WriteResult result = mongoTemplate.remove(query, indexTbName);
             if (result.getN() > 0) {
                 return true;
