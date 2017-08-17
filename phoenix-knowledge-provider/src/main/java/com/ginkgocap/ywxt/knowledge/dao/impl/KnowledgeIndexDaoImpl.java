@@ -322,7 +322,7 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
         if (columnType > 0) {
             criteria.and("type").is(columnType);
         }
-        
+
         final int index = page * size;
         query.addCriteria(criteria);
         query.with(new Sort(Sort.Direction.DESC, "createDate"));
