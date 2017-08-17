@@ -26,8 +26,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class AssociateServiceLocal extends BaseServiceLocal implements KnowledgeBaseService
 {
     private Logger logger = LoggerFactory.getLogger(AssociateServiceLocal.class);
-    /*private BlockingQueue<Associate> associateQueue = new LinkedBlockingQueue<Associate>();
 
+    /*
     public boolean addAssociate(Associate asso)
     {
         return associateQueue.offer(asso);

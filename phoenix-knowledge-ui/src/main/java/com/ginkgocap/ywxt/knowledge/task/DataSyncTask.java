@@ -24,10 +24,7 @@ public class DataSyncTask implements Runnable {
     private static final int MAX_QUEUE_NUM = 2000;
 
     @Autowired
-    DataSyncService dataSyncService;
-
-    @Autowired
-    DynamicNewsServiceLocal dynamicNewsServiceLocal;
+    private DataSyncService dataSyncService;
 
     @Autowired
     private MessageNotifyService messageNotifyService;
@@ -40,6 +37,9 @@ public class DataSyncTask implements Runnable {
 
     @Autowired
     private KnowledgeCommentService knowledgeCommentService;
+
+    @Autowired
+    private KnowledgeIndexService knowledgeIndexService;
 
     @Autowired
     private AssociateServiceLocal associateServiceLocal;
@@ -149,8 +149,11 @@ public class DataSyncTask implements Runnable {
         //delete knowledge count info
         knowledgeCountService.deleteKnowledgeCount(knowledgeId);
 
-        //delete knowledge omment info
+        //delete knowledge comment info
         knowledgeCommentService.cleanComment(knowledgeId);
+
+        //delete knowledge from knowledge index table
+        knowledgeIndexService.deleteKnowledgeIndex(knowledgeId);
 
         //send new knowledge to bigdata
         bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);

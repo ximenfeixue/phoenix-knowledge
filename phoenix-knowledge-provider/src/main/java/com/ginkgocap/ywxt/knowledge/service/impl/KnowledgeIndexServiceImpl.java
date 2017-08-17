@@ -47,4 +47,9 @@ public class KnowledgeIndexServiceImpl implements KnowledgeIndexService {
     {
         return knowledgeIndexDao.getAllByType(userId, type, status, title, page, size);
     }
+
+    public boolean deleteKnowledgeIndex(long knowledgeId)
+    {
+        return knowledgeIndexDao.deleteKnowledgeIndex(knowledgeId);
+    }
 }

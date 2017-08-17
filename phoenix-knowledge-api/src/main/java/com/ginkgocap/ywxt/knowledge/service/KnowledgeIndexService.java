@@ -22,4 +22,6 @@ public interface KnowledgeIndexService
     public List<KnowledgeBase> getAllPublicByPage(short type, int columnId, String columnPath, long userId, int start, int size);
 
     public List<KnowledgeBase> getAllByType(final long userId, final short columnType, final short status, final String title, final int page, int size);
+
+    public boolean deleteKnowledgeIndex(long knowledgeId);
 }
