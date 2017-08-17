@@ -33,11 +33,9 @@ import java.util.List;
  * Created by gintong on 2016/7/19.
  */
 @Repository("knowledgeMongoDao")
-public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
+public class KnowledgeMongoDaoImpl extends BaseDao implements KnowledgeMongoDao {
 
     private final Logger logger = LoggerFactory.getLogger(KnowledgeMongoDaoImpl.class);
-    @Resource
-    private MongoTemplate mongoTemplate;
 
     @Autowired
     private KnowledgeIdService knowledgeIdService;
@@ -55,7 +53,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
         knowledge.setCreatetime(String.valueOf(System.currentTimeMillis()));
         final String currCollectionName = getCollectionName(knowledge.getColumnType());
         knowledge.setId(knowledgeIdService.getUniqueSequenceId());
-        mongoTemplate.insert(knowledge, currCollectionName);
+        saveToMongo(knowledge, currCollectionName);
         return knowledge;
     }
 
@@ -75,7 +73,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
                     logger.error("One knowledge is null...");
                 }
             }
-            mongoTemplate.insert(batchToSave, collectionName);
+            batchSaveToMongo(batchToSave, collectionName);
         }
 
         return batchToSave;
@@ -119,7 +117,7 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
             }
             knowledge.setCreatetime(existValue.getCreatetime());
             knowledge.setModifytime(String.valueOf(System.currentTimeMillis()));
-            mongoTemplate.save(knowledge, collectionName);
+            updateToMongo(knowledge, collectionName);
         }
         else {
             logger.error("can't find this knowledge, so skip update. knowledgeId: " + knowledge.getId() + " type: " + columnType);
@@ -414,16 +412,6 @@ public class KnowledgeMongoDaoImpl implements KnowledgeMongoDao {
 
         return mongoTemplate.find(query, KnowledgeBase.class, topKnowledge);
     }
-
-    private String getCollectionName(String columnId) {
-        int type = KnowledgeUtil.parserColumnId(columnId);
-        return KnowledgeUtil.getKnowledgeCollectionName(type);
-    }
-
-    private String getCollectionName(int columnId) {
-        return KnowledgeUtil.getKnowledgeCollectionName(columnId);
-    }
-
 
     private Class getKnowledgeClassType(int columnId)
     {

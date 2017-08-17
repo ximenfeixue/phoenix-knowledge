@@ -214,8 +214,8 @@ public class KnowledgeServiceTest extends TestBase {
         System.out.println("===testGetBaseById===");
         DataCollect data = this.createKnowledge("KnowledgeServiceTest_"+ "testGetBaseById");
         try {
-            InterfaceResult<DataCollect> result = knowledgeService.getById(data.getKnowledgeDetail().getId());
-            assertResponseWithData(result);
+            KnowledgeBase base = knowledgeService.getBaseById(data.getKnowledgeDetail().getId());
+            TestCase.assertNotNull(base);
         } catch (Exception e) {
             e.printStackTrace();
             TestCase.fail();
@@ -230,7 +230,7 @@ public class KnowledgeServiceTest extends TestBase {
         try {
             knowledgeIds.add(data.getKnowledgeDetail().getId());
             System.out.println("----knowledgeIds :"+knowledgeIds.toString());
-            List<KnowledgeBase> result = knowledgeService.getByIds(knowledgeIds);
+            List<KnowledgeBase> result = knowledgeService.getBaseByIds(knowledgeIds);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();

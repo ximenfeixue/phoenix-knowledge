@@ -413,18 +413,15 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         return null;
     }
 
-    /*
+
     @Override
-    public InterfaceResult<DataCollect> getById(long knowledgeId) throws Exception
+    public KnowledgeBase getBaseById(long knowledgeId) throws Exception
     {
-        KnowledgeBase knowledgeBase = this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
-        KnowledgeReference knowledgeReference = this.knowledgeReferenceDao.getById(knowledgeId);
-
-        return InterfaceResult.getSuccessInterfaceResultInstance(getReturn(knowledgeBase,knowledgeReference));
-    }*/
+        return this.knowledgeMysqlDao.getByKnowledgeId(knowledgeId);
+    }
 
     @Override
-    public List<KnowledgeBase> getByIds(List<Long> knowledgeIds) throws Exception
+    public List<KnowledgeBase> getBaseByIds(List<Long> knowledgeIds) throws Exception
     {
         List<KnowledgeBase> knowledgeList = this.knowledgeMysqlDao.getByKnowledgeIds(knowledgeIds);
         if (knowledgeList == null || knowledgeList.size() <= 0 ) {

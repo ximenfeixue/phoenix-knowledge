@@ -981,7 +981,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getByIds(knowledgeIds);
+            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：" + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
@@ -1015,7 +1015,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         List<KnowledgeBase> knowledgeBaseList = null;
         try {
-            knowledgeBaseList = this.knowledgeService.getByIds(knowledgeIds);
+            knowledgeBaseList = this.knowledgeService.getBaseByIds(knowledgeIds);
         } catch (Exception e) {
             logger.error("Query knowledge failed！reason：{}", e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION, "查询知识失败！");

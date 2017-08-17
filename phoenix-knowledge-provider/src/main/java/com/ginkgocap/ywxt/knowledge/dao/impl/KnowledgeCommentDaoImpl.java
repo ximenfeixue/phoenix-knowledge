@@ -32,6 +32,8 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
     @Autowired
     private KnowledgeIdService knowledgeIdService;
 
+    private final static String tbName = Constant.Collection.KnowledgeComment;
+
     @Override
     public long create(KnowledgeComment knowledgeComment) {
         if (knowledgeComment != null) {
@@ -39,7 +41,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
             if (knowledgeComment.getCreateTime() <= 0) {
                 knowledgeComment.setCreateTime(new Date().getTime());
             }
-            mongoTemplate.save(knowledgeComment, Constant.Collection.KnowledgeComment);
+            mongoTemplate.save(knowledgeComment, tbName);
             return knowledgeComment.getId();
         }
         return -1L;
@@ -57,7 +59,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         Update update = new Update();
         update.set(Constant.Content, comment);
         update.set(Constant.createTime, new Date().getTime());
-        KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        KnowledgeComment knowledgeComment = mongoTemplate.findAndModify(query, update, KnowledgeComment.class, tbName);
         if (knowledgeComment == null) {
             logger.error("Update Knowledge Comment error, no this comment or no permission to update, ownerId:" + ownerId + " knowledgeId: " + commentId);
             return false;
@@ -73,7 +75,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         }
 
         Query query = commentIdAndOwnerId(commentId, ownerId);
-        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, tbName);
         if (result.getN() <= 0) {
             logger.error("delete knowledge comment error, ownerId: " + ownerId + " commentId: " + commentId);
             return false;
@@ -88,7 +90,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
     public boolean cleanComment(final long knowledgeId) {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
-        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, tbName);
         if (result.getN() <= 0) {
             logger.error("delete knowledge comment error, knowledgeId: " + knowledgeId);
             return false;
@@ -107,7 +109,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         Query query = new Query(c);
         query.with(new Sort(Sort.Direction.DESC, Constant.createTime));
 
-        return mongoTemplate.find(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        return mongoTemplate.find(query, KnowledgeComment.class, tbName);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         Criteria c = Criteria.where(Constant.KnowledgeId).is(knowledgeId);
         Query query = new Query(c);
 
-        return mongoTemplate.count(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        return mongoTemplate.count(query, KnowledgeComment.class, tbName);
     }
 
     private Query commentIdAndOwnerId(final long commentId, final long ownerId)
@@ -136,7 +138,7 @@ public class KnowledgeCommentDaoImpl implements KnowledgeCommentDao
         Query query = new Query();
         query.addCriteria(Criteria.where("parentId").is(commentId));
 
-        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, Constant.Collection.KnowledgeComment);
+        WriteResult result = mongoTemplate.remove(query, KnowledgeComment.class, tbName);
         if (result.getN() <= 0) {
             logger.error("delete knowledge child comment error, commentId: " + commentId);
             return false;

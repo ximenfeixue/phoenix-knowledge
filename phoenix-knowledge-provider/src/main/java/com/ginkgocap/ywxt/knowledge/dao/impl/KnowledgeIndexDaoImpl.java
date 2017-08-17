@@ -20,6 +20,7 @@ import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 
+import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.mongodb.WriteResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,18 +36,15 @@ import org.springframework.stereotype.Component;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 
 @Component("knowledgeIndexDao")
-public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
+public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao {
 
     private final Logger logger = LoggerFactory.getLogger(KnowledgeIndexDaoImpl.class);
-
-    @Resource
-    private MongoTemplate mongoTemplate;
 
     @Resource
     private Cache cache;
 
     private final int maxSize = 20;
-    private final int maxQuerySize = 300;
+    private final int maxQuerySize = 200;
     private final int cacheTTL = 60 * 60 * 2;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
@@ -192,50 +190,50 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
     }*/
 
     @Override
-    public List<KnowledgeBase> getAllPublicByPage(final short columnType, final int columnId, final String columnPath, final int page, int size) {
+    public List<KnowledgeBase> getAllPublicByPage(final short type, final int columnId, final String columnPath, final int page, int size) {
         if (page < 0 || size < 0) {
             logger.error("param is invalidated. page: " + page + ", size: " + size);
             return null;
         }
-        logger.info("columnType: " + columnType + " columnId: " + columnId + " columnPath： " + columnPath);
+        logger.info("type: " + type + " columnId: " + columnId + " columnPath： " + columnPath);
 
-        List<KnowledgeBase> baseList = getKnowledgeIndexList(columnType, columnId, page, size);
+        List<KnowledgeBase> baseList = getKnowledgeIndexList(type, columnId, page, size);
         if (CollectionUtils.isEmpty(baseList)) {
-            final String tableName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-            final String key = getBaseKey(columnType, columnId, tableName);
+            final String tableName = KnowledgeUtil.getKnowledgeCollectionName(type);
+            final String key = getBaseKey(type, columnId, tableName);
             boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
             if (!bLoading) {
                 try {
                     loadingMap.put(key, Boolean.TRUE);
                     logger.info("First query begin... key: " + key);
                     // 查询栏目类型
-                    Criteria criteria = Criteria.where("status").is(4);
+                    for (int index = 0; index < 5; index++ ) {
+                        Criteria criteria = Criteria.where("status").is(4);
+                        Query query = new Query(criteria);
+                        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+                        query.limit(maxQuerySize);
+                        query.skip(index * maxQuerySize);
 
-                    // 查询栏目目录为当前分类下的所有数据
-                    //final String reful = columnPath;
-                    // 该栏目路径下的所有文章条件
-                    //criteria.and("cpathid").regex("^" + reful + ".*$");
-                    //criteria.and("privated").is(0);
-                    Query query = new Query(criteria);
-                    query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                    query.limit(maxQuerySize);
-                    query.skip(0);
-
-                    final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
-                    if (CollectionUtils.isNotEmpty(knowledgeList)) {
-                        logger.info("query knowledge size: " + knowledgeList.size());
-                        for (Knowledge knowledge : knowledgeList) {
-                            KnowledgeBase base = DataCollect.generateKnowledge(knowledge);
-                            saveKnowledgeIndex(base);
+                        final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
+                        if (CollectionUtils.isNotEmpty(knowledgeList)) {
+                            logger.info("query knowledge size: " + knowledgeList.size());
+                            for (Knowledge knowledge : knowledgeList) {
+                                if (StringUtil.inValidString(knowledge.getColumnType())) {
+                                    knowledge.setColumnType(String.valueOf(type));
+                                    updateToMongo(knowledge, tableName);
+                                }
+                                KnowledgeBase base = DataCollect.generateKnowledge(knowledge);
+                                saveKnowledgeIndex(base);
+                            }
+                        } else {
+                            logger.info("query knowledge failed. type: " + type + " columnId: " + columnId + " tableName： " + tableName);
                         }
-                    } else {
-                        logger.info("query knowledge failed. columnType: " + columnType + " columnId: " + columnId + " tableName： " + tableName);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            baseList = getKnowledgeIndexList(columnType, columnId, page, size);
+            baseList = getKnowledgeIndexList(type, columnId, page, size);
         }
 
         return baseList;
@@ -473,11 +471,6 @@ public class KnowledgeIndexDaoImpl implements KnowledgeIndexDao {
             clstr.add(String.valueOf(id));
         }
         return clstr;
-    }
-
-    private String getCollectionName(short type)
-    {
-        return KnowledgeUtil.getKnowledgeCollectionName(type);
     }
 
     private static String getKey(Object... params) {

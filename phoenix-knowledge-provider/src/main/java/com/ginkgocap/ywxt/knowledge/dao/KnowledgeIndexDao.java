@@ -19,7 +19,7 @@ public interface KnowledgeIndexDao {
 
     List<Knowledge> getKnowledge(String[] columnId,long user_id, short type,int start,int size);
 
-    List<KnowledgeBase> getAllPublicByPage(short columnType, int columnId, String columnPath, int start, int size);
+    List<KnowledgeBase> getAllPublicByPage(short type, int columnId, String columnPath, int start, int size);
 
     List<KnowledgeBase> getAllByType(long userId, short type, short status, String title, int page, int size);
 
