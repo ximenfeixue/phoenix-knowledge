@@ -4,7 +4,6 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by gintong on 2016/7/30.
@@ -28,6 +27,8 @@ public interface KnowledgeIndexDao {
     void saveKnowledgeIndex(List<KnowledgeBase> baseList);
 
     boolean deleteKnowledgeIndex(long knowledgeId);
+
+    boolean deleteKnowledgeIndex(final List<Long> idList);
 
     List<KnowledgeBase> getKnowledgeIndexList(short columnType, int columnId, int page, int size);
 }

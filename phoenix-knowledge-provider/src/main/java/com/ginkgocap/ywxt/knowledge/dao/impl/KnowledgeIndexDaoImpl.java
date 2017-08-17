@@ -3,23 +3,15 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 /**
  * Created by gintong on 2016/7/30.
  */
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Resource;
 
 import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeIndexDao;
+import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
-
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.mongodb.WriteResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,12 +20,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Component("knowledgeIndexDao")
 public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao {
@@ -294,6 +292,18 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
     public boolean deleteKnowledgeIndex(final long knowledgeId) {
         if (knowledgeId > 0) {
             Query query = new Query(Criteria.where(Constant._ID).is(knowledgeId));
+            WriteResult result = mongoTemplate.remove(query, indexTbName);
+            if (result.getN() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteKnowledgeIndex(final List<Long> idList) {
+        if (CollectionUtils.isNotEmpty(idList)) {
+            Query query = new Query(Criteria.where(Constant._ID).in(idList));
             WriteResult result = mongoTemplate.remove(query, indexTbName);
             if (result.getN() > 0) {
                 return true;
