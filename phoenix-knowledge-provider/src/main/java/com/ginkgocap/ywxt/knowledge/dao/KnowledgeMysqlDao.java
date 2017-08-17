@@ -35,7 +35,15 @@ public interface KnowledgeMysqlDao {
 	 * @throws Exception
 	 */
 	boolean update(KnowledgeBase knowledgeBase) throws Exception;
-	
+
+	/**
+	 * 更新
+	 * @param knowledgeBase
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean updateOrigin(KnowledgeBase knowledgeBase) throws Exception;
+
 	/**
 	 * 根据主键删除
 	 * @param id
@@ -106,7 +114,7 @@ public interface KnowledgeMysqlDao {
 	 * @return
 	 * @throws Exception
 	 */
-	List<KnowledgeBase> getAll(int start,int size) throws Exception;
+	List<KnowledgeBase> getAllBase(int start,int size) throws Exception;
 
 	/**
 	 * 提取所有数据数量

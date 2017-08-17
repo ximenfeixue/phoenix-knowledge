@@ -129,6 +129,18 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }*/
 
     @Override
+    public boolean updateKnowledgeBase(KnowledgeBase base)
+    {
+        try {
+            return this.knowledgeMysqlDao.updateOrigin(base);
+            //return this.knowledgeMysqlDao.update(base);
+        } catch (Exception ex) {
+            logger.info("update knowledge base failed, knowledgeId: " + base.getId() + " error: " + ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
     public Knowledge updateKnowledgeDetail(Knowledge detail) {
         return updateKnowledgeDetail(detail, -1);
     }
@@ -432,9 +444,9 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     }
 
     @Override
-    public List<KnowledgeBase> getAll(int start,int size) throws Exception
+    public List<KnowledgeBase> getAllBase(int start,int size) throws Exception
     {
-        return this.knowledgeMysqlDao.getAll(start, size);
+        return this.knowledgeMysqlDao.getAllBase(start, size);
     }
 
     @Override

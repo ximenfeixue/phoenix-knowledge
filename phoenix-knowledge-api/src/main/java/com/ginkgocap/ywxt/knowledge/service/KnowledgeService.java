@@ -46,6 +46,15 @@ public interface KnowledgeService
     /**
      * 更新，承担以下任务：
      * <p>1、知识详细表更新</P>
+     * @param base
+     * @return
+     * @throws Exception
+     */
+    public boolean updateKnowledgeBase(KnowledgeBase base);
+
+    /**
+     * 更新，承担以下任务：
+     * <p>1、知识详细表更新</P>
      * @param detail
      * @return
      * @throws Exception
@@ -200,7 +209,7 @@ public interface KnowledgeService
      * @return
      * @throws Exception
      */
-    public List<KnowledgeBase> getAll(int start,int size) throws Exception;
+    public List<KnowledgeBase> getAllBase(int start,int size) throws Exception;
 
     /**
      * 提取所有数据（一般用在首页数据展示中）

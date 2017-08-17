@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
 import com.ginkgocap.parasol.common.service.impl.BaseService;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeMysqlDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,15 +54,30 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 			return false;
 		}
 		knowledgeBase.setId(oldValue.getId());
-		knowledgeBase.setModifyDate(new Date().getTime());
+		knowledgeBase.setModifyDate(System.currentTimeMillis());
 		if (knowledgeBase.getModifyUserId() <= 0) {
 			knowledgeBase.setModifyUserId(knowledgeBase.getCreateUserId());
 		}
-		if (knowledgeBase.getModifyUserName() == null) {
+		if (StringUtil.inValidString(knowledgeBase.getModifyUserName())) {
 			knowledgeBase.setModifyUserName(knowledgeBase.getCreateUserName());
 		}
 		return this.updateEntity(knowledgeBase);
 		///return knowledgeBase;
+	}
+
+	@Override
+	public boolean updateOrigin(KnowledgeBase knowledgeBase) throws Exception {
+
+		if(knowledgeBase == null) {
+			return false;
+		}
+		KnowledgeBase oldValue = this.getByKnowledgeId(knowledgeBase.getKnowledgeId());
+		if (oldValue == null) {
+			logger.error("update an not exist knowledge, knowledgeId: " + knowledgeBase.getKnowledgeId());
+			return false;
+		}
+		knowledgeBase.setId(oldValue.getId());
+		return this.updateEntity(knowledgeBase);
 	}
 
 	@Override
@@ -126,7 +142,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	}
 
 	@Override
-	public List<KnowledgeBase> getAll(int start,int size) throws Exception {
+	public List<KnowledgeBase> getAllBase(int start,int size) throws Exception {
 		
 		return this.getSubEntitys("get_all_start_size", start, size, 0);
 	}
