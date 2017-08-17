@@ -244,7 +244,7 @@ public class KnowledgeServiceTest extends TestBase {
         try {
             int start = 1;
             int end = 12;
-            List<KnowledgeBase> result = knowledgeService.getAll(start, end);
+            List<KnowledgeBase> result = knowledgeService.getAllBase(start, end);
             checkListResult(result);
         } catch (Exception e) {
             e.printStackTrace();

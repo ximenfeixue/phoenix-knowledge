@@ -25,7 +25,7 @@ public class KnowledgeMysqlDaoTest extends TestBase {
         try {
             for (int index = 0; index <1044; index++) {
                 System.err.println("Index: " + index);
-                List<KnowledgeBase> baseList = knowledgeMysqlDao.getAll(0, 20);
+                List<KnowledgeBase> baseList = knowledgeMysqlDao.getAllBase(0, 20);
                 System.err.println("Size: " + baseList.size());
                 String jsContent = KnowledgeUtil.writeObjectToJson(baseList);
                 System.out.println(jsContent);
