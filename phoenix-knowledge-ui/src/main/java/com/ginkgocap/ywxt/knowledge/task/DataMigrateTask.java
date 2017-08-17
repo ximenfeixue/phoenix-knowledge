@@ -72,10 +72,14 @@ public class DataMigrateTask implements Runnable, InitializingBean {
             while (CollectionUtils.isNotEmpty(baseList)) {
                 for (KnowledgeBase base : baseList) {
                     if (base != null) {
-                        base.setModifyDate(base.getCreateDate());
+                        if (base.getModifyDate() == 0) {
+                            base.setModifyDate(base.getCreateDate());
+                        }
                         updateKnowledgeBasePermission(base);
                         boolean result = knowledgeService.updateKnowledgeBase(base);
-                        if (!result) {
+                        if (result) {
+                            logger.info("update knolwedge base success. knowledgeId: " + base.getId());
+                        } else {
                             logger.info("update knolwedge base failed. knowledgeId: " + base.getId());
                         }
                         Thread.sleep(1000);
