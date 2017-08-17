@@ -68,8 +68,8 @@ public enum KnowledgeType {
     //生活服务
     ELifeService(30,  KnowledgeLifeService.class, "KnowledgeLifeService", "生活服务"),
     //政府
-    EGovernment(31,  KnowledgeGovernment.class, "KnowledgeGovernment", "政府");
-
+    EGovernment(31,  KnowledgeGovernment.class, "KnowledgeGovernment", "政府"),
+    EMax(32, null, "EMax", "EMax");
     int code;
     Class cls;
     String dec;

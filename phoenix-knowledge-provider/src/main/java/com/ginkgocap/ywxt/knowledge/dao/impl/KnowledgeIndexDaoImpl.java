@@ -8,6 +8,7 @@ import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeIndexDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
+import com.ginkgocap.ywxt.knowledge.model.KnowledgeType;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
@@ -193,12 +194,13 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
             logger.error("param is invalidated. page: " + page + ", size: " + size);
             return null;
         }
-        logger.info("type: " + type + " columnId: " + columnId + " columnPath： " + columnPath);
+        final int columnType = type >= KnowledgeType.EMax.value() ? KnowledgeType.knowledgeType(type).value() : type;
+        logger.info("columnType: " + columnType + " columnId: " + columnId + " columnPath： " + columnPath);
 
-        List<KnowledgeBase> baseList = getKnowledgeIndexList(type, columnId, page, size);
+        List<KnowledgeBase> baseList = getKnowledgeIndexList((short)columnType, columnId, page, size);
         if (CollectionUtils.isEmpty(baseList)) {
-            final String tableName = KnowledgeUtil.getKnowledgeCollectionName(type);
-            final String key = getBaseKey(type, columnId, tableName);
+            final String tableName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
+            final String key = getBaseKey(columnType, columnId, tableName);
             boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
             if (!bLoading) {
                 try {
@@ -217,21 +219,21 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
                             logger.info("query knowledge size: " + knowledgeList.size());
                             for (Knowledge knowledge : knowledgeList) {
                                 if (StringUtil.inValidString(knowledge.getColumnType())) {
-                                    knowledge.setColumnType(String.valueOf(type));
+                                    knowledge.setColumnType(String.valueOf(columnType));
                                     updateToMongo(knowledge, tableName);
                                 }
                                 KnowledgeBase base = DataCollect.generateKnowledge(knowledge);
                                 saveKnowledgeIndex(base);
                             }
                         } else {
-                            logger.info("query knowledge failed. type: " + type + " columnId: " + columnId + " tableName： " + tableName);
+                            logger.info("query knowledge failed. columnType: " + columnType + " columnId: " + columnId + " tableName： " + tableName);
                         }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            baseList = getKnowledgeIndexList(type, columnId, page, size);
+            baseList = getKnowledgeIndexList((short)columnType, columnId, page, size);
         }
 
         return baseList;
@@ -320,8 +322,7 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
         if (columnType > 0) {
             criteria.and("type").is(columnType);
         }
-
-
+        
         final int index = page * size;
         query.addCriteria(criteria);
         query.with(new Sort(Sort.Direction.DESC, "createDate"));
