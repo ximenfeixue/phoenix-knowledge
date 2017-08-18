@@ -82,7 +82,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
                         } else {
                             logger.info("update knolwedge base failed. knowledgeId: " + base.getId());
                         }
-                        Thread.sleep(100);
+                        Thread.sleep(10);
                     }
                 }
                 total += baseList.size();
