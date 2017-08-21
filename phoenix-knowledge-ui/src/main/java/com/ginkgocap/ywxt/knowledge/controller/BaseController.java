@@ -38,7 +38,9 @@ public abstract class BaseController {
     protected final static short KNOWLEDGE_COLLECT = 2;
     protected final static short KNOWLEDGE_SHARE = 3;
     protected final static short KNOWLEDGE_ALL = -1;
-	
+
+    private static final int sessionExpiredTime = 60 * 60 * 24 * 7;
+
     /**
      * 从body中获得参数
      * @param request
@@ -67,10 +69,11 @@ public abstract class BaseController {
      * @throws Exception
      */
     protected User getUser(HttpServletRequest request) {
-        String key = UserUtil.getUserSessionKey(request);
+        final String key = UserUtil.getUserSessionKey(request);
         User user = (User) redisCacheService.getRedisCacheByKey(key);
         if (user != null) {
             logger().info("login userId: " + user.getId() + " userName: " + user.getName());
+            redisCacheService.expireRedisCacheByKey(key, sessionExpiredTime);
         }
         return user;
         //return KnowledgeUtil.getDummyUser();
