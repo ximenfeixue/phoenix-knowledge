@@ -22,7 +22,7 @@ public class KnowledgeIndexTask implements InitializingBean
     private KnowledgeIndexDao knowledgeIndexDao;
 
     private int count = 0;
-    private final static int period = 3600 * 1000 * 24;
+    //private final static int period = 3600 * 1000 * 24;
     private final static int defaultPage = 10;
     private final static int maxSize = 50;
 
