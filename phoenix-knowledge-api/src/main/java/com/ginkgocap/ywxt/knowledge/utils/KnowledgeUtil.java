@@ -508,6 +508,8 @@ public final class KnowledgeUtil {
                     base.setCreateUserId(0);
                     base.setCollected((short)1);
                     base.setPrivated(collect.getPrivated());
+                    base.setCreateDate(collect.getCreateTime());
+                    base.setModifyDate(collect.getCreateTime());
                     collectedKnowledgeItems.add(base);
                 }
             }
