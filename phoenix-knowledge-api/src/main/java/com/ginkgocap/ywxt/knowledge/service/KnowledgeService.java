@@ -488,4 +488,8 @@ public interface KnowledgeService
     public List<KnowledgeBase> getTopKnowledgeByPage(short type, int page, int size);
 
     public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate);
+
+    public int countAllNotModified();
+
+    public List<KnowledgeBase> getAllKnowledgeNotModified(int page,int size);
 }

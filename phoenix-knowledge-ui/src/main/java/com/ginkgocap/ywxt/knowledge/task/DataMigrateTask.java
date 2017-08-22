@@ -63,12 +63,16 @@ public class DataMigrateTask implements Runnable, InitializingBean {
     }
 
     private void updateKnowledgeBase() {
+        if (knowledgeService.countAllNotModified() <= 0) {
+            logger.info("no knowledge need migrate..");
+            return;
+        }
         int total = 0;
         int page = 0;
         final int size = 30;
         List<KnowledgeBase> baseList = null;
         try {
-            baseList = knowledgeService.getAllBase(page++, size);
+            baseList = knowledgeService.getAllKnowledgeNotModified(page++, size);
             while (CollectionUtils.isNotEmpty(baseList)) {
                 for (KnowledgeBase base : baseList) {
                     if (base != null) {

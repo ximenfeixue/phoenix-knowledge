@@ -377,6 +377,18 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		return this.getIds("get_id_list_by_type", 0, size, new Object[]{type});
 	}
 
+	@Override
+	public int countAllNotModified() throws Exception
+	{
+		return this.countEntitys("get_not_modified");
+	}
+
+	@Override
+	public List<KnowledgeBase> getAllKnowledgeNotModified(int start,int size) throws Exception
+	{
+		return this.getSubEntitys("get_not_modified", start, size);
+	}
+
 	/*
 	@Override
 	public int getKnowledgeListByUserIds(List<Long> userIds) throws Exception
@@ -396,15 +408,15 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 		}
 	}
 
-	private boolean updateKnowledgeStatus(List<Long> knowledgeIds, final int staus) {
+	private boolean updateKnowledgeStatus(List<Long> knowledgeIds, final int status) {
 		if (CollectionUtils.isNotEmpty(knowledgeIds)) {
 			String ids = knowledgeIds.toString();
 			ids = ids.substring(1, ids.length()-1);
-			final String updateSql = "update tb_knowledge_base set status = "+ staus + " where id in (" + ids + ")";
+			final String updateSql = "update tb_knowledge_base set status = "+ status + " where id in (" + ids + ")";
 			try {
 				return this.updateByRawSql(updateSql);
 			} catch (Exception ex) {
-				logger.error("update tb_knowledge_base set status + " + staus + " knowledge failed. error: " + ex.getMessage());
+				logger.error("update tb_knowledge_base set status + " + status + " knowledge failed. error: " + ex.getMessage());
 			}
 		}
 		return false;
