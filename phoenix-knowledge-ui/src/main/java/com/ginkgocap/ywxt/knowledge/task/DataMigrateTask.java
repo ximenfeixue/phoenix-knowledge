@@ -100,7 +100,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
 
     public void afterPropertiesSet() throws Exception {
         logger.info("DataMigrateTask begining...");
-        //new Thread(this).start();
+        new Thread(this).start();
         logger.info("DataMigrateTask complete...");
     }
 }
