@@ -5,13 +5,13 @@ import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseSync;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCollect;
-import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.EModuleType;
 import com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference;
 import com.ginkgocap.ywxt.knowledge.model.mobile.EActionType;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeService;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -750,6 +750,30 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
     @Override
     public List getCreatedKnowledgeCountGroupByDay(long userId, long startDate, long endDate) {
         return this.knowledgeMysqlDao.getCreatedKnowledgeCountGroupByDay(userId, startDate, endDate);
+    }
+
+    @Override
+    public int countAllNotModified()
+    {
+        try {
+            return this.knowledgeMysqlDao.countAllNotModified();
+        } catch (Exception ex) {
+            logger.error("countAllNotModified failed. error: " + ex.getMessage());
+        }
+        return 0;
+    }
+
+    @Override
+    public List<KnowledgeBase> getAllKnowledgeNotModified(int page,int size)
+    {
+        try {
+            final int start = page * size;
+            return this.knowledgeMysqlDao.getAllKnowledgeNotModified(start, size);
+        } catch (Exception ex) {
+            logger.error("getAllKnowledgeNotModified failed. error: " + ex.getMessage());
+        }
+        return Collections.EMPTY_LIST;
+
     }
 
     private boolean syncKnowledgeBase(final KnowledgeBaseSync knowSync, final boolean isAdd)

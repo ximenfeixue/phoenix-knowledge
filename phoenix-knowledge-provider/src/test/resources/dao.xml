@@ -152,6 +152,10 @@
                   sqlitem="select id from tb_knowledge_base where privated = 0 and type = ? order by create_date desc"
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
+            <list name="get_not_modified"
+                  sqlitem="select id from tb_knowledge_base where modify_date = 0 order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
+
         </object>
 
         <object name="com.ginkgocap.ywxt.knowledge.model.common.KnowledgeReference" listenerClass="com.ginkgocap.ywxt.framework.dal.dao.listener.DefaultListener"
