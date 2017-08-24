@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.task.BigDataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.user.model.User;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -242,7 +243,6 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                         }
                     }
 
-                    knowledge.setPic(DataCollect.validatePicUrl(imgs));
                     knowledge.setMultiUrls(imgs);
                     // 附件ID
                     knowledge.setTaskid(null);
@@ -261,9 +261,9 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                         // 用户名
                         //knowledge.setUname();
                         // 创建改知识
-                        DataCollect data = createKnowledge(knowledge, srcExternalUrl, isWeb);
+                        DataCollect data = createKnowledge(knowledge, userId, isWeb);
                         // 敏感字检测
-                        if (data == null || data.getKnowledgeDetail().getId() <= 0) {
+                        if (data == null || data.getKnowledgeDetail() == null) {
                             // 弹窗提示
                             setSessionAndErr(request, response, "-1", "创建知识失败");
                             // 错误反馈
@@ -334,24 +334,35 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
     /**
      * 创建知识抽离
      * */
-    private DataCollect createKnowledge(Knowledge knowledge, String url, boolean isWeb) {
+    private DataCollect createKnowledge(Knowledge knowledge, final long userId, boolean isWeb)
+    {
+        //default is privated
+        final int privated = userId <= 0 ? 0 : 1;
+        knowledge.setPrivated((short)privated);
+        Knowledge savedDetail = null;
+        try {
+            savedDetail = this.knowledgeService.insert(knowledge);
+        } catch (Exception ex) {
+            logger.error("save knowledgd detail failed. error: " + ex.getMessage());
+            return null;
+        }
 
-        knowledge.setS_addr(url);
-        // 调用平台层插入知识
-        DataCollect data = new DataCollect(null, knowledge);
-        InterfaceResult result = this.knowledgeService.insert(data);
-        if (result != null && result.getResponseData() != null && result.getResponseData() instanceof Long) {
-            Long knowledgeId = (Long)result.getResponseData();
-            if (knowledgeId != null && knowledgeId.longValue() > 0) {
-                data.getKnowledgeDetail().setId(knowledgeId);
-                try {
-                    permissionServiceLocal.savePermissionInfo(data.defaultPublicPermission());
-                } catch (Exception ex) {
-                    logger.error("Save permission failed. userId: " + knowledge.getCid() + " knowledgeId: " + knowledgeId);
-                }
+        Permission permission = null;
+        if (savedDetail != null && savedDetail.getId() > 0) {
+            final long knowledgeId = savedDetail.getId();
+            try {
+                permission = DataCollect.defaultPermission(userId, knowledgeId);
+                permissionServiceLocal.savePermissionInfo(permission);
+            } catch (Exception ex) {
+                logger.error("Save permission failed. userId: " + knowledge.getCid() + " knowledgeId: " + knowledgeId);
             }
         }
-        return data;
+
+        DataCollect dataCollect = new DataCollect();
+        dataCollect.setKnowledgeDetail(savedDetail);
+        dataCollect.setPermission(permission);
+
+        return dataCollect;
     }
 
     private class KnowledgeSyncTask implements Runnable {
