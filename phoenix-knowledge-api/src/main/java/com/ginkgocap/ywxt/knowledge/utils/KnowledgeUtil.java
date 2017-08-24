@@ -441,7 +441,7 @@ public final class KnowledgeUtil {
 
     public static long parserTimeToLong(String time)
     {
-        final long newTime = System.currentTimeMillis();
+        long newTime = System.currentTimeMillis();
         if (StringUtils.isBlank(time) || "null".equals(time)) {
             return newTime;
         }
