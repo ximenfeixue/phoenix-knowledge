@@ -153,8 +153,8 @@
                   sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
 
             <list name="get_not_modified"
-                  sqlitem="select id from tb_knowledge_base where modify_date = 0 order by create_date desc"
-                  sqlType="hsql" valueProperty="id" keyProperty="type" update="true" />
+                  sqlitem="select id from tb_knowledge_base where modify_date = ? order by create_date desc"
+                  sqlType="hsql" valueProperty="id" keyProperty="date" update="true" />
 
         </object>
 
