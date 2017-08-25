@@ -380,7 +380,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public int countAllNotModified() throws Exception
 	{
-		return this.countEntitys("get_not_modified");
+		return this.countEntitys("get_not_modified", 0);
 	}
 
 	@Override
