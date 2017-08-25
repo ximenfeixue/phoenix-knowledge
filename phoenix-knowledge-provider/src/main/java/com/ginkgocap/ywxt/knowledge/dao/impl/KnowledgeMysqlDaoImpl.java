@@ -386,7 +386,7 @@ public class KnowledgeMysqlDaoImpl extends BaseService<KnowledgeBase> implements
 	@Override
 	public List<KnowledgeBase> getAllKnowledgeNotModified(int start,int size) throws Exception
 	{
-		return this.getSubEntitys("get_not_modified", start, size);
+		return this.getSubEntitys("get_not_modified", start, size, 0);
 	}
 
 	/*
