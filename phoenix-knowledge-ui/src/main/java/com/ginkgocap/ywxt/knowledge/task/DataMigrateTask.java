@@ -90,7 +90,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
                     }
                 }
                 total += baseList.size();
-                baseList = knowledgeService.getAllBase(page++, size);
+                baseList = knowledgeService.getAllKnowledgeNotModified(page++, size);
             }
         } catch (Exception e) {
             e.printStackTrace();
