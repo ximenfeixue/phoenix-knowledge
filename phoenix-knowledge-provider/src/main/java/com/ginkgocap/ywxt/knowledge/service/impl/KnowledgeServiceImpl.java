@@ -16,6 +16,7 @@ import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -893,8 +894,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         Knowledge savedDetail = null;
         try {
             filterKnowledge(detail);
-            detail.setStatus(4);
-            detail = this.knowledgeMongoDao.insert(detail);
+            this.knowledgeMongoDao.insert(detail);
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
             savedDetail = this.knowledgeMongoDao.getByIdAndColumnType(detail.getId(), columnType);
@@ -993,6 +993,12 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                     return;
                 }
             }
+        }
+        String coverPicUrl = detail.getPic();
+        if (StringUtils.isBlank(coverPicUrl) || "null".equals(coverPicUrl)) {
+            coverPicUrl = DataCollect.validatePicUrl(detail.getMultiUrls());
+            logger.info("set cover picture: " + coverPicUrl);
+            detail.setPic(coverPicUrl);
         }
     }
 
