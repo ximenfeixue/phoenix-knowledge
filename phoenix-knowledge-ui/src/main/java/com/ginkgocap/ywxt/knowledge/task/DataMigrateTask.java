@@ -68,11 +68,10 @@ public class DataMigrateTask implements Runnable, InitializingBean {
             return;
         }
         int total = 0;
-        int page = 0;
         final int size = 30;
         List<KnowledgeBase> baseList = null;
         try {
-            baseList = knowledgeService.getAllKnowledgeNotModified(page++, size);
+            baseList = knowledgeService.getAllKnowledgeNotModified(0, size);
             while (CollectionUtils.isNotEmpty(baseList)) {
                 for (KnowledgeBase base : baseList) {
                     if (base != null) {
@@ -90,7 +89,7 @@ public class DataMigrateTask implements Runnable, InitializingBean {
                     }
                 }
                 total += baseList.size();
-                baseList = knowledgeService.getAllKnowledgeNotModified(page++, size);
+                baseList = knowledgeService.getAllKnowledgeNotModified(0, size);
             }
         } catch (Exception e) {
             e.printStackTrace();
