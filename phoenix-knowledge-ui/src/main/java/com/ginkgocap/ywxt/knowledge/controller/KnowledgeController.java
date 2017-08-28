@@ -1931,7 +1931,7 @@ public class KnowledgeController extends BaseKnowledgeController
             detail.setSubmitTime(newTime);
         }
 
-        Permission permission = getPermission(detail.getCid(), knowledgeId);
+        Permission permission = getPermission(detail.getCid(), knowledgeId, detail.getPrivated());
         data.setPermission(permission);
 
         try {

@@ -278,7 +278,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 
-    protected Permission getPermission(final long userId, final long knowledgeId) {
+    protected Permission getPermission(final long userId, final long knowledgeId, final int privated) {
         if (userId == 0 || userId ==1) {
             logger().info("create default public permission for userId: " + userId + " knowledgeId: " + knowledgeId);
             return DataCollect.defaultPublicPermission(userId, knowledgeId);
@@ -287,7 +287,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         if (permission == null) {
             //set a default value
             logger().info("Can't get knowledge permission, so set a default value. knowledgeId: " + knowledgeId);
-            return DataCollect.defaultPermission(userId, knowledgeId, 0);
+            return DataCollect.defaultPermission(userId, knowledgeId, privated);
         }
         return permission;
     }
