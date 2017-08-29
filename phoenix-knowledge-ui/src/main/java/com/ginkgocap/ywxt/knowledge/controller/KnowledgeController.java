@@ -338,7 +338,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return detailWeb(request, response, knowledgeId, type);
         }
 
-        User user = this.getJTNUser(request);
+        User user = this.getUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
@@ -1787,26 +1787,6 @@ public class KnowledgeController extends BaseKnowledgeController
             return picPath;
         }
         return resourceBundle.getString("nginx.root") + picPath;
-    }
-
-    private String getMapValue(Object obj) {
-        if(null == obj) {
-            return "";
-        }
-        String temp = obj.toString();
-        if(temp.startsWith("net")) {
-            return "";
-        }
-        return temp;
-    }
-
-    private String getDesc(String desc) {
-        if(desc != null && !desc.equals("")) {
-            if(desc.length() > 50) {
-                return desc.substring(0, 49);
-            }
-        }
-        return desc;
     }
 
     private List<KnowledgeBase> getCreatedKnowledge(long userId, int start, int size, String keyWord)
