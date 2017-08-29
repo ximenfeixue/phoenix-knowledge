@@ -338,7 +338,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return detailWeb(request, response, knowledgeId, type);
         }
 
-        User user = this.getUser(request);
+        User user = this.getJTNUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }

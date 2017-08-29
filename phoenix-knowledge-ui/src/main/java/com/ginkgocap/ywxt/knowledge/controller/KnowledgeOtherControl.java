@@ -221,7 +221,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                     knowledge = new Knowledge();
 
                     // 指定来源
-                    boolean isWeb = isWeb(request);
+                    final boolean isWeb = isWeb(request);
                     knowledge.setS_addr(srcExternalUrl);
 
                     final String columnId = String.valueOf(KnowledgeType.ENews.value());
@@ -230,7 +230,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                     // 带样式标签内容
                     knowledge.setContent(content);
                     knowledge.setTitle(title);
-                    long createTime = KnowledgeUtil.parserTimeToLong(time);
+                    final long createTime = KnowledgeUtil.parserTimeToLong(time);
                     knowledge.setCreatetime(String.valueOf(createTime));
 
                     @SuppressWarnings("unchecked")
