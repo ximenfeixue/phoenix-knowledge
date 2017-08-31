@@ -948,7 +948,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
                 //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
             }
         } else {
-            logger.warn("userId is 0 or 1 is from 银杏 or 金桐脑, skip to save to knowledge base table.");
+            logger.warn("userId is 0 is from 金桐脑 push, skip to save to knowledge base table.");
         }
 
         if (detail.getPrivated() == 0) {
