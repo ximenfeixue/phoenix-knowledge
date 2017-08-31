@@ -136,7 +136,7 @@ public class KnowledgeCountTask implements InitializingBean
 
         // 每天的date时刻执行task, 仅执行一次
         //timer.schedule(task, date);
-        
+
         // 每天的date时刻执行task, 仅执行一次
         // timer.schedule(task, 1000);
 
