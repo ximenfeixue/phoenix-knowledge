@@ -38,7 +38,10 @@ public class KnowledgeIndexTask implements InitializingBean
                         idList.add(base.getId());
                     }
                 }
-                knowledgeIndexDao.deleteKnowledgeIndex(idList);
+                boolean result = knowledgeIndexDao.deleteKnowledgeIndex(idList);
+                if (!result) {
+                    logger.error("Clean up knowledge failed. idList: " + idList);
+                }
                 baseList = knowledgeIndexDao.getKnowledgeIndexList((short)type, type, defaultPage, maxSize);
             }
         }
