@@ -72,10 +72,17 @@ public class KnowledgeIndexTask implements InitializingBean
         logger.info("current Date: " + date.toLocaleString());
 
         int period = 7200 * 1000;
-        //每天的date时刻执行task，每隔24小时重复执行
-        timer.schedule(task, date, period);
-        //每天的date时刻执行task, 仅执行一次
+        //// 定制每天的24:00:00执行， 每天的date时刻执行task，每隔2小时重复执行
+        // timer.schedule(task, getDate(24), period);
+
+        // 每天的date时刻执行task, 仅执行一次
         //timer.schedule(task, date);
+
+        // 立即开始执行, 仅执行一次
+        //timer.schedule(task, 1000);
+
+        // 立即开始执行, 2小时执行一次
+        timer.schedule(task, 1000, period);
     }
 
     @Override
