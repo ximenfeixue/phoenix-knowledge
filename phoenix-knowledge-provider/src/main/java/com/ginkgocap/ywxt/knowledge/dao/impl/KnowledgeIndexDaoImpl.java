@@ -87,107 +87,6 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
         return getMongoIds(columnType, columnId, columnPath, userId, collectionName, start, size);
     }
 
-    /*
-    @Override
-    public List<KnowledgeBase> getAllPublicByPage(final short columnType, final int columnId, final String columnPath, final int start, int size) {
-        if (start < 0 || size < 0) {
-            logger.error("param is invalidated. start: " + start + ", size: " + size);
-            return null;
-        }
-        logger.info("columnType: " + columnType + " columnId: " + columnId + " columnPath： " + columnPath);
-        final String tableName = KnowledgeUtil.getKnowledgeCollectionName(columnType);
-
-        final String key = getBaseKey(columnType, columnId, tableName);
-        List<Long> knowledgeIds = (List<Long>) getFromCache(key);
-        size = size > maxSize ? maxSize : size;
-        List<KnowledgeBase> result = null;
-        boolean bLoading = loadingMap.get(key) == null ? false : loadingMap.get(key);
-        if (!bLoading) {
-            try {
-                loadingMap.put(key, Boolean.TRUE);
-                logger.info("First query begin... key: " + key);
-                // 查询栏目类型
-                Criteria criteria = Criteria.where("status").is(4);
-
-                // 查询栏目目录为当前分类下的所有数据
-                final String reful = columnPath;
-                // 该栏目路径下的所有文章条件
-                //criteria.and("cpathid").regex("^" + reful + ".*$");
-                criteria.and("privated").is(0);
-                Query query = new Query(criteria);
-                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                query.limit(maxQuerySize);
-                query.skip(0);
-
-                final List<Knowledge> knowledgeList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (knowledgeList != null && knowledgeList.size() > 0 ) {
-                    List<Long> ids = new ArrayList<Long>(maxQuerySize);
-                    List<Knowledge> detailList = new ArrayList<Knowledge>(size);
-                    int skip = 0;
-                    int toIndex = start + size;
-                    for (Knowledge knowledge : knowledgeList) {
-                        if (knowledge != null) {
-                            ids.add(knowledge.getId());
-                            if (skip >= start && skip < toIndex) {
-                                detailList.add(filterKnowledge(knowledge));
-                            }
-                        }
-                        skip++;
-                    }
-                    saveToCache(key, ids);
-                    final String knowledgeKey = getBaseKey(columnType, columnId, tableName, start, size);
-                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
-                }
-            }
-            catch(Exception ex) {
-                ex.printStackTrace();
-            }
-        } else if (knowledgeIds !=null && knowledgeIds.size() > 0) {
-            final String knowledgeKey = getBaseKey(columnType, columnId, tableName, start, size);
-            result = (List<KnowledgeBase>)getFromCache(knowledgeKey);
-            if (result != null) {
-                logger.info("This list have cached before, so return it directly..");
-                return result;
-            }
-
-            int fromIndex = start;
-            int toIndex = start + size;
-            if (toIndex > knowledgeIds.size() - 1) {
-                toIndex = knowledgeIds.size() - 1;
-            }
-            List<Long> ids = null;
-            if (knowledgeIds != null && fromIndex < toIndex) {
-                logger.info("fromIndex: " + fromIndex + " toIndex: " + toIndex + " size: " + knowledgeIds.size());
-                ids = knowledgeIds.subList(fromIndex, toIndex);
-            }
-            if (CollectionUtils.isNotEmpty(ids)) {
-                long begin = System.currentTimeMillis();
-                Criteria criteria = new Criteria();
-                criteria.and("_id").in(ids);
-                Query query = new Query(criteria);
-                query.with(new Sort(Sort.Direction.DESC, Constant._ID));
-                final List<Knowledge> detailList = mongoTemplate.find(query, Knowledge.class, tableName);
-                if (CollectionUtils.isNotEmpty(detailList)) {
-                    for(Knowledge detail : detailList) {
-                        filterKnowledge(detail);
-                    }
-                    result = saveKnowledgeBaseToCache(detailList, columnType, knowledgeKey);
-                    logger.info("get Knowledge size: " + (result != null ? result.size() : 0));
-                }
-                else {
-                    logger.info("can't get Knowledge by Ids: +", ids.toString());
-                }
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end-begin));
-            }
-        }
-        else {
-            //if no data got need query again.
-            loadingMap.remove(key);
-        }
-        return result;
-    }*/
-
     @Override
     public List<KnowledgeBase> getAllPublicByPage(final short type, final int columnId, final String columnPath, final int page, int size) {
         if (page < 0 || size < 0) {
@@ -315,7 +214,7 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
     }
 
     @Override
-    public List<KnowledgeBase> getKnowledgeIndexList(final short columnType, final int columnId, final int page, int size) {
+    public List<KnowledgeBase> getKnowledgeIndexList(final short columnType, final int columnId, final int page, final int size) {
         Query query = new Query();
         Criteria criteria = new Criteria();
 
@@ -325,7 +224,7 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
 
         final int index = page * size;
         query.addCriteria(criteria);
-        query.with(new Sort(Sort.Direction.DESC, "createDate"));
+        query.with(new Sort(Sort.Direction.ASC, "createDate"));
         query.skip(index);
         query.limit(size);
 

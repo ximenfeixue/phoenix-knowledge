@@ -50,7 +50,7 @@ public class KnowledgeIndexTask implements InitializingBean
             public void run() {
                 ++count;
                 knowledgeIndexClean();
-                logger.info("时间=" + new Date() + " 执行了" + count + "次"); // 1次
+                logger.info("KnowledgeIndex 时间=" + new Date() + " 执行了" + count + "次"); // 1次
             }
         };
 
@@ -65,11 +65,11 @@ public class KnowledgeIndexTask implements InitializingBean
         Timer timer = new Timer();
         logger.info("current Date: " + date.toLocaleString());
 
-
+        int period = 7200 * 1000;
         //每天的date时刻执行task，每隔24小时重复执行
-        //timer.schedule(task, date, period);
+        timer.schedule(task, date, period);
         //每天的date时刻执行task, 仅执行一次
-        timer.schedule(task, date);
+        //timer.schedule(task, date);
     }
 
     @Override

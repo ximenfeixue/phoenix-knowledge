@@ -115,7 +115,7 @@ public class KnowledgeCountTask implements InitializingBean
             public void run() {
                 ++count;
                 batchSaveCountResult();
-                logger.info("时间=" + new Date() + " 执行了" + count + "次"); // 1次
+                logger.info("KnowledgeCount 时间=" + new Date() + " 执行了" + count + "次"); // 1次
             }
         };
 
