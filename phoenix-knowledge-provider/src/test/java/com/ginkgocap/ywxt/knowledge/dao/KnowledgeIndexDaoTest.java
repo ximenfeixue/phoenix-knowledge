@@ -19,7 +19,14 @@ public class KnowledgeIndexDaoTest extends TestBase {
 
     @Test
     public void testGetAllPublicKnowledge() {
-        List<KnowledgeBase> baseList = knowledgeIndexDao.getAllPublicByPage((short)KnowledgeType.EMacro.value(), (short)0, null, 0, 200);
+        List<KnowledgeBase> baseList = knowledgeIndexDao.getAllPublicByPage((short)KnowledgeType.EMacro.value(), (short)0, null, 10, 50);
         TestCase.assertNotNull(baseList);
     }
+
+    @Test
+    public void testGetKnowledgeIndexList() {
+        List<KnowledgeBase> baseList = knowledgeIndexDao.getKnowledgeIndexList((short)KnowledgeType.ENews.value(), (short)0, 10, 50);
+        TestCase.assertNotNull(baseList);
+    }
+
 }
