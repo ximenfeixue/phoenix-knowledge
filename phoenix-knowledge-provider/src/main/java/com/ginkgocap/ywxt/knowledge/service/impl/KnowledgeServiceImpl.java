@@ -936,7 +936,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
 
     private void insertKnowledgeBase(Knowledge detail) {
         KnowledgeBase base = DataCollect.generateKnowledge(detail);
-        if (detail.getCid() > 1) {
+        if (detail.getCid() > 0) {
             try {
                 if (this.knowledgeMysqlDao.insert(base) != null) {
                     logger.info("insert knowledge to tb_knowledge_base success. knowledgeId: " + base.getId());
