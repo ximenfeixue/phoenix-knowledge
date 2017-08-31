@@ -224,7 +224,7 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
 
         final int index = page * size;
         query.addCriteria(criteria);
-        query.with(new Sort(Sort.Direction.ASC, "createDate"));
+        query.with(new Sort(Sort.Direction.DESC, "createDate"));
         query.skip(index);
         query.limit(size);
 
