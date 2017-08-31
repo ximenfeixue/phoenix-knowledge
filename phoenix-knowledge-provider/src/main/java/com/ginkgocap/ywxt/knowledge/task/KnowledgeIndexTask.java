@@ -32,8 +32,9 @@ public class KnowledgeIndexTask implements InitializingBean
     {
         for(int type = KnowledgeType.ENews.value(); type <= KnowledgeType.EGovernment.value(); type++) {
             List<KnowledgeBase> baseList = knowledgeIndexDao.getKnowledgeIndexList((short)type, type, defaultPage, maxSize);
+            logger.info("Begin query KnowledgeIndex type: " + type);
             while (CollectionUtils.isNotEmpty(baseList)) {
-                logger.info("query knowledge index. type: " + type + " size: " + baseList.size());
+                logger.info("Got knowledge index. type: " + type + " size: " + baseList.size());
                 List<Long> idList = new ArrayList<Long>(baseList.size());
                 for (KnowledgeBase base : baseList) {
                     if (base != null) {
