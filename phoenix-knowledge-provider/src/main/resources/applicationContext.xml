@@ -34,8 +34,8 @@
 	<bean id="idService" class="com.ginkgocap.ywxt.framework.service.IdService"/>
 	<bean id="cloudIdService" class="com.ginkgocap.ywxt.framework.service.CloudIdService"/>
     <!-- bean id="KnowledgeIdServiceImpl" class="com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeIdServiceImpl"/ -->
-    <bean id="KnowledgeCountTask" class="com.ginkgocap.ywxt.knowledge.task.KnowledgeCountTask"/>
-	<bean id="KnowledgeIndexTask" class="com.ginkgocap.ywxt.knowledge.task.KnowledgeIndexTask"/>
+    <bean id="knowledgeCountTask" class="com.ginkgocap.ywxt.knowledge.task.KnowledgeCountTask"/>
+	<bean id="knowledgeIndexTask" class="com.ginkgocap.ywxt.knowledge.task.KnowledgeIndexTask"/>
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
