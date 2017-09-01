@@ -359,7 +359,7 @@ public class DataCollect implements Serializable
             if (title != null) {
                 if (title.length() > maxLen) {
                     title = title.substring(0, maxLen - 1);
-                    logger.error("Title over 255, so truncate it to 255");
+                    logger.warn("Title over 255, so truncate it to 255");
                 }
                 title = HtmlToText.removeFourChar(title);
                 if (title == null || title.length() <= 0) {
@@ -371,7 +371,7 @@ public class DataCollect implements Serializable
             String contentDesc = base.getContentDesc();
             if (contentDesc != null) {
                 if (contentDesc.length() > maxLen) {
-                    logger.error("ContentDesc over 255, so truncate it to 255");
+                    logger.warn("ContentDesc over 255, so truncate it to 255");
                     contentDesc = contentDesc.substring(0, maxLen - 1);
                 }
                 contentDesc = HtmlToText.removeFourChar(contentDesc);
@@ -379,32 +379,32 @@ public class DataCollect implements Serializable
             }
 
             if (base.getSource() != null && base.getSource().length() > maxLen) {
-                logger.error("source over 255, so truncate it to 255");
+                logger.warn("source over 255, so truncate it to 255");
                 base.setSource(base.getSource().substring(0, maxLen - 1));
             }
 
             if (base.getCoverPic() != null && base.getCoverPic().length() > maxUrlLen) {
-                logger.error("cover Picture over 512, so set it to null");
+                logger.warn("cover Picture over 512, so set it to null");
                 base.setCoverPic(null);
             }
 
             if (base.getCpath() != null && base.getCpath().length() > maxLen) {
-                logger.error("cpath over 255, so truncate it to 255");
+                logger.warn("cpath over 255, so truncate it to 255");
                 base.setCpath(base.getCpath().substring(0, maxLen - 1));
             }
 
             if (base.getTaskId() != null && base.getTaskId().length() > maxLen) {
-                logger.error("taskId over 255, so truncate it to 255");
+                logger.warn("taskId over 255, so truncate it to 255");
                 base.setTaskId(base.getTaskId().substring(0, maxLen - 1));
             }
 
             if (base.getCreateUserName() != null && base.getCreateUserName().length() > 50) {
-                logger.error("create user name over 255, so truncate it to 50");
+                logger.warn("create user name over 255, so truncate it to 50");
                 base.setCreateUserName(base.getCreateUserName().substring(0, 50 - 1));
             }
 
             if (base.getModifyUserName() != null && base.getModifyUserName().length() > maxLen) {
-                logger.error("modify user name over 255, so truncate it to 255");
+                logger.warn("modify user name over 255, so truncate it to 255");
                 base.setModifyUserName(base.getModifyUserName().substring(0, maxLen - 1));
             }
         }
