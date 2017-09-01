@@ -271,7 +271,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
                             // 跳出
                             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SERVICES_EXCEPTION,responseDataMap);
                         }
-
+                        knowledge = data.getKnowledgeDetail();
                         BigData bigData = data.toBigData();
                         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, bigData);
                         logger.info("createKnowledge by url success, knowledgeId: " + bigData.getKid());
