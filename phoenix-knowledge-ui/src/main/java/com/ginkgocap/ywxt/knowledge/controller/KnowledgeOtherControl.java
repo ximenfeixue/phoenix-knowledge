@@ -337,7 +337,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
     private DataCollect createKnowledge(Knowledge knowledge, final long userId, boolean isWeb)
     {
         //default is privated
-        final int privated = userId <= 0 ? 0 : 1;
+        final int privated = 0; //userId <= 0 ? 0 : 1;
         knowledge.setPrivated((short)privated);
         Knowledge savedDetail = null;
         try {
@@ -351,7 +351,7 @@ public class KnowledgeOtherControl extends BaseKnowledgeController
         if (savedDetail != null && savedDetail.getId() > 0) {
             final long knowledgeId = savedDetail.getId();
             try {
-                permission = DataCollect.defaultPermission(userId, knowledgeId);
+                permission = DataCollect.defaultPermission(userId, knowledgeId, 1);
                 permissionServiceLocal.savePermissionInfo(permission);
             } catch (Exception ex) {
                 logger.error("Save permission failed. userId: " + knowledge.getCid() + " knowledgeId: " + knowledgeId);
