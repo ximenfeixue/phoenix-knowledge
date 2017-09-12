@@ -20,13 +20,15 @@ public class HtmlToText {
 	public static String html2Text(String inputString) {
 		String htmlStr = inputString; // 含html标签的字符串
 		String textStr = "";
-		java.util.regex.Pattern p_script;
-		java.util.regex.Matcher m_script;
-		java.util.regex.Pattern p_style;
-		java.util.regex.Matcher m_style;
-		java.util.regex.Pattern p_html;
-		java.util.regex.Matcher m_html;
+
 		try {
+            java.util.regex.Pattern p_script;
+            java.util.regex.Matcher m_script;
+            java.util.regex.Pattern p_style;
+            java.util.regex.Matcher m_style;
+            java.util.regex.Pattern p_html;
+            java.util.regex.Matcher m_html;
+
 			String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; // 定义script的正则表达式{或<script>]*?>[\s\S]*?<\/script>
 			// }
 			String regEx_style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>"; // 定义style的正则表达式{或<style>]*?>[\s\S]*?<\/style>
@@ -64,6 +66,17 @@ public class HtmlToText {
 			System.err.println("Html2Text: " + e.getMessage());
 		}
 
+		return textStr;
+	}
+
+	public static String removeUnderLine(String inputString) {
+        String textStr = "";
+		try {
+            textStr = inputString.replace("text-decoration:underline", "");
+            textStr = textStr.replace("text-decoration: underline", "");
+		} catch (Exception e) {
+			System.err.println("Html2Text: " + e.getMessage());
+		}
 		return textStr;
 	}
 

@@ -341,6 +341,18 @@ public final class KnowledgeUtil {
         return idList;
     }
 
+    public static List<String> splitString(final String targetStr, final String split) {
+        if (StringUtils.isNotBlank(targetStr)) {
+            StringTokenizer token = new StringTokenizer(targetStr, split);
+            List<String> stringList = new ArrayList<String>(token.countTokens());
+            while (token.hasMoreTokens()) {
+                stringList.add(token.nextToken());
+            }
+            return stringList;
+        }
+        return null;
+    }
+
     public static long convertStringToLong(String number)
     {
         try {

@@ -414,7 +414,50 @@ public class KnowledgeController extends BaseKnowledgeController
         KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
         data.setKnowledgeDetail(webDetail);
         return knowledgeDetail(data);
+    }
 
+    /**
+     * 提取知识详细信息，一般用在详细查看界面、编辑界面
+     * @param knowledgeId 知识Id
+     * @param type 栏目主键
+     * @throws java.io.IOException
+     */
+    @RequestMapping(value = "/detailFilter/{knowledgeId}/{type}", method = RequestMethod.GET)
+    @ResponseBody
+    public MappingJacksonValue detailFilter(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
+        User user = this.getJTNUser(request);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
+        /*
+        if (Failed(result)) {
+            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(result);
+        }
+
+        DataCollect data = result.getResponseData();
+        if (data == null || data.getKnowledgeDetail() == null) {
+            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
+        }*/
+
+        DataCollect data = result.getResponseData();
+        logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
+
+        try {
+            Knowledge detail = data.getKnowledgeDetail();
+            final String content = HtmlToText.removeUnderLine(detail.getContent());
+            detail.setContent(content);
+            knowledgeService.updateKnowledgeDetail(detail);
+        } catch (Exception ex) {
+            logger.error("failter knowledge detail and update to database failed. error: " + ex.getMessage());
+        }
+
+        jacksonValue = knowledgeDetail(data);
+        return jacksonValue;
     }
 
     /**
