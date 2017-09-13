@@ -45,8 +45,7 @@ public class HtmlToText {
 			htmlStr = StringUtils.replace(htmlStr, "\n", "");
 			htmlStr = StringUtils.replace(htmlStr, "\t", "");
 			htmlStr = StringUtils.replace(htmlStr, " ", "");
-			htmlStr = htmlStr.replaceAll("<span>", "")
-					.replaceAll("</span>", "");
+			htmlStr = htmlStr.replaceAll("<span>", "").replaceAll("</span>", "");
 
 			p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
 			m_script = p_script.matcher(htmlStr);
@@ -70,36 +69,40 @@ public class HtmlToText {
 	}
 
 	public static String removeUnderLine(String inputString) {
+        String htmlStr = inputString; // 含html标签的字符串
         String textStr = "";
 		try {
-            textStr = inputString.replace("text-decoration:underline", "");
-            textStr = textStr.replace("text-decoration: underline", "");
+            java.util.regex.Pattern p_script;
+            java.util.regex.Matcher m_script;
+
+            htmlStr = htmlStr.replaceAll("&amp;", "&");
+            htmlStr = htmlStr.replaceAll("&lt;", "<");
+            htmlStr = htmlStr.replaceAll("&gt;", ">");
+            htmlStr = htmlStr.replaceAll("&nbsp;", "");
+            htmlStr = htmlStr.replaceAll("&quot;", "");
+            htmlStr = htmlStr.replaceAll("&emsp;", "");
+            htmlStr = htmlStr.replaceAll("&emsp;", "");
+            htmlStr = StringUtils.replace(htmlStr, "\n", "");
+            htmlStr = StringUtils.replace(htmlStr, "\t", "");
+//            htmlStr = StringUtils.replace(htmlStr, " ", "");
+//            htmlStr = htmlStr.replaceAll("<span>", "").replaceAll("</span>", "");
+
+            //final String http_regexp = "(<a href=)//([^/:]+)(:\\d*)?([^#\\s]*)";; // 定义script的正则表达式{或<script>]*?>[\s\S]*?<\/script>
+            //String http_regexp = "<[\\s]*?style[^>]*?>(<a href=)*?(decoration: underline;)*?>"; // 定义script的正则表达式{或<script>]*?>[\s\S]*?<\/script>
+            String regEx_html = "<a href=*(decoration: underline;)*[^>]+>"; // 定义HTML标签的正则表达式
+
+            p_script = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+            m_script = p_script.matcher(htmlStr);
+            htmlStr = m_script.replaceAll(""); // 过滤script标签
+
+            htmlStr = htmlStr.replace("text-decoration:underline", "");
+            htmlStr = htmlStr.replace("text-decoration: underline", "");
+            htmlStr = htmlStr.replace("</p><hr/>", "");
 		} catch (Exception e) {
 			System.err.println("Html2Text: " + e.getMessage());
 		}
-		return textStr;
+		return htmlStr;
 	}
-
-	/**
-	 * 知识内容截取存入简介
-	 * @date 2016年1月14日 下午3:57:47
-	 * @param htmlStr
-	 * @return
-	 */
-	public static String htmlTotest(String htmlStr) {
-		String content = null;
-		if (StringUtils.isNotBlank(htmlStr)) {
-			content = htmlStr.replaceAll("(?isu)<[^>]+>", "");
-		}
-
-		if (StringUtils.isNotBlank(content)) {
-			content = content.length() > 50 ? content.substring(0, 50) + "..."
-					: content;
-
-		}
-		return content;
-	}
-
 
     public static String htmlToText(String htmlContent)
     {
