@@ -12,6 +12,9 @@ import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
+import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
+import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
+import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -20,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +36,8 @@ import java.util.Map;
  * Created by oem on 4/6/17.
  */
 public abstract class BaseKnowledgeController extends BaseController {
+
+    protected static final Logger TRACK_LOGGER = LoggerFactory.getLogger("trackLog");
 
     @Autowired
     protected KnowledgeService knowledgeService;
@@ -141,6 +148,8 @@ public abstract class BaseKnowledgeController extends BaseController {
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
 
         logger().info(".......create knowledge success......");
+        //Businsess log
+        BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
         return result;
     }
 

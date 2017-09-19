@@ -12,6 +12,8 @@ import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
+import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
+import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -343,7 +345,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
@@ -373,13 +375,13 @@ public class KnowledgeController extends BaseKnowledgeController
      * @param type 栏目主键
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/web/{knowledgeId}/{type}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/web/{knowledgeId}/{type}", method = RequestMethod.GET)
     public MappingJacksonValue detailWeb(HttpServletRequest request, HttpServletResponse response,
                                          @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getJTNUser(request);
 
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
@@ -422,12 +424,12 @@ public class KnowledgeController extends BaseKnowledgeController
      * @param type 栏目主键
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/detailFilter/{knowledgeId}/{type}", method = RequestMethod.GET)
     @ResponseBody
+    @RequestMapping(value = "/detailFilter/{knowledgeId}/{type}", method = RequestMethod.GET)
     public MappingJacksonValue detailFilter(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getJTNUser(request);
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, isWeb(request));
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
@@ -1180,6 +1182,9 @@ public class KnowledgeController extends BaseKnowledgeController
         //collect count
         knowledgeCountService.updateCollectCount(knowledgeId, (short)typeId);
         logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
+
+        //Businsess log
+        BusinessTrackUtils.addTbBusinessTrackLog4CollectOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), knowledgeId, null, request, userId, user.getName());
         return result;
     }
 
@@ -1871,7 +1876,8 @@ public class KnowledgeController extends BaseKnowledgeController
         return collectedBaseItems;
     }
 
-    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, boolean isWeb) {
+    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, HttpServletRequest request)
+    {
         long userId = user.getId();
         logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + userId);
 
@@ -1982,6 +1988,8 @@ public class KnowledgeController extends BaseKnowledgeController
             ex.printStackTrace();
         }
 
+        //Business log
+        BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
         return result;
     }
 
