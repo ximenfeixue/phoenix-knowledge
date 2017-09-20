@@ -1,9 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
+import com.ginkgocap.ywxt.knowledge.model.BusinessTrackLog;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.IdTypeUid;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.ywxt.im.model.MessageNotify;
 import com.gintong.ywxt.im.service.MessageNotifyService;
@@ -88,6 +90,10 @@ public class DataSyncTask implements Runnable {
                         } else if (data instanceof IdTypeUid) {
                             final IdTypeUid idTypeUid = (IdTypeUid)data;
                             result = deleteKnowledgeOtherResource(idTypeUid);
+                        } else if (data instanceof BusinessTrackLog) {
+                            BusinessTrackLog log = (BusinessTrackLog)data;
+                            BusinessTrackUtils.addTbBusinessTrackLog(log.getLogger(), log.getTrackLogger(), log.getBusinessModel(),
+                                    log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
                         }
                     }
                     if (result) {

@@ -150,6 +150,8 @@ public abstract class BaseKnowledgeController extends BaseController {
         logger().info(".......create knowledge success......");
         //Businsess log
         BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
+        //DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_ADD.getKey(), detail.getId(), userId, user.getName(), request));
+        //dataSyncTask.addQueue(dataSync);
         return result;
     }
 

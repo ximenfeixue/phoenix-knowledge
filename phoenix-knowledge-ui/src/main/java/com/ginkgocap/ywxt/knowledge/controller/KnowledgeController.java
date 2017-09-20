@@ -13,6 +13,7 @@ import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
+import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
 import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
@@ -1184,7 +1185,10 @@ public class KnowledgeController extends BaseKnowledgeController
         logger.info("collect knowledge success. knowledgeId: " + knowledgeId + " type: " + typeId);
 
         //Businsess log
-        BusinessTrackUtils.addTbBusinessTrackLog4CollectOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), knowledgeId, null, request, userId, user.getName());
+        //BusinessTrackUtils.addTbBusinessTrackLog4CollectOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), knowledgeId, null, request, userId, user.getName());
+        DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(),
+                0, OptTypeEnum.OPT_COLLECT.getKey(), knowledgeId, userId, user.getName(), request));
+        dataSyncTask.addQueue(dataSync);
         return result;
     }
 
@@ -1989,7 +1993,9 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         //Business log
-        BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
+        //BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
+        DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_VIEW.getKey(), detail.getId(), userId, user.getName(), request));
+        dataSyncTask.addQueue(dataSync);
         return result;
     }
 
