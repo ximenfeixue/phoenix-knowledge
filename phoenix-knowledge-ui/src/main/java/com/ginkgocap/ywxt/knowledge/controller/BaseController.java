@@ -2,6 +2,7 @@ package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.*;
@@ -84,16 +85,19 @@ public abstract class BaseController {
         return user.getId();
     }
 
-    protected String getUserName(User user) {
-        //This return name or userName
-        return user.getName();
-    }
-
     protected boolean isAdmin(HttpServletRequest request) {
         User user = this.getUser(request);
         boolean isAdmin = (user != null && user.getId() == 1);
         logger().info("admin permission verify " + (isAdmin ? "success" : "failed."));
         return isAdmin;
+    }
+
+    protected boolean isGinTong(HttpServletRequest request) {
+        final String jtUserValue = request.getHeader(KnowledgeConstant.GIN_USER_KEY);
+        if (KnowledgeConstant.GIN_USER_VALUE.equals(jtUserValue)) {
+            return true;
+        }
+        return false;
     }
 
     protected String getJsonIn(HttpServletRequest request) throws IOException {
@@ -110,7 +114,6 @@ public abstract class BaseController {
 
     protected User getJTNUser(HttpServletRequest request) {
         User user = getUser(request);
-
         if(null == user){
             user = new User();
             user.setId(0);//金桐脑
