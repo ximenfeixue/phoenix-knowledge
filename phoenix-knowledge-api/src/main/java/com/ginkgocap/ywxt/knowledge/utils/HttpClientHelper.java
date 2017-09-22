@@ -207,7 +207,7 @@ public class HttpClientHelper {
         Map<String, Object> result = new HashMap<String, Object>();
         HttpPost post = new HttpPost(url);
         try {
-            for(String key:headers.keySet()){
+            for(String key : headers.keySet()){
                 post.addHeader(key, headers.get(key));
             }
             if (content != null) {
