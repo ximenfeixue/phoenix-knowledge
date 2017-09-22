@@ -214,7 +214,7 @@ public class HttpClientHelper {
                 StringEntity stringEntry = new StringEntity(content, ContentType.create("application/json", "UTF-8"));
                 post.setEntity(stringEntry);
             }
-            logger.info("Http POST, url: " + url + " Body: " + content);
+            //logger.info("Http POST, url: " + url + " Body: " + content);
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -247,7 +247,7 @@ public class HttpClientHelper {
                 for(String key:headers.keySet()){
                     put.addHeader(key, headers.get(key));
                 }
-                logger.info("Http PUT, url: " + url + " Body: " + params);
+                //logger.info("Http PUT, url: " + url + " Body: " + params);
                 HttpClient httpClient = httpClient();
                 HttpResponse response = httpClient.execute(put);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
