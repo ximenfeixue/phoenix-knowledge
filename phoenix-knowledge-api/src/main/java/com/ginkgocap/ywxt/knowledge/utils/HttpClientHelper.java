@@ -204,7 +204,6 @@ public class HttpClientHelper {
     }
 
     public static String POST(final String url, final String content, final Map<String,String> headers) {
-        Map<String, Object> result = new HashMap<String, Object>();
         HttpPost post = new HttpPost(url);
         try {
             for(String key : headers.keySet()){
@@ -218,7 +217,6 @@ public class HttpClientHelper {
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result.put("status", response.getStatusLine().getStatusCode());
                 String respJson = EntityUtils.toString(response.getEntity(),"utf-8");
                 EntityUtils.consume(response.getEntity());
                 //logger.info("respJson: {}", respJson);
@@ -238,7 +236,6 @@ public class HttpClientHelper {
     }
 
     public static String PUT(final String url, final String params, final Map<String,String> headers) {
-        Map<String, Object> result = new HashMap<String, Object>();
         HttpPut put = new HttpPut(url);
         if (params != null) {
             try {
@@ -251,7 +248,6 @@ public class HttpClientHelper {
                 HttpClient httpClient = httpClient();
                 HttpResponse response = httpClient.execute(put);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                    result.put("status", response.getStatusLine().getStatusCode());
                     HttpEntity entity = response.getEntity();
                     String respJson = EntityUtils.toString(entity);
                     EntityUtils.consume(response.getEntity());
@@ -274,7 +270,6 @@ public class HttpClientHelper {
     }
 
     public static String DELETE(final String url, final Map<String,String> headers) {
-        Map<String, Object> result = new HashMap<String, Object>();
         HttpDelete delete = new HttpDelete(url);
 
         try {
@@ -285,7 +280,6 @@ public class HttpClientHelper {
             HttpClient httpClient = httpClient();
             HttpResponse response = httpClient.execute(delete);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result.put("status", response.getStatusLine().getStatusCode());
                 HttpEntity entity = response.getEntity();
                 String respJson = EntityUtils.toString(entity);
                 EntityUtils.consume(response.getEntity());

@@ -100,16 +100,16 @@ public abstract class BaseKnowledgeController extends BaseController {
         detail.setId(knowledgeId);
 
         if (!tagServiceLocal.saveTagSource(userId, detail)) {
-            logger().error("Save Tag info failed, userId: {} knowledgeId: ", userId, knowledgeId);
+            logger().error("Save Tag info failed, userId: " + userId + " knowledgeId: " + knowledgeId);
         }
 
         List<Long> successIds = directoryServiceLocal.saveDirectorySource(userId, detail);
         if (successIds != null && successIds.size() >0) {
-            logger().error("Save Directory success. userId: {} knowledgeId: {}, plan size: {}, success size: {}",
-                    userId, knowledgeId, detail.getDirectorys().size(), successIds.size());
+            logger().error("Save Directory success. userId: " + userId + " knowledgeId: " + knowledgeId + ", plan size: "
+                            + detail.getDirectorys().size() + ", success size: " + successIds.size());
         }
         else {
-            logger().error("Save Directory info failed, userId: {} knowledgeId: {}", userId, knowledgeId);
+            logger().error("Save Directory info failed, userId: " + userId + " knowledgeId: " + knowledgeId);
         }
 
         //save asso information
