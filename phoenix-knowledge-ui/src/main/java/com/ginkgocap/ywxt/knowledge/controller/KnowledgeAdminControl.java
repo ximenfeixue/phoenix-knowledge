@@ -53,7 +53,7 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        User user = this.getJTNUser(request);
+        User user = this.JTNUser();
         return this.create(request, user);
     }
 

@@ -115,12 +115,16 @@ public abstract class BaseController {
     protected User getJTNUser(HttpServletRequest request) {
         User user = getUser(request);
         if(null == user){
-            user = new User();
-            user.setId(0);//金桐脑
-            user.setName("金桐网");
-            user.setUserName("金桐网");
-            return user;
+            return JTNUser();
         }
+        return user;
+    }
+
+    protected User JTNUser() {
+        User user = new User();
+        user.setId(0);//金桐脑
+        user.setName("金桐网");
+        user.setUserName("金桐网");
         return user;
     }
 
