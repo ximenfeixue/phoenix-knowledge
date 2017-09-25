@@ -45,6 +45,19 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
     }
 
     @ResponseBody
+    @RequestMapping(value="/bigdata/create", method = RequestMethod.POST)
+    public InterfaceResult createKnowledgeForBigData(HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+        if (!isGinTong(request)) {
+            logger().error("not from gintong user, so block it.");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        User user = this.getJTNUser(request);
+        return this.create(request, user);
+    }
+
+    @ResponseBody
     @RequestMapping(value="/update", method = RequestMethod.PUT)
     public InterfaceResult updateKnowledge(HttpServletRequest request, HttpServletResponse response) throws Exception
     {

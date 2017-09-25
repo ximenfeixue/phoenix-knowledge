@@ -27,35 +27,24 @@
             <param name="AcceptOnMatch" value="true" />
         </filter>
     </appender>
-    <appender name="httpPerformanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${log4j.path}/knowledge-ui/httpperformanceLog.log" />
+
+    <!--Track日志-->
+    <appender name="trackLogAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${log4j.path}/track/knowledge.track.log" />
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
+            <param name="ConversionPattern" value="[%-5p] %d{yyyy-MM-dd HH:mm:ss} %l%m%n" />
         </layout>
     </appender>
-    <logger name="com.qintong.common.filters.HttpInterceptor"
-            additivity="false">
+    <logger name="trackLog" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="httpPerformanceLog" />
+        <appender-ref ref="trackLogAppender" />
     </logger>
 
-    <appender name="performanceLog" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${log4j.path}/knowledge-ui/performanceLog.log" />
-        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] -%l%m%n" />
-        </layout>
-    </appender>
-    <logger
-            name="com.jt.platform.framework.log.aop.PerformanceMonitorInterceptor"
-            additivity="false">
-        <level value="INFO" />
-        <appender-ref ref="performanceLog" />
-    </logger>
     <root>
         <level value="info" />
         <appender-ref ref="logconsole" />
         <appender-ref ref="logfile" />
+        <appender-ref ref="trackLog" />
     </root>
 </log4j:configuration>

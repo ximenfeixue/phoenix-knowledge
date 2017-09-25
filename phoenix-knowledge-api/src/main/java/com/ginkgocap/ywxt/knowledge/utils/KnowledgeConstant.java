@@ -17,6 +17,8 @@ public class KnowledgeConstant {
     public static final String USER_DEFAULT_PIC_PATH_FAMALE = "/web/pic/user/default.jpeg";//个人默认头像：女
     public static final String USER_DEFAULT_PIC_PATH_MALE = "/web/pic/people/original/default.jpeg";//个人默认头像：男
     public static final String ORGAN_DEFAULT_PIC_PATH = "/web1/organ/avatar/default.jpeg";//组织、客户默认头像
+    public static final String GIN_USER_KEY = "ginUserkey";
+    public static final String GIN_USER_VALUE = "gintong_1998_9167004345845581253L";
 
     /*
     public static enum SourceType {
@@ -366,61 +368,6 @@ public class KnowledgeConstant {
         }
     }
 
-    /*
-    public static enum PermissionType {
-        dule(1, "dule"), dales(2, "dales"), zhongles(3, "zhongles"), xiaoles(4,
-                "xiaoles");
-        private int v;
-
-        private String c;
-
-        private PermissionType(int v, String c) {
-            this.v = v;
-            this.c = c;
-        }
-
-        public int v() {
-            return v;
-        }
-
-        public String c() {
-            return c;
-        }
-    }*/
-
-    public static enum KnowledgeConnectType {
-        // 关联格式（p:人脉,r:事件,o:组织,k:知识）
-        event(1, "r"), people(2, "p"), organization(5, "o"), knowledge(6, "k");
-        private int v;
-
-        private String c;
-
-        private KnowledgeConnectType(int v, String c) {
-            this.v = v;
-            this.c = c;
-        }
-
-        public int v() {
-            return v;
-        }
-
-        public String c() {
-            return c;
-        }
-    }
-
-    /*
-    public static Integer getPermissionValue(String c) {
-        if (StringUtils.isBlank(c))
-            return null;
-        PermissionType[] type = PermissionType.values();
-        for (PermissionType t : type) {
-            if (StringUtils.equalsIgnoreCase(t.c, c)) {
-                return t.v;
-            }
-        }
-        return null;
-    }*/
 
     public enum MenuType {
         collect(1, "收藏"), main(0, "主目录");
