@@ -54,6 +54,10 @@ public class KnowledgeHomeServiceImpl implements KnowledgeHomeService
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (ids != null && ids.size() < 6) {
+            ids = null;
+        }
+
         return knowledgeMongoDao.selectIndexByParam(type, page, size, ids);
     }
 

@@ -286,7 +286,7 @@ public class KnowledgeMongoDaoImpl extends BaseDao implements KnowledgeMongoDao 
             query = new Query(criteria);
         }
         String str = "" + KnowledgeUtil.writeObjectToJson(criteria);
-        logger.info("MongoObject:" + collectionName + ",Query:" + str);
+        logger.info("MongoObject: " + collectionName + ", Query:" + str);
         query.with(new Sort(Sort.Direction.DESC, Constant._ID));
 
         try {
