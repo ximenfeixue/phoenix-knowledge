@@ -488,13 +488,13 @@
             </build>
         </profile>
         <profile>
-            <id>qa</id>
+            <id>fz</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <filters>
-                    <filter>../sa-qa.properties</filter>
+                    <filter>../sa-fz.properties</filter>
                 </filters>
             </build>
         </profile>
