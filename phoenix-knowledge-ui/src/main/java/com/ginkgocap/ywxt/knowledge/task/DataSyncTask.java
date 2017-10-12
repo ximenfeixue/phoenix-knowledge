@@ -92,8 +92,11 @@ public class DataSyncTask implements Runnable {
                             result = deleteKnowledgeOtherResource(idTypeUid);
                         } else if (data instanceof BusinessTrackLog) {
                             BusinessTrackLog log = (BusinessTrackLog)data;
-                            BusinessTrackUtils.addTbBusinessTrackLog(log.getLogger(), log.getTrackLogger(), log.getBusinessModel(),
-                                    log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
+                            //for userId is 0 or 1, skip to write business log
+                            if (log.getUserId() > 1) {
+                                BusinessTrackUtils.addTbBusinessTrackLog(log.getLogger(), log.getTrackLogger(), log.getBusinessModel(),
+                                        log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
+                            }
                         }
                     }
                     if (result) {
