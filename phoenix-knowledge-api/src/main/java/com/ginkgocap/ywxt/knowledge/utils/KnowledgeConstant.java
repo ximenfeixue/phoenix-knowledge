@@ -78,7 +78,7 @@ public class KnowledgeConstant {
     }
 
     public enum UserType {
-        jinTN(0, "金桐网"), platform(-1, "全平台");
+        jinTN(0, "金桐脑"), platform(-1, "全平台");
 
         private int v;
         private String c;

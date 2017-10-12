@@ -122,9 +122,9 @@ public abstract class BaseController {
 
     protected User JTNUser() {
         User user = new User();
-        user.setId(0);//金桐脑
-        user.setName("金桐脑");
-        user.setUserName("金桐脑");
+        user.setId(KnowledgeConstant.UserType.jinTN.v());//金桐脑
+        user.setName(KnowledgeConstant.UserType.jinTN.c());
+        user.setUserName(KnowledgeConstant.UserType.jinTN.c());
         return user;
     }
 
