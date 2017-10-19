@@ -1741,7 +1741,7 @@ public class KnowledgeController extends BaseKnowledgeController
         // 1 自己 2好友 3 金桐脑 4全平台
         int relation = 0;
         if (userId == null) {
-            if (k.getUid() == KnowledgeConstant.Ids.EGinTN.v()) {
+            if (k.getUid() == KnowledgeConstant.UserType.jinTN.v()) {
                 relation = 3;
             } else {
                 relation = 4;

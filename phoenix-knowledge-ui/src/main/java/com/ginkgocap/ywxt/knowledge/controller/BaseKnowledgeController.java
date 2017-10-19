@@ -81,7 +81,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         detailFaultTolerant(data.getKnowledgeDetail());
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
-        InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        InterfaceResult<Long> result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             data.serUserInfo(user);
             result = this.knowledgeService.insert(data);
@@ -94,7 +94,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             logger().error("Insert knowledge failed!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
-        long knowledgeId = Long.valueOf(result.getResponseData().toString());
+        final long knowledgeId = (long)result.getResponseData();
 
         Knowledge detail = data.getKnowledgeDetail();
         detail.setId(knowledgeId);
@@ -144,7 +144,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             }*/
         }
 
-        logger().info(".......create knowledge success......");
+        logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
         //send new knowledge to bigdata
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
