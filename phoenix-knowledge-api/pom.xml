@@ -44,13 +44,5 @@
             <groupId>com.gintong.common</groupId>
             <artifactId>phoenix-permission-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
     </dependencies>
 </project>
