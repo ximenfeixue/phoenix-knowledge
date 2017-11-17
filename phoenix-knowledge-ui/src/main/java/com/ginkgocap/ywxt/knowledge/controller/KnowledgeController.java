@@ -14,13 +14,13 @@ import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
 import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
-import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -364,6 +364,66 @@ public class KnowledgeController extends BaseKnowledgeController
         }*/
 
         DataCollect data = result.getResponseData();
+        logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
+        jacksonValue = knowledgeDetail(data);
+
+        return jacksonValue;
+    }
+
+    /**
+     * 分享出去的知识查看详情
+     * @throws java.io.IOException
+     */
+    @RequestMapping(value = "/shareAsso/{parem}", method = RequestMethod.GET)
+    @ResponseBody
+    public MappingJacksonValue detailByAsso(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable String parame) throws Exception {
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        if (parame.equals("") || parame == null) {
+            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
+        }
+        Base64 base64 = new Base64();
+        parame = base64.decode(parame).toString();
+        String[] parameList = parame.split(",");
+        if (parameList.length != 3) {
+            return mappingJacksonValue(CommonResultCode.PARAMS_FORMAT_EXCEPTION);
+        }
+
+        long knowledgeId = Long.parseLong(parameList[0]);
+        int type = Integer.parseInt(parameList[1]);
+        long shareId = Long.parseLong(parameList[2]);
+
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
+
+        DataCollect data = result.getResponseData();
+        // 开始获取需要展示的数据
+        String content = associateServiceLocal.getAssoiateShareContent(shareId);
+        if (content != null && !content.equals("")) {
+            String[] shareIds = content.split(",");
+            if (shareIds.length > 0) {
+                List<Associate> associateList = data.getAsso();
+                List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
+                for (int i = 0; i < shareIds.length; i++) {
+                    Long shareAssoId = Long.parseLong(shareIds[i]);
+                    for (Associate associate : associateList) {
+                        if (shareAssoId.equals(associate.getId())) {
+                            newAssociateList.add(associate);
+                        }
+                    }
+                }
+                data.setAsso(newAssociateList);
+            }
+
+        }
+
         logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
         jacksonValue = knowledgeDetail(data);
 
@@ -1668,6 +1728,30 @@ public class KnowledgeController extends BaseKnowledgeController
         responseDataMap.put("listUserKnowledge", userKnowledge);
         responseDataMap.put("type", type);
         return InterfaceResult.getSuccessInterfaceResultInstance(responseDataMap);
+    }
+
+    /**
+     * 根据知识ID获取知识的关联信息
+     * @param request
+     * @param knowledgeId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = {"/knowledgeAsso/{knowledgeId}"}, method = RequestMethod.GET)
+    public InterfaceResult getKnowledgeAsso(HttpServletRequest request, @PathVariable long knowledgeId) {
+        User user = getUser(request);
+        if (user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        long userId = this.getUserId(user);
+        try {
+            List<Associate> associateList = associateServiceLocal.getAssociateList(userId, knowledgeId);
+            return InterfaceResult.getSuccessInterfaceResultInstance(associateList);
+        } catch (Exception ex) {
+            logger.error("get associate info failed: knowledgeId: " + knowledgeId + ", userId: " + userId + " error: " + ex.getMessage());
+            //ex.printStackTrace();
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
     }
 
     @SuppressWarnings({ "deprecation", "unchecked" })

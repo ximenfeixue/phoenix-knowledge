@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.knowledge.service;
 import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.parasol.associate.model.AssociateType;
 import com.ginkgocap.parasol.associate.service.AssociateService;
+import com.ginkgocap.parasol.associate.service.AssociateShareService;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService;
 import com.ginkgocap.ywxt.user.model.User;
@@ -35,6 +36,9 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
 
     @Autowired
     private AssociateService associateService;
+
+    @Autowired
+    private AssociateShareService associateShareService;
 
     public Map<Long, List<Associate>> createAssociate(List<Associate> as, long knowledgeId, User user)
     {
@@ -152,5 +156,9 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
 
     public List<Associate> getAssociateList(long userId, long knowledgeId) throws Exception {
         return associateService.getAssociatesBySourceId(APPID, userId, knowledgeId, (long)sourceType);
+    }
+
+    public String getAssoiateShareContent(long share) throws Exception{
+        return associateShareService.getAssociateShare(share);
     }
 }
