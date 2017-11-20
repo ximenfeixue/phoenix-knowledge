@@ -374,29 +374,15 @@ public class KnowledgeController extends BaseKnowledgeController
      * 分享出去的知识查看详情
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/shareAsso/{parem}", method = RequestMethod.GET)
+    @RequestMapping(value = "/shareAsso", method = RequestMethod.POST)
     @ResponseBody
     public MappingJacksonValue detailByAsso(HttpServletRequest request, HttpServletResponse response,
-                                      @PathVariable String parame) throws Exception {
+                                      @PathVariable long knowledgeId,@PathVariable long shareId,@PathVariable int type) throws Exception {
 
         User user = this.getUser(request);
         if (user == null) {
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
-        if (parame.equals("") || parame == null) {
-            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
-        }
-        Base64 base64 = new Base64();
-        parame = base64.decode(parame).toString();
-        String[] parameList = parame.split(",");
-        if (parameList.length != 3) {
-            return mappingJacksonValue(CommonResultCode.PARAMS_FORMAT_EXCEPTION);
-        }
-
-        long knowledgeId = Long.parseLong(parameList[0]);
-        int type = Integer.parseInt(parameList[1]);
-        long shareId = Long.parseLong(parameList[2]);
-
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
