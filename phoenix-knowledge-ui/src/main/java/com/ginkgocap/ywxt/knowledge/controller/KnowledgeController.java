@@ -378,7 +378,6 @@ public class KnowledgeController extends BaseKnowledgeController
     @ResponseBody
     public MappingJacksonValue detailByAsso(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable String parame) throws Exception {
-
         User user = this.getJTNUser(request);
         Base64 base64 = new Base64();
         byte[] b = base64.decode(parame);
@@ -424,7 +423,9 @@ public class KnowledgeController extends BaseKnowledgeController
 
         // 开始获取需要展示的数据
         if (!shareId.equals(0)) {
+            logger.info("begin inspect asso...");
             String content = associateServiceLocal.getAssoiateShareContent(shareId);
+            logger.info("content : " + content);
             if (content != null && !content.equals("")) {
                 String[] shareIds = content.split(",");
                 if (shareIds.length > 0) {
