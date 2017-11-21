@@ -374,46 +374,79 @@ public class KnowledgeController extends BaseKnowledgeController
      * 分享出去的知识查看详情
      * @throws java.io.IOException
      */
-    @RequestMapping(value = "/shareAsso", method = RequestMethod.POST)
+    @RequestMapping(value = "/shareAsso/{parame}", method = RequestMethod.GET)
     @ResponseBody
     public MappingJacksonValue detailByAsso(HttpServletRequest request, HttpServletResponse response,
-                                      @PathVariable long knowledgeId,@PathVariable long shareId,@PathVariable int type) throws Exception {
+                                      @PathVariable String parame) throws Exception {
 
-        User user = this.getUser(request);
-        if (user == null) {
-            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
-        }
+        User user = this.getJTNUser(request);
+        Base64 base64 = new Base64();
+        byte[] b = base64.decode(parame);
+        String parames = new String(b);
+        String[] kts = parames.split(",");
+        Long knowledgeId = Long.parseLong(kts[0]);
+        int type = Integer.parseInt(kts[1]);
+        Long shareId = Long.parseLong(kts[2]);
         InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
         }
+        /*
+        if (Failed(result)) {
+            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(result);
+        }
 
         DataCollect data = result.getResponseData();
+        if (data == null || data.getKnowledgeDetail() == null) {
+            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
+            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
+        }*/
+
+        DataCollect data = result.getResponseData();
+        Knowledge detail = data.getKnowledgeDetail();
+        List<Long> tags = detail.getTagList();
+        List<Long> directoryIds = detail.getDirectorys();
+        List<IdName> minTags = this.getMinTagList(tags);
+        long userId = user.getId() == 0 ? detail.getCid() : user.getId();
+        List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
+        logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
+                " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
+        long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+        ColumnSelf columnSelf = getColumn(columnId);
+        IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
+        if (column != null) {
+            logger.info("get column info: Id: " + column.getId() + " name: " + column.getName());
+        }
+        KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
+        data.setKnowledgeDetail(webDetail);
+
         // 开始获取需要展示的数据
-        String content = associateServiceLocal.getAssoiateShareContent(shareId);
-        if (content != null && !content.equals("")) {
-            String[] shareIds = content.split(",");
-            if (shareIds.length > 0) {
-                List<Associate> associateList = data.getAsso();
-                List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
-                for (int i = 0; i < shareIds.length; i++) {
-                    Long shareAssoId = Long.parseLong(shareIds[i]);
-                    for (Associate associate : associateList) {
-                        if (shareAssoId.equals(associate.getId())) {
-                            newAssociateList.add(associate);
+        if (!shareId.equals(0)) {
+            String content = associateServiceLocal.getAssoiateShareContent(shareId);
+            if (content != null && !content.equals("")) {
+                String[] shareIds = content.split(",");
+                if (shareIds.length > 0) {
+                    List<Associate> associateList = data.getAsso();
+                    List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
+                    for (int i = 0; i < shareIds.length; i++) {
+                        Long shareAssoId = Long.parseLong(shareIds[i]);
+                        for (Associate associate : associateList) {
+                            if (shareAssoId.equals(associate.getId())) {
+                                newAssociateList.add(associate);
+                            }
                         }
                     }
+                    data.setAsso(newAssociateList);
                 }
-                data.setAsso(newAssociateList);
             }
-
         }
 
         logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
         jacksonValue = knowledgeDetail(data);
 
-        return jacksonValue;
+        return knowledgeDetail(data);
     }
 
     /**
@@ -453,7 +486,7 @@ public class KnowledgeController extends BaseKnowledgeController
         long userId = user.getId() == 0 ? detail.getCid() : user.getId();
         List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
         logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
-                     " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
+                " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
         long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
         ColumnSelf columnSelf = getColumn(columnId);
         IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
