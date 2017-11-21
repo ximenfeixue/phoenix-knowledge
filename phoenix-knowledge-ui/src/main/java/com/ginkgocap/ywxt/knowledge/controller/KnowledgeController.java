@@ -439,14 +439,13 @@ public class KnowledgeController extends BaseKnowledgeController
                             }
                         }
                     }
+                    logger.info("newAssociateList size :  " + newAssociateList.size());
                     data.setAsso(newAssociateList);
                 }
             }
         }
 
         logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
-        jacksonValue = knowledgeDetail(data);
-
         return knowledgeDetail(data);
     }
 
