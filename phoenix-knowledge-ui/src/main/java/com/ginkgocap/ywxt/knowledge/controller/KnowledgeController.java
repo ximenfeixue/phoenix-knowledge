@@ -428,13 +428,14 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.info("content : " + content);
             if (content != null && !content.equals("")) {
                 String[] shareIds = content.split(",");
+                logger.info("shareIds length :" +  shareIds.length);
                 if (shareIds.length > 0) {
                     List<Associate> associateList = data.getAsso();
                     List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
                     for (int i = 0; i < shareIds.length; i++) {
                         Long shareAssoId = Long.parseLong(shareIds[i]);
                         for (Associate associate : associateList) {
-                            if (shareAssoId.equals(associate.getId())) {
+                            if (shareAssoId.equals(associate.getAssocId())) {
                                 newAssociateList.add(associate);
                             }
                         }
