@@ -88,7 +88,7 @@ public class DynamicNewsServiceLocal
         return;
     }
 
-    public boolean addDynamicToAll(String newsContent, long userId, Map<Long,List<Associate>> assoMap) throws IOException
+    public boolean addDynamicToAll(String newsContent, long userId)
     {
         try{
             List<Long> receiverIds = null;

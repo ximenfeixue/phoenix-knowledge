@@ -9,6 +9,8 @@ import com.gintong.rocketmq.api.DefaultMessageService;
 import com.gintong.rocketmq.api.enums.TopicType;
 import com.gintong.rocketmq.api.model.RocketSendResult;
 import com.gintong.rocketmq.api.utils.FlagTypeUtils;
+import com.gintong.ywxt.im.model.ResourceMessage;
+import com.gintong.ywxt.im.service.ResourceMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +47,9 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 	@Autowired
 	private DefaultMessageService defaultMessageService;
 
+	@Autowired
+	private ResourceMessageService resourceMessageService;
+
     private final int maxQeueSize = 2000;
 
 	private BlockingQueue<SyncBigData> knowQueue = new ArrayBlockingQueue<SyncBigData>(maxQeueSize);
@@ -72,6 +77,11 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 			if (StringUtils.isNotBlank(optionType)) {
 				result = defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, optionType, PackingDataUtil.packingSendBigData(bigData));
 				logger.info("response: " + result.getSendResult());
+				if (BigDataSyncTask.KNOWLEDGE_INSERT.equals(optionType) && bigData.getCid() > 1) {
+					ResourceMessage resourceMessage = this.createResourceMessage(bigData);
+					logger.info("sync knowledge to feechat.");
+					resourceMessageService.insertResMessage(resourceMessage);
+				}
 			} else {
 				defaultMessageService.sendMessage(TopicType.KNOWLEDGE_TOPIC, PackingDataUtil.packingSendBigData(bigData));
 			}
@@ -158,6 +168,20 @@ public class BigDataSyncTask implements Runnable, InitializingBean
 		} catch (InterruptedException ex) {
 			logger.error("Exist thread, as it was interrupted.");
 		}
+	}
+
+	private ResourceMessage createResourceMessage(BigData bigData) {
+		ResourceMessage resourceMessage = new ResourceMessage();
+		resourceMessage.setResId(bigData.getKid());
+		resourceMessage.setResType(8);
+		resourceMessage.setType(bigData.getColumnType());
+		resourceMessage.setTitle(bigData.getTitle());
+		resourceMessage.setDesc(bigData.getDesc());
+		resourceMessage.setOwnerId(bigData.getCid());
+		resourceMessage.setOwnerName(bigData.getCname());
+		resourceMessage.setPicPath(bigData.getPic());
+
+		return resourceMessage;
 	}
 
 	public void afterPropertiesSet() throws Exception {

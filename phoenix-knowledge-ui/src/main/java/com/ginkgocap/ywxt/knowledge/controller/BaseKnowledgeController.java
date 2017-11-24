@@ -15,7 +15,9 @@ import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
 import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
 import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
 import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
+import com.ginkgocap.ywxt.user.model.SyncSwitch;
 import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.SyncSourceService;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -68,6 +70,9 @@ public abstract class BaseKnowledgeController extends BaseController {
 
     @Autowired
     protected DataSyncTask dataSyncTask;
+
+    @Autowired
+    protected SyncSourceService syncSourceService;
 
     protected InterfaceResult create(HttpServletRequest request, final User user)
     {
@@ -130,18 +135,19 @@ public abstract class BaseKnowledgeController extends BaseController {
         }
 
         //Sync to dynamic news
-        if (syncToDynamic) {
+
+        if (syncToDynamic || syncSwitch.getDynamicType() == 1) {
+            /*
             String dynamicNews = createDynamicNews(detail, user);
             try {
-                dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId, assoMap);
+                dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId);
             } catch (Exception ex) {
                 logger().info("sync knowledge to dynamic failed. userId: " + userId + " knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
-            }
-            /*
-            DataSync dataSync = createDynamicNewsDataSync(knowledgeDetail, user.isVirtual());
+            }*/
+            DataSync dataSync = createDynamicNewsDataSync(detail, user);
             if (dataSyncTask != null) {
                 dataSyncTask.saveDataNeedSync(dataSync);
-            }*/
+            }
         }
 
         logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
@@ -285,9 +291,10 @@ public abstract class BaseKnowledgeController extends BaseController {
         return data;
     }
 
-    protected String createDynamicNews(Knowledge detail,User user) {
+    protected DynamicNews createDynamicNews(Knowledge detail,User user) {
         DynamicNews dynamic = createDynamicNewsObj(detail, user);
-        return KnowledgeUtil.writeObjectToJson(dynamic);
+        return dynamic;
+        //return KnowledgeUtil.writeObjectToJson(dynamic);
     }
 
     protected Permission getPermission(final long userId, final long knowledgeId, final int privated) {
@@ -403,5 +410,17 @@ public abstract class BaseKnowledgeController extends BaseController {
         //dynamic.setVirtual(knowledge.getVirtual());
 
         return dynamic;
+    }
+
+    private SyncSwitch getSyncSwitch (final long userId) {
+        SyncSwitch syncSwitch = syncSourceService.getSyncSwitchStatus(userId, 8);
+        if (syncSwitch == null) {
+            syncSwitch = new SyncSwitch();
+            syncSwitch.setDynamicType(0);
+            syncSwitch.setGroupType(0);
+            syncSwitch.setSpeciFriendType(0);
+            syncSwitch.setStarFriendType(0);
+        }
+        return syncSwitch;
     }
 }

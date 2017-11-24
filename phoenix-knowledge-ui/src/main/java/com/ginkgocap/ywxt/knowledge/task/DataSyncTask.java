@@ -1,10 +1,12 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
+import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.BusinessTrackLog;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
 import com.ginkgocap.ywxt.knowledge.model.common.IdTypeUid;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
+import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.ywxt.im.model.MessageNotify;
@@ -56,6 +58,9 @@ public class DataSyncTask implements Runnable {
     private PermissionServiceLocal permissionServiceLocal;
 
     @Autowired
+    private DynamicNewsServiceLocal dynamicNewsServiceLocal;
+
+    @Autowired
     private BigDataSyncTask bigDataSyncTask;
 
     private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
@@ -67,7 +72,7 @@ public class DataSyncTask implements Runnable {
             data.setId(id);
             addQueue(data);
         } catch (Exception ex) {
-            logger.error("save sync data failed: dataSync: {}",data);
+            logger.error("save sync data failed: dataSync: " + data);
             return false;
         }
         return true;
@@ -90,6 +95,10 @@ public class DataSyncTask implements Runnable {
                         } else if (data instanceof IdTypeUid) {
                             final IdTypeUid idTypeUid = (IdTypeUid)data;
                             result = deleteKnowledgeOtherResource(idTypeUid);
+                        } else if (data instanceof DynamicNews) {
+                            final DynamicNews dynamicNews = (DynamicNews)data;
+                            final String dynamicContent = KnowledgeUtil.writeObjectToJson(dynamicNews);;
+                            dynamicNewsServiceLocal.addDynamicToAll(dynamicContent, dynamicNews.getCreaterId());
                         } else if (data instanceof BusinessTrackLog) {
                             BusinessTrackLog log = (BusinessTrackLog)data;
                             //for userId is 0 or 1, skip to write business log
