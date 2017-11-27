@@ -117,12 +117,15 @@ public class DynamicNewsServiceLocal
             for(long id : receiverIds){
                 //this.setEtagStatus(id, "1");
             }
-            logger.info("create dynamic success, dynamicId: {}", dynamicId);
+            logger.info("create dynamic success, dynamicId: " + dynamicId);
+            if (dynamicId > 0) {
+                return true;
+            }
         }catch(Exception e){
             logger.error("添加动态失败！",e);
             return false;
         }
-        return true;
+        return false;
     }
 
     /*

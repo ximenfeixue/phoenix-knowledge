@@ -21,6 +21,8 @@ import com.ginkgocap.ywxt.user.service.SyncSourceService;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.ywxt.im.model.ResourceMessage;
+import com.gintong.ywxt.im.service.ResourceMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
@@ -99,7 +101,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             logger().error("Insert knowledge failed!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70001);
         }
-        final long knowledgeId = (long)result.getResponseData();
+        final long knowledgeId = result.getResponseData();
 
         Knowledge detail = data.getKnowledgeDetail();
         detail.setId(knowledgeId);
@@ -134,8 +136,10 @@ public abstract class BaseKnowledgeController extends BaseController {
             syncToDynamic = (permission.getPublicFlag() != null && permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
         }
 
-        //Sync to dynamic news
+        logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
+        //Sync to dynamic news
+        SyncSwitch syncSwitch = getSyncSwitch(userId);
         if (syncToDynamic || syncSwitch.getDynamicType() == 1) {
             /*
             String dynamicNews = createDynamicNews(detail, user);
@@ -150,7 +154,14 @@ public abstract class BaseKnowledgeController extends BaseController {
             }
         }
 
-        logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
+        //Sync resource to freechat
+        if (syncSwitch.getGroupType() == 1 || syncSwitch.getSpeciFriendType() == 1 || syncSwitch.getStarFriendType() == 1) {
+            if (detail.getCid() > 1) {
+                ResourceMessage resourceMessage = this.createResourceMessage(detail);
+                logger().info("sync knowledge to feechat. knowledgeId: " + detail.getId());
+                dataSyncTask.saveDataNeedSync(new DataSync(0, resourceMessage));
+            }
+        }
 
         //send new knowledge to bigdata
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
@@ -412,8 +423,32 @@ public abstract class BaseKnowledgeController extends BaseController {
         return dynamic;
     }
 
+    private ResourceMessage createResourceMessage(Knowledge detail) {
+        ResourceMessage resourceMessage = new ResourceMessage();
+        resourceMessage.setResId(detail.getId());
+        resourceMessage.setResType(8);
+        resourceMessage.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));
+        resourceMessage.setTitle(detail.getTitle());
+        final String content = detail.getContent();
+        final int totalLength = detail.getContent().length();
+        final int length = totalLength > 250 ? 250 : totalLength;
+        final String contentDes = content.substring(0, length);
+        resourceMessage.setDesc(contentDes);
+        resourceMessage.setOwnerId(detail.getCid());
+        resourceMessage.setOwnerName(detail.getCname());
+        resourceMessage.setPicPath(detail.getPic());
+
+        return resourceMessage;
+    }
+
     private SyncSwitch getSyncSwitch (final long userId) {
-        SyncSwitch syncSwitch = syncSourceService.getSyncSwitchStatus(userId, 8);
+        SyncSwitch syncSwitch = null;
+        try {
+            syncSwitch = syncSourceService.getSyncSwitchStatus(userId, 8);
+        } catch (Exception ex) {
+            logger().error("query syncSwitch status failed. userId: " + userId);
+        }
+
         if (syncSwitch == null) {
             syncSwitch = new SyncSwitch();
             syncSwitch.setDynamicType(0);

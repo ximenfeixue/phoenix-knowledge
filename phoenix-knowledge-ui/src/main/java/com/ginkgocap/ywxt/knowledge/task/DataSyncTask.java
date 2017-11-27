@@ -10,7 +10,9 @@ import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.ywxt.im.model.MessageNotify;
+import com.gintong.ywxt.im.model.ResourceMessage;
 import com.gintong.ywxt.im.service.MessageNotifyService;
+import com.gintong.ywxt.im.service.ResourceMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,9 @@ public class DataSyncTask implements Runnable {
     private DynamicNewsServiceLocal dynamicNewsServiceLocal;
 
     @Autowired
+    private ResourceMessageService resourceMessageService;
+
+    @Autowired
     private BigDataSyncTask bigDataSyncTask;
 
     private BlockingQueue<DataSync> dataSyncQueue = new ArrayBlockingQueue<DataSync>(MAX_QUEUE_NUM);
@@ -98,13 +103,18 @@ public class DataSyncTask implements Runnable {
                         } else if (data instanceof DynamicNews) {
                             final DynamicNews dynamicNews = (DynamicNews)data;
                             final String dynamicContent = KnowledgeUtil.writeObjectToJson(dynamicNews);;
-                            dynamicNewsServiceLocal.addDynamicToAll(dynamicContent, dynamicNews.getCreaterId());
-                        } else if (data instanceof BusinessTrackLog) {
+                            result = dynamicNewsServiceLocal.addDynamicToAll(dynamicContent, dynamicNews.getCreaterId());
+                        } else if (data instanceof ResourceMessage) {
+                            ResourceMessage resourceMessage = (ResourceMessage)data;
+                            resourceMessageService.insertResMessage(resourceMessage);
+                            result = true;
+                        }else if (data instanceof BusinessTrackLog) {
                             BusinessTrackLog log = (BusinessTrackLog)data;
                             //for userId is 0 or 1, skip to write business log
                             if (log.getUserId() > 1) {
                                 BusinessTrackUtils.addTbBusinessTrackLog(log.getLogger(), log.getTrackLogger(), log.getBusinessModel(),
                                         log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
+                                result = true;
                             }
                         }
                     }

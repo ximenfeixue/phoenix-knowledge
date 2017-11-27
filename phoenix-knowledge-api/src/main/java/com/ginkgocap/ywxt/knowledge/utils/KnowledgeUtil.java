@@ -411,7 +411,7 @@ public final class KnowledgeUtil {
             newColumnId = Short.parseShort(columnType);
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
-            logger.error("Parser columnType error. columnType: {}", columnType);
+            logger.error("Parser columnType error. columnType: " + columnType);
             return newColumnId;
         }
 
