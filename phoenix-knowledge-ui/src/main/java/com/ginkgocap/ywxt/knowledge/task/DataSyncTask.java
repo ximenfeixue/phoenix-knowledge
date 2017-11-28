@@ -128,7 +128,7 @@ public class DataSyncTask implements Runnable {
             logger.error("queues thread interrupted. so exit this thread.");
         }
     }
-    
+
     public void addQueue(DataSync data) {
         if (data != null) {
             try {

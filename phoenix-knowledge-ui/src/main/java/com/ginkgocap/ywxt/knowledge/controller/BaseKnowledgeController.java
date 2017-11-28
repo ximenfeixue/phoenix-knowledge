@@ -130,17 +130,17 @@ public abstract class BaseKnowledgeController extends BaseController {
         }
 
         boolean syncToDynamic = false;
+        /*
         Permission permission = permissionServiceLocal.savePermissionInfo(userId, knowledgeId, data.getPermission());
         if (permission != null) {
             logger().info("save knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
             syncToDynamic = (permission.getPublicFlag() != null && permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
-        }
-
+        }*/
         logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
         //Sync to dynamic news
         SyncSwitch syncSwitch = getSyncSwitch(userId);
-        if (syncToDynamic || syncSwitch.getDynamicType() == 1) {
+        if (data.getUpdateDynamic() == 0 && syncSwitch.getDynamicType() == 1) {
             /*
             String dynamicNews = createDynamicNews(detail, user);
             try {
