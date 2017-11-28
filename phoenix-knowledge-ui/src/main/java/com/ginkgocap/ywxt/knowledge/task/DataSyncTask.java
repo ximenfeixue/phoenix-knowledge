@@ -96,7 +96,7 @@ public class DataSyncTask implements Runnable {
                         } else if(data instanceof Permission) {
                             final Permission perm = (Permission)data;
                             final short privated = DataCollect.privated(perm, false);
-                            result = knowledgeOtherService.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
+                            result = this.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
                         } else if (data instanceof IdTypeUid) {
                             final IdTypeUid idTypeUid = (IdTypeUid)data;
                             result = deleteKnowledgeOtherResource(idTypeUid);
@@ -106,8 +106,7 @@ public class DataSyncTask implements Runnable {
                             result = dynamicNewsServiceLocal.addDynamicToAll(dynamicContent, dynamicNews.getCreaterId());
                         } else if (data instanceof ResourceMessage) {
                             ResourceMessage resourceMessage = (ResourceMessage)data;
-                            resourceMessageService.insertResMessage(resourceMessage);
-                            result = true;
+                            result = this.insertResMessage(resourceMessage);
                         }else if (data instanceof BusinessTrackLog) {
                             BusinessTrackLog log = (BusinessTrackLog)data;
                             //for userId is 0 or 1, skip to write business log
@@ -129,7 +128,7 @@ public class DataSyncTask implements Runnable {
             logger.error("queues thread interrupted. so exit this thread.");
         }
     }
-
+    
     public void addQueue(DataSync data) {
         if (data != null) {
             try {
@@ -155,39 +154,78 @@ public class DataSyncTask implements Runnable {
         return false;
     }
 
+    private boolean updateCollectedKnowledgePrivate(long knowledgeId, int typeId, short privated) {
+        try {
+            return knowledgeOtherService.updateCollectedKnowledgePrivate(knowledgeId, typeId, privated);
+        } catch (Exception ex) {
+            logger.error("update collected knowedge permission failed. knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    private boolean insertResMessage(ResourceMessage resourceMessage) {
+        try {
+            resourceMessageService.insertResMessage(resourceMessage);
+        } catch (Exception ex) {
+            logger.error("insert resource message failed. error: " + ex.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     private boolean deleteKnowledgeOtherResource(final IdTypeUid idTypeUid) {
         final long userId = idTypeUid.getUid();
         final long knowledgeId = idTypeUid.getId();
         final int columnType = idTypeUid.getType();
         logger.info("begin clean up knowlege regards resource. knowledgeId: " + knowledgeId + " type: " + columnType);
-        //delete tags
-        tagServiceLocal.deleteTags(userId, knowledgeId);
 
+        //delete tags
+        boolean reslut = tagServiceLocal.deleteTags(userId, knowledgeId);
+        if (!reslut) {
+            logger.info("delete knowledge tag failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
         //delete directory
-        directoryServiceLocal.deleteDirectory(userId, knowledgeId);
+        reslut = directoryServiceLocal.deleteDirectory(userId, knowledgeId);
+        if (!reslut) {
+            logger.info("delete knowledge directory failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
 
         //delete Assso info
-        associateServiceLocal.deleteAssociate(knowledgeId, userId);
+        reslut = associateServiceLocal.deleteAssociate(knowledgeId, userId);
+        if (!reslut) {
+            logger.info("delete knowledge associate failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
 
         //delete permission info
-        if (permissionServiceLocal.deletePermissionInfo(userId, knowledgeId)) {
-            logger.info("delete knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
+        reslut = permissionServiceLocal.deletePermissionInfo(userId, knowledgeId);
+        if (!reslut) {
+            logger.info("delete knowledge permission failed. userId: " + userId + " knowledgeId: " + knowledgeId);
         }
 
         //delete knowledge count info
-        knowledgeCountService.deleteKnowledgeCount(knowledgeId);
+        try {
+            knowledgeCountService.deleteKnowledgeCount(knowledgeId);
+        } catch (Exception ex) {
+            logger.error("delete knowledge count failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
 
         //delete knowledge comment info
-        knowledgeCommentService.cleanComment(knowledgeId);
+        try {
+            knowledgeCommentService.cleanComment(knowledgeId);
+        } catch (Exception ex) {
+            logger.error("delete knowledge comment failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
 
         //delete knowledge from knowledge index table
-        knowledgeIndexService.deleteKnowledgeIndex(knowledgeId);
+        try {
+            knowledgeIndexService.deleteKnowledgeIndex(knowledgeId);
+        } catch (Exception ex) {
+            logger.error("delete knowledge index failed. userId: " + userId + " knowledgeId: " + knowledgeId);
+        }
 
         //send new knowledge to bigdata
         bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);
         logger.info("clean up knowlege regards resource complete.");
         return true;
     }
-
-
 }

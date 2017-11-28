@@ -81,18 +81,18 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
         return assoMap;
     }
 
-    public InterfaceResult deleteAssociate(long knowledgeId, long userId)
+    public boolean deleteAssociate(long knowledgeId, long userId)
     {
         Map<AssociateType, List<Associate>> assomap = null;
         try {
             assomap =  associateService.getAssociatesBy(APPID, (long)KnowledgeBaseService.sourceType, knowledgeId);
             if (assomap == null) {
                 logger.error("asso item null or converted failed...");
-                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+                return false;
             }
         } catch (Exception ex) {
-            logger.error("delete Associate failed, reason: {}", ex.getMessage());
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            logger.error("delete Associate failed, reason: " + ex.getMessage());
+            return false;
         }
 
         //TODO: If this step failed, how to do ?
@@ -107,12 +107,13 @@ public class AssociateServiceLocal extends BaseServiceLocal implements Knowledge
                     }
                     associateService.removeAssociate(APPID, userId, associate.getId());
                 }catch (Exception ex) {
-                    logger.error("delete Associate failed, reason: {}", ex.getMessage());
+                    logger.error("delete Associate failed, reason: " + ex.getMessage());
+                    return false;
                 }
             }
         }
 
-        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        return true;
     }
 
     public InterfaceResult updateAssociate(long knowledgeId, User user, DataCollect data)
