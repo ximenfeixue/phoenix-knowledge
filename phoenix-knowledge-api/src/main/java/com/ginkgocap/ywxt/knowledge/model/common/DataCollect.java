@@ -41,7 +41,7 @@ public class DataCollect implements Serializable
     private Permission permission;
 
     //同步到动态
-    private short updateDynamic;
+    private short updateDynamic = 0;
 
     //更新知识，更改栏目
     private int oldType;

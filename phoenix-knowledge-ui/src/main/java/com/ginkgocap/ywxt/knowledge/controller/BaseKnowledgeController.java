@@ -129,13 +129,11 @@ public abstract class BaseKnowledgeController extends BaseController {
             //return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
         }
 
-        boolean syncToDynamic = false;
-        /*
         Permission permission = permissionServiceLocal.savePermissionInfo(userId, knowledgeId, data.getPermission());
         if (permission != null) {
             logger().info("save knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
-            syncToDynamic = (permission.getPublicFlag() != null && permission.getPublicFlag() != 0 && data.getUpdateDynamic() == 1);
-        }*/
+        }
+
         logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
         //Sync to dynamic news
@@ -432,7 +430,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         final String content = HtmlToText.htmlToText(detail.getContent());
         final int totalLength = content.length();
         final int length = totalLength >= 250 ? 250 : totalLength;
-        final String contentDes = content.substring(0, length-1);
+        final String contentDes = content.substring(0, length);
         resourceMessage.setDesc(contentDes);
         resourceMessage.setOwnerId(detail.getCid());
         resourceMessage.setOwnerName(detail.getCname());
