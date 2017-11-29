@@ -430,7 +430,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         resourceMessage.setType(KnowledgeUtil.parserShortType(detail.getColumnType()));
         resourceMessage.setTitle(detail.getTitle());
         final String content = HtmlToText.htmlToText(detail.getContent());
-        final int totalLength = detail.getContent().length();
+        final int totalLength = content.length();
         final int length = totalLength >= 250 ? 250 : totalLength;
         final String contentDes = content.substring(0, length-1);
         resourceMessage.setDesc(contentDes);
