@@ -154,7 +154,7 @@ public abstract class BaseKnowledgeController extends BaseController {
                 dataSyncTask.saveDataNeedSync(new DataSync(0, resourceMessage));
             }
         } else {
-            logger().warn("skip sync knowledge. userId: " + userId + "knowledgeId: " + detail.getId());
+            logger().warn("skip sync knowledge. userId: " + userId + " knowledgeId: " + detail.getId());
         }
 
         //send new knowledge to bigdata
