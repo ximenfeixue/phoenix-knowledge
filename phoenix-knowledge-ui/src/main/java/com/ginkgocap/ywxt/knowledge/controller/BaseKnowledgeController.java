@@ -130,14 +130,10 @@ public abstract class BaseKnowledgeController extends BaseController {
         }
 
         Permission permission = permissionServiceLocal.savePermissionInfo(userId, knowledgeId, data.getPermission());
-        if (permission != null) {
-            logger().info("save knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
-        }
 
         logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
-        permission = data.getPermission();
-        if (userId > 1 && permission != null && permission.getConnectFlag() != null && permission.getConnectFlag() == 1) {
+        if (userId > 1 && permission.getPublicFlag() == 1) {
             //Sync to dynamic news
             SyncSwitch syncSwitch = getSyncSwitch(userId);
             if (data.getUpdateDynamic() == 0 && syncSwitch.getDynamicType() == 1) {

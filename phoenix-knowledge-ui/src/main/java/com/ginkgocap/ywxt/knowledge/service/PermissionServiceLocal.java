@@ -129,18 +129,18 @@ public class PermissionServiceLocal extends BaseServiceLocal implements Knowledg
         }
     }
 
-    public Permission savePermissionInfo(final long userId, final long knowledgeId, final Permission permission)
+    public Permission savePermissionInfo(final long userId, final long knowledgeId, Permission permission)
     {
         if (permission == null) {
             logger.error("No permission info give, so skip to save. userId: " + userId + " knowledgeId: " + knowledgeId);
-            return null;
+            return userId > 1 ? DataCollect.defaultPermission(userId, knowledgeId) : null;
         }
         Permission newPermission = permissionInfo(permission, knowledgeId, userId);
         boolean result = savePermissionInfo(newPermission);
         if (result) {
-            return newPermission;
+            logger.info("save knowledge permission success. userId: " + userId + " knowledgeId: " + knowledgeId);
         }
-        return null;
+        return newPermission;
     }
 
     public boolean savePermissionInfo(final Permission permission)
