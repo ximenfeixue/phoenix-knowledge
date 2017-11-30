@@ -136,29 +136,25 @@ public abstract class BaseKnowledgeController extends BaseController {
 
         logger().info("create knowledge success.  knowlegeId: " + knowledgeId + " userId: " + userId + " userName: " + user.getName());
 
-        //Sync to dynamic news
-        SyncSwitch syncSwitch = getSyncSwitch(userId);
-        if (data.getUpdateDynamic() == 0 && syncSwitch.getDynamicType() == 1) {
-            /*
-            String dynamicNews = createDynamicNews(detail, user);
-            try {
-                dynamicNewsServiceLocal.addDynamicToAll(dynamicNews, userId);
-            } catch (Exception ex) {
-                logger().info("sync knowledge to dynamic failed. userId: " + userId + " knowledgeId: " + knowledgeId + " error: " + ex.getMessage());
-            }*/
-            DataSync dataSync = createDynamicNewsDataSync(detail, user);
-            if (dataSyncTask != null) {
-                dataSyncTask.saveDataNeedSync(dataSync);
+        permission = data.getPermission();
+        if (userId > 1 && permission != null && permission.getConnectFlag() != null && permission.getConnectFlag() == 1) {
+            //Sync to dynamic news
+            SyncSwitch syncSwitch = getSyncSwitch(userId);
+            if (data.getUpdateDynamic() == 0 && syncSwitch.getDynamicType() == 1) {
+                DataSync dataSync = createDynamicNewsDataSync(detail, user);
+                if (dataSyncTask != null) {
+                    dataSyncTask.saveDataNeedSync(dataSync);
+                }
             }
-        }
 
-        //Sync resource to freechat
-        if (syncSwitch.getGroupType() == 1 || syncSwitch.getSpeciFriendType() == 1 || syncSwitch.getStarFriendType() == 1) {
-            if (detail.getCid() > 1) {
+            //Sync resource to freechat
+            if (syncSwitch.getGroupType() == 1 || syncSwitch.getSpeciFriendType() == 1 || syncSwitch.getStarFriendType() == 1) {
                 ResourceMessage resourceMessage = this.createResourceMessage(detail);
                 logger().info("sync knowledge to feechat. knowledgeId: " + detail.getId());
                 dataSyncTask.saveDataNeedSync(new DataSync(0, resourceMessage));
             }
+        } else {
+            logger().warn("skip sync knowledge. userId: " + userId + "knowledgeId: " + detail.getId());
         }
 
         //send new knowledge to bigdata
