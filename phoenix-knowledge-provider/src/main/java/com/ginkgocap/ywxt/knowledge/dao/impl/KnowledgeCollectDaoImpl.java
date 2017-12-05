@@ -46,15 +46,16 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     private int maxSize = 10;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId,short privated) {
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, long shareId, short privated) {
         Knowledge detail = knowledgeMongoDao.getByIdAndColumnType(knowledgeId, typeId);
         if (detail == null) {
             logger.error("can't get knowledge detail. userId: " + userId +" knowledgeId: " + knowledgeId + " type: " + typeId);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_DB_OPERATION_EXCEPTION);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "该知识不存在或已经被删除.");
         }
 
         Query query = knowledgeColumnIdAndOwnerId(userId, knowledgeId, typeId);
-        if (mongoTemplate.findOne(query, KnowledgeCollect.class, tbName) == null) {
+        KnowledgeCollect existCollect = mongoTemplate.findOne(query, KnowledgeCollect.class, tbName);
+        if (existCollect == null) {
             KnowledgeCollect collect = new KnowledgeCollect();
             collect.setId(knowledgeIdService.getUniqueSequenceId("1"));
             collect.setKnowledgeId(knowledgeId);
@@ -64,9 +65,15 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             collect.setKnowledgeTitle(detail.getTitle());
             collect.setOwnerId(userId);
             collect.setPrivated(privated);
+            collect.setShareId(shareId);
 
             mongoTemplate.save(collect, tbName);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+        } else if (existCollect.getShareId() != shareId) {
+            boolean result = this.updateShareId(knowledgeId, typeId, shareId);
+            if (result) {
+                return InterfaceResult.getSuccessInterfaceResultInstance("");
+            }
         }
 
         return InterfaceResult.getSuccessInterfaceResultInstance("该知识已经被收藏");
@@ -215,6 +222,20 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
         query.addCriteria(criteria);
 
         return query;
+    }
+
+    public boolean updateShareId(final long knowledgeId, final int typeId, final long shareId)
+    {
+        Query query = idType(knowledgeId, typeId);
+        Update update = Update.update("shareId", shareId);
+        WriteResult result = mongoTemplate.updateMulti(query, update, tbName);
+        if (result.getN() <= 0) {
+            logger.error("update privated failed. knowledgeId: " + knowledgeId);
+            return false;
+        } else {
+            logger.info("update privated success. knowledgeId: " + knowledgeId + " typeId: " + typeId + " shareId: " + shareId);
+        }
+        return true;
     }
 
     public List<KnowledgeCollect> getAllCollectedKnowledge(Query query, int index, int size) {

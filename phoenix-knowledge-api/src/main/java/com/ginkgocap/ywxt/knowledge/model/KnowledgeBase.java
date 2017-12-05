@@ -96,6 +96,9 @@ public class KnowledgeBase implements Serializable {
 	//是否收藏，1是，0否
 	private short collected = 0;
 
+	//分享id
+	private long shareId;
+
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	public long getId() {
@@ -344,5 +347,14 @@ public class KnowledgeBase implements Serializable {
 
 	public void setCollected(short collected) {
 		this.collected = collected;
+	}
+
+	@Transient
+	public long getShareId() {
+		return shareId;
+	}
+
+	public void setShareId(long shareId) {
+		this.shareId = shareId;
 	}
 }

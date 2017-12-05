@@ -1237,6 +1237,19 @@ public class KnowledgeController extends BaseKnowledgeController
     public InterfaceResult collect(HttpServletRequest request, HttpServletResponse response,
                                                    @PathVariable long knowledgeId, @PathVariable int typeId) throws Exception {
 
+        return collectKnowledge(request, response, knowledgeId, typeId, 0);
+    }
+
+    /**
+     * 收藏知识
+     * @param knowledgeId 知识Id
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/collect/{knowledgeId}/{typeId}/{shareId}", method = RequestMethod.POST)
+    public InterfaceResult collectKnowledge(HttpServletRequest request, HttpServletResponse response,
+                                   @PathVariable long knowledgeId, @PathVariable int typeId, @PathVariable long shareId) throws Exception {
+
         User user = this.getUser(request);
         if (user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -1252,11 +1265,11 @@ public class KnowledgeController extends BaseKnowledgeController
             typeId = typeId <= 0 ? 1 : typeId;
             Permission perm = permissionServiceLocal.getPermissionInfo(knowledgeId);
             final short privated = DataCollect.privated(perm, false);
-            result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId, privated);
-        } catch (Exception e) {
-            logger.error("collect knowledge failed！：" + e.getMessage());
+            result = this.knowledgeOtherService.collectKnowledge(userId, knowledgeId, typeId, shareId, privated);
+        } catch (Exception ex) {
+            logger.error("collect knowledge failed！：" + ex.getMessage());
             result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
-            logger.error("collect knowledge failed！knowledgeId: " + knowledgeId + " type: " + typeId + " error: " + e.getMessage());
+            logger.error("collect knowledge failed！knowledgeId: " + knowledgeId + " type: " + typeId + " error: " + ex.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION,"收藏知识失败!");
         }
 

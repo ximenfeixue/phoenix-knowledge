@@ -25,9 +25,9 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
     private KnowledgeReportDao knowledgeReportDao;
 
     @Override
-    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated)
+    public InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, long shareId, short privated)
     {
-        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, typeId, privated);
+        return knowledgeCollectDao.collectKnowledge(userId, knowledgeId, typeId, shareId, privated);
     }
 
     @Override

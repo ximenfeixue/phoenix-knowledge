@@ -44,6 +44,9 @@ public class KnowledgeCollect implements Serializable {
     //是否私密，1是，0否
     private short privated;
 
+    //分享id
+    private long shareId;
+
     public long getId() {
         return id;
     }
@@ -104,4 +107,11 @@ public class KnowledgeCollect implements Serializable {
         this.privated = privated;
     }
 
+    public long getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(long shareId) {
+        this.shareId = shareId;
+    }
 }

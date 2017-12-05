@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface KnowledgeOtherService
 {
-    InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, short privated);
+    InterfaceResult collectKnowledge(long userId,long knowledgeId, int typeId, long shareId, short privated);
 
     InterfaceResult deleteCollectedKnowledge(long userId,long knowledgeId, int typeId);
 

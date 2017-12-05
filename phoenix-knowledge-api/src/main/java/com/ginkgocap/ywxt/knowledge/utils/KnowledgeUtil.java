@@ -522,6 +522,7 @@ public final class KnowledgeUtil {
                     base.setPrivated(collect.getPrivated());
                     base.setCreateDate(collect.getCreateTime());
                     base.setModifyDate(collect.getCreateTime());
+                    base.setShareId(collect.getShareId());
                     collectedKnowledgeItems.add(base);
                 }
             }
