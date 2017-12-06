@@ -415,20 +415,24 @@ public class KnowledgeController extends BaseKnowledgeController
         if (!shareId.equals(0)) {
             String content = associateServiceLocal.getAssoiateShareContent(shareId);
             if (content != null ) {
-                String[] shareIds = content.split(",");
-                if (shareIds.length > 0) {
-                    List<Associate> associateList = data.getAsso();
-                    List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
-                    for (int i = 0; i < shareIds.length; i++) {
-                        Long shareAssoId = Long.parseLong(shareIds[i]);
-                        for (Associate associate : associateList) {
-                            if (shareAssoId.equals(associate.getAssocId())) {
-                                newAssociateList.add(associate);
+                if (content.equals("")) {
+                    data.setAsso(new ArrayList<Associate>());
+                } else {
+                    String[] shareIds = content.split(",");
+                    if (shareIds.length > 0) {
+                        List<Associate> associateList = data.getAsso();
+                        List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
+                        for (int i = 0; i < shareIds.length; i++) {
+                            Long shareAssoId = Long.parseLong(shareIds[i]);
+                            for (Associate associate : associateList) {
+                                if (shareAssoId.equals(associate.getAssocId())) {
+                                    newAssociateList.add(associate);
+                                }
                             }
                         }
+                        logger.info("newAssociateList size :  " + newAssociateList.size());
+                        data.setAsso(newAssociateList);
                     }
-                    logger.info("newAssociateList size :  " + newAssociateList.size());
-                    data.setAsso(newAssociateList);
                 }
             }
         }
