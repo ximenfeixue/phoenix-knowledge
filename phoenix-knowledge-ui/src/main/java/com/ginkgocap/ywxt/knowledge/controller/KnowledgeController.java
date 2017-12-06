@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -391,17 +392,6 @@ public class KnowledgeController extends BaseKnowledgeController
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
         }
-        /*
-        if (Failed(result)) {
-            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(result);
-        }
-
-        DataCollect data = result.getResponseData();
-        if (data == null || data.getKnowledgeDetail() == null) {
-            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
-        }*/
 
         DataCollect data = result.getResponseData();
         Knowledge detail = data.getKnowledgeDetail();
@@ -423,12 +413,9 @@ public class KnowledgeController extends BaseKnowledgeController
 
         // 开始获取需要展示的数据
         if (!shareId.equals(0)) {
-            logger.info("begin inspect asso...");
             String content = associateServiceLocal.getAssoiateShareContent(shareId);
-            logger.info("content : " + content);
-            if (content != null && !content.equals("")) {
+            if (content != null ) {
                 String[] shareIds = content.split(",");
-                logger.info("shareIds length :" +  shareIds.length);
                 if (shareIds.length > 0) {
                     List<Associate> associateList = data.getAsso();
                     List<Associate> newAssociateList = new ArrayList<Associate>(shareIds.length);
