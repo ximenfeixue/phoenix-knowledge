@@ -68,7 +68,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             collect.setShareId(shareId);
 
             mongoTemplate.save(collect, tbName);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            return InterfaceResult.getSuccessInterfaceResultInstance("");
         } else if (existCollect.getShareId() != shareId) {
             boolean result = this.updateShareId(knowledgeId, typeId, shareId);
             if (result) {
@@ -76,7 +76,7 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
             }
         }
 
-        return InterfaceResult.getSuccessInterfaceResultInstance("该知识已经被收藏");
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_KOWLEDGE_EXCEPTION_70004);
     }
 
     @Override
