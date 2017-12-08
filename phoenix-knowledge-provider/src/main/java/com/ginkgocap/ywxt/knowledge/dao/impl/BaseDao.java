@@ -30,6 +30,15 @@ public abstract class BaseDao {
         return query;
     }
 
+    protected Query knowledgeTypeIdQuery(long knowledgeId, int typeId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));
+        if (typeId != -1) {
+            query.addCriteria(Criteria.where(Constant.type).is(typeId));
+        }
+        return query;
+    }
+
     protected Query idType(long knowledgeId, int typeId) {
         Query query = new Query();
         query.addCriteria(Criteria.where(Constant.KnowledgeId).is(knowledgeId));

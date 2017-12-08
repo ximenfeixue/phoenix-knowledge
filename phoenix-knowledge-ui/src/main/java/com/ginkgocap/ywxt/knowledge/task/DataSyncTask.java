@@ -97,6 +97,14 @@ public class DataSyncTask implements Runnable {
                             final Permission perm = (Permission)data;
                             final short privated = DataCollect.privated(perm, false);
                             result = this.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
+                            if (!result) {
+                                //for the knowledge has been cancel colllect, not need to update
+                                boolean isCollected = knowledgeOtherService.isCollectedKnowledge(perm.getResId(), -1);
+                                if (!isCollected) {
+                                    result = true;
+                                    logger.info("delete sync, collected knowledge id: " + perm.getResId());
+                                }
+                            }
                         } else if (data instanceof IdTypeUid) {
                             final IdTypeUid idTypeUid = (IdTypeUid)data;
                             result = deleteKnowledgeOtherResource(idTypeUid);

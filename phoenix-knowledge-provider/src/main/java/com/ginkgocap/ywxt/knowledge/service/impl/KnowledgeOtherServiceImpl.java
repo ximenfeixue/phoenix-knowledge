@@ -53,6 +53,13 @@ public class KnowledgeOtherServiceImpl implements KnowledgeOtherService, Knowled
         return knowledgeCollectDao.isCollectedKnowledge(userId, knowledgeId, typeId);
     }
 
+    //private use
+    @Override
+    public boolean isCollectedKnowledge(long knowledgeId, int typeId)
+    {
+        return knowledgeCollectDao.isCollectedKnowledge(knowledgeId, typeId);
+    }
+
     @Override
     public List<KnowledgeCollect> myCollectedKnowledgeByPage(long userId, long total, int typeId, int page, int size,String keyword)
     {

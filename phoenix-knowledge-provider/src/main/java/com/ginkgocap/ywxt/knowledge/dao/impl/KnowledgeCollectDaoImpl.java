@@ -136,6 +136,14 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
     }
 
     @Override
+    public boolean isCollectedKnowledge(long knowledgeId, int typeId)
+    {
+        Query query = knowledgeTypeIdQuery(knowledgeId, typeId);
+        KnowledgeCollect collect = mongoTemplate.findOne(query, KnowledgeCollect.class, tbName);
+        return collect != null;
+    }
+
+    @Override
     public List<KnowledgeCollect> myCollectedKnowledgeByPage(final long userId, long total, final int typeId, int page, int size, final String keyword)
     {
         Query query = newQuery(userId, typeId, keyword);
