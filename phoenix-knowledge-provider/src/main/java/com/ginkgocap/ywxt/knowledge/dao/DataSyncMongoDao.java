@@ -8,7 +8,8 @@ import java.util.List;
  * Created by gintong on 2016/7/9.
  */
 public interface DataSyncMongoDao {
-    public long saveDataSync(DataSync data);
-    public boolean deleteDataSync(final long id);
-    public List<DataSync> getDataSyncList();
+    long saveDataSync(DataSync data);
+    boolean deleteDataSync(final long id);
+    List<DataSync> getDataSyncList(long fromIndex);
+    List<DataSync> getDataSyncListByTime(long time);
 }

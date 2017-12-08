@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.knowledge.service.KnowledgeIdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -59,11 +60,28 @@ public class DataSyncMongoDaoImpl implements DataSyncMongoDao {
         }
     }
 
-    public List<DataSync> getDataSyncList()
+    public List<DataSync> getDataSyncList(long fromIndex)
     {
+        Query query = queryLimit();
+        if (fromIndex > 0) {
+            query.addCriteria(Criteria.where(Constant._ID).lt(fromIndex));
+            logger.info("query from id : " + fromIndex);
+        }
+        return mongoTemplate.find(query, DataSync.class, collectionName);
+    }
+
+    public List<DataSync> getDataSyncListByTime(long time)
+    {
+        Query query =  queryLimit();
+        query.addCriteria(Criteria.where(Constant.TIME).lt(time));
+        return mongoTemplate.find(query, DataSync.class, collectionName);
+    }
+
+    private Query queryLimit() {
         Query query = new Query();
         query.skip(0);
         query.limit(maxSize);
-        return mongoTemplate.find(query, DataSync.class, collectionName);
+        query.with(new Sort(Sort.Direction.DESC, Constant._ID));
+        return query;
     }
 }

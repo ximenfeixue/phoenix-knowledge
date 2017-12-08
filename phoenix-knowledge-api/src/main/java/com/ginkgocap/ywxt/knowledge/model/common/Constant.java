@@ -20,6 +20,7 @@ public class Constant {
 
     public final static String ID = "id";
     public final static String _ID = "_id";
+    public final static String TIME = "time";
     public final static String KnowledgeId = "knowledgeId";
     public final static String ColumnId = "columnId";
     public final static String type = "type";

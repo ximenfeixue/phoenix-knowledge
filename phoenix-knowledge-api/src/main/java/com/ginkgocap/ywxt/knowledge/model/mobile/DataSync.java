@@ -13,6 +13,8 @@ public class DataSync<T> implements Serializable
     //the unique
     private long id;
 
+    private long time;
+
     //Request content
     private T data;
 
@@ -22,6 +24,14 @@ public class DataSync<T> implements Serializable
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public T getData() {
@@ -34,6 +44,7 @@ public class DataSync<T> implements Serializable
 
     public DataSync(long id, T data) {
         this.id = id;
+        this.time = System.currentTimeMillis();
         this.data = data;
     }
 }

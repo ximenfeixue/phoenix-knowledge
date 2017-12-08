@@ -30,8 +30,14 @@ public class DataSyncServiceImpl implements DataSyncService
     }
 
     @Override
-    public List<DataSync> getDataSyncList()
+    public List<DataSync> getDataSyncList(long fromIndex)
     {
-        return dataSyncMongoDao.getDataSyncList();
+        return dataSyncMongoDao.getDataSyncList(fromIndex);
+    }
+
+    @Override
+    public List<DataSync> getDataSyncListByTime(long time)
+    {
+        return dataSyncMongoDao.getDataSyncListByTime(time);
     }
 }

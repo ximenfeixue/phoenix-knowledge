@@ -27,7 +27,7 @@ import java.util.concurrent.BlockingQueue;
 @Repository("dataSyncTask")
 public class DataSyncTask implements Runnable {
     private final Logger logger = LoggerFactory.getLogger(DataSyncTask.class);
-    private static final int MAX_QUEUE_NUM = 2000;
+    private static final int MAX_QUEUE_NUM = 20000;
 
     @Autowired
     private DataSyncService dataSyncService;

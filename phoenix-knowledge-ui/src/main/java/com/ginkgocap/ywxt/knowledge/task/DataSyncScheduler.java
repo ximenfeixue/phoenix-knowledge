@@ -32,11 +32,17 @@ public class DataSyncScheduler implements InitializingBean {
     public void dataSyncTask()
     {
         //First get 50
-        List<DataSync> dataSyncList = dataSyncService.getDataSyncList();
-        if (CollectionUtils.isNotEmpty(dataSyncList)) {
-            for (DataSync data : dataSyncList) {
-                dataSyncTask.addQueue(data);
+        List<DataSync> dataSyncList = dataSyncService.getDataSyncList(-1);
+        while(CollectionUtils.isNotEmpty(dataSyncList)) {
+            long minId = 0;
+            if (CollectionUtils.isNotEmpty(dataSyncList)) {
+                minId = dataSyncList.get(0).getId();
+                for (DataSync data : dataSyncList) {
+                    dataSyncTask.addQueue(data);
+                    minId = minId < data.getId() ? data.getId() : minId;
+                }
             }
+            dataSyncList = dataSyncService.getDataSyncList(minId);
         }
     }
 
