@@ -92,7 +92,8 @@ public class DataSyncTask implements Runnable {
                     Object data = dataSync.getData();
                     if (data != null) {
                         if (data instanceof MessageNotify) {
-                            result = sendMessageNotify((MessageNotify) data);
+                            MessageNotify message = (MessageNotify)data;
+                            result = sendMessageNotify(message);
                         } else if(data instanceof Permission) {
                             final Permission perm = (Permission)data;
                             final short privated = DataCollect.privated(perm, false);
@@ -123,6 +124,8 @@ public class DataSyncTask implements Runnable {
                                         log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
                                 result = true;
                             }
+                        } else {
+                            logger.error("dataSync not belong, id: " + dataSync.getId());
                         }
                     }
                     if (result) {
@@ -152,10 +155,7 @@ public class DataSyncTask implements Runnable {
     private boolean sendMessageNotify(MessageNotify message) {
         try {
             boolean result = messageNotifyService.sendMessageNotify(message);
-            if (result) {
-                logger.info("send comment notify message success. fromId: " + message.getFromId() + " toId: " + message.getToId());
-            }
-            return result;
+            logger.info("send comment notify message : " +(result ? "success" : "failed") + " fromId: " + message.getFromId() + " toId: " + message.getToId());
         } catch (Exception ex) {
             logger.error("send comment notify message failed. error: " + ex.getMessage());
         }
