@@ -418,7 +418,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("Can't get knowledge detail by, knowledgeId: " + knowledgeId +", columnType: " + columnType);
         } else {
             //Add knowledge property
-            filterKnowledge(knowledgeDetail);
+            filterKnowledge(knowledgeDetail, false);
             final String knowledgeContent = knowledgeDetail.getContent() + suffix;
             knowledgeDetail.setContent(knowledgeContent);
         }
@@ -913,7 +913,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         //知识详细信息插入
         Knowledge savedDetail = null;
         try {
-            filterKnowledge(detail);
+            filterKnowledge(detail, true);
             this.knowledgeMongoDao.insert(detail);
             //Get from mongo, make sure save success..
             final int columnType = KnowledgeUtil.parserColumnId(detail.getColumnType());
@@ -939,7 +939,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.info("Knowledge Detail is null, so skip to save.");
             return null;
         }
-        filterKnowledge(detail);
+        filterKnowledge(detail, true);
         Knowledge updateDetail = this.knowledgeMongoDao.update(detail, oldType);
         if (updateDetail != null) {
             logger.info("update knowledge Detail success, knowledgeId: " + updateDetail.getId());
@@ -1000,9 +1000,11 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
     }
 
-    private void filterKnowledge(Knowledge detail)
+    private void filterKnowledge(Knowledge detail, boolean isSave)
     {
-        detail.setStatus(defaultStatus);
+        if (isSave) {
+            detail.setStatus(defaultStatus);
+        }
         String orgContent = detail.getContent();
         if (orgContent != null) {
             List<String> prefixList = Arrays.asList("<br>", "</br>", "<p>", "</p>", "");
