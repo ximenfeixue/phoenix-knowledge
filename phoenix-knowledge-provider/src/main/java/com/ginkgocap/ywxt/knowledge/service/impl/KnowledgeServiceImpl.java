@@ -350,10 +350,21 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
         }
 
         //知识详细表删除
-        boolean result = this.knowledgeMongoDao.logicDeleteByIdsType(knowledgeIds, type);
-        if (!result) {
-            logger.error("logic delete knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        List<Long> successIds = new ArrayList<Long>();
+        List<Long> failedIds = new ArrayList<Long>();
+        for (Long knowledgeId : knowledgeIds) {
+            if (knowledgeId == null) {
+                logger.error("knowledge id is null, so skip.");
+                continue;
+            }
+            boolean result = this.knowledgeMongoDao.logicDeleteByIdType(knowledgeId, type);
+            if (!result) {
+                logger.error("logic delete knowledge failed. knowledgeId：" + knowledgeId + " columnType: " + type);
+                failedIds.add(knowledgeId);
+            } else {
+                logger.error("logic delete knowledge success. knowledgeId：" + knowledgeId + " columnType: " + type);
+                successIds.add(knowledgeId);
+            }
         }
 
         //知识简表删除
@@ -363,6 +374,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("logic delete knowledge base failed： error: " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
+        logger.info("logic delete knowledge. success ids: " + successIds + " failed ids: " + failedIds);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
     }
 
@@ -373,11 +385,18 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.warn("knowledge is is null, skip logic delete" + knowledgeIds + " columnType: " + type);
         }
 
-        //知识详细表删除
-        boolean result = this.knowledgeMongoDao.logicRecoveryByIdsType(knowledgeIds, type);
-        if (!result) {
-            logger.error("logic recovery knowledge failed. knowledgeIds：" + knowledgeIds + " columnType: " + type);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
+        //知识详细表
+        List<Long> successIds = new ArrayList<Long>();
+        List<Long> failedIds = new ArrayList<Long>();
+        for (Long knowledgeId : knowledgeIds) {
+            boolean result = this.knowledgeMongoDao.logicRecoveryByIdType(knowledgeId, type);
+            if (!result) {
+                logger.error("logic recovery knowledge failed. knowledgeId：" + knowledgeId + " columnType: " + type);
+                failedIds.add(knowledgeId);
+            } else {
+                logger.error("logic recovery knowledge success. knowledgeId：" + knowledgeId + " columnType: " + type);
+                successIds.add(knowledgeId);
+            }
         }
 
         //知识简表删除
@@ -387,6 +406,7 @@ public class KnowledgeServiceImpl implements KnowledgeService, KnowledgeBaseServ
             logger.error("logic recovery knowledge base failed： error: " + e.getMessage());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION, false);
         }
+        logger.info("logic recovery knowledge. success ids: " + successIds + " failed ids: " + failedIds);
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS, true);
     }
 

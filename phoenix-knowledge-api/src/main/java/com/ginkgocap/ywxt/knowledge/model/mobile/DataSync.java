@@ -15,6 +15,8 @@ public class DataSync<T> implements Serializable
 
     private long time;
 
+    private int resType = 0;
+
     //Request content
     private T data;
 
@@ -34,6 +36,14 @@ public class DataSync<T> implements Serializable
         this.time = time;
     }
 
+    public int getResType() {
+        return resType;
+    }
+
+    public void setResType(int resType) {
+        this.resType = resType;
+    }
+
     public T getData() {
         return data;
     }
@@ -42,9 +52,37 @@ public class DataSync<T> implements Serializable
         this.data = data;
     }
 
+    public DataSync() {    }
+
     public DataSync(long id, T data) {
         this.id = id;
+        this.resType = 0;
         this.time = System.currentTimeMillis();
         this.data = data;
+    }
+
+    public DataSync(long id, int resType, T data) {
+        this.id = id;
+        this.resType = resType;
+        this.time = System.currentTimeMillis();
+        this.data = data;
+    }
+
+    public static enum EResType {
+        EMsgNotify(1),
+        EPerm(2),
+        EIdTypeUid(3),
+        EDynamic(4),
+        EResMsg(5);
+
+        private int value;
+
+        private EResType(int value) {
+            this.value = value;
+        }
+
+        public int value() {
+            return this.value;
+        }
     }
 }

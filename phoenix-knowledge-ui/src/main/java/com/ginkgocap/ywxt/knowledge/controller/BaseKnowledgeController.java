@@ -4,6 +4,7 @@ import com.ginkgocap.parasol.associate.model.Associate;
 import com.ginkgocap.ywxt.dynamic.model.*;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
+import com.ginkgocap.ywxt.knowledge.model.common.IdTypeUid;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
@@ -21,6 +22,7 @@ import com.ginkgocap.ywxt.user.service.SyncSourceService;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.ywxt.im.model.MessageNotify;
 import com.gintong.ywxt.im.model.ResourceMessage;
 import com.gintong.ywxt.im.service.ResourceMessageService;
 import org.apache.commons.collections.CollectionUtils;
@@ -147,7 +149,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             if (syncSwitch.getGroupType() == 1 || syncSwitch.getSpeciFriendType() == 1 || syncSwitch.getStarFriendType() == 1) {
                 ResourceMessage resourceMessage = this.createResourceMessage(detail);
                 logger().info("sync knowledge to feechat. knowledgeId: " + detail.getId());
-                dataSyncTask.saveDataNeedSync(new DataSync(0, resourceMessage));
+                dataSyncTask.saveDataNeedSync(this.createDataSync(0, resourceMessage));
             }
         } else {
             logger().warn("skip sync knowledge. userId: " + userId + " knowledgeId: " + detail.getId());
@@ -157,9 +159,10 @@ public abstract class BaseKnowledgeController extends BaseController {
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
 
         //Businsess log
-        //BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
-        DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_ADD.getKey(), detail.getId(), userId, user.getName(), request));
-        dataSyncTask.addQueue(dataSync);
+        BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
+        //BusinessTrackLog busLog = new BusinessTrackLog(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_ADD.getKey(), detail.getId(), userId, user.getName(), request);
+        //DataSync dataSync = this.createDataSync(0, busLog);
+       //dataSyncTask.addQueue(dataSync);
         return result;
     }
 
@@ -233,7 +236,8 @@ public abstract class BaseKnowledgeController extends BaseController {
         data.setKnowledgeDetail(updatedDetail);
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, data.toBigData());
 
-        dataSyncTask.saveDataNeedSync(new DataSync(0,permission));
+        //permission sync
+        dataSyncTask.saveDataNeedSync(this.createDataSync(0, permission));
         logger().info("update knowledge success. knowledgeId: " + knowledgeId + " userId: " + userId);
         return result;
     }
@@ -286,9 +290,9 @@ public abstract class BaseKnowledgeController extends BaseController {
         return detail;
     }
 
-    protected DataSync createDynamicNewsDataSync(Knowledge detail, User user)
+    protected DataSync<DynamicNews> createDynamicNewsDataSync(Knowledge detail, User user)
     {
-        DataSync data = new DataSync(0, createDynamicNewsObj(detail, user));
+        DataSync<DynamicNews> data = this.createDataSync(0, createDynamicNews(detail, user));
         return data;
     }
 

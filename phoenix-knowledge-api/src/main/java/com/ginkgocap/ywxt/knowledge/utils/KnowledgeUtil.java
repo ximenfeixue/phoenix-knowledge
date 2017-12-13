@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -39,32 +36,6 @@ public final class KnowledgeUtil {
     {
         return KnowledgeType.knowledgeType(columnId).cls();
     }
-
-    /*
-    public static KnowledgeBase convertOldKnowledge(Knowledge knowledge)
-    {
-        if (knowledge == null) {
-            throw new IllegalArgumentException("Knowledge is null");
-        }
-        KnowledgeBase knowledgeBase = new KnowledgeBase();
-        knowledgeBase.setId(knowledge.getId());
-        knowledgeBase.setColumnId(knowledge.getColumnId());
-        knowledgeBase.setTitle(knowledge.getTitle());
-        knowledgeBase.setContentDesc(knowledge.getDesc());
-        knowledgeBase.setContent(knowledge.getContent());
-        knowledgeBase.setCreateUserId(knowledge.getCId());
-        knowledgeBase.setCreateUserName(knowledge.getCname());
-        knowledgeBase.setCreateDate(new Date(knowledge.getCreatetime()).getTime());
-        //TODO: check if picture Id is not a number
-        knowledgeBase.setPictureId(Long.parseLong(knowledge.getPic()));
-        knowledgeBase.setModifyDate(new Date(knowledge.getModifytime()).getTime());
-        //knowledgeBase.setType();
-        knowledgeBase.setReportStatus((short)knowledge.getReport_status());
-        knowledgeBase.setStatus((short)knowledge.getStatus());
-        knowledgeBase.setAuditStatus((short)knowledge.getStatus());
-
-        return knowledgeBase;
-    }*/
 
     public static String getKnowledgeCollectionName(int columnId)
     {
@@ -117,7 +88,7 @@ public final class KnowledgeUtil {
             ex.printStackTrace();
         } catch(JsonMappingException ex) {
             ex.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -188,6 +159,7 @@ public final class KnowledgeUtil {
                 objectMapper.setFilters(filterProvider);
             }
             objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             return objectMapper.writeValueAsString(jsonContent);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

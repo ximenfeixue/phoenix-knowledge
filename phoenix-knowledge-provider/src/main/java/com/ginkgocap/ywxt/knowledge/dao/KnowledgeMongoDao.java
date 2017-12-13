@@ -92,23 +92,23 @@ public interface KnowledgeMongoDao
      * @return
      * @throws Exception
      */
-    boolean deleteByIdsAndColumnType(List<Long> ids,int columnId) throws Exception;
+    boolean deleteByIdsAndColumnType(List<Long> ids, int columnId) throws Exception;
 
     /**
-     * @param ids
+     * @param id
      * @param columnType
      * @return
      * @throws Exception
      */
-    boolean logicDeleteByIdsType(List<Long> ids,int columnType);
+    boolean logicDeleteByIdType(long id, int columnType);
 
     /**
-     * @param ids
+     * @param id
      * @param columnType
      * @return
      * @throws Exception
      */
-    boolean logicRecoveryByIdsType(List<Long> ids,int columnType);
+    boolean logicRecoveryByIdType(long id, int columnType);
 
     /**
      * 根据用户Id以及栏目删除数据

@@ -126,14 +126,21 @@ public class DataSyncTask implements Runnable {
                             }
                         } else {
                             logger.error("dataSync not belong, id: " + dataSync.getId());
+                            DataSync resetData = resetDataSync(dataSync);
+                            //delete the bad dataSync
+                            if (resetData == null) {
+                                result = true;
+                            }
                         }
                     }
                     if (result) {
-                        dataSyncService.deleteDataSync(dataSync.getId());
+                        this.deleteDataSync(dataSync.getId());
                     }
                 } else {
-                    logger.info("data is null, so skip to send.");
+                    logger.info("data is null, so delete it.");
+                    this.deleteDataSync(dataSync.getId());
                 }
+                Thread.sleep(1000);
             }
         } catch (InterruptedException ex) {
             logger.error("queues thread interrupted. so exit this thread.");
@@ -156,6 +163,7 @@ public class DataSyncTask implements Runnable {
         try {
             boolean result = messageNotifyService.sendMessageNotify(message);
             logger.info("send comment notify message : " +(result ? "success" : "failed") + " fromId: " + message.getFromId() + " toId: " + message.getToId());
+            return result;
         } catch (Exception ex) {
             logger.error("send comment notify message failed. error: " + ex.getMessage());
         }
@@ -179,6 +187,17 @@ public class DataSyncTask implements Runnable {
             return false;
         }
         return true;
+    }
+
+    private void deleteDataSync(final long syncId) {
+        if (syncId > 0) {
+            try {
+                boolean delResult = dataSyncService.deleteDataSync(syncId);
+                logger.info("delete dataSync " + (delResult ? "success" : "failed") + " id: " + syncId);
+            } catch (Exception ex) {
+                logger.error("delete data sync failed. id: " + syncId + " error: " + ex.getMessage());
+            }
+        }
     }
 
     private boolean deleteKnowledgeOtherResource(final IdTypeUid idTypeUid) {
@@ -235,5 +254,83 @@ public class DataSyncTask implements Runnable {
         bigDataSyncTask.deleteMessage(knowledgeId, columnType, userId);
         logger.info("clean up knowlege regards resource complete.");
         return true;
+    }
+
+    private DataSync resetDataSync(DataSync dataSync)
+    {
+        Object data = dataSyncData(dataSync);
+        if (data != null) {
+            logger.info("reset dataSync success. id: " + dataSync.getId());
+            dataSync.setData(data);
+            addQueue(dataSync);
+            return dataSync;
+        } else {
+            logger.info("reset dataSync failed. id: " + dataSync.getId());
+            return null;
+        }
+    }
+
+    private Object dataSyncData(DataSync dataSync) {
+        final int resType = dataSync.getResType();
+        final Object data = dataSync.getData();
+        if (data == null) {
+            logger.error("DataSync data is null. id: " + dataSync.getId());
+            return null;
+        }
+        final String objContent = KnowledgeUtil.writeObjectToJson(data);
+        if (objContent == null) {
+            logger.error("DataSync data content is null. id: " + dataSync.getId());
+            return null;
+        }
+        logger.info("objContent: " + objContent);
+        if (resType > 0) {
+            switch (resType) {
+                case 1: {
+                    return KnowledgeUtil.readValue(MessageNotify.class, objContent);
+                }
+                case 2: {
+                    return KnowledgeUtil.readValue(Permission.class, objContent);
+                }
+                case 3: {
+                    return KnowledgeUtil.readValue(IdTypeUid.class, objContent);
+                }
+                case 4: {
+                    return KnowledgeUtil.readValue(DynamicNews.class, objContent);
+                }
+                case 5: {
+                    return KnowledgeUtil.readValue(ResourceMessage.class, objContent);
+                }
+                /*case 6: {
+                    return KnowledgeUtil.readValue(BusinessTrackLog.class, objContent);
+                }*/
+                default: {
+                    logger.error("Unknowledge resType: " + resType + " data: " + dataSync.getData());
+                    return null;
+                }
+            }
+        }
+        else {
+            Object dataObject = KnowledgeUtil.readValue(MessageNotify.class, objContent);
+            if (dataObject != null) {
+                logger.info("convert MessageNotify object success..");
+                return dataObject;
+            }
+
+            dataObject = KnowledgeUtil.readValue(ResourceMessage.class, objContent);
+            if (dataObject != null) {
+                logger.info("convert ResourceMessage object success..");
+                return dataObject;
+            }
+
+            dataObject = KnowledgeUtil.readValue(DynamicNews.class, objContent);
+            if (dataObject != null) {
+                logger.info("convert BusinessTrackLog object success..");
+                return dataObject;
+            }
+            else {
+                logger.error("dataSync not belong, id: " + dataSync.getId());
+            }
+        }
+        return null;
     }
 }

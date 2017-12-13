@@ -1,7 +1,11 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
+import com.ginkgocap.ywxt.knowledge.model.BusinessTrackLog;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
+import com.ginkgocap.ywxt.knowledge.model.common.IdTypeUid;
+import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.DataCollect;
@@ -9,10 +13,13 @@ import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.utils.CommonUtil;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.util.Encodes;
+import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.frame.cache.redis.RedisCacheService;
 import com.gintong.frame.util.UserUtil;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.ywxt.im.model.MessageNotify;
+import com.gintong.ywxt.im.model.ResourceMessage;
 import org.apache.commons.lang.StringUtils;
 import org.parasol.column.entity.ColumnSelf;
 import org.parasol.column.service.ColumnSelfService;
@@ -155,6 +162,37 @@ public abstract class BaseController {
         }
 
         return idList;
+    }
+
+    protected <T> DataSync createDataSync(long id, T data) {
+        if (data instanceof MessageNotify) {
+            logger().info("create MessageNotify dataSync..");
+            return new DataSync(0, DataSync.EResType.EMsgNotify.value(), data);
+        }
+        else if (data instanceof Permission) {
+            logger().info("create Permission dataSync..");
+            return new DataSync(0, DataSync.EResType.EPerm.value(), data);
+        }
+        else if (data instanceof IdTypeUid) {
+            logger().info("create knowledge dataSync..");
+            return new DataSync(0, DataSync.EResType.EIdTypeUid.value(), data);
+        }
+        else if (data instanceof DynamicNews) {
+            logger().info("create DynamicNews dataSync..");
+            return new DataSync(0, DataSync.EResType.EDynamic.value(), data);
+        }
+        else if (data instanceof ResourceMessage) {
+            logger().info("create ResourceMessage dataSync..");
+            return new DataSync(0, DataSync.EResType.EResMsg.value(), data);
+        }
+        else if (data instanceof BusinessTrackLog) {
+            logger().info("create BusinessTrackLog dataSync..");
+            return new DataSync(0, 0, data);
+        }
+        else {
+            logger().info("create dataSync not belong.  data: " + data.getClass());
+            return null;
+        }
     }
 
     protected InterfaceResult checkColumn(int column)

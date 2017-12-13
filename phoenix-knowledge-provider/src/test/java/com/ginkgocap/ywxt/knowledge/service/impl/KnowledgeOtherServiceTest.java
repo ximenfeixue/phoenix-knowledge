@@ -28,7 +28,7 @@ public class KnowledgeOtherServiceTest extends TestBase
     {
         long knowledgeId = System.currentTimeMillis();
         try {
-            InterfaceResult result = knowledgeOtherService.collectKnowledge(userId, knowledgeId, 1, (short) 1);
+            InterfaceResult result = knowledgeOtherService.collectKnowledge(userId, knowledgeId, 1, 0, (short) 1);
             Assert.assertTrue("0".equals(result.getNotification().getNotifCode()));
             System.out.println(result.getResponseData());
         } catch (Exception e) {

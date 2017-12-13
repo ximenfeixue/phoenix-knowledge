@@ -167,16 +167,16 @@ public class KnowledgeMongoDaoImpl extends BaseDao implements KnowledgeMongoDao 
     }
 
     @Override
-    public boolean logicDeleteByIdsType(List<Long> ids,int columnType)
+    public boolean logicDeleteByIdType(long id, int columnType)
     {
-        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        Query query = new Query(Criteria.where(Constant._ID).is(id));
         return logicDelete(query, getCollectionName(columnType));
     }
 
     @Override
-    public boolean logicRecoveryByIdsType(List<Long> ids,int columnType)
+    public boolean logicRecoveryByIdType(long id, int columnType)
     {
-        Query query = new Query(Criteria.where(Constant._ID).in(ids));
+        Query query = new Query(Criteria.where(Constant._ID).is(id));
         return logicRecovery(query, getCollectionName(columnType));
     }
 

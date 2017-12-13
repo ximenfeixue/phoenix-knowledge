@@ -133,7 +133,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //Async delete knowledge related resource
         IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, columnType, userId);
-        DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+        DataSync<IdTypeUid> dataSync = this.createDataSync(0, idTypeUid);
         dataSyncTask.saveDataNeedSync(dataSync);
 
         /*
@@ -206,7 +206,7 @@ public class KnowledgeController extends BaseKnowledgeController
         for (long knowledgeId : permDeleteIds) {
             //asynchronize delete other knowledge resource
             IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, 1, userId);
-            DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+            DataSync<IdTypeUid> dataSync = this.createDataSync(0, idTypeUid);
             dataSyncTask.saveDataNeedSync(dataSync);
 
             /*
@@ -290,7 +290,7 @@ public class KnowledgeController extends BaseKnowledgeController
                 //asynchronize delete other knowledge resource
                 for (long knowledgeId : deleIds) {
                     IdTypeUid idTypeUid = new IdTypeUid(knowledgeId, type, userId);
-                    DataSync<IdTypeUid> dataSync = new DataSync(0, idTypeUid);
+                    DataSync<IdTypeUid> dataSync = this.createDataSync(0, idTypeUid);
                     dataSyncTask.saveDataNeedSync(dataSync);
                 }
 
@@ -1270,8 +1270,9 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //Businsess log
         //BusinessTrackUtils.addTbBusinessTrackLog4CollectOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), knowledgeId, null, request, userId, user.getName());
-        DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(),
-                0, OptTypeEnum.OPT_COLLECT.getKey(), knowledgeId, userId, user.getName(), request));
+        BusinessTrackLog busLog = new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(),
+                0, OptTypeEnum.OPT_COLLECT.getKey(), knowledgeId, userId, user.getName(), request);
+        DataSync dataSync = this.createDataSync(0, busLog);
         dataSyncTask.addQueue(dataSync);
         return result;
     }
@@ -2102,7 +2103,8 @@ public class KnowledgeController extends BaseKnowledgeController
 
         //Business log
         //BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
-        DataSync dataSync = new DataSync(0, new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_VIEW.getKey(), detail.getId(), userId, user.getName(), request));
+        BusinessTrackLog busLog = new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_VIEW.getKey(), detail.getId(), userId, user.getName(), request);
+        DataSync dataSync = this.createDataSync(0, busLog);
         dataSyncTask.addQueue(dataSync);
         return result;
     }

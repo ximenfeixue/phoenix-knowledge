@@ -86,7 +86,7 @@ public class KnowledgeCommentController extends BaseController {
             if (commentId > 0) {
                 if (user.getId() != comment.getToId()) {
                     MessageNotify message = createMessageNotify(comment, user);
-                    dataSyncTask.saveDataNeedSync(new DataSync(0, message));
+                    dataSyncTask.saveDataNeedSync(this.createDataSync(0, message));
                 } else {
                     logger.info("comment self knowledge, so skip to send message notify.");
                 }
