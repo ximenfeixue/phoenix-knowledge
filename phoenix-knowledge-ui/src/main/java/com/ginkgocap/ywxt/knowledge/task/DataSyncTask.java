@@ -147,8 +147,8 @@ public class DataSyncTask implements Runnable {
                 }
                 Thread.sleep(1000);
             }
-        } catch (InterruptedException ex) {
-            logger.error("queues thread interrupted. so exit this thread.");
+        } catch (Exception ex) {
+            logger.error("queues thread interrupted. so exit this thread. error: " + ex.getMessage());
         }
     }
 
