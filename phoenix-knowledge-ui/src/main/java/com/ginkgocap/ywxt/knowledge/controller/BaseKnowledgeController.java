@@ -139,9 +139,10 @@ public abstract class BaseKnowledgeController extends BaseController {
             //Sync to dynamic news
             SyncSwitch syncSwitch = getSyncSwitch(userId);
             if (data.getUpdateDynamic() == 0 && syncSwitch.getDynamicType() == 1) {
-                DataSync dataSync = createDynamicNewsDataSync(detail, user);
+                //DataSync dataSync = createDynamicNewsDataSync(detail, user);
+                DynamicNews dynamicNews = createDynamicNews(detail, user);
                 if (dataSyncTask != null) {
-                    dataSyncTask.saveDataNeedSync(dataSync);
+                    dataSyncTask.saveDataNeedSync(dynamicNews);
                 }
             }
 
@@ -149,7 +150,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             if (syncSwitch.getGroupType() == 1 || syncSwitch.getSpeciFriendType() == 1 || syncSwitch.getStarFriendType() == 1) {
                 ResourceMessage resourceMessage = this.createResourceMessage(detail);
                 logger().info("sync knowledge to feechat. knowledgeId: " + detail.getId());
-                dataSyncTask.saveDataNeedSync(this.createDataSync(0, resourceMessage));
+                dataSyncTask.saveDataNeedSync(resourceMessage);
             }
         } else {
             logger().warn("skip sync knowledge. userId: " + userId + " knowledgeId: " + detail.getId());
@@ -237,7 +238,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_UPDATE, data.toBigData());
 
         //permission sync
-        dataSyncTask.saveDataNeedSync(this.createDataSync(0, permission));
+        dataSyncTask.saveDataNeedSync(permission);
         logger().info("update knowledge success. knowledgeId: " + knowledgeId + " userId: " + userId);
         return result;
     }
@@ -289,12 +290,12 @@ public abstract class BaseKnowledgeController extends BaseController {
 
         return detail;
     }
-
+    /*
     protected DataSync<DynamicNews> createDynamicNewsDataSync(Knowledge detail, User user)
     {
         DataSync<DynamicNews> data = this.createDataSync(0, createDynamicNews(detail, user));
         return data;
-    }
+    }*/
 
     protected DynamicNews createDynamicNews(Knowledge detail,User user) {
         DynamicNews dynamic = createDynamicNewsObj(detail, user);

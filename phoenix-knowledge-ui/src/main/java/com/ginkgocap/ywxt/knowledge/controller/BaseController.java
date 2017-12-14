@@ -164,37 +164,6 @@ public abstract class BaseController {
         return idList;
     }
 
-    protected <T> DataSync createDataSync(long id, T data) {
-        if (data instanceof MessageNotify) {
-            logger().info("create MessageNotify dataSync..");
-            return new DataSync(0, DataSync.EResType.EMsgNotify.value(), data);
-        }
-        else if (data instanceof Permission) {
-            logger().info("create Permission dataSync..");
-            return new DataSync(0, DataSync.EResType.EPerm.value(), data);
-        }
-        else if (data instanceof IdTypeUid) {
-            logger().info("create knowledge dataSync..");
-            return new DataSync(0, DataSync.EResType.EIdTypeUid.value(), data);
-        }
-        else if (data instanceof DynamicNews) {
-            logger().info("create DynamicNews dataSync..");
-            return new DataSync(0, DataSync.EResType.EDynamic.value(), data);
-        }
-        else if (data instanceof ResourceMessage) {
-            logger().info("create ResourceMessage dataSync..");
-            return new DataSync(0, DataSync.EResType.EResMsg.value(), data);
-        }
-        else if (data instanceof BusinessTrackLog) {
-            logger().info("create BusinessTrackLog dataSync..");
-            return new DataSync(0, 0, data);
-        }
-        else {
-            logger().info("create dataSync not belong.  data: " + data.getClass());
-            return null;
-        }
-    }
-
     protected InterfaceResult checkColumn(int column)
     {
         InterfaceResult result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
