@@ -105,7 +105,7 @@ public class DataSyncTask implements Runnable {
                             result = this.updateCollectedKnowledgePrivate(perm.getResId(), -1, privated);
                             if (!result) {
                                 //for the knowledge has been cancel colllect, not need to update
-                                boolean isCollected = knowledgeOtherService.isCollectedKnowledge(perm.getResId(), -1);
+                                boolean isCollected = this.isCollectedKnowledge(perm.getResId(), -1);
                                 if (!isCollected) {
                                     result = true;
                                     logger.info("delete sync, collected knowledge id: " + perm.getResId());
@@ -167,6 +167,15 @@ public class DataSyncTask implements Runnable {
     public <T> void addQueue(T data) {
         DataSync<T> dataSync = this.createDataSync(0, data);
         this.addQueue(dataSync);
+    }
+
+    private boolean isCollectedKnowledge(long knowledgeId, int typeId) {
+        try {
+            return knowledgeOtherService.isCollectedKnowledge(knowledgeId, typeId);
+        } catch (Exception ex) {
+            logger.error("check knowledge collected failed. knowledgeId: " + knowledgeId + " typeId: " + typeId);
+        }
+        return false;
     }
 
     private boolean sendMessageNotify(MessageNotify message) {
@@ -365,7 +374,7 @@ public class DataSyncTask implements Runnable {
 
             dataObject = KnowledgeUtil.readValue(DynamicNews.class, objContent);
             if (dataObject != null) {
-                logger.info("convert BusinessTrackLog object success..");
+                logger.info("convert DynamicNews object success. id: " + dataSync.getId());
                 return dataObject;
             }
             else {
