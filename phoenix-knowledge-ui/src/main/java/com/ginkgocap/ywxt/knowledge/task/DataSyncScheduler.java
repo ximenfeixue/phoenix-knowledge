@@ -32,7 +32,7 @@ public class DataSyncScheduler implements InitializingBean {
     public void dataSyncTask()
     {
         //First get 50
-        List<DataSync> dataSyncList = dataSyncService.getDataSyncList(-1);
+        List<DataSync> dataSyncList = this.getDataSyncList(-1);
         while(CollectionUtils.isNotEmpty(dataSyncList)) {
             long minId = 0;
             if (CollectionUtils.isNotEmpty(dataSyncList)) {
@@ -42,8 +42,22 @@ public class DataSyncScheduler implements InitializingBean {
                     minId = minId < data.getId() ? data.getId() : minId;
                 }
             }
-            dataSyncList = dataSyncService.getDataSyncList(minId);
+            try {
+                Thread.sleep(1000L);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            dataSyncList = this.getDataSyncList(minId);
         }
+    }
+
+    private List<DataSync> getDataSyncList(long fromIndex) {
+        try {
+            return dataSyncService.getDataSyncList(fromIndex);
+        } catch (Exception ex) {
+            logger.error("query data sync list failed. error: " + ex.getMessage());
+        }
+        return null;
     }
 
     private void startTimer() {
