@@ -28,6 +28,7 @@ public class DataSyncScheduler implements InitializingBean {
     DataSyncTask dataSyncTask;
 
     private int count = 0;
+    private Thread dataSyncTaskThread = null;
 
     public void dataSyncTask()
     {
@@ -38,14 +39,22 @@ public class DataSyncScheduler implements InitializingBean {
             if (CollectionUtils.isNotEmpty(dataSyncList)) {
                 minId = dataSyncList.get(0).getId();
                 for (DataSync data : dataSyncList) {
-                    dataSyncTask.addQueue(data);
-                    minId = minId < data.getId() ? data.getId() : minId;
+                    if (dataSyncTask.offerToQueue(data)) {
+                        minId = minId < data.getId() ? data.getId() : minId;
+                    } else {
+                        logger.error("task queue full, so stop sync, with 5 minute.");
+                        if (dataSyncTaskThread.isAlive()) {
+                            try {
+                                Thread.sleep(2 * 60 * 1000L);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            logger.error("data sync is down, restart it.");
+                            dataSyncTaskThread.start();
+                        }
+                    }
                 }
-            }
-            try {
-                Thread.sleep(1000L);
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
             dataSyncList = this.getDataSyncList(minId);
         }
@@ -85,7 +94,8 @@ public class DataSyncScheduler implements InitializingBean {
 
     public void afterPropertiesSet() throws Exception {
         logger.info("DataSyncTask starting........");
-        new Thread(dataSyncTask).start();
+        dataSyncTaskThread = new Thread(dataSyncTask);
+        dataSyncTaskThread.start();
         startTimer();
         logger.info("DataSyncTask start completed........");
     }

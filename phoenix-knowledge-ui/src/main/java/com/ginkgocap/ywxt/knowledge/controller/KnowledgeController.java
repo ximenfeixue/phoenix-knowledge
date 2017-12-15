@@ -1271,7 +1271,7 @@ public class KnowledgeController extends BaseKnowledgeController
         //BusinessTrackUtils.addTbBusinessTrackLog4CollectOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), knowledgeId, null, request, userId, user.getName());
         BusinessTrackLog busLog = new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(),
                 0, OptTypeEnum.OPT_COLLECT.getKey(), knowledgeId, userId, user.getName(), request);
-        dataSyncTask.addQueue(busLog);
+        dataSyncTask.putQueue(busLog);
         return result;
     }
 
@@ -2102,7 +2102,7 @@ public class KnowledgeController extends BaseKnowledgeController
         //Business log
         //BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
         BusinessTrackLog busLog = new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_VIEW.getKey(), detail.getId(), userId, user.getName(), request);
-        dataSyncTask.addQueue(busLog);
+        dataSyncTask.putQueue(busLog);
         return result;
     }
 
