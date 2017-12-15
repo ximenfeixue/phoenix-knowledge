@@ -155,7 +155,7 @@ public class DataSyncTask implements Runnable {
                     result = true;
                 }
             } else {
-                logger.error("can't find the type of data sync. id: " + data);
+                logger.error("can't find the type of data sync. id: " + id);
             }
         }
         return result;
