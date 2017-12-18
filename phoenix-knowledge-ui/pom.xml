@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-cache</artifactId>
+            <version>${cache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-file-api</artifactId>
             <version>${phoenix-file-api.version}</version>
         </dependency>
@@ -66,29 +71,10 @@
             <artifactId>phoenix-im-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gintong.frame</groupId>
-            <artifactId>phoenix-frame-cache</artifactId>
-            <version>${phoenix-frame-cache.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ginkgocap.ywxt</groupId>
-            <artifactId>phoenix-cloud-api</artifactId>
-            <version>1.2.7-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.ginkgocap.ywxt</groupId>
-                    <artifactId>phoenix-user-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-track-entity</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

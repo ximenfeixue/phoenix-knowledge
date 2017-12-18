@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.knowledge.controller;
 
 import com.ginkgocap.parasol.associate.model.Associate;
+import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.dynamic.model.DynamicNews;
 import com.ginkgocap.ywxt.knowledge.model.BusinessTrackLog;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
@@ -37,7 +38,7 @@ import java.util.List;
 public abstract class BaseController {
 
     @Resource
-    private RedisCacheService redisCacheService;
+    private Cache cache;
 
     @Autowired
     protected KnowledgeCountService knowledgeCountService;
@@ -78,13 +79,12 @@ public abstract class BaseController {
      */
     protected User getUser(HttpServletRequest request) {
         final String key = UserUtil.getUserSessionKey(request);
-        User user = (User) redisCacheService.getRedisCacheByKey(key);
+        User user = (User) cache.getByRedis(key);
         if (user != null) {
             logger().info("login userId: " + user.getId() + " userName: " + user.getName());
-            redisCacheService.expireRedisCacheByKey(key, sessionExpiredTime);
+            cache.setRedisKeyExpire(key, sessionExpiredTime);
         }
         return user;
-        //return KnowledgeUtil.getDummyUser();
     }
 
     protected long getUserId(User user) {

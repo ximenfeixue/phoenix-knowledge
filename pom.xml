@@ -19,6 +19,7 @@
         <spring.version>4.2.1.RELEASE</spring.version>
         <spring.integration.version>2.1.3.RELEASE</spring.integration.version>
         <entire.version>5.6.3</entire.version>
+        <cache.version>5.6.3-SNAPSHOT</cache.version>
         <aspectj.version>1.7.0</aspectj.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <jdbc.groupId>mysql</jdbc.groupId>
@@ -34,7 +35,6 @@
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
         <parasol-common-provider.version>1.0.3-SNAPSHOT</parasol-common-provider.version>
-        <parasol-cache.version>1.0.0-SNAPSHOT</parasol-cache.version>
         <parasol-tags.version>1.0.2-SNAPSHOT</parasol-tags.version>
         <parasol-directory.version>1.0.2-SNAPSHOT</parasol-directory.version>
         <parasol-associate-api.version>1.0.2-SNAPSHOT</parasol-associate-api.version>
@@ -80,14 +80,14 @@
                 <version>${entire.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.gintong.frame</groupId>
-                <artifactId>phoenix-frame-util</artifactId>
-                <version>${phoenix-frame-util.version}</version>
+                <groupId>com.ginkgocap.ywxt</groupId>
+                <artifactId>phoenix-cache</artifactId>
+                <version>${cache.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gintong.frame</groupId>
-                <artifactId>phoenix-frame-cache</artifactId>
-                <version>${phoenix-frame-cache.version}</version>
+                <artifactId>phoenix-frame-util</artifactId>
+                <version>${phoenix-frame-util.version}</version>
             </dependency>
 
             <dependency>
@@ -99,11 +99,6 @@
                 <groupId>com.ginkgocap.parasol</groupId>
                 <artifactId>parasol-common-provider</artifactId>
                 <version>${parasol-common-provider.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ginkgocap.parasol</groupId>
-                <artifactId>parasol-cache</artifactId>
-                <version>${parasol-cache.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ginkgocap.ywxt</groupId>

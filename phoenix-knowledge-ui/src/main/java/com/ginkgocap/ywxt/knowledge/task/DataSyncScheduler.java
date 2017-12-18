@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
+import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
@@ -27,7 +28,13 @@ public class DataSyncScheduler implements InitializingBean {
     @Autowired
     DataSyncTask dataSyncTask;
 
+    @Autowired
+    private Cache cache;
+
     private int count = 0;
+
+    private final int period = 7200 * 1000;
+    private final String lock = "dataSyncTaskLock";
 
     public void dataSyncTask()
     {
@@ -67,15 +74,22 @@ public class DataSyncScheduler implements InitializingBean {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                ++count;
-                dataSyncTask();
-                String nowDate = DateUtil.convertDateToString(new Date());
-                logger.info("时间=" + nowDate + " 执行了" + count + "次"); // 1次
+                if (cache.tryLock(lock, 7200)) {
+                    logger.info("acquired the task lock success.");
+                    ++count;
+                    dataSyncTask();
+                    String nowDate = DateUtil.convertDateToString(new Date());
+                    logger.info("时间=" + nowDate + " 执行了" + count + "次"); // 1次
+                    if(cache.unLock(lock)) {
+                        logger.info("release the task lock success.");
+                    }
+                } else {
+                    logger.info("acquired the task lock failed. so skip task!");
+                }
             }
         };
 
-        Timer timer = new Timer();
-        int period = 7200 * 1000;
+        final Timer timer = new Timer();
         //// 定制每天的24:00:00执行， 每天的date时刻执行task，每隔2小时重复执行
         // timer.schedule(task, getDate(24), period);
 
