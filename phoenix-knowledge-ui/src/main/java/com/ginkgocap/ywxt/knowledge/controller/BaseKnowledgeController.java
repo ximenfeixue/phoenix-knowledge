@@ -384,7 +384,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         dynamic.setLowType(detail.getColumnType());
         dynamic.setTargetId(detail.getId());
         dynamic.setTitle(detail.getTitle());
-        //dynamic.setContent(knowledge.getContent());
+        dynamic.setContent("分享知识");
         dynamic.setContentPath(detail.getS_addr());
         dynamic.setCreaterId(detail.getCid());
         String clearContent = HtmlToText.html2Text(detail.getContent());
