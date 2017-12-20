@@ -38,7 +38,7 @@ import java.util.List;
 public abstract class BaseController {
 
     @Resource
-    private Cache cache;
+    private RedisCacheService redisCacheService;
 
     @Autowired
     protected KnowledgeCountService knowledgeCountService;
@@ -79,10 +79,10 @@ public abstract class BaseController {
      */
     protected User getUser(HttpServletRequest request) {
         final String key = UserUtil.getUserSessionKey(request);
-        User user = (User) cache.getByRedis(key);
+        User user = (User) redisCacheService.getRedisCacheByKey(key);
         if (user != null) {
             logger().info("login userId: " + user.getId() + " userName: " + user.getName());
-            cache.setRedisKeyExpire(key, sessionExpiredTime);
+            redisCacheService.expireRedisCacheByKey(key, sessionExpiredTime);
         }
         return user;
     }

@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-cache</artifactId>
-            <version>${cache.version}</version>
+            <version>${phoenix-frame-cache.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ginkgocap.ywxt</groupId>
@@ -74,6 +74,11 @@
             <groupId>com.ginkgocap.ywxt</groupId>
             <artifactId>phoenix-track-entity</artifactId>
             <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

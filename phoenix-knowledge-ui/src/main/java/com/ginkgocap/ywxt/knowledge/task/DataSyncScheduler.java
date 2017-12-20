@@ -4,6 +4,7 @@ import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.DataSyncService;
 import com.ginkgocap.ywxt.knowledge.utils.DateUtil;
+import com.gintong.frame.cache.redis.RedisCacheService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class DataSyncScheduler implements InitializingBean {
     DataSyncTask dataSyncTask;
 
     @Autowired
-    private Cache cache;
+    private RedisCacheService redisCacheService;
 
     private int count = 0;
 
@@ -74,15 +75,14 @@ public class DataSyncScheduler implements InitializingBean {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (cache.tryLock(lock, 7200)) {
+                if (redisCacheService.setnxRedisCacheByKey(lock, period) == 1) {
                     logger.info("acquired the task lock success.");
                     ++count;
                     dataSyncTask();
                     String nowDate = DateUtil.convertDateToString(new Date());
                     logger.info("时间=" + nowDate + " 执行了" + count + "次"); // 1次
-                    if(cache.unLock(lock)) {
-                        logger.info("release the task lock success.");
-                    }
+                    redisCacheService.deleteRedisCacheByKey(lock);
+                    logger.info("release the task lock success.");
                 } else {
                     logger.info("acquired the task lock failed. so skip task!");
                 }
