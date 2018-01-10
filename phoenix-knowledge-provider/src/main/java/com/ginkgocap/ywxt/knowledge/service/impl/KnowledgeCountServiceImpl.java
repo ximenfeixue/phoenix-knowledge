@@ -1,6 +1,5 @@
 package com.ginkgocap.ywxt.knowledge.service.impl;
 
-import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
 import com.ginkgocap.ywxt.knowledge.service.KnowledgeCountService;
@@ -8,11 +7,12 @@ import com.ginkgocap.ywxt.knowledge.task.KnowledgeCountTask;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Chen Peifeng on 2016/5/24.

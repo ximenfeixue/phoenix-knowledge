@@ -1,9 +1,8 @@
 package com.ginkgocap.ywxt.knowledge.task;
 
-import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeCountDao;
+import com.ginkgocap.ywxt.knowledge.dao.impl.BaseDao;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeCount;
-import com.ginkgocap.ywxt.knowledge.service.impl.KnowledgeCountServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,7 +15,7 @@ import java.util.*;
  * Created by oem on 8/17/17.
  */
 @Repository("knowledgeCountTask")
-public class KnowledgeCountTask implements InitializingBean
+public class KnowledgeCountTask extends BaseDao implements InitializingBean
 {
     private final static Logger logger = LoggerFactory.getLogger(KnowledgeCountTask.class);
 
@@ -31,8 +30,6 @@ public class KnowledgeCountTask implements InitializingBean
     @Autowired
     private KnowledgeCountDao knowledgeCountDao;
 
-    @Autowired
-    private Cache cache;
 
     public void addIdToQueue(final long id) {
         hotCountSet.add(id);
@@ -43,7 +40,7 @@ public class KnowledgeCountTask implements InitializingBean
         if (count != null) {
             final long knowledgeId = count.getId();
             String key = knowledgeCountKey(knowledgeId);
-            this.cache.setByRedis(key, count, expiredTime);
+            this.saveToCache(key, count, expiredTime);
             addIdToQueue(knowledgeId);
 
         }
@@ -52,14 +49,14 @@ public class KnowledgeCountTask implements InitializingBean
     public KnowledgeCount getFromCache(final long knowledgeId)
     {
         String key = knowledgeCountKey(knowledgeId);
-        return (KnowledgeCount)this.cache.getByRedis(key);
+        return (KnowledgeCount)this.getFromCache(key);
     }
 
     public boolean deleteFromCache(final long knowledgeId)
     {
         String key = knowledgeCountKey(knowledgeId);
-        this.cache.setUseRedis(true);
-        return this.cache.remove(key);
+        this.removeFromCache(key);
+        return true;
     }
 
     private String knowledgeCountKey(final long knowledgeId)
@@ -115,7 +112,7 @@ public class KnowledgeCountTask implements InitializingBean
             public void run() {
                 ++count;
                 batchSaveCountResult();
-                logger.info("KnowledgeCount 时间=" + new Date() + " 执行了" + count + "次"); // 1次
+                logger.info("KnowledgeCountTask 时间: " + new Date() + " 执行了" + count + "次"); // 1次
             }
         };
 

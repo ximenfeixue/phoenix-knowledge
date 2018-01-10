@@ -149,7 +149,7 @@ public class DataSyncTask implements Runnable {
             } else if (data instanceof BusinessTrackLog) {
                 BusinessTrackLog log = (BusinessTrackLog) data;
                 //for userId is 0 or 1, skip to write business log
-                if (log.getUserId() > 1) {
+                if (log.getUserId() >= 0) {
                     BusinessTrackUtils.addTbBusinessTrackLog(log.getLogger(), log.getTrackLogger(), log.getBusinessModel(),
                             log.getKnowledgeId(), null, log.getOptType(), log.getRequest(), log.getUserId(), log.getUserName());
                     result = true;

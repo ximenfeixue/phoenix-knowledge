@@ -1,15 +1,14 @@
 package com.ginkgocap.ywxt.knowledge.dao.impl;
 
-import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Constant;
-
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
+import com.gintong.frame.cache.redis.RedisCacheService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,6 +18,11 @@ public abstract class BaseDao {
 
     @Resource
     protected MongoTemplate mongoTemplate;
+
+    @Autowired
+    private RedisCacheService redisCacheService;
+
+    private final int cacheTTL = 60 * 60 * 2;
 
     protected Query knowledgeColumnIdAndOwnerId(long ownerId, long knowledgeId, int typeId) {
         Query query = new Query();
@@ -67,5 +71,41 @@ public abstract class BaseDao {
 
     protected String getCollectionName(final int columnId) {
         return KnowledgeUtil.getKnowledgeCollectionName(columnId);
+    }
+
+
+    protected void saveToCache(String key, Object value) {
+        try {
+            redisCacheService.setRedisCacheByKey(key, value);
+            redisCacheService.expireRedisCacheByKey(key, cacheTTL);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected void saveToCache(String key, Object value, Integer expiredTime) {
+        try {
+            redisCacheService.setRedisCacheByKey(key, value);
+            redisCacheService.expireRedisCacheByKey(key, expiredTime);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected Object getFromCache(String key) {
+        try {
+            return redisCacheService.getRedisCacheByKey(key);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    protected void removeFromCache(String key) {
+        try {
+            redisCacheService.deleteRedisCacheByKey(key);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

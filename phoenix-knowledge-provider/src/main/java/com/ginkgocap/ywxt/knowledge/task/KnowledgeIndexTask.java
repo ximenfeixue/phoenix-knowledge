@@ -56,7 +56,7 @@ public class KnowledgeIndexTask implements InitializingBean
             public void run() {
                 ++count;
                 knowledgeIndexClean();
-                logger.info("KnowledgeIndex 时间=" + new Date() + " 执行了" + count + "次"); // 1次
+                logger.info("KnowledgeIndexTask 时间: " + new Date() + " 执行了" + count + "次"); // 1次
             }
         };
 

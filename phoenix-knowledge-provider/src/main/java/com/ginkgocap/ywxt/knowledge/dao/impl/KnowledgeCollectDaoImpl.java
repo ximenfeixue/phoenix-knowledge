@@ -31,9 +31,6 @@ public class KnowledgeCollectDaoImpl extends BaseDao implements KnowledgeCollect
 {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeCollectDaoImpl.class);
 
-    @Resource
-    private MongoTemplate mongoTemplate;
-
     @Autowired
     private KnowledgeIdService knowledgeIdService;
 

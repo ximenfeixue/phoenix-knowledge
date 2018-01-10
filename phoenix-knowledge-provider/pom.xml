@@ -88,6 +88,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.ginkgocap.ywxt</groupId>
+            <artifactId>phoenix-cache</artifactId>
+            <version>${phoenix-frame-cache.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.ginkgocap.parasol</groupId>
             <artifactId>parasol-associate-api</artifactId>
         </dependency>

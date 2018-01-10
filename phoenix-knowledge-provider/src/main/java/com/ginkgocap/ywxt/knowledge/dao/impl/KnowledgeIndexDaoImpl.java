@@ -4,7 +4,6 @@ package com.ginkgocap.ywxt.knowledge.dao.impl;
  * Created by gintong on 2016/7/30.
  */
 
-import com.ginkgocap.ywxt.cache.Cache;
 import com.ginkgocap.ywxt.knowledge.dao.KnowledgeIndexDao;
 import com.ginkgocap.ywxt.knowledge.model.Knowledge;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
@@ -25,7 +24,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +37,8 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
 
     private final Logger logger = LoggerFactory.getLogger(KnowledgeIndexDaoImpl.class);
 
-    @Resource
-    private Cache cache;
-
     private final int maxSize = 20;
     private final int maxQuerySize = 200;
-    private final int cacheTTL = 60 * 60 * 2;
 
     private static final Map<String, Boolean> loadingMap = new ConcurrentHashMap<String, Boolean>();
 
@@ -403,17 +397,5 @@ public class KnowledgeIndexDaoImpl extends BaseDao implements KnowledgeIndexDao 
             sb.append(i > 0 ? "-" : "").append(params[i]);
         }
         return sb.toString();
-    }
-
-    private void saveToCache(String key, Object value) {
-        cache.setByRedis(key, value, cacheTTL);
-    }
-
-    private void saveToCache(String key, Object value, Integer expiredTime) {
-        cache.setByRedis(key, value, expiredTime);
-    }
-
-    private Object getFromCache(String key) {
-        return cache.getByRedis(key);
     }
 }

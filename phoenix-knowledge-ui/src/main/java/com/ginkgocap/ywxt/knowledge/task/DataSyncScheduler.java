@@ -80,7 +80,7 @@ public class DataSyncScheduler implements InitializingBean {
                     ++count;
                     dataSyncTask();
                     String nowDate = DateUtil.convertDateToString(new Date());
-                    logger.info("时间=" + nowDate + " 执行了" + count + "次"); // 1次
+                    logger.info(" DataSyncScheduler 时间: " + nowDate + " 执行了" + count + "次"); // 1次
                     redisCacheService.deleteRedisCacheByKey(lock);
                     logger.info("release the task lock success.");
                 } else {

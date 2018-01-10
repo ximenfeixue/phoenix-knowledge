@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF8"?>
+<redis-config>
+    <hash>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+        <hash-node host="${redis.host}" port="${redis.port}" weight="1"/>
+    </hash>
+</redis-config>
