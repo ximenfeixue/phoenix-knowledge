@@ -324,10 +324,11 @@ public abstract class BaseKnowledgeController extends BaseController {
 
         InterfaceResult<Knowledge> result = null;
         try {
+            data.serUserInfo(user);
             // 在组织修改知识时 需重新设置 cid
-            if (data.getOrganResourceVO() == null || data.getOrganResourceVO().getOrganId() == null)
-                data.serUserInfo(user);
-
+            if (data.getOrganResourceVO() != null) {
+                detailSetCidByOrganId(data);
+            }
             result = this.knowledgeService.update(data);
         } catch (Exception e) {
             logger().error("知识更新失败！失败原因： "+e.getMessage());
@@ -385,10 +386,10 @@ public abstract class BaseKnowledgeController extends BaseController {
         }
         // 是游客 的情况
         if (memberDetail == null)
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限修改该资源");
         // 是组织普通成员
         if (memberDetail != null && "m".equals(memberDetail.getRole()))
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限修改该资源");
         return InterfaceResult.getSuccessInterfaceResultInstance(true);
     }
 
@@ -446,7 +447,9 @@ public abstract class BaseKnowledgeController extends BaseController {
         Long organResourceId = organResourceVO.getOrganResourceId();
         Byte permissionType = organResourceVO.getPermissionType();
         organResource.setId(organResourceId);
-        organResource.setPrivated(privated);
+        if (privated != null) {
+            organResource.setPrivated(privated);
+        }
         organResource.setSourcePic(coverPic);
         organResource.setPermissionType(permissionType);
         organResource.setBackup(String.valueOf(type));

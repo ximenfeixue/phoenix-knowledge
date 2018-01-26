@@ -466,6 +466,38 @@ public class KnowledgeController extends BaseKnowledgeController
      * @param knowledgeId 知识Id
      * @param type 栏目主键
      * @throws java.io.IOException
+     *//*
+    @RequestMapping(value = "/{knowledgeId}/{type}/{organId}", method = RequestMethod.GET)
+    @ResponseBody
+    public MappingJacksonValue detailByOrganId(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable long knowledgeId,@PathVariable int type, @PathVariable long organId) throws Exception {
+        if (isWeb(request)) {
+            logger.info("Query knowledge from web....");
+            return detailWeb(request, response, knowledgeId, type);
+        }
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
+        DataCollect data = result.getResponseData();
+        logger.info("Query knowledge detail success. knowledgeId: " + knowledgeId + " type: " + type);
+        jacksonValue = knowledgeDetail(data);
+
+        return jacksonValue;
+    }*/
+
+    /**
+     * 提取知识详细信息，一般用在详细查看界面、编辑界面
+     * @param knowledgeId 知识Id
+     * @param type 栏目主键
+     * @throws java.io.IOException
      */
     @RequestMapping(value = "/{knowledgeId}/{type}", method = RequestMethod.GET)
     @ResponseBody
