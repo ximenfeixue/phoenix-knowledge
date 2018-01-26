@@ -225,10 +225,16 @@ public abstract class BaseKnowledgeController extends BaseController {
     private void setOrganResource(OrganResource organResource, long userId, User user, DataCollect data) {
 
         Knowledge detail = data.getKnowledgeDetail();
+        KnowledgeBase base = null;
+        try {
+            base = knowledgeService.getBaseById(detail.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         organResource.setRealCreateId(userId);
         organResource.setRealCreateName(user.getName());
-        organResource.setTitle(detail.getTitle());
-        organResource.setTordescribe(detail.getDesc());
+        organResource.setTitle(base.getTitle());
+        organResource.setTordescribe(base.getContentDesc());
         organResource.setBackup(detail.getColumnType());
         organResource.setSourceId(detail.getId());
         organResource.setSourceType(OrganSourceTypeEnum.KNOWLEDGE.value());
@@ -245,12 +251,16 @@ public abstract class BaseKnowledgeController extends BaseController {
         String coverPicUrl = detail.getPic();
         if (StringUtils.isNotBlank(coverPicUrl) && !"null".equals(coverPicUrl)) {
             organResource.setSourcePic(coverPicUrl);
-
         } else {
             coverPicUrl = DataCollect.validatePicUrl(detail.getMultiUrls());
             organResource.setSourcePic(coverPicUrl);
         }
-        organResource.setOriginalSourceId(organResourceVO.getOriginalSourceId());
+        Long originalSourceId = organResourceVO.getOriginalSourceId();
+        if (null != originalSourceId) {
+            organResource.setOriginalSourceId(originalSourceId);
+        } else {
+            organResource.setOriginalSourceId(0l);
+        }
     }
 
     private void saveOrganResourcePermission(OrganResourceVO organResourceVO, long organResourceId) {
@@ -305,7 +315,7 @@ public abstract class BaseKnowledgeController extends BaseController {
 
         String columnType = data.getOldType() > 0 ? String.valueOf(data.getOldType()) : detail.getColumnType();
         long knowledgeId = detail.getId();
-        if (!permissionServiceLocal.canUpdate(knowledgeId, columnType, userId)) {
+        if (null == data.getOrganResourceVO() && !permissionServiceLocal.canUpdate(knowledgeId, columnType, userId)) {
             logger().error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
