@@ -44,5 +44,9 @@
             <groupId>com.gintong.common</groupId>
             <artifactId>phoenix-permission-api</artifactId>
         </dependency>
+		<dependency>
+			<artifactId>phoenix-organ-api</artifactId>
+			<groupId>com.ginkgocap.ywxt</groupId>
+		</dependency>
     </dependencies>
 </project>

@@ -222,6 +222,10 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
+        <dependency>
+            <artifactId>phoenix-organ-api</artifactId>
+            <groupId>com.ginkgocap.ywxt</groupId>
+        </dependency>
     </dependencies>
 
     <build>

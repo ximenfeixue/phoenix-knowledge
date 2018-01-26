@@ -4,6 +4,8 @@ import com.ginkgocap.ywxt.knowledge.model.KnowledgeBase;
 import com.ginkgocap.ywxt.knowledge.model.KnowledgeBaseExt;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
+import com.ginkgocap.ywxt.organ.model.organ.OrganMember;
+import com.ginkgocap.ywxt.organ.service.organ.OrganMemberService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -11,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +35,9 @@ import java.util.Map;
 public class KnowledgeAdminControl extends BaseKnowledgeController
 {
     private final Logger logger = LoggerFactory.getLogger(KnowledgeAdminControl.class);
+
+    @Autowired
+    private OrganMemberService organMemberService;
 
     @ResponseBody
     @RequestMapping(value="/create", method = RequestMethod.POST)
@@ -79,6 +85,40 @@ public class KnowledgeAdminControl extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
+        List<Long> ids = Arrays.asList(id);
+        return this.knowledgeService.logicDelete(ids, type);
+    }
+
+    /**
+     * 组织 管理者 可以进行删除
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ/delete/{id}/{type}/{organId}", method = RequestMethod.DELETE)
+    public InterfaceResult deleteOrganKnowledge(HttpServletRequest request,
+                                                @PathVariable long id, @PathVariable int type,
+                                                @PathVariable long organId) {
+        User user = this.getUser(request);
+        if (user == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+
+        long currentUserId = user.getId();
+        OrganMember memberDetail = null;
+        try {
+            memberDetail = organMemberService.findMemberDetail(organId, currentUserId);
+        } catch (Exception e) {
+            logger.error("invoke organMemberService failed. method : [findMemberDetail]. userId : " + currentUserId);
+            e.printStackTrace();
+        }
+        // 是游客 的情况
+        if (memberDetail == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+        // 是组织普通成员
+        if (memberDetail != null && "m".equals(memberDetail.getRole()))
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+
+        // 验证当前用户是否有 权限修改删除 资源
         List<Long> ids = Arrays.asList(id);
         return this.knowledgeService.logicDelete(ids, type);
     }

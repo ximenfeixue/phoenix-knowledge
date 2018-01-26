@@ -31,6 +31,7 @@
         <framework-id.version>2.0-SNAPSHOT</framework-id.version>
         <framework-dal.version>2.0-SNAPSHOT</framework-dal.version>
         <phoenix-permission-api.version>0.0.1-SNAPSHOT</phoenix-permission-api.version>
+        <phoenix-organ-api.version>1.0.2-SNAPSHOT</phoenix-organ-api.version>
         <phoenix-file-api.version>5.6.3</phoenix-file-api.version>
         <parasol-metadata.version>1.0.2-SNAPSHOT</parasol-metadata.version>
         <parasol-common-provider.version>1.0.3-SNAPSHOT</parasol-common-provider.version>
@@ -364,6 +365,11 @@
                 <groupId>com.gintong</groupId>
                 <artifactId>phoenix-rocketmq-api</artifactId>
                 <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>phoenix-organ-api</artifactId>
+                <groupId>com.ginkgocap.ywxt</groupId>
+                <version>${phoenix-organ-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

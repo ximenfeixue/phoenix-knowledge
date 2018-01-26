@@ -6,16 +6,23 @@ import com.ginkgocap.parasol.tags.model.Tag;
 import com.ginkgocap.ywxt.knowledge.model.*;
 import com.ginkgocap.ywxt.knowledge.model.common.*;
 import com.ginkgocap.ywxt.knowledge.model.common.Page;
-import com.ginkgocap.ywxt.knowledge.model.mobile.DataSync;
 import com.ginkgocap.ywxt.knowledge.service.*;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.HttpClientHelper;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
+import com.ginkgocap.ywxt.organ.model.Enum.OrganResourcePermissionTypeEnum;
+import com.ginkgocap.ywxt.organ.model.Enum.OrganSourceTypeEnum;
+import com.ginkgocap.ywxt.organ.model.organ.OrganMember;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResource;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResourceVO;
+import com.ginkgocap.ywxt.organ.service.organ.OrganMemberService;
+import com.ginkgocap.ywxt.organ.service.organ.OrganResourceService;
 import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
 import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
 import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
+import com.gintong.common.phoenix.permission.utils.JsonUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import net.sf.json.JSONArray;
@@ -35,11 +42,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+
+import static com.ginkgocap.ywxt.knowledge.service.common.KnowledgeBaseService.sourceType;
 
 @Controller
 @RequestMapping("/knowledge")
@@ -53,11 +62,19 @@ public class KnowledgeController extends BaseKnowledgeController
     @Autowired
     private KnowledgeOtherService knowledgeOtherService;
 
-
     //@Value("#{configuers.knowledgeBigDataSearchUrl}")
     //private String knowledgeBigDataSearchUrl;
+    @Autowired
+    private OrganMemberService organMemberService;
+
+    @Autowired
+    private OrganResourceService organResourceService;
 
     private ResourceBundle resourceBundle =  ResourceBundle.getBundle("application");
+    // 贡献类型
+    private static final byte contributeType = 2;
+
+
     /**
      * 插入数据
      * @throws java.io.IOException
@@ -74,6 +91,38 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     /**
+     * 组织插入数据
+     * 与用户插入 不同在于 前端传入 virtual = 2 且 cid = organId cname 还是 当前用户名字
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ", method = RequestMethod.POST)
+    public InterfaceResult createByOrgan(HttpServletRequest request) throws Exception
+    {
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        return this.create(request, user);
+    }
+
+    /**
+     * 组织更新数据
+     * 与用户插入 不同在于 前端传入 virtual = 2 且 cid = organId cname 还是 当前用户名字
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ", method = RequestMethod.PUT)
+    public InterfaceResult updateKnowledgeByOrgan(HttpServletRequest request) throws Exception
+    {
+        User user = this.getUser(request);
+        if (user == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+
+        return this.updateKnowledge(request, user);
+    }
+
+    /**
      * 更新数据
      * @throws java.io.IOException
      */
@@ -86,6 +135,92 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
         }
         return updateKnowledge(request, user);
+    }
+
+    /**
+     * 批量贡献资源
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ/batchContribute", method = RequestMethod.POST)
+    public InterfaceResult batchContributeKnowledge(HttpServletRequest request) {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        String requestJson = this.getBodyParam(request);
+        ContributeVO contributeVO = null;
+        try {
+            contributeVO = (ContributeVO) JsonUtils.jsonToBean(requestJson, ContributeVO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (contributeVO == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        // 批量贡献资源
+        batchContribute(contributeVO, user, request);
+        return InterfaceResult.getSuccessInterfaceResultInstance(true);
+    }
+
+    /**
+     * 贡献资源
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ/contribute", method = RequestMethod.POST)
+    public InterfaceResult contributeKnowledge(HttpServletRequest request) {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+        String requestJson = this.getBodyParam(request);
+        ContributeData data = null;
+        try {
+            data = (ContributeData) JsonUtils.jsonToBean(requestJson, ContributeData.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (data == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+
+        return contribute(data, user, request);
+    }
+
+    private InterfaceResult contribute(ContributeData contributeData, User user, HttpServletRequest request) {
+
+        Long id = contributeData.getId();
+        short columnType = contributeData.getColumnType();
+        Long organId = contributeData.getOrganId();
+        Knowledge detail = null;
+        try {
+            detail = knowledgeService.getDetailById(id, columnType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (detail == null) {
+            logger().error("知识 id 和 columnType 传入有误。 id : " + id + " columnType : " + columnType);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "当前知识已被删除");
+        }
+        OrganResource organResource = null;
+        try {
+            organResource = organResourceService.getContributedOrganResource(organId, OrganSourceTypeEnum.KNOWLEDGE.value(), id, contributeType, user.getId());
+        } catch (Exception e) {
+            logger().error("invoke organResourceService failure. method : " +
+                    "[getContributedOrganResource]. organId : " + organId + " userId : " + user.getId());
+        }
+        // 已贡献过该资源
+        if (organResource != null){
+            logger().info("this know has been contributed. id : " + id + " type : " + columnType);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "已贡献过该资源");
+        }
+        DataCollect dataCollect = new DataCollect();
+        setDataCollect(detail, dataCollect, organId);
+        //  创建知识
+        return this.createKnowledge(dataCollect, user, request);
     }
 
     /**
@@ -712,6 +847,43 @@ public class KnowledgeController extends BaseKnowledgeController
         }
 
         List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyWord);
+        InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
+        logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
+        return result;
+    }
+
+    /**
+     * 组织 提取知识创建数据 (不包括已经在当前组织贡献的知识)
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/organ/myByPage", method = RequestMethod.POST)
+    public InterfaceResult getMyByPage(HttpServletRequest request) throws Exception {
+
+        User user = this.getUser(request);
+        if(user == null) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        String requestJson = this.getBodyParam(request);
+        OrganKnowQuery organKnowQuery = (OrganKnowQuery)JsonUtils.jsonToBean(requestJson, OrganKnowQuery.class);
+        if (organKnowQuery == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+
+        long userId = this.getUserId(user);
+        Long organId = organKnowQuery.getOrganId();
+        String keyword = organKnowQuery.getKeyword();
+        int page = organKnowQuery.getPage();
+        int size = organKnowQuery.getSize();
+            //TODO: need to check if long to int
+        int total = getCreatedKnowledgeCount(userId, keyword);
+
+        int start = page * size;
+        if (start > total) {
+            return InterfaceResult.getSuccessInterfaceResultInstance("到达最后一页，知识已经取完。");
+        }
+
+        List<KnowledgeBase> createdKnowledgeList = this.getCreatedKnowledge(userId, start, size, keyword);
         InterfaceResult<Page<KnowledgeBase>> result = this.knowledgeListPage(total, page, size, createdKnowledgeList);
         logger.info(".......get all created knowledge success. size: " + (createdKnowledgeList != null ? createdKnowledgeList.size() : 0));
         return result;
@@ -1959,6 +2131,17 @@ public class KnowledgeController extends BaseKnowledgeController
         return createdKnowledgeItems;
     }
 
+    private List<KnowledgeBase> getOrganCreatedKnowledge(long userId, int start, int size, String keyWord, List<Long> list)
+    {
+        List<KnowledgeBase> createdKnowledgeItems = null;
+        try {
+            createdKnowledgeItems = this.knowledgeService.getCreatedKnowledge(userId, start, size, keyWord);
+        } catch (Exception e) {
+            logger.error("Query knowledge failed！reason：" + e.getMessage());
+        }
+        return createdKnowledgeItems;
+    }
+
     private List<KnowledgeBase> getCollectedKnowledgeByPage(long userId, long total, int page, int size, String keyword) throws Exception {
         List<KnowledgeCollect> collectItems = null;
         List<KnowledgeBase> collectedKnowledgeItems = null;
@@ -2257,4 +2440,67 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     public Logger logger() { return this.logger; }
+
+    private void batchContribute(ContributeVO contributeVO, User user, HttpServletRequest request) {
+
+        List<ContributeData> dataList = contributeVO.getDataList();
+        Long organId = contributeVO.getOrganId();
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (ContributeData data : dataList) {
+                Long id = data.getId();
+                short columnType = data.getColumnType();
+                Knowledge detail = null;
+                try {
+                    detail = knowledgeService.getDetailById(id, columnType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (detail == null) {
+                    logger().error("知识 id 和 columnType 传入有误。 id : " + id + " columnType : " + columnType);
+                    continue;
+                }
+                OrganResource organResource = null;
+                try {
+                    organResource = organResourceService.getContributedOrganResource(organId, OrganSourceTypeEnum.KNOWLEDGE.value(), id, contributeType, user.getId());
+                } catch (Exception e) {
+                    logger().error("invoke organResourceService failure. method : " +
+                            "[getContributedOrganResource]. organId : " + organId + " userId : " + user.getId());
+                }
+                // 已贡献过该资源
+                if (organResource != null){
+                    logger().info("this know has been contributed. id : " + id + " type : " + columnType);
+                    continue;
+                }
+                DataCollect dataCollect = new DataCollect();
+                setDataCollect(detail, dataCollect, organId);
+                //  创建知识
+                InterfaceResult result = this.createKnowledge(dataCollect, user, request);
+                if (!"0".equals(result.getNotification().getNotifCode())) {
+                    logger().error("contribute know failure. know id : " + id + " columnType : " + columnType);
+                }
+            }
+        }
+    }
+    private void setDataCollect(Knowledge detail, DataCollect dataCollect, long organId) {
+
+        Knowledge knowledgeDetail = new Knowledge();
+        knowledgeDetail.setTitle(detail.getTitle());
+        knowledgeDetail.setContent(detail.getContent());
+        knowledgeDetail.setCpathid(detail.getCpathid());
+        knowledgeDetail.setColumnid(detail.getColumnid());
+        knowledgeDetail.setColumnType(detail.getColumnType());
+        knowledgeDetail.setMultiUrls(detail.getMultiUrls());
+        knowledgeDetail.setPic(detail.getPic());
+        dataCollect.setKnowledgeDetail(knowledgeDetail);
+        // 设置创建 组织资源参数
+        OrganResourceVO organResourceVO = new OrganResourceVO();
+        organResourceVO.setOrganId(organId);
+        organResourceVO.setPrivated((byte) 0);
+        organResourceVO.setPermissionType(OrganResourcePermissionTypeEnum.NO_PERMISSION.value());
+        // 创建资源类型 1：创建 2：贡献
+        organResourceVO.setCreateType((byte) 2);
+        // 设置原始 资源 id
+        organResourceVO.setOriginalSourceId(detail.getId());
+        dataCollect.setOrganResourceVO(organResourceVO);
+    }
 }

@@ -13,6 +13,15 @@ import com.ginkgocap.ywxt.knowledge.task.DataSyncTask;
 import com.ginkgocap.ywxt.knowledge.utils.HtmlToText;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeUtil;
 import com.ginkgocap.ywxt.knowledge.utils.StringUtil;
+import com.ginkgocap.ywxt.organ.model.Enum.OrganResourcePermissionTypeEnum;
+import com.ginkgocap.ywxt.organ.model.Enum.OrganSourceTypeEnum;
+import com.ginkgocap.ywxt.organ.model.organ.OrganMember;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResource;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResourcePermission;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResourceVO;
+import com.ginkgocap.ywxt.organ.service.organ.OrganMemberService;
+import com.ginkgocap.ywxt.organ.service.organ.OrganResourcePermissionService;
+import com.ginkgocap.ywxt.organ.service.organ.OrganResourceService;
 import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
 import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
 import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
@@ -34,9 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by oem on 4/6/17.
@@ -78,21 +85,38 @@ public abstract class BaseKnowledgeController extends BaseController {
     @Autowired
     protected SyncSourceService syncSourceService;
 
+    @Autowired
+    private OrganResourceService organResourceService;
+
+    @Autowired
+    private OrganResourcePermissionService organResourcePermissionService;
+
+    @Autowired
+    private OrganMemberService organMemberService;
+
     protected InterfaceResult create(HttpServletRequest request, final User user)
     {
-        long userId = user.getId();
         String requestJson = this.getBodyParam(request);
         DataCollect data = KnowledgeUtil.getDataCollect(requestJson);
         if (data == null || data.getKnowledgeDetail() == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION,"知识详情格式错误或者为空");
         }
+        return createKnowledge(data, user, request);
+    }
 
-        detailFaultTolerant(data.getKnowledgeDetail());
+    protected InterfaceResult createKnowledge(DataCollect data, final User user, HttpServletRequest request) {
+
+        long userId = user.getId();
+        detailFaultTolerant(data.getKnowledgeDetail(), user);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult<Long> result = InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
         try {
             data.serUserInfo(user);
+            // 在组织创建知识时 需重新设置 cid
+            if (data.getOrganResourceVO() != null) {
+                detailSetCidByOrganId(data);
+            }
             result = this.knowledgeService.insert(data);
         } catch (Exception e) {
             logger().error("Insert knowledge failed : " + e.getMessage());
@@ -115,7 +139,7 @@ public abstract class BaseKnowledgeController extends BaseController {
         List<Long> successIds = directoryServiceLocal.saveDirectorySource(userId, detail);
         if (successIds != null && successIds.size() >0) {
             logger().error("Save Directory success. userId: " + userId + " knowledgeId: " + knowledgeId + ", plan size: "
-                            + detail.getDirectorys().size() + ", success size: " + successIds.size());
+                    + detail.getDirectorys().size() + ", success size: " + successIds.size());
         }
         else {
             logger().error("Save Directory info failed, userId: " + userId + " knowledgeId: " + knowledgeId);
@@ -159,12 +183,94 @@ public abstract class BaseKnowledgeController extends BaseController {
         //send new knowledge to bigdata
         bigDataSyncTask.addToMessageQueue(BigDataSyncTask.KNOWLEDGE_INSERT, data.toBigData());
 
+        // 创建组织资源成功后，插入组织资源表
+        if (data.getOrganResourceVO() != null) {
+            saveOrganResource(user, userId, data);
+        }
         //Businsess log
         BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), detail.getId(), null, request, userId, user.getName());
         //BusinessTrackLog busLog = new BusinessTrackLog(logger(), TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_ADD.getKey(), detail.getId(), userId, user.getName(), request);
         //DataSync dataSync = this.createDataSync(0, busLog);
-       //dataSyncTask.addQueue(dataSync);
+        //dataSyncTask.addQueue(dataSync);
         return result;
+    }
+
+    private void detailSetCidByOrganId(DataCollect data) {
+
+        OrganResourceVO organResourceVO = data.getOrganResourceVO();
+        Knowledge detail = data.getKnowledgeDetail();
+        Long organId = organResourceVO.getOrganId();
+        if (organId != null && organId.longValue() != 0) {
+            detail.setCid(organId);
+        }
+    }
+
+    private void saveOrganResource(User user, long userId, DataCollect data) {
+
+        OrganResource organResource = new OrganResource();
+        setOrganResource(organResource, userId, user, data);
+        long organResourceId = 0;
+        try {
+            organResourceId = organResourceService.insertOrganResource(organResource);
+        } catch (Exception e) {
+            logger().error("invoke organResourceService failure. method : [insertOrganResource]. organId : " + user.getId());
+            e.printStackTrace();
+        }
+        if (organResourceId != 0 && organResource.getPermissionType() == OrganResourcePermissionTypeEnum.APPOINTED_USER.value()) {
+
+            saveOrganResourcePermission(data.getOrganResourceVO(), organResourceId);
+        }
+    }
+
+    private void setOrganResource(OrganResource organResource, long userId, User user, DataCollect data) {
+
+        Knowledge detail = data.getKnowledgeDetail();
+        organResource.setRealCreateId(userId);
+        organResource.setRealCreateName(user.getName());
+        organResource.setTitle(detail.getTitle());
+        organResource.setTordescribe(detail.getDesc());
+        organResource.setBackup(detail.getColumnType());
+        organResource.setSourceId(detail.getId());
+        organResource.setSourceType(OrganSourceTypeEnum.KNOWLEDGE.value());
+        OrganResourceVO organResourceVO = data.getOrganResourceVO();
+        organResource.setPermissionType(organResourceVO.getPermissionType());
+        // 1：创建 2：贡献
+        if (organResourceVO.getCreateType() != null) {
+            organResource.setCreateType(organResourceVO.getCreateType());
+        } else {
+            organResource.setCreateType((byte) 1);
+        }
+        organResource.setOrganId(organResourceVO.getOrganId());
+        organResource.setPrivated(organResourceVO.getPrivated());
+        String coverPicUrl = detail.getPic();
+        if (StringUtils.isNotBlank(coverPicUrl) && !"null".equals(coverPicUrl)) {
+            organResource.setSourcePic(coverPicUrl);
+
+        } else {
+            coverPicUrl = DataCollect.validatePicUrl(detail.getMultiUrls());
+            organResource.setSourcePic(coverPicUrl);
+        }
+        organResource.setOriginalSourceId(organResourceVO.getOriginalSourceId());
+    }
+
+    private void saveOrganResourcePermission(OrganResourceVO organResourceVO, long organResourceId) {
+
+        List<OrganResourcePermission> list = new LinkedList<OrganResourcePermission>();
+        OrganResourcePermission organResourcePermission = new OrganResourcePermission();
+        List<Long> userIds = organResourceVO.getUserIds();
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            for (Long appointUId : userIds) {
+                organResourcePermission.setUserId(appointUId);
+                organResourcePermission.setOrganResourceId(organResourceId);
+                list.add(organResourcePermission);
+            }
+            try {
+                organResourcePermissionService.batchInsertOrganResourcePermission(list);
+            } catch (Exception e) {
+                logger().error("invoke organResourcePermissionService failure. method : [batchInsertOrganResourcePermission]. organResourceId : " + organResourceId);
+                e.printStackTrace();
+            }
+        }
     }
 
     protected InterfaceResult updateKnowledge(HttpServletRequest request, final User user) throws Exception
@@ -178,6 +284,13 @@ public abstract class BaseKnowledgeController extends BaseController {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
 
+        // 在组织进行修改操作时 核实用户是否有权限
+        if (data.getOrganResourceVO() != null) {
+            InterfaceResult checkResult = checkOrganResourcePerm(user, data.getOrganResourceVO());
+            if (!"0".equals(checkResult.getNotification().getNotifCode())) {
+                return checkResult;
+            }
+        }
         Knowledge detail = data.getKnowledgeDetail();
         if (detail == null) {
             logger().error("request knowledgeDetail is null or incorrect");
@@ -196,12 +309,15 @@ public abstract class BaseKnowledgeController extends BaseController {
             logger().error("permission validate failed, please check if user have permission!");
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION, "没有权限编辑知识!");
         }
-        detailFaultTolerant(detail);
+        detailFaultTolerant(detail, user);
         //convertKnowledgeContent(detail, detail.getContent(), null, null, null, isWeb(request));
 
         InterfaceResult<Knowledge> result = null;
         try {
-            data.serUserInfo(user);
+            // 在组织修改知识时 需重新设置 cid
+            if (data.getOrganResourceVO() == null || data.getOrganResourceVO().getOrganId() == null)
+                data.serUserInfo(user);
+
             result = this.knowledgeService.update(data);
         } catch (Exception e) {
             logger().error("知识更新失败！失败原因： "+e.getMessage());
@@ -240,10 +356,95 @@ public abstract class BaseKnowledgeController extends BaseController {
         //permission sync
         dataSyncTask.saveDataNeedSync(permission);
         logger().info("update knowledge success. knowledgeId: " + knowledgeId + " userId: " + userId);
+        // 修改组织资源成功后，修改组织资源表
+        if (data.getOrganResourceVO() != null) {
+            updateOrganResource(data);
+        }
         return result;
     }
 
-    protected Knowledge detailFaultTolerant(Knowledge detail)
+    private InterfaceResult checkOrganResourcePerm(User user, OrganResourceVO organResourceVO) {
+
+        long currentUserId = user.getId();
+        OrganMember memberDetail = null;
+        try {
+            memberDetail = organMemberService.findMemberDetail(organResourceVO.getOrganId(), currentUserId);
+        } catch (Exception e) {
+            logger().error("invoke organMemberService failed. method : [findMemberDetail]. userId : " + currentUserId);
+            e.printStackTrace();
+        }
+        // 是游客 的情况
+        if (memberDetail == null)
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+        // 是组织普通成员
+        if (memberDetail != null && "m".equals(memberDetail.getRole()))
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "没有权限删除该资源");
+        return InterfaceResult.getSuccessInterfaceResultInstance(true);
+    }
+
+    private void updateOrganResource(DataCollect data) {
+
+        Knowledge detail = data.getKnowledgeDetail();
+        KnowledgeBase base = null;
+        try {
+            base = knowledgeService.getBaseById(detail.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        OrganResourceVO organResourceVO = data.getOrganResourceVO();
+        Byte permissionType = organResourceVO.getPermissionType();
+        List<Long> userIds = organResourceVO.getUserIds();
+        Long organResourceId = organResourceVO.getOrganResourceId();
+        OrganResource organResource = new OrganResource();
+        // 设置 organResource
+        setOrganResource(organResource, base, organResourceVO);
+        try {
+            organResourceService.updateOrganResource(organResource);
+        } catch (Exception e) {
+            logger().error("invoke organResourceService failure. method : [updateOrganResource]. organResourceId : " + organResourceId);
+            e.printStackTrace();
+        }
+        // 若修改权限 是指定人可见，修改指定人表
+        if (permissionType == OrganResourcePermissionTypeEnum.APPOINTED_USER.value()) {
+
+            List<OrganResourcePermission> list = new LinkedList<OrganResourcePermission>();
+            OrganResourcePermission organResourcePermission = new OrganResourcePermission();
+            if (CollectionUtils.isNotEmpty(userIds)) {
+                for (Long appointUId : userIds) {
+                    organResourcePermission.setUserId(appointUId);
+                    organResourcePermission.setOrganResourceId(organResourceId);
+                    list.add(organResourcePermission);
+                }
+                try {
+                    organResourcePermissionService.updateType(permissionType, organResourceId, list);
+                } catch (Exception e) {
+                    logger().error("invoke organResourcePermissionService failure. method : [batchInsertOrganResourcePermission]. organResourceId : " + organResourceId);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setOrganResource(OrganResource organResource, KnowledgeBase base, OrganResourceVO organResourceVO) {
+
+        String title = base.getTitle();
+        String desc = base.getContentDesc();
+        String coverPic = base.getCoverPic();
+        short type = base.getType();
+        Byte privated = organResourceVO.getPrivated();
+        Long organResourceId = organResourceVO.getOrganResourceId();
+        Byte permissionType = organResourceVO.getPermissionType();
+        organResource.setId(organResourceId);
+        organResource.setPrivated(privated);
+        organResource.setSourcePic(coverPic);
+        organResource.setPermissionType(permissionType);
+        organResource.setBackup(String.valueOf(type));
+        organResource.setTordescribe(desc);
+        organResource.setTitle(title);
+    }
+
+    protected Knowledge detailFaultTolerant(Knowledge detail, User user)
     {
         if (StringUtil.inValidString(detail.getColumnType())) {
             logger().warn("column type is null, so set a default value");

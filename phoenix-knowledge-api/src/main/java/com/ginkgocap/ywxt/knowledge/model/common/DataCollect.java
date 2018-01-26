@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.ginkgocap.ywxt.knowledge.model.BigData;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResourceVO;
 import com.gintong.common.phoenix.permission.ResourceType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,8 @@ public class DataCollect implements Serializable
 
     // 权限
     private Permission permission;
+    // 组织 资源 接收前端数据
+    private OrganResourceVO organResourceVO;
 
     //同步到动态
     private short updateDynamic = 0;
@@ -432,5 +435,13 @@ public class DataCollect implements Serializable
     public static String convertLongListToBase(List<Long> ids)
     {
         return KnowledgeUtil.convertLongListToBase(ids);
+    }
+
+    public OrganResourceVO getOrganResourceVO() {
+        return organResourceVO;
+    }
+
+    public void setOrganResourceVO(OrganResourceVO organResourceVO) {
+        this.organResourceVO = organResourceVO;
     }
 }
