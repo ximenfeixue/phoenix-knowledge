@@ -854,6 +854,7 @@ public class KnowledgeController extends BaseKnowledgeController
 
     /**
      * 组织 提取知识创建数据 (不包括已经在当前组织贡献的知识)
+     * 暂未实现
      * @throws java.io.IOException
      */
     @ResponseBody
