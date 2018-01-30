@@ -161,7 +161,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         // 批量贡献资源
         batchContribute(contributeVO, user, request);
-        return InterfaceResult.getSuccessInterfaceResultInstance(true);
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
     /**
