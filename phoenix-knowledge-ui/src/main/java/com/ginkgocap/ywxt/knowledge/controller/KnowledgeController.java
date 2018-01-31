@@ -2564,5 +2564,7 @@ public class KnowledgeController extends BaseKnowledgeController
         // 设置原始 资源 id
         organResourceVO.setOriginalSourceId(detail.getId());
         dataCollect.setOrganResourceVO(organResourceVO);
+        Permission permission = permissionServiceLocal.getPermissionInfo(detail.getId());
+        dataCollect.setPermission(permission);
     }
 }
