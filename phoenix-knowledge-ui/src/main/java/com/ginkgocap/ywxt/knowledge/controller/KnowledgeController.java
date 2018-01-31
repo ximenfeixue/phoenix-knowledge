@@ -513,22 +513,45 @@ public class KnowledgeController extends BaseKnowledgeController
             return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
         }
 
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, 0l);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
         }
-        /*
-        if (Failed(result)) {
-            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(result);
-        }
 
         DataCollect data = result.getResponseData();
-        if (data == null || data.getKnowledgeDetail() == null) {
-            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
-        }*/
+        logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
+        jacksonValue = knowledgeDetail(data);
+
+        return jacksonValue;
+    }
+
+    /**
+     * 组织 提取知识详细信息，一般用在详细查看界面、编辑界面
+     * @param knowledgeId 知识Id
+     * @param type 栏目主键
+     * @throws java.io.IOException
+     */
+    @RequestMapping(value = "/{knowledgeId}/{type}/{organId}", method = RequestMethod.GET)
+    @ResponseBody
+    public MappingJacksonValue detailByOrganId(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable long knowledgeId,@PathVariable int type,
+                                      @PathVariable long organId) throws Exception {
+        if (isWeb(request)) {
+            logger.info("organ Query knowledge from web....");
+            return detailWeb(request, response, knowledgeId, type);
+        }
+
+        User user = this.getUser(request);
+        if (user == null) {
+            return mappingJacksonValue(CommonResultCode.PERMISSION_EXCEPTION);
+        }
+
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, organId);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
 
         DataCollect data = result.getResponseData();
         logger.info("Query knowledge detail succcess. knowledgeId: " + knowledgeId + " type: " + type);
@@ -553,7 +576,7 @@ public class KnowledgeController extends BaseKnowledgeController
         Long knowledgeId = Long.parseLong(kts[0]);
         int type = Integer.parseInt(kts[1]);
         Long shareId = Long.parseLong(kts[2]);
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, 0l);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
@@ -619,22 +642,11 @@ public class KnowledgeController extends BaseKnowledgeController
                                          @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getJTNUser(request);
 
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, 0l);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
         }
-        /*
-        if (Failed(result)) {
-            logger.error("Query knowledge detail failed. knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(result);
-        }
-
-        DataCollect data = result.getResponseData();
-        if (data == null || data.getKnowledgeDetail() == null) {
-            logger.error("Query knowledge detail failed: knowledgeId: " + knowledgeId + " type: " + type);
-            return mappingJacksonValue(CommonResultCode.PARAMS_EXCEPTION);
-        }*/
 
         DataCollect data = result.getResponseData();
         Knowledge detail = data.getKnowledgeDetail();
@@ -667,7 +679,7 @@ public class KnowledgeController extends BaseKnowledgeController
     public MappingJacksonValue detailFilter(HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable long knowledgeId,@PathVariable int type) throws Exception {
         User user = this.getJTNUser(request);
-        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request);
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, 0l);
         MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
         if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
             return jacksonValue;
@@ -2203,7 +2215,7 @@ public class KnowledgeController extends BaseKnowledgeController
         return collectedBaseItems;
     }
 
-    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, HttpServletRequest request)
+    private InterfaceResult<DataCollect> knowledgeDetail(User user,long knowledgeId, int columnType, HttpServletRequest request, long organId)
     {
         long userId = user.getId();
         logger.info("Query knowledge detail. knowledgeId: " + knowledgeId + " userId: " + userId);
@@ -2298,6 +2310,11 @@ public class KnowledgeController extends BaseKnowledgeController
             //ex.printStackTrace();
         }
 
+        // 若 organId 不是 0 返回组织资源数据
+        if (organId != 0) {
+            resetKnowData(knowledgeId, OrganSourceTypeEnum.KNOWLEDGE.value(), organId, data);
+        }
+
         result.setResponseData(data);
         logger.info(".......get knowledge detail complete......");
 
@@ -2320,6 +2337,18 @@ public class KnowledgeController extends BaseKnowledgeController
         BusinessTrackLog busLog = new BusinessTrackLog(logger, TRACK_LOGGER, BusinessModelEnum.BUSINESS_KNOWLEDGE.getKey(), 0, OptTypeEnum.OPT_VIEW.getKey(), detail.getId(), userId, user.getName(), request);
         dataSyncTask.putQueue(busLog);
         return result;
+    }
+
+    private void resetKnowData(long sourceId, byte type, long organId, DataCollect data) {
+
+        OrganResource organResource = null;
+        try {
+            organResource = organResourceService.getOrganResourceBySIdTypeOrganId(sourceId, type, organId);
+        } catch (Exception e) {
+            logger.error("invoke organResourceService failure. method : [getOrganResourceBySIdTypeOrganId]");
+            e.printStackTrace();
+        }
+        data.setOrganResource(organResource);
     }
 
     private long getKnowledgeCount(long userId)

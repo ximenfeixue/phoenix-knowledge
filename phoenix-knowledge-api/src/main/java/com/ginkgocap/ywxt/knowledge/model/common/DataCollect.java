@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.ginkgocap.ywxt.knowledge.model.BigData;
 import com.ginkgocap.ywxt.knowledge.utils.KnowledgeConstant;
+import com.ginkgocap.ywxt.organ.model.organ.OrganResource;
 import com.ginkgocap.ywxt.organ.model.organ.OrganResourceVO;
 import com.gintong.common.phoenix.permission.ResourceType;
 import org.apache.commons.collections.CollectionUtils;
@@ -19,6 +20,8 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.gintong.common.phoenix.permission.entity.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.Transient;
 
 /**
  * Created by gintong on 2016/7/18.
@@ -50,6 +53,10 @@ public class DataCollect implements Serializable
     private int oldType;
 
     private long readCount;
+
+    // 组织资源信息
+    @Transient
+    private OrganResource organResource;
 
     private static final int maxLen = 255;
     private static final int maxUrlLen = 512;
@@ -443,5 +450,13 @@ public class DataCollect implements Serializable
 
     public void setOrganResourceVO(OrganResourceVO organResourceVO) {
         this.organResourceVO = organResourceVO;
+    }
+
+    public OrganResource getOrganResource() {
+        return organResource;
+    }
+
+    public void setOrganResource(OrganResource organResource) {
+        this.organResource = organResource;
     }
 }
