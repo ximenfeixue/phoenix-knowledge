@@ -216,6 +216,7 @@ public abstract class BaseKnowledgeController extends BaseController {
             logger().error("invoke organResourceService failure. method : [insertOrganResource]. organId : " + user.getId());
             e.printStackTrace();
         }
+        logger().info("-------------- organResourceId :" + organResourceId);
         if (organResourceId != 0 && organResource.getPermissionType() == OrganResourcePermissionTypeEnum.APPOINTED_USER.value()) {
 
             saveOrganResourcePermission(data.getOrganResourceVO(), organResourceId);

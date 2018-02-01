@@ -669,6 +669,45 @@ public class KnowledgeController extends BaseKnowledgeController
     }
 
     /**
+     * 组织web提取知识详细信息，一般用在详细查看界面、编辑界面
+     * @param knowledgeId 知识Id
+     * @param type 栏目主键
+     * @throws java.io.IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/web/organ/{knowledgeId}/{type}/{organId}", method = RequestMethod.GET)
+    public MappingJacksonValue detailWebByOrgan(HttpServletRequest request, HttpServletResponse response,
+                                         @PathVariable long knowledgeId,@PathVariable int type,
+                                                @PathVariable long organId) throws Exception {
+        User user = this.getJTNUser(request);
+
+        InterfaceResult<DataCollect> result = knowledgeDetail(user, knowledgeId, type, request, organId);
+        MappingJacksonValue jacksonValue = new MappingJacksonValue(result);
+        if(FailedGetKnowledge(result, jacksonValue, knowledgeId, type)) {
+            return jacksonValue;
+        }
+
+        DataCollect data = result.getResponseData();
+        Knowledge detail = data.getKnowledgeDetail();
+        List<Long> tags = detail.getTagList();
+        List<Long> directoryIds = detail.getDirectorys();
+        List<IdName> minTags = this.getMinTagList(tags);
+        long userId = user.getId() == 0 ? detail.getCid() : user.getId();
+        List<IdNameType> minDirectoryList = this.getMinDirectoryList(userId, directoryIds);
+        logger.debug("get minTags size: " + (minTags != null ?  + minTags.size() : 0) +
+                " minDirectoryList size: " + (minDirectoryList != null ? minDirectoryList.size() : 0));
+        long columnId = KnowledgeUtil.parserStringIdToLong(detail.getColumnid());
+        ColumnSelf columnSelf = getColumn(columnId);
+        IdName column = columnSelf != null ? new IdName(columnId, columnSelf.getColumnname()) : null;
+        if (column != null) {
+            logger.info("get column info: Id: " + column.getId() + " name: " + column.getName());
+        }
+        KnowledgeWeb webDetail = new KnowledgeWeb(detail, minTags, minDirectoryList, column);
+        data.setKnowledgeDetail(webDetail);
+        return knowledgeDetail(data);
+    }
+
+    /**
      * 提取知识详细信息，一般用在详细查看界面、编辑界面
      * @param knowledgeId 知识Id
      * @param type 栏目主键
