@@ -267,10 +267,10 @@ public abstract class BaseKnowledgeController extends BaseController {
     private void saveOrganResourcePermission(OrganResourceVO organResourceVO, long organResourceId) {
 
         List<OrganResourcePermission> list = new LinkedList<OrganResourcePermission>();
-        OrganResourcePermission organResourcePermission = new OrganResourcePermission();
         List<Long> userIds = organResourceVO.getUserIds();
         if (CollectionUtils.isNotEmpty(userIds)) {
             for (Long appointUId : userIds) {
+                OrganResourcePermission organResourcePermission = new OrganResourcePermission();
                 organResourcePermission.setUserId(appointUId);
                 organResourcePermission.setOrganResourceId(organResourceId);
                 list.add(organResourcePermission);
@@ -421,9 +421,9 @@ public abstract class BaseKnowledgeController extends BaseController {
         if (permissionType == OrganResourcePermissionTypeEnum.APPOINTED_USER.value()) {
 
             List<OrganResourcePermission> list = new LinkedList<OrganResourcePermission>();
-            OrganResourcePermission organResourcePermission = new OrganResourcePermission();
             if (CollectionUtils.isNotEmpty(userIds)) {
                 for (Long appointUId : userIds) {
+                    OrganResourcePermission organResourcePermission = new OrganResourcePermission();
                     organResourcePermission.setUserId(appointUId);
                     organResourcePermission.setOrganResourceId(organResourceId);
                     list.add(organResourcePermission);
