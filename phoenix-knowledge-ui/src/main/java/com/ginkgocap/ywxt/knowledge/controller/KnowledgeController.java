@@ -2387,8 +2387,11 @@ public class KnowledgeController extends BaseKnowledgeController
             logger.error("invoke organResourceService failure. method : [getOrganResourceBySIdTypeOrganId]");
             e.printStackTrace();
         }
-        if (organResource == null)
+        if (organResource == null) {
             logger().error("organResource is null...");
+        } else {
+            logger().error("organResource is not null...");
+        }
         data.setOrganResource(organResource);
     }
 
