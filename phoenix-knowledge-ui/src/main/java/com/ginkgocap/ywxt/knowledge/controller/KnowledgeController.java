@@ -2388,9 +2388,9 @@ public class KnowledgeController extends BaseKnowledgeController
             e.printStackTrace();
         }
         if (organResource == null) {
-            logger().error("organResource is null...");
+            logger.error("organResource is null...");
         } else {
-            logger().error("organResource is not null...");
+            logger.error("organResource is not null...");
         }
         data.setOrganResource(organResource);
     }
