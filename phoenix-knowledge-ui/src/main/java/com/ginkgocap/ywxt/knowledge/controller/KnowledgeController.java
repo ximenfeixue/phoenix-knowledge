@@ -539,7 +539,7 @@ public class KnowledgeController extends BaseKnowledgeController
                                       @PathVariable long organId) throws Exception {
         if (isWeb(request)) {
             logger.info("organ Query knowledge from web....");
-            return detailWeb(request, response, knowledgeId, type);
+            return detailWebByOrgan(request, response, knowledgeId, type, organId);
         }
 
         User user = this.getUser(request);
