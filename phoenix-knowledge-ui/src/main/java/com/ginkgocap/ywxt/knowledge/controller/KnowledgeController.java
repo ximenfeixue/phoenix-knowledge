@@ -25,6 +25,7 @@ import com.gintong.common.phoenix.permission.entity.Permission;
 import com.gintong.common.phoenix.permission.utils.JsonUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
+import com.gintong.frame.util.dto.Notification;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.codec.binary.Base64;
@@ -146,6 +147,7 @@ public class KnowledgeController extends BaseKnowledgeController
     @RequestMapping(value = "/organ/batchContribute", method = RequestMethod.POST)
     public InterfaceResult batchContributeKnowledge(HttpServletRequest request) {
 
+        InterfaceResult result = null;
         User user = this.getUser(request);
         if(user == null) {
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PERMISSION_EXCEPTION);
@@ -160,7 +162,10 @@ public class KnowledgeController extends BaseKnowledgeController
         if (contributeVO == null)
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         // 批量贡献资源
-        batchContribute(contributeVO, user, request);
+        result = batchContribute(contributeVO, user, request);
+        if (!CommonResultCode.SUCCESS.getCode().equals(result.getNotification().getNotifCode())) {
+            return result;
+        }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
 
@@ -2548,13 +2553,17 @@ public class KnowledgeController extends BaseKnowledgeController
 
     public Logger logger() { return this.logger; }
 
-    private void batchContribute(ContributeVO contributeVO, User user, HttpServletRequest request) {
+    private InterfaceResult batchContribute(ContributeVO contributeVO, User user, HttpServletRequest request) {
 
         List<ContributeData> dataList = contributeVO.getDataList();
         Byte privated = contributeVO.getPrivated();
         Long organId = contributeVO.getOrganId();
         if (CollectionUtils.isNotEmpty(dataList)) {
             for (ContributeData data : dataList) {
+                if (data == null) {
+                    logger().error("传参为空。。请核实前端数据");
+                    continue;
+                }
                 Long id = data.getId();
                 short columnType = data.getColumnType();
                 Knowledge detail = null;
@@ -2577,6 +2586,9 @@ public class KnowledgeController extends BaseKnowledgeController
                 // 已贡献过该资源
                 if (organResource != null){
                     logger().info("this know has been contributed. id : " + id + " type : " + columnType);
+                    if (dataList.size() == 1) {
+                        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "已贡献过该资源");
+                    }
                     continue;
                 }
                 DataCollect dataCollect = new DataCollect();
@@ -2588,6 +2600,7 @@ public class KnowledgeController extends BaseKnowledgeController
                 }
             }
         }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
     }
     private void setDataCollect(Knowledge detail, DataCollect dataCollect, long organId, byte privated) {
 
