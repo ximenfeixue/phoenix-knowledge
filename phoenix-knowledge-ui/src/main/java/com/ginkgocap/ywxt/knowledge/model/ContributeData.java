@@ -11,6 +11,8 @@ public class ContributeData {
 
     private Long organId;
 
+    private Byte privated;
+
     public Long getId() {
         return id;
     }
@@ -33,5 +35,13 @@ public class ContributeData {
 
     public void setOrganId(Long organId) {
         this.organId = organId;
+    }
+
+    public Byte getPrivated() {
+        return privated;
+    }
+
+    public void setPrivated(Byte privated) {
+        this.privated = privated;
     }
 }

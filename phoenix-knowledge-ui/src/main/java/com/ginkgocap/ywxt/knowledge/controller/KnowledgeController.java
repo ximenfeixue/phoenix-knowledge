@@ -195,6 +195,7 @@ public class KnowledgeController extends BaseKnowledgeController
         Long id = contributeData.getId();
         short columnType = contributeData.getColumnType();
         Long organId = contributeData.getOrganId();
+        Byte privated = contributeData.getPrivated();
         Knowledge detail = null;
         try {
             detail = knowledgeService.getDetailById(id, columnType);
@@ -218,7 +219,7 @@ public class KnowledgeController extends BaseKnowledgeController
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, "已贡献过该资源");
         }
         DataCollect dataCollect = new DataCollect();
-        setDataCollect(detail, dataCollect, organId);
+        setDataCollect(detail, dataCollect, organId, privated);
         //  创建知识
         return this.createKnowledge(dataCollect, user, request);
     }
@@ -2550,6 +2551,7 @@ public class KnowledgeController extends BaseKnowledgeController
     private void batchContribute(ContributeVO contributeVO, User user, HttpServletRequest request) {
 
         List<ContributeData> dataList = contributeVO.getDataList();
+        Byte privated = contributeVO.getPrivated();
         Long organId = contributeVO.getOrganId();
         if (CollectionUtils.isNotEmpty(dataList)) {
             for (ContributeData data : dataList) {
@@ -2578,7 +2580,7 @@ public class KnowledgeController extends BaseKnowledgeController
                     continue;
                 }
                 DataCollect dataCollect = new DataCollect();
-                setDataCollect(detail, dataCollect, organId);
+                setDataCollect(detail, dataCollect, organId, privated);
                 //  创建知识
                 InterfaceResult result = this.createKnowledge(dataCollect, user, request);
                 if (!"0".equals(result.getNotification().getNotifCode())) {
@@ -2587,7 +2589,7 @@ public class KnowledgeController extends BaseKnowledgeController
             }
         }
     }
-    private void setDataCollect(Knowledge detail, DataCollect dataCollect, long organId) {
+    private void setDataCollect(Knowledge detail, DataCollect dataCollect, long organId, byte privated) {
 
         Knowledge knowledgeDetail = new Knowledge();
         knowledgeDetail.setTitle(detail.getTitle());
@@ -2601,7 +2603,7 @@ public class KnowledgeController extends BaseKnowledgeController
         // 设置创建 组织资源参数
         OrganResourceVO organResourceVO = new OrganResourceVO();
         organResourceVO.setOrganId(organId);
-        organResourceVO.setPrivated((byte) 0);
+        organResourceVO.setPrivated(privated);
         organResourceVO.setPermissionType(OrganResourcePermissionTypeEnum.NO_PERMISSION.value());
         // 创建资源类型 1：创建 2：贡献
         organResourceVO.setCreateType((byte) 2);
